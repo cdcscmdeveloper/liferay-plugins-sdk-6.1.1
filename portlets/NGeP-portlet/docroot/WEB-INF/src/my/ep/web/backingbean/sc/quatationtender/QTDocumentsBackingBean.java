@@ -2628,6 +2628,7 @@ public class QTDocumentsBackingBean extends
 
 			SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
 			SupplierFinalizationManagedBean finalizationManagedBean = finalizationBackingBean.getManagedBean();
+			AttachmentDateFormat attachmentDateFormat = new AttachmentDateFormat();
 			for (int i = 0; i < reports.size(); i++) {
 				ScReport report = reports.get(i);
 				try {
@@ -2636,11 +2637,12 @@ public class QTDocumentsBackingBean extends
 						if (report instanceof ScQtDocReport) {
 							ScQtDocReport qtDocReport = (ScQtDocReport)report;
 							ScQtDocReportAttachment qtDocReportAttachment = qtDocReport.getScQtDocReportAttachment();
-							String filePath = qtDocReportAttachment.getFilePath();
-							int startIndex = filePath.length()-qtDocReportAttachment.getFileName().length()-3;
+							
+							// rename the original file before regenerate the documents.
+							backupExistingFile(qtDocReportAttachment, attachmentDateFormat);
 							
 							qtDocReportAttachment = generateDocumentAttachment(qtDocReport, 
-									filePath.substring(startIndex, startIndex+2));
+									qtDocReportAttachment.getFileName().substring(0, 2));
 							qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 						}
 						
@@ -2650,6 +2652,9 @@ public class QTDocumentsBackingBean extends
 							ScQtFinalizationReport finalizationReport = (ScQtFinalizationReport)report;
 							finalizationManagedBean.setScQtFinalization(finalizationReport.getScQtFinalization());
 							finalizationManagedBean.setScQt(finalizationReport.getScQtFinalization().getScQt());
+							
+							// rename the original file before regenerate the documents.
+							backupExistingFile(finalizationReport.getScQtFinalizationReportAttachment(), attachmentDateFormat);
 							
 							ScQtFinalizationReportAttachment reportAttachment = finalizationBackingBean
 									.generateDocumentAttachment(finalizationReport, true);	
@@ -2672,170 +2677,222 @@ public class QTDocumentsBackingBean extends
 		
 	}
 	
+	private void backupExistingFile(ScAttachment attachment, AttachmentDateFormat attachmentDateFormat) {
+		String oldFilePath = getActualFilePath(attachment);
+		File oldFile = new File(oldFilePath);
+		String fileName = attachment.getFileName();
+		String newFilePath = oldFilePath.replaceAll(
+				fileName, 
+				attachmentDateFormat.format(fileName, null));
+		
+		oldFile.renameTo(new File(newFilePath));
+	}
+	
 	private String getPrefixFileName(int increment) {
 		
 		return (String) (increment <= 9 ? "0" + (increment) : Integer
 				.toString(increment));
 	}
 	
-private PmOrgProfile retriveOrgprofileByIdAndDate(Long orgProfileId,Date date){
-	IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
-			.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IOrgProfileSO.class);
-	OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-	reqDTO.setOrgProfileId(orgProfileId);
-	reqDTO.setCreateDate(date);
-	PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
-			reqDTO).getPmOrgProfile();
-	return orgProfile;
-	
-}
+	private PmOrgProfile retriveOrgprofileByIdAndDate(Long orgProfileId,
+			Date date) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(date);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		return orgProfile;
 
-private void retriveTemplateDocParams(TemplateDocBackingBean templateDocBackingBean,ScQt scQt){
-	
-
-	IAddressSO addressSO = null;
-	PmAddressType pmAddressType = null;
-	try {
-		addressSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-		AddressReqDTO reqDTO = new AddressReqDTO();
-		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
-		reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-		reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-		if (resDTO.getAddressTypeList().size() > 0) {
-			pmAddressType = resDTO.getAddressTypeList().get(0);
-		}
-		String agencyAddress = "";
-		String agencyPhoneNo = "";
-		String agencyFaxNo = "";
-		if (pmAddressType != null) {
-			PmAddress pmAddress = pmAddressType.getPmAddress();
-			agencyAddress = getFullAddress(pmAddress);
-			agencyAddress = agencyAddress.replaceAll(TemplateDocConst.PARAM_NEW_LINE_CHARACTER, TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER);
-			agencyPhoneNo = pmAddress.getPhoneNo();
-			agencyFaxNo = pmAddress.getFaxNo();
-		}
-
-		FacesScopes facesScopes = new FacesScopes();
-		String officerName = facesScopes.getUserSessionBean().getUserName();
-		log.info("======currentstatusid generateSyaratSyaratAmFromVelocity===="+this.getManagedBean().getCurrentStatusId());
-		String ptjName=" ";
-		if(null!=this.getManagedBean().getCurrentStatusId()){
-		 ptjName=retrievePTJByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
-		}else{
-			ptjName=scQt.getPmOrgProfile().getOrgName();
-		}
-		log.info("=======ptjName====="+ptjName);
-	Map<String, String> docParamValues=templateDocBackingBean.getManagedBean().getDocParamValues();
-		if(null==docParamValues){
-			docParamValues=new HashMap<String, String>();
-		}
-		docParamValues.put(TemplateDocConst.PARAM_AGENCY_NAME, ptjName);
-		docParamValues.put(TemplateDocConst.PARAM_AGENCY_ADDRESS, agencyAddress);
-		docParamValues.put(TemplateDocConst.PARAM_OFFICER_NAME, officerName);
-		docParamValues.put(TemplateDocConst.PARAM_TELEPHONE_NUM, agencyPhoneNo);
-		//docParamValues.put(TemplateDocConst.COMPANY_NAME, ptjName);
-		docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, agencyFaxNo);
-		docParamValues.put(TemplateDocConst.PARAM_VALIDITY_PERIOD, scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");
-		docParamValues.put(TemplateDocConst.PARAM_DEPARTMENT_NAME, ptjName);
-		BigDecimal contarctAmount=returnContractAmount();
-		docParamValues.put(TemplateDocConst.PARAM_CONTRACT_AMOUNT, contarctAmount.toString());
-		//docParamValues.put(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
-		//docParamValues.put(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
-		PmConfigRuleValue configRuleValue=calculateBondPercentage();
-		if(null!=configRuleValue){
-			log.info("configRuleValue.getFromValue()"+configRuleValue.getFromValue());
-			log.info("configRuleValue.getToValue()"+configRuleValue.getToValue());
-			docParamValues.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM,configRuleValue.getFromValue()!=null ? configRuleValue.getFromValue().toString() : TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM_AMOUNT);
-			docParamValues.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_TO,configRuleValue.getToValue()!=null ? configRuleValue.getToValue().toString() : TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT);
-			docParamValues.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_MAX,configRuleValue.getToValue()!=null ? configRuleValue.getToValue().toString() : TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT);
-		}
-		templateDocBackingBean.getManagedBean().setDocParamValues(docParamValues);
-		/*html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",
-				ptjName);
-		html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",
-				ptjName);
-		html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",
-				ptjName);
-		html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;", agencyAddress);
-		html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;", officerName);
-		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
-		html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;", agencyFaxNo);
-		html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
-				scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");*/
-	} finally {
-		addressSO = null;
 	}
-}
 
-private BigDecimal returnContractAmount(){
-	log.info("start returnContractAmount");
-	IRuleSO ruleSO = null;
-	BigDecimal contractAmount=new BigDecimal(0);
-	try {
-		ruleSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+	private void retriveTemplateDocParams(
+			TemplateDocBackingBean templateDocBackingBean, ScQt scQt) {
 
-		RuleReqDTO reqDTO = new RuleReqDTO();
-		reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
-		
-		List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
-				.getRuleValueList();
-		if (configRuleValues != null && configRuleValues.size() > 0) {
-			PmConfigRuleValue configRuleValue = configRuleValues.get(0);
-			
-			
-				if (configRuleValue != null && configRuleValue.getRuleValue() != null) {
-					contractAmount=new BigDecimal(configRuleValue.getRuleValue());
+		IAddressSO addressSO = null;
+		PmAddressType pmAddressType = null;
+		try {
+			addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if (resDTO.getAddressTypeList().size() > 0) {
+				pmAddressType = resDTO.getAddressTypeList().get(0);
+			}
+			String agencyAddress = "";
+			String agencyPhoneNo = "";
+			String agencyFaxNo = "";
+			if (pmAddressType != null) {
+				PmAddress pmAddress = pmAddressType.getPmAddress();
+				agencyAddress = getFullAddress(pmAddress);
+				agencyAddress = agencyAddress.replaceAll(
+						TemplateDocConst.PARAM_NEW_LINE_CHARACTER,
+						TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER);
+				agencyPhoneNo = pmAddress.getPhoneNo();
+				agencyFaxNo = pmAddress.getFaxNo();
+			}
+
+			FacesScopes facesScopes = new FacesScopes();
+			String officerName = facesScopes.getUserSessionBean().getUserName();
+			log.info("======currentstatusid generateSyaratSyaratAmFromVelocity===="
+					+ this.getManagedBean().getCurrentStatusId());
+			String ptjName = " ";
+			if (null != this.getManagedBean().getCurrentStatusId()) {
+				ptjName = retrievePTJByOrgProfileId(scQt.getPmOrgProfile()
+						.getOrgProfileId(),
+						isQTStatusPublished(this.getManagedBean()
+								.getCurrentStatusId()) ? scQt.getPublishDate()
+								: scQt.getCreatedDate());
+			} else {
+				ptjName = scQt.getPmOrgProfile().getOrgName();
+			}
+			log.info("=======ptjName=====" + ptjName);
+			Map<String, String> docParamValues = templateDocBackingBean
+					.getManagedBean().getDocParamValues();
+			if (null == docParamValues) {
+				docParamValues = new HashMap<String, String>();
+			}
+			docParamValues.put(TemplateDocConst.PARAM_AGENCY_NAME, ptjName);
+			docParamValues.put(TemplateDocConst.PARAM_AGENCY_ADDRESS,
+					agencyAddress);
+			docParamValues
+					.put(TemplateDocConst.PARAM_OFFICER_NAME, officerName);
+			docParamValues.put(TemplateDocConst.PARAM_TELEPHONE_NUM,
+					agencyPhoneNo);
+			// docParamValues.put(TemplateDocConst.COMPANY_NAME, ptjName);
+			docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, agencyFaxNo);
+			docParamValues.put(
+					TemplateDocConst.PARAM_VALIDITY_PERIOD,
+					scQt.getQtValidityPeriod() != null ? Integer.toString(scQt
+							.getQtValidityPeriod()) : "");
+			docParamValues.put(TemplateDocConst.PARAM_DEPARTMENT_NAME, ptjName);
+			BigDecimal contarctAmount = returnContractAmount();
+			docParamValues.put(TemplateDocConst.PARAM_CONTRACT_AMOUNT,
+					contarctAmount.toString());
+			// docParamValues.put(TemplateDocConst.PARAM_BREAK_LINE,
+			// TemplateDocConst.PARAM_SPACE);
+			// docParamValues.put(TemplateDocConst.PARAM_PREFIX_POSTFIX,
+			// TemplateDocConst.PARAM_SPACE);
+			PmConfigRuleValue configRuleValue = calculateBondPercentage();
+			if (null != configRuleValue) {
+				log.info("configRuleValue.getFromValue()"
+						+ configRuleValue.getFromValue());
+				log.info("configRuleValue.getToValue()"
+						+ configRuleValue.getToValue());
+				docParamValues
+						.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM,
+								configRuleValue.getFromValue() != null ? configRuleValue
+										.getFromValue().toString()
+										: TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM_AMOUNT);
+				docParamValues
+						.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_TO,
+								configRuleValue.getToValue() != null ? configRuleValue
+										.getToValue().toString()
+										: TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT);
+				docParamValues
+						.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_MAX,
+								configRuleValue.getToValue() != null ? configRuleValue
+										.getToValue().toString()
+										: TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT);
+			}
+			templateDocBackingBean.getManagedBean().setDocParamValues(
+					docParamValues);
+			/*
+			 * html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;", ptjName);
+			 * html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;", ptjName);
+			 * html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",
+			 * ptjName); html =
+			 * html.replaceAll("&lt;&lt;Agency Address&gt;&gt;", agencyAddress);
+			 * html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;",
+			 * officerName); html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;",
+			 * agencyPhoneNo); html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;",
+			 * agencyFaxNo); html =
+			 * html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
+			 * scQt.getQtValidityPeriod() != null ?
+			 * Integer.toString(scQt.getQtValidityPeriod()) : "");
+			 */
+		} finally {
+			addressSO = null;
+		}
+	}
+
+	private BigDecimal returnContractAmount() {
+		log.info("start returnContractAmount");
+		IRuleSO ruleSO = null;
+		BigDecimal contractAmount = new BigDecimal(0);
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
+
+			List<PmConfigRuleValue> configRuleValues = ruleSO
+					.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+			if (configRuleValues != null && configRuleValues.size() > 0) {
+				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+
+				if (configRuleValue != null
+						&& configRuleValue.getRuleValue() != null) {
+					contractAmount = new BigDecimal(
+							configRuleValue.getRuleValue());
 				}
-		} else {
-			contractAmount=new BigDecimal(TemplateDocConst.PARAM_CONTRACT_AMOUNT_VALUE);
+			} else {
+				contractAmount = new BigDecimal(
+						TemplateDocConst.PARAM_CONTRACT_AMOUNT_VALUE);
+			}
+			log.info("contractAmount" + contractAmount);
+			return contractAmount;
+
+		} finally {
+			ruleSO = null;
 		}
-		log.info("contractAmount"+contractAmount);
-		return contractAmount;
-
-	} finally {
-		ruleSO = null;
 	}
-}
 
-/**
- * Calculate the performance bond percentage
- * 
- * @param amountForBondPercentage amount for performance bond percentage
- * 
- * @return BigDecimal bondPercentage
- */
-private PmConfigRuleValue calculateBondPercentage() {
-	log.info("start calculateBondPercentage");
-	IRuleSO ruleSO = null;
-	PmConfigRuleValue configRuleValue=null;
-	try {
-		ruleSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+	/**
+	 * Calculate the performance bond percentage
+	 * 
+	 * @param amountForBondPercentage
+	 *            amount for performance bond percentage
+	 * 
+	 * @return BigDecimal bondPercentage
+	 */
+	private PmConfigRuleValue calculateBondPercentage() {
+		log.info("start calculateBondPercentage");
+		IRuleSO ruleSO = null;
+		PmConfigRuleValue configRuleValue = null;
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
-		RuleReqDTO reqDTO = new RuleReqDTO();
-		reqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-		
-		List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
-				.getRuleValueList();
-		if (configRuleValues != null && configRuleValues.size() > 0) {
-			 configRuleValue = configRuleValues.get(0);
-			
-		} else {
-			configRuleValue=new PmConfigRuleValue();
-			configRuleValue.setFromValue(new BigDecimal(TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM_AMOUNT));
-			configRuleValue.setToValue(new BigDecimal(TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT));
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
+
+			List<PmConfigRuleValue> configRuleValues = ruleSO
+					.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+			if (configRuleValues != null && configRuleValues.size() > 0) {
+				configRuleValue = configRuleValues.get(0);
+
+			} else {
+				configRuleValue = new PmConfigRuleValue();
+				configRuleValue.setFromValue(new BigDecimal(
+						TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM_AMOUNT));
+				configRuleValue.setToValue(new BigDecimal(
+						TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT));
+			}
+
+		} finally {
+			ruleSO = null;
 		}
-		
-
-	} finally {
-		ruleSO = null;
+		return configRuleValue;
 	}
-	return configRuleValue;
-}
 
 }
