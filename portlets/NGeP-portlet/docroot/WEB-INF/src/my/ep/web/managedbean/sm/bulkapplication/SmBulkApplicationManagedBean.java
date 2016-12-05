@@ -212,6 +212,8 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 							.isOverLappedCategoryExist());
 					bulkApplicationVO.setOverlapRemarks(overlapCategoryVO
 							.getOverLappedCategoryRemarks());
+					bulkApplicationVO.setOverlapMsg(overlapCategoryVO
+							.getOverLappedCategoryMsg());
 				}
 				PmState state = appl.getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress()
