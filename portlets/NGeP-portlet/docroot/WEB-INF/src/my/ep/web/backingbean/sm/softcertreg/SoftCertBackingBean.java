@@ -361,13 +361,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			if (resDTO.isSuccessful()) {
 				String msgKey = MessageConst.INFO_721060;
 				String[] params = null;
+				StringBuilder sbName = null;
+				StringBuilder sbEmail = null;
+				String name = StringUtils.EMPTY;
+				String email = StringUtils.EMPTY;
 				if (getManagedBean().getTotalPaymentAmount().compareTo(
 						BigDecimal.ZERO) == 0) {
 					msgKey = MessageConst.INFO_721061;
-					StringBuilder sbName = null;
-					StringBuilder sbEmail = null;
-					String name = StringUtils.EMPTY;
-					String email = StringUtils.EMPTY;
 
 					if (getManagedBean().getSupplierTmpPersonnel() != null) {
 						name = getManagedBean().getSupplierTmpPersonnel()
@@ -394,6 +394,19 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 					}
 					params = new String[] { name, email };
+				} else {
+					if (!EntityHelper.isCollectionEmpty(reqDTO
+							.getSmPersonnelList())) {
+						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
+							sbName = new StringBuilder();
+							sbName.append(per.getName()).append(",");
+						}
+						name = sbName.toString();
+						if (name.endsWith(",")) {
+							name = name.substring(0, name.length() - 1);
+						}
+						params = new String[] { name };
+					}
 				}
 				renewSesionObject();
 				SmCommonUtil.redirectToPage(
@@ -872,7 +885,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					Calendar renewDate = Calendar.getInstance();
 					renewDate.setTime(softcertRequest.getPmDigiCert()
 							.getValidTo());
-					renewDate.add(Calendar.MONTH, retrieveSoftcertRenewalPeriod());
+					renewDate.add(Calendar.MONTH,
+							retrieveSoftcertRenewalPeriod());
 
 					if (DateUtils.isDateGreaterOrEqual(new Date(),
 							renewDate.getTime())) {
@@ -1234,15 +1248,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 
 	}
-	
+
 	/**
 	 * Retrieve Soft Cert Renewal Period
+	 * 
 	 * @return int
 	 */
-	private int retrieveSoftcertRenewalPeriod(){
-		int softCertPeriod = SmServiceLookup.getSmRuleSO().retrieveSoftCertRenewalPeriod().getSoftCertRenewalMonth();
+	private int retrieveSoftcertRenewalPeriod() {
+		int softCertPeriod = SmServiceLookup.getSmRuleSO()
+				.retrieveSoftCertRenewalPeriod().getSoftCertRenewalMonth();
 		softCertPeriod = -softCertPeriod;
-		
+
 		return softCertPeriod;
 	}
 }
