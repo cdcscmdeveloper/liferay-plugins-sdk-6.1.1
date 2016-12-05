@@ -89,7 +89,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
-import my.ep.web.backingbean.report.ReportBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -802,18 +801,38 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
-	 * @param parameterType
-	 *            the parameter type
+	 * @param moduleCode
+	 *            the module code
+	 * @param docType
+	 *            the document type
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getStatusDropdownValues(String moduleCode,
 			String docType) {
+		return getStatusDropdownValuesBySearchBean(moduleCode,
+				docType,
+				null);
+	}
+	
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docType
+	 *            the document type
+	 * @param searchBean
+	 *            the SearchBean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode,
+			String docType, SearchBean<PmStatusDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 
 		try {
 			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-					.getStatusDescList(moduleCode, docType);
+					.getStatusDescList(moduleCode, docType, searchBean);
 
 			items = new SelectItem[statusDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(

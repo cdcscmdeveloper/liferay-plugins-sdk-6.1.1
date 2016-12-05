@@ -8,16 +8,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmDataRestrValue;
+import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -60,24 +67,31 @@ public class StatusHelper implements Serializable{
 	 * 			the module code
 	 * @param docType
 	 * 			the document type
+	 * @param searchBean
+	 * 			the search bean instance
 	 * @return list of PmStatusDesc
 	 */
-	public List<PmStatusDesc> getStatusDescList(String moduleCode, String docType) {
+	public List<PmStatusDesc> getStatusDescList(String moduleCode, String docType, SearchBean<PmStatusDesc> searchBean) {
 		debugLogger("getStatusDescList.moduleCode: " + moduleCode + ", docType: " + docType);
 		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		String key = new StringBuilder()
+		StringBuilder key = new StringBuilder()
 			.append(moduleCode)
 			.append(KEY_SEPARATOR)
 			.append(docType)
 			.append(KEY_SEPARATOR)
-			.append(languageCode)
-			.toString();
+			.append(languageCode);
+		String searchBeanKey = getSearchBeanKey(searchBean);
+		
+		if (StringUtils.isNotBlank(searchBeanKey)) {
+			key.append(KEY_SEPARATOR);
+			key.append(searchBeanKey);
+		}
 		
 		debugLogger("key: " + key);
 		
 		// Get the status description list from map.
-		List<PmStatusDesc> list = statusListMap.get(key);
+		List<PmStatusDesc> list = statusListMap.get(key.toString());
 		
 		debugLogger("list: " + list);
 		
@@ -91,6 +105,7 @@ public class StatusHelper implements Serializable{
 				reqDTO.setModuleCode(moduleCode);
 				reqDTO.setDocType(docType);
 				reqDTO.setLanguageCode(languageCode);
+				reqDTO.setStatusDescSearchBean(searchBean);
 				
 				// Get status description list from db.
 				StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
@@ -107,7 +122,7 @@ public class StatusHelper implements Serializable{
 				}
 			    
 			    // Put status description list into map.
-			    statusListMap.put(key, list);
+			    statusListMap.put(key.toString(), list);
 				
 				debugLogger("put into list: " + list);
 			} catch (Exception e) {
@@ -119,6 +134,49 @@ public class StatusHelper implements Serializable{
 		}
 		
 		return list;
+	}
+	
+	/**
+	 * Gets the search bean key.
+	 * 
+	 * @param searchBean
+	 *            the search bean
+	 * @return the search bean key
+	 */
+	private String getSearchBeanKey(ISearchBean<PmStatusDesc> searchBean) {
+		if (searchBean == null)
+			return null;
+		
+		StringBuilder searchBeanKey = new StringBuilder();
+		
+		for (BaseSearchFilterBean baseSearchFilterBean : searchBean.getDataFilterBeans()) {
+			if (baseSearchFilterBean instanceof SearchFilterBean) {
+				SearchFilterBean searchFilterBean = (SearchFilterBean)baseSearchFilterBean;
+				
+				if (searchBeanKey.length() > 0) {
+					searchBeanKey.append(KEY_SEPARATOR);
+				}
+				searchBeanKey.append(searchFilterBean.getSearchField());
+				searchBeanKey.append(KEY_SEPARATOR);
+				searchBeanKey.append(searchFilterBean.getSearchOperator());
+				searchBeanKey.append(KEY_SEPARATOR);
+				searchBeanKey.append(searchFilterBean.getSearchValue());
+			}
+		}
+		
+		for (PmScreenRestr pmScreenRestr : searchBean.getDataFilterMetadatas()) {
+			if (searchBeanKey.length() > 0) {
+				searchBeanKey.append(KEY_SEPARATOR);
+			}
+			
+			for (PmDataRestrValue pmDataRestrValue : pmScreenRestr.getPmDataRestrValues()) {
+				searchBeanKey.append(pmDataRestrValue.getDataRestrValueId());
+				searchBeanKey.append(KEY_SEPARATOR);
+			}
+			
+		}
+		
+		return searchBeanKey.toString();
 	}
 	
 	/**
