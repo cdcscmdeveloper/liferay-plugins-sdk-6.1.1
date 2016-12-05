@@ -55,8 +55,8 @@
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
 		               			  			 				
 			<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
-							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>	
-			
+							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
+				
 			<p:dataTable id="supplierListTblSingle" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
@@ -203,7 +203,7 @@
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
 						  disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
 													shortlistedSupp.suppSelectionDisabled or 
-														suppFinalizationBackingBean.managedBean.disableSupplierSelection}" />
+														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding }" />
 			</p:dataTable>							 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
@@ -347,7 +347,7 @@
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
 						disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
-											suppFinalizationBackingBean.managedBean.disableSupplierSelection}">
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	
