@@ -516,7 +516,12 @@ p {
 
 	</table>
 
-<br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br />
+	
+    <br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/>
+    <br/><br/><br/>
+    
 
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	
@@ -558,33 +563,32 @@ p {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.1 No. Pendaftaran</span></td>
 					<td>:</td>
-					<td>______________________________</td>
+					<td>$!mofNo</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.2 Tempoh Sah Laku </span></td>
 					<td>:</td>
-					<td>_______________________________</td>
+					<td>$!mofEffectiveDate - $!mofExpiredDate</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.3 Kod Bidang </span></td>
 					<td>:</td>
-					<td>_______________________________</td>
+					<td>$!kodBidang</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.4 Taraf Syarikat </span></td>
 					<td>:</td>
-					<td>_______________________________</td>
+					<td>$isBumi</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.5 Tempoh Sah Laku Taraf Bumiputera </span></td>
 					<td>:</td>
-					<td>_______________________________</td>
+					<td>$!mofCertEffectiveDate - $!mofCertExpiredDate</td>
 				</tr>
-
 
 				<tr>
 					<th colspan="3"><span class="text_header_submenu"> 3.Pendaftaran Cukai Barang dan Perkhidmatan (CBP) dengan Jabatan
@@ -802,9 +806,7 @@ p {
 	<br />
 		
 	
-	
-	
-<p class="break"></p>	
+<br/>
 #set($colSpan = 3) 
 	#if ($isZonal)
 		#set($colSpan = 4) 
@@ -905,7 +907,8 @@ p {
 	</tr>
 </table>
 
-<br /><br /><br /><br />
+<br/>
+<br/>
 
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
