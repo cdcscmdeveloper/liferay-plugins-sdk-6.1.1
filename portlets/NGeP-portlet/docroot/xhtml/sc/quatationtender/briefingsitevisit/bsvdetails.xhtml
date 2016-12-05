@@ -86,7 +86,8 @@
 				rendered="#{isBSVEnabled}">
 				<p:commandLink 
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
-					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+					partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
+					rendered="#{briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_PENDING}">
 					<h:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 						styleClass="tasklist_title1" />
@@ -200,7 +201,8 @@
 						rendered="#{isBSVEnabled}">
 						<p:commandLink
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
-							partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+							partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
+							rendered="#{sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_PENDING}">
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1" />
