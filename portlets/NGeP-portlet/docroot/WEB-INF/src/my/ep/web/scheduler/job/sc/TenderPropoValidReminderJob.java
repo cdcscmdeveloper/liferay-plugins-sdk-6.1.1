@@ -241,4 +241,10 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 		return QTConstants.KPI_CODE_TENDER_REMINDER;
 	}
 
+	@Override
+	public List<String> getSubjectParams(Object[] data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
