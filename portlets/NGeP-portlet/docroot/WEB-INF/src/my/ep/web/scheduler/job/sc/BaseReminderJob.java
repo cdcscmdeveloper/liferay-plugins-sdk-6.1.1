@@ -72,6 +72,17 @@ public abstract class BaseReminderJob implements Job {
 	 * @return the params
 	 */
 	public abstract List<String> getParams(Long reminderDays, Object[] data);
+	
+	/**
+	 * Gets the params.
+	 * 
+	 * @param reminderDays
+	 *            the reminder days
+	 * @param data
+	 *            the data
+	 * @return the params
+	 */
+	public abstract List<String> getSubjectParams( Object[] data);
 
 	/*
 	 * (non-Javadoc)
@@ -84,7 +95,7 @@ public abstract class BaseReminderJob implements Job {
 		if (beans != null && !beans.isEmpty()) {
 			// no.of reminder days
 			List<Integer> notificationDays = getNotificationDays(getKpiCode());
-			
+
 			for (ReminderBean reminderBean : beans) {
 				Long reminderDays = DateUtils.getDaysDifference(
 						reminderBean.getDueDate(), new Date());
@@ -93,12 +104,13 @@ public abstract class BaseReminderJob implements Job {
 						&& notificationDays.contains(reminderDays)) {
 					List<String> paramList = getParams(reminderDays,
 							reminderBean.getData());
-
+					List<String> subjectParamList = getSubjectParams(reminderBean.getData());
 					// send reminder
-					sendReminder(getTemplateId(), reminderBean, paramList);
+					sendReminder(getTemplateId(), reminderBean, paramList,
+							subjectParamList);
 				}
 			}
-		}else{
+		} else {
 			log.info("reminder beans is either null or empty");
 		}
 
@@ -116,7 +128,7 @@ public abstract class BaseReminderJob implements Job {
 	 * @return true, if successful
 	 */
 	private boolean sendReminder(String templateId, ReminderBean reminderBean,
-			List<String> paramList) {
+			List<String> paramList, List<String> subjectParamList) {
 		log.info("sendReminder -  Doc No " + reminderBean.getDocNo());
 
 		// NTF
@@ -147,10 +159,15 @@ public abstract class BaseReminderJob implements Job {
 
 			// Params.
 			if (CollectionUtils.isNotEmpty(paramList)) {
-				ntfReqDTO.setCntParaArr(paramList.toArray(new String[paramList
-						.size()]));
+				ntfReqDTO.setCntParaLst(paramList);
 			} else {
 				log.info("Params not found.");
+			}
+			
+			if(subjectParamList!= null && !subjectParamList.isEmpty()){
+				ntfReqDTO.setSubParaLst(subjectParamList);
+			}else{
+				log.info("Subject params not found.");
 			}
 
 			ntfResDTO = ntfClientSO.processAndPublish(ntfReqDTO);

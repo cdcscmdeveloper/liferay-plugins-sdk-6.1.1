@@ -398,4 +398,10 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 		// Proposal Validity Reminder (Quotation)
 		return QTConstants.KPI_CODE_QUOTATION_REMINDER;
 	}
+
+	@Override
+	public List<String> getSubjectParams(Object[] data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
