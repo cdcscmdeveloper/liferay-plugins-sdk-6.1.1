@@ -80,6 +80,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmApplStatusInfoVO;
+import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -357,6 +358,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDoc> missinDocs;
 	private List<SmApplSupportDoc> mandatoryDocs;
 	private List<SmApplSupportDoc> nonMandatoryDocs;
+	private List<SmLicenseInfoVO> mandatoryLicenseDocs;
 	private boolean reviewSiteVisit;
 	private SelectItem[] businessTypeLs;
 	private List<String> supplierToPOList;
@@ -3849,5 +3851,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedOverlapDoc(SmCategoryOverlapDoc selectedOverlapDoc) {
 		this.selectedOverlapDoc = selectedOverlapDoc;
+	}
+
+	public List<SmLicenseInfoVO> getMandatoryLicenseDocs() {
+		return mandatoryLicenseDocs;
+	}
+
+	public void setMandatoryLicenseDocs(
+			List<SmLicenseInfoVO> mandatoryLicenseDocs) {
+		this.mandatoryLicenseDocs = mandatoryLicenseDocs;
 	}
 }
