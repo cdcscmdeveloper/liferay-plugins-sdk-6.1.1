@@ -56,7 +56,7 @@ public class BidParticipationReminderJob extends BaseReminderJob {
 		String qtTitle = paramData[4].toString();
 		String publishDate = paramData[5].toString();
 		String status = paramData[6].toString();
-		String bidStartDate = paramData[7].toString();
+		
 
 		List<String> paramList = new ArrayList<String>();
 
@@ -80,10 +80,6 @@ public class BidParticipationReminderJob extends BaseReminderJob {
 
 		// 7. Status
 		paramList.add(status);
-
-		// 8. bid start due date
-		paramList.add(bidStartDate);
-
 		return paramList;
 	}
 
@@ -121,5 +117,14 @@ public class BidParticipationReminderJob extends BaseReminderJob {
 		}
 
 		return beans;
+	}
+
+	@Override
+	public List<String> getSubjectParams(Object[] data) {
+		String[] paramData = (String[])data;
+		String bidStartDate = paramData[7].toString();
+		List<String> paramList = new ArrayList<String>();
+		paramList.add(bidStartDate);
+		return paramList;
 	}
 }
