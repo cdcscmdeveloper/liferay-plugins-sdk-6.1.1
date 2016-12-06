@@ -8,7 +8,7 @@
 		dynamic="true" hideEffect="explode" resizable="false" width="1000px"
 		height="500px" styleClass="pop_up_top"
 		header="#{lbl['lbl.sc.sample.labels']}">
-		<p:media value="#{supplierProposalDetailBackingBean.managedBean.sampleLabelStreamContent}"
+		<p:media value="#{supplierProposalDetailBackingBean.getSampleLabelStreamContent()}"
 			width="100%" height="450px" player="pdf" />
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>

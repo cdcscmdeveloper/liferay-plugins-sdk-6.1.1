@@ -54,7 +54,6 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 
 /**
  * Supplier Proposal Managed Bean
@@ -199,7 +198,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProposal> selectMultipleProposalList;
 
 	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
-	private StreamedContent sampleLabelStreamContent;
 	
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
@@ -660,22 +658,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setZoneTplSpecBeanMap(
 			Map<Long, TemplateSpecBean> zoneTplSpecBeanMap) {
 		this.zoneTplSpecBeanMap = zoneTplSpecBeanMap;
-	}
-
-	/**
-	 * @return the sampleLabelStreamContent
-	 */
-	public StreamedContent getSampleLabelStreamContent() {
-		return sampleLabelStreamContent;
-	}
-
-	/**
-	 * @param sampleLabelStreamContent
-	 *            the sampleLabelStreamContent to set
-	 */
-	public void setSampleLabelStreamContent(
-			StreamedContent sampleLabelStreamContent) {
-		this.sampleLabelStreamContent = sampleLabelStreamContent;
 	}
 
 	/**

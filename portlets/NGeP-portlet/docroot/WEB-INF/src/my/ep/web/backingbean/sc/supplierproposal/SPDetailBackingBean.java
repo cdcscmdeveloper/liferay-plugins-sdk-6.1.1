@@ -165,6 +165,7 @@ public class SPDetailBackingBean extends
 
 	private static final SimpleDateFormat BANK_STATEMENT_MONTH_FORMAT = new SimpleDateFormat(
 			"MMMM yyyy");
+	private StreamedContent sampleLabelStreamContent;
 
 	private static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
@@ -4108,17 +4109,25 @@ public class SPDetailBackingBean extends
 	 * 
 	 * @throws Exception
 	 */
-	public void printLabelAction() throws Exception {
+	public void printLabelAction() {
 		log.info("===printLabelAction");
-		ScSlAttachment slAttachment = new ScSlAttachment();
-		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
-		generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
-				.getQt());
-		StreamedContent slStreamContent = getAttachmentStreamContent(
-				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-		getManagedBean().setSampleLabelStreamContent(slStreamContent);
 		RequestContext.getCurrentInstance().execute(
 				"supplierSampleLabelDlg.show();");
+	}
+
+	/**
+	 * @return the sampleLabelStreamContent
+	 */
+	public StreamedContent getSampleLabelStreamContent() throws Exception {
+		if (sampleLabelStreamContent == null) {
+			ScSlAttachment slAttachment = new ScSlAttachment();
+			slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
+			generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
+					.getQt());
+			sampleLabelStreamContent = getAttachmentStreamContent(
+					slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);	
+		}		
+		return sampleLabelStreamContent;
 	}
 
 	/**
