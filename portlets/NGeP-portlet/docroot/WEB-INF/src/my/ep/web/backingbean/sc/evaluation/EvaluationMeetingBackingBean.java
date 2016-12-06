@@ -228,7 +228,7 @@ public class EvaluationMeetingBackingBean extends
 			}
 		}
 		}finally{
-			
+			orgProfileSO=null;	
 		}
 		return orgProfile;
 	}
