@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
@@ -149,6 +150,7 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -9750,21 +9752,66 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 						.getSmApplSupportDocs())) {
-			getManagedBean()
-					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
+			List<SmApplSupportDoc> mandatoryLicenseDocs = new ArrayList<SmApplSupportDoc>();
 			getManagedBean().setNonMandatoryDocs(
 					new ArrayList<SmApplSupportDoc>());
+			getManagedBean()
+					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
-						getManagedBean().getMandatoryDocs().add(doc);
+						if (doc.getPmDocument().isLicenseReq()) {
+							doc.setCategoriesConcat(getLicenseConcatCategories(doc
+									.getPmDocument().getPmDocumentRestrs()));
+							mandatoryLicenseDocs.add(doc);
+						} else {
+							getManagedBean().getMandatoryDocs().add(doc);
+						}
 					} else {
 						getManagedBean().getNonMandatoryDocs().add(doc);
 					}
 				}
 			}
+			initMandatoryLicenseInfo(mandatoryLicenseDocs);
 		}
+	}
+
+	private void initMandatoryLicenseInfo(
+			List<SmApplSupportDoc> mandatoryLicenseDocs) {
+		getManagedBean().setMandatoryLicenseDocs(
+				new ArrayList<SmLicenseInfoVO>());
+		SmLicenseInfoVO licenseVO = null;
+		for (SmApplSupportDoc doc : mandatoryLicenseDocs) {
+			licenseVO = new SmLicenseInfoVO();
+			licenseVO.setLicenseSuppDocs(new ArrayList<SmApplSupportDoc>());
+			licenseVO.getLicenseSuppDocs().add(doc);
+			getManagedBean().getMandatoryLicenseDocs().add(licenseVO);
+		}
+	}
+
+	public String getLicenseConcatCategories(
+			List<PmDocumentRestr> pmDocumentRestrs) {
+		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
+		if (!EntityHelper.isCollectionEmpty(pmDocumentRestrs)) {
+			StringBuilder sb = null;
+			for (PmDocumentRestr tmp : pmDocumentRestrs) {
+				if (tmp.getPmCategoryL3() != null) {
+					sb = new StringBuilder();
+					sb.append(tmp.getPmCategoryL3().getFullCatcode())
+							.append(" (")
+							.append(tmp.getPmCategoryL3().getCategoryName())
+							.append(")").append(",");
+				}
+			}
+			if (sb != null && sb.length() > 0) {
+				retVal = sb.toString();
+				if (retVal.endsWith(",")) {
+					retVal = retVal.substring(0, retVal.length() - 1);
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**
