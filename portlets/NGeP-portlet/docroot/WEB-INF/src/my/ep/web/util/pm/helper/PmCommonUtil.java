@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
@@ -65,6 +66,8 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
@@ -97,6 +100,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -2483,6 +2487,50 @@ public class PmCommonUtil implements Serializable{
 			bpmSO = null;
 		}
 		return anyPendingTask;
+	}
+	
+	public static List<PmUserGroup> retrieveUserActiveUserGroup(Long userId,SearchBean<PmUserGroup> searchBean) {
+		log.info("userActiveUserGroup");
+		List<PmUserGroup> userActiveUserGroups = null;
+		IUserGroupSO userGroupSO = null;
+		UserGroupReqDTO reqDTO = null;		
+		try {
+			if (userId != null) {
+				if(searchBean == null){
+					searchBean = new SearchBean<PmUserGroup>();
+				}
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserGroupUsers.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserGroupUsers.pmUser.userId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								userId));
+				
+				reqDTO = new UserGroupReqDTO();
+				reqDTO.setUserGroupSearchBean(searchBean);
+				userGroupSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+				UserGroupResDTO resDTO = userGroupSO.searchUserGroupProfile(reqDTO);
+				if(resDTO != null && resDTO.getPmUserGroupList() != null 
+						&& !resDTO.getPmUserGroupList().isEmpty()){
+					userActiveUserGroups =  resDTO.getPmUserGroupList();
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.info(e.getMessage());
+		} finally {
+			userGroupSO = null;
+			reqDTO = null;
+		}
+		return userActiveUserGroups;
 	}
 
 }
