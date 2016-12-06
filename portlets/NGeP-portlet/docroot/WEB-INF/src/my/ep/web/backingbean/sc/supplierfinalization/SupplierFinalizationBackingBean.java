@@ -1071,6 +1071,7 @@ public class SupplierFinalizationBackingBean extends
 	
 					reqDTO.setScQtCommittee(_scQtCommittee);
 					reqDTO.setScQtFinalization(scQtFinalization);
+					reqDTO.setQtRefinalized(isQTRefinalized());
 //					reqDTO.setResetSuppliers(
 //							this.getManagedBean().getResetSupplierList());
 					
@@ -6048,7 +6049,7 @@ public class SupplierFinalizationBackingBean extends
 								// Set shortlisted as true by defaultly for qualified suppliers in Bidding 
 								if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 										.equals(getManagedBean().getFinalizationMethod())
-										&& !qualSupplier.isSuppSelectionDisabled()) {
+										&& !qualSupplier.isSuppSelectionDisabled() && !isQTRefinalized()) {
 									qualSupplier.setShortListed(true);		
 								}
 								recommendationBean = updateCachedData(qualSupplier, 
@@ -6065,7 +6066,7 @@ public class SupplierFinalizationBackingBean extends
 								//  Set shortlisted as true by defaultly for qualified suppliers in Bidding  
 								if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 										.equals(getManagedBean().getFinalizationMethod())
-										&& !qualSupplier.isSuppSelectionDisabled()) {
+										&& !qualSupplier.isSuppSelectionDisabled()&& !isQTRefinalized()) {
 									qualSupplier.setShortListed(true);		
 								}
 							} 
