@@ -183,20 +183,11 @@ public class EvaluationMeetingBackingBean extends
 
 	private boolean orgProfileCheckExist(ScQt scqt, PmUser user, boolean isptj) {
 		//PmOrgProfile orgProfile = scqt.getPmOrgProfile();
-		IOrgProfileSO	orgProfileSO=null;
-		try{
-			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		PmOrgProfile orgProfile=null;
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(scqt
+		try{
+			
+		orgProfile=retriveMinistryByOrgprofile(scqt
 				.getPmOrgProfile().getOrgProfileId());
-		OrgProfileResDTO resDTO = orgProfileSO
-				.retrieveMinistryByOrgProfileId(reqDTO);
-		if (resDTO.getPmOrgProfile() != null) {
-		 orgProfile=resDTO.getPmOrgProfile();
-		}
-		
 		if (null != user.getPmUserOrgs() && null!=orgProfile) {
 			for (PmUserOrg userorg : user.getPmUserOrgs()) {
 				log.info("===user org record status==="
@@ -204,21 +195,43 @@ public class EvaluationMeetingBackingBean extends
 				//orgProfile.setOrgProfileId(273481L);
 				log.info("===qt PtjId===" + orgProfile.getOrgProfileId());
 				if (userorg.isRecordStatus()
-						&& null != userorg.getPmOrgProfile()
-						&& userorg.getPmOrgProfile().getOrgProfileId()
-								.equals(orgProfile.getOrgProfileId())) {
+						&& null != userorg.getPmOrgProfile()) {
+					PmOrgProfile localorgProfile=retriveMinistryByOrgprofile(userorg.getPmOrgProfile().getOrgProfileId());
+					if(null!=localorgProfile && localorgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())){
 					isptj = true;
 					break;
+					}
 				}
 
 			}
 		}
 		}finally{
-			orgProfileSO=null;
+			
 		}
 		return isptj;
 	}
 
+	private PmOrgProfile retriveMinistryByOrgprofile(Long orgProfileId){
+		IOrgProfileSO	orgProfileSO=null;
+		PmOrgProfile orgProfile=null;
+		try{
+			
+			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			if(null!=orgProfileId){
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(orgProfileId);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveMinistryByOrgProfileId(reqDTO);
+			if (resDTO.getPmOrgProfile() != null) {
+			 orgProfile=resDTO.getPmOrgProfile();
+			}
+		}
+		}finally{
+			
+		}
+		return orgProfile;
+	}
 	/**
 	 * Gets the procurement mode dropdown values.display procurement mode
 	 * values(Quotation/Tender) in committee member clone popup.
