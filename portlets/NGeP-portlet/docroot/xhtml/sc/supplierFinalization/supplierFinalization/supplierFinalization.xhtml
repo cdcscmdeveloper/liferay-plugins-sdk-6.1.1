@@ -367,7 +367,8 @@
 				</c:if>
 				
 			<ui:param name="isBidding"
-				value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.finalizationMethod.parameterCode eq 'B'}" />
+				value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.finalizationMethod.parameterCode eq 'B' and 
+				!suppFinalizationBackingBean.managedBean.qtRefinalized}" />
 				
 				<td class="tdWidth" valign="top">
 					<h:panelGroup id="itemPanel" rendered="#{(suppFinalizationBackingBean.managedBean.recommendSupplier or 
