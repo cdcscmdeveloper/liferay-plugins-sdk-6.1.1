@@ -80,6 +80,7 @@
            	<portlet id="pmResendAccessApplicationActivation"></portlet>
            	<portlet id="pmTaskReassignment"></portlet>
            	<portlet id="pmRace"></portlet>
+           	<portlet id="pmCustService"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
