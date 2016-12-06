@@ -2248,7 +2248,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		}finally{
-			
+			orgProfileSO=null;
 		}
 		return orgProfile;
 	}
