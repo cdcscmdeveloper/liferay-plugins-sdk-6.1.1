@@ -56,6 +56,9 @@
 		
 		<ac:smSupplierOnlineSuppDoc tableId="mandatoryTableId" uploadDialogId="mandatoryUploadId"
 			smApplSupportDocs="#{backingBean.managedBean.mandatoryDocs}" mandatory="true" />
+		<ac:smLicenseDocs tableId="licenseDocTableId" mandatoryDocSize="#{backingBean.managedBean.mandatoryDocs.size()}"
+			supportingDocMode="#{backingBean.managedBean.smAppl.supportingDocMode}" backingBean="#{backingBean}"
+			licenseInfoDocs="#{backingBean.managedBean.mandatoryLicenseDocs}" />
 		<ac:smSupplierOnlineSuppDoc tableId="nonMandatoryTableId" uploadDialogId="nonMandatoryUploadId"
 			smApplSupportDocs="#{backingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
 

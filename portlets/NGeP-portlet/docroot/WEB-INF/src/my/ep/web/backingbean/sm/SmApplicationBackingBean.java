@@ -9762,8 +9762,6 @@ public class SmApplicationBackingBean extends
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
 						if (doc.getPmDocument().isLicenseReq()) {
-							doc.setCategoriesConcat(getLicenseConcatCategories(doc
-									.getPmDocument().getPmDocumentRestrs()));
 							mandatoryLicenseDocs.add(doc);
 						} else {
 							getManagedBean().getMandatoryDocs().add(doc);
