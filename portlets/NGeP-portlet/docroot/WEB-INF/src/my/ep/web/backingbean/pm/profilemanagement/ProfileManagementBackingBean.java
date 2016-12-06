@@ -37,7 +37,6 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
@@ -50,8 +49,6 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
@@ -4549,44 +4546,8 @@ public class ProfileManagementBackingBean extends
 	
 	private PmUserGroup retrieveUserActiveUserGroup(Long userId) {
 		logger.info("userActiveUserGroup");
-		PmUserGroup userActiveUserGroup = null;
-		IUserGroupSO userGroupSO = null;
-		UserGroupReqDTO reqDTO = null;		
-		try {
-			if (userId != null) {
-				SearchBean<PmUserGroup> searchBean = new SearchBean<PmUserGroup>();
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("recordStatusFlg",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmUserGroupUsers.recordStatusFlg",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmUserGroupUsers.pmUser.userId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								userId));
-				
-				reqDTO = new UserGroupReqDTO();
-				reqDTO.setUserGroupSearchBean(searchBean);
-				userGroupSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-				UserGroupResDTO resDTO = userGroupSO.searchUserGroupProfile(reqDTO);
-				if(resDTO != null && resDTO.getPmUserGroupList() != null 
-						&& !resDTO.getPmUserGroupList().isEmpty()){
-					userActiveUserGroup = resDTO.getPmUserGroupList().get(0);
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info(e.getMessage());
-		} finally {
-			userGroupSO = null;
-			reqDTO = null;
-		}
-		return userActiveUserGroup;
+		List<PmUserGroup> userGroups = PmCommonUtil.retrieveUserActiveUserGroup(userId,null);		
+		return userGroups != null ? userGroups.get(0) : null;
 	}
 
 	/*
