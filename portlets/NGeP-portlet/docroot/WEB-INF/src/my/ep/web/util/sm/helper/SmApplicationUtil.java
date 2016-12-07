@@ -11020,23 +11020,6 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	private static void validateOwnerIndividualAcc(SmPersonnel personnel) {
-		boolean retVal = false;
-		if (personnel.getIdentificationType() != null) {
-			PmParameter identificationType = SmApplicationUtil
-					.retrievePmParameterById(personnel
-							.getIdentificationTypeId());
-			retVal = SmCommonUtil
-					.isSupplierOwnerIndividualAcc(
-							identificationType.getParameterCode(),
-							personnel.getIdentificationNo(),
-							my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL);
-		}
-		if (retVal && personnel.isEquityOwner()) {
-			throw new EpException(MessageConst.ERROR_721052);
-		}
-	}
 
 	private static void setSupplierCategoryEffectiveDate(
 			SmSupplierCategory cat, String applType) {
