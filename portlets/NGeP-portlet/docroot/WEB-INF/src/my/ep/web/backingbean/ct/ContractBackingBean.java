@@ -1505,16 +1505,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		agencyDataModel.resetData();
 	}
 	
-	public void resetPtjDetails(){
+	/**
+	 * The method used to reset the search criteria for agency.
+	 */
+	public void resetMinistryDetails() {
 		if(retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId().equals(getManagedBean().getMinistryProfileId())){
 			   getManagedBean().setOwnerOrgProfile(true);
 		} else {
 			  getManagedBean().setOwnerOrgProfile(false);
 		}
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
 		agencyDataModel.resetData();
 	}
+	
+	/**
+	 * The method used to reset the search criteria for agency.
+	 */
+	public void resetJabatanDetails() {
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+		getManagedBean().setButtonHideActive(true);
+		agencyDataModel.resetData();
+	}
+
 
 	/**
 	 * @return the agencyDataModel
@@ -1811,20 +1827,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-		
 	/**
 	 * The method used to add a new agency record.
 	 * This method will generate a new record in agency
 	 * list, user allow to enter the agency details. 
 	 */
-	public void addAgencyDetails() {
+	public void addAgencyDetails(boolean selectedOnly) {
 	
 		List<CtAgency> ctAgencyList = null;
 		OrgProfileReqDTO reqDTO = null;
 		List<PmOrgProfile> orgProfileList = null;
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		  
-		    if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null && getManagedBean().isOwnerOrgProfile()) {
+		Long ministryId = retrieveMinistryOrgProfile(
+ 				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+		    if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null && selectedOnly) {
 		    		ctAgencyList = new ArrayList<CtAgency>();
 			        for(PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
 			        	  if(pmOrgProfiles.isSelectedCheckBox()){
@@ -1848,7 +1864,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        		  ctAgency.setOrgProfile(pmOrgProfiles);
 			        		  ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
 			        		  ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
-			        		  if (!getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
+			        		  if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
 			        			  ctAgency.setAp178(true);
 			        		  }		  	
 			        		  ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
@@ -1978,12 +1994,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    fileOuputStream.close();
 	    
 	    if(event.getComponent().getId().equalsIgnoreCase("agencyUploadId")){
-	    CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
-	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
-	    agency.setFileName(item.getFileName());
-	    agency.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
-	    RequestContext.getCurrentInstance().execute("uploadDlg1.hide()");		 
+	    	CtAttachment attachment = new CtAttachment();
+	    	attachment.setFileName(item.getFileName());
+	    	attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+	    	attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+	    	attachment.setCreatedUser(facesScopes.getUserSessionBean());
+	    	attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+	    	attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
+	    	getManagedBean().getContractVer().setAgencyContractSharingAttachements(attachment);
+	    	RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 	    }
 	    else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
 	    	CtAttachment attachment = new CtAttachment();
@@ -1995,18 +2014,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    	getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
 	    	RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 	    }
-	  
 	}
 		
 	/**
 	 * The method used to delete the uploaded agency file.
 	 */    
-	public void deleteAgencyAttachement(){
-		CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
-	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
-	    agency.setFileName(null);
-	    agency.setFilePath(null);
-	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
+	public void delCtMinstrySharringAttach(){
+		CtAttachment attachment =  getManagedBean().getContractVer().getAgencyContractSharingAttachements();
+		 if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		 }
+		 getManagedBean().getContractVer().getAgencyContractSharingAttachements().setFileName(null);
+		 getManagedBean().getContractVer().getAgencyContractSharingAttachements().setFilePath(null); 
 	}
 	    
 	/**
@@ -2047,7 +2066,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public SelectItem[] getJabatanDropdown() {		
 		SelectItem[] items = null;
-		
 		try {
 		    int i = 1;
 		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
@@ -2451,11 +2469,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public void selectAllAgencyCheckbox(){
 	
-		  FacesContext context = FacesContext.getCurrentInstance();
+		/*  FacesContext context = FacesContext.getCurrentInstance();
 	      Map<String, String> map = context.getExternalContext().getRequestParameterMap();
 	      String onSaleAllStr = (String) map.get("onCheckAllRow");
 	          boolean   onAgencyAllRow = Boolean.valueOf(onSaleAllStr.toLowerCase());
-	          getManagedBean().setSelectAll(onAgencyAllRow);
+	          getManagedBean().setSelectAll(onAgencyAllRow);*/
 	   
 			 	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
 			 		if (getManagedBean().isSelectAll()) {
