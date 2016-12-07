@@ -19,25 +19,16 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<ui:param name="backingBean" value="#{updatePersonnelBackingBean}" />
-		
-		<p:outputPanel id="cc" layout="block">
-			<p:outputPanel id="prsnlSecApprvrRmrk" layout="block"></p:outputPanel>
-			<p:outputPanel id="persInfPan" layout="block"></p:outputPanel>
-			<p:outputPanel id="smPersonnelParentPan" layout="block"></p:outputPanel>
-			<p:outputPanel id="stfSummaryPan" layout="block"></p:outputPanel>
+		<ui:param name="viewSmApplBackingBean" value="#{updatePersonnelBackingBean}" />
 			
-			<p:outputPanel id="personnelTableOutPanelId" rendered="#{!backingBean.managedBean.redirectToPersonPage}">
-				<p:panel header="#{lbl['lbl.sm.update.personnel.list']}" toggleable="true">
-					<p:outputPanel rendered="#{backingBean.managedBean.disAllowOwnerEdit}">
-						<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.update.personel.disallowed.edit']}" />
-					</p:outputPanel><br />
-					<ui:include src="/xhtml/sm/shared/mofRegistration/personnelTableList.xhtml" />
-				</p:panel>
+		<p:outputPanel id="personnelTableOutPanelId" rendered="#{!viewSmApplBackingBean.managedBean.redirectToPersonPage}">
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.disAllowOwnerEdit}">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.update.personel.disallowed.edit']}" /><br />
 			</p:outputPanel>
-			<p:outputPanel id="personnelMainOutPanelId" rendered="#{backingBean.managedBean.redirectToPersonPage}">
-				<ui:include src="/xhtml/sm/shared/mofRegistration/captialShareHolderInfoRedirectForm.xhtml" />
-			</p:outputPanel>
+			<ui:include src="personnelList.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel id="personnelMainOutPanelId" rendered="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
+			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
 		</p:outputPanel>
 		
 	</ui:define>
