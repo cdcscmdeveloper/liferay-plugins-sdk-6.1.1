@@ -6,6 +6,7 @@ package my.ep.web.scheduler.job.sc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -72,17 +73,15 @@ public abstract class BaseReminderJob implements Job {
 	 * @return the params
 	 */
 	public abstract List<String> getParams(Long reminderDays, Object[] data);
-	
+
 	/**
-	 * Gets the params.
+	 * Gets the Subject Params.
 	 * 
-	 * @param reminderDays
-	 *            the reminder days
 	 * @param data
 	 *            the data
 	 * @return the params
 	 */
-	public abstract List<String> getSubjectParams( Object[] data);
+	public abstract List<String> getSubjectParams(Object[] data);
 
 	/*
 	 * (non-Javadoc)
@@ -94,17 +93,18 @@ public abstract class BaseReminderJob implements Job {
 		List<ReminderBean> beans = getReminderBeans();
 		if (beans != null && !beans.isEmpty()) {
 			// no.of reminder days
-			List<Integer> notificationDays = getNotificationDays(getKpiCode());
-
+			List<Long> notificationDays = getNotificationDays(getKpiCode());
 			for (ReminderBean reminderBean : beans) {
 				Long reminderDays = DateUtils.getDaysDifference(
-						reminderBean.getDueDate(), new Date());
+						DateUtils.getCurrentDateWithoutTime(),
+						reminderBean.getDueDate());
 
 				if (CollectionUtils.isNotEmpty(notificationDays)
 						&& notificationDays.contains(reminderDays)) {
 					List<String> paramList = getParams(reminderDays,
 							reminderBean.getData());
-					List<String> subjectParamList = getSubjectParams(reminderBean.getData());
+					List<String> subjectParamList = getSubjectParams(reminderBean
+							.getData());
 					// send reminder
 					sendReminder(getTemplateId(), reminderBean, paramList,
 							subjectParamList);
@@ -163,10 +163,10 @@ public abstract class BaseReminderJob implements Job {
 			} else {
 				log.info("Params not found.");
 			}
-			
-			if(subjectParamList!= null && !subjectParamList.isEmpty()){
+
+			if (subjectParamList != null && !subjectParamList.isEmpty()) {
 				ntfReqDTO.setSubParaLst(subjectParamList);
-			}else{
+			} else {
 				log.info("Subject params not found.");
 			}
 
@@ -188,15 +188,15 @@ public abstract class BaseReminderJob implements Job {
 	 * 
 	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getNotificationDays()
 	 */
-	public List<Integer> getNotificationDays(String kpiCode) {
-		List<Integer> reminders = new ArrayList<Integer>();
+	public List<Long> getNotificationDays(String kpiCode) {
+		List<Long> reminders = new ArrayList<Long>();
 		KpiReqDTO reqDTO = new KpiReqDTO();
 		reqDTO.setKpiCode(kpiCode);// days to send reminder
 		KpiResDTO resDTO = getKpiSO().retrieveKpiValueByModuleCodeAndKpiCode(
 				reqDTO);
 		if (resDTO.isSuccessful()) {
 			for (PmKPIValue value : resDTO.getKpiValues()) {
-				reminders.add(value.getKpiValue());
+				reminders.add(value.getKpiValue().longValue());
 			}
 		}
 		return reminders;

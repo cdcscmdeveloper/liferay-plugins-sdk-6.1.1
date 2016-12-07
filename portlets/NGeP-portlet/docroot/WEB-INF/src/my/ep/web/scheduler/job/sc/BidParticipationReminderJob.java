@@ -108,6 +108,7 @@ public class BidParticipationReminderJob extends BaseReminderJob {
 					reminderBean.setDocNo(nextDayBid.getScBid().getDocNo());
 					reminderBean.setData(bidWiseReminderData.get(nextDayBid
 							.getBidScheduleId()));
+					beans.add(reminderBean);
 				}
 
 			}
