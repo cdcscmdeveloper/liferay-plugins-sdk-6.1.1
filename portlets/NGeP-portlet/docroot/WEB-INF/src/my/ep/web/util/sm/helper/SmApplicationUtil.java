@@ -10873,6 +10873,7 @@ public class SmApplicationUtil {
 		return eduLevelItems;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static List<? extends Object> getPropListValue(Object obj,
 			String mainListPropName) throws IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException {
