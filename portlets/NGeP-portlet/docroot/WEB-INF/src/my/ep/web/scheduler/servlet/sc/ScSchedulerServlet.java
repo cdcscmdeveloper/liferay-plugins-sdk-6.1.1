@@ -13,6 +13,7 @@ import my.ep.util.SchedulerPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.gfmas.SSTInformationJob;
+import my.ep.web.scheduler.job.sc.BidParticipationReminderJob;
 import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
 import my.ep.web.scheduler.job.sc.ContinuousBidSchedulerJob;
 import my.ep.web.scheduler.job.sc.InviteSuppliersJob;
@@ -163,6 +164,18 @@ public class ScSchedulerServlet extends HttpServlet {
 						.getInstance()
 						.getProperty(
 								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(
+						SchedulerConstants.SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB,
+						SchedulerConstants.SC_JOB_GROUP),
+						BidParticipationReminderJob.class,
+				SchedulerConstants.SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB_DESCRIPTION,
+				SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPCOMING_BIDS_REMINDER));
 
 	}
 }
