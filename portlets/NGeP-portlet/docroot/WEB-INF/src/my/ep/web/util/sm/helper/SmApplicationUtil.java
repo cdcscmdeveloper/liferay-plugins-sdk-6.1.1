@@ -2311,10 +2311,14 @@ public class SmApplicationUtil {
 		}
 		sec.setFactoryVerify(isVerifiedAll);
 		sec.setManufacturingVerified(isVerifiedAll);
-		sec.setMachineryVerified(isVerifiedAll);
+		if(managedBean.isShowMachineryEquipmentPanel()){
+			sec.setMachineryVerified(isVerifiedAll);
+		}
 		sec.setLicenseVerified(isVerifiedAll);
 		sec.setAssocBodyVerified(isVerifiedAll);
-		sec.setSupplierSystemVerified(isVerifiedAll);
+		if(managedBean.isShowTravelSoftwarePanel()){
+			sec.setSupplierSystemVerified(isVerifiedAll);
+		}
 
 		return sec;
 	}
