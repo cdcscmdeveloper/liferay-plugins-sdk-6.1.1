@@ -64,6 +64,7 @@ public class UpdatePersonnelBackingBean extends
 						.getSmAppl());
 		getManagedBean().setSmSupplier(
 				getManagedBean().getSmAppl().getSmSupplier());
+		initPersonnelList();
 		getManagedBean().setSupplierUser(true);
 		getManagedBean().setPrevApprovedPersonnels(
 				SmApplicationUtil
@@ -255,6 +256,11 @@ public class UpdatePersonnelBackingBean extends
 		SmApplicationUtil.assignSelShareHolder(shareHolderBean,
 				getManagedBean(), 0);
 
+	}
+
+	public void editPersonnel(SmPersonnel shareHolderBean) {
+		getManagedBean().setRedirectToPersonPage(true);
+		getManagedBean().setSelectedShareHolder(shareHolderBean);
 	}
 
 	/**
@@ -772,12 +778,25 @@ public class UpdatePersonnelBackingBean extends
 	}
 
 	/**
-	 * Assign value reqd to false when anyof the pop up is closed in the
+	 * Assign value required to false when any of the pop up is closed in the
 	 * screen.Used for enable and disable screen validation dynamically.
 	 */
 	private void assignValReqdToFalse() {
 		getManagedBean().setShowParentMsg(true);
 		getManagedBean().setValueReqd(false);
+	}
+
+	private void initPersonnelList() {
+		getManagedBean().setAuthorizedPersonnels(new ArrayList<SmPersonnel>());
+		getManagedBean().setNormalPersonnels(new ArrayList<SmPersonnel>());
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (per.isAuthorized()) {
+				getManagedBean().getAuthorizedPersonnels().add(per);
+			} else {
+				getManagedBean().getNormalPersonnels().add(per);
+			}
+
+		}
 	}
 
 }
