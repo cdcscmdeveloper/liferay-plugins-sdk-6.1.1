@@ -210,7 +210,7 @@ public class CustServiceBackingBean extends
 		getManagedBean().setLazy(false);
 		getManagedBean().setSearchBean(new ProfileManagementSearchBean());
 		getManagedBean().setSelectedOrgTypeParam(new PmParameter());
-		getCustSvcDataModel().resetData();
+		setCustSvcDataModel(new CustSvcDataModel()); 
 	}
 
 	private class CustSvcDataModel extends PagingDataModel<PmUserOrg> {
@@ -421,7 +421,6 @@ public class CustServiceBackingBean extends
 	 * 
 	 **/
 	public String backToSearch() {
-		getManagedBean().setLazy(true);
 		getManagedBean().setTabActiveIndex(0);
 		getManagedBean().setSelectedUserOrg(null);
 		getManagedBean().setFlUserGroups(null);
