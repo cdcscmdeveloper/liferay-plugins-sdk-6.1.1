@@ -327,7 +327,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, 
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE, 
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE, 
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.COORDINATE_EC_MEETING,
 					SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
