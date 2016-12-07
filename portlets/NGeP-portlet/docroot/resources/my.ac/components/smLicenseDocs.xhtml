@@ -17,16 +17,18 @@
 
 	<cc:implementation>
 		
-		<div class="ui-datatable-tablewrapper">
-			<table role="grid">
-				<thead>
-					<tr>
-						<th class="ui-state-default" role="columnheader" style="text-align: center !important;">
-							<h:outputText value="#{lbl['lbl.sm.license.cert.info']}"/>
-						</th>
-					</tr>
-				</thead>
-			</table>
+		<div class="ui-datatable ui-widget" style="width:100% !important; table-layout: fixed !important;">
+			<div class="ui-datatable-tablewrapper">
+				<table role="grid">
+					<thead>
+						<tr>
+							<th class="ui-state-default" role="columnheader" style="text-align: center !important;">
+								<span><h:outputText value="#{lbl['lbl.sm.license.cert.info']}"/></span>
+							</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 		
 		<ui:repeat var="mainTable" value="#{cc.attrs.licenseInfoDocs}" varStatus="mainTableStatus">
