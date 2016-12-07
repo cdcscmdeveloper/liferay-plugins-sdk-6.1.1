@@ -1873,7 +1873,12 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
 		
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		Long currentStatusId = null;
+		if (getManagedBean().getQt().getQtStatus() != null) {
+			currentStatusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		} else {
+			currentStatusId = getManagedBean().getCurrentStatusId();
+		}
 				
 		if (this.getManagedBean().isMaintanceFlow()) {
 		
@@ -1892,16 +1897,19 @@ public class QTCommitteBackingBean extends
 			}
 		} else {
 			String taskName = this.getManagedBean().getTaskName();
-			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this.getManagedBean().getCurrentStatusId()))
-					&& !SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(taskName)) {
+			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
+					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId))
+					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return true;
-			} else if (isQTStatusAfterScheduleDoc(this.getManagedBean().getCurrentStatusId())
-					&& !(SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(taskName)
-							|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-									.equalsIgnoreCase(taskName) || SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+			} else if (isQTStatusAfterScheduleDoc(currentStatusId)
+					&& !(SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+							|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)
+							|| (SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
+									&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
+											|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)))
+							|| (SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)
+									&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType))
+							|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName))) {
 				return true;
 			}
