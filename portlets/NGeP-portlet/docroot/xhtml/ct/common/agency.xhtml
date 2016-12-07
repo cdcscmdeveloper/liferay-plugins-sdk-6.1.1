@@ -8,160 +8,133 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
    <p:panel id="agencyId" toggleable="true"  toggleSpeed="500">
-	   <f:facet name="header">
-			<h:outputText value="#{lbl['lbl.ct.panel.agency']}"/>
-        	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}"/>
-  	   </f:facet>
-       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
-	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
-	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
-        <p:remoteCommand name="callRemoteCommand" 
-			         actionListener="#{ctBackingBean.selectAllAgencyCheckbox}" partialSubmit="true" process="@this" 
-			         update="@([id$=tableAgencyDetails],[id$=delBtn])" />
-     
+		   <f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.panel.agency']}"/>
+        			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}"/>
+  	   		</f:facet>
+    	 	  <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
+	 	 	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
+	  		 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
+      		<h:panelGroup id ="panelCtSharingAttach">
+      			   <table style="width: 100%">
+					<tr>
+							<td class="TableFieldLeft" width="15%">  <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.refno']}"/></td>
+							<td class="TableFieldRight">  <p:inputText id="uploadRefNoDoc"   style="width:130px;"   
+							        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}" 
+							       disabled="#{ctBackingBean.managedBean.disableAmendDetails}" rendered="#{!ctBackingBean.managedBean.viewContract}" /></td>
+				   </tr>
+				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}"/>     </td>
+				           <td> <p:commandButton id="uploadSharingDoc" oncomplete="ctSharingAttachDlg.show();return false;" 
+				                      rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
+					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"/>
+
+		     					 <h:commandLink
+										value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.fileName)}"						
+										style="float:left;margin-top:10px;" styleClass="blue_font"
+										action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements)}" />
+						
+			   					<p:commandLink process="@this" partialSubmit="true"
+			   						   onclick="delCtSharingAttachDlg.show();"  
+			   						   disabled="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
+									  rendered="#{!ctBackingBean.managedBean.viewContract}">
+			   								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" style="margin-bottom:-10px;"/>
+			 					</p:commandLink>
+		    </td>
+		    </tr>
+		    </table>
+		    </h:panelGroup>
+		    <br/>
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
-       		value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
-  			selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
-  			rowIndexVar="indexVar" >
-            <ac:paginator for="tableAgencyDetails"/>
-            <p:ajax event="rowSelect" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
-				
-				<p:columnGroup type="header"> 
-					<p:row> 
-						<p:column rowspan="2"
-							 style="width:10px;"  rendered="#{!ctBackingBean.managedBean.viewContract}" >			 
-							 <f:facet name="header">
-							        <p:selectBooleanCheckbox id="onSaleAll"
-                                              widgetVar="onAgencyAllCheckbox"
-                                              value="#{ctBackingBean.managedBean.selectAll}"
-                                              onchange="callRemoteCommand([{name: 'onCheckAllRow', value: onAgencyAllCheckbox.isChecked()}])" />
-                              </f:facet>
-						</p:column>
-							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" styleClass="column-align-center"/> 
-							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}" styleClass="column-align-center"/> 	
-							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"/> 						
-							 <p:column rowspan="2" style="width:10%;white-space:normal;">
-						      <f:facet name="header" styleClass="column-align-center">
-					               <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
-               		               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
-               	              </f:facet>
+       					value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
+  						selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
+  						rowIndexVar="indexVar" >
+         			 	  <ac:paginator for="tableAgencyDetails"/>
+        			    <p:ajax event="rowSelect" onstart="blockWidget.show();"
+        			          oncomplete="blockWidget.hide();" update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
+						
+							<p:column style="width:10px;"   rendered="#{!ctBackingBean.managedBean.viewContract}">
+
+                                  <f:facet name="header">
+							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
+								                    <p:ajax partialSubmit="true" process="@this" 
+			         										update="@([id$=tableAgencyDetails],[id$=delBtn])"  listener="#{ctBackingBean.selectAllAgencyCheckbox}" />
+							                 		</p:selectBooleanCheckbox>
+						                 </f:facet>
+                                	                 
+	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" 
+	     		                    	 disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+			  		               		<p:ajax event="change" update=":form:tableAgencyDetails,:form:delBtn" listener="#{ctBackingBean.selectOneAgencyCheckboxSelect}"
+			  		              		 onstart="blockWidget.show();" oncomplete="blockWidget.hide();" ></p:ajax>
+		       	                   </p:selectBooleanCheckbox>
+	      	                 </p:column>
+							
+							 <p:column headerText="#{lbl['lbl.ct.ministry']}" 
+							    styleClass="column-align-center" style="width:25%;white-space:normal;" > 
+				                       <h:outputText value="#{agencyData.ministryName}" style="float:left;text-align:left;"/>
+							 </p:column>
+							 
+							  <p:column  headerText="#{lbl['lbl.ct.jabatan']}" 
+							        style="width:25%;white-space:normal;" styleClass="column-align-center"> 
+							         <h:outputText value="#{agencyData.kumpulanPtjName}"  style="float:left;text-align:left;"/>
+							   </p:column>
+							   
+							   <p:column headerText="#{lbl['lbl.ct.ptj']}"
+							         style="width:25%;white-space:normal;" styleClass="column-align-center"> 	
+							          <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;"/>
+							   </p:column>
+							   
+							    <p:column  style="width:10%;white-space:normal;">
+						   			   <f:facet name="header" styleClass="column-align-center">
+					           				    <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
+               		             				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+               	            		  </f:facet>
+               	            		     <p:inputText value="#{agencyData.ceilingAmount}"  required="true" 
+               	            		          label="#{lbl['lbl.ct.ceiling.amount']}" disabled="#{ctBackingBean.managedBean.disableAmendDetails
+           		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
+           		      							  style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract}">
+			 									    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 		  							  <p:ajax event="change" update=":form:tableAgencyDetails" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}"/> 
+				 					    </p:inputText>
+				   								  <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
+				     						   	 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							     				 </h:outputText>
 							  </p:column>
-							  <p:column rowspan="2" style="width:8%;" styleClass="column-align-center">
-							      <f:facet name="header">
-							        <h:outputText value="#{lbl['lbl.ct.effective.date']}" styleClass="required"/>
-							      </f:facet></p:column>
-							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center"/>
-							  <p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;" styleClass="column-align-center"> 
+							  
+							   <p:column rowspan="2" style="width:8%;" styleClass="column-align-center">
+							  		    <f:facet name="header">
+							       				 <h:outputText value="#{lbl['lbl.ct.effective.date']}" styleClass="required"/>
+							    		  </f:facet>
+							            <p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
+		               							readonlyInput="true"  
+		          							    mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
+		              						 	maxdate="#{agencyData.expDate}"	rendered="#{!ctBackingBean.managedBean.viewContract}"		             
+		               							showOn="button"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		              						 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+		           	  								 <p:ajax event="dateSelect" update="agenyStatus" listener="#{ctBackingBean.checkAgencyStatus(agencyData)}"  /> 
+		          						 </p:calendar>
+		           
+		            					 <h:outputText value="#{agencyData.effDate}"  rendered="#{ctBackingBean.managedBean.viewContract}">
+				         						  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				         				</h:outputText>
+							    </p:column>
+							    
+							    <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center">
+							          	<h:outputText value="#{agencyData.expDate}">
+				      						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				      					</h:outputText>
+							    </p:column>
+							    
+							      <p:column headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;" styleClass="column-align-center"> 
 									 <f:facet name="header">
 					                       <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
                	                     </f:facet>
-               	               </p:column>						
-							   <p:column rowspan="2" headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;" styleClass="column-align-center"/>
-							</p:row>							
-								<p:row> 
-									<p:column/>	
-									<p:column>
-									  <f:facet name="header">
-									     <h:outputText value="* " styleClass="mandatory" />
-									     <h:outputText value="#{lbl['lbl.txt.attachment']}"/>
-									  </f:facet>
-									</p:column>  
-									<p:column style="width:10%; white-space:normal;">
-									  <f:facet name="header">
-									       <h:outputText value="* " styleClass="mandatory" />
-									       <h:outputText value="#{lbl['lbl.ct.file.ref.no']}"/>
-									   </f:facet>
-									 </p:column>
-								</p:row>
-							</p:columnGroup>
-						
-							<p:column style="width:10px;" 
-							    rendered="#{!ctBackingBean.managedBean.viewContract}">
-
-	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" 
-	     		                     disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
-			  		               <p:ajax event="change" update=":form:tableAgencyDetails,:form:delBtn" listener="#{ctBackingBean.selectOneAgencyCheckboxSelect}"
-			  		               onstart="blockWidget.show();" oncomplete="blockWidget.hide();" ></p:ajax>
-		       	                   </p:selectBooleanCheckbox>
-	      	                 </p:column>
-	      	                 
-	      	                 <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{agencyData.ministryName}" style="float:left;"/>
-			                 </p:column>
-			                 <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{agencyData.kumpulanPtjName}"  style="float:left;"/>
-			                 </p:column>
-			                 
-			                  <p:column style="width:25%;white-space:normal;" >
-				                     <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;"/>
-			                  </p:column>
-			
-			    <p:column>
-           		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
-           		        disabled="#{ctBackingBean.managedBean.disableAmendDetails
-           		        	or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
-           		        style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract}">
-			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			 		    <p:ajax event="change" update=":form:tableAgencyDetails" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}"/> 
-				     </p:inputText>
-				     <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
-				         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				      </h:outputText>
-		    	</p:column>
-		   
-		   	     <p:column>
-			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
-		               readonlyInput="true"  
-		               mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
-		               maxdate="#{agencyData.expDate}"	rendered="#{!ctBackingBean.managedBean.viewContract}"		             
-		               showOn="button"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-		           	   <p:ajax event="dateSelect" update="agenyStatus" listener="#{ctBackingBean.checkAgencyStatus(agencyData)}"  /> 
-		           </p:calendar>
-		           
-		             <h:outputText value="#{agencyData.effDate}"  rendered="#{ctBackingBean.managedBean.viewContract}">
-				           <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
-		          </p:column>
-		   	
-		   	      <p:column>
-				  <h:outputText value="#{agencyData.expDate}">
-				      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
-		   	   </p:column>
-		   	   <p:column>
-		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="float:center;" disabled="true" />
-		       </p:column>
-		       <p:column style="white-space:normal;">
-		         <p:commandButton id="uploadSharingDoc" oncomplete="uploadDlg1.show();return false;" icon="ui-icon-upload" 
-					        rendered="#{agencyData.contractSharing and agencyData.fileName == null}" action="#{ctBackingBean.setIndexProperty(indexVar)}"
-					       disabled="#{ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"/>
-
-		      <h:commandLink title="#{agencyData.fileName}"
-						value="#{ctBackingBean.getShortFileName(agencyData.fileName)}"						
-						style="float:left;margin-top:10px;" styleClass="blue_font"
-						action="#{ctBackingBean.downloadFile(agencyData.filePath, agencyData.fileName)}" />
-						
-			   	<p:commandLink process="@this" partialSubmit="true"
-			   	   onclick="deleteAttachmentDlg1.show();" action="#{ctBackingBean.setIndexProperty(indexVar)}"
-						  rendered="#{!ctBackingBean.managedBean.viewContract and agencyData.contractSharing and agencyData.fileName != null}">
-			   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	</p:commandLink>
-			 	 				
-		       </p:column>
-		       <p:column style="white-space:normal;">
-		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" 
-		             style="width:80px;" disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-		              rendered="#{agencyData.contractSharing and !ctBackingBean.managedBean.viewContract}"> </p:inputText>
-		              
-		           <h:outputText value="#{agencyData.refNo}" style="float:left;text-align:left;"
-		               rendered="#{agencyData.contractSharing and ctBackingBean.managedBean.viewContract}"	/>
-		       </p:column>
-		        
-		        <p:column>
-		   	         <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
-		       </p:column>
-           
+               	                      <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="float:center;" disabled="true" />
+               	               </p:column>		
+               	               
+               	                <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;" styleClass="column-align-center">	
+               	                    <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
+               	                </p:column>		
 			</p:dataTable> 
 		
        	<div class="ppRightBtn">
@@ -250,98 +223,94 @@
 	   </p:panel>  
 	
 	
-		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
-				styleClass="pop_up_top" modal="true" width="700" height="auto" resizable="false">
-				<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
-			   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
-			   <h:panelGroup  id="agencyies">
-		  		     <p:panel id="agencyPopUpId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500" >
-            			  <h:panelGrid columns="3">
-               					  <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
-            	 						   <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
-               					  </p:selectOneMenu>
-            				     <p:spacer height="1"/>
-                				 <p:selectOneMenu id="ministry" style="width:300px"
-                   					   value="#{ctBackingBean.managedBean.ministryProfileId}" required="true" label="#{lbl['lbl.ct.ministry']}">
-            	  						 <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
-            	  						 <p:ajax event="change" update=":form:agencyies" 
-            	  						      listener="#{ctBackingBean.resetPtjDetails}" process="@this" partialSubmit="true" />
-               					  </p:selectOneMenu>
-                				 <p:selectOneMenu for="jabatan"  style="width:150px" 
-                				      disabled="true" rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
-            	   					 <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
-                				 </p:selectOneMenu>
-                 				<p:spacer height="1"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" />
-               					<p:selectOneMenu id="jabatan" style="width:300px"
-                   					   value="#{ctBackingBean.managedBean.jabatanProfileId}"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
-            	  						 <f:selectItems value="#{ctBackingBean.getJabatanDropdown()}"/>
-            	  						  <p:ajax event="change" update=":form:jabatan,:form:tableAgency" 
-            	  						      listener="#{ctBackingBean.resetPtjDetails}" process="@this" partialSubmit="true" />
-              					  </p:selectOneMenu>
-                 				<p:selectOneMenu for="ptjcodename"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" 
-                   						 value="#{ctBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
-                     					  <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
-            	     					 <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
-            	     					 <p:ajax process="@this"/>
-               					  </p:selectOneMenu>
-							 <p:spacer height="1"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" />
-                 				<p:inputText id="ptjCodeVaue"  style="width:300px;" 
-                     					value="#{ctBackingBean.managedBean.ptjCodeNameSearchValues}"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
-                    					 <p:ajax process="@this"/></p:inputText>
-						  </h:panelGrid>
-			  				<div class="ppRightBtn">
-			  				       <p:commandButton id="agyAllSlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@this" partialSubmit="true" 
-										update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-									    action="#{ctBackingBean.addAgencyDetails()}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									     rendered="#{!ctBackingBean.managedBean.ownerOrgProfile}"  />
-									       <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" process="@this" partialSubmit="true" 
-									           onclick="dlgAgency.hide();"  rendered="#{!ctBackingBean.managedBean.ownerOrgProfile}"/>
-       		      				   <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
-       		        				    action="#{ctBackingBean.searchAgencyDetails}" process="@this" partialSubmit="true"
-       		         				   disabled="#{ctBackingBean.managedBean.ministryProfileId == null}"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" /> 
-			       					  <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this" partialSubmit="true"
-			        					    action="#{ctBackingBean.resetAgencyDetails}" update=":form:agencyies"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}"   />
-		     				  </div>
-		     	  </p:panel>
-			   <p:spacer height="2"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" />
-			        <p:panel id="agencyTablePopUpId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
-            			  <p:dataTable id="tableAgency" var="pmVar" value="#{ctBackingBean.agencyDataModel}" 
-               					  rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true">
-               					   <ac:paginator for="tableAgency"/>
-                 					  <p:column style="width:3%;text-align:left;white-space:normal;"
-				      					     rendered="#{!ctBackingBean.managedBean.viewContract}">
-				       					    <f:facet name="header">
-											   <p:selectBooleanCheckbox id="checkBoxAll" value="#{ctBackingBean.managedBean.selectAll}">
-							     				    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
-												     <p:ajax partialSubmit="true" process="@this"
-													       update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectAllMinstryAgency}" />
-							      					   </p:selectBooleanCheckbox>
-						   					  </f:facet>
+			<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
+			styleClass="pop_up_top" modal="true" width="700" height="auto" resizable="false">
+			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
+		   <h:panelGroup  id="agencyies">
+		       <p:panel id="agencyPopUpId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500" >
+              <h:panelGrid columns="3">
+                 <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="ministry" style="width:300px"
+                      value="#{ctBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax  process="@this" partialSubmit="true" event="change"  
+            		  update=":form:jabatan,:form:ptjCodeVaue,:form:agencyTablePopUpId" listener="#{ctBackingBean.resetMinistryDetails}"   />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="jabatan" style="width:300px"
+                      value="#{ctBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{ctBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" process="@this" partialSubmit="true"
+            	        update=":form:ptjCodeVaue,:form:agencyTablePopUpId"  listener="#{ctBackingBean.resetJabatanDetails}" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="ptjcodename" 
+                    value="#{ctBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+                       <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	      <p:ajax process="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                     value="#{ctBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax process="@this"/></p:inputText>
+			  </h:panelGrid>
+			  	<div class="ppRightBtn">
+       		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:agencyTablePopUpId"  
+       		            action="#{ctBackingBean.searchAgencyDetails}" process="@this" partialSubmit="true"
+       		            disabled="#{ctBackingBean.managedBean.ministryProfileId == null}"/> 
+			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
+			            action="#{ctBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
+		       </div>
+		       </p:panel>
+			   <p:spacer height="2"/>
+			        <p:panel id="agencyTablePopUpId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500" >
+              <p:dataTable id="tableAgency" var="pmVar" value="#{ctBackingBean.agencyDataModel}" 
+                 rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true">
+                  <ac:paginator for="tableAgency"/>
+                   <p:column style="width:3%;text-align:left;white-space:normal;"
+				           rendered="#{!ctBackingBean.managedBean.viewContract}">
+				           <f:facet name="header">
+							   <p:selectBooleanCheckbox id="checkBoxAll" value="#{ctBackingBean.managedBean.selectAll}">
+							         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
+								     <p:ajax partialSubmit="true" process="@this"
+									       update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectAllMinstryAgency}" />
+							         </p:selectBooleanCheckbox>
+						     </f:facet>
 		           
-		                 			    <p:selectBooleanCheckbox 
-		                         				  value="#{pmVar.selectedCheckBox}" styleClass="myCustomChekBox">
-		           		        		   <p:ajax event="change" 
-		           		            		    update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectOneAgyCheckboxSelect}"></p:ajax>
-			               				  </p:selectBooleanCheckbox>
-				    				  </p:column>
+		                     <p:selectBooleanCheckbox 
+		                           value="#{pmVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		           <p:ajax event="change" 
+		           		                update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectOneAgyCheckboxSelect}"></p:ajax>
+			                 </p:selectBooleanCheckbox>
+				      </p:column>
                   
-                  				  <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
-                    				   	#{pmVar.orgCode}
-									</p:column>
-                 				   <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
-                      					#{pmVar.orgName}
-									</p:column>
-			 			</p:dataTable>           
-						<div class="ppRightBtn">
-						<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@this" partialSubmit="true" 
+                    <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
+                       	#{pmVar.orgCode}
+					</p:column>
+                    <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
+                      	#{pmVar.orgName}
+					</p:column>
+			 </p:dataTable>           
+			<div class="ppRightBtn">
+				<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@form" 
+				update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
+				    action="#{ctBackingBean.addAgencyDetails('true')}" onclick="dlgAgency.hide();"
+				    disabled="#{ctBackingBean.managedBean.buttonHideActive}"
+				    oncomplete="tableAgencyWidget.paginator.endLink.click();" />
+				        <p:commandButton id="agyAllSlectBtnId"  value="#{lbl['lbl.ct.agency.popup.selectall']}" process="@this" partialSubmit="true" 
 								update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-				    			action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"
-				   				 disabled="#{ctBackingBean.managedBean.buttonHideActive}"
-				  				  oncomplete="tableAgencyWidget.paginator.endLink.click();" />
-				  		  <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" 
-				  		    	 process="@this" partialSubmit="true"  ajax="false" onclick="dlgAgency.hide();" />
-           			</div>
-       				   </p:panel>
+								disabled="#{ctBackingBean.agencyDataModel.list == null}"
+								action="#{ctBackingBean.addAgencyDetails('false')}"  onstart="tableAgencyWidget.show();" oncomplete="tableAgencyWidget.hide();"/>
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
+           </div>
+          </p:panel>
            </h:panelGroup>
 	</p:dialog>
 	
@@ -437,7 +406,7 @@
 		</tr>
 	</table>
 	
-	<p:dialog id="uploadDlg1" widgetVar="uploadDlg1" modal="true" resizable="false"
+	<p:dialog id="ctSharingAttachId" widgetVar="ctSharingAttachDlg" modal="true" resizable="false"
 	   	width="700px" height="auto" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 	   	onShow="singleUploadListener(agencyUploadWV);">
 		<p:ajax event="close" />
@@ -446,11 +415,11 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="agencyUploadWV"
-			update=":form:tableAgencyDetails" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadDlg1.hide();" >
+			update=":form:panelCtSharingAttach" label="#{lbl['lbl.btn.choose']}" oncomplete="ctSharingAttachDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg1.hide();" />
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="ctSharingAttachDlg.hide();" />
    		</div>
    		</f:facet>
 	</p:dialog>
@@ -486,13 +455,13 @@
                    </p:confirmDialog>
 		
 	
-    <p:confirmDialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1" message="#{lbl['lbl.msg.confirm.delete']}" 	
+    <p:confirmDialog id="delAttachId" widgetVar="delCtSharingAttachDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
              severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
            <div class="ppRightBtn">
          <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-             update=":form:tableAgencyDetails" 
-             action="#{ctBackingBean.deleteAgencyAttachement()}" oncomplete="deleteAttachmentDlg1.hide();"/>
-      <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
+             update=":form:panelCtSharingAttach" 
+             action="#{ctBackingBean.delCtMinstrySharringAttach()}" oncomplete="delCtSharingAttachDlg.hide();"/>
+      <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCtSharingAttachDlg.hide();" type="button" />
      </div>
      </p:confirmDialog>
 		   	
