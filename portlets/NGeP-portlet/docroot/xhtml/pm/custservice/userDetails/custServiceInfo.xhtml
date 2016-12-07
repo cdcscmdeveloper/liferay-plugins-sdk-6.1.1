@@ -16,7 +16,7 @@
 			<td>&#160;</td>
 		</tr>
 		<tr>
-			<th width="20%"><p:outputLabel
+			<th style="vertical-align:top;"><p:outputLabel
 					value="#{lbl['lbl.pm.profiles.search.name']}" /></th>
 			<td><p:inputText size="103" disabled="true"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.userName}"
@@ -30,7 +30,7 @@
 			<td><p:inputTextarea id="orgName" disabled="true"
 					label="#{lbl['lbl.pm.ucd.organization']}"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
-					rows="3" cols="36" maxlength="255" /></td>
+					rows="3" cols="105" maxlength="255" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
@@ -57,11 +57,11 @@
 		</tr>
 		<tr>
 			<th width="20%"></th>
-			<td><p:selectBooleanCheckbox style="float:left"
+			<td><p:selectBooleanCheckbox style="float:left;margin-top:10px;"
 					id="rnApproverBcb" disabled="true"
 					value="#{empty custServiceBackingBean.managedBean.rnUserGroups ? 'false':'true'}" />
 			    <p:outputLabel
-					style="float:left;margin-left:10px;font-weight:normal !important;"
+					style="float:left;margin-left:10px;font-weight:normal !important;margin-top:10px;"
 					value="#{custServiceBackingBean.getRoleDescByRoleCode(ProfileManagementConst.rnApprover)}" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>

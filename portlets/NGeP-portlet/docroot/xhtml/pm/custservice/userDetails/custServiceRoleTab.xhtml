@@ -14,7 +14,7 @@
 			<ac:paginator for="dtCustSvcRole" />
 
 			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}"
-				style="width :10%;white-space : normal">
+				style="width :10%;white-space : normal;text-align:center;">
 				#{index + 1}
 			</p:column>
 
@@ -25,7 +25,7 @@
 
 			<p:column
 				headerText="#{lbl['lbl.pm.profiles.authorisation.role.status']}"
-				width="30%">
+				style="width:30%;text-align:center;">
 						#{(role.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 			    </p:column>
 		</p:dataTable>
