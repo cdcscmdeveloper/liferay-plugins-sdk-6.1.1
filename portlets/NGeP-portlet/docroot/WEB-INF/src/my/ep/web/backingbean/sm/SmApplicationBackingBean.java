@@ -1280,8 +1280,9 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getTotalPaymentAmount().add(
 								paymentDetailsVO.getPrice()));
 			}
-			getManagedBean().getTotalPaymentAmount().setScale(2,
-					BigDecimal.ROUND_UP);
+			getManagedBean().setTotalPaymentAmount(
+					getManagedBean().getTotalPaymentAmount().setScale(2,
+							BigDecimal.ROUND_UP));
 			getManagedBean().setApplDeclarationAlertMsg(
 					SmCommonUtil.getMessage(
 							"lbl.sm.payment.declaration.appl.alert.msg",
