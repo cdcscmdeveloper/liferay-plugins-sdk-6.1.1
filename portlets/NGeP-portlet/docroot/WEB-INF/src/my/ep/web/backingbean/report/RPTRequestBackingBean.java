@@ -45,6 +45,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -492,11 +493,14 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		String dir = EpPropertiesUtils.getInstance().getProperty("document.repository.shared.report.dir");
 		
 		String path = dir + "/" + rptRequest.getReportPath();
+		
+		String fileType = FilenameUtils.getExtension(path);
+		
 		String displayName = this.getReportName(rptRequest.getReportCode());
 		
 		System.out.println(new File(dir).getAbsolutePath());
 		
-		this.commonDownloadUtil(path, displayName + ".pdf");
+		this.commonDownloadUtil(path, displayName + fileType);
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
