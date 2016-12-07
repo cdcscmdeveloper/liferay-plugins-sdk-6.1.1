@@ -388,7 +388,7 @@
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="@this, menuItems,agreementReqPG"
+									update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel"
 									listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
 							</p:selectOneMenu>
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
@@ -602,9 +602,9 @@
 			</tr>
 			<tr>
 				<td>
-				<ui:param name="lblContractDuration"
+				<ui:param name="lblContractDuration" 
 				    value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period'}" />
-				<p:outputLabel
+				<p:outputLabel id="contractDurationLabel"
 						value="#{lbl[lblContractDuration]}" />
 				 <p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
@@ -616,12 +616,12 @@
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
 					</p:inputText>  <p:message id="contractDurationMsg" for="contractDuration" display="icon" /></td>
 			</tr>
-			<ui:param name="lbleffDate"
+			<ui:param name="lbleffDate"  
 				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
-			<ui:param name="lblexpDate"
+			<ui:param name="lblexpDate" 
 				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
 			<tr>
-				<td width="21%"><p:outputLabel value="#{lbl[lbleffDate]}" /> <p:outputLabel
+				<td width="21%"><p:outputLabel id="effDateLabel" value="#{lbl[lbleffDate]}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar id="effdate" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -635,7 +635,7 @@
 							listener="#{directLOABackingBean.contractEffDateChanged()}"
 							update="expdate" />
 					</p:calendar> <p:message id="effdateMsg" for="effdate" display="icon" /></td>
-				<td width="160px"><p:outputLabel value="#{lbl[lblexpDate]}" /></td>
+				<td width="160px"><p:outputLabel id="expDateLabel" value="#{lbl[lblexpDate]}" /></td>
 				<td><p:calendar id="expdate" disabled="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						showOn="button" required="true"
