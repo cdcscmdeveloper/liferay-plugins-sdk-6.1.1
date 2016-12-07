@@ -70,7 +70,7 @@ public class CustServiceBackingBean extends
 
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/custservice/search/custServiceMain.xhtml?faces-redirect=true";
-	public static final String NAV_TO_INFO = "/xhtml/pm/custservice/userDetails/custServiceInfoMain.xhtml?faces-redirect=true";
+	public static final String NAV_TO_INFO = "/xhtml/pm/custservice/userDetails/custServiceInfoMain.xhtml";
 	
 	// Data Model
 	private IPagingDataModel<PmUserOrg> custSvcDataModel = new CustSvcDataModel();
@@ -87,6 +87,7 @@ public class CustServiceBackingBean extends
 	public void preRenderView() {
 		log.info("preRenderView");
 		renewSesionObject();
+		resetUserDataModel();
 		retrieveOrgTypeMap();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -426,7 +427,7 @@ public class CustServiceBackingBean extends
 		getManagedBean().setFlUserGroups(null);
 		getManagedBean().setRnUserGroups(null);
 		this.getManagedBean().setSelectedRoleList(null);
-		return NAV_TO_SEARCH;
+		return "/xhtml/pm/custservice/search/custServiceMain.xhtml";
 	}
 	
 	
