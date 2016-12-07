@@ -107,25 +107,13 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	 * @return the string
 	 */
 	public String navigateToPage(String docType, String flDocId,Long statusId,String docNo,String ordrNo){
-		//IFulfilmentRequestSO fulfilmentRequestSO = null;
-		//IDeliveryOrderSO deliveryOrderSO = null;
-		//IInvoiceSO invoiceSO = null;
-		//IReceivedNoteSO receivedNoteSO = null;
-		//IFulfilmentOrderSO fulfilmentOrderSO = null;
-		//IPaymentMatchSO paymentSO = null;
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		
-		System.out.println("docType:::: "+docType);
-		
-		System.out.println("docId::::: "+flDocId);
 		String navgPage="/xhtml/fl/customerservice/customerServiceViewResult.xhtml";
-		System.out.println("we are in NAV page");
 		getManagedBean().setStatusDescId(statusId);
 		getManagedBean().setViewDocNo(docNo);
 		getManagedBean().setViewOrdrNo(ordrNo);
-		System.out.println("PTJ from search Criteria::::: "+getManagedBean().getPtj().getOrgProfileId());;
 		getManagedBean().setViewKumpulanPTJ(retrieveJabatanByOrgProfileId(getManagedBean().getPtj().getOrgProfileId()));
 		getManagedBean().setViewMinistry(retrieveMinistryByOrgProfileId(getManagedBean().getPtj().getOrgProfileId()));
 		getManagedBean().setViewPtjName(getManagedBean().getPtj().getOrgName());
@@ -163,41 +151,12 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		getManagedBean().setTempLoginId(id);
 	}
 	
-	/**
-	 * Selected doctype.
-	 *
-	 * @param e the e
-	 */
-	public void selectedDoctype(AjaxBehaviorEvent e) {}
-	
-	/**
-	 * Selected order type.
-	 *
-	 * @param e the e
-	 */
-	public void selectedOrderType(AjaxBehaviorEvent e) {}
 	
 	/**
 	 * Search reset.
 	 */
 	public void searchReset(){
 		renewSesionObject();
-	}
-	
-	
-	/**
-	 * The method used reset PTJ/PTJ Group profile value once select the Ministry
-	 */
-	public void resetPtjGroupProfile() {
-		getManagedBean().setPtj(null);
-		getManagedBean().setPtjGroup(null);
-	}
-	
-	/**
-	 * The method used reset PTJ profile value once select the Ministry
-	 */
-	public void resetPtjProfile() {
-		getManagedBean().setPtj(null);
 	}
 		
 	public String getUsername(Long userId) {
