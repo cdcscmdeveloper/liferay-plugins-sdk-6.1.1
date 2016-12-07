@@ -6909,7 +6909,7 @@ public class DirectLOABackingBean extends
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
 
-		String issueDate = "";
+		String issueDate = "______________";
 		if (scLoa.getIssueDate() != null) {
 			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
