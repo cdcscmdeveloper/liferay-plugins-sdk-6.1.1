@@ -830,20 +830,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								 		DecimalFormat df = new DecimalFormat("#.00");
 								 		for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 								 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-								 				if (ctAgency.isAp178() == true && ctAgency.isContractSharing() && 
-								 						(ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
-								 							setTabValue("AG");
-								 							throw new EpException(MessageConst.ERROR_750008); 
-								 							// Approval document is mandatory for AP178 agency. Please upload the document.
-								 				}
-								
-								 				if (ctAgency.isAp178() == true && ctAgency.isContractSharing() &&  
-								 						(ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
-								 							setTabValue("AG");
-								 							throw new EpException(MessageConst.ERROR_100061, 
-								 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
-								 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-								 				}
 								 		}
 								 		ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 							
@@ -870,6 +856,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								 					// Total ceiling value exceeded contract value. Please check your ceiling amount.
 								 			}
 							 			}	
+							 
+							 		if(!ctBB.getManagedBean().isOwnerOrgProfile()){
+							 			if(ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
+							 					 || ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
+							 				setTabValue("AG");
+				 							throw new EpException(MessageConst.ERROR_100022, 
+				 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.refno", 
+				 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							 			 }else if(ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
+							 					 ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
+							 				setTabValue("AG");
+				 							throw new EpException(MessageConst.ERROR_100022, 
+				 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.attachment", 
+				 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							 			 }
+							 		}
 								}
 					
 								//Validation for contract item details
