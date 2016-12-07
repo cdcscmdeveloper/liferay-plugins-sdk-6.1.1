@@ -46,22 +46,22 @@
 		<tr>
 			<th width="20%"><p:outputLabel
 					value="#{lbl['lbl.fl.ptj.approver.group']}" /></th>
-			<td><p:selectBooleanCheckbox style="float:left"
+			<td><p:selectBooleanCheckbox style="float:left;margin-top:10px;"
 					id="flApproverBcb" disabled="true"
 					value="#{empty custServiceBackingBean.managedBean.flUserGroups ? 'false':'true'}" />
 				<p:outputLabel
-					style="float:left;margin-left:10px;font-weight:normal !important;"
+					style="float:left;margin-left:10px;font-weight:normal !important;margin-top:10px;"
 					value="#{custServiceBackingBean.getRoleDescByRoleCode(ProfileManagementConst.flApprover)}" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
 		<tr>
 			<th width="20%"></th>
-			<td><p:selectBooleanCheckbox style="float:left;margin-top:10px;"
+			<td><p:selectBooleanCheckbox style="float:left;"
 					id="rnApproverBcb" disabled="true"
 					value="#{empty custServiceBackingBean.managedBean.rnUserGroups ? 'false':'true'}" />
 			    <p:outputLabel
-					style="float:left;margin-left:10px;font-weight:normal !important;margin-top:10px;"
+					style="float:left;margin-left:10px;font-weight:normal !important;"
 					value="#{custServiceBackingBean.getRoleDescByRoleCode(ProfileManagementConst.rnApprover)}" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
