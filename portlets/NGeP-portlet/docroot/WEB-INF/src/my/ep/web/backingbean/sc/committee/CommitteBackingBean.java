@@ -1602,24 +1602,21 @@ public class CommitteBackingBean extends
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
+		ScCommitteeMember scMember = getManagedBean().getCommitteMember();
+		if (scMember.getUserSelection().equals("N")) {
 			ScCommitteeMember member = new ScCommitteeMember();
-			member.setMemberName(getManagedBean().getCommitteMember()
-					.getMemberName());
-			member.setIcPassport(getManagedBean().getCommitteMember()
-					.getIcPassport());
-			member.setGrade(getManagedBean().getCommitteMember().getGrade());
-			member.setDesignation(getManagedBean().getCommitteMember()
-					.getDesignation());
-			member.setPNP(getManagedBean().getCommitteMember().isPNP());
-			member.setEmail(getManagedBean().getCommitteMember().getEmail());
-			member.setMemberRole(getManagedBean().getCommitteMember()
-					.getMemberRole());
+			member.setMemberName(scMember.getMemberName());
+			member.setIcPassport(scMember.getIcPassport());
+			member.setGrade(scMember.getGrade());
+			member.setDesignation(scMember.getDesignation());
+			member.setPNP(scMember.isPNP());
+			member.setEmail(scMember.getEmail());
+			member.setMemberRole(scMember.getMemberRole());
 			if (member.getMemberRole() != null) {
 				member.setMemberRoleId(member.getMemberRole().getParameterId());	
 			}			
 			member.setAccessRight("E");
-			member.setPmOrgProfile(scQt.getPmOrgProfile());
+			setCommitteeMemberOrgProfile(member);
 
 			member.setScCommittee(scCommittee);
 
@@ -1716,7 +1713,7 @@ public class CommitteBackingBean extends
 					committeeMember.setGrade(users.get(i).getGrade());
 					committeeMember.setPNP(users.get(i).isPMP());
 					committeeMember.setPmUser(users.get(i));
-					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+					setCommitteeMemberOrgProfile(committeeMember);
 					if (users.get(i).isPMP() == true) {
 						ParameterReqDTO reqDTO = new ParameterReqDTO();
 						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
@@ -1846,29 +1843,26 @@ public class CommitteBackingBean extends
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
 		List<ScCommitteeMember> tobeAddedList = new ArrayList<ScCommitteeMember>();
+		ScCommitteeMember scMemeber = getManagedBean().getCommitteMember();
 		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
 			ScCommitteeMember member = new ScCommitteeMember();
-			member.setMemberName(getManagedBean().getCommitteMember()
-					.getMemberName());
-			member.setIcPassport(getManagedBean().getCommitteMember()
-					.getIcPassport());
-			member.setGrade(getManagedBean().getCommitteMember().getGrade());
-			member.setDesignation(getManagedBean().getCommitteMember()
-					.getDesignation());
-			member.setPNP(getManagedBean().getCommitteMember().isPNP());
-			member.setEmail(getManagedBean().getCommitteMember().getEmail());
-			member.setMemberRole(getManagedBean().getCommitteMember()
-					.getMemberRole());
+			member.setMemberName(scMemeber.getMemberName());
+			member.setIcPassport(scMemeber.getIcPassport());
+			member.setGrade(scMemeber.getGrade());
+			member.setDesignation(scMemeber.getDesignation());
+			member.setPNP(scMemeber.isPNP());
+			member.setEmail(scMemeber.getEmail());
+			member.setMemberRole(scMemeber.getMemberRole());
 			if (member.getMemberRole() != null) {
 				member.setMemberRoleId(member.getMemberRole().getParameterId());	
 			}
-			member.setRepresentativeType(getManagedBean().getCommitteMember()
+			member.setRepresentativeType(scMemeber
 					.getRepresentativeType());
 			if (member.getRepresentativeType() != null) {
 				member.setRepresentativeTypeId(member.getRepresentativeType().getParameterId());
 			}
 			member.setAccessRight("E");
-			member.setPmOrgProfile(scQt.getPmOrgProfile());
+			setCommitteeMemberOrgProfile(member);
 
 			member.setScCommittee(scCommittee);
 
@@ -1964,7 +1958,7 @@ public class CommitteBackingBean extends
 					committeeMember.setGrade(user.getGrade());
 					committeeMember.setPNP(user.isPMP());
 					committeeMember.setPmUser(user);
-					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+					setCommitteeMemberOrgProfile(committeeMember);
 					
 					if (user.getMemberRoleId() == null) {
 						PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
@@ -2071,6 +2065,7 @@ public class CommitteBackingBean extends
 					member1.setBrandNew(true);
 					member1.setCommitteeMemberId(null);
 					setUserDetails(member1);
+					setCommitteeMemberOrgProfile(member1);
 					member1.setChangedDate(null);
 					memberList.add(member1);
 				}
