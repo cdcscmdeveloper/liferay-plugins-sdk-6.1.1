@@ -381,11 +381,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		this.getManagedBean().setRequired(Boolean.FALSE);
 		
-		updateLatestBsvDate();
-		
 		ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
 		if (null != tempScQtBsvDtl) {
 			updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl,bsvDetail);
+		} else {
+			updateLatestBsvDate();
 		}
 		
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
@@ -964,6 +964,14 @@ public class QTBriefingSiteVisitBackingBean extends
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_DATE, 
 				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate());
 		
+		// Closing Date
+		ScQt scQt = getManagedBean().getQt();
+		Date oldClosingDate = scQt.getClosingDate();
+		updateLatestBsvDate();
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				QTFieldConst.FILED_QT_CLOSING_DATE, 
+				oldClosingDate, scQt.getClosingDate());
+		
 		// location
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_LOCATION, 
@@ -1028,7 +1036,20 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	}
 	
-	private void putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue) {
+	/**
+	 * Put into AmendmentBean if any changes.
+	 * 
+	 * @param amendMentBean
+	 * 		the QtAmendMentBean instance
+	 * @param key
+	 * 		the field key
+	 * @param oldValue
+	 * 		the old value
+	 * @param newValue
+	 * 		the new value
+	 * @return	the indicator field is changed.
+	 */
+	public boolean putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue) {
 		boolean isChanged = false;
 		QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
 		
@@ -1038,7 +1059,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		
 		if (oldValue instanceof String || newValue instanceof String) {
-			if (!StringUtils.equalsIgnoreCase((String)oldValue, (String)newValue)) {
+			if (!StringUtils.equals((String)oldValue, (String)newValue)) {
 				isChanged = true;
 			}
 		} else {
@@ -1061,6 +1082,8 @@ public class QTBriefingSiteVisitBackingBean extends
 				amendMentBean.getValueMap().remove(key);
 			}
 		}
+		
+		return isChanged;
 	}
 
 	private void updateLatestBsvDate() {

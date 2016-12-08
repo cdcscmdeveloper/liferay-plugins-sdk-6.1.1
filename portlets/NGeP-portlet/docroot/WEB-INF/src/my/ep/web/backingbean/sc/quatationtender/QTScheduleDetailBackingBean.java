@@ -29,6 +29,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -543,6 +544,7 @@ public class QTScheduleDetailBackingBean extends
 	public void handleReschedulePublishClosingDate() {
 		debugLogger("handleReschedulePublishClosingDate");
 		ScQt scQt = this.getManagedBean().getQt();
+		Date oldClosingDate = scQt.getClosingDate();
 		Date newClosingDate = scQt.getNewClosingDate();
 		if (newClosingDate != null) {
 			scQt.setClosingDate(newClosingDate);
@@ -557,8 +559,14 @@ public class QTScheduleDetailBackingBean extends
 			
 			if (null == amendMentBean) {
 				amendMentBean = new QtAmendMentBean();
+				
 				this.getManagedBean().setAmendMentBean(amendMentBean);
 			}
+			
+			new QTBriefingSiteVisitBackingBean().putIntoAmendMentBeanIfChanged(
+					amendMentBean, 
+					QTFieldConst.FILED_QT_CLOSING_DATE, 
+					oldClosingDate, newClosingDate);
 		}
 	}
 
