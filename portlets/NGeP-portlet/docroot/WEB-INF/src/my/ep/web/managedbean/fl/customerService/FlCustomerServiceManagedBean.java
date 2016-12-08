@@ -4,7 +4,6 @@
 package my.ep.web.managedbean.fl.customerService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -20,10 +19,8 @@ import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.VFlDocument;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
@@ -54,59 +51,25 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String tempLoginId;
-	
-	private String tempDocType;
-	
 	private String searchType = "D"; // Define or Advanced
 	
-	private String searchFunctionType;
-	
 	private String searchOrderType; 
-	
 	private String searchDocType;
-	
-	/** The search doc no. */
 	private String searchDocNo;
-	
 	private String searchSuppName;
-	
-	/** The search order no. */
 	private String searchOrderNo;
 	
 	private List<PmStatusDesc> docStatusList;
-	
 	private Long statusDescId;
-	
-	private FlFulfilmentRequest flRequest;
-	
 	private PmUser pmUser;
 	
 	private List<VFlDocument> flDocumentList;
 	
-	
-	private Boolean  checkDoInDocType=false;
-	
-	private Boolean  checkDoDocType=false;
-	
-	private Boolean  checkInDocType=false;
-	
-	// for selected Approver List
 	private DualListModel<String> approverModel;
-	
-	private HashMap<String, PmUserGroupUser> approverMap;
 	
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 	
-	private int searchFinancialYear;
-	
 	private PmOrgProfile ptj;
-	private PmOrgProfile ministry;
-	private PmOrgProfile ptjGroup;
-	
-	private boolean trackingDiarySearch;
-	
-	private boolean isTaxable=false;
 	
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
@@ -120,18 +83,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	private String viewKumpulanPTJ;
 	private String viewPtjName;
 	
-	//private PmOrgProfile chargedPtj;
-	
-	//private PmOrgProfile preparedOrgProfile;
-	
-	/**
-	 * Gets the temp login id.
-	 *
-	 * @return the temp login id
-	 */
-	public String getTempLoginId() {
-		return tempLoginId;
-	}
 	
 	/**
 	 * The Class FlDocumentPagingDataModel.
@@ -270,33 +221,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * Sets the temp login id.
-	 *
-	 * @param tempLoginId the new temp login id
-	 */
-	public void setTempLoginId(String tempLoginId) {
-		this.tempLoginId = tempLoginId;
-	}
-
-	/**
-	 * Gets the temp doc type.
-	 *
-	 * @return the temp doc type
-	 */
-	public String getTempDocType() {
-		return tempDocType;
-	}
-
-	/**
-	 * Sets the temp doc type.
-	 *
-	 * @param tempDocType the new temp doc type
-	 */
-	public void setTempDocType(String tempDocType) {
-		this.tempDocType = tempDocType;
-	}
-
-	/**
 	 * Gets the fl document list.
 	 *
 	 * @return the fl document list
@@ -387,21 +311,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the flRequest
-	 */
-	public FlFulfilmentRequest getFlRequest() {
-		return flRequest;
-	}
-
-	/**
-	 * @param flRequest the flRequest to set
-	 */
-	public void setFlRequest(FlFulfilmentRequest flRequest) {
-		this.flRequest = flRequest;
-	}
-
-
-	/**
 	 * Gets the search supp name.
 	 *
 	 * @return the searchSuppName
@@ -474,25 +383,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the check do in doc type.
-	 *
-	 * @return the checkDoInDocType
-	 */
-	public Boolean getCheckDoInDocType() {
-		return checkDoInDocType;
-	}
-
-	/**
-	 * Sets the check do in doc type.
-	 *
-	 * @param checkDoInDocType the checkDoInDocType to set
-	 */
-	public void setCheckDoInDocType(Boolean checkDoInDocType) {
-		this.checkDoInDocType = checkDoInDocType;
-	}
-
-
-	/**
 	 * Gets the approver model.
 	 *
 	 * @return the approverModel
@@ -510,59 +400,7 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 
-	/**
-	 * Gets the approver map.
-	 *
-	 * @return the approverMap
-	 */
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
-		return approverMap;
-	}
 
-	/**
-	 * Sets the approver map.
-	 *
-	 * @param approverMap the approverMap to set
-	 */
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
-		this.approverMap = approverMap;
-	}
-
-	/**
-	 * Gets the check do doc type.
-	 *
-	 * @return the checkDoDocType
-	 */
-	public Boolean getCheckDoDocType() {
-		return checkDoDocType;
-	}
-
-	/**
-	 * Sets the check do doc type.
-	 *
-	 * @param checkDoDocType the checkDoDocType to set
-	 */
-	public void setCheckDoDocType(Boolean checkDoDocType) {
-		this.checkDoDocType = checkDoDocType;
-	}
-
-	/**
-	 * Gets the check in doc type.
-	 *
-	 * @return the checkInDocType
-	 */
-	public Boolean getCheckInDocType() {
-		return checkInDocType;
-	}
-
-	/**
-	 * Sets the check in doc type.
-	 *
-	 * @param checkInDocType the checkInDocType to set
-	 */
-	public void setCheckInDocType(Boolean checkInDocType) {
-		this.checkInDocType = checkInDocType;
-	}
 
 	/**
 	 * Gets the search order no.
@@ -592,20 +430,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchFinancialYear
-	 */
-	public int getSearchFinancialYear() {
-		return searchFinancialYear;
-	}
-
-	/**
-	 * @param searchFinancialYear the searchFinancialYear to set
-	 */
-	public void setSearchFinancialYear(int searchFinancialYear) {
-		this.searchFinancialYear = searchFinancialYear;
-	}
-
-	/**
 	 * @return the ptj
 	 */
 	public PmOrgProfile getPtj() {
@@ -617,64 +441,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	 */
 	public void setPtj(PmOrgProfile ptj) {
 		this.ptj = ptj;
-	}
-
-	/**
-	 * @return the ministry
-	 */
-	public PmOrgProfile getMinistry() {
-		return ministry;
-	}
-
-	/**
-	 * @param ministry the ministry to set
-	 */
-	public void setMinistry(PmOrgProfile ministry) {
-		this.ministry = ministry;
-	}
-
-	public boolean isTrackingDiarySearch() {
-		return trackingDiarySearch;
-	}
-
-	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
-		this.trackingDiarySearch = trackingDiarySearch;
-	}
-
-	/**
-	 * @return the ptjGroup
-	 */
-	public PmOrgProfile getPtjGroup() {
-		return ptjGroup;
-	}
-
-	/**
-	 * @param ptjGroup the ptjGroup to set
-	 */
-	public void setPtjGroup(PmOrgProfile ptjGroup) {
-		this.ptjGroup = ptjGroup;
-	}
-
-	/**
-	 * @return the isTaxable
-	 */
-	public boolean isTaxable() {
-		return isTaxable;
-	}
-
-	/**
-	 * @param isTaxable the isTaxable to set
-	 */
-	public void setTaxable(boolean isTaxable) {
-		this.isTaxable = isTaxable;
-	}
-
-	public String getSearchFunctionType() {
-		return searchFunctionType;
-	}
-
-	public void setSearchFunctionType(String searchFunctionType) {
-		this.searchFunctionType = searchFunctionType;
 	}
 
 	/**

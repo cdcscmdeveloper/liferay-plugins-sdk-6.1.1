@@ -142,17 +142,6 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	}
 	
 	/**
-	 * Selected user.
-	 *
-	 * @param e the e
-	 */
-	public void selectedUser(AjaxBehaviorEvent e) {
-		String id = (String) e.getComponent().getAttributes().get("value");
-		getManagedBean().setTempLoginId(id);
-	}
-	
-	
-	/**
 	 * Search reset.
 	 */
 	public void searchReset(){
@@ -167,5 +156,18 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		
 	return "customerService";
 	}
+	/**
+	 * Selected order type.
+	 *
+	 * @param e the e
+	 */
+	public void selectedOrderType(AjaxBehaviorEvent e) {}
+	
+	/**
+	 * Selected doctype.
+	 *
+	 * @param e the e
+	 */
+	public void selectedDoctype(AjaxBehaviorEvent e) {}
 	
 }
