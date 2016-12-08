@@ -626,18 +626,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				  	if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies() != null 
 				  			&& this.ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 				  		ctBackingBean.getManagedBean().setSelectedAgency(null);
+				  		ctBackingBean.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				  				ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 				  		for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
 				  			// If effective date is after current date, status is still display old status
 				  			ctBackingBean.checkAgencyStatus(ctAgency);
-				  			if (!retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId().equals(
-									retrieveMinistryOrgProfile(ctAgency.getOrgProfile().getOrgProfileId()).getOrgProfileId())) {
-								ctAgency.setAp178(true);
-							} else {
+				  			if (ctBackingBean.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 								ctAgency.setAp178(false);
+							} else {
+								ctAgency.setAp178(true);
 							}
 				  		}
-				  		ctBackingBean.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
-				  				ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 					}
 		  	
 				  	// Retrieve Items
@@ -1150,6 +1149,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		/*validation for other  selection*/
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+			// Validation for AP201 exempt
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
+					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp201FileName() == null 
+					||ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp201FileName().equalsIgnoreCase("")) 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.attachment.ap201", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} 
+			
 			// Validation for mandatory attachments
 			if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_750033);
@@ -1193,28 +1203,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-			// Validation for Deduction
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
-					ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
-				for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
-					if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-					ctBackingBean.validateDeductionType(deduction.getDeductionType().getParameterId());
-					if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
-						for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
-							if(ctDeductionClauses.getClauseDescription().isEmpty()){
-								throw new EpException(MessageConst.ERROR_100022, 
-										new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-							}
-						}
-					}
-				}  
-			}
+			
 			// Validation for zone
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				ctBackingBean.getZoneObjDetails();
@@ -1231,6 +1220,93 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
+			
+			// Validation for AP178 agency
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size()>0) {
+				double ceilingAmt = 0.0;
+				DecimalFormat df = new DecimalFormat("#.00");
+				for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
+					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				}
+				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
+
+				double latestContractAmount = 0.0;
+				for (CtContractAmount contractAmt : ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts()){
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+						latestContractAmount = contractAmt.getContractAmount().doubleValue();
+						latestContractAmount = Double.valueOf(df.format(latestContractAmount));
+						break;
+					}
+				}
+				if (ceilingAmt >  latestContractAmount) {
+					CommonUtils commonUtils = new CommonUtils();
+					DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+							CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+					throw new EpException(MessageConst.ERROR_750007, 
+							new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				}
+				
+				if(!ctBackingBean.getManagedBean().isOwnerOrgProfile()){
+		 			if(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
+		 					 || ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.refno", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		 			 }else if(ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
+		 					ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.attachment", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		 			 }
+		 		}
+			}			
+			
+			// Validation for Deduction
+						if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+								ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+								&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+							for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
+								if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
+									throw new EpException(MessageConst.ERROR_100022, 
+											new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								}
+								ctBackingBean.validateDeductionType(deduction.getDeductionType().getParameterId());
+								if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
+									for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
+										if(ctDeductionClauses.getClauseDescription().isEmpty()){
+											throw new EpException(MessageConst.ERROR_100022, 
+													new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
+															ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+										}
+									}
+								}
+							}  
+						}
+						
+						if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null) {
+							for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+								// Validation for minimum order quantity
+								if (item.getMinimumOrderQty() <= 0) {
+									item.setMinimumOrderQty(1);
+									throw new EpException(MessageConst.ERROR_100033,
+											new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								}
+								// Validation for ceiling quantity
+								double totalCeilingQuantity = 0.0;
+								if (item.getCtItemMaxQties().size() != 0) {						
+									for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
+										totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
+									}
+									if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
+										throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
+									}
+								}
+							}
+						}
+						
 			// Validation for schedule
 			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
@@ -1332,74 +1408,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			// Validation for AP178 agency
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size()>0) {
-				double ceilingAmt = 0.0;
-				DecimalFormat df = new DecimalFormat("#.00");
-				for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
-					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					if (ctAgency.isAp178() == true && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
-						throw new EpException(MessageConst.ERROR_750008); 
-						// Approval document is mandatory for AP178 agency. Please upload the document.
-					}
-
-					if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
-						throw new EpException(MessageConst.ERROR_100061, 
-								new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-				}
-				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
-
-				double latestContractAmount = 0.0;
-				for (CtContractAmount contractAmt : ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts()){
-					if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
-							&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-						latestContractAmount = contractAmt.getContractAmount().doubleValue();
-						latestContractAmount = Double.valueOf(df.format(latestContractAmount));
-						break;
-					}
-				}
-				if (ceilingAmt >  latestContractAmount) {
-					CommonUtils commonUtils = new CommonUtils();
-					DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
-							CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-					throw new EpException(MessageConst.ERROR_750007, 
-							new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
-				}
-			}			
-
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null) {
-				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
-					// Validation for minimum order quantity
-					if (item.getMinimumOrderQty() <= 0) {
-						item.setMinimumOrderQty(1);
-						throw new EpException(MessageConst.ERROR_100033,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-					// Validation for ceiling quantity
-					double totalCeilingQuantity = 0.0;
-					if (item.getCtItemMaxQties().size() != 0) {						
-						for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
-							totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
-						}
-						if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
-							throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
-						}
-					}
-				}
-			}
-			// Validation for AP201 exempt
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-					&& (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp201FileName() == null 
-					||ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp201FileName().equalsIgnoreCase("")) 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.attachment.ap201", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			} 
 		}
 
 		/* Validation mandatory for supporting document of AP201 special approver */

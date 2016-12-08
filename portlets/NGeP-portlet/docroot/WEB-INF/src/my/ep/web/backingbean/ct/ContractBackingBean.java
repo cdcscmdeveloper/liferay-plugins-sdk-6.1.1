@@ -1809,6 +1809,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
+		
+			Long minstryId = retrieveMinistryOrgProfile(
+	  			    getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+			 getManagedBean().setOwnerOrgProfile(true);
+			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
+				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
+					 getManagedBean().setOwnerOrgProfile(false);
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1882,7 +1892,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        			  }
 			        		  }
 			        	  }
-			        } getManagedBean().setOwnerOrgProfile(false);
+			        } //getManagedBean().setOwnerOrgProfile(false);
 		    } else {
 		
 		    		boolean contractSharing = true;
@@ -1949,7 +1959,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    		getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 		    	}
            }
-           RequestContext.getCurrentInstance().execute("dlgAgency.hide();");
+       //    RequestContext.getCurrentInstance().execute("dlgAgency.hide()");
 	}
 	
 	/**
