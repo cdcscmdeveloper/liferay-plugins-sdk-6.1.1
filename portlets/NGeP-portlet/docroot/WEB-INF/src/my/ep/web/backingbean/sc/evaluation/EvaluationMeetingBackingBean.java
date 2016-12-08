@@ -478,27 +478,21 @@ public class EvaluationMeetingBackingBean extends
 			committeeActivity = new ArrayList<ScCommitteeMember>();
 		}
 		List<ScCommitteeMember> localList = new ArrayList<ScCommitteeMember>();
-		if ("N".equalsIgnoreCase(getManagedBean().getCommitteMember()
-				.getUserSelection())) {
+		ScCommitteeMember  scMember = getManagedBean().getCommitteMember();
+		if ("N".equalsIgnoreCase(scMember.getUserSelection())) {
+				
 			ScCommitteeMember member = new ScCommitteeMember();
-			member.setMemberName(getManagedBean().getCommitteMember()
-					.getMemberName());
-			member.setIcPassport(getManagedBean().getCommitteMember()
-					.getIcPassport());
-			member.setGrade(getManagedBean().getCommitteMember().getGrade());
-			member.setDesignation(getManagedBean().getCommitteMember()
-					.getDesignation());
-			member.setPNP(getManagedBean().getCommitteMember().isPNP());
-			member.setEmail(getManagedBean().getCommitteMember().getEmail());
-			member.setMemberRole(getManagedBean().getCommitteMember()
-					.getMemberRole());
+			member.setMemberName(scMember.getMemberName());
+			member.setIcPassport(scMember.getIcPassport());
+			member.setGrade(scMember.getGrade());
+			member.setDesignation(scMember.getDesignation());
+			member.setPNP(scMember.isPNP());
+			member.setEmail(scMember.getEmail());
+			member.setMemberRole(scMember.getMemberRole());
 			if (member.getMemberRole() != null) {
 				member.setMemberRoleId(member.getMemberRole().getParameterId());
 			}
 			member.setAccessRight(QTConstants.ACCESS_RIGHT);
-			member.setPmOrgProfile(this.getManagedBean().getQt()
-					.getPmOrgProfile());
-
 			member.setScCommittee(this.getManagedBean().getScQtCommittee()
 					.getScCommittee());
 			setUserDetails(member);
@@ -587,9 +581,9 @@ public class EvaluationMeetingBackingBean extends
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = getUserSO().saveUser(userReqDTO);
-
+			
 			member.setPmUser(resDTO.getPmUser());
-
+			setCommitteeMemberOrgProfile(member);
 			// ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 			// activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
 			// activity.setScCommitteeMember(member);
@@ -664,8 +658,7 @@ public class EvaluationMeetingBackingBean extends
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
 					committeeMember.setScCommittee(this.getManagedBean()
 							.getScQtCommittee().getScCommittee());
-					committeeMember.setPmOrgProfile(this.getManagedBean()
-							.getQt().getPmOrgProfile());
+					setCommitteeMemberOrgProfile(committeeMember);
 					setUserDetails(committeeMember);
 
 					if (committeeActivity.isEmpty()) {
