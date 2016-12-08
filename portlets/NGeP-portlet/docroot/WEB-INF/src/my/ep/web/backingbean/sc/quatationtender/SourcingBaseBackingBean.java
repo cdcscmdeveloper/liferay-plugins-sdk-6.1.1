@@ -1900,31 +1900,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return	the PmOrgProfile instance
 	 */
 	public PmOrgProfile getPTJOrgProfileByLoginUser() {
-		PmOrgProfile pmOrgProfile = null;
+		
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		
-		if (userId != null) {
-			IOrgProfileSO orgProfileSO = null;
-			try {
-				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setUserId(userId);
-				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
-				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
-				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
-					pmOrgProfile = pmOrgProfiles.get(0);
-				}
-
-			} finally {
-				orgProfileSO = null;
-			}	
-		}
-		
-		return pmOrgProfile;
+		return getPTJOrgProfileByUserId(userId);
 	}
 	
 	/**
@@ -2621,4 +2599,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return message;
 	}
 	
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param scMember
+	 */
+	public void setCommitteeMemberOrgProfile(ScCommitteeMember scMember) {
+		scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
+				.getUserId()));
+	}
+	
+	private PmOrgProfile getPTJOrgProfileByUserId(Long userId) {
+
+		PmOrgProfile pmOrgProfile = null;
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
+
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+		return pmOrgProfile;
+	}
 }
