@@ -634,11 +634,15 @@ public class AccessApplBackingBean extends
 		if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
 			log.info("myidentity validation");
 			log.info("Ic No: ->>>> :" + accessAppl.getIdentificationNo());
-			log.info("PostCode ->>>> :" + accessAppl.getPostcode());
 			// validate IC with MyIdentity
 			SmCommonUtil.getInstance().verifyWithMyIdentity(accessAppl.getApplicantName(),
-					accessAppl.getIdentificationNo(),
-					accessAppl.getPostcode(), null);
+					accessAppl.getIdentificationNo(), 
+					null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+			
+//			
+//			SmCommonUtil.getInstance().verifyWithMyIdentity(accessAppl.getApplicantName(),
+//					accessAppl.getIdentificationNo(),
+//					accessAppl.getPostcode(), null);
 		}
 		
 		if(accessAppl.getOrgProfile() == null ){
