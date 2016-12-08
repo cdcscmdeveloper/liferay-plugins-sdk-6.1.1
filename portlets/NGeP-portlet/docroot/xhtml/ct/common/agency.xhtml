@@ -21,7 +21,9 @@
 							<td class="TableFieldLeft" width="15%">  <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.refno']}"/></td>
 							<td class="TableFieldRight">  <p:inputText id="uploadRefNoDoc"   style="width:130px;"   
 							        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}" 
-							       disabled="#{ctBackingBean.managedBean.disableAmendDetails}" rendered="#{!ctBackingBean.managedBean.viewContract}" /></td>
+							       disabled="#{ctBackingBean.managedBean.disableAmendDetails}" rendered="#{!ctBackingBean.managedBean.viewContract}">
+							       <p:ajax process="@this"/></p:inputText>
+							</td>
 				   </tr>
 				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}"/>     </td>
 				           <td> <p:commandButton id="uploadSharingDoc" oncomplete="ctSharingAttachDlg.show();return false;" 
@@ -35,8 +37,8 @@
 						
 			   					<p:commandLink process="@this" partialSubmit="true"
 			   						   onclick="delCtSharingAttachDlg.show();"  
-			   						   disabled="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
-									  rendered="#{!ctBackingBean.managedBean.viewContract}">
+			   						   disabled="#{ctBackingBean.managedBean.viewContract}"
+									  rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath != null}">
 			   								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" style="margin-bottom:-10px;"/>
 			 					</p:commandLink>
 		    </td>
@@ -303,11 +305,11 @@
 				update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{ctBackingBean.addAgencyDetails('true')}" onclick="dlgAgency.hide();"
 				    disabled="#{ctBackingBean.managedBean.buttonHideActive}"
-				    oncomplete="tableAgencyWidget.paginator.endLink.click();" />
+				     onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				        <p:commandButton id="agyAllSlectBtnId"  value="#{lbl['lbl.ct.agency.popup.selectall']}" process="@this" partialSubmit="true" 
 								update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-								disabled="#{ctBackingBean.agencyDataModel.list == null}"
-								action="#{ctBackingBean.addAgencyDetails('false')}"  onstart="tableAgencyWidget.show();" oncomplete="tableAgencyWidget.hide();"/>
+								disabled="#{ctBackingBean.agencyDataModel.list == null}" onclick="dlgAgency.hide();"
+								action="#{ctBackingBean.addAgencyDetails('false')}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
            </div>
           </p:panel>
