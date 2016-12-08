@@ -642,6 +642,7 @@ public class QTCommitteBackingBean extends
 						member1.setBrandNew(true);
 						member1.setCommitteeMemberId(null);
 						setUserDetails(member1);
+						setCommitteeMemberOrgProfile(member1);
 						member1.setChangedDate(null);
 						if (member1.isConsolidate()) {
 							this.getManagedBean().setSelectScCommitteMember(
@@ -836,6 +837,7 @@ public class QTCommitteBackingBean extends
 								member1.setCommitteeMemberId(null);
 								setUserDetails(member1);
 								member1.setChangedDate(null);
+								setCommitteeMemberOrgProfile(member1);
 								member1.setScCommittee(cloneCommitte);
 								// tabs.get(beanCount).getMembers().add(member1);
 								memberList.add(member1);
@@ -1313,7 +1315,7 @@ public class QTCommitteBackingBean extends
 				member.setMemberRoleId(member.getMemberRole().getParameterId());	
 			}
 			member.setAccessRight(QTConstants.ACCESS_RIGHT);
-			member.setPmOrgProfile(scQt.getPmOrgProfile());
+			
 
 			member.setScCommittee(scCommittee);
 
@@ -1402,6 +1404,7 @@ public class QTCommitteBackingBean extends
 			}
 
 			member.setPmUser(resDTO.getPmUser());
+			setCommitteeMemberOrgProfile(member);
 			setUserDetails(member);
 			toBeAddedList.add(member);
 		} else {
@@ -1420,7 +1423,8 @@ public class QTCommitteBackingBean extends
 					committeeMember.setGrade(users.get(i).getGrade());
 					committeeMember.setPNP(users.get(i).isPMP());
 					committeeMember.setPmUser(users.get(i));
-					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+					// set user org profile id
+					setCommitteeMemberOrgProfile(committeeMember);
 					if (null != users.get(i).getMemberRoleId()) {
 						ParameterReqDTO reqDTO = new ParameterReqDTO();
 						reqDTO.setParameterId(users.get(i).getMemberRoleId());

@@ -1005,7 +1005,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeeMember.setGrade(user.getGrade());
 			committeeMember.setPNP(user.isPMP());
 			committeeMember.setPmUser(user);
-			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+			setCommitteeMemberOrgProfile(committeeMember);
+			
 			if (user.getMemberRoleId() == null) {
 				PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
@@ -1166,8 +1167,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeeMember.setGrade(commMember.getGrade());
 			committeeMember.setPNP(commMember.isPNP());
 			committeeMember.setPmUser(commMember.getPmUser());
-			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-			
+			setCommitteeMemberOrgProfile(committeeMember);
 			if (commMember.getMemberRole() == null || 
 					ParameterConst.COMMITTEE_ROLE_SECRETARY
 						.equals(commMember.getMemberRole().getParameterCode())) {
