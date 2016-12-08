@@ -88,11 +88,12 @@
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 			</h:outputText>
+			<ui:param name="closingDateChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_CLOSING_DATE]}" />
 			<c:choose>
-				<c:when test="#{!empty publishPeriodChangeDate}">
+				<c:when test="#{!empty publishPeriodChangeDate or !empty closingDateChangeDate}">
 					<h:panelGroup>
 						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
-						<h:outputText value="#{publishPeriodChangeDate}" styleClass="lastUpdated">
+						<h:outputText value="#{empty closingDateChangeDate ? publishPeriodChangeDate : (DateUtils.isDateGreater(publishPeriodChangeDate, closingDateChangeDate) ? publishPeriodChangeDate : closingDateChangeDate)}" styleClass="lastUpdated">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 						</h:outputText>
 						<h:outputText value=")" styleClass="lastUpdated" />
