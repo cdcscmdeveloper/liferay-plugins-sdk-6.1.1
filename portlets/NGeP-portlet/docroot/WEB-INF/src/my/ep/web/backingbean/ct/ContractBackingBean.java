@@ -1868,9 +1868,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        			  ctAgency.setAp178(true);
 			        		  }		  	
 			        		  ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
-			        		  //CT_CHANGE_LOG
-			        		  getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
-			      			
 			        		  ctAgencyList.add(ctAgency);
 					 
 			        		  if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
@@ -1929,9 +1926,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    			ctAgency.setChkStatus(true);  	
 		    			ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		    			getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
-		    			
-		    			//CT_CHANGE_LOG
-		    			getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 		    			ctAgencyList.add(ctAgency);
 		 
 		    			if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
@@ -1950,6 +1944,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
       
 		    if (ctAgencyList.size()>0) {
 		    	this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
+		    	//CT_CHANGE_LOG
+		    	for(CtAgency ctAgency : ctAgencyList) {
+		    		getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
+		    	}
            }
            RequestContext.getCurrentInstance().execute("dlgAgency.hide();");
 	}
