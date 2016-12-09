@@ -569,7 +569,7 @@ p {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.2 Tempoh Sah Laku </span></td>
 					<td>:</td>
-					<td>$!mofEffectiveDate - $!mofExpiredDate</td>
+					<td>$!mofValidityDuration</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -587,7 +587,7 @@ p {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.5 Tempoh Sah Laku Taraf Bumiputera </span></td>
 					<td>:</td>
-					<td>$!mofCertEffectiveDate - $!mofCertExpiredDate</td>
+					<td>$mofCertValidityDuration</td>
 				</tr>
 
 				<tr>
@@ -694,7 +694,7 @@ p {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">7.1 Kadar Bon Pelaksanaan</span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">$!scLoa.bondPercentage</td>
+					<td class="text_family_red">$!bondPercentage</td>
 				</tr>
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
