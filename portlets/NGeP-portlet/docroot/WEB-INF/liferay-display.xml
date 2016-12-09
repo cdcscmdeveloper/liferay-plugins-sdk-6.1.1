@@ -81,6 +81,7 @@
            	<portlet id="pmTaskReassignment"></portlet>
            	<portlet id="pmRace"></portlet>
            	<portlet id="pmCustService"></portlet>
+           	<portlet id="poWorkload"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
