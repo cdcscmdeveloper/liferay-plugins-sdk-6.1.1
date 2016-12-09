@@ -82,31 +82,8 @@ public class PoWorkloadBackingBean extends BaseBackingBean<PoWorkloadManagedBean
 		List<String> selectedSuppType = selectedUser.getSelectedPoWorkloadSupplierTypes();
 		List<String> selectedCatType = selectedUser.getSelectedPoWorkloadCategoryTypes();
 		
-/*		selectedApplType.removeAll(currApplType);
-		currApplType.removeAll(selectedApplType);
-		
-		selectedSuppType.removeAll(currSuppType);
-		currSuppType.removeAll(selectedSuppType);
-		
-		selectedCatType.removeAll(currCatType);
-		currCatType.removeAll(selectedCatType);*/
-		
-/*		log.info("currApplType>>>>>>>" + currApplType);
-		log.info("selectedApplType>>>>>>>" + selectedApplType);
-		
-		log.info("currSuppType>>>>>>>" + currSuppType);
-		log.info("selectedSuppType>>>>>>>" + selectedSuppType);
-		
-		log.info("currCatType>>>>>>>" + currCatType);
-		log.info("selectedCatType>>>>>>>" + selectedCatType);*/
-		
-/*		log.info("selectedSuppType size>>>>>>>" + selectedSuppType.size());
-		log.info("selectedCatType size>>>>>>>" + selectedCatType.size());*/
-		//List<PmPoWorkload> workLoadToBeRemoved = new ArrayList<PmPoWorkload>();
 		List<PmPoWorkload> workLoadToBeAdded= new ArrayList<PmPoWorkload>();
 		
-		
-
 		for(PmPoWorkload workload :getManagedBean().getSelectedUser().getPmPoWorkloads()){
 			if(workload.getApplType() != null){
 				if(!selectedApplType.contains(workload.getApplType())){
@@ -162,13 +139,7 @@ public class PoWorkloadBackingBean extends BaseBackingBean<PoWorkloadManagedBean
 				}
 			}
 		}
-		//log.info("PmPoWorkload be4 removed>>>>>" + getManagedBean().getSelectedUser().getPmPoWorkloads().size());
-		//getManagedBean().getSelectedUser().getPmPoWorkloads().removeAll(workLoadToBeRemoved);
-		//log.info("PmPoWorkload after removed>>>>>" + getManagedBean().getSelectedUser().getPmPoWorkloads().size());
-		
-		//log.info("PmPoWorkload to be added >>>>" + workLoadToBeAdded.size());
 		getManagedBean().getSelectedUser().getPmPoWorkloads().addAll(workLoadToBeAdded);
-		//log.info("PmPoWorkload after added>>>>>" + getManagedBean().getSelectedUser().getPmPoWorkloads().size());
 		
 	}
 	
