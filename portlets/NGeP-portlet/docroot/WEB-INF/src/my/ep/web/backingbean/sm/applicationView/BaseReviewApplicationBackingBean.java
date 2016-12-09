@@ -291,6 +291,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		return accStatus;
 	}
+	
+	/**
+	 * Dummy submit
+	 */
+	public void submit(){
+		
+	}
 
 	/**
 	 * Get SER file name and path
