@@ -1935,7 +1935,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    			ctAgency.setCeilingAmount(new BigDecimal(0));
 		    			ctAgency.setChkStatus(true);  	
 		    			ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
-		    			getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 		    			ctAgencyList.add(ctAgency);
 		 
 		    			if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
