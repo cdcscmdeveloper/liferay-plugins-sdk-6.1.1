@@ -1531,7 +1531,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return String
 	 */
 	public String getEpRoleDescByRoleCode(String roleCode) {
-		String retVal = "";
+		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
 		RoleReqDTO reqDTO = new RoleReqDTO();
 		reqDTO.setRoleCode(roleCode);
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
