@@ -241,6 +241,7 @@ public class DirectLOABackingBean extends
 	private static final String PIPE_SYMBOL = "|";
 	private static final String CARET_SYMBOL = "^";
 	private static final String BRANCH_INFO_TITLE = "Branch Information";
+	private static final String MALAY_NA = "T/B";
 
 	/**
 	 * Instantiates a new LOA detail backing bean.
@@ -5032,19 +5033,19 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa, DecimalFormat amountDF, Locale myLocale) {
 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo()
-				: "";
+				: "______________";
 		context.put("gstRegNo", gstRegNo);
 
 		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
-				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "";
+				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "______________";
 		context.put("gstEffectiveDate", gstEffectiveDate);
 
 		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
-				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "";
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
 		context.put("gstDeclaredDate", gstDeclaredDate);
 
-		String offerPrice = "";
-		String offerPriceWording = "";
+		String offerPrice = "______________";
+		String offerPriceWording = "______________";
 		BigDecimal loaAmount = scLoa.getLoaAmt();
 		if (loaAmount != null) {
 			offerPrice = amountDF.format(loaAmount);
@@ -5054,10 +5055,10 @@ public class DirectLOABackingBean extends
 		context.put("offerPrice", offerPrice);
 		context.put("offerPriceWording", offerPriceWording);
 
-		String gstAmount = "T/B";
-		String gstAmountWording = "T/B";
-		String overallctAmt = "";
-		String overallctAmtWording = "";
+		String gstAmount = MALAY_NA;
+		String gstAmountWording = MALAY_NA;
+		String overallctAmt = "______________";
+		String overallctAmtWording = "______________";
 		BigDecimal gstAmt = scLoa.getGstAmt();
 		if (gstAmt != null) {
 			gstAmount = amountDF.format(gstAmt);
@@ -5093,35 +5094,56 @@ public class DirectLOABackingBean extends
 		
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
 		
-		String mofEffectiveDate = "";
-		String mofExpiredDate = "";
-		String mofCertEffectiveDate = "";
-		String mofCertExpiredDate = "";
+		String mofValidityDuration = MALAY_NA;
+		String mofCertValidityDuration = MALAY_NA;
+		String isBumi = MALAY_NA;
+		String kodBidang = MALAY_NA;
+		
 		if(mofAccount != null) {
-			mofEffectiveDate = mofAccount.getEffDate() != null ? DateUtils
-					.getLocalizeDate(mofAccount.getEffDate(), myLocale) : "";
-			mofExpiredDate = mofAccount.getExpDate() != null ? DateUtils
-					.getLocalizeDate(mofAccount.getExpDate(), myLocale) : "";
-					
+			String mofEffectiveDate = null;
+			String mofExpiredDate = null;
+			if(mofAccount.getEffDate() != null) {
+				mofEffectiveDate = DateUtils
+						.getLocalizeDate(mofAccount.getEffDate(), myLocale);
+			}
+			if(mofAccount.getExpDate() != null) {
+				mofExpiredDate = DateUtils
+						.getLocalizeDate(mofAccount.getExpDate(), myLocale);
+			}
+			
+			if(mofEffectiveDate != null && mofExpiredDate != null) {
+				mofValidityDuration = new StringBuilder().append(mofEffectiveDate).
+						append(" - ").append(mofExpiredDate).toString();
+			}
+			
 			SmMofCert mofCert = getMofCertBySupplierId(mofAccount.getMofAccountId());
-			mofCertEffectiveDate = mofCert.getEffDate() != null ? DateUtils
-					.getLocalizeDate(mofCert.getEffDate(), myLocale) : "";
-			mofCertExpiredDate = mofCert.getExpDate() != null ? DateUtils
-					.getLocalizeDate(mofCert.getExpDate(), myLocale) : "";
+			
+			String mofCertEffectiveDate = null;
+			String mofCertExpiredDate = null;
+			if(mofCert.getEffDate() != null) {
+				mofCertEffectiveDate = DateUtils
+						.getLocalizeDate(mofCert.getEffDate(), myLocale);
+			}
+			if(mofCert.getExpDate() != null) {
+				mofCertExpiredDate = DateUtils
+						.getLocalizeDate(mofCert.getExpDate(), myLocale);
+			}
+			
+			if(mofCertEffectiveDate != null && mofCertExpiredDate != null) {
+				mofValidityDuration = new StringBuilder().append(mofCertEffectiveDate).
+						append(" - ").append(mofCertExpiredDate).toString();
+			}
+			
+			if(smSupplier.isBumi()) {
+				isBumi = "Bumiputera";
+			} else {
+				isBumi = "Bukan Bumiputera";
+			}
 		}
-		
-		context.put("mofEffectiveDate", mofEffectiveDate);
-		context.put("mofExpiredDate", mofExpiredDate);
-		context.put("mofCertEffectiveDate", mofCertEffectiveDate);
-		context.put("mofCertExpiredDate", mofCertExpiredDate);
-		
-		context.put("kodBidang", "_______________________________");
-		
-		if(smSupplier.isBumi()) {
-			context.put("isBumi", "Bumiputera");
-		} else {
-			context.put("isBumi", "Bukan Bumiputera");
-		}
+		context.put("mofValidityDuration", mofValidityDuration);
+		context.put("mofCertValidityDuration", mofCertValidityDuration);
+		context.put("isBumi", isBumi);		
+		context.put("kodBidang", kodBidang);
 	}
 
 	/**
