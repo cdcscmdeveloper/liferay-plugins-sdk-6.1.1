@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -1543,6 +1544,8 @@ public class LOADetailBackingBean extends
 		
 		// date formatter
 		context.put("dateSDF", dateSDF);
+		boolean isZonal = scLoa.getScLoiLoa().isZonal();
+		context.put("isZonal", isZonal);
 		
 		String fileNo = "";
 		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
@@ -1657,9 +1660,14 @@ public class LOADetailBackingBean extends
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
-		setMofInfoForAgreementLetter(context, scLoa, myLocale);
+		setMofInfoForAgreementLetter(context, scLoa, scQt, myLocale);
+
+		String qtNo = MALAY_NA;
+		if(scQt != null) {
+			qtNo = scQt.getQtNo();
+		}
 		// qtno
-		context.put("qtNo", scQt.getQtNo());
+		context.put("qtNo", qtNo);
 		
 		// JadualHarga
 		 formJadualHarga(context, scLoa);
@@ -1669,22 +1677,6 @@ public class LOADetailBackingBean extends
 		
 		// scLoa
 		context.put("scLoa", scLoa);
-		
-		if(scQt != null) {
-			String kodBidang = "_______________________________";
-			if(!CollectionUtils.isEmpty(scQt.getScQtCategorys())) {
-				List<String> categoryCodes = new ArrayList<String>();
-				for(ScQtCategory category : scQt.getScQtCategorys()) {
-					String l1Code = category.getPmCategoryL1().getCategoryL1Code();
-					String l2Code = category.getPmCategoryL2().getCategoryL2Code();
-					String l3Code = category.getPmCategoryL3().getCategoryL3Code();
-					String categoryCode = new StringBuilder().append(l1Code).append(l2Code).append(l3Code).toString();
-					categoryCodes.add(categoryCode);
-				}
-				kodBidang = StringUtils.join(categoryCodes, ",");
-			}
-			context.put("kodBidang", kodBidang);
-		}
 		
 		String content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER, context);
 
@@ -1721,33 +1713,47 @@ public class LOADetailBackingBean extends
 	
 	public void formSpecification(VelocityContext context, ScLoa scLoa)
 			throws Exception {
-		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
-		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
-
-		List<String> itemNames = new ArrayList<String>();
-		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
-			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
-				itemNames.add(item.getScRequestItem().getItemName());
-			}
-		}
-		templateSpecReqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
-		templateSpecReqDTO.setSupplier(scLoa.getScLoiLoa().getSmSupplier());
-		templateSpecReqDTO.setItemNameList(itemNames);
+		List<ItemBean> serviceBeans  = null;
+		List<ItemBean> productBeans  = null;
 		
-		List<TplSpecAnswer> serviceAnswers  = new ArrayList<>();
-		List<TplSpecAnswer> productAnswers  = new ArrayList<>();
-		TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
-		if(templateSpecResDTO.getSpecAnswerList() != null && templateSpecResDTO.getSpecAnswerList().size()>0){
-			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
-				if(ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
-					productAnswers.add(tplSpecAnswer);
-				} else if(ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
-					serviceAnswers.add(tplSpecAnswer);
+		// Filter By - docType & docId
+		String docType = scLoa.getScLoiLoa().getDocType();
+		Long docId = scLoa.getScLoiLoa().getDocId();
+		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType)) {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setQtId(docId);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveQTDocByQtId(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				if(resDTO.getProductDoc() != null) {
+					TplSpecMaster productSpecMaster = resDTO.getProductDoc().getTplSpecMaster();
+					productBeans = convertSpecQuestionToSpecAnswer(productSpecMaster);
+				}
+				if(resDTO.getServiceDoc() != null) {
+					TplSpecMaster serviceSpecMaster = resDTO.getServiceDoc().getTplSpecMaster();
+					serviceBeans = convertSpecQuestionToSpecAnswer(serviceSpecMaster);
+				}
+			}
+		} else {
+			serviceBeans = new ArrayList<ItemBean>();
+			List<Long> requestItemIds = new ArrayList<Long>();
+			for(ScLoiLoaItem loiLoaItem : scLoa.getScLoiLoaItems()) {
+				ScRequestItem requestItem = loiLoaItem.getScRequestItem();
+				Long requestItemId = requestItem.getRequestNoteItemId();
+				if(!requestItemIds.contains(requestItemId)) {
+					ItemBean itemBean = new ItemBean();
+					itemBean.setItem(requestItem.getItemName());
+					List<String> specs = new ArrayList<String>();
+					specs.add(requestItem.getItemDesc());
+					itemBean.setSpecs(specs);
+					serviceBeans.add(itemBean);
+					requestItemIds.add(requestItemId);
 				}
 			}
 		}
-		context.put("productAnswers", productAnswers);
-		context.put("serviceAnswers", serviceAnswers);
+		
+		context.put("productAnswers", productBeans);
+		context.put("serviceAnswers", serviceBeans);
 	}
 	
 	/**
@@ -4874,19 +4880,19 @@ public class LOADetailBackingBean extends
 	private void setGstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,
 			DecimalFormat amountDF, Locale myLocale) {
 
-		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): "";
+		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): "______________";
 		context.put("gstRegNo", gstRegNo);
 
 		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
-				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "";
+				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "______________";
 		context.put("gstEffectiveDate", gstEffectiveDate);
 
 		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
-				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "";
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
 		context.put("gstDeclaredDate", gstDeclaredDate);
 
-		String offerPrice = "";
-		String offerPriceWording = "";
+		String offerPrice = "______________";
+		String offerPriceWording = "______________";
 		BigDecimal loaAmount = scLoa.getLoaAmt();
 		if (loaAmount != null) {
 			offerPrice = amountDF.format(loaAmount);
@@ -4897,8 +4903,8 @@ public class LOADetailBackingBean extends
 
 		String gstAmount = MALAY_NA;
 		String gstAmountWording = MALAY_NA;
-		String overallctAmt = "";
-		String overallctAmtWording = "";
+		String overallctAmt = "______________";
+		String overallctAmtWording = "______________";
 		BigDecimal gstAmt = scLoa.getGstAmt();
 		if (gstAmt != null) {
 			gstAmount = amountDF.format(gstAmt);
@@ -4923,42 +4929,81 @@ public class LOADetailBackingBean extends
 	 * @param myLocale
 	 */
 	private void setMofInfoForAgreementLetter(VelocityContext context,
-			ScLoa scLoa, Locale myLocale) {
+			ScLoa scLoa, ScQt scQt, Locale myLocale) {
 
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 		Long supplierId = smSupplier.getSupplierId();
-		context.put("mofNo", scLoiLoa.getMofNo());
 		
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
 		
-		String mofEffectiveDate = "";
-		String mofExpiredDate = "";
-		String mofCertEffectiveDate = "";
-		String mofCertExpiredDate = "";
+		String mofNo = MALAY_NA;
+		String mofValidityDuration = MALAY_NA;
+		String mofCertValidityDuration = MALAY_NA;
+		String isBumi = MALAY_NA;
+		String kodBidang = MALAY_NA;
+		
 		if(mofAccount != null) {
-			mofEffectiveDate = mofAccount.getEffDate() != null ? DateUtils
-					.getLocalizeDate(mofAccount.getEffDate(), myLocale) : "";
-			mofExpiredDate = mofAccount.getExpDate() != null ? DateUtils
-					.getLocalizeDate(mofAccount.getExpDate(), myLocale) : "";
-					
+			mofNo = mofAccount.getMofNo();
+			String mofEffectiveDate = null;
+			String mofExpiredDate = null;
+			if(mofAccount.getEffDate() != null) {
+				mofEffectiveDate = DateUtils
+						.getLocalizeDate(mofAccount.getEffDate(), myLocale);
+			}
+			if(mofAccount.getExpDate() != null) {
+				mofExpiredDate = DateUtils
+						.getLocalizeDate(mofAccount.getExpDate(), myLocale);
+			}
+			
+			if(mofEffectiveDate != null && mofExpiredDate != null) {
+				mofValidityDuration = new StringBuilder().append(mofEffectiveDate).
+						append(" - ").append(mofExpiredDate).toString();
+			}
+			
 			SmMofCert mofCert = getMofCertBySupplierId(mofAccount.getMofAccountId());
-			mofCertEffectiveDate = mofCert.getEffDate() != null ? DateUtils
-					.getLocalizeDate(mofCert.getEffDate(), myLocale) : "";
-			mofCertExpiredDate = mofCert.getExpDate() != null ? DateUtils
-					.getLocalizeDate(mofCert.getExpDate(), myLocale) : "";
+			
+			String mofCertEffectiveDate = null;
+			String mofCertExpiredDate = null;
+			if(mofCert.getEffDate() != null) {
+				mofCertEffectiveDate = DateUtils
+						.getLocalizeDate(mofCert.getEffDate(), myLocale);
+			}
+			if(mofCert.getExpDate() != null) {
+				mofCertExpiredDate = DateUtils
+						.getLocalizeDate(mofCert.getExpDate(), myLocale);
+			}
+			
+			if(mofCertEffectiveDate != null && mofCertExpiredDate != null) {
+				mofValidityDuration = new StringBuilder().append(mofCertEffectiveDate).
+						append(" - ").append(mofCertExpiredDate).toString();
+			}
+			
+			if(smSupplier.isBumi()) {
+				isBumi = "Bumiputera";
+			} else {
+				isBumi = "Bukan Bumiputera";
+			}
+			
+			if(scQt != null) {
+				if(!CollectionUtils.isEmpty(scQt.getScQtCategorys())) {
+					List<String> categoryCodes = new ArrayList<String>();
+					for(ScQtCategory category : scQt.getScQtCategorys()) {
+						String l1Code = category.getPmCategoryL1().getCategoryL1Code();
+						String l2Code = category.getPmCategoryL2().getCategoryL2Code();
+						String l3Code = category.getPmCategoryL3().getCategoryL3Code();
+						String categoryCode = new StringBuilder().append(l1Code).append(l2Code).append(l3Code).toString();
+						categoryCodes.add(categoryCode);
+					}
+					kodBidang = StringUtils.join(categoryCodes, ",");
+				}
+			}
 		}
-		
-		context.put("mofEffectiveDate", mofEffectiveDate);
-		context.put("mofExpiredDate", mofExpiredDate);
-		context.put("mofCertEffectiveDate", mofCertEffectiveDate);
-		context.put("mofCertExpiredDate", mofCertExpiredDate);
-		
-		if(smSupplier.isBumi()) {
-			context.put("isBumi", "Bumiputera");
-		} else {
-			context.put("isBumi", "Bukan Bumiputera");
-		}
+		context.put("mofValidityDuration", mofValidityDuration);
+		context.put("mofCertValidityDuration", mofCertValidityDuration);
+		context.put("isBumi", isBumi);		
+		context.put("kodBidang", kodBidang);
+		context.put("mofNo", scLoiLoa.getMofNo());
 	}
 	
 	/**
@@ -5546,5 +5591,37 @@ public class LOADetailBackingBean extends
 				witness.getPhoneNo().isEmpty() || witness.getFaxNo().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760442);
 		}
+	}
+	
+	private List<ItemBean> convertSpecQuestionToSpecAnswer(
+			TplSpecMaster specMaster) {
+		Map<Integer, ItemBean> questionSpecMap = new HashMap<Integer, ItemBean>();
+
+		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
+			for (TplSpecQuestion specQuestion : specMaster
+					.getTplSpecQuestions()) {
+				/*if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
+						.getQuestionType())) {*/
+					if(specQuestion.getParentSpecQuestion() == null) {
+						int order = specQuestion.getQuestionOrder();
+						if (!questionSpecMap.containsKey(order)) {
+							ItemBean specBean = new ItemBean();
+							specBean.setItem(specQuestion.getClItem());
+							specBean.setSpecs(new ArrayList<String>());
+							questionSpecMap.put(order, specBean);						} 
+					} else {
+						int parentOrder = specQuestion.getParentSpecQuestion().getQuestionOrder();
+						questionSpecMap.get(parentOrder).getSpecs().add(specQuestion.getClSpecDetail());
+					}
+				/*} else {
+					TplSpecAnswer specAnswer = new TplSpecAnswer();
+					specAnswer.setTplSpecQuestion(specQuestion);
+
+					specAnswers.add(specAnswer);
+				}*/
+			}
+		}
+
+		return new ArrayList<ItemBean>(questionSpecMap.values());
 	}
 }
