@@ -15,6 +15,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.common.myidentity.IDiMyidentitySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.poworkload.IPoWorkloadSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -579,5 +580,16 @@ public class SmServiceLookup {
 		return (IPmKpiSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IPmKpiSO.class);
+	}
+	
+	/**
+	 * Get IPoWorkloadSO
+	 * 
+	 * @return IPoWorkloadSO
+	 */
+	public static IPoWorkloadSO getPoWorkloadSO() {
+		return (IPoWorkloadSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IPoWorkloadSO.class);
 	}
 }

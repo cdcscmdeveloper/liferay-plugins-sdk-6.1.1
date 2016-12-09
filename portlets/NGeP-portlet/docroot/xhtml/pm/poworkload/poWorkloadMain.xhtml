@@ -1,0 +1,74 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<c:forEach items="#{poWorkloadBB.managedBean.zoneUserMap}" var="entry">
+			<p:panel header="#{entry.key}" toggleable="true">
+	    		<p:dataTable value="#{entry.value}" var="user">
+	    			<p:column headerText="Name">
+	   					<h:outputText value="#{user.userName}"></h:outputText>
+	    			</p:column>
+	    			
+					<p:column style="width : 25%;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sm.action']}" />
+						</f:facet>
+						
+						<p:commandLink id="btnEdit" oncomplete="poWorkloadDlg.show();" update=":#{p:component('workloadPnl')},:#{p:component('poWorkloadDlg')}"
+							action="#{poWorkloadBB.editUser(user)}">
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
+						</p:commandLink>
+					</p:column>
+	    		</p:dataTable>
+    		</p:panel>
+		</c:forEach>
+		
+		<p:dialog widgetVar="poWorkloadDlg" id="poWorkloadDlg"   modal="true">
+			<p:outputPanel id="workloadPnl" rendered="#{!empty poWorkloadBB.managedBean.selectedUser}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="Name" /></td>
+						<td><h:outputText value="#{poWorkloadBB.managedBean.selectedUser.userName}" /></td>
+					</tr>
+				</table>
+				
+				<p:panel header="Supplier Type">
+					<p:selectManyCheckbox  value="#{poWorkloadBB.managedBean.selectedUser.selectedPoWorkloadSupplierTypes}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J"></f:selectItem>
+					</p:selectManyCheckbox>
+				</p:panel>
+				
+				<p:panel header="Application Type">
+					<p:selectManyCheckbox layout="pageDirection" columns="1"
+						value="#{poWorkloadBB.managedBean.selectedUser.selectedPoWorkloadApplTypes}">
+						<f:selectItems value="#{poWorkloadBB.managedBean.applTypeSelection}" var="applType" 
+						   style="text-align: left !important;"
+						  itemLabel="#{applType.codeName}" itemValue="#{applType.pmParameter.parameterCode}" />
+					</p:selectManyCheckbox>
+				</p:panel>
+				
+				<p:panel header="Catogery Type">
+					<p:selectManyCheckbox  value="#{poWorkloadBB.managedBean.selectedUser.selectedPoWorkloadCategoryTypes}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.norm']}" itemValue="N"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.spl']}" itemValue="S"></f:selectItem>
+					</p:selectManyCheckbox>
+				</p:panel>
+				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{poWorkloadBB.savePoWorkload}" oncomplete="poWorkloadDlg.hide();">
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="poWorkloadDlg.hide();"></p:commandButton>
+				</div>
+			</p:outputPanel>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
