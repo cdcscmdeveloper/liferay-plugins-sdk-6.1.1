@@ -13,7 +13,7 @@
 		<c:forEach items="#{poWorkloadBB.managedBean.zoneUserMap}" var="entry">
 			<p:panel header="#{entry.key}" toggleable="true">
 	    		<p:dataTable value="#{entry.value}" var="user">
-	    			<p:column headerText="Name">
+	    			<p:column headerText="#{lbl['lbl.pm.poworkload.username']}">
 	   					<h:outputText value="#{user.userName}"></h:outputText>
 	    			</p:column>
 	    			
@@ -31,23 +31,23 @@
     		</p:panel>
 		</c:forEach>
 		
-		<p:dialog widgetVar="poWorkloadDlg" id="poWorkloadDlg"   modal="true">
+		<p:dialog widgetVar="poWorkloadDlg" id="poWorkloadDlg" modal="true" width="800" height="400">
 			<p:outputPanel id="workloadPnl" rendered="#{!empty poWorkloadBB.managedBean.selectedUser}">
 				<table>
 					<tr>
-						<td><p:outputLabel value="Name" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.pm.poworkload.username']}" /></td>
 						<td><h:outputText value="#{poWorkloadBB.managedBean.selectedUser.userName}" /></td>
 					</tr>
 				</table>
 				
-				<p:panel header="Supplier Type">
+				<p:panel header="#{lbl['lbl.pm.poworkload.supptype']}">
 					<p:selectManyCheckbox  value="#{poWorkloadBB.managedBean.selectedUser.selectedPoWorkloadSupplierTypes}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J"></f:selectItem>
 					</p:selectManyCheckbox>
 				</p:panel>
 				
-				<p:panel header="Application Type">
+				<p:panel header="#{lbl['lbl.pm.poworkload.appltype']}">
 					<p:selectManyCheckbox layout="pageDirection" columns="1"
 						value="#{poWorkloadBB.managedBean.selectedUser.selectedPoWorkloadApplTypes}">
 						<f:selectItems value="#{poWorkloadBB.managedBean.applTypeSelection}" var="applType" 
@@ -56,7 +56,7 @@
 					</p:selectManyCheckbox>
 				</p:panel>
 				
-				<p:panel header="Catogery Type">
+				<p:panel header="#{lbl['lbl.pm.poworkload.catType]}">
 					<p:selectManyCheckbox  value="#{poWorkloadBB.managedBean.selectedUser.selectedPoWorkloadCategoryTypes}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.norm']}" itemValue="N"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.spl']}" itemValue="S"></f:selectItem>
