@@ -236,7 +236,7 @@ public class TemplateSpecBackingBean extends
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setSpecAnswersToDelete(templateSpecBean
 					.getSpecAnswersToDelete());
-			reqDTO.setLocale(new FacesScopes().getUserLocale());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			TemplateSpecResDTO resDTO = templateSpecSO.saveTemplateSpec(reqDTO);
 
 			if (resDTO.isSuccessful()) {
