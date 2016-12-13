@@ -33,9 +33,11 @@ public class NtfMessageBulkJob implements Job {
 			.getServiceObject(ModuleCodeConst.NTF_SCH,
 					INtfMessageBulkSchedulerSO.class);
 			
-			iNtfMessageBulkSchedulerSO.retrieveDb();
-			iNtfMessageBulkSchedulerSO.sendNotification();
-			iNtfMessageBulkSchedulerSO.updateDb();
+//			iNtfMessageBulkSchedulerSO.retrieveDb();
+//			iNtfMessageBulkSchedulerSO.sendNotification();
+//			iNtfMessageBulkSchedulerSO.updateDb();
+			
+			iNtfMessageBulkSchedulerSO.process();
 			
 		} catch (Exception ex){
 			log.error(ex);
