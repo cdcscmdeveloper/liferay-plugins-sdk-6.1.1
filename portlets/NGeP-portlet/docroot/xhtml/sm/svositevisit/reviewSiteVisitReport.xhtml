@@ -29,7 +29,7 @@
 
 		<p:column headerText="#{lbl['lbl.sm.action']}">
 			<p:commandButton value="#{lbl['lbl.btn.view']}" oncomplete="blockWidget.hide();poReportDlg.show();"  
-			update="@form" onclick="blockWidget.show();"
+			update=":#{p:component('poReportDlgId')}" onclick="blockWidget.show();"
 				action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}">
 			</p:commandButton>
 
