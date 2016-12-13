@@ -1,3 +1,4 @@
+
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
@@ -49,6 +50,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
+
+import my.ep.web.constant.CommonUIConst;
 
 @ManagedBean(name = "rptRequestBackingBean")
 @ViewScoped
@@ -478,13 +481,13 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		return false;
 	}
 	
-	public String getFileType(String reportCode){
+	public String getIconPath(String reportCode){
 		
 		if (reportCode.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || 
 				reportCode.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
-			return "Excel";
+			return CommonUIConst.IMAGE_PATH + "/ico-excel.png";
 		} else {
-			return "Pdf";
+			return CommonUIConst.IMAGE_PATH + "/ico-pdf.png";
 		}
 	}
 		

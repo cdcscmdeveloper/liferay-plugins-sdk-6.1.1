@@ -116,7 +116,7 @@
 									</p:column>
 									
 									<p:column style="text-align:center; width:7%">
-										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePath}/ico-pdf.png"
+										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{rptRequestBackingBean.getIconPath(rptRequest.reportCode)}"
 											rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode) and rptRequest.downloaded eq '0'}" height="16px" width="16px"/>
 									</p:column>
 									
