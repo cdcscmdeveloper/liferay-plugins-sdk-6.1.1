@@ -68,8 +68,8 @@
 						style="width: 314px;">
 						<f:selectItems
 							value="#{flCustomerServiceBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update="form:searchPanel"
-							listener="#{flCustomerServiceBackingBean.selectedOrderType}"/>
+					<p:ajax event="change" update="form:searchPanel"
+							listener="#{flCustomerServiceBackingBean.selectedOrderType}"/>		
 					</p:selectOneMenu></td>
 				
 			</tr>
@@ -79,9 +79,9 @@
 						value="#{flCustomerServiceBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flCustomerServiceBackingBean.getDocumentTypeDropDown()}" />
-						<p:ajax event="change"
+					<p:ajax event="change"
 							update="docStatusSearch"
-							listener="#{flCustomerServiceBackingBean.selectedDoctype}" />
+							listener="#{flCustomerServiceBackingBean.selectedDoctype}" />		
 					</p:selectOneMenu></td>
 			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
 			<td><p:inputText size="28" value="#{flCustomerServiceBackingBean.managedBean.searchDocNo}" />

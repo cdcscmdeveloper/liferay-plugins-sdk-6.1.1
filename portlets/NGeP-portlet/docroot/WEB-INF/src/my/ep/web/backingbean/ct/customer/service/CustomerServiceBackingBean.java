@@ -103,7 +103,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			reqDTO.setContractVerId(contractVer.getContractVerId());
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractAgency(reqDTO);	
-			 getManagedBean().setCtContractVer(resDTO.getCtContractVer());
+			getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 			 
 			 IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			 Object ctxToken = bpmSO.authenticate(sysUserId);
