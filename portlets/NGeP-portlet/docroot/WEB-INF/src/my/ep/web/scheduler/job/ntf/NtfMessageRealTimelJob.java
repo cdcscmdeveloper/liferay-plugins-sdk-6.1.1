@@ -28,10 +28,12 @@ public class NtfMessageRealTimelJob implements Job {
 			.getServiceObject(ModuleCodeConst.NTF_SCH,
 					INtfMessageRealTimeSchedulerSO.class);
 			
-			iNtfMessageRealTimeSchedulerSO.retrieveDb();
-			iNtfMessageRealTimeSchedulerSO.sendNotification();
-			iNtfMessageRealTimeSchedulerSO.updateDb();
-		
+//			iNtfMessageRealTimeSchedulerSO.retrieveDb();
+//			iNtfMessageRealTimeSchedulerSO.sendNotification();
+//			iNtfMessageRealTimeSchedulerSO.updateDb();
+
+			iNtfMessageRealTimeSchedulerSO.process();
+			
 		} catch (Exception ex){
 			log.error(ex);
 		}

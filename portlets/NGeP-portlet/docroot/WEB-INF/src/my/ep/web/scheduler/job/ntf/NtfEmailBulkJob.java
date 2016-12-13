@@ -30,9 +30,10 @@ public class NtfEmailBulkJob implements Job {
 					INtfEmailBulkSchedulerSO.class);
 			
 			for(int i = 0; i<3; i++){
-				iNtfEmailBulkSchedulerSO.retrieveDb();
-				iNtfEmailBulkSchedulerSO.sendEmail();
-				iNtfEmailBulkSchedulerSO.updateDb();
+//				iNtfEmailBulkSchedulerSO.retrieveDb();
+//				iNtfEmailBulkSchedulerSO.sendEmail();
+//				iNtfEmailBulkSchedulerSO.updateDb();
+				iNtfEmailBulkSchedulerSO.process();
 			}
 		
 		}catch(Exception ex){
