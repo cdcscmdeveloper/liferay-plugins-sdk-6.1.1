@@ -200,6 +200,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private PmZone loginUserZone;
 	private Date currDate;
 	private SmGstSupplier hqGst;
+	private boolean updatePersonnelPage;
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1413,6 +1414,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setFactoryFacilitiesVOList(
 			List<PmCategoryL3> factoryFacilitiesVOList) {
 		this.factoryFacilitiesVOList = factoryFacilitiesVOList;
+	}
+
+	public boolean isUpdatePersonnelPage() {
+		return updatePersonnelPage;
+	}
+
+	public void setUpdatePersonnelPage(boolean updatePersonnelPage) {
+		this.updatePersonnelPage = updatePersonnelPage;
 	}
 
 }

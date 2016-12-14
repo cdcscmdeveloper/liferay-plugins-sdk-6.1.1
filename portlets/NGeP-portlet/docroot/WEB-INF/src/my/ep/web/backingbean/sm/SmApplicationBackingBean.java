@@ -9762,7 +9762,9 @@ public class SmApplicationBackingBean extends
 					.getSmApplSupportDocs()) {
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
-						if (doc.getPmDocument().isLicenseReq()) {
+						if (doc.getPmDocument().isLicenseReq()
+								&& !doc.getPmDocument().getPmDocumentRestrs()
+										.isEmpty()) {
 							mandatoryLicenseDocs.add(doc);
 						} else {
 							getManagedBean().getMandatoryDocs().add(doc);
@@ -9789,18 +9791,28 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public String getLicenseConcatCategories(
-			List<PmDocumentRestr> pmDocumentRestrs) {
+	public String getLicenseConcatCategories(PmDocument doc) {
 		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
-		if (!EntityHelper.isCollectionEmpty(pmDocumentRestrs)) {
+		if (!EntityHelper.isCollectionEmpty(doc.getPmDocumentRestrs())) {
 			StringBuilder sb = null;
-			for (PmDocumentRestr tmp : pmDocumentRestrs) {
+			for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 				if (tmp.getPmCategoryL3() != null) {
-					sb = new StringBuilder();
-					sb.append(tmp.getPmCategoryL3().getFullCatcode())
-							.append(" (")
-							.append(tmp.getPmCategoryL3().getCategoryName())
-							.append(")").append(",");
+					if (tmp.getPmCategoryL3().getPmCategoryL2() != null
+							&& tmp.getPmCategoryL3().getPmCategoryL2()
+									.getPmCategoryL1() != null) {
+						sb = new StringBuilder();
+						sb.append(
+								tmp.getPmCategoryL3().getPmCategoryL2()
+										.getPmCategoryL1().getCategoryL1Code()
+										+ tmp.getPmCategoryL3()
+												.getPmCategoryL2()
+												.getCategoryL2Code()
+										+ tmp.getPmCategoryL3()
+												.getCategoryL3Code())
+								.append(" (")
+								.append(tmp.getPmCategoryL3().getCategoryName())
+								.append(")").append(",");
+					}
 				}
 			}
 			if (sb != null && sb.length() > 0) {
