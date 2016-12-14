@@ -465,6 +465,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean changeCurrRegStatus;
 	private boolean showPoApprovedOrRecommendButton;
 	private boolean showNewChanges;
+	private boolean updatePersonnelPage;
 
 	private String businessTypeParamCode;
 	private String physicalConsulting;
@@ -3860,5 +3861,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setMandatoryLicenseDocs(
 			List<SmLicenseInfoVO> mandatoryLicenseDocs) {
 		this.mandatoryLicenseDocs = mandatoryLicenseDocs;
+	}
+
+	public boolean isUpdatePersonnelPage() {
+		return updatePersonnelPage;
+	}
+
+	public void setUpdatePersonnelPage(boolean updatePersonnelPage) {
+		this.updatePersonnelPage = updatePersonnelPage;
 	}
 }
