@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
@@ -15,6 +17,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -28,9 +32,11 @@ import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.updatepersonnel.UpdatePersonnelManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -91,11 +97,30 @@ public class UpdatePersonnelBackingBean extends
 		getManagedBean().setRacesList(SmApplicationUtil.retrievePmRaceList());
 		getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 		getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
-		if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
-				.getSmSupplier())) {
-			getManagedBean().setDisAllowOwnerEdit(true);
+		getManagedBean().setUpdatePersonnelPage(true);
+		if (getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()) {
+			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+					.getSmSupplier())) {
+				getManagedBean().setDisAllowOwnerEdit(true);
+			}
+			SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "",
+					null);
+		} else {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							SmCommonUtil
+									.getMessage(
+											"lbl.sm.update.personel.not.deal.with.government",
+											null)));
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							SmApplicationUtil.getApplicationErrorPage());
 		}
-		SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "", null);
 	}
 
 	/**
@@ -258,9 +283,20 @@ public class UpdatePersonnelBackingBean extends
 
 	}
 
-	public void editPersonnel(SmPersonnel shareHolderBean) {
-		getManagedBean().setRedirectToPersonPage(true);
-		getManagedBean().setSelectedShareHolder(shareHolderBean);
+	public void submit() {
+		PersonnelAuthorizationReqDTO reqDTO = new PersonnelAuthorizationReqDTO();
+		reqDTO.setPersonnel(getManagedBean().getSelectedShareHolder());
+		PersonnelAuthorizationResDTO resDTO = SmServiceLookup
+				.getPersonnelAuthorizationSO()
+				.updatePersonnelRoleChange(reqDTO);
+		if (StringUtils.isBlank(resDTO.getErrorCode())) {
+			SmCommonUtil.showFacesMsg(null, FacesMessage.SEVERITY_INFO,
+					MessageUtils.getMessage(MessageConst.INFO_721215,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), null);
+		} else {
+			throw new EpException(resDTO.getErrorCode());
+		}
 	}
 
 	/**

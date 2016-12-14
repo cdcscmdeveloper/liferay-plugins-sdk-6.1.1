@@ -1127,10 +1127,11 @@ public class SmCommonUtil {
 							"lbl.sm.recommend.poapprover.nonbumi", null));
 				}
 			}
-			
-			//if Personnel staff bumi percentage greater than 50%
-			if(persCalcVo.getStfBumiEnterPerc() != null && 
-					persCalcVo.getStfBumiEnterPerc().compareTo(new BigDecimal(50)) == 1){
+
+			// if Personnel staff bumi percentage greater than 50%
+			if (persCalcVo.getStfBumiEnterPerc() != null
+					&& persCalcVo.getStfBumiEnterPerc().compareTo(
+							new BigDecimal(50)) == 1) {
 				persCalcVo.setBumiRecommendNote(getMessage(
 						"lbl.sm.recommend.poapprover.bumi", null));
 			}
@@ -2425,6 +2426,9 @@ public class SmCommonUtil {
 	 */
 	public static void showFacesMsg(FacesContext fc, Severity severity,
 			String msg, String componentId) {
+		if (fc == null) {
+			fc = FacesContext.getCurrentInstance();
+		}
 		fc.addMessage(componentId, new FacesMessage(severity, null, msg));
 	}
 
