@@ -150,6 +150,8 @@
 			fileUploadListener="directLOABackingBean.handleFileUpload"
 			readonly="#{directLOABackingBean.managedBean.readOnly}"
 			update="@([id$=scDocUploadBtn])" 
+			fileType="#{directLOABackingBean.managedBean.fileTypePdf}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 			autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/>
 			
 		<ac:scSingleFileUploadPopup widgetVar="supportDocUploadDlg"

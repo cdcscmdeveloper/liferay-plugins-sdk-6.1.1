@@ -282,6 +282,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
     
     /** The temp file path. */
     private String tempFilePath;
+    
+    /** The file type pdf. */
+    private String fileTypePdf ="/(\\.|\\/)(pdf)$/i";
 	
 	/**
 	 * Gets the spki backing bean.
@@ -1686,5 +1689,20 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setToBedeletedSupplierZone(ScQtZoneCriteria toBedeletedSupplierZone) {
 		this.toBedeletedSupplierZone = toBedeletedSupplierZone;
 	}
+
+	/**
+	 * @return the fileTypePdf
+	 */
+	public String getFileTypePdf() {
+		return fileTypePdf;
+	}
+
+	/**
+	 * @param fileTypePdf the fileTypePdf to set
+	 */
+	public void setFileTypePdf(String fileTypePdf) {
+		this.fileTypePdf = fileTypePdf;
+	}
+	
 	
 }
