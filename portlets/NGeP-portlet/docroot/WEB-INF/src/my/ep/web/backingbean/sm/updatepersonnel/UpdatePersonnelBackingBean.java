@@ -291,7 +291,7 @@ public class UpdatePersonnelBackingBean extends
 				.updatePersonnelRoleChange(reqDTO);
 		if (StringUtils.isBlank(resDTO.getErrorCode())) {
 			SmCommonUtil.showFacesMsg(null, FacesMessage.SEVERITY_INFO,
-					MessageUtils.getMessage(MessageConst.INFO_721215,
+					MessageUtils.getMessage(MessageConst.INFO_721226,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()), null);
 		} else {
