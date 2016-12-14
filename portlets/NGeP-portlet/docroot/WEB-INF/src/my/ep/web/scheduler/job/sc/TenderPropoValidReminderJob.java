@@ -39,8 +39,6 @@ import org.apache.log4j.Logger;
 public class TenderPropoValidReminderJob extends BaseReminderJob{
 	private static Logger log = EpLogger
 			.getLogger(TenderPropoValidReminderJob.class);
-	/** The Constant Proposal valid end at less than or equal to 30 days. */
-	private static final String PROPO_VALID_END_AT_MAX_DAYS = (new Long(30)).toString();
 
 	/* (non-Javadoc)
 	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#sendProposalValidReminder()
@@ -65,27 +63,27 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 
 				for (Object[] objects : resDTO.getQtDetailsArray()) {
 					for (int i = 0; i < objects.length; i++) {
-						Date currentDate = new Date();
+						//Date currentDate = new Date();
 
 						// Before proposal validity expired QTs 
-						if(objects[7] != null && currentDate.compareTo((Date)objects[7]) >0){
-							ReminderBean bean = new ReminderBean();
-							Date propoValidityEndDate = (Date)objects[7];
-							List<String> userIds = new ArrayList<String>();
-							String qtId    = objects[0].toString();
+						//if(objects[7] != null && currentDate.compareTo((Date)objects[7]) >0){
+						ReminderBean bean = new ReminderBean();
+						Date propoValidityEndDate = (Date)objects[7];
+						List<String> userIds = new ArrayList<String>();
+						String qtId    = objects[0].toString();
 
-							ScActor actorDO = getActorByQtIdAndRoleCode(Long.valueOf(qtId),
-									RoleCode.DESK_OFFICER.value());
-							if(actorDO != null) {
-								userIds.add(actorDO.getUserId().toString());
-							} else {
-								log.info("user not found.");
-							}
-							bean.setDocNo(qtId);
-							bean.setDueDate(propoValidityEndDate);
-							bean.setReciepts(userIds);
-							beans.add(bean);
+						ScActor actorDO = getActorByQtIdAndRoleCode(Long.valueOf(qtId),
+								RoleCode.DESK_OFFICER.value());
+						if(actorDO != null) {
+							userIds.add(actorDO.getUserId().toString());
+						} else {
+							log.info("user not found.");
 						}
+						bean.setDocNo(qtId);
+						bean.setDueDate(propoValidityEndDate);
+						bean.setReciepts(userIds);
+						beans.add(bean);
+						//}
 					}
 				}
 			}
