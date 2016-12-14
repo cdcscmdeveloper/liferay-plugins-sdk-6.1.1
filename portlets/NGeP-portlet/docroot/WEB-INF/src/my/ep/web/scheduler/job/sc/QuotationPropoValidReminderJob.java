@@ -7,6 +7,7 @@ import java.util.List;
 
 import my.ep.biz.service.osb.ntf.INtfClientSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
@@ -19,6 +20,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.osb.ntf.NtfRequestDTO;
 import my.ep.dto.osb.ntf.NtfResponseDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.common.kpi.KpiReqDTO;
+import my.ep.dto.pm.common.kpi.KpiResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
@@ -48,8 +51,6 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 		log.info("inside QuotationPropoValidReminderJob");
 	}
 
-	/** The Constant Proposal valid end at less than or equal to 30 days. */
-	private static final String PROPO_VALID_END_AT_MAX_DAYS = "30";
 
 	@Override
 	public List<ReminderBean> getReminderBeans() {
@@ -60,7 +61,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
-			reqDTO.setPropoValidEndAtMaxDays(PROPO_VALID_END_AT_MAX_DAYS);
+			reqDTO.setPropoValidEndAtMaxDays(getMaxProposalValidDays());
 			reqDTO.setStatusIds(qtStatusListInBetween(
 					QTStatusConst.QT_BRIEFING_SITE_VISIT,
 					QTStatusConst.QT_PENDING_LOA));
@@ -397,6 +398,29 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 	public String getKpiCode() {
 		// Proposal Validity Reminder (Quotation)
 		return QTConstants.KPI_CODE_QUOTATION_REMINDER;
+	}
+	
+	/**
+	 * Gets the max proposal valid days.
+	 *
+	 * @return the max proposal valid days
+	 */
+	public Integer getMaxProposalValidDays() {
+		KpiReqDTO reqDTO = new KpiReqDTO();
+		reqDTO.setMaxKPIValue(Boolean.TRUE);
+		reqDTO.setKpiCode(getKpiCode());// days to send reminder
+		KpiResDTO resDTO = getKpiSO().retrieveKpiValueByModuleCodeAndKpiCode(
+				reqDTO);
+		if (resDTO.isSuccessful()) {
+			if(resDTO.getKpiValue() != null){
+				return resDTO.getKpiValue().getKpiValue();
+			}
+		}
+		return null;
+	}
+	private IPmKpiSO getKpiSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
 	}
 
 	@Override
