@@ -273,7 +273,9 @@
 								label="#{lbl['lbl.sc.procurment.type.category']}">
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+								 <p:ajax event="change" 
+									process="@this" partialSubmit="true" update="procTypeBoCategory"
+									listener="#{directLOABackingBean.procTypeCategoryChanged(directLOABackingBean.managedBean.scLoa)}" />
 							</p:selectOneMenu>
 							<p:message id="procTypeBoCategoryMsg" for="procTypeBoCategory"
 								display="icon" />
