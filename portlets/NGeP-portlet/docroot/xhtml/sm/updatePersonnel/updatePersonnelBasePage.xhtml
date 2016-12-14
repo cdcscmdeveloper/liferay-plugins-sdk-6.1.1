@@ -29,38 +29,6 @@
 		</p:outputPanel>
 		<p:outputPanel id="personnelMainOutPanelId" rendered="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
-			
-			<p:panel header="#{lbl['lbl.sm.update.personnel.details']}" >
-				<table width="100%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-						<td><p:selectOneRadio disabled="#{viewSmApplBackingBean.managedBean.disableAuthorizedRadio}"
-								value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
-								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-								<p:ajax event="change" process="@this" onstart="blockWidget.show()" 
-									oncomplete="blockWidget.hide()" update="@form"
-									listener="#{viewSmApplBackingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
-							</p:selectOneRadio></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
-						<td><p:selectOneMenu id="smPersnEpRole"
-								label="#{lbl['lbl.sm.userprofile.eprole']}"
-								value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"
-								disabled="#{viewSmApplBackingBean.managedBean.disableRoleSelection or empty viewSmApplBackingBean.managedBean.ePRoleList}"
-								style="width: 207px;margin: 5px 0px 5px 0px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems value="#{viewSmApplBackingBean.managedBean.ePRoleList}" />
-								<p:ajax event="change" update="@form" process="@this" 
-									listener="#{viewSmApplBackingBean.assignShareHolderPrivilegeByEpRole}" 
-									partialSubmit="true"/>
-							</p:selectOneMenu>
-							<p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
-							showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-				</table>
-			</p:panel>
 		</p:outputPanel>
 		
 	</ui:define>
