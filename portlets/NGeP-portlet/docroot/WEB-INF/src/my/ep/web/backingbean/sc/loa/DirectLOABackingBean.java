@@ -5018,9 +5018,9 @@ public class DirectLOABackingBean extends
 		context.put("gstRegFlag", gstRegFlag);
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
+		/*DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+				new FileOutputStream(getActualFilePath(attachment)));*/
 	}
 
 	/**
@@ -6782,6 +6782,27 @@ public class DirectLOABackingBean extends
 	}
 	
 	/**
+	 * Proc type category changed.
+	 *
+	 * @param scLoa the sc loa
+	 */
+	public void procTypeCategoryChanged(ScLoa scLoa) {
+		IParameterSO parameterSO = null;
+		try {
+			Long parameterId = scLoa.getProcurementTypeCatId().getParameterId();
+
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			scLoa.setProcurementTypeCatId(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
+	/**
 	 * QT Type dropdown change action
 	 */
 	public void qtTypeChanged() {
@@ -6950,15 +6971,16 @@ public class DirectLOABackingBean extends
 		String headerTitle = "";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			headerTitle = "Pembelian Terus";
+			headerTitle = "Pembelian Terus (Bermasa)";
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || 
 				ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
 			headerTitle = "Sebut Harga/ Tender";
 		}
 		context.put("headerTitle", headerTitle); 
+		context.put("subTitle", headerTitle.toLowerCase()); 
 		
 		// loa title
-		context.put("title", scQt.getQtTitle().replaceAll("&", "&#38;"));
+		context.put("loaTitle", scQt.getQtTitle().replaceAll("&", "&#38;"));
 		
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
@@ -7049,8 +7071,13 @@ public class DirectLOABackingBean extends
 		// scLoa
 		context.put("scLoa", scLoa);
 		
-		String content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER, context);
-
+		String content = null;
+		if(scLoa.getProcurementTypeCatId() != null && 
+				scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)){
+			content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER_PRODUCT, context);
+		} else{
+			content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER_SERVICE, context);
+		}
 		if (content != null) {
 			convertHtmlToDocFile(content, getActualFilePath(attachment), scLoa.getLoaNo());
 		}
@@ -7368,7 +7395,10 @@ public class DirectLOABackingBean extends
 	     paragraph.setPPr(ppr);
 	     Text txt = new Text();
 	     txt.setSpace("preserve");
-	     txt.setValue(" PAGE   \\* MERGEFORMAT ");
+	     txt.setValue(" PAGE \\* MERGEFORMAT");
+	     //txt.setValue(" PAGE   \\# $##0.00'issalestax' ");
+	     //txt.setValue(" PAGE \\# #'daripada'");
+	     //txt.setValue("PAGE \\* MERGEFORMAT  NUMPAGES");
 	     run.getContent().add(factory.createRInstrText(txt));
 	     paragraph.getContent().add(run);
 	  }
