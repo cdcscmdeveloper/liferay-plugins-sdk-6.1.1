@@ -258,6 +258,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
     /** The QT is cancel requested. */
     private boolean qtCancelRequested;
     
+    /** The file type pdf. */
+    private String fileTypePdf ="/(\\.|\\/)(pdf)$/i";
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1429,5 +1432,18 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setQtCancelRequested(boolean qtCancelRequested) {
 		this.qtCancelRequested = qtCancelRequested;
 	}
-	
+
+	/**
+	 * @return the fileTypePdf
+	 */
+	public String getFileTypePdf() {
+		return fileTypePdf;
+	}
+
+	/**
+	 * @param fileTypePdf the fileTypePdf to set
+	 */
+	public void setFileTypePdf(String fileTypePdf) {
+		this.fileTypePdf = fileTypePdf;
+	}
 }

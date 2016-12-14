@@ -1576,15 +1576,16 @@ public class LOADetailBackingBean extends
 		String headerTitle = "";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			headerTitle = "Pembelian Terus";
+			headerTitle = "Pembelian Terus (Bermasa)";
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			headerTitle = "Sebut Harga / Tender";
 		}
 		context.put("headerTitle", headerTitle); 
+		context.put("subTitle", headerTitle.toLowerCase()); 
 		
 		// loa title
-		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
+		context.put("loaTitle", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
 		
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
@@ -1678,7 +1679,13 @@ public class LOADetailBackingBean extends
 		// scLoa
 		context.put("scLoa", scLoa);
 		
-		String content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER, context);
+		String content = null;
+		if(scLoa.getProcurementTypeCatId() != null && 
+				scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)){
+			content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER_PRODUCT, context);
+		} else{
+			content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER_SERVICE, context);
+		}
 
 		if (content != null) {
 			convertHtmlToDocFile(content, getActualFilePath(attachment), scLoa.getLoaNo());
@@ -5334,6 +5341,26 @@ public class LOADetailBackingBean extends
 		return userName;
 	}
 	
+	/**
+	 * Proc type category changed.
+	 *
+	 * @param scLoa the sc loa
+	 */
+	public void procTypeCategoryChanged(ScLoa scLoa) {
+		IParameterSO parameterSO = null;
+		try {
+			Long parameterId = scLoa.getProcurementTypeCatId().getParameterId();
+
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			scLoa.setProcurementTypeCatId(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	}
 
 	/**
 	 * The method used to convert the template into document file.

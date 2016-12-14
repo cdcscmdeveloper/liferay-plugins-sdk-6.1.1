@@ -251,7 +251,9 @@
 						rendered="#{isDocTypeQuotation}" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						 <p:ajax event="change" 
+									process="@this" partialSubmit="true" update="procTypeBoCategory"
+									listener="#{lOADetailBackingBean.procTypeCategoryChanged(lOADetailBackingBean.managedBean.scLoa)}" />
 					</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
 						display="icon" /></td>
 			</tr>
