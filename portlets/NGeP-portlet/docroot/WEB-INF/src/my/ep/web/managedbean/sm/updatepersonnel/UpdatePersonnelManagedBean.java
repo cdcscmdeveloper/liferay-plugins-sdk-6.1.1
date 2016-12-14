@@ -16,18 +16,8 @@ public class UpdatePersonnelManagedBean extends SmApplicationManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 2369634084956032415L;
-
-	private int targetPage;
 	private List<SmPersonnel> authorizedPersonnels;
 	private List<SmPersonnel> normalPersonnels;
-
-	public int getTargetPage() {
-		return targetPage;
-	}
-
-	public void setTargetPage(int targetPage) {
-		this.targetPage = targetPage;
-	}
 
 	public List<SmPersonnel> getAuthorizedPersonnels() {
 		return authorizedPersonnels;
