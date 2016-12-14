@@ -13,6 +13,9 @@
 	<cc:attribute name="update" default="@form" />
 	<cc:attribute name="fileUploadListener" required="true" />
 	<cc:attribute name="autoUpdateValue" />
+	<cc:attribute name="fileType" default="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" />
+	<cc:attribute name="invalidFileMessage" default="#{lbl['lbl.txt.upload.invalid.file']}" />
+	
 </cc:interface>
 
 <cc:implementation>
@@ -29,8 +32,8 @@
 				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
 				mode="advanced" 
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				allowTypes="#{cc.attrs.fileType}"
+				invalidFileMessage="#{cc.attrs.invalidFileMessage}"
 				label="#{lbl['lbl.btn.choose']}" 
 				showButtons="false"
 				multiple="false"
