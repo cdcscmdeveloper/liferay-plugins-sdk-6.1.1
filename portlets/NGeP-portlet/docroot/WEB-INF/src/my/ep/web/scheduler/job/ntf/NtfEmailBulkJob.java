@@ -29,11 +29,10 @@ public class NtfEmailBulkJob implements Job {
 			.getServiceObject(ModuleCodeConst.NTF_SCH,
 					INtfEmailBulkSchedulerSO.class);
 			
-			for(int i = 0; i<3; i++){
-//				iNtfEmailBulkSchedulerSO.retrieveDb();
-//				iNtfEmailBulkSchedulerSO.sendEmail();
-//				iNtfEmailBulkSchedulerSO.updateDb();
-				iNtfEmailBulkSchedulerSO.process();
+			for(int i = 0; i<6; i++){
+				iNtfEmailBulkSchedulerSO.retrieveDb();
+				iNtfEmailBulkSchedulerSO.sendEmail();
+				iNtfEmailBulkSchedulerSO.updateDb();
 			}
 		
 		}catch(Exception ex){

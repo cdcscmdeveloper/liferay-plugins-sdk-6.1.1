@@ -28,12 +28,10 @@ public class NtfMessageDirectEmailJob implements Job {
 			.getServiceObject(ModuleCodeConst.NTF_SCH,
 					INtfMessageDirectEmailSchedulerSO.class);
 			
-//			iNtfMessageDirectEmailSchedulerSO.retrieveDb();
-//			iNtfMessageDirectEmailSchedulerSO.sendNotification();
-//			iNtfMessageDirectEmailSchedulerSO.updateDb();
+			iNtfMessageDirectEmailSchedulerSO.retrieveDb();
+			iNtfMessageDirectEmailSchedulerSO.sendNotification();
+			iNtfMessageDirectEmailSchedulerSO.updateDb();
 			
-			iNtfMessageDirectEmailSchedulerSO.process();
-		
 		} catch (Exception ex){
 			log.error(ex);
 		}
