@@ -29,6 +29,11 @@
 		</p:outputPanel>
 		<p:outputPanel id="personnelMainOutPanelId" rendered="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form"
+						action="#{viewSmApplBackingBean.save}" onclick="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" />
+			</div>
 		</p:outputPanel>
 		
 	</ui:define>
