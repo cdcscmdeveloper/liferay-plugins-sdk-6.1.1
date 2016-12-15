@@ -216,4 +216,6 @@ public interface QTConstants {
 	public static final String KPI_CODE_QUOTATION_REMINDER  = "SC016"; //Proposal Validity Reminder (Quotation)
 	public static final String KPI_CODE_TENDER_REMINDER = "SC017"; // Proposal Validity Reminder (Tender)
 	public static final String KPI_CODE_BIDDING_REMINDER = "SC018"; //Upcoming BidSessions Reminder
+	public static final String SPEC_MAINTENANCE = "SM"; 
+	public static final String SPEC_MAINTENANCE_SEARCH_PAGE = "/xhtml/sc/speccommitteemaintenance/specificationCommitteeMaintenanceSearch.xhtml";
 }
