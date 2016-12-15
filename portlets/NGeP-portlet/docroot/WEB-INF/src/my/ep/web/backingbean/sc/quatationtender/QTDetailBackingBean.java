@@ -220,6 +220,12 @@ public class QTDetailBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
 	
+	private static final int FORM_NO_ACTION = 0;
+	private static final int FORM_SC = 1;
+	private static final int FORM_OC = 2;
+	private static final int FORM_TEC = 4;
+	private static final int FORM_FEC = 8;
+	
 	private static final int REFORM_NO_ACTION = 0;
 	private static final int REFORM_SC = 1;
 	private static final int REFORM_OC = 2;
@@ -1657,7 +1663,7 @@ public class QTDetailBackingBean extends
 	 * @param isApprovalReq
 	 *            the is approval req
 	 */
-	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, int reformCommitteeFlag) {
+	public void retrieveCommitteeAppointmentTabDtl(int formCommitteeFlag, int reformCommitteeFlag) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
@@ -1700,9 +1706,9 @@ public class QTDetailBackingBean extends
 					tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
 					ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
-					if (isApprovalReq) {
+					if ((formCommitteeFlag & FORM_OC) == FORM_OC) {
 						committee = evalCommitte.getScCommittee();
-						committee.setApprovalReq(isApprovalReq);
+						committee.setApprovalReq(true);
 						reformCommittee = (reformCommitteeFlag & REFORM_OC) == REFORM_OC ||
 								(reformCommitteeFlag & REFORM_TEC) == REFORM_TEC ||
 								(reformCommitteeFlag & REFORM_FEC) == REFORM_FEC;
@@ -1727,9 +1733,9 @@ public class QTDetailBackingBean extends
 					tabType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
 					ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
-					if (isApprovalReq) {
+					if ((formCommitteeFlag & FORM_OC) == FORM_OC) {
 						committee = openingCommitte.getScCommittee();
-						committee.setApprovalReq(isApprovalReq);
+						committee.setApprovalReq(true);
 						reformCommittee = (reformCommitteeFlag & REFORM_OC) == REFORM_OC;
 								
 						if ((committee.getCommitteStatus() != null &&
@@ -1750,9 +1756,9 @@ public class QTDetailBackingBean extends
 					tabType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
 					ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
-					if (isApprovalReq) {
+					if ((formCommitteeFlag & FORM_TEC) == FORM_TEC) {
 						committee = tecCommitte.getScCommittee();
-						committee.setApprovalReq(isApprovalReq);
+						committee.setApprovalReq(true);
 						reformCommittee = (reformCommitteeFlag & REFORM_TEC) == REFORM_TEC;
 						
 						if ((committee.getCommitteStatus() != null &&
@@ -1773,9 +1779,9 @@ public class QTDetailBackingBean extends
 					tabType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
 					ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
-					if (isApprovalReq) {
+					if ((formCommitteeFlag & FORM_FEC) == FORM_FEC) {
 						committee = fecCommitte.getScCommittee();
-						committee.setApprovalReq(isApprovalReq);
+						committee.setApprovalReq(true);
 						reformCommittee = (reformCommitteeFlag & REFORM_FEC) == REFORM_FEC;
 						
 						if ((committee.getCommitteStatus() != null &&
@@ -1954,6 +1960,10 @@ public class QTDetailBackingBean extends
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_TEC_COMMITTEE
+							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_FEC_COMMITTEE
+							.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_FC_SECRETARY
 							.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
@@ -1963,27 +1973,33 @@ public class QTDetailBackingBean extends
 				
 				boolean isCommitteeAppointmentRemark = !SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(taskName);
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-				if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-						.equalsIgnoreCase(taskName)
-						&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
-								.equalsIgnoreCase(taskName)
-						&& !SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName)) {
-
-					SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
-
-					qtId = committeDataType.getQtId().longValue();
-				} else {
 
 					SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
 					qtId = evalDataType.getQtId().longValue();
-
+					
+				} else {
+					
+					SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
+					qtId = committeDataType.getQtId().longValue();
+					
 				}
 				
 				retrieveQuationTenderDetails(new Long(qtId));
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(true, REFORM_NO_ACTION);
+					retrieveCommitteeAppointmentTabDtl(FORM_OC+FORM_TEC+FORM_FEC, REFORM_NO_ACTION);
+				} else if (SCProcessNameConst.ASSIGN_TEC_COMMITTEE
+						.equalsIgnoreCase(taskName)) {
+					retrieveCommitteeAppointmentTabDtl(FORM_TEC, REFORM_NO_ACTION);
+				} else if (SCProcessNameConst.ASSIGN_FEC_COMMITTEE
+						.equalsIgnoreCase(taskName)) {
+					retrieveCommitteeAppointmentTabDtl(FORM_FEC, REFORM_NO_ACTION);
 				} else if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName)) {
 					IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -1995,17 +2011,21 @@ public class QTDetailBackingBean extends
 						reqDTO.setQtId(qtId);
 						ScQtFinalization scQtFinalization = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO)
 							.getScQtFinalization();
+						int formCommitteeFlag = FORM_NO_ACTION;
 						int reformCommitteeFlag = REFORM_NO_ACTION;
 						if (scQtFinalization.isReEvaluateCompReq()) {
+							formCommitteeFlag += FORM_OC;
 							reformCommitteeFlag += REFORM_OC;
 						}
 						if (scQtFinalization.isReEvaluateTechReq()) {
+							formCommitteeFlag += FORM_TEC;
 							reformCommitteeFlag += REFORM_TEC;
 						}
 						if (scQtFinalization.isReEvaluateFinReq()) {
+							formCommitteeFlag += FORM_FEC;
 							reformCommitteeFlag += REFORM_FEC;
 						}
-						retrieveCommitteeAppointmentTabDtl(true, 
+						retrieveCommitteeAppointmentTabDtl(formCommitteeFlag, 
 								reformCommitteeFlag);
 						removeCommitteeActivityDetails(this.getManagedBean().getQt());
 
@@ -2015,10 +2035,10 @@ public class QTDetailBackingBean extends
 					
 				} else if (SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(true, REFORM_SC);
+					retrieveCommitteeAppointmentTabDtl(FORM_SC, REFORM_SC);
 					
 				} else {
-					retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
+					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				}
 				
 				if (isCommitteeAppointmentRemark) {
@@ -2175,6 +2195,10 @@ public class QTDetailBackingBean extends
 							.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_TEC_COMMITTEE
+							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_FEC_COMMITTEE
+							.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
 				
@@ -2298,7 +2322,7 @@ public class QTDetailBackingBean extends
 		List<TabBean> tabList = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		if (CollectionUtils.isEmpty(tabList)) {
-			retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
+			retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 		}
 		updateQtDtls();
 		IQTDetailSO detailSO;
@@ -3777,7 +3801,7 @@ public class QTDetailBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			this.getManagedBean().setSelectedCommitteeTabIndex(
 					committeeTabIndex);
-			retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
+			retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				initializeRemarksForCommitteeApproval();
@@ -3999,7 +4023,7 @@ public class QTDetailBackingBean extends
 
 			case 2:
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
+				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
@@ -4208,6 +4232,7 @@ public class QTDetailBackingBean extends
 
 			quationTenderReqDTO.setQtdetail(qtDetails);
 			quationTenderReqDTO.setAmendMentBean(amendMentBean);
+			quationTenderReqDTO.setRoleCode(getUserRoleCode());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
