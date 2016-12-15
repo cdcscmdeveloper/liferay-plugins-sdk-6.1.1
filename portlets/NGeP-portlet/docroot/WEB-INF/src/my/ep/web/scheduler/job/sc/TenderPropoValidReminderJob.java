@@ -40,11 +40,14 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 	private static Logger log = EpLogger
 			.getLogger(TenderPropoValidReminderJob.class);
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#sendProposalValidReminder()
-	 */
-	
+	public TenderPropoValidReminderJob() {
+		log.info("inside TenderPropoValidReminderJob");
+	}
 
+
+	/* (non-Javadoc)
+	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getReminderBeans()
+	 */
 	@Override
 	public List<ReminderBean> getReminderBeans() {
 		IQTDetailSO detailSO = null;
@@ -82,10 +85,12 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 						bean.setDocNo(qtId);
 						bean.setDueDate(propoValidityEndDate);
 						bean.setReciepts(userIds);
+						bean.setData(objects);
 						beans.add(bean);
 						//}
 					}
 				}
+				log.info("TenderPropoValidReminderJob @ QT List :"+resDTO.getQtDetailsArray().size());
 			}
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
@@ -229,7 +234,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 
 		// 9. Total Days left 
 		paramList.add(String.valueOf(reminders));
-
+		log.info("Tender paramList "+paramList.size());
 		return paramList;
 	}
 	
