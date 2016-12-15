@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -56,6 +57,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -68,6 +70,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -116,7 +119,10 @@ public class QTCommitteBackingBean extends
 
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
-			.getLogger(QTCommitteBackingBean.class);	
+			.getLogger(QTCommitteBackingBean.class);
+	
+	private ScWorkFlowStatus ocWorkFlowStatus;
+	private ScWorkFlowStatus tecWorkFlowStatus;
 
 	/**
 	 * Debug logger.
@@ -1876,23 +1882,59 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is committe info editable
 	 */
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
-		
 		Long currentStatusId = null;
-		if (getManagedBean().getQt().getQtStatus() != null) {
-			currentStatusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		ScQt scQt = getManagedBean().getQt();
+		if (scQt.getQtStatus() != null) {
+			currentStatusId = scQt.getQtStatus().getStatusId();
 		} else {
 			currentStatusId = getManagedBean().getCurrentStatusId();
 		}
 				
 		if (this.getManagedBean().isMaintanceFlow()) {
-		
-			Date closingDate = this.getManagedBean().getQt().getClosingDate();
-			if (isQTStatusPublished(currentStatusId)
-					&& closingDate != null && DateUtils.getDaysDifference(new Date(), closingDate) <= 7
-					&& (QTStatusConst.CMT_PENDING_SUBMISSION
-							.equals(committeStatus) || QTStatusConst.CMT_PENDING_REVISION
-							.equals(committeStatus))) {
-				return true;
+			if (super.isQTStatusPublished(currentStatusId)) {
+				if (super.isQTStatusInBetween(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
+					if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)) {
+						Long qtId = scQt.getQtId();
+						
+						if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+							if (ocWorkFlowStatus == null || (ocWorkFlowStatus.getDocId() != null && !ocWorkFlowStatus.getDocId().equals(qtId))) {
+								ocWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_OC_COMMITTE, qtId);	
+							}
+							
+							if (ocWorkFlowStatus != null) {
+								if (QTStatusConst.OC_COMPLETED.equals(ocWorkFlowStatus.getPmStatus().getStatusId())) {
+									return true;
+								}
+							}
+						} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+							if (tecWorkFlowStatus == null || (tecWorkFlowStatus.getDocId() != null && !tecWorkFlowStatus.getDocId().equals(qtId))) {
+								tecWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_TEC_COMMITTE, qtId);
+							}
+							
+							if (tecWorkFlowStatus != null) {
+								if (QTStatusConst.TEC_COMPLETED.equals(tecWorkFlowStatus.getPmStatus().getStatusId())) {
+									return true;
+								}
+							}
+						} else {
+							return true;
+						}
+						
+					} else {
+						Date closingDate = this.getManagedBean().getQt().getClosingDate();
+						if (closingDate != null && 
+								DateUtils.getDaysDifference(
+										DateUtils.setDefaultDateTime(new Date()), 
+										DateUtils.setDefaultDateTime(closingDate)) <= 7 &&
+								(QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) || 
+										QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
+							return true;
+						}
+					}
+				} else {
+					return true;
+				}
+				
 			} else if (!isEligibleStatusForBtns(currentStatusId)) {
 				return true;
 			} 
@@ -1929,6 +1971,23 @@ public class QTCommitteBackingBean extends
 		}
 		return false;
 
+	}
+	
+	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+		IScWorkFlowStatusSO workFlowStatusSO = null;
+		try {
+
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(docType);
+			reqDTO.setDocId(docId);
+			return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO)
+					.getWorkFlowStatus();
+		} finally {
+			workFlowStatusSO = null;
+		}
 	}
 	
 	private boolean isQTStatusAfterScheduleDoc(Long currentStatusId) {
