@@ -113,6 +113,7 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.menuitem.MenuItem;
@@ -4320,8 +4321,12 @@ public class SPDetailBackingBean extends
 			public int compare(ScQtProposalChecklist checklist1,
 					ScQtProposalChecklist checklist2) {
 
-				return checklist1.getScQtCheckList().getChecklistSeq()
-						- checklist2.getScQtCheckList().getChecklistSeq();
+				//return checklist1.getScQtCheckList().getChecklistSeq()
+						//- checklist2.getScQtCheckList().getChecklistSeq();
+				  return new CompareToBuilder()
+	                .append(checklist1.getScQtCheckList().getChecklistSeq(),checklist2.getScQtCheckList().getChecklistSeq())
+	                .append(checklist1.getScQtCheckList().getCreatedDate(), checklist2.getScQtCheckList().getCreatedDate())
+	               .toComparison();
 			}
 		});
 	}
