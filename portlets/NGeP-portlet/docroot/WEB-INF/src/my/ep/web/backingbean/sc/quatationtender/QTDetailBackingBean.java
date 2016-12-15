@@ -1993,7 +1993,7 @@ public class QTDetailBackingBean extends
 				retrieveQuationTenderDetails(new Long(qtId));
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(FORM_OC+FORM_TEC+FORM_FEC, REFORM_NO_ACTION);
+					retrieveCommitteeAppointmentTabDtl(FORM_OC, REFORM_NO_ACTION);
 				} else if (SCProcessNameConst.ASSIGN_TEC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
 					retrieveCommitteeAppointmentTabDtl(FORM_TEC, REFORM_NO_ACTION);
