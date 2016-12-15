@@ -92,7 +92,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 						// }
 					}
 				}
-				log.info("QuotationPropoValidReminderJob @ QT List : "+resDTO.getQtDetailsArray().size());
+				log.info("QuotationPropoValidReminderJob @ QT List Size : "+resDTO.getQtDetailsArray().size());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -244,7 +244,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 		// 9. Total Days left
 		paramList.add(String.valueOf(reminders));
 
-		log.info("Quoation paramList "+paramList.size());
+		log.info("Quoation paramList Size :"+paramList.size());
 		return paramList;
 	}
 
