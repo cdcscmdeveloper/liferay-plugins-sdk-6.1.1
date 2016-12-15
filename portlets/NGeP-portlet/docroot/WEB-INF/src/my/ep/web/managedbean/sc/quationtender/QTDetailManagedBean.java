@@ -1546,7 +1546,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
     private String viewOriginalUrl;
     private boolean showAndHideAmounts=Boolean.TRUE;
-	
+    private boolean specMaintenance=Boolean.FALSE;
+    private String specMaintenanceScreen="SC";
+    private boolean isUpdateSpec=Boolean.TRUE;
+    
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -9701,5 +9704,52 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setShowAndHideAmounts(boolean showAndHideAmounts) {
 		this.showAndHideAmounts = showAndHideAmounts;
 	}
+
+	/**
+	 * @return the specMaintenance
+	 */
+	public boolean isSpecMaintenance() {
+		return specMaintenance;
+	}
+
+	/**
+	 * @param specMaintenance the specMaintenance to set
+	 */
+	public void setSpecMaintenance(boolean specMaintenance) {
+		this.specMaintenance = specMaintenance;
+	}
+
+	/**
+	 * @return the specMaintenanceScreen
+	 */
+	public String getSpecMaintenanceScreen() {
+		return specMaintenanceScreen;
+	}
+
+	/**
+	 * @param specMaintenanceScreen the specMaintenanceScreen to set
+	 */
+	public void setSpecMaintenanceScreen(String specMaintenanceScreen) {
+		this.specMaintenanceScreen = specMaintenanceScreen;
+	}
+
+	/**
+	 * @return the isUpdateSpec
+	 */
+	public boolean isUpdateSpec() {
+		return isUpdateSpec;
+	}
+
+	/**
+	 * @param isUpdateSpec the isUpdateSpec to set
+	 */
+	public void setUpdateSpec(boolean isUpdateSpec) {
+		this.isUpdateSpec = isUpdateSpec;
+	}
+
+	
+
+	
+	
 
 }
