@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -195,6 +194,7 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -1455,11 +1455,17 @@ public class SpecificationBackingBean extends
 							resDTO.getTechnicalCheckList());
 					// localcheckList.addAll(resDTO.getTechnicalCheckList());
 				}
-
+                
 				this.getManagedBean().setScQtCheckSt2techProposal(
 						localcheckList);
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
+				checklistSorting(this.getManagedBean().getScQtCheckSt2techProposal());
+				}
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())){
+				checklistSorting(this.getManagedBean().getScQtCheckSt2financeProposalList());
+				}
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 			}
@@ -1497,6 +1503,9 @@ public class SpecificationBackingBean extends
 				// Collections.sort(resDTO.getFinancialCheckLists());
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())){
+				checklistSorting(this.getManagedBean().getScQtCheckSt2financeProposalList());
+				}
 			}
 		} finally {
 			specSo = null;
@@ -3080,7 +3089,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @param docType
 	 *            the doc type
 	 */
-	private void retriveSpecdetails(Long qtId) {
+	public void retriveSpecdetails(Long qtId) {
 		
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
@@ -4058,6 +4067,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				if (this.getManagedBean().getQt().isPanel()) {
 					this.getManagedBean().setPanelItemCategory("");
 					this.getManagedBean().setSpecNewable(true);
+					this.getManagedBean().setUpdateSpec(true);
 					if (null == this.getManagedBean().getPanelItemCategory()
 							|| "".equals(this.getManagedBean()
 									.getPanelItemCategory())) {
@@ -4072,6 +4082,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					}*/
 						if(null!=templateresDTO.getSpecMaster() && null==templateresDTO.getSpecMaster().getCtPanelItem()){
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
+						}else{
+							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
 						}
 					}
 					if ((null != this.getManagedBean().getPanelItemCategory() && !""
@@ -4081,7 +4093,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									.equalsIgnoreCase(this.getManagedBean()
 											.getPanelItemCategory())) {
 						this.getManagedBean().setSpecNewable(false);
+						this.getManagedBean().setUpdateSpec(false);
 					}
+					else if ((null != this.getManagedBean().getPanelItemCategory() && !""
+							.equals(this.getManagedBean()
+									.getPanelItemCategory()))
+							&& ParameterConst.ITEM_CATEGORY_TYPE_GENERAL
+									.equalsIgnoreCase(this.getManagedBean()
+											.getPanelItemCategory())) {
+						
+						setTechnicalSpecEnableDisable();
+					}
+				}
+				else{
+					setTechnicalSpecEnableDisable();
 				}
 				/*
 				 * templateSpecBean.getSpecMaster().setScoringReq(
@@ -5333,6 +5358,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								.equalsIgnoreCase(this.getManagedBean()
 										.getPanelItemCategory())) {
 					this.getManagedBean().setSpecNewable(false);
+					this.getManagedBean().setUpdateSpec(false);
 				}
 			}
 			/*
@@ -9482,6 +9508,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			String panelItemCategory = this.getManagedBean()
 					.getPanelItemCategory();
 			boolean specNewable = this.getManagedBean().isSpecNewable();
+			boolean updateSpec = this.getManagedBean().isUpdateSpec();
 			String loginRoleType=this.getManagedBean().getLoginRoleType();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
@@ -9514,6 +9541,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			specReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 			specReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			boolean isAssignedState = this.getManagedBean().isAssignedState();
+			boolean qtMaintenanceFlow =this.getManagedBean().isMaintanceFlow();
+		    String specScreenMaintenance=this.getManagedBean().getSpecMaintenanceScreen();
+		   boolean specMaintenance= this.getManagedBean().isSpecMaintenance();
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = constructSpecCommitteDtls().getScQt();
@@ -9768,6 +9798,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setPayLoad(quotationTenderDataType);
 			this.getManagedBean().setAssignedState(isAssignedState);
 			this.getManagedBean().setLoginRoleType(loginRoleType);
+			this.getManagedBean().setMaintanceFlow(qtMaintenanceFlow);
+		    this.getManagedBean().setSpecMaintenanceScreen(specScreenMaintenance);
+		    this.getManagedBean().setSpecMaintenance(specMaintenance);
+		    this.getManagedBean().setUpdateSpec(updateSpec);
 			if(null!=this.getManagedBean().getCtContract()){
 				this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 			}
@@ -11351,6 +11385,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			String flowtype) {
 		this.getManagedBean().setSpecSelectStats(false);
 		this.getManagedBean().setSpecNewable(true);
+		this.getManagedBean().setUpdateSpec(true);
 		this.getManagedBean().setSpecItemWeightageRequired(false);
 		try {
 			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
@@ -13177,6 +13212,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	public String addPanelItemsToTemplateSpec(){
 		this.getManagedBean().setSpecNewable(true);
+		this.getManagedBean().setUpdateSpec(true);
 		this.getManagedBean().setPanelSpecExistedOrNot(false);
 		List<CtPanelItem> selectedPanelItems=this.getManagedBean().getSelectCtPanelItem();
 		if(null==selectedPanelItems || selectedPanelItems.isEmpty()){
@@ -13221,6 +13257,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		for(CtPanelItem checkItem:selectedPanelItems){
 			if(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC.equals(checkItem.getItemCategoryId().getParameterCode())){
 				this.getManagedBean().setSpecNewable(false);
+				this.getManagedBean().setUpdateSpec(false);
 				break;
 			}
 		}
@@ -13395,8 +13432,35 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					public int compare(ScQtCheckList checklist1, 
 							ScQtCheckList checklist2) {
 						
-						return checklist1.getChecklistSeq()-checklist2.getChecklistSeq();
+						//return checklist1.getChecklistSeq()-checklist2.getChecklistSeq();
+						  return new CompareToBuilder()
+			                .append(checklist1.getChecklistSeq(), checklist2.getChecklistSeq())
+			                .append(checklist1.getCreatedDate(), checklist2.getCreatedDate())
+			               .toComparison();
 					}
 				});
+	}
+	
+	/**
+	 * The method to used for SpecMaintenance.
+	 * @return string value.
+	 */
+	public String getSpecMaintenance(){
+	
+		return QTConstants.SPEC_MAINTENANCE;
+	}
+	
+	private void setTechnicalSpecEnableDisable(){
+		if(this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())){
+			if(!this.getManagedBean().isReadOnly()){
+			this.getManagedBean().setSpecNewable(false);
+			this.getManagedBean().setUpdateSpec(true);
+			}
+			else{
+				this.getManagedBean().setSpecNewable(false);
+				this.getManagedBean().setUpdateSpec(false);	
+			}
+			}
+			
 	}
 }
