@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -163,6 +164,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -1401,7 +1403,9 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setComplianceTechnicalCheckList(
 					resDTO.getCheckListResultBean().getResultList());
-
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
+			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
+			}
 		} finally {
 			evaluationSO = null;
 		}
@@ -1491,6 +1495,9 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setCompliancefinancialCheckList(
 					resDTO.getCheckListResultBean().getResultList());
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
+				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
+				}
 
 		} finally {
 			evaluationSO = null;
@@ -1720,6 +1727,9 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(
 					localCheckList);
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgTechnicalCheckList())){
+				checklistSorting(this.getManagedBean().getEvaluationStgTechnicalCheckList());
+				}
 			checkTechnicalSuppliersQualified();
 
 		} finally {
@@ -1869,7 +1879,9 @@ public class EvaluationBackingBean extends
 				checkFinancialSuppliersQualified();
 
 			}
-
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgfinancialCheckList())){
+				checklistSorting(this.getManagedBean().getEvaluationStgfinancialCheckList());
+				}
 		} finally {
 			evaluationSO = null;
 
@@ -11599,4 +11611,20 @@ private void retriveCommitteeRemarksList(){
 						new FacesScopes().getUserLocale())));
 		return selectItems;
 	}
+	
+	private void checklistSorting(List<ScQtCheckList> checkList){
+		Collections.sort(checkList, 
+				new Comparator<ScQtCheckList>() {
+					public int compare(ScQtCheckList checklist1, 
+							ScQtCheckList checklist2) {
+						
+						//return checklist1.getChecklistSeq()-checklist2.getChecklistSeq();
+						  return new CompareToBuilder()
+			                .append(checklist1.getChecklistSeq(), checklist2.getChecklistSeq())
+			                .append(checklist1.getCreatedDate(), checklist2.getCreatedDate())
+			               .toComparison();
+					}
+				});
+	}
+	
 }
