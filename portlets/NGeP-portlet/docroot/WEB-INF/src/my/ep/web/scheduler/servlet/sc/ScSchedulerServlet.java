@@ -22,6 +22,7 @@ import my.ep.web.scheduler.job.sc.QTProposalCloseSchedulingJob;
 import my.ep.web.scheduler.job.sc.QTPublishSchedulingJob;
 import my.ep.web.scheduler.job.sc.QuotationPropoValidReminderJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
+import my.ep.web.scheduler.job.sc.TenderPropoValidReminderJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobDataMap;
@@ -158,7 +159,7 @@ public class ScSchedulerServlet extends HttpServlet {
 				new JobKey(
 						SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB,
 						SchedulerConstants.SC_JOB_GROUP),
-				QuotationPropoValidReminderJob.class,
+				TenderPropoValidReminderJob.class,
 				SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION,
 				SchedulerPropertiesUtils
 						.getInstance()
