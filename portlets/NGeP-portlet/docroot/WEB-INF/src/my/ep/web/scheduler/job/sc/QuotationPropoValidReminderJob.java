@@ -63,9 +63,10 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 					.getQTDetailsByStatusIds(reqDTO);
 			if (resDTO.isSuccessful()) {
 				beans = new ArrayList<ReminderBean>();
-				List<String> userIds = new ArrayList<String>();
+				
 				for (Object[] objects : resDTO.getQtDetailsArray()) {
 					for (int i = 0; i < objects.length; i++) {
+						List<String> userIds = new ArrayList<String>();
 						// Date currentDate = new Date();
 
 						// Before proposal validity expired qts
@@ -88,7 +89,6 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 						bean.setReciepts(userIds);
 						bean.setData(objects);
 						beans.add(bean);
-						userIds.clear();
 						// }
 					}
 				}
