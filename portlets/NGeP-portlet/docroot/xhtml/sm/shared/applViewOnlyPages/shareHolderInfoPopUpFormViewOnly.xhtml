@@ -76,7 +76,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true" id="shrRolesPanel">
+	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true" id="shrRolesPanel" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 		<ui:include src="personnelRolesPanelViewOnly.xhtml" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
@@ -161,9 +161,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"/></td>
 							<td>
-								<p:selectOneRadio
-									value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg}"
-									rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR>
+								<p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 									<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 								</p:selectOneRadio>
@@ -208,12 +206,12 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.addrDtls']}" toggleable="true"
-		id="shareHolderAddrDialog">
+		id="shareHolderAddrDialog" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 		<ui:include
 			src="/xhtml/sm/shared/applViewOnlyPages/shareHolderAddressInfoPopUpFormViewOnly.xhtml" />
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true" id="equiShrHldrJbFnc">
+	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true" id="equiShrHldrJbFnc" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf"
@@ -285,7 +283,7 @@
 		test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType
 						eq SupplierManagementConst.STYPE_CONSULTANT}">
 	<p:panel header="#{lbl['lbl.sm.related.company.details']}" toggleable="true"
-		id="equiShrHldrRelComp">
+		id="equiShrHldrRelComp" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 
 		<p:dataTable id="shrRelCom"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smRelatedCompanies}"
@@ -361,7 +359,7 @@
 	</p:dialog>
 	
 	<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
-		id="equiShrPfBdyPan">
+		id="equiShrPfBdyPan" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 		<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smAssociationBodies}"
 			rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
@@ -411,7 +409,7 @@
 	</p:dialog>
 	</c:if>
 	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true"
-		id="equiShrHldrAcadPan">
+		id="equiShrHldrAcadPan" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 
 		<p:dataTable id="shrAqdt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffAcademics}"
