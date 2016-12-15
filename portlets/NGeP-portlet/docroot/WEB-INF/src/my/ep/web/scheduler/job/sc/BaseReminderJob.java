@@ -89,10 +89,13 @@ public abstract class BaseReminderJob implements Job {
 	 */
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		log.info("execute BaseReminderJob");
 		List<ReminderBean> beans = getReminderBeans();
+		List<String> paramList = null;
 		if (beans != null && !beans.isEmpty()) {
 			// no.of reminder days
 			List<Long> notificationDays = getNotificationDays(getKpiCode());
+			
 			for (ReminderBean reminderBean : beans) {
 				Long reminderDays = DateUtils.getDaysDifference(
 						DateUtils.getCurrentDateWithoutTime(),
@@ -100,15 +103,22 @@ public abstract class BaseReminderJob implements Job {
 
 				if (CollectionUtils.isNotEmpty(notificationDays)
 						&& notificationDays.contains(reminderDays)) {
-					List<String> paramList = getParams(reminderDays,
-							reminderBean.getData());
+					
+					// params
+					if(reminderBean.getData() != null){
+					  paramList = getParams(reminderDays, reminderBean.getData());
+					}
+					
+					// subparams
 					List<String> subjectParamList = getSubjectParams(reminderBean
 							.getData());
+					
 					// send reminder
 					sendReminder(getTemplateId(), reminderBean, paramList,
 							subjectParamList);
 				}
 			}
+			log.info("End BaseReminderJob");
 		} else {
 			log.info("reminder beans is either null or empty");
 		}
@@ -128,7 +138,7 @@ public abstract class BaseReminderJob implements Job {
 	 */
 	private boolean sendReminder(String templateId, ReminderBean reminderBean,
 			List<String> paramList, List<String> subjectParamList) {
-		log.info("sendReminder -  Doc No " + reminderBean.getDocNo());
+		log.info("sendReminder -  Doc No :" + reminderBean.getDocNo());
 
 		// NTF
 		INtfClientSO ntfClientSO = null;
