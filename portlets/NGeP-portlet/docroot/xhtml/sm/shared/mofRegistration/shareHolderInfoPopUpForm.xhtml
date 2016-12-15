@@ -442,7 +442,7 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-				<td><p:selectOneRadio disabled="#{backingBean.managedBean.disableAuthorizedRadio}"
+				<td><p:selectOneRadio disabled="#{backingBean.managedBean.disableAuthorizedRadio or backingBean.managedBean.popupAction eq 'U'}"
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -469,7 +469,7 @@
 					<td><p:selectOneMenu id="smPersnEpRole"
 							label="#{lbl['lbl.sm.userprofile.eprole']}"
 							value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-							disabled="#{backingBean.managedBean.disableRoleSelection or empty backingBean.managedBean.ePRoleList}"
+							disabled="#{backingBean.managedBean.disableRoleSelection or backingBean.managedBean.popupAction eq 'U'}"
 							style="width: 207px;margin: 5px 0px 5px 0px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
@@ -523,6 +523,7 @@
 									and backingBean.managedBean.selectedShareHolder.softcertFlg ne '0'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
+						disabled="#{backingBean.managedBean.popupAction eq 'U'}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')

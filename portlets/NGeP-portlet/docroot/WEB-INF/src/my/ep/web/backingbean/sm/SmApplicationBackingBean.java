@@ -5474,6 +5474,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
+		getManagedBean().setPopupAction("U");
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		SmApplicationUtil.assignSelShareHolder(shareHolderBean,
 				getManagedBean(), currentTab);
@@ -5580,6 +5581,7 @@ public class SmApplicationBackingBean extends
 	 *            - the personel type to define equity or not
 	 */
 	public void assignNewShareHolder() {
+		getManagedBean().setPopupAction("N");
 		SmApplicationUtil.initNewSmPersonnel(getManagedBean(), currentTab);
 
 	}

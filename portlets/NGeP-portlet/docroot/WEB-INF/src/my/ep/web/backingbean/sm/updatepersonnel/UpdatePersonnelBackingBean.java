@@ -190,7 +190,7 @@ public class UpdatePersonnelBackingBean extends
 	}
 
 	/**
-	 * Gets the my identity status description based on the responsecode.
+	 * Gets the my identity status description based on the response code.
 	 * 
 	 * @param identityResponseCode
 	 *            - the identity response code
@@ -263,9 +263,9 @@ public class UpdatePersonnelBackingBean extends
 	}
 
 	/**
-	 * Submit personnel maintenance and regenerate virtual cert
+	 * Submit personnel maintenance and regenerate virtual certificate
 	 */
-	public void submit() {
+	public void save() {
 		List<SmMofCert> certList = SmVirtualCertHelper.getInstance()
 				.retrieveCurrentMofCert(
 						getManagedBean().getSmAppl().getApplId());
@@ -290,8 +290,10 @@ public class UpdatePersonnelBackingBean extends
 		}
 		SmCommonUtil.showFacesMsg(null, FacesMessage.SEVERITY_INFO,
 				MessageUtils.getMessage(MessageConst.INFO_721226,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale()), null);
+						new String[] { getManagedBean()
+								.getSelectedShareHolder().getName() },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+								.getUserLocale()), null);
 	}
 
 	/**

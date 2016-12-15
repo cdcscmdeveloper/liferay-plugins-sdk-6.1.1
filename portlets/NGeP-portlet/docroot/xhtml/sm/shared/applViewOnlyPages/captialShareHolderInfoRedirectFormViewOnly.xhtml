@@ -17,13 +17,6 @@
 					<p:commandButton type="button" value="#{lbl['lbl.btn.back']}" />
 				</p:commandLink>
 			</div>
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.updatePersonnelPage}">
-				<div align="right" style="padding-top: 10px;">
-					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@form"
-							action="#{viewSmApplBackingBean.submit}" onclick="blockWidget.show()" 
-							oncomplete="blockWidget.hide()" />
-				</div>
-			</p:outputPanel>
 			<ui:include
 				src="/xhtml/sm/shared/applViewOnlyPages/shareHolderInfoPopUpFormViewOnly.xhtml" />
 		</p:outputPanel>
