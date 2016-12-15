@@ -5,10 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import my.ep.biz.service.osb.ntf.INtfClientSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -17,20 +15,15 @@ import my.ep.constant.NotificationTextConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.osb.ntf.NtfRequestDTO;
-import my.ep.dto.osb.ntf.NtfResponseDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
 import my.ep.dto.pm.common.kpi.KpiResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.type.pm.RoleCode;
@@ -54,6 +47,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 
 	@Override
 	public List<ReminderBean> getReminderBeans() {
+		log.info("getReminderBeans");
 		IQTDetailSO detailSO = null;
 		List<ReminderBean> beans = null;
 		try {
@@ -92,11 +86,13 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 						bean.setDocNo(qtId);
 						bean.setDueDate(propoValidityEndDate);
 						bean.setReciepts(userIds);
+						bean.setData(objects);
 						beans.add(bean);
 						userIds.clear();
 						// }
 					}
 				}
+				log.info("QuotationPropoValidReminderJob @ QT List : "+resDTO.getQtDetailsArray().size());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,150 +105,12 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 		return beans;
 	}
 
-	/**
-	 * Send proposal validity reminder.
-	 * 
-	 * @param reminderDays
-	 * 
-	 * @param scQt
-	 *            the sc qt
-	 * @param senderId
-	 *            the sender id
-	 * @return true, if successful
-	 */
-	private boolean sendProposalValidityReminder(Object[] objects,
-			Long totalDaysLeft) {
-		log.info("sendProposalValidityReminder");
-		String qtId = objects[0].toString();
-		String qtNo = objects[1].toString();
-		String qtTitle = objects[2].toString();
-		String orgCode = objects[4].toString();
-		String orgName = objects[5].toString();
-		String procurementModeId = objects[6].toString();
-		String propoValidEndDate = objects[7].toString();
-		String publishDate = objects[8].toString();
-		String status = objects[9].toString();
-		String ministryName = objects[10].toString();
-		boolean isQuotationTender = Boolean.FALSE;
-		// NTF
-		INtfClientSO ntfClientSO = null;
-		NtfResponseDTO ntfResDTO = null;
-		try {
-			NtfRequestDTO ntfReqDTO = new NtfRequestDTO();
-			ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.NTF, INtfClientSO.class);
-			ntfReqDTO.setSenderId(CommonConstants.SYSTEM_USER_ID.toString());
-
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(Long.valueOf(procurementModeId));
-			PmParameter procurementMode = getParameterSO()
-					.retrieveParameterById(reqDTO).getPmParameter();
-
-			if (procurementMode.getParameterCode().equals(
-					ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
-				ntfReqDTO
-						.setTemplateId(NotificationTextConst.TEMPLATE_ID_401163);
-				isQuotationTender = Boolean.TRUE;
-
-			} else if (procurementMode.getParameterCode().equals(
-					ParameterConst.PROCUREMENT_MODE_TENDER)) {
-				ntfReqDTO
-						.setTemplateId(NotificationTextConst.TEMPLATE_ID_401164);
-				isQuotationTender = Boolean.TRUE;
-			}
-
-			if (isQuotationTender) {
-				// set parameters
-				List<String> paramList = new ArrayList<String>();
-				List<String> userIds = new ArrayList<String>();
-
-				// 1. Ministry Name
-				paramList.add(ministryName);
-
-				// 2. PTJ Code
-				paramList.add(orgCode);
-
-				// 3. PTJ Name
-				paramList.add(orgName);
-
-				// 4. qtNo
-				paramList.add(qtNo);
-
-				// 5. Qt Title in header
-				paramList.add(qtTitle);
-
-				// 6. Publish Date/ Time
-				paramList.add(publishDate);
-
-				String preferredLanguage = CommonConstants.DEFAULT_LANGUAGE_CODE;
-				ScActor actorDO = getActorByQtIdAndRoleCode(Long.valueOf(qtId),
-						RoleCode.DESK_OFFICER.value());
-				if (actorDO != null) {
-					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(actorDO.getUserId());
-					PmUser pmUser = getUserSO()
-							.retrieveUserByUserId(userReqDTO).getPmUser();
-					if (pmUser != null) {
-						preferredLanguage = pmUser.getPreferredLanguage();
-					}
-					userIds.add(actorDO.getUserId().toString());
-				} else {
-					log.info("user not found.");
-				}
-
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setLanguageCode(preferredLanguage);
-				statusReqDTO.setStatusId(Long.valueOf(status));
-				PmStatusDesc statusDesc = getStatusSO().retrieveStatusDescById(
-						statusReqDTO).getPmStatusDesc();
-				// 7. Status
-				paramList.add(statusDesc.getStatusName());
-
-				// 8. Proposal validity due date
-				paramList.add(propoValidEndDate);
-
-				// 9. Total Days left
-				paramList.add(totalDaysLeft.toString());
-
-				if (userIds != null && userIds.size() > 0) {
-					String[] userIdsArray = Arrays.copyOf(userIds.toArray(),
-							userIds.size(), String[].class);
-					ntfReqDTO.setUserIdArr(userIdsArray);
-				} else {
-					log.info("user not found.");
-				}
-
-				ntfReqDTO.setCntParaArr(paramList.toArray(new String[paramList
-						.size()]));
-				ntfResDTO = ntfClientSO.processAndPublish(ntfReqDTO);
-
-				if (!NotificationTextConst.STATUS_CODE_SUCCESS.equals(ntfResDTO
-						.getStatusCode())) {
-					throw new EpException(ntfResDTO.getStatusDesc());
-				}
-			}
-		} finally {
-			ntfClientSO = null;
-		}
-		return true;
-	}
-
 	private List<Long> qtStatusListInBetween(Long fromStatusId, Long toStatusId) {
 		List<Long> orderedStatuses =Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		List<Long> subStatusList = new ArrayList<Long>(orderedStatuses.subList(
 				orderedStatuses.indexOf(fromStatusId),
 				orderedStatuses.indexOf(toStatusId) + 1));
 		return subStatusList;
-	}
-
-	/**
-	 * Gets the parameter so.
-	 * 
-	 * @return the parameter so
-	 */
-	private IParameterSO getParameterSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
 	/**
@@ -386,6 +244,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 		// 9. Total Days left
 		paramList.add(String.valueOf(reminders));
 
+		log.info("Quoation paramList "+paramList.size());
 		return paramList;
 	}
 
