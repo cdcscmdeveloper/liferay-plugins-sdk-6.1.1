@@ -90,7 +90,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 						//}
 					}
 				}
-				log.info("TenderPropoValidReminderJob @ QT List :"+resDTO.getQtDetailsArray().size());
+				log.info("TenderPropoValidReminderJob @ QT List Size :"+resDTO.getQtDetailsArray().size());
 			}
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
@@ -234,7 +234,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 
 		// 9. Total Days left 
 		paramList.add(String.valueOf(reminders));
-		log.info("Tender paramList "+paramList.size());
+		log.info("Tender paramList Size : "+paramList.size());
 		return paramList;
 	}
 	
