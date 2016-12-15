@@ -30,11 +30,9 @@ public class NtfEmailRealTimeJob implements Job {
 			.getServiceObject(ModuleCodeConst.NTF_SCH,
 					INtfEmailRealTimeSchedulerSO.class);
 			
-//			iNtfEmailRealTimeSchedulerSO.retrieveDb();
-//			iNtfEmailRealTimeSchedulerSO.sendEmail();
-//			iNtfEmailRealTimeSchedulerSO.updateDb();
-			
-			iNtfEmailRealTimeSchedulerSO.process();
+			iNtfEmailRealTimeSchedulerSO.retrieveDb();
+			iNtfEmailRealTimeSchedulerSO.sendEmail();
+			iNtfEmailRealTimeSchedulerSO.updateDb();
 		
 		}catch(Exception ex){
 			log.error(ex);
