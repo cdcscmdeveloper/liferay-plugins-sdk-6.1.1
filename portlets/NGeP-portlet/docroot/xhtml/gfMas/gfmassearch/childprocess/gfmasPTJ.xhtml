@@ -23,20 +23,7 @@
 				
 				<ac:paginator for="gfMasPTJId"></ac:paginator>
 				
-				<p:column style="width:2%">
-					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"							
-							value="#{gfMasBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="@form"
-								listener="#{gfMasBackingBean.selectAllPtj}"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</f:facet>
-					<p:selectBooleanCheckbox value="#{pmInterfacePTJ.selected}"
-						disabled="#{pmInterfacePTJ.processStatus eq '1' or pmInterfacePTJ.processStatus eq '2'}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{gfMasBackingBean.selectPtjSingleRow(pmInterfacePTJ)}" />
-					</p:selectBooleanCheckbox>
-				</p:column>
+
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacePTJ.diInterfaceLog.logId}" />

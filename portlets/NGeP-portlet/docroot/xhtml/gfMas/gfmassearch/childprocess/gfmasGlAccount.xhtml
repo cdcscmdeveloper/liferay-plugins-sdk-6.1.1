@@ -22,20 +22,7 @@
 				value="#{gfMasBackingBean.managedBean.searchGlAccount}">
 				<ac:paginator for="gfMasGlAcntId"></ac:paginator>
 
-				<p:column style="width:2%">
-					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"
-							value="#{gfMasBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="@form"
-								listener="#{gfMasBackingBean.selectAllGlAccount}"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</f:facet>
-					<p:selectBooleanCheckbox value="#{pmInterfaceGlAcnt.selected}"
-						disabled="#{pmInterfaceGlAcnt.processStatus eq '1' or pmInterfaceGlAcnt.processStatus eq '2'}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{gfMasBackingBean.selectGlAccountSingleRow(pmInterfaceGlAcnt)}" />
-					</p:selectBooleanCheckbox>
-				</p:column>
+				
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
 					style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceGlAcnt.dIInterfaceLog.logId}" />

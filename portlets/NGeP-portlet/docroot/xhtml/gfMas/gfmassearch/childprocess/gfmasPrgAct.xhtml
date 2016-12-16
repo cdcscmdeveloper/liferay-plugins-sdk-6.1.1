@@ -21,20 +21,7 @@
 				rowIndexVar="index" rowKey="#{pmInterfacePrgAct}" lazy="true"				
 				value="#{gfMasBackingBean.managedBean.searchProgAct}">
 				<ac:paginator for="gfMasPrgActId"></ac:paginator>
-				<p:column style="width:2%">
-					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"							
-							value="#{gfMasBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="@form"
-								listener="#{gfMasBackingBean.selectAllPrgAct}"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</f:facet>
-					<p:selectBooleanCheckbox value="#{pmInterfacePrgAct.selected}"
-						disabled="#{pmInterfacePrgAct.processStatus eq '1' or pmInterfacePrgAct.processStatus eq '2'}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{gfMasBackingBean.selectPrgActSingleRow(pmInterfacePrgAct)}" />
-					</p:selectBooleanCheckbox>
-				</p:column>
+		
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
 					style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfacePrgAct.diInterfaceLog.logId}" />
