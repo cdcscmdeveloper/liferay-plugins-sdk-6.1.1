@@ -2839,7 +2839,9 @@ public class SmCommonUtil {
 					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
 				Calendar renewDate = Calendar.getInstance();
 				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
-				renewDate.add(Calendar.MONTH, -3);
+				renewDate.add(Calendar.MONTH, -SmServiceLookup.getSmRuleSO()
+						.retrieveSoftCertRenewalPeriod()
+						.getSoftCertRenewalMonth());
 				if (DateUtils.isDateGreaterOrEqual(new Date(),
 						renewDate.getTime())) {
 					retVal = true;
