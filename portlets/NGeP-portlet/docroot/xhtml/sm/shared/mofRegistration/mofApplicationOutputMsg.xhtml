@@ -19,7 +19,9 @@
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
 			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" /><br/>
 			<div align="center">
-				<p:commandButton id="pyDetailsBtnId" value="#{lbl['lbl.sm.print.payment.details']}" ajax="false">
+				<p:commandButton id="pyDetailsBtnId" value="#{lbl['lbl.sm.print.payment.details']}" 
+					ajax="false" rendered="#{smOutputMsgBackingBean.managedBean.smAppl.applType eq 'N' 
+						or smOutputMsgBackingBean.managedBean.smAppl.applType eq 'R'}">
 					<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentDetails()}" />
 				</p:commandButton>
 				<p:commandButton id="applDetailsBtnId" value="#{lbl['lbl.sm.print.application.details']}" ajax="false">
