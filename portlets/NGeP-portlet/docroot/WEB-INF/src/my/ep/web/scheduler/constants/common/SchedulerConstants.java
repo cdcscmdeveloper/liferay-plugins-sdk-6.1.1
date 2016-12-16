@@ -201,7 +201,7 @@ public class SchedulerConstants {
 	
 	
 	///GFMAS AUTO
-	public static final String GFMAS_KPTJ_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
+	public static final String GFMAS_KPTJ_INTEGRATION_JOB_DESC = "Job run every 5 minute";
 
 	// CRM Job Group ID
 	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";

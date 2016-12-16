@@ -23,20 +23,6 @@
 				value="#{gfMasBackingBean.managedBean.searchDana}">				
 				<ac:paginator for="gfMasDanaId"></ac:paginator>
 				
-				<p:column style="width:2%">
-					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"							
-							value="#{gfMasBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="@form"
-								listener="#{gfMasBackingBean.selectAllDana}"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</f:facet>
-					<p:selectBooleanCheckbox value="#{pmInterfaceDana.selected}"
-						disabled="#{pmInterfaceDana.processStatus eq '1' or pmInterfaceDana.processStatus eq '2'}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{gfMasBackingBean.selectDanaSingleRow(pmInterfaceDana)}" />
-					</p:selectBooleanCheckbox>
-				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
 					style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceDana.diInterfaceLog.logId}" />
