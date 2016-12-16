@@ -24,21 +24,6 @@
 
 				<ac:paginator for="gfMasAgOfficeId"></ac:paginator>
 
-				<p:column style="width:2%">
-					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"
-							value="#{gfMasBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="@form"
-								listener="#{gfMasBackingBean.selectAllAccountingOffice}"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</f:facet>
-					<p:selectBooleanCheckbox value="#{pmInterfaceAgOffice.selected}"
-						disabled="#{pmInterfaceAgOffice.processStatus eq '1' or pmInterfaceAgOffice.processStatus eq '2'}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{gfMasBackingBean.selectAgOfficeSingleRow(pmInterfaceAgOffice)}" />
-					</p:selectBooleanCheckbox>
-				</p:column>
-
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
 					style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceAgOffice.diInterfaceLog.logId}" />
