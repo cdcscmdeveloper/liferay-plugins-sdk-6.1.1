@@ -10,14 +10,13 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -29,6 +28,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
@@ -97,11 +97,9 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			getManagedBean().setKumpulanPtjName(retrieveJabatanByOrgProfileId(getManagedBean().getSearchPtjProfile().getOrgProfileId()));
 			getManagedBean().setMinistryName(retrieveMinistryByOrgProfileId(getManagedBean().getSearchPtjProfile().getOrgProfileId()));
 		 
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractVerId(contractVer.getContractVerId());
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractAgency(reqDTO);	
 			getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 			 
@@ -115,9 +113,12 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			 bpmReqDTO.setCtxToken(ctxToken);
 			 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 			 if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
+				 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					   for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
 					    	 		CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
-						    	 	custServiceEntity.setOfficerName(worklistItemVO.getAssignees().get(0));
+					    	 		UserReqDTO reqUserDTO = new UserReqDTO();
+					    	 		reqUserDTO.setLoginId(worklistItemVO.getAssignees().get(0));
+						    	 	custServiceEntity.setOfficerName(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName());
 						    	 	bpmReqDTO = new BpmRequestDTO();
 									bpmReqDTO.setCtxToken(ctxToken);
 									bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
@@ -140,7 +141,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(new Long(docStatus));
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 					return resDTO.getPmStatusDesc().getStatusName();
@@ -228,20 +229,24 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		return SERVICE_VIEW_PAGE;
 	}
 	
-	public String gotoBackPage() throws IOException{
-		/*try {
-		FacesScopes facesScope = new FacesScopes();
-		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-		String commonUrl = themeDisplay.getURLCurrent().substring(
-				0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
-						.getFriendlyURL())	+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		externalContext.redirect(commonUrl + "/" +CONTRACT_SERVICE_PAGE);
+	public String gotoBackPage() throws IOException {
+		
+	/*	try {
+		
+				FacesScopes facesScope = new FacesScopes();
+				ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+				String commonUrl = themeDisplay.getURLCurrent().substring(
+						0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
+								.getFriendlyURL())	+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				externalContext.redirect(commonUrl + "/" +CONTRACT_SERVICE_PAGE);
+		
 		} catch (PortalException e) {
 			e.printStackTrace();
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}*/
+		
 		return CONTRACT_SERVICE_PAGE;
 	}
 }
