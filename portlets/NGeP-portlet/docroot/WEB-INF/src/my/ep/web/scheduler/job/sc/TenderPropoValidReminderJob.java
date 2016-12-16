@@ -34,7 +34,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
 /**
- * The Class QuotationPropoValidReminderJob.
+ * The Class TenderPropoValidReminderJob.
  */
 public class TenderPropoValidReminderJob extends BaseReminderJob{
 	private static Logger log = EpLogger
@@ -44,12 +44,9 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 		log.info("inside TenderPropoValidReminderJob");
 	}
 
-
-	/* (non-Javadoc)
-	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getReminderBeans()
-	 */
 	@Override
 	public List<ReminderBean> getReminderBeans() {
+		log.info("Tender getReminderBeans");
 		IQTDetailSO detailSO = null;
 		List<ReminderBean> beans = null;
 		try {
@@ -58,41 +55,46 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_TENDER);
 			reqDTO.setPropoValidEndAtMaxDays(getMaxProposalValidDays());
-			reqDTO.setStatusIds(qtStatusListInBetween(QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PENDING_LOA));
-			QuationTenderResDTO resDTO = detailSO.getQTDetailsByStatusIds(reqDTO);
-			if(resDTO.isSuccessful()){
-
+			reqDTO.setStatusIds(qtStatusListInBetween(
+					QTStatusConst.QT_BRIEFING_SITE_VISIT,
+					QTStatusConst.QT_PENDING_LOA));
+			QuationTenderResDTO resDTO = detailSO
+					.getQTDetailsByStatusIds(reqDTO);
+			if (resDTO.isSuccessful()) {
 				beans = new ArrayList<ReminderBean>();
-
+				
 				for (Object[] objects : resDTO.getQtDetailsArray()) {
-					for (int i = 0; i < objects.length; i++) {
-						//Date currentDate = new Date();
-
-						// Before proposal validity expired QTs 
-						//if(objects[7] != null && currentDate.compareTo((Date)objects[7]) >0){
-						ReminderBean bean = new ReminderBean();
-						Date propoValidityEndDate = (Date)objects[7];
+					//for (int i = 0; i < objects.length; i++) {
 						List<String> userIds = new ArrayList<String>();
-						String qtId    = objects[0].toString();
+						Date currentDate = new Date();
 
-						ScActor actorDO = getActorByQtIdAndRoleCode(Long.valueOf(qtId),
-								RoleCode.DESK_OFFICER.value());
-						if(actorDO != null) {
-							userIds.add(actorDO.getUserId().toString());
-						} else {
-							log.info("user not found.");
-						}
-						bean.setDocNo(qtId);
-						bean.setDueDate(propoValidityEndDate);
-						bean.setReciepts(userIds);
-						bean.setData(objects);
-						beans.add(bean);
+						// Before proposal validity expired qts
+						if(objects[7] != null &&
+								currentDate.compareTo((Date)objects[7])<0){
+							ReminderBean bean = new ReminderBean();
+							Date propoValidityEndDate = (Date) objects[7];
+							String qtId = objects[0].toString();
+
+							ScActor actorDO = getActorByQtIdAndRoleCode(
+									Long.valueOf(qtId),
+									RoleCode.DESK_OFFICER.value());
+							if (actorDO != null) {
+								userIds.add(actorDO.getUserId().toString());
+							} else {
+								log.info("user not found.");
+							}
+							bean.setDocNo(qtId);
+							bean.setDueDate(propoValidityEndDate);
+							bean.setReciepts(userIds);
+							bean.setData(objects);
+							beans.add(bean);
 						//}
 					}
 				}
-				log.info("TenderPropoValidReminderJob @ QT List Size :"+resDTO.getQtDetailsArray().size());
+				log.info("QuotationPropoValidReminderJob @ QT List Size : "+resDTO.getQtDetailsArray().size());
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
 
 		} finally {

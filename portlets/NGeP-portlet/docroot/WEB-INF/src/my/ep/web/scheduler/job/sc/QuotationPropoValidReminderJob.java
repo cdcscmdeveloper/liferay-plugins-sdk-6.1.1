@@ -47,7 +47,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 
 	@Override
 	public List<ReminderBean> getReminderBeans() {
-		log.info("getReminderBeans");
+		log.info("Quotation getReminderBeans");
 		IQTDetailSO detailSO = null;
 		List<ReminderBean> beans = null;
 		try {
@@ -65,31 +65,30 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 				beans = new ArrayList<ReminderBean>();
 				
 				for (Object[] objects : resDTO.getQtDetailsArray()) {
-					for (int i = 0; i < objects.length; i++) {
+					//for (int i = 0; i < objects.length; i++) {
 						List<String> userIds = new ArrayList<String>();
-						// Date currentDate = new Date();
-
 						// Before proposal validity expired qts
-						// if(objects[7] != null &&
-						// currentDate.compareTo((Date)objects[7])<0){
-						ReminderBean bean = new ReminderBean();
-						Date propoValidityEndDate = (Date) objects[7];
-						String qtId = objects[0].toString();
+						Date currentDate = new Date();
+						if(objects[7] != null &&
+								currentDate.compareTo((Date)objects[7])<0){
+							ReminderBean bean = new ReminderBean();
+							Date propoValidityEndDate = (Date) objects[7];
+							String qtId = objects[0].toString();
 
-						ScActor actorDO = getActorByQtIdAndRoleCode(
-								Long.valueOf(qtId),
-								RoleCode.DESK_OFFICER.value());
-						if (actorDO != null) {
-							userIds.add(actorDO.getUserId().toString());
-						} else {
-							log.info("user not found.");
-						}
-						bean.setDocNo(qtId);
-						bean.setDueDate(propoValidityEndDate);
-						bean.setReciepts(userIds);
-						bean.setData(objects);
-						beans.add(bean);
-						// }
+							ScActor actorDO = getActorByQtIdAndRoleCode(
+									Long.valueOf(qtId),
+									RoleCode.DESK_OFFICER.value());
+							if (actorDO != null) {
+								userIds.add(actorDO.getUserId().toString());
+							} else {
+								log.info("user not found.");
+							}
+							bean.setDocNo(qtId);
+							bean.setDueDate(propoValidityEndDate);
+							bean.setReciepts(userIds);
+							bean.setData(objects);
+							beans.add(bean);
+						//}
 					}
 				}
 				log.info("QuotationPropoValidReminderJob @ QT List Size : "+resDTO.getQtDetailsArray().size());
