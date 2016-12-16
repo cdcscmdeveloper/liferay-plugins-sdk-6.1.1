@@ -26,7 +26,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAssociationBody;
-import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -34,6 +33,7 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.userprofilemaintenance.SmPersonnelBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.updatepersonnel.UpdatePersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -47,6 +47,7 @@ import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "updatePersonnelBackingBean")
@@ -58,6 +59,7 @@ public class UpdatePersonnelBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 5267823583927057585L;
+	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
 
 	public void preRenderUpdatePersonnel() {
 		renewSesionObject();
@@ -266,34 +268,28 @@ public class UpdatePersonnelBackingBean extends
 	 * Submit personnel maintenance and regenerate virtual certificate
 	 */
 	public void save() {
-		List<SmMofCert> certList = SmVirtualCertHelper.getInstance()
-				.retrieveCurrentMofCert(
-						getManagedBean().getSmAppl().getApplId());
-		if (!EntityHelper.isCollectionEmpty(certList)) {
-			for (SmMofCert cert : certList) {
-				Map<String, String> reportParamMap = SmVirtualCertHelper
-						.getInstance().getReportParam(cert);
-				String reportType = SmVirtualCertHelper.getInstance()
-						.getReportType(cert.getBumiCertFlg());
-				SmVirtualCertHelper.getInstance().getGeneratedMofCert(
-						reportType, reportParamMap, cert, false);
-			}
-		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedShareHolder());
-		reqDTO.setCertList(certList);
+		reqDTO.setAppl(getManagedBean().getSmAppl());
 
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.submitPersonnelMaintenance(reqDTO);
 		if (resDTO != null && resDTO.getSmPersonnel() != null) {
 			getManagedBean().setSelectedShareHolder(resDTO.getSmPersonnel());
 		}
-		SmCommonUtil.showFacesMsg(null, FacesMessage.SEVERITY_INFO,
-				MessageUtils.getMessage(MessageConst.INFO_721226,
-						new String[] { getManagedBean()
-								.getSelectedShareHolder().getName() },
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-								.getUserLocale()), null);
+		try {
+			SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(
+					getManagedBean().getSmAppl().getApplId(), false);
+			SmCommonUtil.showFacesMsg(null, FacesMessage.SEVERITY_INFO,
+					MessageUtils.getMessage(MessageConst.INFO_721226,
+							new String[] { getManagedBean()
+									.getSelectedShareHolder().getName() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), null);
+		} catch (Exception e) {
+			log.debug(">>>>>>>>>FAILED TO GENERATE VIRTUAL CERT REPORT:"
+					+ e.getMessage() + "<<<<<<<<<<");
+		}
 	}
 
 	/**
