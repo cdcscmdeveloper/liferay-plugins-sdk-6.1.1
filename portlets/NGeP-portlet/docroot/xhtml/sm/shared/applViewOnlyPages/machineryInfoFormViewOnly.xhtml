@@ -72,7 +72,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.machine.category']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getMachineCategoryType(viewSmApplBackingBean.managedBean.selectedMachine)}" /></td>
 				</tr>
-				<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedMachine.categoryCode}">
+				<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedMachine.smMachineCategories}">
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.machine.categorycode']}" /></td>
 						<td>
