@@ -55,11 +55,15 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_TENDER);
 			reqDTO.setPropoValidEndAtMaxDays(getMaxProposalValidDays());
+			log.info("max propo validity days :"+reqDTO.getPropoValidEndAtMaxDays());
 			reqDTO.setStatusIds(qtStatusListInBetween(
 					QTStatusConst.QT_BRIEFING_SITE_VISIT,
 					QTStatusConst.QT_PENDING_LOA));
 			QuationTenderResDTO resDTO = detailSO
 					.getQTDetailsByStatusIds(reqDTO);
+			
+			log.info("Tender Reminder @ QT List Size : "+resDTO.getQtDetailsArray().size());
+			
 			if (resDTO.isSuccessful()) {
 				beans = new ArrayList<ReminderBean>();
 				
@@ -91,7 +95,6 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 						//}
 					}
 				}
-				log.info("QuotationPropoValidReminderJob @ QT List Size : "+resDTO.getQtDetailsArray().size());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,7 +114,6 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 				orderedStatuses.indexOf(toStatusId)+1));
 		return subStatuses;
 	}
-
 
 	/**
 	 * Gets the user so.
@@ -189,7 +191,6 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 		String ministryName = data[10].toString();
 
 		List<String> paramList = new ArrayList<String>();
-		List<String> userIds = new ArrayList<String>();
 
 		// 1. Ministry Name        
 		paramList.add(ministryName);
@@ -219,7 +220,6 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 			if(pmUser != null) {
 				preferredLanguage = pmUser.getPreferredLanguage();
 			}
-			userIds.add(actorDO.getUserId().toString());
 		} else {
 			log.info("user not found.");
 		}
@@ -245,7 +245,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 	 */
 	@Override
 	public String getKpiCode() {
-		// Proposal Validity Reminder (Quotation)
+		// Proposal Validity Reminder (Tender)
 		return QTConstants.KPI_CODE_TENDER_REMINDER;
 	}
 	
@@ -267,6 +267,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 		}
 		return null;
 	}
+	
 	private IPmKpiSO getKpiSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
