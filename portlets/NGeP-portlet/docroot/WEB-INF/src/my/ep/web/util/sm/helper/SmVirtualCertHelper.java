@@ -110,25 +110,6 @@ public class SmVirtualCertHelper {
 	 * @return SmMofCert
 	 */
 	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert, boolean isDeleteCategory) {
-		cert = getGeneratedMofCert(reportFile, paramMap, cert,isDeleteCategory);
-		if(cert!=null){
-			SmMofCert mofcert = updateMOFCertFilePath(cert);
-			return mofcert;
-		}else{
-			return cert;
-		}
-		
-	}
-	
-	/**
-	 * Generate SmMofCert with file name and file path
-	 * @param reportFile
-	 * @param paramMap
-	 * @param cert
-	 * @param isDeleteCategory
-	 * @return SmMofCert
-	 */
-	public SmMofCert getGeneratedMofCert(String reportFile,Map<String, String> paramMap, SmMofCert cert,boolean isDeleteCategory){
 		Date fileTimeStamp = new Date();
 		SimpleDateFormat dateFt = new SimpleDateFormat ("_yyyyMMdd_Hmmss");
 		String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
@@ -174,10 +155,12 @@ public class SmVirtualCertHelper {
 				//update MOF Cert with file path & name
 				cert.setFilePath(path);
 				cert.setFileName(fileName);
-				return cert;
+				SmMofCert mofcert = updateMOFCertFilePath(cert);
+				return mofcert;
 			}else{
 				log.info("****genReport****" + urlConnection.getContentType());
 			}
+			//commonDownload(finalFile, fileName);
 		}catch(Exception ex){
 			log.info("******genReport******" + cert.getMofCertId() + " - " + ex.getMessage());
 			if(isDeleteCategory){
@@ -186,11 +169,12 @@ public class SmVirtualCertHelper {
 				updateMOFCertFilePath(cert);
 			}
 		}
+		
 		return null;
 	}
 	
 	
-	public List<SmMofCert> retrieveCurrentMofCert(Long applId){
+	private List<SmMofCert> retrieveCurrentMofCert(Long applId){
 		IVirtualCertSO reqSO = SmServiceLookup.getVirtualCertSO();
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setApplId(applId);
