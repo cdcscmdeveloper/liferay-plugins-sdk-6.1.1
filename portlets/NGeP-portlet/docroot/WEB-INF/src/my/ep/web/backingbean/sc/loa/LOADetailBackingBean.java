@@ -5405,13 +5405,35 @@ public class LOADetailBackingBean extends
 	
   	private static Ftr createFooter(ObjectFactory factory) {
 	     Ftr footer = factory.createFtr();
-	     // Page nors
+	     // Page nors and spacing between page numbers
 	     P pageNumParagraph = factory.createP();
-	     addFieldBegin(factory, pageNumParagraph);
-	     addPageNumberField(factory, pageNumParagraph);
-	     addFieldEnd(factory, pageNumParagraph);
-	     footer.getContent().add(pageNumParagraph);
+	     PPr ppr = new PPr();
+	     Jc jc = new Jc();
+	     jc.setVal(JcEnumeration.RIGHT);
+	     ppr.setJc(jc);
+	     pageNumParagraph.setPPr(ppr);
 	     
+	     addFieldBegin(factory, pageNumParagraph);
+	     addPageNumberField(factory, pageNumParagraph, "PAGE");
+	     addFieldEnd(factory, pageNumParagraph);
+	     
+	     addFieldBegin(factory, pageNumParagraph);
+	     addPageNumberField(factory, pageNumParagraph, "SYMBOL 32");
+	     addFieldEnd(factory, pageNumParagraph);
+	     
+	     addFieldBegin(factory, pageNumParagraph);
+	     addPageNumberField(factory, pageNumParagraph, "Date \\@ 'daripada'");
+	     addFieldEnd(factory, pageNumParagraph);
+	     
+	     addFieldBegin(factory, pageNumParagraph);
+	     addPageNumberField(factory, pageNumParagraph, "SYMBOL 32");
+	     addFieldEnd(factory, pageNumParagraph);
+	     
+	     addFieldBegin(factory, pageNumParagraph);
+	     addPageNumberField(factory, pageNumParagraph,"SECTIONPAGES");
+	     addFieldEnd(factory, pageNumParagraph);
+	     
+	     footer.getContent().add(pageNumParagraph);
 	     // Footer content
 	     P paragraph = factory.createP();
 	     R run = factory.createR();
@@ -5543,16 +5565,11 @@ public class LOADetailBackingBean extends
 	   * 
 	   * @param paragraph
 	   */
-	  private static void addPageNumberField(ObjectFactory factory, P paragraph) {
+	  private static void addPageNumberField(ObjectFactory factory, P paragraph, String value) {
 	     R run = factory.createR();
-	     PPr ppr = new PPr();
-	     Jc jc = new Jc();
-	     jc.setVal(JcEnumeration.RIGHT);
-	     ppr.setJc(jc);
-	     paragraph.setPPr(ppr);
 	     Text txt = new Text();
 	     txt.setSpace("preserve");
-	     txt.setValue(" PAGE   \\* MERGEFORMAT ");
+	     txt.setValue(value);
 	     run.getContent().add(factory.createRInstrText(txt));
 	     paragraph.getContent().add(run);
 	  }
