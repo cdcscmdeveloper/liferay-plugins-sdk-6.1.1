@@ -56,11 +56,13 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 			reqDTO.setPropoValidEndAtMaxDays(getMaxProposalValidDays());
+			log.info("max propo validity days :"+reqDTO.getPropoValidEndAtMaxDays());
 			reqDTO.setStatusIds(qtStatusListInBetween(
 					QTStatusConst.QT_BRIEFING_SITE_VISIT,
 					QTStatusConst.QT_PENDING_LOA));
 			QuationTenderResDTO resDTO = detailSO
 					.getQTDetailsByStatusIds(reqDTO);
+			log.info("Quotation Reminder @ QT List Size : "+resDTO.getQtDetailsArray().size());
 			if (resDTO.isSuccessful()) {
 				beans = new ArrayList<ReminderBean>();
 				
@@ -193,7 +195,6 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 		String ministryName = data[10].toString();
 
 		List<String> paramList = new ArrayList<String>();
-		List<String> userIds = new ArrayList<String>();
 
 		// 1. Ministry Name
 		paramList.add(ministryName);
@@ -224,7 +225,6 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 			if (pmUser != null) {
 				preferredLanguage = pmUser.getPreferredLanguage();
 			}
-			userIds.add(actorDO.getUserId().toString());
 		} else {
 			log.info("user not found.");
 		}
