@@ -55,7 +55,8 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText size="31" styleClass="ppRightBtn"
 					        required="#{requestNoteBackingBean.managedBean.required}"
 							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
