@@ -34,6 +34,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -247,8 +248,22 @@ public class AccountingOfficeBackingBean extends
 			IAgOfficeSO agOfficeSO;
 
 			try {
-				//ISearchBean<PmAgOffice> searchBeanData = getSearchBeanData(searchBean);
+//				ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
+				AccountingOfficeSearchBean officeSearchBean= getManagedBean().getAccountingOfficeSearchBean();
 				AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+				if (StringUtils.isNotBlank(officeSearchBean.getOfficeCode())){
+					reqDTO.setAgOfficeCode(officeSearchBean.getOfficeCode());
+				}
+				
+				if (StringUtils.isNotBlank(officeSearchBean.getOfficeName())) {
+					reqDTO.setAgOfficeDesc(officeSearchBean.getOfficeName());
+								
+				}
+				
+				if(StringUtils.isNotBlank(officeSearchBean.getStatus())) {
+					reqDTO.setRecordStatus(Integer.parseInt(officeSearchBean.getStatus()));	
+				}
+				
 				reqDTO.setOfficeObjSearchBean(searchBean);
 				agOfficeSO = (IAgOfficeSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
