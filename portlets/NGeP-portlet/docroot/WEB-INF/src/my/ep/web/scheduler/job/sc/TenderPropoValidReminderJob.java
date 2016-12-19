@@ -61,39 +61,31 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 					QTStatusConst.QT_PENDING_LOA));
 			QuationTenderResDTO resDTO = detailSO
 					.getQTDetailsByStatusIds(reqDTO);
-			
+
 			log.info("Tender Reminder @ QT List Size : "+resDTO.getQtDetailsArray().size());
-			
+
 			if (resDTO.isSuccessful()) {
 				beans = new ArrayList<ReminderBean>();
-				
+
 				for (Object[] objects : resDTO.getQtDetailsArray()) {
-					//for (int i = 0; i < objects.length; i++) {
-						List<String> userIds = new ArrayList<String>();
-						Date currentDate = new Date();
+					List<String> userIds = new ArrayList<String>();
+					ReminderBean bean = new ReminderBean();
+					Date propoValidityEndDate = (Date) objects[7];
+					String qtId = objects[0].toString();
 
-						// Before proposal validity expired qts
-						if(objects[7] != null &&
-								currentDate.compareTo((Date)objects[7])<0){
-							ReminderBean bean = new ReminderBean();
-							Date propoValidityEndDate = (Date) objects[7];
-							String qtId = objects[0].toString();
-
-							ScActor actorDO = getActorByQtIdAndRoleCode(
-									Long.valueOf(qtId),
-									RoleCode.DESK_OFFICER.value());
-							if (actorDO != null) {
-								userIds.add(actorDO.getUserId().toString());
-							} else {
-								log.info("user not found.");
-							}
-							bean.setDocNo(qtId);
-							bean.setDueDate(propoValidityEndDate);
-							bean.setReciepts(userIds);
-							bean.setData(objects);
-							beans.add(bean);
-						//}
+					ScActor actorDO = getActorByQtIdAndRoleCode(
+							Long.valueOf(qtId),
+							RoleCode.DESK_OFFICER.value());
+					if (actorDO.getUserId() != null) {
+						userIds.add(actorDO.getUserId().toString());
+					} else {
+						log.info("user not found for qt id "+qtId);
 					}
+					bean.setDocNo(qtId);
+					bean.setDueDate(propoValidityEndDate);
+					bean.setReciepts(userIds);
+					bean.setData(objects);
+					beans.add(bean);
 				}
 			}
 		} catch (Exception e) {
