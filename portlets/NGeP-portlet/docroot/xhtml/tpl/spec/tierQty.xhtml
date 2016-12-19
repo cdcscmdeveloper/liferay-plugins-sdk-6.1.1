@@ -70,26 +70,4 @@
 			<p:message id="subSeqMsg" for="subSeq" display="icon" />
 		</p:column>
 	</p:dataTable>
-	
-	<table style="width:100%;">
-	<tr>
-		<td style="text-align:right;">
-			<p:commandButton id="addTierBtn" value="#{lbl['lbl.btn.add']}"
-				process="@this, tierQtyTbl" partialSubmit="true"
-				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
-				oncomplete="tierQtyWidget.paginator.endLink.click();"
-				update="tierQtyTbl" 
-				rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}"
-				title="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}" />
-			
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this" partialSubmit="true"
-				action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
-				update="tierQtyTbl"
-				rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
-			</p:commandButton>
-		</td>
-	</tr>
-	</table>
 </ui:composition>
