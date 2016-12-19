@@ -191,17 +191,15 @@
 			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSuppliercriteriaSupplierListDeleteBtnId])" />
 						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
 						 disabledSelection="#{!isEditable}"/>
+						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
+							<h:outputText value="#{quoteSupplier.supplierName}" />
+						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
 						</p:column>
-
 						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
 							<h:outputText value="#{quoteSupplier.mofNumber}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
-							<h:outputText value="#{quoteSupplier.supplierName}" />
 						</p:column>
 					</p:dataTable>
 
@@ -243,21 +241,18 @@
 			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSuppliercriteriaAgencyDeleteBtnId])" />
 						<p:column selectionMode="multiple" styleClass="td-check-box-spacing"  
 						  disabledSelection="#{!isEditable}"/>
+						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
+							<h:outputText value="#{data.supplierName}" />
+						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
 						</p:column>
-
 						<p:column headerText="#{lbl['lbl.sc.sq.organization.type']}"
 							style="width:10%">
 							<h:outputText
 								value="#{simpleQuoteBackingBean.getParameterDesc(data.smSupplier.pmOrgProfile.orgTypeCode)}" />
 						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
-							<h:outputText value="#{data.supplierName}" />
-						</p:column>
-
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
@@ -299,19 +294,15 @@
 			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId])" />
 						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
 						  disabledSelection="#{!isEditable}"/>
-
+						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
+							<h:outputText value="#{data.supplierName}" />
+						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
 						</p:column>
-
 						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
 							<h:outputText value="#{data.mofNumber}" />
-
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
-							<h:outputText value="#{data.supplierName}" />
 						</p:column>
 						<c:if test="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}">
 							<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:20%">
