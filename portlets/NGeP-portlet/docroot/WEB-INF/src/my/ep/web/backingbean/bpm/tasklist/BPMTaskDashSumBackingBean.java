@@ -178,12 +178,18 @@ public class BPMTaskDashSumBackingBean extends
 		try {
 			FacesScopes facesScope = new FacesScopes();
 
+			System.out.println("1");
+			
 			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
 					.getRequestScope(WebKeys.THEME_DISPLAY);
 
+			System.out.println("2");
+			
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 
+			System.out.println("3");
+			
 			String commonUrl = themeDisplay.getURLCurrent().substring(
 					0,
 					themeDisplay.getURLCurrent().indexOf(
@@ -196,10 +202,16 @@ public class BPMTaskDashSumBackingBean extends
 			externalContext.redirect(commonUrl + "/" + "task-list?docTypeId="
 					+ docTypeId);
 
+			System.out.println("4");
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			
+			System.out.println("5");
 			e.printStackTrace();
 		}
+		
+		System.out.println("6");
 	}
 
 	public void redirectToCatalogueTaskList() throws PortalException,
