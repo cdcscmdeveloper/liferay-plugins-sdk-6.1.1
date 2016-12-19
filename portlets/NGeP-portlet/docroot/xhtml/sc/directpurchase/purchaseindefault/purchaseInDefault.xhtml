@@ -371,7 +371,7 @@
 				value="#{lbl['lbl.sc.purchase.in.default.req.details']}" />
 		</f:facet>
 
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus}"
 			value="#{lbl['lbl.sc.pid.reason.instruction']}">
 		</h:outputText>
 		<h:panelGroup>
