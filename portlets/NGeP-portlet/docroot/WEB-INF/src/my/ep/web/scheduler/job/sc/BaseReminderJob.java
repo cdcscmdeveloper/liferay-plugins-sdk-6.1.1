@@ -95,7 +95,6 @@ public abstract class BaseReminderJob implements Job {
 		if (beans != null && !beans.isEmpty()) {
 			// no.of reminder days
 			List<Long> notificationDays = getNotificationDays(getKpiCode());
-			log.info(" notification days size : "+notificationDays.size());
 			
 			for (ReminderBean reminderBean : beans) {
 				Long reminderDays = DateUtils.getDaysDifference(
@@ -104,8 +103,6 @@ public abstract class BaseReminderJob implements Job {
 
 				if (CollectionUtils.isNotEmpty(notificationDays)
 						&& notificationDays.contains(reminderDays)) {
-					
-					log.info("sending notification for "+reminderDays+" Day(s)");
 					
 					// params
 					if(reminderBean.getData() != null){
@@ -171,13 +168,13 @@ public abstract class BaseReminderJob implements Job {
 
 			// Params.
 			if (CollectionUtils.isNotEmpty(paramList)) {
-				ntfReqDTO.setCntParaLst(paramList);
+				ntfReqDTO.setCntParaArr(paramList.toArray(new String[paramList.size()]));
 			} else {
 				log.info("Params not found.");
 			}
 
 			if (subjectParamList != null && !subjectParamList.isEmpty()) {
-				ntfReqDTO.setSubParaLst(subjectParamList);
+				ntfReqDTO.setSubParaArr(paramList.toArray(new String[subjectParamList.size()]));
 			} else {
 				log.info("Subject params not found.");
 			}
