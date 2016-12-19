@@ -2311,12 +2311,12 @@ public class SmApplicationUtil {
 		}
 		sec.setFactoryVerify(isVerifiedAll);
 		sec.setManufacturingVerified(isVerifiedAll);
-		if(managedBean.isShowMachineryEquipmentPanel()){
+		if (managedBean.isShowMachineryEquipmentPanel()) {
 			sec.setMachineryVerified(isVerifiedAll);
 		}
 		sec.setLicenseVerified(isVerifiedAll);
 		sec.setAssocBodyVerified(isVerifiedAll);
-		if(managedBean.isShowTravelSoftwarePanel()){
+		if (managedBean.isShowTravelSoftwarePanel()) {
 			sec.setSupplierSystemVerified(isVerifiedAll);
 		}
 
@@ -8277,67 +8277,47 @@ public class SmApplicationUtil {
 			List<SmMachineDtl> machToDeleteList,
 			boolean isShowMachineryEquipmentPanel) {
 		String retVal = StringUtils.EMPTY;
-		PmParameterDesc desc = null;
-		String language = new FacesScopes().getUserLocale().getLanguage();
 		String categoryTypeDesc = StringUtils.EMPTY;
 
-		deleteSelectedMachines(machToDeleteList, appl);
-
-		for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-			if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-					&& cat.getPmCategoryL3() != null
-					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-					&& Arrays
-							.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
-							.contains(
-									cat.getPmCategoryL3().getCategoryTypeCode()
-											.getParameterCode())) {
-				desc = (PmParameterDesc) EntityHelper
-						.getEntityBySinglePropertyFromList(language, cat
-								.getPmCategoryL3().getCategoryTypeCode()
-								.getPmParameterDescs(), "languageCode");
-				categoryTypeDesc = desc != null ? desc.getCodeName()
-						: categoryTypeDesc;
-
-				if (EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
-					retVal = MessageUtils.getMessage(MessageConst.ERROR_722631,
-							new String[] {
-									cat.getPmCategoryL3().getFullCatcode(),
-									categoryTypeDesc },
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale());
-				} else {
-					SmMachineDtl mac = (SmMachineDtl) EntityHelper
-							.getEntityBySinglePropertyFromList(cat
-									.getPmCategoryL3().getCategoryL3Id(), appl
-									.getSmMachineDtls(), "categoryCode");
-					if (mac == null) {
-						retVal = MessageUtils.getMessage(
-								MessageConst.ERROR_722631, new String[] {
-										cat.getPmCategoryL3().getFullCatcode(),
-										categoryTypeDesc },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale());
-					}
-				}
-
-			}
-		}
-		return retVal;
-	}
-
-	public static void deleteSelectedMachines(
-			List<SmMachineDtl> machToDeleteList, SmAppl appl) {
+		// remove selected from main list
 		Iterator<SmMachineDtl> mainIter = appl.getSmMachineDtls().iterator();
 		while (mainIter.hasNext()) {
 			SmMachineDtl mainObj = mainIter.next();
-
 			for (SmMachineDtl toRemoveObj : machToDeleteList) {
-				if (mainObj.equals(toRemoveObj)) {
+				if (mainObj.getMachineDtlId().compareTo(
+						toRemoveObj.getMachineDtlId()) == 0) {
 					mainIter.remove();
 				}
 			}
 		}
+
+		// check at least one category is needed and cant be deleted
+		List<SmMachineCategory> macCategoryList = new ArrayList<SmMachineCategory>();
+		for (SmMachineDtl machDtl : appl.getSmMachineDtls()) {
+			macCategoryList.addAll(machDtl.getSmMachineCategories());
+		}
+
+		for (SmMachineDtl toRemoveObj : machToDeleteList) {
+			for (SmMachineCategory toRemoveMachCat : toRemoveObj
+					.getSmMachineCategories()) {
+				SmMachineCategory macCat = (SmMachineCategory) EntityHelper
+						.getEntityBySinglePropertyFromList(toRemoveMachCat
+								.getPmCategoryL3().getCategoryL3Id(),
+								macCategoryList, "pmCategoryL3");
+				if (macCat == null) {
+					retVal = MessageUtils
+							.getMessage(MessageConst.ERROR_722631,
+									new String[] {
+											toRemoveMachCat.getPmCategoryL3()
+													.getFullCatcode(),
+											categoryTypeDesc },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale());
+				}
+			}
+		}
+
+		return retVal;
 	}
 
 	/**
