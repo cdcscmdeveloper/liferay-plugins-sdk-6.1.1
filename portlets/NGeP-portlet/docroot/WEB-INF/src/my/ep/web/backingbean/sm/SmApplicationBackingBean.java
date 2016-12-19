@@ -151,6 +151,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
+import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -4815,6 +4816,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelMachineSaveorUpdate() {
 		assignValReqdToFalse();
+		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		if (getManagedBean().getSelectedMachine().getMachineDtlId() == null) {
 			getManagedBean().getSelectedMachine().setValue(
 					new BigDecimal(SupplierManagementConst.MIN_AMT_RANGE));
@@ -4913,25 +4915,31 @@ public class SmApplicationBackingBean extends
 	 */
 	public void deleteSelectedMachinery() {
 		String errMsg = StringUtils.EMPTY;
-		if (getManagedBean().getSelectedMachineList().size() > 0) {
-			SmAppl cloneAppl = (SmAppl) SerializationUtils
-					.clone(getManagedBean().getSmAppl());
-			errMsg = SmApplicationUtil.getMachineDeleteErrMsgKey(
-					getManagedBean().getSmAppl(), getManagedBean()
-							.getSelectedMachineList(), getManagedBean()
-							.isShowMachineryEquipmentPanel());
-			if (!StringUtils.isBlank(errMsg)) {
-				getManagedBean().setSmAppl(cloneAppl);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								errMsg));
+		getManagedBean().setSelectedMachineList(new ArrayList<SmMachineDtl>());
+		for (SmMachineCategoryVO macVO : getManagedBean()
+				.getMachineCategoryVOList()) {
+			for (SmMachineDtl mac : macVO.getSmMachineDtls()) {
+				if (mac.isSelected()) {
+					getManagedBean().getSelectedMachineList().add(mac);
+				}
 			}
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.machine.or.equipment", null) });
 		}
+		SmAppl cloneAppl = (SmAppl) SerializationUtils.clone(getManagedBean()
+				.getSmAppl());
+		errMsg = SmApplicationUtil.getMachineDeleteErrMsgKey(getManagedBean()
+				.getSmAppl(), getManagedBean().getSelectedMachineList(),
+				getManagedBean().isShowMachineryEquipmentPanel());
+		if (!StringUtils.isBlank(errMsg)) {
+			getManagedBean().setSmAppl(cloneAppl);
+			FacesContext.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									errMsg));
+		}
+		getManagedBean().setMachineCategoryVOList(
+				SmApplicationUtil.getMachineCategoryVO(getManagedBean()
+						.getSmAppl()));
 	}
 
 	/**
@@ -4986,7 +4994,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedMachine().getMachine() != null) {
 			if ((getManagedBean().getSelectedMachine().getMachine()
 					.getMachineId().compareTo(-1L) == 0)) {
-				getManagedBean().setSelectedMachineCategoryIds(null);
+				log.info(">>>OTHERS EQUIPMENT TYPE IS SELECTED<<<<");
 			} else {
 				getManagedBean().getSelectedMachine().setMachine(
 						SmCommonUtil.getInstance().getMachineById(
