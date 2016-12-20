@@ -988,7 +988,7 @@
 	
 	<!-- Supplier Task Reassignment - KK LIM -->
 	<portlet>
-		<portlet-name>suppliertaskreassignment</portlet-name>
+		<portlet-name>supplierTaskReassignment</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
