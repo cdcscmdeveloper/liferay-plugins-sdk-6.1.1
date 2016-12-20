@@ -762,7 +762,7 @@ public class FinancialOrgBackingBean extends
 //		for(PmAddressType pmAddressType:this.getManagedBean().getFinancialOrg().getPmAddressTypes()){
 //			if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
 //					&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
-		if(!pmAddressType.isBrandNew() && pmAddressType.getAddressTypeId() != null){
+		if(pmAddressType != null && !pmAddressType.isBrandNew() && pmAddressType.getAddressTypeId() != null){
 			log.info("updateMainAddress - update");			
 			pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
 			
