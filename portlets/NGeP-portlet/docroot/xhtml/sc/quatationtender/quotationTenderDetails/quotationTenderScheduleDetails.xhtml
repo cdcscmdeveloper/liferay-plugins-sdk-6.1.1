@@ -80,13 +80,17 @@
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true'}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.bsv.date']}" /></td>
-					<td><p:inputText id="bsvDate"
+					<td>
+						<p:inputText id="bsvDate" 
 							value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}"
-							readonly="true" disabled="true"
-							style="width: 120px;margin-top:5px">
-							<f:convertDateTime
-								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-						</p:inputText></td>
+							disabled="true" style="width: 120px;margin-top:5px;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+						<p:inputText id="bsvTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}" disabled="true" size="4"
+							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+						</p:inputText>
+					</td>
 				</tr>
 			</c:if>
 			<tr>
