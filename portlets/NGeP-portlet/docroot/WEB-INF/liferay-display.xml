@@ -326,6 +326,7 @@
 		<portlet id="paymentReceipt"></portlet>
 		<portlet id="smComplaintSummary"></portlet>
 		<portlet id="rejectionAcknowledgementLetter"></portlet>
+		<portlet id="supplierTaskReassignment"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
