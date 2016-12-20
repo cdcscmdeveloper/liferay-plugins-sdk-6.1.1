@@ -44,135 +44,61 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The invoice. */
 	private FlInvoice invoice;
-	
-	/** The inv item. */
 	private FlInvoiceItem invItem = new FlInvoiceItem();
-	
-	/** The Doc process. */
 	private String DocProcess;
-	
-	/** The button val. */
 	private String buttonVal;
-	
-	/** The contract no. */
 	private String contractNo;
-	
-	/** The loa no. */
 	private String loaNo;
-	
-	/** The title. */
 	private String title;
-	
 	private String physicalLoaNo;
-	
 	private String physicalContractNo;
-	
-	/** The is dan. */
 	private boolean isDan = false;
-	
-	/** The is update dan. */
 	private boolean isUpdateDan = false;
-	
-	/** The sum ordered amt. */
 	private BigDecimal sumOrderedAmt;
-	
-	/** The exp date. */
 	private String expDate;
-	
-	/** The eff date. */
 	private String effDate;
-	
-	/** The status id. */
 	private Long statusId;
-	
-	/** The factoring check. */
 	private String factoringCheck="false";
-	
-	/** The doc type. */
 	private String docType;
-	
-	/** The supplier bank account map. */
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
-	
-	/** The decision list. */
 	private List<PmStatusDesc>decisionList;
 	
 	// Inv Items
-	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot ;
 	private TreeNode outOfScopeSectionItemRoot ;
 	private TreeNode taxSectionItemRoot ;
 	
-	/** The charge line selected item address. */
 	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
-	
-	/** The selected nodes. */
 	private TreeNode[] selectedNodes;
-	
-	/** The selected node. */
 	private TreeNode selectedNode;
-	
-	/** The selected item charge section. */
 	private FlFulfilmentItemAddr selectedItemChargeSection;
 	
 	//grand total
-	/** The ordered amt grand total. */
 	private BigDecimal orderedAmtGrandTotal ;
-	
-	/** The received amt grand total. */
 	private BigDecimal receivedAmtGrandTotal ;
-	
-	/** The inv amt grand total. */
 	private BigDecimal invAmtGrandTotal ;
-	
 	private BigDecimal oosReceivedAmtGrandTotal ;
-	
 	private BigDecimal oosInvAmtGrandTotal ;
-	
-	/** The service charge. */
 	private String serviceCharge ;
 	
 	//tab menu
-	/** The selected tab index. */
 	private int selectedTabIndex;
-	
-	/** The pm user. */
 	private PmUser pmUser;
-	
-	/** The modification cancel. */
 	private boolean modificationCancel;
-	
-	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
-	
-	/** The account no name. */
 	private String accountNoName;
-	
-	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
 	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate = true;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
 	
-	/** The button action. */
 	private String buttonAction;
-	
-	/** The invoice id. */
 	private Long invoiceId;
-	
-	/** The back to document. */
 	private String backToDocument;
 	
-	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
@@ -208,7 +134,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String gfmasErrorCode;
 	private String gfmasErrorDesc;
 	
-	/** The status id. */
 	private Long danStatusId;
 	
 	/**

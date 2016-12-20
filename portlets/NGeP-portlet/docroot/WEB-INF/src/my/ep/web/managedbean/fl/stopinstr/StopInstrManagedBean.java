@@ -34,51 +34,29 @@ public class StopInstrManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
-	/** The selected tab index. */
+
 	private int selectedTabIndex;
-	
-	/** The stop instr. */
 	private FlStopInstr stopInstr;
-	
-	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot ;
-	
-	/** The reason descs. */
 	private List<PmReasonDesc> reasonDescs;
-	
-	/** The button val. */
 	private String buttonVal;
 	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
-	
-	/** The button action. */
 	private String buttonAction;
 	
-	/** The back to document. */
 	private String backToDocument;
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
-	
-	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
-    
     private boolean gfmasError=false;
     private String gfmasErrorContent;
 	private String gfmasErrorCode;
 	private String gfmasErrorDesc;
-	
     private List<PmUser> approverList;
-    
     private boolean hyperLinkPage = false;
     private boolean issuanceCogstrCheck;
     private boolean coGstr;

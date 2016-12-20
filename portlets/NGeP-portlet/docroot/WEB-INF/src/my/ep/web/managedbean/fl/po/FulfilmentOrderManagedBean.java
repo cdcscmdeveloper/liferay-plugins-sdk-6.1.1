@@ -56,162 +56,77 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The task list. */
 	private List<WorklistItemVO> taskList;
-	
-	/** The process name. */
 	private String processName;
-	
-	/** The status. */
 	private String status;
-	
-	/** The task name. */
 	private String taskName;
-	
-	/** The fl order id. */
 	private Long flOrderId;
-	
-	/** The stop request id. */
 	private Long stopRequestId;
 	
-	/** The contract request. */
 	private boolean contractRequest;
 	
-	/** The button val. */
 	private String buttonVal;
-	
-	/** The back to previous. */
 	private String backToPrevious;
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
-	
-	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
-	
-	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
-	
-	/** The fl request. */
 	private FlFulfilmentRequest flRequest;
-	
-	/** The fl delivery order. */
 	private FlDeliveryOrder flDeliveryOrder;
-	
-	/** The delivery address. */
 	private FlDeliveryAddress deliveryAddress;
-	
-	/** The fulfilment order. */
 	private FlFulfilmentOrder fulfilmentOrder;
-	
-	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
-	
-	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
-	
-	/** The selected fl order. */
 	private FlFulfilmentOrder selectedFlOrder;
-	
-	/** The stop ins. */
 	private FlStopInstr stopIns;
-	
-	/** The selected del addr list. */
 	private List<FlDeliveryAddress> selectedDelAddrList;
 	
-	/** The pending do list. */
 	private List<FlFulfilmentOrder> pendingDoList;
-	
-	/** The delivery address list. */
 	private List<FlDeliveryAddress>deliveryAddressList;
-	
-	/** The pm financial orgs. */
 	private List<PmFinancialOrg> pmFinancialOrgs;
-	
-	/** The reason descs. */
 	private List<PmReasonDesc> reasonDescs;
-	
-	/** The fl item list. */
 	private List<FlFulfilmentItem> flItemList;
-	
-	/** The approver model. */
 	private DualListModel<String> approverModel;
-	
-	/** The selected lov del addr. */
 	private String selectedLovDelAddr;
-	
-	/** The factoring check. */
 	private String factoringCheck="false";
-	
-	/** The doc type. */
 	private String docType;
 	
 	//getSuplier address details
-	/** The supplier address. */
 	private String supplierAddress;
-	
-	/** The phone no. */
 	private String phoneNo;
-	
-	/** The fax no. */
 	private String faxNo;
-	
-	/** The contact email. */
 	private String contactEmail;
-	
-	/** The contact person. */
 	private String contactPerson;
-	
-	/** The contact phone no. */
 	private String contactPhoneNo;
 	
 	//for termdays
 	
-	/** The term days. */
 	private String termDays;
-	
-	/** The remove factoring. */
 	private boolean removeFactoring;
-	
-	/** The selected tab index. */
 	private int selectedTabIndex;
 	
-	/** The pm user. */
 	private PmUser pmUser;
-	
-	/** The fl approver. */
 	private String flApprover;
-	
-	/** The stop instr. */
 	private FlFulfilmentItemAddr stopInstr;
-	
-	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
 	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate = true;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
-	
-	/** The button action. */
 	private String buttonAction;
-	
-	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
     private boolean supplier = false;
-    
     private boolean hyperLinkPage = false;
     private List<PmUser> approverList;
+    
     private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private String gfmasErrorCode;
 	private String gfmasErrorDesc;
+	
 	private Long docStatusId;
 	private List<Long> statusIds;
 	private BigDecimal totalPendingFl;
@@ -221,8 +136,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
     private IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel = new PendingFlPagingDataModel();
-    
-    /** The ordered amt grand total. */
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
     
     /**

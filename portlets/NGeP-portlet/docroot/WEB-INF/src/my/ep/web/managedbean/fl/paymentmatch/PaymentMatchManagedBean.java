@@ -43,195 +43,75 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The payment advice. */
 	private FlPaymentAdvice paymentAdvice;
-	
-	/** The selected deductions. */
 	private List<FlPaymentDeduction> selectedDeductions;
-	
-	/** The ct deduction. */
 	private CtDeduction ctDeduction;
-	
-	/** The ct deduction clause list. */
 	private List<CtDeductionClause> ctDeductionClauseList;
-	
-	/** The gl account list. */
 	private List<PmGlAccount> glAccountList;
-	
-	/** The vot fund list. */
 	private List<PmVotFund> votFundList;
-	
-	/** The fee vot fund. */
 	private PmVotFund feeVotFund;
-	
-	/** The ct deduction list. */
 	private List<CtDeduction> ctDeductionList;
-	
-	/** The populate deduction list. */
 	private List<SelectItem> populateDeductionList;
-
-	// for Deduction panel display
-	/** The doc type. */
 	private String docType;
-
-	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot;
-	
-	/** The selected node. */
 	private TreeNode selectedNode;
 
 	// set chargeline for selected items
-	/** The vot fund code. */
 	private String votFundCode;
-	
-	/** The asset ind code. */
 	private String assetIndCode;
-	
-	/** The gl account code. */
 	private String glAccountCode;
-	
-	/** The project code. */
 	private String projectCode;
-	
-	/** The setia code. */
 	private String setiaCode;
-	
-	/** The sub setia code. */
 	private String subSetiaCode;
-	
-	/** The prg activity code. */
 	private String prgActivityCode;
-	
-	/** The vot fund type. */
 	private String votFundType;
-
-	/** The vot fund id. */
 	private Long votFundId;
-	
-	/** The asset ind id. */
 	private Long assetIndId;
-	
-	/** The gl account id. */
 	private Long glAccountId;
-	
-	/** The project id. */
 	private Long projectId;
-	
-	/** The setia id. */
 	private Long setiaId;
-	
-	/** The sub setia id. */
 	private Long subSetiaId;
-	
-	/** The prg activity id. */
 	private Long prgActivityId;
-	
-	/** The financing type code. */
 	private String financingTypeCode;
-	
-	/** The deduction id. */
 	private Long deductionId;
-	
-	/** The invoice date. */
 	private String invoiceDate;
-
-	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
-
-	/** The ordered amt grand total. */
 	private BigDecimal orderedAmtGrandTotal;
-	
-	/** The received amt grand total. */
 	private BigDecimal receivedAmtGrandTotal;
-	
-	/** The inv amt grand total. */
 	private BigDecimal invAmtGrandTotal;
-	
-	/** The can amt grand total. */
 	private BigDecimal canAmtGrandTotal;
-	
-	/** The dan amt grand total. */
 	private BigDecimal danAmtGrandTotal;
-	
-	/** The service charge. */
 	private String serviceCharge;
-
-	/** The deduction amt. */
 	private BigDecimal deductionAmt;
-	
-	/** The have advanced pymt. */
 	private boolean haveAdvancedPymt;
-	
-	/** The paid amt. */
 	private BigDecimal paidAmt;
-	
-	/** The balance amt. */
 	private BigDecimal balanceAmt;
-	
-	/** The paid perc. */
 	private BigDecimal paidPerc;
-	
-	/** The number of co. */
 	private int numberOfCO;
-	
-	/** The show deduction tab. */
 	private boolean showDeductionTab;
-
-	/** The button val. */
 	private String buttonVal;
-	
-	/** The pm user. */
 	private PmUser pmUser;
 
 	// getSuplier address details
-	/** The supplier address. */
 	private String supplierAddress;
-	
-	/** The phone no. */
 	private String phoneNo;
-	
-	/** The fax no. */
 	private String faxNo;
-	
-	/** The contact email. */
 	private String contactEmail;
-	
-	/** The contact person. */
 	private String contactPerson;
-	
-	/** The contact phone no. */
 	private String contactPhoneNo;
 
 	// tab menu
-	/** The selected tab index. */
 	private int selectedTabIndex;
-
-	/** The adjustment doc no. */
 	private String adjustmentDocNo;
-	
-	/** The adjustment dan doc no. */
 	private String adjustmentDanDocNo;
-	
-	/** The adjustment can doc no. */
 	private String adjustmentCanDocNo;
-	
-	/** The stop instr no. */
 	private String stopInstrNo;
 	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate = true;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
-	
-	/** The button action. */
 	private String buttonAction;
-	
-	/** The validated. */
 	private boolean validated = false;
 	
 	

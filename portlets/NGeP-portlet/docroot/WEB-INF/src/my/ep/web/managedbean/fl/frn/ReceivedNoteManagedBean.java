@@ -36,80 +36,35 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
-	
-	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
 	
-	/** The fulfilment note. */
 	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
-	
-	/** The fulfilment note item. */
 	private FlFulfilmentNoteItem fulfilmentNoteItem = new FlFulfilmentNoteItem();
-	
-	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
-	
-	/** The selected item. */
 	private FlFulfilmentNoteItem selectedItem = new FlFulfilmentNoteItem();
-
-	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
-	
-	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
-	
-	/** The check ptj flg. */
 	private boolean checkPtjFlg = true;
-	
-	/** The fulfillment req id. */
 	private String fulfillmentReqId;
-	
-	/** The button val. */
 	private String buttonVal;
-	
-	/** The doc type. */
 	private String docType;
-	
-	/** The supplier address. */
 	private String supplierAddress;
-	
-	/** The frn cancellation process. */
 	private boolean frnCancellationProcess;
-	
-	/** The selected tab index. */
 	private int selectedTabIndex;
-	
-	/** The pm user. */
 	private PmUser pmUser;
-	
-	/** The criteria desc list. */
 	private List<PmCriteriaDesc> criteriaDescList;
-	
-	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
-	
-	/** Disable evaluation. */
 	private boolean disableEvaluation = false;
 	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate = true;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
 	
-	/** The button action. */
 	private String buttonAction;
-	
-	/** The validated. */
 	private boolean validated = false;
-	
-	
+	//gfmas
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private String gfmasErrorCode;
@@ -122,27 +77,17 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private boolean acknowledged;
 	
-	/** The from page url. */
 	private String fromPageUrl;
 	
 	private BigDecimal orderedAmt;
-
 	private BigDecimal orderedQty;
-
 	private BigDecimal receivedAmt; 
-	
 	private BigDecimal receivedQty;
-	
 	private BigDecimal totalReceivedAmt; 
-	
 	private BigDecimal totalReceivedQty;	
-	
 	private BigDecimal deliveredAmt;
-
 	private BigDecimal deliveredQty;
-	
 	private BigDecimal remainingQty;
-	
 	private boolean itemTypeProduct=false;
 	
 	/** The back to previous. */

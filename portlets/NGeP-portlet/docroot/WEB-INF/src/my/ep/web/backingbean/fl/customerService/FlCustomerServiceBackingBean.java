@@ -40,6 +40,10 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCustomerServiceManagedBean>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger.getLogger(FlCustomerServiceBackingBean.class);
 	private String sysUserId = "weblogic";
