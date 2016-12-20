@@ -3124,6 +3124,7 @@ public class SmCommonUtil {
 							reqDTO).getSoftcertRequest();
 			if (softcertRequest != null
 					&& StringUtils.isNotBlank(softcertRequest.getReasonCode())) {
+				personnel.setSoftcertRejectCode(softcertRequest.getReasonCode());
 				if (softcertRequest.getReasonCode().equals(
 						SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
 					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
