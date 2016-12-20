@@ -78,6 +78,7 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -123,6 +124,7 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -4522,5 +4524,29 @@ public class SmCommonUtil {
 		}
 		return getMessage(sb.toString(), null);
 
+	}
+	
+	/**
+	 * search user by search bean
+	 * 
+	 * @param searchBean
+	 * @return ISearchResultBean<PmUser>
+	 */
+	public static ISearchResultBean<SmPersonnel> searchUsersResultBeanBySearchBean(ISearchBean<SmPersonnel> searchBean) {
+		IPersonnelSO personnelSO = null;
+		try {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			PersonnelResDTO resDTO = new PersonnelResDTO();
+			reqDTO.setSearchPersonnelBean(searchBean);
+			personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			resDTO = personnelSO.retrieveUsersResultBeanBySearchBean(reqDTO);
+
+			if (resDTO.isSuccessful() && resDTO.getSearchPersonnelResultBean() != null) {
+				return resDTO.getSearchPersonnelResultBean();
+			}
+		} finally {
+			personnelSO = null;
+		}
+		return null;
 	}
 }
