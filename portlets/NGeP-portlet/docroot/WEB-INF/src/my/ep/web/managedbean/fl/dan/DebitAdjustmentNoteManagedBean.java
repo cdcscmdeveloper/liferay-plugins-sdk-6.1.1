@@ -33,84 +33,37 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The adjustment. */
 	private FlAdjustment adjustment;
-	
-	/** The dan charge line tree. */
 	private TreeNode danChargeLineTree;
-	
-	/** The selected nodes. */
 	private TreeNode selectedNode;
-	
-	/** The is dan. */
 	private boolean isDan = false;
 	//tab menu
-	/** The selected tab index. */
 	private int selectedTabIndex;
 	
-	/** The selected dan item. */
 	private FlAdjustmentItem selectedDanItem;
 	
 	//getSuplier address details
-	/** The supplier address. */
 	private String supplierAddress;
-	
-	/** The phone no. */
 	private String phoneNo;
-	
-	/** The fax no. */
 	private String faxNo;
-	
-	/** The contact email. */
 	private String contactEmail;
-	
-	/** The contact person. */
 	private String contactPerson;
-	
-	/** The contact phone no. */
 	private String contactPhoneNo;
-	
-	/** The branch name. */
 	private String branchName;
 	
 	// set chargeline for selected items
-	/** The vot fund code. */
 	private String votFundCode;
-	
-	/** The asset ind code. */
 	private String assetIndCode;
-	
-	/** The gl account code. */
 	private String glAccountCode;
-	
-	/** The project code. */
 	private String projectCode;
-	
-	/** The setia code. */
 	private String setiaCode;
-	
-	/** The sub setia code. */
 	private String subSetiaCode;
-	
-	/** The prg activity code. */
 	private String prgActivityCode;
-	
-	/** The vot fund type. */
 	private String votFundType;
-	
-	/** The financing type code. */
 	private String financingTypeCode;
-	
-	/** The ordered amt total. */
 	private BigDecimal orderedAmtTotal ;
-	
-	/** The dan amt total. */
 	private BigDecimal danAmtTotal ;
-	
-	/** The inv amt total. */
 	private BigDecimal invAmtTotal ;
-	
-	/** The account no name. */
 	private String accountNoName;
 	
 	/** The back to document. */
@@ -129,17 +82,11 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;
 	
-	/** The text before sign. */
 	private String textBeforeSign;
 	
 	//gpki signing
-		/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The button action. */
 	private String buttonAction;
-	
-	/** The validated. */
 	private boolean validated = false;
 	
 	

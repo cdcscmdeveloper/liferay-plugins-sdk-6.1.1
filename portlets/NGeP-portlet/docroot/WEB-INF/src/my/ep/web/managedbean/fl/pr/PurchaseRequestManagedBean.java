@@ -63,436 +63,179 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
-	
-	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
-	
-	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
 
 	//remove multiple selection from data table
-	/** The selected address rows. */
 	private List<FlDeliveryAddress> selectedAddressRows;
-	
-	/** The selected address rows list. */
 	private List<FlDeliveryAddress> selectedAddressRowsList;
-	
-	/** The selected items rows. */
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
-	
-	/** The show all items rows. */
 	private List <FlFulfilmentItemAddr>  showAllItemsRows;
-	
-	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
-	
-	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
-	
-	/** The selected addr list. */
 	private List<FlDeliveryAddress> selectedAddrList;
-	
-	/** The selected pm del addr list. */
 	private List<PmAddressType> selectedPmDelAddrList;
-	
-	/** The address types list. */
 	private List<PmAddressType> addressTypesList;
-	
-	/** The request note list. */
 	private List<ScRequestNote> requestNoteList;
-	
-	/** The check ptj flg. */
 	private boolean checkPtjFlg = true;
-	
-	/** The selected request note. */
 	private ScRequestNote selectedRequestNote;
-	
-	/** The manual address list. */
 	private List<PmAddressType> manualAddressList;
-	
-	/** The request note item list. */
 	private List<FlFulfilmentItemAddr> requestNoteItemList;
-	
-	/** The fulfillment req id. */
 	private String fulfillmentReqId;
 	
-	/** The task name. */
 	private String taskName;
-	
-	/** The doc process. */
 	private String docProcess;
 	
-	/** The fl doc id. */
 	private String flDocId;
-	
-	/** The button val. */
 	private String buttonVal;
-	
-	/** The submit button status. */
 	private Boolean submitButtonStatus =true;
-	
-	/** The doc status id. */
 	private Long docStatusId;
-	
-	/** The ministry name. */
 	private String ministryName;
-	
-	/** The issued jabatan id. */
 	private Long issuedJabatanId;
-	
-	/** The received jabatan id. */
 	private Long receivedJabatanId;
-	
-	/** The issued ptj id. */
 	private Long issuedPtjId;
-	
-	/** The received ptj id. */
 	private Long receivedPtjId;
-	
-	/** The charged ptj id. */
 	private Long chargedPtjId;
-	
-	/** The current ptj group id. */
 	private Long currentPtjGroupId;
-	
-	/** The current prepared org id. */
 	private Long currentPreparedOrgId;
-	
-	/** The pm user org. */
 	private PmUserOrg pmUserOrg = new PmUserOrg();
-	
-	/** The approver map. */
 	private HashMap<Long, PmUserGroupUser> approverMap;
-	
-	/** The sc request supplier item id map. */
 	private HashMap<Long, Long> scRequestSupplierItemIdMap;
-	
-	/** The zonal tier map. */
 	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
-	
-	/** The tier map. */
 	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
-	
-	/** The ct contract. */
 	private CtContract ctContract = new CtContract();
-	
-	/** The contract list. */
 	private List <CtContract> contractList;
 	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
-	
-	/** The selected row flg. */
 	private boolean selectedRowFlg;
-	
 	private boolean declarationCheck;
-	
 	private String taskDeadLine;
 	private FlDeliveryAddress flManualAddress;
 	
 	//getItems
-	/** The request note with dtls list. */
 	private List<ScRequestNoteDtl> requestNoteWithDtlsList;
-	
-	/** The selected purchased item list. */
 	private List<ScRequestNoteDtl> selectedPurchasedItemList;
-	
-	/** The selected item row. */
 	private FlFulfilmentItem  selectedItemRow;
-	
-	/** The zonal tier item list. */
 	private List<FlFulfilmentItemAddr> zonalTierItemList;
-	
-	/** The zonal tier item. */
 	private FlFulfilmentItemAddr zonalTierItem;
-	
-	/** The request note items. */
 	public List<ScRequestItem> requestNoteItems;
 	
 	//get GOSODO
-	/** The go id. */
 	private Long goId;
-	
-	/** The so id. */
 	private Long soId;
-	
-	/** The do id. */
 	private Long doId;
-	
-	/** The sub total. */
 	private BigDecimal subTotal;
-	
-	/** The selected item addr. */
 	private FlFulfilmentItemAddr selectedItemAddr;
-	
-	/** The fl req note map. */
 	private HashMap<Long, ScRequestNoteDtl> flReqNoteMap;
-	
-	/** The manual address map. */
 	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
 	// getUserGroup
-	/** The user group list. */
 	private List<PmUserGroup> userGroupList;
-	
-	/** The fulfilment requisitioner. */
 	private String fulfilmentRequisitioner;
 	
 	//getSuplier address details
-	/** The supplier address. */
 	private String supplierAddress;
-	
-	/** The pm address type. */
 	private PmAddressType pmAddressType;
-	
-	/** The pm address. */
 	private PmAddress pmAddress;
-	
-	/** The pm country. */
 	private PmCountry pmCountry ;
-	
-	/** The pm state. */
 	private PmState pmState;
-	
-	/** The pm district. */
 	private PmDistrict pmDistrict ;
-	
-	/** The pm city. */
 	private PmCity pmCity ;
-	
-	/** The charge check. */
 	private String chargeCheck ="false";
 	
 	// for Manual Address
-	/** The country list. */
 	private List<PmCountry> countryList;
-	
-	/** The state list. */
 	private List<PmState> stateList;
-	
-	/** The division list. */
 	private List<PmDivision> divisionList;
-	
-	/** The city list. */
 	private List<PmCity> cityList;
-	
-	/** The district list. */
 	private List<PmDistrict> districtList;
 	
 	//chargeline
-	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot ;
-	
-	/** The charge line selected item address. */
 	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
-	
-	/** The selected nodes. */
 	private TreeNode[] selectedNodes;
-	
-	/** The selected node. */
 	private TreeNode selectedNode;
-	
-	/** The selected item charge section. */
 	private FlFulfilmentItemAddr selectedItemChargeSection;
-	
-	/** The ordered amt grand total. */
 	private BigDecimal orderedAmtGrandTotal ;
 	
 	// charge Line dropdown lists
-	/** The vot fund list. */
 	private List<PmVotFund> votFundList;
-	
-	/** The gl account list. */
 	private List<PmGlAccount> glAccountList;
-	
-	/** The sub setia list. */
 	private List<PmSubSetia> subSetiaList;
-	
-	/** The prg activity list. */
 	private List<PmPrgActivity> prgActivityList;
-	
-	/** The manual addr list. */
 	private List<SelectItem> manualAddrList;
-	
-	/** The supplier branches list. */
 	private List<SelectItem> supplierBranchesList;
 	
 	// set chargeline for selected items
-	/** The vot fund code. */
 	private String votFundCode;
-	
-	/** The asset ind code. */
 	private String assetIndCode;
-	
-	/** The gl account code. */
 	private String glAccountCode;
-	
-	/** The project code. */
 	private String projectCode;
-	
-	/** The setia code. */
 	private String setiaCode;
-	
-	/** The sub setia code. */
 	private String subSetiaCode;
-	
-	/** The prg activity code. */
 	private String prgActivityCode;
-	
-	/** The vot fund type. */
 	private String votFundType;
-	
-	/** The vot fund id. */
 	private Long votFundId;
-	
-	/** The asset ind id. */
 	private Long assetIndId;
-	
-	/** The gl account id. */
 	private Long glAccountId;
-	
-	/** The sub setia id. */
 	private Long subSetiaId;
-	
-	/** The prg activity id. */
 	private Long prgActivityId;
-	
-	/** The financing type code. */
 	private String financingTypeCode;
 	
 	//receving officer List
-	/** The receiving off list. */
 	private List<PmAddressType> receivingOffList;
 	
 	//get Ag Office details
-	/** The ag office id. */
 	private Long agOfficeId;
-	
-	/** The ag office name. */
 	private String agOfficeName;
 	
 	//temp
-	/** The term days. */
 	private String termDays;
 	
-	/** The delete button hide. */
 	private boolean deleteButtonHide;
-	
-	/** The selected tab index. */
 	private int selectedTabIndex;
-	
-	/** The required. */
 	private boolean required;
-	
-	/** The pm user. */
 	private PmUser pmUser;
-	
-	/** The max date. */
 	private Date maxDate;
 	
 	//RequestItemInfo List
-	/** The req item info list. */
 	private List<ScSupplierItemPrice> reqItemInfoList;
-	
-	/** The item name. */
 	private String itemName;
-	
-	/** The quantity. */
 	private Double quantity;
-	
-	/** The standard unit price. */
 	private Double standardUnitPrice;
-	
-	/** The price type. */
 	private PmParameter priceType;
-	
-	/** The standard price. */
 	private boolean standardPrice = false;
-	
-	/** The zonal price. */
 	private boolean zonalPrice = false;
-	
-	/** The zonal tier price. */
 	private boolean zonalTierPrice = false;
-	
-	/** The email validate. */
 	private boolean emailValidate = false;
-	
-	/** The charge line panel. */
 	private boolean chargeLinePanel=false;
-	
-	/** The program lov. */
 	private boolean programLov=false;
-	
-	/** The project lov. */
 	private boolean projectLov=false;
-	
-	/** The vot fund display. */
 	private boolean votFundDisplay=false;
-	
-	/** The pm vote fund. */
 	private PmVotFund pmVoteFund;
-	
-	/** The gosodo. */
 	private PmGlAccount gosodo;
-	
-	/** The pm prg activity. */
 	private PmPrgActivity pmPrgActivity;
-	
-	/** The pm sub setia. */
 	private PmSubSetia pmSubSetia;
-	
-	/** The item addr vote fund disp. */
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
-	
-	/** The root zone tree. */
 	private	TreeNode	rootZoneTree;
-	
-	/** The selected tree node. */
 	private TreeNode selectedTreeNode;
-	
-	/** The supplier item price list. */
 	private List<FLSupplierItemVO>	supplierItemPriceList = new ArrayList<FLSupplierItemVO>();
-	
-	/** The selected zone tree. */
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
-	
-	/** The query display. */
 	private boolean queryDisplay=false;
-	
-	/** The fee vote fund. */
 	private PmVotFund feeVoteFund;
 	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate = true;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
-	
-	/** The button action. */
 	private String buttonAction;
-	
-	/** The validated. */
 	private boolean validated = false;
 	
 	//uom
-	/** The measurement codes. */
 	private String measurementCodes;	
-	
-	/** The measurement names. */
 	private String measurementNames;
-	
-	/** The fl doc maintain. */
 	private boolean flDocMaintain = false;
-	
-	/** The is purchase request link. */
 	private boolean isPurchaseRequestLink = false;
-	
-	/** The back to document. */
 	private String backToDocument;
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
@@ -522,7 +265,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
 	
-	/** The ordered amt grand total. */
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
 	
 	private String itemDesc;

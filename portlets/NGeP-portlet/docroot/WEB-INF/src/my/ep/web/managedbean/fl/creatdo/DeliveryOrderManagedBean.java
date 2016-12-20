@@ -36,167 +36,74 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class DeliveryOrderManagedBean extends BaseManagedBean {
 	
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
-	
-	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
-	
-	/** The fl delivery order. */
-	private FlDeliveryOrder flDeliveryOrder;
-	
-	/** The delivery address. */
-	private FlDeliveryAddress deliveryAddress;
-	
-	/** The fulfilment order. */
-	private FlFulfilmentOrder fulfilmentOrder;
-    
-    /** The fulfilment request. */
-    private FlFulfilmentRequest fulfilmentRequest;
-    
-    /** The del order item. */
-    private FlDelOrderItem delOrderItem = new FlDelOrderItem();
-	
-	/** The selected addr row. */
-	private FlDeliveryAddress selectedAddrRow;
-	
-	/** The selected del addr. */
-	private FlDeliveryAddress selectedDelAddr;
-	//private List<PmMaksud> maksudCodeList;
-	/** The check ptj flg. */
-	private boolean checkPtjFlg = true;
-	
-	/** The fulfillment req id. */
-	private String fulfillmentReqId;
-	
-	/** The fulfilment order id. */
-	private String fulfilmentOrderId;
-	
-	/** The status id. */
-	private String statusId;
-	
-	/** The pending do list. */
-	private List<FlFulfilmentOrder> pendingDoList;
-	
-	/** The delivery address list. */
-	private List<FlDeliveryAddress>deliveryAddressList;
-	
-	/** The doc process. */
-	private String docProcess;
-	
-	/** The button val. */
-	private String buttonVal;
-	
-	/** The selected lov del addr. */
-	private String selectedLovDelAddr;
-	
-	/** The supplier address. */
-	private String supplierAddress;
-	
-	/** The doc type. */
-	private String docType;
-	
-	/** The status desc. */
-	private String statusDesc;
-	
-	/** The selected item row. */
-	private FlFulfilmentItemAddr selectedItemRow;
-	
-	/** The selected item row list. */
-	private List <FlFulfilmentItemAddr>selectedItemRowList;
-	
-	/** The selected item amount section. */
-	private FlFulfilmentItemAddr selectedItemAmountSection;
-	
-	/** The selected item row cal list. */
-	private List <FlFulfilmentItemAddr>selectedItemRowCalList;
-	
-	/** The rejection list. */
-	private List<FlFulfilmentNoteItem> rejectionList;
-	
-	/** The item selected for cal. */
-	private String itemSelectedForCal; 
-	
-	/** The del qty cal. */
-	private int delQtyCal;
-	
-	/** The del amt cal. */
-	private int delAmtCal;
-	
-	/** The remark list. */
 	private List<FlRemark> remarkList;
-	
-	/** The attachment list. */
 	private List<FlAttachment> attachmentList;
 	
-	/** The pm user. */
+	private FlDeliveryOrder flDeliveryOrder;
+	private FlDeliveryAddress deliveryAddress;
+	private FlFulfilmentOrder fulfilmentOrder;
+    private FlFulfilmentRequest fulfilmentRequest;
+    private FlDelOrderItem delOrderItem = new FlDelOrderItem();
+	private FlDeliveryAddress selectedAddrRow;
+	private FlDeliveryAddress selectedDelAddr;
+	private boolean checkPtjFlg = true;
+	private String fulfillmentReqId;
+	private String fulfilmentOrderId;
+	private String statusId;
+	private List<FlFulfilmentOrder> pendingDoList;
+	private List<FlDeliveryAddress>deliveryAddressList;
+	private String docProcess;
+	private String buttonVal;
+	private String selectedLovDelAddr;
+	private String supplierAddress;
+	private String docType;
+	private String statusDesc;
+	private FlFulfilmentItemAddr selectedItemRow;
+	private List <FlFulfilmentItemAddr>selectedItemRowList;
+	private FlFulfilmentItemAddr selectedItemAmountSection;
+	private List <FlFulfilmentItemAddr>selectedItemRowCalList;
+	private List<FlFulfilmentNoteItem> rejectionList;
+	private String itemSelectedForCal; 
+	private int delQtyCal;
+	private int delAmtCal;
+	
 	private PmUser pmUser;
-	
-	/** The supplier do ref. */
 	private String supplierDoRef;
-	
 	//tab menu
-	/** The selected tab index. */
 	private int selectedTabIndex;
-	
-	/** The modification cancel. */
 	private boolean modificationCancel;
-	
-	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
-	
-	/** The from page url. */
 	private String fromPageUrl;
-	
-	/** The from page url. */
 	private boolean fromDoPage;
-	
-	/** The from page url. */
 	private boolean fromDoDashboardPage;
-	
 	//gpki signing
-	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-	
-	/** The auto update. */
 	private boolean autoUpdate = true;
-	
-	/** The text before sign. */
 	private String textBeforeSign;
-	
-	/** The button action. */
 	private String buttonAction;
 	
 	//uom
-	/** The measurement codes. */
 	private String measurementCodes;	
-	
-	/** The measurement names. */
 	private String measurementNames;
-	
-	/** The fl stop instr. */
 	private FlStopInstr flStopInstr;
-	
-	/** The rejected remark. */
 	private List<FlRemark> rejectedRemark;
-	
-	/** The display stop intr detls. */
 	private boolean displayStopIntrDetls;
-	
-	/** The reason desc. */
 	private String reasonDesc;
 
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
+    //gfma
     private boolean gfmasError=false;
     private String gfmasErrorCode;
     private String gfmasErrorContent;
     private String gfmasErrorDesc;
+   
+    //gst
     private Date estDeliveryDate;
     private Date gstDeclareDate;
     private Date gstEffDate;
@@ -209,15 +116,10 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<FlAttachment> previousAttachmentList;	
 	
 	private boolean hyperLinkPage = false;
-	
 	private List <FlDeliveryAddress>selectedDeliveryAddressList;
-	
 	private boolean orderDisabledForSdCheck = false;
-	
 	private boolean delAddressSelected = false;
-	
 	private List<FlDeliveryOrder> submittedDoList;
-	
 	private String supplierUserName;
     
 	/**
@@ -311,22 +213,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setFulfillmentReqId(String fulfillmentReqId) {
 		this.fulfillmentReqId = fulfillmentReqId;
 	}
-
-	/**
-	 * Checks if is check ptj flg.
-	 *
-	 * @return the maksudCodeList
-	 *//*
-	public List<PmMaksud> getMaksudCodeList() {
-		return maksudCodeList;
-	}
-
-	*//**
-	 * @param maksudCodeList the maksudCodeList to set
-	 *//*
-	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
-		this.maksudCodeList = maksudCodeList;
-	}*/
 
 	/**
 	 * @return the checkPtjFlg

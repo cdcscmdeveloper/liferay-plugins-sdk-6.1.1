@@ -13,8 +13,6 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.log4j.Logger;
-
 // TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Fulfilment.
@@ -26,34 +24,20 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class FulfilmentManagedBean extends BaseManagedBean {
 	
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The fl attachment. */
+	// Remarks and attachments
 	private FlAttachment flAttachment = new FlAttachment();
-	
-	/** The remark list. */
 	private List<FlRemark> remarkList;
-	
-	/** The attachment list. */
 	private List<FlAttachment> attachmentList;
+	private boolean docMaintainRemarks = false;
+	private boolean hideRemarks = false;
+	private int attachedFileIndex;
+	private List<FlAttachment> deleteAttachments;
 		
-	/** The doc type. */
 	private String docType;
-	
-	/** The doc no. */
 	private String docNo;
 	
-	/** The doc maintain remarks. */
-	private boolean docMaintainRemarks = false;
-	
-	/** The hide remarks. */
-	private boolean hideRemarks = false;
-	
-	/** The attached file index. */
-	private int attachedFileIndex;
-	
-	private List<FlAttachment> deleteAttachments;
 	
 	/**
 	 * Instantiates a new fulfilment managed bean.

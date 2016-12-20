@@ -69,136 +69,55 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
-	/** The temp login id. */
+	//search
 	private String tempLoginId;
-	
-	/** The temp doc type. */
 	private String tempDocType;
-	
-	/** The search type. */
 	private String searchType = "D"; // Define or Advanced
-	
-	/** The search Function Type - PTJ or Supplier */
 	private String searchFunctionType;
-	
-	/** The search order type. */
 	private String searchOrderType; 
-	
-	/** The search doc type. */
 	private String searchDocType;
-	
-	/** The search doc no. */
 	private String searchDocNo;
-	
-	/** The search contract no. */
 	private String searchContractNo;
-	
-	/** The search circular no. */
 	private String searchCircularNo;
-	
-	/** The search loa no. */
 	private String searchLoaNo;
-	
-	/** The search title. */
 	private String searchTitle;
-	
-	/** The search supp name. */
 	private String searchSuppName;
-	
-	/** The search supp do ref. */
 	private String searchSuppDoRef;
-	
-	/** The search supp inv ref. */
 	private String searchSuppInvRef;
-	
-	/** The search status id. */
 	private Long searchStatusId;
-	
-	/** The search contract from duration. */
 	private Date searchContractFromDuration;
-	
-	/** The search contract to duration. */
 	private Date searchContractToDuration;
-	
-	/** The search order no. */
 	private String searchOrderNo;
-	
-	/** The search phys loa no. */
 	private String searchPhysLoaNo;
-	
-	/** The search phys contract no. */
 	private String searchPhysContractNo;
-	
 	private String searchCentralContractName;
-	
-	/** The doc status list. */
 	private List<PmStatusDesc> docStatusList;
-	
-	/** The procurement type list. */
 	private List<PmParameterDesc> procurementTypeList;
-	
-	/** The status desc id. */
 	private Long statusDescId;
-	
-	/** The search procurement type id. */
 	private Long searchProcurementTypeId;
-	
-	
-	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
-	
-	/** The pm user. */
 	private PmUser pmUser;
-	
-	/** The fl document list. */
 	private List<VFlDocument> flDocumentList;
-	
-	/** The check doc type. */
+	//search update elements
 	private Boolean checkDocType =false;
-	
-	/** The check po doc type. */
 	private Boolean checkPoDocType =false;
-	
-	/** The check pa doc type. */
 	private Boolean checkPaDocType =false;
-	//private Boolean checkTitle =false;
-	/** The check doc no. */
 	private Boolean checkDocNo =false;
-	
-	/** The check do in doc type. */
 	private Boolean  checkDoInDocType=false;
-	
-	/** The check do doc type. */
 	private Boolean  checkDoDocType=false;
-	
-	/** The check in doc type. */
 	private Boolean  checkInDocType=false;
 	
 	// getUserGroup
-	/** The fl requisitioner. */
 	private String flRequisitioner;
-	
-	/** The fl receving officer. */
 	private String flRecevingOfficer;
-	
-	/** The fl supplier. */
 	private String flSupplier;
-	
-	/** The fl pm officer. */
 	private String flPmOfficer;
-	
-	/** The fl approver. */
 	private String flApprover;
 	
 	// for selected Approver List
-	/** The approver model. */
 	private DualListModel<String> approverModel;
 	
-	/** The approver map. */
 	private HashMap<String, PmUserGroupUser> approverMap;
-	
-	/** The fl document data model. */
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 	
 	private int searchFinancialYear;
@@ -208,7 +127,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private PmOrgProfile ptjGroup;
 	
 	private boolean trackingDiarySearch;
-	
 	private boolean isTaxable=false;
 	
 	/**
