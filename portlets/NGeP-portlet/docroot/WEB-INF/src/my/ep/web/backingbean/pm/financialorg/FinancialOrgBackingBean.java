@@ -791,7 +791,12 @@ public class FinancialOrgBackingBean extends
 //				addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
 //				addressType.setPmAddress(this.getManagedBean().getPmAddress());
 //				addressType.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
-				
+				if(pmAddressType == null){
+					pmAddressType = new PmAddressType();
+					pmAddressType.setAddressType(AddressType.BILLING_ADDRESS.value());
+					pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
+					pmAddressType.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
+				}
 				pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
 
 				// bind contact & address type
@@ -812,7 +817,7 @@ public class FinancialOrgBackingBean extends
 			
 		
 	
-	}
+ 	}
 	
 	/**
 	 * validate financial account fields
@@ -1450,10 +1455,11 @@ public class FinancialOrgBackingBean extends
 			for(PmFinancialSvc svc : getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
 				if(DbValueConst.RECORD_STATUS_ACTIVE == svc.getRecordStatusFlg() 
 						&& svc.getServiceTypeCode() != null 
-						&& svc.getServiceTypeCode().getParameterCode() !=null){
-					if(svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)||
-							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)||
-							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_REGISTRATION)){
+						&& svc.getServiceTypeCode().getParameterId() !=null){
+					PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(svc.getServiceTypeCode().getParameterId());
+					if(pmParameter.getParameterCode().equals(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)||
+							pmParameter.getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)||
+							pmParameter.getParameterCode().equals(ParameterConst.BANK_SERVICES_REGISTRATION)){
 						isMandatory = true;
 						break;
 					}

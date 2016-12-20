@@ -59,7 +59,9 @@
 						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
 						required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address1}"
-						size="52" />
+						size="52" >
+						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						</p:inputText>
 						<p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td >
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
@@ -90,7 +92,9 @@
 				<td></td>
 				<td ><p:inputText styleClass="ppDisplayTextL"  tabindex="3"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address2}"
-						size="52" maxlength="100" /></td>				
+						size="52" maxlength="100" >
+						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td >
@@ -114,7 +118,9 @@
 				<td></td>
 				<td ><p:inputText maxlength="100" styleClass="ppDisplayTextL"  tabindex="4"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address3}"
-						size="52" /></td>				
+						size="52" >
+						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td class="tdContent"><p:selectOneMenu id="facCity" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"  tabindex="10"
@@ -141,7 +147,9 @@
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.postcode}" styleClass="ppDisplayTextL"
 						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						</p:inputText>
 						<p:message for="postCode" id="postCodeMsg" display="icon" /></td>				
 			</tr>
 			<tr>
