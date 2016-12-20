@@ -985,7 +985,19 @@
 		<css-class-wrapper>onlineregistration-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Supplier Management - End - Andrew -->
-
+	
+	<!-- Supplier Task Reassignment - KK LIM -->
+	<portlet>
+		<portlet-name>suppliertaskreassignment</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>suppliertaskreassignment-portlet</css-class-wrapper>
+	</portlet>
+	<!-- Supplier Task Reassignment - End - KK LIM -->
 	
 	<portlet>
 		<portlet-name>catalogueTaskList</portlet-name>
