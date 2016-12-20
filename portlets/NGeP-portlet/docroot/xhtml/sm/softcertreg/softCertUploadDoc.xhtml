@@ -35,6 +35,7 @@
 			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" 
 			rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}" escape="false"/>
 			
+			<ui:param name="softcertSelLs" value="#{softCertBackingBean.managedBean.softCertSelectList[0]}"></ui:param>
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.submission.type']}" /></td>
@@ -42,7 +43,9 @@
 							value="#{softCertBackingBean.managedBean.suppDocMode}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.ep.centre']}"
 								itemValue="H" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.online']}"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.online']}" 
+							itemDisabled="#{!empty softcertSelLs.softcertRejectCode and 
+							(softcertSelLs.softcertRejectCode == SupplierMgmtConst.rejectedWithFraud or softcertSelLs.softcertRejectCode == SupplierMgmtConst.rejectedWithBlacklist)}"
 								itemValue="S"/>
 							<p:ajax update="@([id$=uploadPanelId])" event="change" />
 						</p:selectOneRadio></td>
