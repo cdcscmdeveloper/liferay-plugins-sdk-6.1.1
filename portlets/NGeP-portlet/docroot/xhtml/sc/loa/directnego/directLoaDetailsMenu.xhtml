@@ -453,6 +453,7 @@
 								required="true" label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}">
 								<f:selectItems
 									value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax process="@this" partialSubmit="true" update="@this" />
 							</p:selectOneRadio>
 							<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 						</c:when>
@@ -511,6 +512,7 @@
 								required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}">
 								<f:selectItems
 									value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax process="@this" partialSubmit="true" update="@this" />
 							</p:selectOneRadio>
 							<p:message id="approvalReqMsg" for="approvalReq" display="icon" />
 						</c:when>
