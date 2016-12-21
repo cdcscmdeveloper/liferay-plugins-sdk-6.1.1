@@ -35,7 +35,7 @@
 							value="#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.fullCatcode} 
 								(#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.categoryName})" />
 						<p:column
-							headerText="#{lbl['lbl.sm.category']} : #{categoryName}"
+							headerText="#{lbl['lbl.sm.category']} : #{empty categoryName ? lbl['lbl.txt.na'] : categoryName}"
 							style="background-color:lightblue !important;text-align: left !important;color:black !important"
 							colspan="5" />
 					</p:row>
@@ -126,7 +126,7 @@
 	
 				<p:column style="width : 10%;text-align: center  !important;">
 					<p:commandLink
-						oncomplete="#{cc.attrs.uploadDialogId}.show();return false;"
+						oncomplete="uploadLicenseDialog.show();return false;"
 						process="@this" partialSubmit="true"
 						rendered="#{!table.pmDocument.hardCopyReq}"
 						update="@([id$=uploadLicenseDialog])"

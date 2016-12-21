@@ -33,7 +33,7 @@
 							value="#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.fullCatcode} 
 								(#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.categoryName})" />
 								
-						<p:column headerText="#{lbl['lbl.sm.category']} : #{categoryName}" colspan="2"
+						<p:column headerText="#{lbl['lbl.sm.category']} : #{empty categoryName ? lbl['lbl.txt.na'] : categoryName}" colspan="2"
 							style="background-color:lightblue !important;text-align: left !important;color:black !important" />
 	                </p:row>
 				</p:columnGroup>
