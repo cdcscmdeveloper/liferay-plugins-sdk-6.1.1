@@ -11,7 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -23,7 +22,6 @@ import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
@@ -44,10 +42,12 @@ import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -989,9 +989,17 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.measurementFilterBean = measurementFilterBean;
 	}
 
-	public String assignProductCode(ScRequestItem requestItem) {
+	public String assignProductCode(ScRequestItem requestItem, TplSpecQuestion tplSpecQuestion) {
 		log.info(">>>>>>>>>requestItem= " + requestItem);
+		if(null != tplSpecQuestion){
+			 requestItem  = new ScRequestItem();
+			 requestItem.setItemName(tplSpecQuestion.getClItem());
+			 requestItem.setItemDesc(tplSpecQuestion.getClSpecDetail());
+			 requestItem.setItemType(tplSpecQuestion.getTplSpecMaster().getItemTypeCode());
+		}
 		this.getManagedBean().setSelectedRequestItem(requestItem);
+		this.getManagedBean().setTplSpecQuestion(tplSpecQuestion);
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 
@@ -1333,16 +1341,27 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				item = codeResDTO.getCmItem();
 
 			}
-			ScRequestItem scRequestItem = this.getManagedBean().getSelectedRequestItem();
-			scRequestItem.setCmItem(item);
-			List<ScRequestItem> tempRequestItemList = new ArrayList<ScRequestItem>();
-			tempRequestItemList.add(scRequestItem);
-			// update RequestItem
-			RequestItemReqDTO requestItemReqDTO = new RequestItemReqDTO();
-			requestItemReqDTO.setRequestItems(tempRequestItemList);
 
-			RequestItemResDTO requestItemResDTO = ReqItemSO
-					.saveRequestItems(requestItemReqDTO);
+			List<ScRequestItem> tempRequestItemList = new ArrayList<ScRequestItem>();
+			TplSpecQuestion tplSpecQuestion = getManagedBean().getTplSpecQuestion();
+			ScRequestItem scRequestItem = this.getManagedBean().getSelectedRequestItem();
+			if(null == tplSpecQuestion){
+				scRequestItem.setCmItem(item);
+				tempRequestItemList.add(scRequestItem);
+				
+				// update RequestItem
+				RequestItemReqDTO requestItemReqDTO = new RequestItemReqDTO();
+				requestItemReqDTO.setRequestItems(tempRequestItemList);
+				RequestItemResDTO requestItemResDTO = ReqItemSO
+						.saveRequestItems(requestItemReqDTO);
+				
+			} else{ 
+				getManagedBean().getTplSpecQuestion().setCmItem(item);
+					// direct Loa
+					DirectLOABackingBean directLOABackingBean = new DirectLOABackingBean();
+					directLOABackingBean.updateUnspscItem(getManagedBean().getTplSpecQuestion());
+					scRequestItem = null;
+			}
 
 			// check RequestItemList if all ItemCodes were assigned then
 			// update
@@ -1369,8 +1388,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			
 			// update status of pendingCodifiedItem
 			if(null == getManagedBean().getSelectedVPendingCodifiedItem()){
-				LOADetailBackingBean loaBackingBean = new LOADetailBackingBean();
-				loaBackingBean.updateUnspscItem(scRequestItem);
+				// Dp or QT Loa
+				if(null != scRequestItem){
+					LOADetailBackingBean loaBackingBean = new LOADetailBackingBean();
+					loaBackingBean.updateUnspscItem(scRequestItem);
+				}
 				
 			} else {
 				PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();

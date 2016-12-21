@@ -6881,6 +6881,31 @@ public class DirectLOABackingBean extends
 	}
 	
 	/**
+	 * Update unspsc item.
+	 *
+	 * @param selectedSpecQuestion the selected spec question
+	 */
+	public void updateUnspscItem(TplSpecQuestion selectedSpecQuestion) {
+		log.info("selectedSpecQuestion " + selectedSpecQuestion);
+		// product
+		TplSpecMaster  prodMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+		int prodQuestionIndex = prodMaster.getTplSpecQuestions().indexOf(selectedSpecQuestion);
+
+		if(prodQuestionIndex != -1) {
+			prodMaster.getTplSpecQuestions().set(prodQuestionIndex, selectedSpecQuestion);
+		}
+		
+		// service
+		TplSpecMaster  serviceMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+		int serviceQuestionIndex = serviceMaster.getTplSpecQuestions().indexOf(selectedSpecQuestion);
+
+		if(serviceQuestionIndex != -1) {
+			serviceMaster.getTplSpecQuestions().set(serviceQuestionIndex, selectedSpecQuestion);
+		}
+		
+	}
+	
+	/**
 	 * Generate agreement letter doc from velocity.
 	 *
 	 * @param attachment the attachment
