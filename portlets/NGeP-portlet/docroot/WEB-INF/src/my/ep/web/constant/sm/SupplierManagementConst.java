@@ -399,7 +399,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT = "ROC";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT = "LLP";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN = "UNKNOW";
-	
+
 	public static final String MOF_STATUS_ACTIVE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_ACTIVE;
 	public static final String MOF_STATUS_EXPIRED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED;
 	public static final String MOF_STATUS_NOT_AVAILABLE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE;
@@ -444,6 +444,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED = 20117;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED = 20116;
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
+	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
@@ -471,7 +472,6 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_357_0_SEQ = "SM_MOF_357_0_SEQ";
 	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
 	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
-	
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
@@ -928,7 +928,7 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_VIRTUAL_CERT() {
 		return SM_APPL_PAGE_TYPE_VIRTUAL_CERT;
 	}
-	
+
 	public String getSM_APPL_PAGE_TYPE_TRACKING_DIARY() {
 		return SM_APPL_PAGE_TYPE_TRACKING_DIARY;
 	}
@@ -936,7 +936,7 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_PAYMENT() {
 		return SM_APPL_PAGE_TYPE_PAYMENT;
 	}
-	
+
 	public String getSM_APPL_PAGE_TYPE_DECLARATION() {
 		return SM_APPL_PAGE_TYPE_DECLARATION;
 	}
@@ -1080,7 +1080,7 @@ public class SupplierManagementConst {
 	public String getSiteVisitAssignmentTypeAfter() {
 		return SITE_VISIT_ASSIGNMENT_TYPE_AFTER;
 	}
-	
+
 	public long getPmStatusRejectedBySys() {
 		return PM_STATUS_REJECTED_BY_SYS;
 	}
@@ -1088,14 +1088,15 @@ public class SupplierManagementConst {
 	public int getMAX_PAYMENT_BANK() {
 		return SmRuleHelper.getInstance().getMaxPaymentBankForEachBranch();
 	}
-	
+
 	public String getMOF_STATUS_ACTIVE() {
 		return MOF_STATUS_ACTIVE;
 	}
-	
+
 	public String getMOF_STATUS_EXPIRED() {
 		return MOF_STATUS_EXPIRED;
 	}
+
 	public String getMOF_STATUS_NOT_AVAILABLE() {
 		return MOF_STATUS_NOT_AVAILABLE;
 	}
