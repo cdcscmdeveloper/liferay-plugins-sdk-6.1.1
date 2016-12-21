@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.bulkapplication;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -16,6 +17,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.bulkapplication.SmBulkApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -192,6 +194,16 @@ public class SmBulkApplicationBackingBean extends
 
 		getManagedBean().setInitSelectedTasks(
 				getManagedBean().getSelectedTasks());
+	}
+
+	/**
+	 * Ajax call to set approve or reject date for the selected category.
+	 * 
+	 * @param category
+	 *            - SmSupplierCategory
+	 */
+	public void assignCategoryApproveOrRejectDate(SmSupplierCategory category) {
+		category.setApprovedDate(new Date());
 	}
 
 	private void showSuccessApplicationMsg(List<SmAppl> applList) {

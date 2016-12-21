@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.bulkapplication;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -15,9 +16,13 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
@@ -25,6 +30,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
@@ -171,6 +177,11 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 			mofReqDTO.setApplId(worklistItemVO.getDocId().longValue());
 			SmAppl appl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveSmApplicationDetailsById(mofReqDTO).getSmAppl();
+			SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							SupplierManagementConst.SECTION_REV_ROLE_PO,
+							appl.getSmApplSectionReviews(), "roleType");
+
 			if (appl != null) {
 				String companyName = appl.getSmSupplier().getCompanyName();
 				StringBuilder sb = new StringBuilder();
@@ -190,8 +201,13 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 				bulkApplicationVO.setCreateDate(worklistItemVO.getCreateDate());
 				bulkApplicationVO.setExpirationDate(worklistItemVO
 						.getExpirationDate());
+				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
 				bulkApplicationVO.setTitle(worklistItemVO.getTitle());
 				bulkApplicationVO.setAppl(appl);
+				if (poRev != null) {
+					bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
+							.getChangedBy()));
+				}
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
 								appl.getSupplierType(), appl.getApplType()));
@@ -199,12 +215,14 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 						.getHqFacilityByAppl(appl));
 				PmStatusDesc currentStatusDesc = SmApplicationUtil
 						.getCurrRegStatusDesc(appl);
-				if (currentStatusDesc != null) {
-					bulkApplicationVO.setApprovedStatusId(currentStatusDesc
-							.getPmStatus().getStatusId());
-					bulkApplicationVO.setCurrRegStatus(currentStatusDesc
-							.getStatusName());
+				if (currentStatusDesc == null) {
+					currentStatusDesc = SmCommonUtil
+							.getStatusDescByStatusId(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED);
 				}
+				bulkApplicationVO.setApprovedStatusId(currentStatusDesc
+						.getPmStatus().getStatusId());
+				bulkApplicationVO.setCurrRegStatus(currentStatusDesc
+						.getStatusName());
 				SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
 						.getOverlapCategoryVO(appl);
 				if (overlapCategoryVO != null) {
@@ -227,6 +245,18 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 					bulkApplicationVO.setOnlineDoc(false);
 				}
 				bulkApplicationVO.setPaymentReqd(getPaymentMode(appl));
+				bulkApplicationVO
+						.setPendingApproveCategories(new ArrayList<SmSupplierCategory>());
+				for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							|| cat.getRecordStatusFlg()
+									.compareTo(
+											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+						bulkApplicationVO.getPendingApproveCategories()
+								.add(cat);
+					}
+				}
 			}
 		}
 		return bulkApplicationVO;
