@@ -2447,6 +2447,12 @@ important;
 	background-position:center;
 	border-radius:0px;
 	height:16px !important;
+}	
+.ui-icon-item-code {
+	background-image: url('../images/design/item_code') !important;
+	background-position:center;
+	border-radius:0px;
+	height:16px !important;
 }
 /*--------------------------       End Custom Icons    ------------------------------ */
 
