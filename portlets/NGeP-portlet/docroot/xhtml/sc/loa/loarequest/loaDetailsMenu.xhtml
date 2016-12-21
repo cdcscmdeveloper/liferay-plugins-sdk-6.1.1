@@ -375,6 +375,7 @@
 					label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}"
 					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+					<p:ajax process="@this" partialSubmit="true" update="@this" />
 				</p:selectOneRadio>
 				<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 			</td>
@@ -414,6 +415,7 @@
 						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />
 			</td>
 		</tr>
