@@ -158,5 +158,12 @@ scheduleBiddingBB.isQTStatusPublished(scheduleBiddingBB.managedBean.currentStatu
 					update="@([id$=contactPersonDetails])" />
 			</div>
 		</p:panel>
+		
+		<p:dialog header="#{lbl['lbl.sc.item.details']}"
+			widgetVar="scheduleBiddingItemDetails" modal="true"
+			id="scheduleBiddingItemDetails">
+			<ui:include
+				src="/xhtml/sc/bidding/scheduleBidding/scheduleBiddingItemDetailsPopup.xhtml"></ui:include>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
