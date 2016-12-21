@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sc.schedulermanager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -16,6 +15,7 @@ import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.LoadAllJob;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ReflectionHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.EpJobVO;
@@ -32,11 +32,21 @@ import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
 
+import com.cronutils.descriptor.CronDescriptor;
+import com.cronutils.model.CronType;
+import com.cronutils.model.definition.CronDefinition;
+import com.cronutils.model.definition.CronDefinitionBuilder;
+import com.cronutils.parser.CronParser;
+
 @ManagedBean(name = "schedulerManagerBB")
 @RequestScoped
 public class SchedulerManagerBackingBean extends
 		BaseBackingBean<SchedulerManagerManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1088034146543313228L;
 	public static Logger log = EpLogger
 			.getLogger(SchedulerManagerBackingBean.class);
 
@@ -103,7 +113,8 @@ public class SchedulerManagerBackingBean extends
 								.getSimpleName());
 						jobVO.setJobGroup(jobKey.getGroup());
 						jobVO.setJobName(jobKey.getName());
-						constructCronExpression(jobVO);
+						jobVO.setCronExpressionDescription(constructExpression(jobVO
+								.getCronExpression()));
 						getManagedBean().getEpSchedulerJobList().add(jobVO);
 
 						// construct problem jobs
@@ -119,7 +130,6 @@ public class SchedulerManagerBackingBean extends
 				}
 
 			}
-
 
 		} catch (SchedulerException e) {
 			if (tmpJobKey != null) {
@@ -249,6 +259,12 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void addOrUpdateJob() {
+		try {
+			getCronParser().parse(
+					getManagedBean().getSelectedJobVO().getCronExpression());
+		} catch (Exception ex) {
+			throw new EpException(MessageConst.ERRQRTZ_00007);
+		}
 		if (getManagedBean().getSelectedJobVO().getJobKey() == null) {
 			if (isJobAlreadyExist(getManagedBean().getSelectedJobVO()
 					.getJobName())) {
@@ -272,19 +288,6 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void addJob() {
-		StringBuilder cronExpSb = new StringBuilder();
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronSec())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronMin())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronHr())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronDay())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronMonth())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronYear());
-
 		Class<? extends Job> jobClass = getValidJobClass();
 
 		try {
@@ -292,7 +295,7 @@ public class SchedulerManagerBackingBean extends
 					.getSelectedJobVO().getJobName(), getManagedBean()
 					.getSelectedJobVO().getJobGroup()), jobClass,
 					getManagedBean().getSelectedJobVO().getDescription(),
-					cronExpSb.toString(),
+					getManagedBean().getSelectedJobVO().getCronExpression(),
 					null);
 		} catch (Exception ex) {
 			throw new EpException(MessageConst.ERRQRTZ_00004);
@@ -314,7 +317,8 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void updateJob() {
-		String finalCronExpression = getFinalCronExpression();
+		String finalCronExpression = getManagedBean().getSelectedJobVO()
+				.getCronExpression();
 		if (!getManagedBean()
 				.getSelectedJobVO()
 				.getJobName()
@@ -361,14 +365,39 @@ public class SchedulerManagerBackingBean extends
 
 	public String showMisFiredInstruction(int policy) {
 		if (policy == CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
-			return "MISFIRE_INSTRUCTION_DO_NOTHING";
+			return "DO NOTHING";
 		} else if (policy == CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
-			return "MISFIRE_INSTRUCTION_FIRE_ONCE_NOW";
+			return "FIRE ONCE NOW";
 		} else if (policy == CronTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
-			return "MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY";
+			return "IGNORE MISFIRE POLICY";
 		} else {
-			return "MISFIRE_INSTRUCTION_SMART_POLICY";
+			return "SMART POLICY";
 		}
+	}
+
+	public String constructExpression(String cronExpression) {
+		String retVal = StringUtils.EMPTY;
+
+		if (!StringUtils.isBlank(cronExpression)) {
+
+			// create a parser based on provided definition
+			CronParser parser = getCronParser();
+
+			// create a descriptor for a specific Locale
+			CronDescriptor descriptor = CronDescriptor
+					.instance(new FacesScopes().getUserLocale());
+
+			// parse some expression and ask descriptor for description
+			retVal = "** " + descriptor.describe(parser.parse(cronExpression));
+		}
+
+		return retVal;
+	}
+
+	public void onBlurCronExpression() {
+		getManagedBean().getSelectedJobVO().setCronExpressionDescription(
+				constructExpression(getManagedBean().getSelectedJobVO()
+						.getCronExpression()));
 	}
 
 	private String getJobStatus(JobKey jobKey) {
@@ -404,45 +433,6 @@ public class SchedulerManagerBackingBean extends
 		return retVal;
 	}
 
-	private void constructCronExpression(EpJobVO jobVO) {
-		String[] splitExpr = jobVO.getCronExpression().split(" ");
-		if (splitExpr != null && splitExpr.length == 6) {
-			int count = 0;
-			for (String exprTmp : Arrays.asList(splitExpr)) {
-				if (count == 0) {
-					jobVO.setCronSec(exprTmp);
-				} else if (count == 1) {
-					jobVO.setCronMin(exprTmp);
-				} else if (count == 2) {
-					jobVO.setCronHr(exprTmp);
-				} else if (count == 3) {
-					jobVO.setCronDay(exprTmp);
-				} else if (count == 4) {
-					jobVO.setCronMonth(exprTmp);
-				} else if (count == 5) {
-					jobVO.setCronYear(exprTmp);
-				}
-				count++;
-			}
-		}
-	}
-
-	private String getFinalCronExpression() {
-		StringBuilder cronExpSb = new StringBuilder();
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronSec())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronMin())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronHr())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronDay())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronMonth())
-				.append(" ");
-		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronYear());
-		return cronExpSb.toString();
-	}
-
 	private void initAllJobClasses() {
 		getManagedBean().setSelectedJobVO(new EpJobVO());
 		getManagedBean().setJobClassList(new ArrayList<String>());
@@ -475,6 +465,16 @@ public class SchedulerManagerBackingBean extends
 				getManagedBean().getEpSchedulerProblemJobList().add(job);
 			}
 		}
+	}
+
+	private CronParser getCronParser() {
+		// get a predefined instance
+		CronDefinition cronDefinition = CronDefinitionBuilder
+				.instanceDefinitionFor(CronType.QUARTZ);
+
+		// create a parser based on provided definition
+		CronParser parser = new CronParser(cronDefinition);
+		return parser;
 	}
 
 }
