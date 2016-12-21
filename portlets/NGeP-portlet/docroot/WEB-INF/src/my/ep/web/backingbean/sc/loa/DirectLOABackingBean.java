@@ -1144,7 +1144,7 @@ public class DirectLOABackingBean extends
 			for (ScLoaReport report : loaReports) {
 				if (report.getScLoaReportAttachment() != null && 
 						report.getScLoaReportAttachment().getFileName() == null) {
-					this.getManagedBean().setSelectedTabIndex(6);
+					this.getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_760402);
 				}
 			}
