@@ -355,61 +355,23 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.quartz.cronexpression']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td>
-							<h:outputText value="#{lbl['lbl.quartz.sec']}"/>
-							<p:inputText maxlength="4"
-								required="true"
-								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.sec']}" id="secId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronSec}"
-								size="4">
-								<p:ajax process="@this" partialSubmit="true" event="blur" />
-							</p:inputText>&#160;
-							<h:outputText value="#{lbl['lbl.quartz.min']}" />
-							<p:inputText maxlength="4"
-								required="true"
-								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.min']}" id="minId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronMin}"
-								size="4">
-								<p:ajax process="@this" partialSubmit="true" event="blur" />
-							</p:inputText>&#160;
-							<h:outputText value="#{lbl['lbl.quartz.hour']}" />
-							<p:inputText maxlength="4"
-								required="true"
-								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.hour']}" id="hourId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronHr}"
-								size="4">
-								<p:ajax process="@this" partialSubmit="true" event="blur" />
-							</p:inputText>&#160;
-							<h:outputText value="#{lbl['lbl.quartz.day']}" />
-							<p:inputText maxlength="4"
-								required="true"
-								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.day']}" id="dayId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronDay}"
-								size="4">
-								<p:ajax process="@this" partialSubmit="true" event="blur" />
-							</p:inputText>&#160;
-							<h:outputText value="#{lbl['lbl.quartz.month']}" />
-							<p:inputText maxlength="4"
-								required="true"
-								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.month']}" id="monthId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronMonth}"
-								size="4">
-								<p:ajax process="@this" partialSubmit="true" event="blur" />
-							</p:inputText>&#160;
-							<h:outputText value="#{lbl['lbl.quartz.year']}" />
-							<p:inputText maxlength="4"
-								required="true"
-								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.year']}" id="yearId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronYear}"
-								size="4">
-								<p:ajax process="@this" partialSubmit="true" event="blur" />
-							</p:inputText>&#160;
-						</td>
-					</tr>
-		
+					<ui:remove>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.quartz.cronexpression']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td>
+								<p:inputText maxlength="7"
+									required="true"
+									label="#{lbl['lbl.quartz.cronexpression']}" id="exprId"
+									value="#{schedulerManagerBB.managedBean.selectedJobVO.cronExpression}"
+									size="7">
+									<p:ajax process="@this" partialSubmit="true" event="blur" 
+										update="exprDescId" listener="#{schedulerManagerBB.onBlurCronExpression()}"/>
+								</p:inputText><br />
+								<h:outputText value="#{schedulerManagerBB.managedBean.selectedJobVO.cronExpressionDescription}" id="exprDescId"/>
+							</td>
+						</tr>
+					</ui:remove>
 				</table>
 			</p:outputPanel>
 			
