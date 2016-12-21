@@ -17,7 +17,8 @@
 				onkeyup="limitTextArea(this,2000);" onkeydown="limitTextArea(this,2000);"
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
-			</p:inputTextarea>
+			</p:inputTextarea><br />
+			#{question.cmItem.extensionCode}
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 		</c:if>
 		<c:if test="#{!newable}">
