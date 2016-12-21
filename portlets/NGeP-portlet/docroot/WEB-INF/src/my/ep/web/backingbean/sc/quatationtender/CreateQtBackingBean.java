@@ -2341,6 +2341,9 @@ public class CreateQtBackingBean extends
 			if (!valueBean.getOldValue().equals(newValue)) {
 				if (ptjApprovalReqFlg) {
 					amendMentBean.setPTJApprovalReq(true);	
+				} else {
+					valueBean.setApprovalDate(new Date());
+					valueBean.setIsApproved(true);
 				}
 			} else {
 				amendMentBean.getValueMap().remove(field);
