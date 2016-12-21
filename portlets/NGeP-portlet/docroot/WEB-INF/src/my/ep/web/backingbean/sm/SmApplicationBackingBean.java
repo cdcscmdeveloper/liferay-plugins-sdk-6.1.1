@@ -9793,10 +9793,13 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMandatoryLicenseDocs(
 				new ArrayList<SmLicenseInfoVO>());
 		SmLicenseInfoVO licenseVO = null;
+		int count = mandatoryLicenseDocs.size() + 1;
 		for (SmApplSupportDoc doc : mandatoryLicenseDocs) {
+			count++;
 			licenseVO = new SmLicenseInfoVO();
 			licenseVO.setLicenseSuppDocs(new ArrayList<SmApplSupportDoc>());
 			licenseVO.getLicenseSuppDocs().add(doc);
+			licenseVO.setCount(count);
 			getManagedBean().getMandatoryLicenseDocs().add(licenseVO);
 		}
 	}

@@ -12,6 +12,7 @@ public class SmLicenseInfoVO implements Serializable {
 	 */
 	private static final long serialVersionUID = -8538916961941006931L;
 	private List<SmApplSupportDoc> licenseSuppDocs;
+	private int count;
 
 	public List<SmApplSupportDoc> getLicenseSuppDocs() {
 		return licenseSuppDocs;
@@ -19,6 +20,14 @@ public class SmLicenseInfoVO implements Serializable {
 
 	public void setLicenseSuppDocs(List<SmApplSupportDoc> licenseSuppDocs) {
 		this.licenseSuppDocs = licenseSuppDocs;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }
