@@ -161,6 +161,11 @@
 					target="#{templateSpecBean.specComponentId}"
 					value="#{templateSpecId}" />
 		</p:commandButton>
+		
+	 	<p:commandButton icon="ui-icon-item-code" rendered="#{empty question.clSpecDetail}" title="assign code"
+		    style="background-color:transparent !important; border:0px none; width:10px !important;"
+			disabled="#{question.cmItem != null}"
+			action="#{codificationBackingBean.assignProductCode(null, question)}"/>
 	</p:column>
 
 </ui:composition>

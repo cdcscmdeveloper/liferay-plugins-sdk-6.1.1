@@ -27,6 +27,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -119,6 +120,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private VCmPendingCodifiedItem selectedVPendingCodifiedItem;
 	private List<ScRequestItem> selectedVPendingRequestItemList;
 	private ScRequestItem selectedRequestItem;
+	private TplSpecQuestion tplSpecQuestion;
 	private Object[] selectedExtenstionForItem;
 
 	private CmRequestCode requestExtCode;
@@ -1383,5 +1385,19 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
 	}
-	
+
+	/**
+	 * @return the tplSpecQuestion
+	 */
+	public TplSpecQuestion getTplSpecQuestion() {
+		return tplSpecQuestion;
+	}
+
+	/**
+	 * @param tplSpecQuestion the tplSpecQuestion to set
+	 */
+	public void setTplSpecQuestion(TplSpecQuestion tplSpecQuestion) {
+		this.tplSpecQuestion = tplSpecQuestion;
+	}
+
 }
