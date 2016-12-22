@@ -298,13 +298,9 @@ public void viewDoc(Object[] dpObj,String url){
 		List<String> userIds = new ArrayList<String>();
 try{
      String documentDesc	=getManagedBean().getDpDcoumentDescription();
-     PmOrgProfile orgName=	this.getManagedBean().getDpCustServiceSearchBean().getOrgProfilePtjname();
-    PmOrgProfile orgCode=	this.getManagedBean().getDpCustServiceSearchBean().getOrgProfilePtjCode();
-  String documentType=  this.getManagedBean().getDpCustServiceSearchBean().getDocumentType();
+   DpCustomerServiceSearchBean customer=	this.getManagedBean().getDpCustServiceSearchBean();
 	renewSesionObject();
-	this.getManagedBean().getDpCustServiceSearchBean().setOrgProfilePtjname(orgName);
-	this.getManagedBean().getDpCustServiceSearchBean().setOrgProfilePtjCode(orgCode);
-	this.getManagedBean().getDpCustServiceSearchBean().setDocumentType(documentType);
+	this.getManagedBean().setDpCustServiceSearchBean(customer);
 	getManagedBean().setDpDcoumentDescription(documentDesc);
 	log.info("viewDoc");
 	log.info("url"+url);
