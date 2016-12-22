@@ -157,6 +157,10 @@
 		</table>
 	</p:panel>
 	
+	<c:if test="#{approvalBackingBean.managedBean.qt.bsvRequired}">
+		<ui:include src="/xhtml/sc/quatationtender/briefingsitevisit/briefingsitevisitdetails.xhtml" />
+	</c:if>
+	
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		showAttachment="false"
