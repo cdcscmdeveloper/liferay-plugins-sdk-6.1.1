@@ -126,6 +126,7 @@ import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -2354,6 +2355,7 @@ public class QTDocumentsBackingBean extends
 		context.put("hostUrl", hostUrl);
 
 		context.put("commonUtils", commonUtils);
+		context.put("AddressUtils", new AddressUtils());
 		context.put("QTStatusConst", new QTStatusConst());
 
 		String ministryOrgName = null;

@@ -114,8 +114,75 @@ public class AddressUtils {
 	}
 	
 	/**
-	 * Get Full Address based on SmAddress
-	 * @param smAddress
+	 * Get Full Address Formatted based on ScAddress
+	 * 
+	 * @param scAddress
+	 * 		the ScAddress instance
+	 * @return full address
+	 */
+	public static String getFullFormattedAddress(ScAddress scAddress) {
+		StringBuilder address = new StringBuilder();
+		if (scAddress != null) {
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress1())) {
+				address.append(scAddress.getAddress1());
+				address.append(separator);
+				address.append(htmlLineSeparator);
+			}
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress2())) {
+				address.append(scAddress.getAddress2());
+				address.append(separator);
+				address.append(htmlLineSeparator);
+			}
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress3())) {
+				address.append(scAddress.getAddress3());
+				address.append(separator);
+				address.append(htmlLineSeparator);
+			}
+			/*if (StringUtils.isNotBlank(
+					scAddress.getAddress4())) {
+				address.append(scAddress.getAddress4());
+				address.append(separator);
+			}*/
+			
+			if (scAddress.getPmDistrict() != null && 
+					StringUtils.isNotBlank(
+						scAddress.getPmDistrict().getDistrictName())) {
+				address.append(scAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+				address.append(htmlLineSeparator);
+			}
+			
+			if (StringUtils.isNotBlank(
+					scAddress.getPostcode())) {
+				address.append(scAddress.getPostcode());
+				address.append(" ");
+			}
+			if (scAddress.getPmCity() != null && 
+					StringUtils.isNotBlank(
+						scAddress.getPmCity().getCityName())) {
+				address.append(scAddress.getPmCity().getCityName());
+				address.append(separator);
+				address.append(htmlLineSeparator);
+			}
+
+			if (scAddress.getPmState() != null && 
+					StringUtils.isNotBlank(
+						scAddress.getPmState().getStateName())) {
+				address.append(scAddress.getPmState().getStateName());
+			}			
+		}
+		
+		return address.toString();
+	}
+	
+	/**
+	 * Get Full Address based on ScAddress
+	 * 
+	 * @param scAddress
+	 * 		the ScAddress instance
 	 * @return full address
 	 */
 	public static String getFullAddress(ScAddress scAddress) {
@@ -172,7 +239,7 @@ public class AddressUtils {
 		}
 		
 		return address.toString();
-	}	
+	}
 
 	/**
 	 * Get Full Address based on PmAddress
