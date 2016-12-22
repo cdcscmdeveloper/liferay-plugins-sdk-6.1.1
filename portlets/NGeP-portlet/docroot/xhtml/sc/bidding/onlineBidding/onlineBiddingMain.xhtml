@@ -111,7 +111,7 @@
 					<p:commandLink id="itemNameOB" style="white-space : normal;"
 						value="#{bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
 						action="#{onlineBiddingBB.itemDetialsPopupAction(bidPriceItem)}"
-						update=":form:onlineBiddingItemDetails"
+						update=":form:onlineBiddingItemDetails" process="@this" partialSubmit="true"
 						oncomplete="onlineBiddingItemDetails.show()" />
 				</p:column>
 				<p:column>
