@@ -28,7 +28,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
-import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -1020,47 +1019,7 @@ public class QTDetailBackingBean extends
 
 		scQt.setScQtBriefings(null);
 		if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
-			// Setting the qtBreifing details to Qtdetails
-			List<BriefingZoneBean> beansList = this.getManagedBean()
-					.getBriefingZoneBean();
-			List<ScQtBsv> bsvs = null;
-			if (beansList != null && !beansList.isEmpty()) {
-				bsvs = new ArrayList<ScQtBsv>();
-				for (BriefingZoneBean bsvDtlBean : beansList) {
-					ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
-					scQtBsv.setBsvRemarks(finalizeRemarks(scQtBsv
-							.getBsvRemarks()));
-					// scQtBsv.setScQt(this.getManagedBean().getQt());
-					scQtBsv.setTplSpecZoneDtl(bsvDtlBean.getTplSpecZoneDtl());
-					if (null != scQtBsv) {
-						bsvs.add(scQtBsv);
-					}
-				}
-
-				for (int i = 0; i < bsvs.size(); i++) {
-					List<ScQtBsvDtl> bsvDtls = bsvs.get(i).getScQtBsvDtls();
-					if (bsvDtls == null || !(bsvDtls.size() > 0)) {
-						bsvs.remove(i--);
-					}
-				}
-
-			} else {
-				// code for if bsv details if any and non zonal
-				BriefingZoneBean bsvDtlBean = this.getManagedBean()
-						.getBsvDtlBean();
-				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
-
-				if (null != scQtBsv) {
-					scQtBsv.setBsvRemarks(finalizeRemarks(scQtBsv
-							.getBsvRemarks()));
-					// scQtBsv.setScQt(this.getManagedBean().getQt());
-					bsvs = new ArrayList<ScQtBsv>();
-					bsvs.add(scQtBsv);
-				}
-
-			}
-
-			scQt.setScQtBriefings(bsvs);
+			prepareBSVInfo(scQt);
 
 			// Setting Sample Submission to qtDetails.
 			List<ScQtSampleSubmission> sampleSubmissionList = null;
@@ -1231,6 +1190,57 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Prepare BSV details and populate into ScQt instance
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 */
+	public void prepareBSVInfo(ScQt scQt) {
+		// Setting the qtBreifing details to Qtdetails
+		List<ScQtBsv> bsvs = null;
+		if (scQt.isBsvRequired()) {
+			List<BriefingZoneBean> beansList = this.getManagedBean()
+					.getBriefingZoneBean();
+			if (beansList != null && !beansList.isEmpty()) {
+				bsvs = new ArrayList<ScQtBsv>();
+				for (BriefingZoneBean bsvDtlBean : beansList) {
+					ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+					scQtBsv.setBsvRemarks(finalizeRemarks(scQtBsv
+							.getBsvRemarks()));
+					// scQtBsv.setScQt(this.getManagedBean().getQt());
+					scQtBsv.setTplSpecZoneDtl(bsvDtlBean.getTplSpecZoneDtl());
+					if (null != scQtBsv) {
+						bsvs.add(scQtBsv);
+					}
+				}
+
+				for (int i = 0; i < bsvs.size(); i++) {
+					List<ScQtBsvDtl> bsvDtls = bsvs.get(i).getScQtBsvDtls();
+					if (bsvDtls == null || !(bsvDtls.size() > 0)) {
+						bsvs.remove(i--);
+					}
+				}
+
+			} else {
+				// code for if bsv details if any and non zonal
+				BriefingZoneBean bsvDtlBean = this.getManagedBean()
+						.getBsvDtlBean();
+				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+
+				if (null != scQtBsv) {
+					scQtBsv.setBsvRemarks(finalizeRemarks(scQtBsv
+							.getBsvRemarks()));
+					// scQtBsv.setScQt(this.getManagedBean().getQt());
+					bsvs = new ArrayList<ScQtBsv>();
+					bsvs.add(scQtBsv);
+				}
+
+			}	
+		}
+		scQt.setScQtBriefings(bsvs);
 	}
 
 	/**
@@ -1564,10 +1574,17 @@ public class QTDetailBackingBean extends
 								IQTBriefingSO.class);
 				String languageCode = new FacesScopes().getUserLocale()
 						.getLanguage();
+				QtAmendMentBean amendMentBean = getManagedBean().getAmendMentBean();
+				// Only pass amendment bean from db.
+				if (amendMentBean != null) {
+					amendMentBean = !amendMentBean.isBrandNew() ? amendMentBean : null;	
+				}
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
 				// reqDTO.setQtId(getManagedBean().getQt().getQtId());
 				reqDTO.setScQt(qt);
 				reqDTO.setLanguageCode(languageCode);
+				reqDTO.setMaintanceFlow(true);
+				reqDTO.setAmendMentBean(amendMentBean);
 				BriefingResDTO resDTO = qTBriefingSO
 						.retrieveBriefingSiteVisitDtl(reqDTO);
 				// getting Briefing Same As Site Visit value
@@ -1584,6 +1601,8 @@ public class QTDetailBackingBean extends
 						briefingReqDTO.setQtId(getManagedBean().getQt()
 								.getQtId());
 						briefingReqDTO.setScQt(getManagedBean().getQt());
+						briefingReqDTO.setMaintanceFlow(true);
+						briefingReqDTO.setAmendMentBean(amendMentBean);
 						for (TplSpecZoneDtl specZoneDtl : zones) {
 							briefingReqDTO.setSpecZoneId(specZoneDtl
 									.getSpecZoneId());
@@ -2329,8 +2348,8 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
 			
+			prepareBSVInfo(scQt);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO resDTO = null;
@@ -4261,25 +4280,6 @@ public class QTDetailBackingBean extends
 							log.error(e.getMessage());
 						}
 					} 
-				} else if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(currentStatusId)) {
-					if (amendMentBean != null) {
-						Map<String, QtAmendMentValueBean> valueMap = amendMentBean.getValueMap();
-						if (valueMap != null && valueMap.size() > 0) {
-							boolean isBSVChanged = false;
-							for (String key : valueMap.keySet()) {
-								if (key.indexOf(QTFieldConst.FILED_QT_BSV_DESC.substring(0, 4)) > 0) {
-									isBSVChanged = true;
-									break;
-								}
-							}
-							
-							if (isBSVChanged) {
-								new QTDocumentsBackingBean().reGenerateDocuments(
-										scQt.getQtId(), 
-										QTFieldConst.FILED_QT_BSVDETAILS);	
-							}
-						}
-					}
 				}
 				
 				String msgCode;

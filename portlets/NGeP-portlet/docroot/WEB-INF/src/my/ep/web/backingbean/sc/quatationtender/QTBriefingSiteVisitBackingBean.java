@@ -957,25 +957,29 @@ public class QTBriefingSiteVisitBackingBean extends
 		// bsvDesc
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_DESC, 
-				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc());
+				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
+				true);
 		
 		// bsvDate
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_DATE, 
-				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate());
+				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
+				true);
 		
-		// Closing Date
+		// Proposal Start Date
 		ScQt scQt = getManagedBean().getQt();
-		Date oldClosingDate = scQt.getClosingDate();
+		Date oldProposalStartDate = scQt.getProposalStartDate();
 		updateLatestBsvDate();
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				QTFieldConst.FILED_QT_CLOSING_DATE, 
-				oldClosingDate, scQt.getClosingDate());
+				QTFieldConst.FILED_QT_PROPOSAL_START_DATE, 
+				oldProposalStartDate, scQt.getProposalStartDate(),
+				true);
 		
 		// location
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_LOCATION, 
-				oldBsvDtl.getLocation(), newBsvDtl.getLocation());
+				oldBsvDtl.getLocation(), newBsvDtl.getLocation(),
+				true);
 
 		// address
 		ScAddress oldAddress = oldBsvDtl.getAddress();
@@ -992,15 +996,18 @@ public class QTBriefingSiteVisitBackingBean extends
 		// address1
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_1, 
-				oldAddress.getAddress1(), newAddress.getAddress1());
+				oldAddress.getAddress1(), newAddress.getAddress1(),
+				true);
 		// address2
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_2, 
-				oldAddress.getAddress2(), newAddress.getAddress2());
+				oldAddress.getAddress2(), newAddress.getAddress2(),
+				true);
 		// address3
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_3, 
-				oldAddress.getAddress3(), newAddress.getAddress3());
+				oldAddress.getAddress3(), newAddress.getAddress3(),
+				true);
 		// address4
 	/*	putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_4, 
@@ -1008,28 +1015,33 @@ public class QTBriefingSiteVisitBackingBean extends
 		// postcode
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE, 
-				oldAddress.getPostcode(), newAddress.getPostcode());
+				oldAddress.getPostcode(), newAddress.getPostcode(),
+				true);
 		// cityId
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_CITY, 
-				oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId());
+				oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId(),
+				true);
 
 		// coordinatingOfficer
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_COORDINATING_OFFICER, 
-				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer());
+				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer(),
+				true);
 
 		// maxNoOfAttendance
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE, 
-				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance());
+				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance(),
+				true);
 
 		// bsvStatus
 		Long oldBsvStatusId = oldBsvDtl.getBsvStatus() != null ? oldBsvDtl.getBsvStatus().getStatusId() : null;
 		Long newBsvStatusId = newBsvDtl.getBsvStatus() != null ? newBsvDtl.getBsvStatus().getStatusId() : null;
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_STATUS, 
-				oldBsvStatusId, newBsvStatusId);
+				oldBsvStatusId, newBsvStatusId,
+				true);
 
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 		this.getManagedBean().setTempScQtBsvDtl(null);
@@ -1049,7 +1061,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * 		the new value
 	 * @return	the indicator field is changed.
 	 */
-	public boolean putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue) {
+	public boolean putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue, boolean ptjApprovalReqFlg) {
 		boolean isChanged = false;
 		QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
 		
@@ -1073,9 +1085,14 @@ public class QTBriefingSiteVisitBackingBean extends
 			QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
 			valueBean.setOldValue(oldValue);
 			valueBean.setNewValue(newValue);
-			valueBean.setApprovalDate(new Date());
-			valueBean.setIsApproved(true);
-			amendMentBean.getValueMap().put(key, valueBean);	
+			amendMentBean.getValueMap().put(key, valueBean);
+			
+			if (ptjApprovalReqFlg) {
+				amendMentBean.setPTJApprovalReq(true);	
+			} else {
+				valueBean.setApprovalDate(new Date());
+				valueBean.setIsApproved(true);
+			}
 		} else {
 			// remove if had been revert to old value.
 			if (oldValueBean != null) {
@@ -1125,7 +1142,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			for (ScQtBsvDtl scQtBsvDtl : scQtBsvDtls) {
 				Date bsvDate = scQtBsvDtl.getBsvDate();
 				
-				if (bsvDate != null && (latestBsvDate == null || (latestBsvDate != null && bsvDate.after(latestBsvDate)))) {
+				if (bsvDate != null &&
+						(scQtBsvDtl.getBsvStatus() == null || !QTStatusConst.BSV_CANCELLED.equals(scQtBsvDtl.getBsvStatus().getStatusId())) && 
+						(latestBsvDate == null || (latestBsvDate != null && bsvDate.after(latestBsvDate)))) {
 					latestBsvDate = bsvDate;
 				}
 			}
