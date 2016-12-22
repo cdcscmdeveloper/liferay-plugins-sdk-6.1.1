@@ -1241,6 +1241,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public String getFullAddress(ScAddress scAddress) {
 		return AddressUtils.getFullAddress(scAddress);
 	}
+	
+	/**
+	 * Gets the full address.
+	 *
+	 * @param scAddress the sc address
+	 * @return the full address
+	 */
+	public String getFullFormattedAddress(ScAddress scAddress) {
+		return AddressUtils.getFullFormattedAddress(scAddress);
+	}
 
 	/**
 	 * Handle exception.
