@@ -70,14 +70,15 @@
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
 						<ui:param name="bsvAddressCityField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
 						<ui:param name="bsvAddressCityChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressCityField]}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
-						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
+						<ui:param name="latestBsvLocationChangeDate" value="#{bsvLocationChangeDate}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress1ChangeDate : (empty bsvAddress1ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress1ChangeDate) ? latestBsvLocationChangeDate : bsvAddress1ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress2ChangeDate : (empty bsvAddress2ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress2ChangeDate) ? latestBsvLocationChangeDate : bsvAddress2ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress3ChangeDate : (empty bsvAddress3ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress3ChangeDate) ? latestBsvLocationChangeDate : bsvAddress3ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddressPostcodeChangeDate : (empty bsvAddressPostcodeChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddressPostcodeChangeDate) ? latestBsvLocationChangeDate : bsvAddressPostcodeChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddressCityChangeDate : (empty bsvAddressCityChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddressCityChangeDate) ? latestBsvLocationChangeDate : bsvAddressCityChangeDate))}" />
+						<h:panelGroup rendered="#{!empty latestBsvLocationChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
-							<h:outputText value="#{bsvLocationChangeDate}" styleClass="lastUpdated">
+							<h:outputText value="#{latestBsvLocationChangeDate}" styleClass="lastUpdated">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 							</h:outputText>
 						</h:panelGroup>
@@ -192,14 +193,15 @@
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
 						<ui:param name="bsvAddressCityField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
 						<ui:param name="bsvAddressCityChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressCityField]}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
-						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
+						<ui:param name="latestBsvLocationChangeDate" value="#{bsvLocationChangeDate}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress1ChangeDate : (empty bsvAddress1ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress1ChangeDate) ? latestBsvLocationChangeDate : bsvAddress1ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress2ChangeDate : (empty bsvAddress2ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress2ChangeDate) ? latestBsvLocationChangeDate : bsvAddress2ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress3ChangeDate : (empty bsvAddress3ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress3ChangeDate) ? latestBsvLocationChangeDate : bsvAddress3ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddressPostcodeChangeDate : (empty bsvAddressPostcodeChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddressPostcodeChangeDate) ? latestBsvLocationChangeDate : bsvAddressPostcodeChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddressCityChangeDate : (empty bsvAddressCityChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddressCityChangeDate) ? latestBsvLocationChangeDate : bsvAddressCityChangeDate))}" />
+						<h:panelGroup rendered="#{!empty latestBsvLocationChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
-							<h:outputText value="#{bsvLocationChangeDate}" styleClass="lastUpdated">
+							<h:outputText value="#{latestBsvLocationChangeDate}" styleClass="lastUpdated">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 							</h:outputText>
 						</h:panelGroup>
@@ -323,14 +325,15 @@
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
 						<ui:param name="bsvAddressCityField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
 						<ui:param name="bsvAddressCityChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressCityField]}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
-						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
+						<ui:param name="latestBsvLocationChangeDate" value="#{bsvLocationChangeDate}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress1ChangeDate : (empty bsvAddress1ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress1ChangeDate) ? latestBsvLocationChangeDate : bsvAddress1ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress2ChangeDate : (empty bsvAddress2ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress2ChangeDate) ? latestBsvLocationChangeDate : bsvAddress2ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddress3ChangeDate : (empty bsvAddress3ChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddress3ChangeDate) ? latestBsvLocationChangeDate : bsvAddress3ChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddressPostcodeChangeDate : (empty bsvAddressPostcodeChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddressPostcodeChangeDate) ? latestBsvLocationChangeDate : bsvAddressPostcodeChangeDate))}" />
+						<ui:param name="latestBsvLocationChangeDate" value="#{empty latestBsvLocationChangeDate ? bsvAddressCityChangeDate : (empty bsvAddressCityChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestBsvLocationChangeDate, bsvAddressCityChangeDate) ? latestBsvLocationChangeDate : bsvAddressCityChangeDate))}" />
+						<h:panelGroup rendered="#{!empty latestBsvLocationChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
-							<h:outputText value="#{bsvLocationChangeDate}" styleClass="lastUpdated">
+							<h:outputText value="#{latestBsvLocationChangeDate}" styleClass="lastUpdated">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 							</h:outputText>
 						</h:panelGroup>
