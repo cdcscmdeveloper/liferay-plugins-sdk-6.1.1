@@ -14,6 +14,7 @@
 		<cc:attribute name="editable" default="true" />
 		<cc:attribute name="processValidationId" default="#{null}" />
 		<cc:attribute name="updateSpec" default="true" />
+	    <cc:attribute name="isWorkflowStatus" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -26,6 +27,7 @@
 		<ui:param name="editable" value="#{cc.attrs.editable}" />
 		<ui:param name="processValidationId" value="#{cc.attrs.processValidationId}" />
 		<ui:param name="updateSpec" value="#{cc.attrs.updateSpec}" />
+		<ui:param name="isWorkflowStatus" value="#{cc.attrs.isWorkflowStatus}" />
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 		
 	</cc:implementation>
