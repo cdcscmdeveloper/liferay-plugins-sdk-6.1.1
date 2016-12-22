@@ -44,12 +44,17 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
 				</f:facet>
-				<h:outputText id="itemNameByItem"
-					value="#{bidItem.scRequestItem.itemName}" />
+				
+				<p:commandLink id="itemNameByItem" 
+						value="#{bidItem.scRequestItem.itemName}"
+						action="#{scheduleBiddingBB.itemDetailsPopupAction(bidItem.scRequestItem,bidItem.qty)}"
+						update=":form:scheduleBiddingItemDetails"
+						oncomplete="scheduleBiddingItemDetails.show()" />
+				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
-				style="white-space : normal; width : 25%;">
-				<h:outputText id="itemDescByItem"
+				style="white-space : pre-line; width : 25%;">
+				<h:outputText id="itemDescByItem" style="white-space : pre-line;"
 					value="#{bidItem.scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.uom']}" style="width : 8%;">

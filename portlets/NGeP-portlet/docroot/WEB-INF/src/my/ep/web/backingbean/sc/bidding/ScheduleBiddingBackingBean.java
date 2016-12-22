@@ -34,6 +34,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -673,5 +674,10 @@ public class ScheduleBiddingBackingBean extends
 						recommendDtl.getScQtProposalItem().getOfferPrice(),
 						this.getManagedBean().getSelectedBidItem().getQty());
 		return itemSubTotal;
+	}
+	
+	public void itemDetailsPopupAction(ScRequestItem requestItem,BigDecimal awardedQty){
+		this.getManagedBean().setRequestItem(requestItem);
+		this.getManagedBean().setAwardedQuantity(awardedQty);
 	}
 }

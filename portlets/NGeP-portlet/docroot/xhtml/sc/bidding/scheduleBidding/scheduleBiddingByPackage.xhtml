@@ -15,7 +15,7 @@
 					<td><h:outputText value="* " styleClass="mandatory" /> <p:outputLabel
 							id="startDateByPackage" value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
-					<td> <ac:dateTime id="scheduleBidPackageStartDate" 
+					<td><ac:dateTime id="scheduleBidPackageStartDate"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 							postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 							required="true" label="#{lbl['lbl.sc.bidding.start']}"
@@ -24,21 +24,20 @@
 						</ac:dateTime> <p:message id="byPackageStartDateMsg" showDetail="false"
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<td><p:spacer width="10"></p:spacer></td>
-					<td><p:outputLabel id="endDateByPackage" 
+					<td><p:outputLabel id="endDateByPackage"
 							value="#{lbl['lbl.sc.bidding.end']}" /></td>
 					<td><p:inputText id="scheduleBidPackageEndDate"
-							readonly="true" 
+							readonly="true"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText></td>
 					<td><p:spacer width="5"></p:spacer></td>
-					<td  ><h:outputText value="*" styleClass="mandatory" />
-						<p:outputLabel id="durationByPackage" 
-							value="#{lbl['lbl.sc.duration.hours']}" /></td>
+					<td><h:outputText value="*" styleClass="mandatory" /> <p:outputLabel
+							id="durationByPackage" value="#{lbl['lbl.sc.duration.hours']}" /></td>
 
 					<td><p:selectOneMenu id="bidSchedulePackageDuration"
-							required="true" 
+							required="true"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].duration}">
 							<f:selectItems
 								value="#{scheduleBiddingBB.managedBean.selectItems}"
@@ -68,12 +67,14 @@
 					<h:outputText value="#{lbl['lbl.sc.item.name']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.item.name.tooltip']}" />
 				</f:facet>
-				<h:outputText id="itemNameByPackage"
-					value="#{bidItem.scRequestItem.itemName}" />
-
+				<p:commandLink id="itemNameByPackage"
+					value="#{bidItem.scRequestItem.itemName}"
+					action="#{scheduleBiddingBB.itemDetailsPopupAction(bidItem.scRequestItem,bidItem.qty)}"
+					update=":form:scheduleBiddingItemDetails"
+					oncomplete="scheduleBiddingItemDetails.show()" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
-				style="white-space : normal; width : 30%;">
+				style="white-space : pre-line; width : 30%;">
 				<h:outputText id="descriptionByPackage"
 					value="#{bidItem.scRequestItem.itemDesc}" />
 			</p:column>
