@@ -19,22 +19,19 @@
 					<h:outputText value="#{index+1}." />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.document.no']}"
-					style="text-align:center">
-					<h:outputText value="#{CustomerServiceQt.qtNo}" />
-				</p:column>
+				
 
 				<p:column headerText="#{lbl['lbl.sc.qtn.no']}"
 					style="text-align:center">
 					<h:outputText value="#{CustomerServiceQt.qtNo}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.title']}"
-					style="text-align:center">
+					style="text-align:center;white-space:normal;">
 					<h:outputText value="#{CustomerServiceQt.qtTitle}"/>
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
+				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;white-space:normal;">
 					<h:outputText value="#{qtCustomerServiceBB.getStatusDescById(CustomerServiceQt.qtStatus.statusId)}"/>
 				</p:column>
 
