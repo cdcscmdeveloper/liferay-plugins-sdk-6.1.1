@@ -10117,6 +10117,12 @@ public class SmApplicationUtil {
 		// disable or enable authorized flag
 		bean.setDisableAuthorizedRadio(isDisableAuthorizedRadio(
 				shareHolderBean, bean.isValidSmUserLimit()));
+
+		// set previous selected personnel if exist
+		bean.setSelectedPrevShareHolder((SmPersonnel) EntityHelper
+				.getEntityBySinglePropertyFromList(
+						shareHolderBean.getIdentificationNo(),
+						bean.getPrevApprovedPersonnels(), "identificationNo"));
 	}
 
 	/**

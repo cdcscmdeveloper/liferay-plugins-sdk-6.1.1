@@ -71,35 +71,7 @@ public class UpdatePersonnelBackingBean extends
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
 						.getSmAppl());
-		getManagedBean().setSmSupplier(
-				getManagedBean().getSmAppl().getSmSupplier());
-		initPersonnelList();
-		getManagedBean().setSupplierUser(true);
-		getManagedBean().setPrevApprovedPersonnels(
-				SmApplicationUtil
-						.getPrevApprovedPersonnelDirectorOwner(getManagedBean()
-								.getSmAppl()));
-		calcPersonnelListCount();
-		SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(getManagedBean()
-				.getSmAppl(), getManagedBean().getPrevApprovedPersonnels(),
-				getManagedBean().isDisAllowOwnerEdit());
-		SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
-				.getManagedBean().getSmSupplier(), this.getManagedBean()
-				.getSmAppl().getSmPersonnels());
-		SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
-				.getSmAppl());
-		getManagedBean().setBusinessTypeVal(
-				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
-						.getSmSupplier()));
-		getManagedBean().setCurrentPageType(
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
-		getManagedBean().setAcadQualifications(
-				SmApplicationUtil.getAcademicQualifications(getManagedBean()));
-		getManagedBean().setEduFieldList(
-				SmApplicationUtil.retrieveEduFieldList());
-		getManagedBean().setRacesList(SmApplicationUtil.retrievePmRaceList());
-		getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
-		getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
+		init();
 		getManagedBean().setUpdatePersonnelPage(true);
 		SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "", null);
 	}
@@ -111,6 +83,7 @@ public class UpdatePersonnelBackingBean extends
 	public void backFromPersonnelPage() {
 		getManagedBean().setRedirectToPersonPage(false);
 		getManagedBean().setValidSmUserLimit(false);
+		init();
 		if (SmApplicationUtil.getCurrAuthPersonnelCount(getManagedBean()) >= SmRuleHelper
 				.getInstance().getMaxAdditionalMofAuthorizedUser()) {
 			getManagedBean().setValidSmUserLimit(true);
@@ -276,6 +249,7 @@ public class UpdatePersonnelBackingBean extends
 				.submitPersonnelMaintenance(reqDTO);
 		if (resDTO != null && resDTO.getSmPersonnel() != null) {
 			getManagedBean().setSelectedShareHolder(resDTO.getSmPersonnel());
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
 		}
 		try {
 			SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(
@@ -830,6 +804,41 @@ public class UpdatePersonnelBackingBean extends
 			}
 
 		}
+	}
+
+	/**
+	 * Initialize related information from DB
+	 */
+	private void init() {
+		getManagedBean().setSmSupplier(
+				getManagedBean().getSmAppl().getSmSupplier());
+		initPersonnelList();
+		getManagedBean().setSupplierUser(true);
+		getManagedBean().setPrevApprovedPersonnels(
+				SmApplicationUtil
+						.getPrevApprovedPersonnelDirectorOwner(getManagedBean()
+								.getSmAppl()));
+		calcPersonnelListCount();
+		SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(getManagedBean()
+				.getSmAppl(), getManagedBean().getPrevApprovedPersonnels(),
+				getManagedBean().isDisAllowOwnerEdit());
+		SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
+				.getManagedBean().getSmSupplier(), this.getManagedBean()
+				.getSmAppl().getSmPersonnels());
+		SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
+				.getSmAppl());
+		getManagedBean().setBusinessTypeVal(
+				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
+						.getSmSupplier()));
+		getManagedBean().setCurrentPageType(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+		getManagedBean().setAcadQualifications(
+				SmApplicationUtil.getAcademicQualifications(getManagedBean()));
+		getManagedBean().setEduFieldList(
+				SmApplicationUtil.retrieveEduFieldList());
+		getManagedBean().setRacesList(SmApplicationUtil.retrievePmRaceList());
+		getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
+		getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
 	}
 
 }
