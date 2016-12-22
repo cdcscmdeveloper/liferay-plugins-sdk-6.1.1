@@ -23,6 +23,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -391,6 +392,16 @@ public class ApprovalBackingBean extends
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
 
+			if (CollectionUtils.isNotEmpty(paramTypes)) {
+				if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(paramTypes.get(0))) {
+					approvalCategoryCode = ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL;
+					
+					QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+					qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+				}
+			}
+			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PTJ_APPROVAL,
+					getManagedBean().getQt().getQtId());
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
@@ -878,9 +889,14 @@ public class ApprovalBackingBean extends
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
+					ScQt tmpScQt = new ScQt();
+					tmpScQt.setBsvRequired(true);
+					new QTDetailBackingBean().prepareBSVInfo(tmpScQt);
+					qtReqDTO.setScQtBsvs(tmpScQt.getScQtBriefings());
 					
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
+						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE
 							.equalsIgnoreCase(outcome)) {
 						approvalTypes = approveApprovalRequests(qt, approvalRequests, true);
@@ -932,6 +948,9 @@ public class ApprovalBackingBean extends
 								}
 							}
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
+							new QTDocumentsBackingBean().reGenerateDocuments(
+									qt.getQtId(), 
+									QTFieldConst.FILED_QT_PUBLISH_PERIOD);
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
 								// To remove the existing QT closing job from scheduler if any
@@ -947,7 +966,11 @@ public class ApprovalBackingBean extends
 										qt.getQtId(), 
 										QTFieldConst.FILED_QT_VALIDITY_PERIOD);
 							}
-						}				
+						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS)) {
+							new QTDocumentsBackingBean().reGenerateDocuments(
+									qt.getQtId(), 
+									QTFieldConst.FILED_QT_BSVDETAILS);
+						}			
 					}	
 				}
 			}
@@ -1098,16 +1121,17 @@ public class ApprovalBackingBean extends
 	private List<ScQtApprovalRequest> getApprovalRequests(Long qtId,
 			String approvalCategory, String docType, List<String> reqTypes, String approverAction) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		String taskName = this.getManagedBean().getTaskName();
 
 		tenderReqDTO.setQtId(qtId);
 		tenderReqDTO.setDocType(docType);
 		tenderReqDTO.setApprovalReqTypes(reqTypes);
 		tenderReqDTO.setApprovalCategory(approvalCategory);
 		tenderReqDTO.setApproverAction(approverAction);
-		tenderReqDTO
-				.setSuppAcceptedQtChange(SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
-						.equalsIgnoreCase(this.getManagedBean().getTaskName()) ? true
-						: false);
+		tenderReqDTO.setSuppAcceptedQtChange(
+				SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName));
+		tenderReqDTO.setShowAmendmentData(
+				SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName));
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -1116,6 +1140,7 @@ public class ApprovalBackingBean extends
 
 		this.getManagedBean().setQt(resDTO.getQtDetail());
 		this.getManagedBean().setScQtApproval(resDTO.getQtApproval());
+		this.getManagedBean().setAmendMentBean(resDTO.getAmendMentBean());
 		return resDTO.getApprovalRequests();
 	}
 
@@ -1327,6 +1352,8 @@ public class ApprovalBackingBean extends
 										.getChangedValue()));
 						updateProposalValidityDate(scQt);
 					}
+				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equalsIgnoreCase(approvalType)) {
+					scQt.setChanged(true);
 				}
 
 				approvalTypes.add(approvalType);
@@ -1390,6 +1417,13 @@ public class ApprovalBackingBean extends
 						}
 					}
 
+				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
+					// Proposal Start Date
+					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FILED_QT_PROPOSAL_START_DATE);
+					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
+						scQt.setProposalStartDate((Date)valueBean.getOldValue());
+						updatePublishClosingDate(scQt);
+					}
 				}
 			}
 		}
