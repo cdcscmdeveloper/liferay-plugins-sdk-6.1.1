@@ -25,15 +25,15 @@
 				style="white-space: normal !important;width : 10% !important;">
 				<ac:smSoftcertStatus personnel="#{authPerson}"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.person.composition.role']}" style="white-space: normal !important;width : 10% !important;">
+			<p:column headerText="#{lbl['lbl.sm.person.composition.role']}" style="white-space: normal !important;width : 20% !important;">
 				<h:outputText value="#{authPerson.roleName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}" style="white-space: normal !important;width : 10% !important;">
+			<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}" style="white-space: normal !important;width : 15% !important;">
 				<ac:smRoleDesc backingBean="#{viewSmApplBackingBean}" roleCode="#{authPerson.epRole}" />
 				<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 					rendered="#{authPerson.contractSignerFlg eq 1 and viewSmApplBackingBean.managedBean.smAppl.supplierType ne 'J'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;width : 5% !important;">
 				<p:commandLink onstart="blockWidget.show()"
 					disabled="#{viewSmApplBackingBean.managedBean.disAllowOwnerEdit}"
 					oncomplete="blockWidget.hide()"
@@ -68,15 +68,15 @@
 				style="white-space: normal !important;width : 10% !important;">
 				<ac:smSoftcertStatus personnel="#{unauthPerson}"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.person.composition.role']}" style="white-space: normal !important;width : 10% !important;">
+			<p:column headerText="#{lbl['lbl.sm.person.composition.role']}" style="white-space: normal !important;width : 20% !important;">
 				<h:outputText value="#{unauthPerson.roleName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}" style="white-space: normal !important;width : 10% !important;">
+			<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}" style="white-space: normal !important;width : 15% !important;">
 				<ac:smRoleDesc backingBean="#{viewSmApplBackingBean}" roleCode="#{unauthPerson.epRole}" />
 				<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 					rendered="#{unauthPerson.contractSignerFlg eq 1 and viewSmApplBackingBean.managedBean.smAppl.supplierType ne 'J'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;width : 5% !important;">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					disabled="#{viewSmApplBackingBean.managedBean.disAllowOwnerEdit}"
