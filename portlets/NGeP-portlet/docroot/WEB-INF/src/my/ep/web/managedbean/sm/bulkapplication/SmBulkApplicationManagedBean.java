@@ -216,8 +216,10 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 				PmStatusDesc currentStatusDesc = SmApplicationUtil
 						.getCurrRegStatusDesc(appl);
 				if (currentStatusDesc == null) {
-					currentStatusDesc = SmCommonUtil
-							.getStatusDescByStatusId(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED);
+					currentStatusDesc = SmApplicationUtil
+							.getDefaultRegStatusDesc(bulkApplicationVO
+									.getHqFacility(), appl.getSmSupplier()
+									.isBumi());
 				}
 				bulkApplicationVO.setApprovedStatusId(currentStatusDesc
 						.getPmStatus().getStatusId());
