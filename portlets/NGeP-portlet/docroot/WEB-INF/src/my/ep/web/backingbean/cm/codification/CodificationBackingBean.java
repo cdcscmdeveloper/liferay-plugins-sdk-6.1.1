@@ -989,7 +989,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.measurementFilterBean = measurementFilterBean;
 	}
 
-	public String assignProductCode(ScRequestItem requestItem, TplSpecQuestion tplSpecQuestion) {
+	public String assignProductCode(ScRequestItem requestItem, TplSpecQuestion tplSpecQuestion, boolean isSourcing) {
 		log.info(">>>>>>>>>requestItem= " + requestItem);
 		if(null != tplSpecQuestion){
 			 requestItem  = new ScRequestItem();
@@ -999,6 +999,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 		this.getManagedBean().setSelectedRequestItem(requestItem);
 		this.getManagedBean().setTplSpecQuestion(tplSpecQuestion);
+		this.getManagedBean().setSourcing(isSourcing);
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
