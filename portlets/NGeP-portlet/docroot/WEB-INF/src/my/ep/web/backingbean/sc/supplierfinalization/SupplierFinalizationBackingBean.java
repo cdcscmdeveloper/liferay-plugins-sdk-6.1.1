@@ -2648,10 +2648,10 @@ public class SupplierFinalizationBackingBean extends
 							if (CollectionUtils.isEmpty(
 										recommendedSuppliers)) {
 								reportDTO.setEmpty(true);
+								recommendedSuppliers = new ArrayList<QtEvaluationResultDtlBean>();
 							}
 							
-							reportDTO.setRecommendedSuppliers(
-									new ArrayList<QtEvaluationResultDtlBean>(recommendedSuppliers));
+							reportDTO.setRecommendedSuppliers(recommendedSuppliers);
 							reportDTO.setRecommendedItems(items);
 							zoneDetailsMap.put(zoneMap.get(zoneId),reportDTO);
 						}
