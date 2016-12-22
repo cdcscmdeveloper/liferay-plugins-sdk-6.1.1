@@ -8,10 +8,10 @@
 	
 	<p:column style="width:18%">
 		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" rendered="#{newable}" />
+			<h:outputText value="* " styleClass="mandatory" rendered="#{updateSpec}" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}"/>
 		</f:facet>
-		<c:if test="#{newable}">
+		<c:if test="#{updateSpec}">
 			<p:inputTextarea id="itemName" style="width:150px" value="#{question.clItem}" 
 				rendered="#{isQuestionTypeItem}" required="#{isValidationReq}" rows="2" maxlength="2000"
 				onkeyup="limitTextArea(this,2000);" onkeydown="limitTextArea(this,2000);"
@@ -21,7 +21,7 @@
 			#{question.cmItem.extensionCode}
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 		</c:if>
-		<c:if test="#{!newable}">
+		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{question.clItem}" escape="false" rendered="#{isQuestionTypeItem}" />
 		</c:if>
 	</p:column>
@@ -30,7 +30,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.specification']}"/>
 		</f:facet>
-		<c:if test="#{newable}">
+		<c:if test="#{updateSpec}">
 			<p:inputTextarea id="specification" style="width:calc(100% - 20px);" value="#{question.clSpecDetail}" 
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{isValidationReq}" rows="5" maxlength="1000"
 				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
@@ -39,7 +39,7 @@
 			</p:inputTextarea>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 		</c:if>
-		<c:if test="#{!newable}">
+		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{templateSpecBackingBean.replaceWithBR(question.clSpecDetail)}" escape="false" rendered="#{!isQuestionTypeItem or !isSpecificationReq}" 
 			style="white-space: normal;word-wrap: break-word;" />
 		</c:if>
@@ -64,7 +64,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
 		
-		<c:if test="#{newable}">
+		<c:if test="#{updateSpec}">
 			<h:panelGroup layout="block" style="width:120px;">
 				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
 					headerText="#{lbl['lbl.sc.uom']}"
@@ -82,7 +82,7 @@
 			</h:panelGroup>
 			<h:outputText value="#{question.clUom.uomName}" />
 		</c:if>
-		<c:if test="#{!newable}">
+		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" />
 		</c:if>
 	</p:column>
