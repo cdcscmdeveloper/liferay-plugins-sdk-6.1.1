@@ -24,21 +24,21 @@
 							value="#{custServiceBackingBean.getOrgTypeDropdownValues()}" />
 						<p:ajax event="change"
 							listener="#{custServiceBackingBean.changeOrgType()}"
-							update=":form:orgProfilePG,@this" />
+							update=":form:orgProfilePG,@this,:form:itOrgName" />
 					</p:selectOneMenu></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.pm.organisation.orgName']}" /> </td>
+						value="#{lbl['lbl.pm.organisation.orgCode']}" /> </td>
 				<td>
 					<div style="display: inline-block;">
 						<h:panelGroup id="orgProfilePG">
 							<ui:fragment rendered="#{isPTJOrgType or isKPTJOrgType}">
 								<h:panelGroup id="lovResOrg">
-									<p:inputText size="103" id="itSelectedPtj"
-										value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgName}"
+									<p:inputText size="38" id="itSelectedPtj"
+										value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgCode}"
 										readonly="true" />
 									&#160;	
 									<p:commandLink id="ptjSearchCL" partialSubmit="true"
@@ -51,17 +51,27 @@
 								</h:panelGroup>
 							</ui:fragment>
 							<ui:fragment rendered="#{not isPTJOrgType and not isKPTJOrgType}">
-								<ac:lov id="lovOtherOrg" lovId="PM_ORG_PROFILE" size="103"									
+								<ac:lov id="lovOtherOrg" lovId="PM_ORG_PROFILE" size="38"									
 									label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-									update=":form:orgProfilePG"
+									update=":form:orgProfilePG,:form:itOrgName"
 									disabled="#{empty custServiceBackingBean.managedBean.searchBean.selectedOrgType}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-									value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgName}"
+									value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgCode}"
 									saveObject="custServiceBackingBean.managedBean.searchBean.selectedOrgProfile"
 									conditionField="#{custServiceBackingBean.constructConditionFields()}" />
 							</ui:fragment>
 						</h:panelGroup>
 					</div>
+
+				</td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgName']}" /> </td>
+				<td><p:inputText styleClass="ppDisplayTextM" size="103" disabled="true" id="itOrgName"
+						value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgName}"
+						maxlength="80" />
 
 				</td>
 
@@ -107,7 +117,7 @@
 		<ac:ptjPopup id="orgProfileCcId"
 			orgTypeParamCode="#{custServiceBackingBean.managedBean.selectedOrgTypeParam.parameterCode}"
 			okAction="custServiceBackingBean.selectPtjAction"
-			update=":form:orgProfilePG" />
+			update=":form:orgProfilePG,:form:itOrgName" />
 	</p:panel>
 	<ac:lovPopup />
 
