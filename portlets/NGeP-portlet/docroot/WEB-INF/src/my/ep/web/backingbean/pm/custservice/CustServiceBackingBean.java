@@ -299,7 +299,7 @@ public class CustServiceBackingBean extends
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"pmUser.userName",
-							SearchOperator.OPERATOR_EQUALS.value(),
+							SearchOperator.OPERATOR_LIKE.value(),
 							pmSearchBean.getUserName(),
 							true));
 		}
@@ -313,7 +313,7 @@ public class CustServiceBackingBean extends
 								DbValueConst.RECORD_STATUS_SUSPENDED))));
 
 		searchBean.getSortColumns().add(
-				new SearchOrderBean("createdDate", false));
+				new SearchOrderBean("pmUser.userName"));
 
 		return searchBean;
 	}
