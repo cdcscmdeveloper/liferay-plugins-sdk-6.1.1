@@ -20,7 +20,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
 				<td><p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 						<f:selectItems
@@ -196,7 +196,7 @@
 						id="techUserScoreUploadBtn"
 						popupWidgetVar="technicalUserScoringSchema"
 						attachment="#{specificationBackingBean.managedBean.qt.technicalUserScoringSchemaAttachment}"
-						readonly="#{specificationBackingBean.managedBean.readOnly}" />
+						readonly="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 
 
 				</td>
