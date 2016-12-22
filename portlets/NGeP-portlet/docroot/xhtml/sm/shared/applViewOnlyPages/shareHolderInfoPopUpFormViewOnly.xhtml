@@ -82,14 +82,18 @@
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel"
 		rendered="#{viewSmApplBackingBean.managedBean.userWithRole}">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.disabled.role.msg']}" rendered="#{viewSmApplBackingBean.managedBean.disableRoleSelection}"/>
+		<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.validSmUserLimit}">
+			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/><br />
+		</p:outputPanel>
 		<table style="width:50%;table-layout:fixed">
 			<c:choose>
 				<c:when test="#{viewSmApplBackingBean.managedBean.updatePersonnelPage}" >
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-						<td><p:selectOneRadio disabled="#{viewSmApplBackingBean.managedBean.disableAuthorizedRadio}"
-								value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" 
+								itemDisabled="#{viewSmApplBackingBean.managedBean.disableAuthorizedRadio}"/>
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 								<p:ajax event="change" process="@this" onstart="blockWidget.show()" 
 									oncomplete="blockWidget.hide()" update="@form"
@@ -133,14 +137,6 @@
 					</c:if>
 				</c:otherwise>
 			</c:choose>
-			<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}">
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.justification']}" /></td>
-					<td style="word-wrap: break-word">
-						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}" />
-					</td>
-				</tr>
-			</c:if>
 			
 			<p:outputPanel
 				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
