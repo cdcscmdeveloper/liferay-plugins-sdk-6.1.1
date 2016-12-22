@@ -17,13 +17,13 @@
 			escape="false" />
 
 		<p:dataTable id="bidScheduleByZonal" rows="10" selectionMode="single"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
-			value="#{scheduleBiddingBB.managedBean.bidScheduleList}" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
 			selection="#{scheduleBiddingBB.managedBean.rowSelectedBid}"
 			var="scheduleZoneBid" rowIndexVar="index" rowKey="#{scheduleZoneBid}">
-			<p:ajax event="rowSelect" process="@this" partialSubmit="true" 
+			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				listener="#{scheduleBiddingBB.zonalRowBidSelectListener}"
-				 update="@([id$=zoneBidItemsPanel])" />
+				update="@([id$=zoneBidItemsPanel])" />
 			<ac:paginator for="bidScheduleByZonal"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.zone.name']}">
 				<h:outputText id="zoneNameByZone"
@@ -38,7 +38,7 @@
 				<ac:dateTime id="zoneBidStartDate"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 					postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
-					 label="#{lbl['lbl.sc.bidding.start']}" 
+					label="#{lbl['lbl.sc.bidding.start']}"
 					value="#{scheduleZoneBid.startDate}" rowIndex="#{index}"
 					update="@([id$=bidScheduleByZonal])">
 				</ac:dateTime>
@@ -60,8 +60,8 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
 				</f:facet>
-				<p:selectOneMenu id="bidDurationByZone"   
-					value="#{scheduleZoneBid.duration}">  
+				<p:selectOneMenu id="bidDurationByZone"
+					value="#{scheduleZoneBid.duration}">
 					<f:selectItems value="#{scheduleBiddingBB.managedBean.selectItems}"
 						var="selectItem" itemLabel="#{selectItem.label}"
 						itemValue="#{selectItem.value}" />
@@ -90,7 +90,7 @@
 				value="#{scheduleBiddingBB.managedBean.rowSelectedBid.scBidItems}"
 				var="item" rowKey="#{item}" rowIndexVar="index">
 				<p:ajax event="rowSelect" process="@this" immediate="true"
-					partialSubmit="true" 
+					partialSubmit="true"
 					listener="#{scheduleBiddingBB.bidItemSelectionListner}"
 					update="@([id$=qualifiedSupplierPanel])" />
 
@@ -98,10 +98,13 @@
 
 				<p:column style="width : 30%; white-space : normal;"
 					headerText="#{lbl['lbl.sc.item.name']}">
-					<h:outputText id="itemNameByZone"
-						value="#{item.scRequestItem.itemName}" />
+					<p:commandLink id="itemNameByZone"
+						value="#{item.scRequestItem.itemName}"
+						action="#{scheduleBiddingBB.itemDetailsPopupAction(item.scRequestItem,item.qty)}"
+						update=":form:scheduleBiddingItemDetails"
+						oncomplete="scheduleBiddingItemDetails.show()" />
 				</p:column>
-				<p:column style="width : 35%; white-space : normal;"
+				<p:column style="width : 35%; white-space : pre-line;"
 					headerText="#{lbl['lbl.sc.item.description']}">
 					<h:outputText id="itemDescByZone"
 						value="#{item.scRequestItem.itemDesc}" />

@@ -4,6 +4,7 @@
 
 package my.ep.web.managedbean.sc.bidding;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,16 +14,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
-import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 /**
  * Schedule Bidding Managed Bean
@@ -65,6 +67,9 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private Long bidMinDuration;
 	private Long bidMaxDuration;
 	private SelectItem[] selectItems;
+	private ScRequestItem requestItem;
+	private String itemTypeService = ParameterConst.ITEM_TYPE_SERVICE;
+	private BigDecimal awardedQuantity;
 
 	/**
 	 * Default COnstructor
@@ -413,5 +418,49 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	public void setSelectItems(SelectItem[] selectItems) {
 		this.selectItems = selectItems;
 	}
+
+	/**
+	 * @return the requestItem
+	 */
+	public ScRequestItem getRequestItem() {
+		return requestItem;
+	}
+
+	/**
+	 * @param requestItem
+	 *            the requestItem to set
+	 */
+	public void setRequestItem(ScRequestItem requestItem) {
+		this.requestItem = requestItem;
+	}
+
+	/**
+	 * @return the itemTypeService
+	 */
+	public String getItemTypeService() {
+		return itemTypeService;
+	}
+
+	/**
+	 * @param itemTypeService the itemTypeService to set
+	 */
+	public void setItemTypeService(String itemTypeService) {
+		this.itemTypeService = itemTypeService;
+	}
+
+	/**
+	 * @return the awardedQuantity
+	 */
+	public BigDecimal getAwardedQuantity() {
+		return awardedQuantity;
+	}
+
+	/**
+	 * @param awardedQuantity the awardedQuantity to set
+	 */
+	public void setAwardedQuantity(BigDecimal awardedQuantity) {
+		this.awardedQuantity = awardedQuantity;
+	}
+	
 
 }
