@@ -40,7 +40,7 @@
 			<tr>
 				<TD><p:outputLabel
 						value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" /></TD>
-				<TD><p:inputText style="text-align : right;" 
+				<TD><p:inputText style="text-align : right;"  disabled="true"
 						value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.tplSpecQuestion.clUomPerDay}"
 						size="20" readonly="true">
 						<f:convertNumber
@@ -69,7 +69,7 @@
 		</tr>
 	</table>
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.close']}" style="float : right"
+		<p:commandButton value="#{lbl['lbl.btn.close']}" style="float : right" process="@this" partialSubmit="true"
 			styleClass="BtnSpacing" onclick="onlineBiddingItemDetails.hide();" />
 	</div>
 </ui:composition>
