@@ -88,12 +88,17 @@
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 			</h:outputText>
-			<ui:param name="closingDateChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_CLOSING_DATE]}" />
+			<ui:param name="proposalStartChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_PROPOSAL_START_DATE]}" />
+			<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_CLOSING_DATE]}" />
 			<c:choose>
-				<c:when test="#{!empty publishPeriodChangeDate or !empty closingDateChangeDate}">
+				<c:when test="#{!empty publishPeriodChangeDate or !empty closingChangeDate or !empty proposalStartChangeDate}">
+					<ui:param name="latestClosingChangeDate" value="#{proposalStartChangeDate}" />
+					<ui:param name="latestClosingChangeDate" value="#{empty latestClosingChangeDate ? closingChangeDate : (empty closingChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestClosingChangeDate, closingChangeDate) ? latestClosingChangeDate : closingChangeDate))}" />
+					<ui:param name="latestClosingChangeDate" value="#{empty latestClosingChangeDate ? publishPeriodChangeDate : (empty publishPeriodChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestClosingChangeDate, publishPeriodChangeDate) ? latestClosingChangeDate : publishPeriodChangeDate))}" />
 					<h:panelGroup>
 						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
-						<h:outputText value="#{empty closingDateChangeDate ? publishPeriodChangeDate : (DateUtils.isDateGreater(publishPeriodChangeDate, closingDateChangeDate) ? publishPeriodChangeDate : closingDateChangeDate)}" styleClass="lastUpdated">
+						<h:outputText value="#{latestClosingChangeDate}" 
+							styleClass="lastUpdated">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 						</h:outputText>
 						<h:outputText value=")" styleClass="lastUpdated" />
@@ -141,10 +146,12 @@
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</h:outputText>
 			<c:choose>
-				<c:when test="#{!empty validityPeriodChangeDate}">
+				<c:when test="#{!empty validityPeriodChangeDate or !empty latestClosingChangeDate}">
+					<ui:param name="latestValidityPeriodChangeDate" value="#{latestClosingChangeDate}" />
+					<ui:param name="latestValidityPeriodChangeDate" value="#{empty latestValidityPeriodChangeDate ? validityPeriodChangeDate : (empty validityPeriodChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestValidityPeriodChangeDate, validityPeriodChangeDate) ? latestValidityPeriodChangeDate : validityPeriodChangeDate))}" />
 					<h:panelGroup>
 						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
-						<h:outputText value="#{validityPeriodChangeDate}" styleClass="lastUpdated">
+						<h:outputText value="#{latestValidityPeriodChangeDate}" styleClass="lastUpdated">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 						</h:outputText>
 						<h:outputText value=")" styleClass="lastUpdated" />
