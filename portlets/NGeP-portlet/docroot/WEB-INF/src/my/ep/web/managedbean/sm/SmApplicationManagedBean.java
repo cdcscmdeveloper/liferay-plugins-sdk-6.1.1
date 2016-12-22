@@ -174,6 +174,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> smapplShareHolders;
 	private List<SmPersonnel> selectedShareHolders;
 	private SmPersonnel selectedShareHolder;
+	private SmPersonnel selectedPrevShareHolder;
 
 	private List<SmStaffExperience> selectedShrHldrJobFunctions;
 	private SmStaffExperience selectedJobFunction;
@@ -3869,5 +3870,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setUpdatePersonnelPage(boolean updatePersonnelPage) {
 		this.updatePersonnelPage = updatePersonnelPage;
+	}
+
+	public SmPersonnel getSelectedPrevShareHolder() {
+		return selectedPrevShareHolder;
+	}
+
+	public void setSelectedPrevShareHolder(SmPersonnel selectedPrevShareHolder) {
+		this.selectedPrevShareHolder = selectedPrevShareHolder;
 	}
 }
