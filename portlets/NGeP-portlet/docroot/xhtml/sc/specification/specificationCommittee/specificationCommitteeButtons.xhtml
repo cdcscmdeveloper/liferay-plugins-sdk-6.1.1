@@ -15,7 +15,15 @@
 
 		<table width="100%">
 			<tr>
-				<td align="right"><ui:repeat var="bpmAction"
+				<td align="right">
+				
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}" rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+					partialSubmit="true"
+					process="@this"
+					update="@this" />
+			
+				<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
