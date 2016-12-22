@@ -136,7 +136,7 @@
 
 				</p:dataTable>
 				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.cm.request.unspsc']}"
+					<p:commandButton value="#{lbl['lbl.cm.request.unspsc']}" rendered="#{codificationBackingBean.managedBean.isSourcing()}"
 						action="#{codificationBackingBean.redirectToRequestUnspscCodeII}" />
 				</div>
 
