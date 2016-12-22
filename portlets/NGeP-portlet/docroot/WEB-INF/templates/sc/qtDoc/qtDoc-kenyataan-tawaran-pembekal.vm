@@ -239,7 +239,7 @@ th{
 									<tr>
 										<td>$briefingdtls.bsvDesc</td>
 										<td>$commonUtils.getFormattedDate($briefingdtls.bsvDate, "dd/MM/yyyy hh:mm a")</td>
-										<td>$briefingdtls.location</td>
+										<td>$briefingdtls.location,<br/>$AddressUtils.getFullFormattedAddress($briefingdtls.address)</td>
 										<td>$briefingdtls.coordinatingOfficer</td>
 										<td>$briefingdtls.maxNoOfAttendance</td>
 									</tr>
@@ -267,7 +267,7 @@ th{
 									<tr>
 										<td>$sitevisitdtls.bsvDesc</td>
 										<td>$commonUtils.getFormattedDate($sitevisitdtls.bsvDate,"dd/MM/yyyy hh:mm a")</td>
-										<td>$sitevisitdtls.location</td>
+										<td>$sitevisitdtls.location,<br/>$AddressUtils.getFullFormattedAddress($sitevisitdtls.address)</td>
 										<td>$sitevisitdtls.coordinatingOfficer</td>
 										<td>$sitevisitdtls.maxNoOfAttendance</td>
 									</tr>
