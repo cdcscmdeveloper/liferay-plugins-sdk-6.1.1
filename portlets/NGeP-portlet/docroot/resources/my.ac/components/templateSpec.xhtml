@@ -13,6 +13,7 @@
 		<cc:attribute name="removable" default="true" />
 		<cc:attribute name="editable" default="true" />
 		<cc:attribute name="processValidationId" default="#{null}" />
+		<cc:attribute name="updateSpec" default="true" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -24,7 +25,7 @@
 		<ui:param name="removable" value="#{cc.attrs.removable}" />
 		<ui:param name="editable" value="#{cc.attrs.editable}" />
 		<ui:param name="processValidationId" value="#{cc.attrs.processValidationId}" />
-		
+		<ui:param name="updateSpec" value="#{cc.attrs.updateSpec}" />
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 		
 	</cc:implementation>
