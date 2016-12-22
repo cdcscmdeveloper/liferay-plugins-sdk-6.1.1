@@ -3158,14 +3158,16 @@ public class SmApplicationUtil {
 			// created date after latest application created date), can't
 			// proceed. Need to used resubmit link.
 			SmAppl rejectedAppl = getLatesRejectedApplicationBySuppIdAndAppType(
-					supplierId, null);
+					supplierId, applicationType);
 			if (rejectedAppl != null
 					&& rejectedAppl.getCreatedDate()
 							.after(resDto.getSmSupplier().getSmAppl()
 									.getCreatedDate())
 					&& rejectedAppl.getApplType().equals(applicationType)) {
-				result = true;
-				throw new EpException(MessageConst.ERROR_722643);
+				if (isRejectedApplValidForResubmission(rejectedAppl)) {
+					result = true;
+					throw new EpException(MessageConst.ERROR_722643);
+				}
 			}
 
 			SmSupplier smSupplier = resDto.getSmSupplier();
@@ -10898,6 +10900,29 @@ public class SmApplicationUtil {
 	public static void assignValReqdToFalse(SmApplicationManagedBean bean) {
 		bean.setShowParentMsg(true);
 		bean.setValueReqd(false);
+	}
+
+	/**
+	 * Check whether the rejected application still valid for resubmission
+	 * compare to no. of days allowed to resubmit after rejected
+	 * 
+	 * @param SmAppl
+	 *            rejAppl
+	 * @return boolean
+	 */
+	public static boolean isRejectedApplValidForResubmission(SmAppl rejAppl) {
+		boolean valid = true;
+		if (rejAppl.getApplSubmitDate() != null) {
+			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+			long diff = currentDate.getTime()
+					- rejAppl.getApplSubmitDate().getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			if (diffDays > SmRuleHelper.getInstance()
+					.getApplicationResubmissionDays()) {
+				valid = false;
+			}
+		}
+		return valid;
 	}
 
 	/**

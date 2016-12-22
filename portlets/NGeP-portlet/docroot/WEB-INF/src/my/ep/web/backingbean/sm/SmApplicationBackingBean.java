@@ -368,16 +368,10 @@ public class SmApplicationBackingBean extends
 				boolean activeExist = false;
 				activeExist = SmApplicationUtil
 						.checkActiveSmApplForSupp(supplierProfile);
-				if (rejAppl.getApplSubmitDate() != null) {
-					Timestamp currentDate = new Timestamp(
-							System.currentTimeMillis());
-					long diff = currentDate.getTime()
-							- rejAppl.getApplSubmitDate().getTime();
-					long diffDays = diff / (24 * 60 * 60 * 1000);
-					if (diffDays > ruleHelper.getApplicationResubmissionDays()) {
-						resubmitErrorKey = "lbl.sm.resubmitExpired";
-						this.getManagedBean().setValidResubmit(false);
-					}
+				if (!SmApplicationUtil
+						.isRejectedApplValidForResubmission(rejAppl)) {
+					resubmitErrorKey = "lbl.sm.resubmitExpired";
+					this.getManagedBean().setValidResubmit(false);
 				}
 				if (!activeExist && this.getManagedBean().isValidResubmit()) {
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
