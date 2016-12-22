@@ -9817,6 +9817,27 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Get default registration status description by HQ type and bumi status
+	 * 
+	 * @param SmFacility
+	 *            hq
+	 * @param boolean isBumi
+	 * @return PmStatusDesc
+	 */
+	public static PmStatusDesc getDefaultRegStatusDesc(SmFacility hq,
+			boolean isBumi) {
+		Long statusId = SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+		if (hq.getFacilityType().equals("H")) {
+			if (isBumi) {
+				statusId = SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
+			} else {
+				statusId = SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
+			}
+		}
+		return SmCommonUtil.getStatusDescByStatusId(statusId);
+	}
+
 	private static void addRoles(List<SelectItem> roles, String epRole,
 			boolean isAdmin) {
 		SelectItem role = new SelectItem();
