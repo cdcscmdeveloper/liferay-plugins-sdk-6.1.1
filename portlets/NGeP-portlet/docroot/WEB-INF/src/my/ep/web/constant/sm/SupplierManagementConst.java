@@ -445,6 +445,8 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED = 20116;
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	public static final long PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
+	public static final long PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
