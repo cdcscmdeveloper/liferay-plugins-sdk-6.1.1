@@ -24,14 +24,15 @@
 
 			<ac:paginator for="deductPaymentTblId" />
 
-			<p:column>
+			<p:column style="width:650px;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.deduction.type']}"/>
 					<ac:iconTooltip id="dedType#{rowIndex}" value="#{lbl['lbl.sc.deduction.type.tooltip']}" />
 				</f:facet>
 				<c:choose>
 					<c:when test="#{!isDeductionPaymentReadOnly}">
-						<h:selectOneMenu id="deductionType"
+						<h:selectOneMenu id="deductionType" style="width:170px;float: left;"
+						label="#{lbl['lbl.sc.deduction.type']}"
 							value="#{scQtDeduction.deductionType.parameterId}">
 							<f:selectItems
 								value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
@@ -40,9 +41,20 @@
 								oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
 								listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
 						</h:selectOneMenu>
+						<p:message id="deductionTypeMsgqt" for="deductionType" display="icon" />
+					<p:spacer width="5px" />
+						<p:inputText value="#{scQtDeduction.deductionDesc}"
+						style="width:450px;float:left;" maxlength="255"
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
+						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" >
+						<f:ajax></f:ajax>
+					</p:inputText>
 					</c:when>
 					<c:otherwise>
 						#{qTDetailBB.getParameterDesc(scQtDeduction.deductionType)}
+						<h:outputText value=" - #{scQtDeduction.deductionDesc}"
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
+						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" />
 					</c:otherwise>
 				</c:choose>
 			</p:column>
