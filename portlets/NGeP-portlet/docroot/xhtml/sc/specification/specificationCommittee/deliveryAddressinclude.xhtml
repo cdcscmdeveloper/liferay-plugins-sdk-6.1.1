@@ -23,7 +23,7 @@
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="pjtDelivered,@form"
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, deliveryList)}" />
@@ -54,7 +54,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 			styleClass="BtnSpacing"
 				partialSubmit="true" update="@([id$=deliveryAddrDlg])"
-				disabled="#{specificationBackingBean.managedBean.readOnly}"
+				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 				action="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 				oncomplete="deliveryAddress.show();" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
