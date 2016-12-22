@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS) and (empty qTDetailBB.managedBean.amendMentBean or qTDetailBB.managedBean.amendMentBean.brandNew)}" />
 	<ui:param name="isQTStatusPublished" value="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true"
@@ -63,7 +63,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.location']}"
 				style="white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{briefingdtls.location}" />
+				<h:outputText value="#{briefingdtls.location}" />,<br/>
+				<h:outputText value="#{qTBriefingSiteVisitBackingBean.getFullFormattedAddress(briefingdtls.address)}" escape="false" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
@@ -177,7 +178,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.location']}"
 						style="white-space: normal;word-wrap: break-word;">
-						<h:outputText value="#{sitevisitdtls.location}" />
+						<h:outputText value="#{sitevisitdtls.location}" />,<br/>
+						<h:outputText value="#{qTBriefingSiteVisitBackingBean.getFullFormattedAddress(sitevisitdtls.address)}" escape="false" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
@@ -267,6 +269,7 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{bsvdtlbean.scQtBsv.bsvRemarks}"
 		showAttachment="false"
-		readonly="#{!isBSVEnabled}" />
+		readonly="#{!isBSVEnabled}"
+		rendered="#{isBSVRemarkRendered}" />
 
 </ui:composition>
