@@ -141,6 +141,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private boolean productKeyword =false;
 	private boolean serviceKeyword =false;
 	private boolean refreshPageNoFlag=false;
+	private boolean isSourcing = true;
 	
 	/** The back to previous page. */
 	private String backToPreviousPage;
@@ -1400,4 +1401,17 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.tplSpecQuestion = tplSpecQuestion;
 	}
 
+	/**
+	 * @return the isSourcing
+	 */
+	public boolean isSourcing() {
+		return isSourcing;
+	}
+
+	/**
+	 * @param isSourcing the isSourcing to set
+	 */
+	public void setSourcing(boolean isSourcing) {
+		this.isSourcing = isSourcing;
+	}
 }

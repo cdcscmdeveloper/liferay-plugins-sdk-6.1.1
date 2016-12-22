@@ -76,11 +76,13 @@
 		<ac:templateSpec
 			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
 			title="#{lbl['lbl.txt.product']}"
+			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}" />
 
 		<ac:templateSpec
 			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
 			title="#{lbl['lbl.txt.service']}"
+			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}" />
 
 	</h:panelGroup>
