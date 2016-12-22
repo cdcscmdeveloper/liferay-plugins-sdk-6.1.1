@@ -161,11 +161,9 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		List<String> userIds = new ArrayList<String>();
 		
 	try{
-		PmOrgProfile orgPtjCode=this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjCode();
-		PmOrgProfile orgPtjName=this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjname();
+		QTCustomerServiceSearchBean customerService=this.getManagedBean().getQtCustomerServiceSearchBean();
 		renewSesionObject();
-		this.getManagedBean().getQtCustomerServiceSearchBean().setOrgProfilePtjCode(orgPtjCode);
-		this.getManagedBean().getQtCustomerServiceSearchBean().setOrgProfilePtjname(orgPtjName);
+		this.getManagedBean().setQtCustomerServiceSearchBean(customerService);
 		this.getManagedBean().setOfficerName(" ");
 		if(statusId >=QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT){
 			log.info("=status greater==="+statusId);
@@ -189,8 +187,8 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		String kampulanPTJ=retrieveJabatanByOrgProfileId(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjname().getOrgProfileId());
 		this.getManagedBean().setMinistryName(ministryName);
 		this.getManagedBean().setKampulanPtjName(kampulanPTJ);
-		this.getManagedBean().setPtjCode(orgPtjCode.getOrgCode());
-		this.getManagedBean().setPtjName(orgPtjName.getOrgName());
+		this.getManagedBean().setPtjCode(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjCode().getOrgCode());
+		this.getManagedBean().setPtjName(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjname().getOrgName());
 		this.getManagedBean().setViewOriginalUrl(url);
 	    this.getManagedBean().setCustomerScQt(scQt);
        
