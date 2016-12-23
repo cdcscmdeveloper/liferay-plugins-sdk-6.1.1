@@ -66,6 +66,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -889,10 +890,9 @@ public class ApprovalBackingBean extends
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
-					ScQt tmpScQt = new ScQt();
-					tmpScQt.setBsvRequired(true);
-					new QTDetailBackingBean().prepareBSVInfo(tmpScQt);
-					qtReqDTO.setScQtBsvs(tmpScQt.getScQtBriefings());
+					List<ScQtBsv> scQtBsvs = new QTDetailBackingBean()
+						.constructBriefingSiteVisitList(qt);
+					qtReqDTO.setScQtBsvs(scQtBsvs);
 					
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);

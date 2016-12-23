@@ -1019,7 +1019,8 @@ public class QTDetailBackingBean extends
 
 		scQt.setScQtBriefings(null);
 		if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
-			prepareBSVInfo(scQt);
+			List<ScQtBsv> scQtBsvs = constructBriefingSiteVisitList(scQt);
+			scQt.setScQtBriefings(scQtBsvs);
 
 			// Setting Sample Submission to qtDetails.
 			List<ScQtSampleSubmission> sampleSubmissionList = null;
@@ -1198,7 +1199,7 @@ public class QTDetailBackingBean extends
 	 * @param scQt
 	 * 		the ScQt instance
 	 */
-	public void prepareBSVInfo(ScQt scQt) {
+	public List<ScQtBsv> constructBriefingSiteVisitList(ScQt scQt) {
 		// Setting the qtBreifing details to Qtdetails
 		List<ScQtBsv> bsvs = null;
 		if (scQt.isBsvRequired()) {
@@ -1240,7 +1241,8 @@ public class QTDetailBackingBean extends
 
 			}	
 		}
-		scQt.setScQtBriefings(bsvs);
+		
+		return bsvs;
 	}
 
 	/**
@@ -2349,7 +2351,8 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
-			prepareBSVInfo(scQt);
+			List<ScQtBsv> scQtBsvs = constructBriefingSiteVisitList(scQt);
+			scQt.setScQtBriefings(scQtBsvs);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO resDTO = null;
