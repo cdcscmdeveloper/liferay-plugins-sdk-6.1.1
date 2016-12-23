@@ -546,9 +546,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				isDeliveryTermPrompt  = getRequestNoteSO().validateDeliveryTerm(requestNoteReqDTO);
 
 				if(isDeliveryTermPrompt){
-					StringBuilder message = new StringBuilder();
-					message.append("Same delivery term is required for each PR generated.");
-					getManagedBean().setPromptMessage(message.toString());
 					RequestContext.getCurrentInstance().execute("deliveryTermConform.show()");
 				}
 			}
