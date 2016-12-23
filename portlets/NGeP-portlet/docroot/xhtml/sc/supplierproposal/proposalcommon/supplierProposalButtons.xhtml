@@ -31,8 +31,6 @@
 				action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 				rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
 				update="spkiOutputPanel" process="@form">
-				<f:setPropertyActionListener value="false"
-					target="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />
 			</p:commandButton>
 		</td>
 	</tr>
