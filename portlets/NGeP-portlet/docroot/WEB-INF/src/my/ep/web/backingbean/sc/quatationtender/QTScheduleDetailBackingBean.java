@@ -565,7 +565,7 @@ public class QTScheduleDetailBackingBean extends
 			
 			new QTBriefingSiteVisitBackingBean().putIntoAmendMentBeanIfChanged(
 					amendMentBean, 
-					QTFieldConst.FILED_QT_CLOSING_DATE, 
+					QTFieldConst.FIELD_QT_CLOSING_DATE, 
 					oldClosingDate, newClosingDate,
 					false);
 		}

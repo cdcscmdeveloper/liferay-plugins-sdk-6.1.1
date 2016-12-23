@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<ui:param name="isDeductionPaymentReadOnly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT) or qTDetailBB.managedBean.readOnly}" />
+	<ui:param name="isDeductionPaymentReadOnly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT) or qTDetailBB.managedBean.readOnly}" />
 
 	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" id="deductionPayid" toggleable="true">
 		<p:dataTable id="deductPaymentTblId" widgetVar="deductPaymentTblWidget" 

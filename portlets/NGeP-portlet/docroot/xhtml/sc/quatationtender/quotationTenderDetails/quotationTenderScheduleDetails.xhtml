@@ -8,7 +8,7 @@
 
 	<ui:param name="isRequire" value="#{!qTDetailBB.managedBean.readOnly}" />
 	<ui:param name="scheduleReadonly"
-		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_SCHDETAILS)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
 		id="scheduleDetalsPublishingClosing">
@@ -21,7 +21,7 @@
 						<table>
 							<tr>
 								<td>
-									<ui:param name="isPublishDateEnable" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}" />
+									<ui:param name="isPublishDateEnable" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_PUBLISH_DATE)}" />
 									<c:choose>
 										<c:when test="#{isPublishDateEnable and qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION}">
 											<ac:dateTime id="resNoticePublish"
