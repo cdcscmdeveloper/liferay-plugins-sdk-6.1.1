@@ -25,7 +25,7 @@
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
 			<p:column selectionMode="multiple" style="width:1%"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
+				rendered="#{!categoryCodeReadonly}" />
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
@@ -58,7 +58,7 @@
 				partialSubmit="true" update="@([id$=catCodePopup])"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
+				rendered="#{!categoryCodeReadonly}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			id="supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId"
 			disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
@@ -66,7 +66,7 @@
 				partialSubmit="true"
 				oncomplete="supplierOpencategoryDeletePopUp.show();"
 				update="@([id$=#{supplierOpencategoryDeleteId}])"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
+				rendered="#{!categoryCodeReadonly}" />
 		</div>
 		<ui:param name="supplierOpencategoryDeleteId"
 			value="supplierOpencategoryDeleteId" />
