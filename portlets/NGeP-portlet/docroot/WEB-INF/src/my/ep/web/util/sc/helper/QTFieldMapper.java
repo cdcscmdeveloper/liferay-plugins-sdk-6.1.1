@@ -12,16 +12,16 @@ import my.ep.type.IEnumType;
 
 /**
  * 
- * QTFiledMapper class is used to enable or disable fileds
+ * QTFieldMapper class is used to enable or disable fields
  * 
  * @author VidyaSagarReddy
  * @since 22.11.2013
  * 
  */
-public class QTFiledMapper {
+public class QTFieldMapper {
 
 	/**
-	 * To enable fileds by statusid and maintance flow
+	 * To enable fields by statusid and maintance flow
 	 * 
 	 * @param statusId
 	 * @param isMaintanceFlow
@@ -29,26 +29,26 @@ public class QTFiledMapper {
 	 */
 	public static List<String> getEnableFieldsByStatus(Long statusId,
 			boolean isMaintanceFlow, boolean isEditable) {
-		List<String> updatedFiledsList = null;
-		String[] fileds = null;
+		List<String> updatedFieldsList = null;
+		String[] fields = null;
 		if (isMaintanceFlow) {
 			if (isEditable) {
-				fileds = QTMaintanaceEnableFields.getValuesByStatusId(statusId);
+				fields = QTMaintanaceEnableFields.getValuesByStatusId(statusId);
 			}
 		} else {
-			fileds = QTTaskListEnableFields.getValuesByStatusId(statusId);
+			fields = QTTaskListEnableFields.getValuesByStatusId(statusId);
 		}
-		if (null != fileds) {
-			updatedFiledsList = Arrays.asList(fileds);
+		if (null != fields) {
+			updatedFieldsList = Arrays.asList(fields);
 		}
-		return updatedFiledsList;
+		return updatedFieldsList;
 
 	}
 
 	/**
-	 * Constant for Maintance Flow Fileds
+	 * Constant for Maintance Flow Fields
 	 * 
-	 * Add the filed names which needs to be editable on the screen upon QT status
+	 * Add the field names which needs to be editable on the screen upon QT status
 	 */
 	enum QTMaintanaceEnableFields implements IEnumType {
 		
@@ -194,9 +194,9 @@ public class QTFiledMapper {
 		private String[] toBeEnableFields;
 
 		private QTMaintanaceEnableFields(Long statusId,
-				String[] tobeEnableFileds) {
+				String[] tobeEnableFields) {
 			this.statusId = statusId;
-			this.toBeEnableFields = tobeEnableFileds;
+			this.toBeEnableFields = tobeEnableFields;
 
 		}
 
@@ -216,10 +216,10 @@ public class QTFiledMapper {
 		 * @return the array of values.
 		 */
 		public static String[] getValuesByStatusId(Long statusId) {
-			for (QTMaintanaceEnableFields filedMapper : QTMaintanaceEnableFields
+			for (QTMaintanaceEnableFields fieldMapper : QTMaintanaceEnableFields
 					.values()) {
-				if (filedMapper.statusId.equals(statusId)) {
-					return filedMapper.value();
+				if (fieldMapper.statusId.equals(statusId)) {
+					return fieldMapper.value();
 				}
 			}
 			return null;
@@ -228,7 +228,7 @@ public class QTFiledMapper {
 	}
 
 	/**
-	 * Constant for TaskList Fileds
+	 * Constant for TaskList Fields
 	 */
 	enum QTTaskListEnableFields implements IEnumType {
 		// QT_PENDING_QT_SUBMISSION
@@ -351,7 +351,7 @@ public class QTFiledMapper {
 										QTFieldConst.FIELD_QT_SCHDETAILS,
 										QTFieldConst.FIELD_QT_PUB_APPROVAL}),
 										
-						   // QT_PENDING_PB_APPROVAL both status have the same filed names			
+						   // QT_PENDING_PB_APPROVAL both status have the same field names			
 		                  QT_PENDING_PB_APPROVAL(QTStatusConst.QT_PENDING_PB_APPROVAL,
 				                                              QT_PENDING_BPK_APPROVAL.value() );
 
@@ -360,9 +360,9 @@ public class QTFiledMapper {
 		private Long statusId;
 		private String[] toBeEnableFields;
 
-		private QTTaskListEnableFields(Long statusId, String[] tobeEnableFileds) {
+		private QTTaskListEnableFields(Long statusId, String[] tobeEnableFields) {
 			this.statusId = statusId;
-			this.toBeEnableFields = tobeEnableFileds;
+			this.toBeEnableFields = tobeEnableFields;
 
 		}
 
@@ -383,10 +383,10 @@ public class QTFiledMapper {
 		 * @return the array of values.
 		 */
 		public static String[] getValuesByStatusId(Long statusId) {
-			for (QTTaskListEnableFields filedMapper : QTTaskListEnableFields
+			for (QTTaskListEnableFields fieldMapper : QTTaskListEnableFields
 					.values()) {
-				if (filedMapper.statusId.equals(statusId)) {
-					return filedMapper.value();
+				if (fieldMapper.statusId.equals(statusId)) {
+					return fieldMapper.value();
 				}
 			}
 			return null;
