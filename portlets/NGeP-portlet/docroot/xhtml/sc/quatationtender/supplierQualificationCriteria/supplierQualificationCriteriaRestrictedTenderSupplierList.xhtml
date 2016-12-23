@@ -6,6 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="supplierListReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_SUPPLIER_LIST)}" />
 
 	<p:panel id="supplierlist" header="#{lbl['lbl.sc.supplier.list']}"
 		toggleable="true">
@@ -29,7 +31,7 @@
 			<p:ajax event="rowSelectCheckbox" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" rendered="#{!supplierListReadonly}" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
@@ -80,13 +82,15 @@
 					<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true"
 						process="@this" styleClass="BtnSpacing"
 						action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
-						update="suppPopup" oncomplete="suppdlg.show();" />
+						update="suppPopup" oncomplete="suppdlg.show();"
+						rendered="#{!supplierListReadonly}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 					id="RestrictedTndrSuppliersDeleteBtnId"
 					disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}"
 						process="@this, supplierlist" partialSubmit="true"
 						oncomplete="restrictedSupplierDeletePopUp.show();"
-						update="@([id$=#{restrictedSupplierDeleteId}])" />
+						update="@([id$=#{restrictedSupplierDeleteId}])"
+						rendered="#{!supplierListReadonly}" />
 				</td>
 			</tr>
 		</table>

@@ -61,6 +61,7 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_GOSODO,
 						QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FIELD_QT_CATEGORY_CODE,
+						QTFieldConst.FIELD_QT_SUPPLIER_LIST,
 						QTFieldConst.FIELD_QT_QT_TYPE,
 						QTFieldConst.FIELD_QT_OPEN_FOR,
 						QTFieldConst.FIELD_QT_PROCUREMENT_CATEGORY,
@@ -239,6 +240,7 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_GOSODO,
 						QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FIELD_QT_CATEGORY_CODE,
+						QTFieldConst.FIELD_QT_SUPPLIER_LIST,
 						QTFieldConst.FIELD_QT_QT_TYPE,
 						QTFieldConst.FIELD_QT_OPEN_FOR,
 						QTFieldConst.FIELD_QT_PROCUREMENT_CATEGORY,
@@ -256,6 +258,7 @@ public class QTFieldMapper {
 				new String[] {
 						QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FIELD_QT_CATEGORY_CODE,
+						QTFieldConst.FIELD_QT_SUPPLIER_LIST,
 						QTFieldConst.FIELD_QT_PROCUREMENT_CATEGORY,
 						QTFieldConst.FIELD_QT_EVALUATION_TYPE,
 						QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
@@ -283,6 +286,7 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FIELD_QT_MINIMUM_PAID_UP_CAPITAL,
 						QTFieldConst.FIELD_QT_CATEGORY_CODE,
+						QTFieldConst.FIELD_QT_SUPPLIER_LIST,
 						QTFieldConst.FIELD_QT_LOCATION_COVERAGE,
 						QTFieldConst.FIELD_QT_SUPPQUALIFICATION,
 						QTFieldConst.FIELD_QT_QT_TYPE,
@@ -331,29 +335,31 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD}),
 						
-						// QT_PENDING_BPK_APPROVAL
-						QT_PENDING_BPK_APPROVAL(
-								QTStatusConst.QT_PENDING_BPK_APPROVAL, new String[] {
-										QTFieldConst.FIELD_QT_TITLE,
-										QTFieldConst.FIELD_QT_FILE_NO,
-										QTFieldConst.FIELD_QT_OPEN_FOR,
-										QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
-										QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
-										QTFieldConst.FIELD_QT_CATEGORY_CODE,
-										QTFieldConst.FIELD_QT_LOCATION_COVERAGE,
-										QTFieldConst.FIELD_QT_SUPPQUALIFICATION,
-										QTFieldConst.FIELD_QT_BSVDETAILS,
-										QTFieldConst.FIELD_QT_PUBLISH_DATE,
-										QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
-										QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
-										QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
-										QTFieldConst.FIELD_QT_DOCUMENTS,
-										QTFieldConst.FIELD_QT_SCHDETAILS,
-										QTFieldConst.FIELD_QT_PUB_APPROVAL}),
+		// QT_PENDING_BPK_APPROVAL
+		QT_PENDING_BPK_APPROVAL(
+				QTStatusConst.QT_PENDING_BPK_APPROVAL, new String[] {
+						QTFieldConst.FIELD_QT_TITLE,
+						QTFieldConst.FIELD_QT_FILE_NO,
+						QTFieldConst.FIELD_QT_OPEN_FOR,
+						QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
+						QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
+						QTFieldConst.FIELD_QT_CATEGORY_CODE,
+						QTFieldConst.FIELD_QT_SUPPLIER_LIST,
+						QTFieldConst.FIELD_QT_LOCATION_COVERAGE,
+						QTFieldConst.FIELD_QT_SUPPQUALIFICATION,
+						QTFieldConst.FIELD_QT_BSVDETAILS,
+						QTFieldConst.FIELD_QT_PUBLISH_DATE,
+						QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
+						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
+						QTFieldConst.FIELD_QT_DOCUMENTS,
+						QTFieldConst.FIELD_QT_SCHDETAILS,
+						QTFieldConst.FIELD_QT_PUB_APPROVAL}),
 										
-						   // QT_PENDING_PB_APPROVAL both status have the same field names			
-		                  QT_PENDING_PB_APPROVAL(QTStatusConst.QT_PENDING_PB_APPROVAL,
-				                                              QT_PENDING_BPK_APPROVAL.value() );
+		// QT_PENDING_PB_APPROVAL both status have the same field names			
+		QT_PENDING_PB_APPROVAL(
+				QTStatusConst.QT_PENDING_PB_APPROVAL,
+		            	QT_PENDING_BPK_APPROVAL.value() );
 
 				                            
 		
