@@ -110,7 +110,7 @@
 			
 			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true"
 				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				rowIndexVar="index" var="tasks"
+				rowIndexVar="indexMain" var="tasks"
 				value="#{bulkApplicationBackingBean.managedBean.claimTaskListDataModel}"
 				selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
 				<ac:paginator for="claimTaskListId" />
@@ -127,9 +127,13 @@
 					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
 					
 				<p:column selectionMode="multiple" style="width:2% !important;" disabledSelection="#{tasks.notAllowedToTick}"/>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+					<h:outputText value="#{indexMain + 1}" />
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.application.no']} (#{lbl['lbl.sm.companyname']})" disabledSelection="#{tasks.notAllowedToTick}">
-					<br /><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /><br /><br />
+					<br /><p:outputLabel value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /><br />
 					
 					<p:dataTable var="catBean" widgetVar="catBeanWidVar" value="#{tasks.pendingApproveCategories}"
 						rowKey="#{catBean}" rowIndexVar="index" id="catBeanDtId"
@@ -151,11 +155,11 @@
 							</p:row>
 						</p:columnGroup>
 						
-						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+						<p:column style="width : 2%;">
 							<p:outputLabel value="#{index + 1}"
 								style="float: left;white-space: normal;" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="white-space : normal">
+						<p:column style="white-space : normal">
 							<h:outputText
 								value="#{catBean.pmCategoryL1.categoryL1Code} -  #{empty catBean.categoryL1Name ? catBean.pmCategoryL1.categoryName : catBean.categoryL1Name}" />
 							<br />
@@ -165,7 +169,7 @@
 							<h:outputText
 								value="#{catBean.pmCategoryL3.categoryL3Code} -  #{empty catBean.categoryL3Name ? catBean.pmCategoryL3.categoryName : catBean.categoryL3Name}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal">
+						<p:column style="width : 15%;white-space : normal">
 							<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 								rendered="#{!catBean.specialCategory}" />
 							<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
