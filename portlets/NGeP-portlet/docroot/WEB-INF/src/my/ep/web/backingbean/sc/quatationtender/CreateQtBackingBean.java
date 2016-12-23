@@ -2305,15 +2305,15 @@ public class CreateQtBackingBean extends
 		QtAmendMentBean amendMentBean = null;
 		
 		if ("title1".equalsIgnoreCase(componentId)) {
-			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FILED_QT_TITLE,
+			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FIELD_QT_TITLE,
 					oldValue, newValue, false);
 
 		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
-			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 					oldValue, newValue, false);
 
 		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
-			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 					oldValue, newValue, true);
 		}
 

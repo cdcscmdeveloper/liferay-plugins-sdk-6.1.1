@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS) and (empty qTDetailBB.managedBean.amendMentBean or qTDetailBB.managedBean.amendMentBean.brandNew)}" />
+	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_BSVDETAILS) and (empty qTDetailBB.managedBean.amendMentBean or qTDetailBB.managedBean.amendMentBean.brandNew)}" />
 	<ui:param name="isQTStatusPublished" value="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true"

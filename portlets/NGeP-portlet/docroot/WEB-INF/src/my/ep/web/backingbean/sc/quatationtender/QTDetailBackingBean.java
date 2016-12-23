@@ -2236,6 +2236,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
+				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
@@ -2260,6 +2261,7 @@ public class QTDetailBackingBean extends
 						.updateFinalizateSecrataryTask(committeReqDTO);
 
 			} else {
+				qtReqDTO.setQtCommittes(qt.getScQtCommittees());
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(payLoad);
@@ -3291,7 +3293,7 @@ public class QTDetailBackingBean extends
 			zoneGeneralTrees.clear();	
 		}
 		
-		boolean zoneCoverageReadonly = enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE);
+		boolean zoneCoverageReadonly = enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE);
 		List<TreeNode> zoneSuppQualTrees = null;
 		if (zoneCoverageReadonly) {
 			zoneSuppQualTrees = getManagedBean().getZoneSuppQualTrees();
@@ -3792,6 +3794,7 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
 		reqDTO.setSaveFlow(true);
 		reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+		reqDTO.setQtCommittes(reqDTO.getQtdetail().getScQtCommittees());
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
