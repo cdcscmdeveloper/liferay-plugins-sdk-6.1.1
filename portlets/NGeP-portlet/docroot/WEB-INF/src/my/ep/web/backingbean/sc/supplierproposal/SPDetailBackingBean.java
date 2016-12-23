@@ -4256,6 +4256,7 @@ public class SPDetailBackingBean extends
 		} finally {
 			proposalSO = null;
 		}
+		this.getManagedBean().setAutoUpdate(false);
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 
