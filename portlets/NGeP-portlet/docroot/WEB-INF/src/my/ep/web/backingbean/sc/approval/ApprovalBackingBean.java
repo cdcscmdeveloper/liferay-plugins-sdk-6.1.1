@@ -950,7 +950,7 @@ public class ApprovalBackingBean extends
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
 							new QTDocumentsBackingBean().reGenerateDocuments(
 									qt.getQtId(), 
-									QTFieldConst.FILED_QT_PUBLISH_PERIOD);
+									QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
 								// To remove the existing QT closing job from scheduler if any
@@ -964,12 +964,12 @@ public class ApprovalBackingBean extends
 							if (isFinalApproval) {
 								new QTDocumentsBackingBean().reGenerateDocuments(
 										qt.getQtId(), 
-										QTFieldConst.FILED_QT_VALIDITY_PERIOD);
+										QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 							}
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS)) {
 							new QTDocumentsBackingBean().reGenerateDocuments(
 									qt.getQtId(), 
-									QTFieldConst.FILED_QT_BSVDETAILS);
+									QTFieldConst.FIELD_QT_BSVDETAILS);
 						}			
 					}	
 				}
@@ -1419,7 +1419,7 @@ public class ApprovalBackingBean extends
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
 					// Proposal Start Date
-					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FILED_QT_PROPOSAL_START_DATE);
+					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
 					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
 						scQt.setProposalStartDate((Date)valueBean.getOldValue());
 						updatePublishClosingDate(scQt);
@@ -1591,7 +1591,7 @@ public class ApprovalBackingBean extends
 				if (isAllAccepted) {
 					new QTDocumentsBackingBean().reGenerateDocuments(
 							qt.getQtId(), 
-							QTFieldConst.FILED_QT_VALIDITY_PERIOD);
+							QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 				}
 				
 				FacesContext

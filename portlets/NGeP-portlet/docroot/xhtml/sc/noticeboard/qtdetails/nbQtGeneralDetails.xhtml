@@ -19,7 +19,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText style="white-space: normal;word-wrap: break-word;"
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
-			<ui:param name="qtTitleChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_TITLE]}" />
+			<ui:param name="qtTitleChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_TITLE]}" />
 			<c:choose>
 				<c:when test="#{!empty qtTitleChangeDate}">
 					<h:panelGroup>
@@ -65,7 +65,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
-			<ui:param name="publishPeriodChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_PUBLISH_PERIOD]}" />
+			<ui:param name="publishPeriodChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_PUBLISH_PERIOD]}" />
 			<c:choose>
 				<c:when test="#{!empty publishPeriodChangeDate}">
 					<h:panelGroup>
@@ -88,8 +88,8 @@
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 			</h:outputText>
-			<ui:param name="proposalStartChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_PROPOSAL_START_DATE]}" />
-			<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_CLOSING_DATE]}" />
+			<ui:param name="proposalStartChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_PROPOSAL_START_DATE]}" />
+			<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_CLOSING_DATE]}" />
 			<c:choose>
 				<c:when test="#{!empty publishPeriodChangeDate or !empty closingChangeDate or !empty proposalStartChangeDate}">
 					<ui:param name="latestClosingChangeDate" value="#{proposalStartChangeDate}" />
@@ -123,7 +123,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
-			<ui:param name="validityPeriodChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FILED_QT_VALIDITY_PERIOD]}" />
+			<ui:param name="validityPeriodChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_VALIDITY_PERIOD]}" />
 			<c:choose>
 				<c:when test="#{!empty validityPeriodChangeDate}">
 					<h:panelGroup>

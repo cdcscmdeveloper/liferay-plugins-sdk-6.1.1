@@ -947,7 +947,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	private void updateQtAmmendMentDtls(String bsvType,
 			ScQtBsvDtl oldBsvDtl, ScQtBsvDtl newBsvDtl) {
 
-		String fieldPrefix = oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FILED_QT_BSV_SEPARATOR;
+		String fieldPrefix = oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR;
 		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
 		
 		if (null == amendMentBean) {
@@ -956,13 +956,13 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		// bsvDesc
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_DESC, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
 				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
 				true);
 		
 		// bsvDate
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_DATE, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
 				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
 				true);
 		
@@ -971,13 +971,13 @@ public class QTBriefingSiteVisitBackingBean extends
 		Date oldProposalStartDate = scQt.getProposalStartDate();
 		updateLatestBsvDate();
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				QTFieldConst.FILED_QT_PROPOSAL_START_DATE, 
+				QTFieldConst.FIELD_QT_PROPOSAL_START_DATE, 
 				oldProposalStartDate, scQt.getProposalStartDate(),
 				true);
 		
 		// location
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_LOCATION, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_LOCATION, 
 				oldBsvDtl.getLocation(), newBsvDtl.getLocation(),
 				true);
 
@@ -995,43 +995,43 @@ public class QTBriefingSiteVisitBackingBean extends
 		}*/
 		// address1
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_1, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_1, 
 				oldAddress.getAddress1(), newAddress.getAddress1(),
 				true);
 		// address2
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_2, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_2, 
 				oldAddress.getAddress2(), newAddress.getAddress2(),
 				true);
 		// address3
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_3, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_3, 
 				oldAddress.getAddress3(), newAddress.getAddress3(),
 				true);
 		// address4
 	/*	putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_4, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_4, 
 				oldAddress.getAddress4(), newAddress.getAddress4());*/
 		// postcode
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_POSTCODE, 
 				oldAddress.getPostcode(), newAddress.getPostcode(),
 				true);
 		// cityId
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_CITY, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_CITY, 
 				oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId(),
 				true);
 
 		// coordinatingOfficer
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_COORDINATING_OFFICER, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_COORDINATING_OFFICER, 
 				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer(),
 				true);
 
 		// maxNoOfAttendance
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_MAX_NO_OF_ATTENDANCE, 
 				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance(),
 				true);
 
@@ -1039,7 +1039,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		Long oldBsvStatusId = oldBsvDtl.getBsvStatus() != null ? oldBsvDtl.getBsvStatus().getStatusId() : null;
 		Long newBsvStatusId = newBsvDtl.getBsvStatus() != null ? newBsvDtl.getBsvStatus().getStatusId() : null;
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FILED_QT_BSV_STATUS, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_STATUS, 
 				oldBsvStatusId, newBsvStatusId,
 				true);
 
