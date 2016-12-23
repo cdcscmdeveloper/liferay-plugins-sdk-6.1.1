@@ -135,6 +135,22 @@
 				<p:column headerText="#{lbl['lbl.sm.application.no']} (#{lbl['lbl.sm.companyname']})" disabledSelection="#{tasks.notAllowedToTick}">
 					<br /><p:outputLabel value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /><br />
 					
+					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
+						<table style="width: 100%">
+							<tr>
+								<td style="white-space: normal;">
+									<span id="blinkId3"><h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" /></span>
+									<span style="opacity: 0.0;"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span>
+								</td>
+							</tr>
+							<tr>
+								<td style="white-space: normal;">
+									<h:outputText styleClass="warning" value="#{tasks.overlapMsg}" escape="false"/>
+								</td>
+							</tr>
+						</table><br /><br />
+					</p:outputPanel>
+					
 					<p:dataTable var="catBean" widgetVar="catBeanWidVar" value="#{tasks.pendingApproveCategories}"
 						rowKey="#{catBean}" rowIndexVar="index" id="catBeanDtId"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
