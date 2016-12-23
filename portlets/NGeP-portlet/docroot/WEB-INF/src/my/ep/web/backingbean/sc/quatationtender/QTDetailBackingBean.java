@@ -192,7 +192,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
-import my.ep.web.util.sc.helper.QTFiledMapper;
+import my.ep.web.util.sc.helper.QTFieldMapper;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -4598,7 +4598,7 @@ public class QTDetailBackingBean extends
 	private boolean enableFieldByStatusNFiledName(String fieldName,
 			Long statusId, boolean isMaintance, boolean isEditable) {
 
-		List<String> values = QTFiledMapper.getEnableFieldsByStatus(statusId,
+		List<String> values = QTFieldMapper.getEnableFieldsByStatus(statusId,
 				isMaintance, isEditable);
 		if (CollectionUtils.isNotEmpty(values)) {
 			if (values.contains(fieldName)) {
