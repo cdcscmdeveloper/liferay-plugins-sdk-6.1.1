@@ -67,6 +67,10 @@
 					</tr>
 				</table>
 
+                <p:spacer height="5px;"></p:spacer>
+				<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.score.company.exp.tech.fin.non.gov.supplier.instructions']}"
+				escape="false" />
 				<p:dataTable id="experience" rowIndexVar="index" var="experience"
 				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{experience}" style="width:1090px">
