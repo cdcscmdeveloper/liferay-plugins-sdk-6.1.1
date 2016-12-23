@@ -773,12 +773,11 @@ public class CreateQtBackingBean extends
 				scQt.getScQtSupplierCriteria()
 						.setLocationLevel(new PmParameter());
 			}
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getQtSupplierList())) {
+			
 				this.getManagedBean().setToBeRemoveRestrictedSupplierList(this.getManagedBean().getQtSupplierList());
 				this.getManagedBean().setQtSupplierList(null);
 				scQt.setScQtSuppliers(null);
-			}
+			
 
 		} else {
 			if(scQt.getTmpExpectedIntendedPrice()== null){
@@ -822,6 +821,9 @@ public class CreateQtBackingBean extends
 				clearNonBumiSuppliers(scQt);
 			} else {
 				scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+				List<ScQtSupplier> supplierList = this.getManagedBean()
+						.getQtSupplierList();
+				scQt.setScQtSuppliers(supplierList);
 			}
 
 		} finally {
@@ -2803,10 +2805,10 @@ public class CreateQtBackingBean extends
 					}
 				}
 				this.getManagedBean().setQtSupplierList(supplierList);
-				scQt.setScQtSuppliers(supplierList);
 				getManagedBean().setTotalSuppliers(supplierList.size());
 
 			}
 		}
+		scQt.setScQtSuppliers(supplierList);
 	}
 }
