@@ -817,6 +817,7 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
+				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
 
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
