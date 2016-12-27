@@ -45,6 +45,9 @@
 			<p:panel header="#{lbl['lbl.sc.spec.tech.staff.list']}"
 				toggleable="true">
 
+				<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.score.company.exp.tech.fin.gov.supplier.instructions']}"
+				escape="false" />
 				<p:dataTable id="techEmployeeList" var="techEmployee"
 				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowIndexVar="index">
