@@ -2133,6 +2133,10 @@ public class DirectLOABackingBean extends
 				loa.setScLoiLoa(scLoiLoa);
 			}
 		}
+		
+		if(loa.getScLoiLoa() != null && scQt.getFulfilmentType() != null) {
+			loa.getScLoiLoa().setFulfilmentTypeCode(scQt.getFulfilmentType());
+		}
 		loa.setScQt(scQt);
 		
 		loa.setProcurementMode(scQt.getProcurementMode());
@@ -2150,6 +2154,9 @@ public class DirectLOABackingBean extends
 			qtTypeCode = new PmParameter();
 		}
 		loa.setQtType(qtTypeCode);
+		
+		//get loa report due to fulfilment change
+		getLoaReports();
 	}
 
 	/**
@@ -2246,12 +2253,28 @@ public class DirectLOABackingBean extends
 		sb.append("%");
 		String qtNoPrefix = sb.toString();
 		
-		// Filter By - pmStatus
 		StringBuilder conditionFieldSb = new StringBuilder();
 		conditionFieldSb.append("qtNo^");
 		conditionFieldSb.append(qtNoPrefix);
 		conditionFieldSb.append("^");
 		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_LIKE.value());
+		
+		// Filter By - pmStatus
+		conditionFieldSb.append("|");
+		conditionFieldSb.append("scQtStatus.docType^");
+		conditionFieldSb.append(ParameterConst.DOCTYPE_QUOTATION);
+		conditionFieldSb.append("^");
+		conditionFieldSb.append(SearchOperator.OPERATOR_EQUALS.value());
+		conditionFieldSb.append("|");
+		conditionFieldSb.append("scQtStatus.current^");
+		conditionFieldSb.append(true);
+		conditionFieldSb.append("^");
+		conditionFieldSb.append(SearchOperator.OPERATOR_EQUALS.value());
+		conditionFieldSb.append("|");
+		conditionFieldSb.append("scQtStatus.pmStatus.statusId^");
+		conditionFieldSb.append(QTStatusConst.QT_AWARDED);
+		conditionFieldSb.append("^");
+		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_EQUALS.value());
 		
 		PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
 				.getPmOrgProfile();
