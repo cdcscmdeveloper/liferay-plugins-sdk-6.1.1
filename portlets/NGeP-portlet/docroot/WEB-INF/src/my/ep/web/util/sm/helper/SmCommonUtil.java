@@ -884,9 +884,9 @@ public class SmCommonUtil {
 		BigDecimal retVal = BigDecimal.ZERO;
 		if (total != 0) {
 			try {
-				retVal = new BigDecimal(param).divide(new BigDecimal(total))
+				retVal = new BigDecimal(param).divide(new BigDecimal(total),2,BigDecimal.ROUND_CEILING)
 						.multiply(percent);
-				retVal = retVal.setScale(2, RoundingMode.CEILING);
+				//retVal = retVal.setScale(2, RoundingMode.CEILING);
 			} catch (ArithmeticException e) {
 				log.info("FAILED GET PERCENTAG:" + e.getMessage());
 			}
@@ -1136,6 +1136,13 @@ public class SmCommonUtil {
 							new BigDecimal(50)) == 1) {
 				persCalcVo.setBumiRecommendNote(getMessage(
 						"lbl.sm.recommend.poapprover.bumi", null));
+			}
+			
+			//if bumi BOD greater than 50%
+			if(persCalcVo.getBodBumiPerc() != null 
+					&& persCalcVo.getBodBumiPerc().compareTo(new BigDecimal(50)) == 1){
+					persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.poapprover.bumi", null));
 			}
 		}
 
