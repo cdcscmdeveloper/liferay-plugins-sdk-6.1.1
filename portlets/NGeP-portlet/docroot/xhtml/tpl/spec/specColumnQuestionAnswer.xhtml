@@ -138,6 +138,11 @@
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</f:facet>
+		<p:commandButton icon="ui-icon-item-code" rendered="#{empty question.clSpecDetail and isWorkflowStatus}" title="assign code"
+		    style="background-color:transparent !important; border:0px none; width:10px !important;"
+			disabled="#{question.cmItem != null}"
+			action="#{codificationBackingBean.assignProductCode(null, question, false)}"/>
+			
 		<p:commandButton id="addBtn" icon="ui-icon-add"
 			style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 			partialSubmit="true" process="@this"
@@ -161,11 +166,7 @@
 					target="#{templateSpecBean.specComponentId}"
 					value="#{templateSpecId}" />
 		</p:commandButton>
-		
-	 	<p:commandButton icon="ui-icon-item-code" rendered="#{empty question.clSpecDetail and isWorkflowStatus}" title="assign code"
-		    style="background-color:transparent !important; border:0px none; width:10px !important;"
-			disabled="#{question.cmItem != null}"
-			action="#{codificationBackingBean.assignProductCode(null, question, false)}"/>
+	 	
 	</p:column>
 
 </ui:composition>
