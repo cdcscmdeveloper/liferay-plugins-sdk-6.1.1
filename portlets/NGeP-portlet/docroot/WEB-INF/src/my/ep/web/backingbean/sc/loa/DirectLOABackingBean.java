@@ -6912,20 +6912,21 @@ public class DirectLOABackingBean extends
 		log.info("selectedSpecQuestion " + selectedSpecQuestion);
 		// product
 		TplSpecMaster  prodMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
-		int prodQuestionIndex = prodMaster.getTplSpecQuestions().indexOf(selectedSpecQuestion);
-
-		if(prodQuestionIndex != -1) {
-			prodMaster.getTplSpecQuestions().set(prodQuestionIndex, selectedSpecQuestion);
+		if(prodMaster.getTplSpecQuestions() != null){
+			int prodQuestionIndex = prodMaster.getTplSpecQuestions().indexOf(selectedSpecQuestion);
+			if(prodQuestionIndex != -1) {
+				prodMaster.getTplSpecQuestions().set(prodQuestionIndex, selectedSpecQuestion);
+			}
 		}
 		
 		// service
 		TplSpecMaster  serviceMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
-		int serviceQuestionIndex = serviceMaster.getTplSpecQuestions().indexOf(selectedSpecQuestion);
-
-		if(serviceQuestionIndex != -1) {
-			serviceMaster.getTplSpecQuestions().set(serviceQuestionIndex, selectedSpecQuestion);
+		if(serviceMaster.getTplSpecQuestions() != null){
+			int serviceQuestionIndex = serviceMaster.getTplSpecQuestions().indexOf(selectedSpecQuestion);
+			if(serviceQuestionIndex != -1) {
+				serviceMaster.getTplSpecQuestions().set(serviceQuestionIndex, selectedSpecQuestion);
+			}
 		}
-		
 	}
 	
 	/**
