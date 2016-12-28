@@ -9,22 +9,19 @@
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.letter']}" escape="false"/><br/>
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.upload.loa']}" escape="false"/><br/>
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/><br/><br/>
-		<h:panelGrid columns="2" >
-		<h:panelGrid columns="2" style="width:400px;" 	rendered="#{amendmentBackingBean.managedBean.disableLoaLetter}">
-				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" styleClass="required" /> 
+		<h:panelGrid columns="2" style="width:900px;" >
+		<h:panelGrid columns="2" style="width:500px;" >
+				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" styleClass="required" style="width:250px;"/> 
      			<p:calendar style="width:80px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
 			   		 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" 
+					    disabled="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.govtSignDate}">
 				</p:calendar>
 		</h:panelGrid>
-			<h:panelGrid columns="2" style="width:400px;" rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
-				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.supp.sign.date']}" styleClass="required" /> 
-     			<p:calendar style="width:80px;" id="signLoaDateBySupplier" showOn="button"  readonlyInput="true" navigator="true"
-			   		 	 pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-					    label="#{lbl['lbl.ct.amend.loa.supp.sign.date']}" 
-					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.supplierSignDate}">
-				</p:calendar>
+			<h:panelGrid columns="2" style="width:400px;">
+				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.agency.no']}" styleClass="required" style="width:200px;" /> 
+				<p:outputLabel value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}" /> 
 		</h:panelGrid>
 	</h:panelGrid>
 		<p:spacer height="5"/>

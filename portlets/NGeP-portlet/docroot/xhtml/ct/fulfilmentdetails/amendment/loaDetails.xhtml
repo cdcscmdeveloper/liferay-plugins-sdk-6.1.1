@@ -29,14 +29,6 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" maxlength="5" 
 					 required="true" label="#{lbl['lbl.ct.file.no']}"/>
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.insurance.warranty']}" />
-			<h:panelGrid columns="4">
-				<p:selectOneRadio id="radiOptionsWarenty" required="true" disabled="true"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.insWarrantyReq}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
-					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
-				</p:selectOneRadio>
-			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.type']}" />
 			<p:inputText style="width:300px;" disabled="true"
 				value="#{amendmentBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType)}" />				
@@ -128,10 +120,7 @@
 	</p:panel>
 	<p:panel id="loaVerifier" header="#{lbl['lbl.ct.panel.loa.verifier']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
-		    <p:outputLabel value="#{lbl['lbl.ct.panel.loa.verifier']}" />
-			<p:inputText style="width:300px;" disabled="true"
-				value="#{amendmentBackingBean.managedBean.approverName}" />
-			<p:outputLabel value="#{lbl['lbl.ct.required.loa.verifier']}" />			
+		  <p:outputLabel value="#{lbl['lbl.ct.required.loa.verifier']}" />			
 			<h:panelGrid columns="4">
 				<p:selectOneRadio id="reqLoaVerifier" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or
 					amendmentBackingBean.managedBean.disableEndorseAmendDetails}"
@@ -140,6 +129,11 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 				</p:selectOneRadio>
 			</h:panelGrid>			
+		  
+		    <p:outputLabel value="#{lbl['lbl.ct.panel.loa.verifier']}" />
+			<p:inputText style="width:300px;" disabled="true"
+				value="#{amendmentBackingBean.managedBean.approverName}" />
+			
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
