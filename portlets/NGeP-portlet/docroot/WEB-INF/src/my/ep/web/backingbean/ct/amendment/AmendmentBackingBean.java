@@ -4875,34 +4875,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 		} else if (ContractConst.DOC_DEF_KEY_LOA_RECIEPT.equals(docDefinitionKey)) {
 			context = new VelocityContext();	
-			if(getFacesScopes().getUserLocale().getLanguage().equalsIgnoreCase("bm")){
-			       vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_BM;
-			} else if(getFacesScopes().getUserLocale().getLanguage().equalsIgnoreCase("en")){
-			     vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_EN;
-			}
+			vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_BM;
+			context.put("supplierName",  ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			context.put("supplierID", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+			context.put("supplierAckDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
 			String supplierAddress = "";
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
 				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			}
-			
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
 				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
 			} else {
 				context.put("govSignDate", "");
 			}
 			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
-			if(getManagedBean().getAckFA() !=  null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
-				context.put("supplierName",  getFacesScopes().getUserSessionBean().getUserName());
-				context.put("supplierID",  getFacesScopes().getUserSessionBean().getIdentificationNo());
-				context.put("supplierAddress",supplierAddress);
-				context.put("supplierAckDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
-				context.put("witnessName",  getManagedBean().getScLoaWitness().getWitnessName());
-				context.put("witnessID",  getManagedBean().getScLoaWitness().getIdentificationNo());
-				context.put("witnessAddress", getManagedBean().getScLoaWitness().getAddress());
-				context.put("witnessDate",  dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getSupplierSignDate()));		
-			}
 		}
 		
 		if (vmFile != null && context != null) {
