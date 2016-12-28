@@ -91,8 +91,7 @@
 				<c:when test="#{viewSmApplBackingBean.managedBean.updatePersonnelPage}" >
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-						<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}" 
-								disabled="#{viewSmApplBackingBean.managedBean.disableAuthorizedRadio}">
+						<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 								<p:ajax event="change" process="@this" onstart="blockWidget.show()" 
@@ -105,7 +104,6 @@
 						<td><p:selectOneMenu id="smPersnEpRole"
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"
-								disabled="#{viewSmApplBackingBean.managedBean.disableRoleSelection or empty viewSmApplBackingBean.managedBean.ePRoleList}"
 								style="width: 207px;margin: 5px 0px 5px 0px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{viewSmApplBackingBean.managedBean.ePRoleList}" />

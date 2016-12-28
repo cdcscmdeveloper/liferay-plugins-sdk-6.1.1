@@ -128,6 +128,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
@@ -196,6 +197,9 @@ public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
 	private static final BigDecimal percent = new BigDecimal(100);
+	private static final String SER_FILE_TYPE = ".ser";
+	private static final String FOLDER_NAME_SM = "SM";
+	private static final String FOLDER_NAME_REVISION = "Revision";
 
 	/**
 	 * Hash string.
@@ -884,9 +888,9 @@ public class SmCommonUtil {
 		BigDecimal retVal = BigDecimal.ZERO;
 		if (total != 0) {
 			try {
-				retVal = new BigDecimal(param).divide(new BigDecimal(total),2,BigDecimal.ROUND_CEILING)
-						.multiply(percent);
-				//retVal = retVal.setScale(2, RoundingMode.CEILING);
+				retVal = new BigDecimal(param).divide(new BigDecimal(total), 2,
+						BigDecimal.ROUND_CEILING).multiply(percent);
+				// retVal = retVal.setScale(2, RoundingMode.CEILING);
 			} catch (ArithmeticException e) {
 				log.info("FAILED GET PERCENTAG:" + e.getMessage());
 			}
@@ -1137,12 +1141,13 @@ public class SmCommonUtil {
 				persCalcVo.setBumiRecommendNote(getMessage(
 						"lbl.sm.recommend.poapprover.bumi", null));
 			}
-			
-			//if bumi BOD greater than 50%
-			if(persCalcVo.getBodBumiPerc() != null 
-					&& persCalcVo.getBodBumiPerc().compareTo(new BigDecimal(50)) == 1){
-					persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.poapprover.bumi", null));
+
+			// if bumi BOD greater than 50%
+			if (persCalcVo.getBodBumiPerc() != null
+					&& persCalcVo.getBodBumiPerc()
+							.compareTo(new BigDecimal(50)) == 1) {
+				persCalcVo.setBumiRecommendNote(getMessage(
+						"lbl.sm.recommend.poapprover.bumi", null));
 			}
 		}
 
@@ -3133,7 +3138,8 @@ public class SmCommonUtil {
 							reqDTO).getSoftcertRequest();
 			if (softcertRequest != null
 					&& StringUtils.isNotBlank(softcertRequest.getReasonCode())) {
-				personnel.setSoftcertRejectCode(softcertRequest.getReasonCode());
+				personnel
+						.setSoftcertRejectCode(softcertRequest.getReasonCode());
 				if (softcertRequest.getReasonCode().equals(
 						SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
 					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
@@ -4532,28 +4538,47 @@ public class SmCommonUtil {
 		return getMessage(sb.toString(), null);
 
 	}
-	
+
 	/**
 	 * search user by search bean
 	 * 
 	 * @param searchBean
 	 * @return ISearchResultBean<PmUser>
 	 */
-	public static ISearchResultBean<SmPersonnel> searchUsersResultBeanBySearchBean(ISearchBean<SmPersonnel> searchBean) {
+	public static ISearchResultBean<SmPersonnel> searchUsersResultBeanBySearchBean(
+			ISearchBean<SmPersonnel> searchBean) {
 		IPersonnelSO personnelSO = null;
 		try {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			reqDTO.setSearchPersonnelBean(searchBean);
-			personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			personnelSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			resDTO = personnelSO.retrieveUsersResultBeanBySearchBean(reqDTO);
 
-			if (resDTO.isSuccessful() && resDTO.getSearchPersonnelResultBean() != null) {
+			if (resDTO.isSuccessful()
+					&& resDTO.getSearchPersonnelResultBean() != null) {
 				return resDTO.getSearchPersonnelResultBean();
 			}
 		} finally {
 			personnelSO = null;
 		}
 		return null;
+	}
+
+	/**
+	 * Get serialized application by file path and name
+	 * 
+	 * @param String
+	 *            applNo
+	 * @return SmAppl
+	 */
+	public static SmApplRevisionResDTO getSerializedApplicationByFilePathName(
+			String filePathName) {
+		SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+		reqDTO.setDeSerFileName(filePathName);
+		SmApplRevisionResDTO resDTO = SmServiceLookup.getSmApplRevisionSO()
+				.readApplicationHist(reqDTO);
+		return resDTO;
 	}
 }

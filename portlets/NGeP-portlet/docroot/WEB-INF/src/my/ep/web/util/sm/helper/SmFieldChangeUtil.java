@@ -4,6 +4,7 @@ import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -42,10 +43,26 @@ public class SmFieldChangeUtil {
 				&& !bean.getSmAppl().getApplType()
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
-			bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
-					.getSmAppl());
+			if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()) {
+				mofReqDTO.setSmAppl(bean.getSmAppl());
+				SmAppl latestRejectedAppl = SmServiceLookup
+						.getMofRegistrationSO()
+						.retrieveLatestRejectedApplication(mofReqDTO)
+						.getSmAppl();
+				SmApplRevisionResDTO applRevDTO = SmCommonUtil
+						.getSerializedApplicationByFilePathName(latestRejectedAppl
+								.getSupplierSerFile());
+				if (applRevDTO == null) {
+					bean.setLatestAppl(latestRejectedAppl);
+				} else {
+					bean.setLatestAppl(applRevDTO.getSmAppl());
+				}
+			} else {
+				mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
+				bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()
+						.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
+						.getSmAppl());
+			}
 			bean.getLatestAppl()
 					.setHqFacility(
 							SmApplicationUtil.getHqFacilityByAppl(bean
