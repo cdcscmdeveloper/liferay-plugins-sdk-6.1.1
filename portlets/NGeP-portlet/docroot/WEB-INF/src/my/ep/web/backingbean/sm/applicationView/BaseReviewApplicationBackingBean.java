@@ -142,7 +142,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 *            smAppl
 	 */
 	public void initApplication(SmAppl smAppl) {
-		ISmApplRevisionSO applRevisionSO = null;
 
 		try {
 			// set revision application type
@@ -152,17 +151,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			createSerFileIfNotExist(smAppl);
 
 			if (getManagedBean().isReviewApplicationExist()) {
-				applRevisionSO = (ISmApplRevisionSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								ISmApplRevisionSO.class);
-
-				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-
-				reqDTO.setDeSerFileName(getDeSerFileNameAndPath(getManagedBean()
-						.getApplicationNoParam()));
-				SmApplRevisionResDTO resDTO = applRevisionSO
-						.readApplicationHist(reqDTO);
+				SmApplRevisionResDTO resDTO = SmCommonUtil
+						.getSerializedApplicationByFilePathName(getDeSerFileNameAndPath(getManagedBean()
+								.getApplicationNoParam()));
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				setApplication(resDTO.getSmAppl());
 			}
@@ -171,8 +162,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			log.error("***************Error init revision appl:"
 					+ ne.getMessage());
 			getManagedBean().setReviewApplicationExist(false);
-		} finally {
-			applRevisionSO = null;
 		}
 
 		// show message if supp profile not ready
@@ -293,12 +282,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		return accStatus;
 	}
-	
+
 	/**
 	 * Dummy submit
 	 */
-	public void submit(){
-		
+	public void submit() {
+
 	}
 
 	/**
