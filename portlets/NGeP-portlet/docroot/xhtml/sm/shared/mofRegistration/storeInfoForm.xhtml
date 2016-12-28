@@ -138,6 +138,7 @@
 							style="height:100px;width: 200px;">
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedStoreFacility.facilityType)}" />
+							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 						</p:selectManyMenu>
 						<p:message id="storeCategoryIdMsg" for="storeCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
