@@ -194,10 +194,6 @@ public class UpdatePersonnelBackingBean extends
 					"deleteAuthPersConfirmDialog.show()");
 		} else {
 			if (getManagedBean().getSelectedShareHolders().size() > 0) {
-				for (SmPersonnel shr : getManagedBean()
-						.getSelectedShareHolders()) {
-
-				}
 				SmApplicationUtil.getInstance().setApplAddressTransientValue(
 						getManagedBean().getSmAppl(), false);
 				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
