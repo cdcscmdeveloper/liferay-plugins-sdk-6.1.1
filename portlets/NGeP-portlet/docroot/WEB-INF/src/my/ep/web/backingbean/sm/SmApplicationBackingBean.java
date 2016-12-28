@@ -1234,7 +1234,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
 							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getSmAppl()));
+									.getLatestAppl()));
 		}
 
 		// set payment details section only for supplier and application type is
