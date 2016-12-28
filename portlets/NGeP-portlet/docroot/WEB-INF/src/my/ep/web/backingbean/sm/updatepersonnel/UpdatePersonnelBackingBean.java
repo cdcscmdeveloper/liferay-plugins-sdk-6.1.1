@@ -20,6 +20,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -241,6 +242,27 @@ public class UpdatePersonnelBackingBean extends
 	 * Submit personnel maintenance and regenerate virtual certificate
 	 */
 	public void save() {
+
+		SmPersonnel prevPersonnel = (SmPersonnel) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSelectedShareHolder().getIdentificationNo(),
+						getManagedBean().getPrevApprovedPersonnels(),
+						"identificationNo");
+
+		if (getManagedBean().isValidSmUserLimit()
+				&& getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& prevPersonnel != null
+				&& prevPersonnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			throw new EpException(MessageConst.ERROR_722646);
+		}
+
+		if (getManagedBean().isDisableRoleSelection()
+				&& prevPersonnel != null
+				&& !prevPersonnel.getEpRole().equals(
+						getManagedBean().getSelectedShareHolder().getEpRole())) {
+			throw new EpException(MessageConst.ERROR_722647);
+		}
+
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedShareHolder());
 		reqDTO.setAppl(getManagedBean().getSmAppl());
