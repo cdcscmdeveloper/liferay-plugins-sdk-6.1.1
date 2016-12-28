@@ -59,7 +59,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -194,17 +193,19 @@ public class CommitteBackingBean extends
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			IUserSO userSO;
+			ICommitteSO committeSO;
 			try {
-				userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+
 				populateUserSearchCriteria(userQCSearchBean, searchBean);
-				userReqDTO.setUserSearchBean(searchBean);
-				
-				return userSO.searchUserProfileDtl(userReqDTO).getUserResultBean();
+				committeReqDTO.setUserSearchBean(searchBean);
+
+				return committeSO.retrieveUserListByCommType(committeReqDTO)
+						.getUserResultBean();
 			} finally {
-				userSO = null;
+				committeSO = null;
 			}
 		}
 	}
@@ -242,84 +243,6 @@ public class CommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
-			userSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg", 
-							SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE)					
-					);	
-			
-			userSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmUserOrgs.recordStatusFlg", 
-							SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE)					
-					);	
-			
-			List<String> orgTypes = new ArrayList<String>();
-			orgTypes.add(ParameterConst.ORG_TYPE_PTJ);
-			orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
-			orgTypes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
-			orgTypes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
-			orgTypes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
-			orgTypes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
-			orgTypes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
-			orgTypes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
-			
-			userSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-						 "pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-					  	 SearchOperator.OPERATOR_IN.value(), orgTypes)
-					);				
-			
-			/* Commented as part of CR change to fetch irrespective of Ministry.
-			 *   
-			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
-				Long ministryOrgProfile = retrieveMinistryOrgProfile(
-						getManagedBean().getQt().getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
-				String committeeType = getManagedBean().getScCommittee().getCommitteeType().getParameterCode();
-				SearchFilterBean ptjOrgProfileFB = new SearchFilterBean(
-						"pmUserOrgs.pmOrgProfile."
-								+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-						SearchOperator.OPERATOR_EQUALS.value(),
-						ministryOrgProfile,
-						JoinType.LEFT);
-				
-				if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType) ||
-						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
-					List<String> orgTypes = new ArrayList<String>();
-					orgTypes.add(ParameterConst.ORG_TYPE_SM_PMS_SABAH);
-					orgTypes.add(ParameterConst.ORG_TYPE_SM_PMS_SARAWAK);
-					orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
-					
-					SearchFilterBean otherOrgFB = new SearchFilterBean(
-							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_IN.value(),
-							orgTypes,
-							SearchCondition.CONDITION_OR.value());
-					userSearchBean.getDataFilterBeans().add(
-							new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
-					
-				} else {
-					SearchFilterBean otherOrgFB = new SearchFilterBean(
-							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							ParameterConst.ORG_TYPE_OTHERS,
-							SearchCondition.CONDITION_OR.value());
-					
-					if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equals(committeeType) ||
-							ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equals(committeeType)) {
-						SearchFilterBean ministryOrgProfileFB = new SearchFilterBean(
-								"pmUserOrgs.pmOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ministryOrgProfile);
-						userSearchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(ptjOrgProfileFB, 
-										new SearchMultiFilterBean(ministryOrgProfileFB, SearchCondition.CONDITION_OR.value(), otherOrgFB)));
-					} else {
-						userSearchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
-					}
-				} 
-			}*/
 		}
 	}
 

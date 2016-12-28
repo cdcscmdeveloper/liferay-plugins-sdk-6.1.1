@@ -555,35 +555,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 								idtype, true));
 			}
 			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg", 
-							SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE)					
-					);			
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmUserOrgs.recordStatusFlg", 
-							SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE)					
-					);
-			
-			List<String> orgTypes = new ArrayList<String>();
-			orgTypes.add(ParameterConst.ORG_TYPE_PTJ);
-			orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
-			orgTypes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
-			orgTypes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
-			orgTypes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
-			orgTypes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
-			orgTypes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
-			orgTypes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-						 "pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-					  	 SearchOperator.OPERATOR_IN.value(), orgTypes)
-					);			
-			
 //			ScQt scQt = this.getManagedBean().getScQt();
 //			if (null != scQt.getPmOrgProfile()) {
 //				Long ministryOrgProfile = retrieveMinistryOrgProfile(
@@ -977,17 +948,19 @@ public class SupplierFinalizationMeetingBackingBean extends
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			IUserSO userSO;
+			ICommitteSO committeSO;
 			try {
-				userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+
 				populateUserSearchCriteria(userSearchBean, searchBean);
-				userReqDTO.setUserSearchBean(searchBean);
-				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
-				return resDto.getUserResultBean();
+				committeReqDTO.setUserSearchBean(searchBean);
+
+				return committeSO.retrieveUserListByCommType(committeReqDTO)
+						.getUserResultBean();
 			} finally {
-				userSO = null;
+				committeSO = null;
 			}
 		}
 	}	
