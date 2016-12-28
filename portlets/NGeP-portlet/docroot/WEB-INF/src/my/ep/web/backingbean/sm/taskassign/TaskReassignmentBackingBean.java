@@ -1184,7 +1184,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 												getFacesScopes().getUserSessionBean()
 														.getUserId()))));
 
-
 			if (roleList == null || roleList.isEmpty()) {
 				roleList = retrieveAvailableRoles(task.getDocStatus().longValue(),reassignType,subReassignType);
 			}
