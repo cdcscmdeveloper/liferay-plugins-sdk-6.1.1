@@ -59,7 +59,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1462,11 +1461,12 @@ public class EvaluationMeetingBackingBean extends
 		 */
 		public ISearchResultBean<PmUser> pageChangeListener(
 				ISearchBean<PmUser> searchBean) {
-
+			ICommitteSO committeSO;
 			try {
-				UserReqDTO userReqDTO = new UserReqDTO();
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
-				UserResDTO resDto = null;
 				if (null != getManagedBean().getName()
 						&& !"".equalsIgnoreCase(getManagedBean().getName())) {
 
@@ -1496,43 +1496,13 @@ public class EvaluationMeetingBackingBean extends
 									getManagedBean().getIdentificationType(),
 									true));
 				}
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("recordStatusFlg",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmUserOrgs.recordStatusFlg",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
-
 				
-					List<String> paramcodes=new ArrayList<String>();
-					paramcodes.add(ParameterConst.ORG_TYPE_OTHERS);
-					paramcodes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
-					paramcodes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
-					paramcodes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
-					paramcodes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
-					paramcodes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
-					paramcodes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
-					paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
-					searchBean
-							.getDataFilterBeans()
-							.add(new SearchFilterBean(
-											"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-											SearchOperator.OPERATOR_IN
-													.value(),
-													paramcodes));
-				
-				userReqDTO.setUserSearchBean(searchBean);
+				committeReqDTO.setUserSearchBean(searchBean);
 
-				IUserSO userSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
-				return userSO.searchUserProfileDtl(userReqDTO)
+				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
-
 			} finally {
-
+				committeSO = null;
 			}
 
 		}
