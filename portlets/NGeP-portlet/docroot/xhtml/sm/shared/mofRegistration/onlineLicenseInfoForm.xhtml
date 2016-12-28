@@ -33,9 +33,9 @@
 					<p:row>
 						<ui:param name="categoryName" 
 							value="#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.fullCatcode} 
-								(#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.categoryName})" />
+								#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.categoryName}" />
 						<p:column
-							headerText="#{lbl['lbl.sm.category']} : #{empty categoryName ? lbl['lbl.txt.na'] : categoryName}"
+							headerText="#{lbl['lbl.sm.category']} : (#{empty categoryName ? lbl['lbl.txt.na'] : categoryName})"
 							style="background-color:lightblue !important;text-align: left !important;color:black !important"
 							colspan="5" />
 					</p:row>
