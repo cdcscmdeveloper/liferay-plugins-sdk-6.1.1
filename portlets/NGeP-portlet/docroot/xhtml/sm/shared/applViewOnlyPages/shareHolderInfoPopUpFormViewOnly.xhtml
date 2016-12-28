@@ -91,9 +91,9 @@
 				<c:when test="#{viewSmApplBackingBean.managedBean.updatePersonnelPage}" >
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-						<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" 
-								itemDisabled="#{viewSmApplBackingBean.managedBean.disableAuthorizedRadio}"/>
+						<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}" 
+								disabled="#{viewSmApplBackingBean.managedBean.disableAuthorizedRadio}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 								<p:ajax event="change" process="@this" onstart="blockWidget.show()" 
 									oncomplete="blockWidget.hide()" update="@form"
