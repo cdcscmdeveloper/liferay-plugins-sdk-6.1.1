@@ -60,7 +60,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -194,18 +193,19 @@ public class QTCommitteBackingBean extends
 				logger.debug("pageChangeListener");
 			}
 
-			IUserSO userSO;
+			ICommitteSO committeSO;
 			try {
-				userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
-				userReqDTO.setUserSearchBean(searchBean);
+				committeReqDTO.setUserSearchBean(searchBean);
 
-				return userSO.searchUserProfileDtl(userReqDTO).getUserResultBean();
+				return committeSO.retrieveUserListByCommType(committeReqDTO)
+						.getUserResultBean();
 			} finally {
-				userSO = null;
+				committeSO = null;
 			}
 		}
 	}
@@ -245,57 +245,6 @@ public class QTCommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
-			userSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							DbValueConst.RECORD_STATUS_ACTIVE));
-			
-			userSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmUserOrgs.recordStatusFlg", 
-							SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE)					
-					);			
-			List<String> paramcodes=new ArrayList<String>();
-			paramcodes.add(ParameterConst.ORG_TYPE_OTHERS);
-			paramcodes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
-			paramcodes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
-			paramcodes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
-			paramcodes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
-			paramcodes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
-			paramcodes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
-			paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
-			userSearchBean
-					.getDataFilterBeans()
-					.add(new SearchFilterBean(
-									"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-									SearchOperator.OPERATOR_IN
-											.value(),
-											paramcodes));
-			/*Removed based on Ministry search for Add Users
-			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
-				userSearchBean
-						.getDataFilterBeans()
-						.add(new SearchMultiFilterBean(
-								new SearchFilterBean(
-										"pmUserOrgs.pmOrgProfile."
-												+ OrgProfileUtil
-														.getSearchBeanParentString(OrganizationType.MINISTRY
-																.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										retrieveMinistryOrgProfile(
-												this.getManagedBean().getQt()
-														.getPmOrgProfile()
-														.getOrgProfileId())
-												.getOrgProfileId()),
-
-								new SearchFilterBean(
-										"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										ParameterConst.ORG_TYPE_OTHERS,
-										SearchCondition.CONDITION_OR.value())));
-			}*/
-			// Adding search filterbeans to searchbean.
-			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
 	}
 
