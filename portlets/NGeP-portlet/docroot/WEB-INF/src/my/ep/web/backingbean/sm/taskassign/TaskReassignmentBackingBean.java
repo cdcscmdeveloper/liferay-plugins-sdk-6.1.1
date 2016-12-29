@@ -1142,7 +1142,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	private ISearchResultBean<SmPersonnel> generateUserResultBean(PmStatus status , ISearchBean<SmPersonnel> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,SmTaskReassignmentVO vo){
 		ISearchResultBean<SmPersonnel> resultBean = null;
 		boolean isSearched = false;
-		Long userId = getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getUserId();
+//		Long userId = getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getUserId();
 		Integer subReassignType = null;
 		
 		// filter by user name
@@ -1180,9 +1180,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("pmUser.userId",
 										SearchOperator.OPERATOR_NOT_IN.value(),
-										new ArrayList<Long>(Arrays.asList(userId,
-												getFacesScopes().getUserSessionBean()
-														.getUserId()))));
+										new ArrayList<Long>(Arrays.asList(getFacesScopes().getUserSessionBean().getUserId()))));
 
 			if (roleList == null || roleList.isEmpty()) {
 				roleList = retrieveAvailableRoles(task.getDocStatus().longValue(),reassignType,subReassignType);
