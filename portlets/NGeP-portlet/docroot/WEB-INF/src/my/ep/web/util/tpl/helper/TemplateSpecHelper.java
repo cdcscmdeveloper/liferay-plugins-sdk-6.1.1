@@ -158,7 +158,8 @@ public class TemplateSpecHelper {
 						if (newSpecQuestion != null) {
 							if (isTechnicalSpec || 
 									(!isTechnicalSpec && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(
-											newSpecQuestion.getQuestionType()))) {
+											newSpecQuestion.getQuestionType())|| 
+											newSpecMaster.isSpecCreatedBySQ())) {
 								
 								newSpecQuestion.setSpecQuestionId(null);
 								newSpecQuestion.setTplSpecMaster(newSpecMaster);
