@@ -7,108 +7,124 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table width="100%">
 		<tr>
-			<td align="right">
-			<p:commandButton immediate="true"
-					value="#{lbl['lbl.btn.back']}" style="float:left;" action="#{dpCustomerServiceBB.navigateToCurrentPage}"
+			<td align="right"><p:commandButton immediate="true"
+					value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{dpCustomerServiceBB.navigateToCurrentPage}"
 					partialSubmit="true" process="@this" /></td>
 		</tr>
 	</table>
-	
-	<p:panel header="#{lbl['lbl.sc.customer.service.info']}" toggleable="true"
-			id="dpCustomerServiceViewInfo">
-			<table width="100%">
+
+	<p:panel header="#{lbl['lbl.sc.dp.customer.service.panel.info']}"
+		toggleable="true" id="dpCustomerServiceViewInfo">
+		<table width="100%">
+
 			<tr>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.ptj.code']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:250px" value="#{dpCustomerServiceBB.managedBean.dpCustServiceSearchBean.orgProfilePtjCode.orgCode}"></p:inputText>
-			</td>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.ptj.name']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:300px" value="#{dpCustomerServiceBB.managedBean.dpCustServiceSearchBean.orgProfilePtjname.orgName}"></p:inputText>
-			</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
+				<td ><p:inputText disabled="true" style="width:750px;"
+						value="#{dpCustomerServiceBB.managedBean.ministryName}"></p:inputText>
+				</td>
+
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
+				<td ><p:inputText disabled="true" style="width:750px;"
+						value="#{dpCustomerServiceBB.managedBean.kampulanPtjName}"></p:inputText>
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td><p:inputText disabled="true" style="width:150px;"
+						value="#{dpCustomerServiceBB.managedBean.dpCustServiceSearchBean.orgProfilePtjCode.orgCode}"></p:inputText>
+						<p:spacer width="10px;"></p:spacer>
+						<p:inputText disabled="true" style="width:590px;"
+						value="#{dpCustomerServiceBB.managedBean.dpCustServiceSearchBean.orgProfilePtjname.orgName}"></p:inputText>
+				</td>
+				
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.document.type']}" /></td>
+				<td ><p:inputText disabled="true" style="width:300px;"
+						value="#{dpCustomerServiceBB.managedBean.dpDcoumentDescription}"></p:inputText>
+				</td>
+
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+				<td ><p:inputText disabled="true" style="width:300px;"
+						value="#{dpCustomerServiceBB.managedBean.docNumber}"></p:inputText>
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" />
+				</td>
+				<td ><p:inputTextarea disabled="true" style="width:750px;margin-bottom:5px;"
+						rows="3" cols="400"
+						value="#{dpCustomerServiceBB.managedBean.docTitle}"></p:inputTextarea>
+				</td>
+
+
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+				<td ><p:inputText disabled="true" style="width:300px;"
+						value="#{dpCustomerServiceBB.getStatusDescById(dpCustomerServiceBB.managedBean.statusId)}"></p:inputText>
+				</td>
 			</tr>
 			<tr>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.kumpulan.ptj']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:250px" value="#{dpCustomerServiceBB.managedBean.kampulanPtjName}"></p:inputText>
-			</td>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.ministry']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:300px" value="#{dpCustomerServiceBB.managedBean.ministryName}"></p:inputText>
-			</td>
-			</tr>
-			<tr>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.document.no']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:250px" value="#{dpCustomerServiceBB.managedBean.docNumber}"></p:inputText>
-			</td>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.document.type']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:300px" value="#{dpCustomerServiceBB.managedBean.dpDcoumentDescription}"></p:inputText>
-			</td>
-			</tr>
-			<tr>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.status']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:250px" value="#{dpCustomerServiceBB.getStatusDescById(dpCustomerServiceBB.managedBean.statusId)}"></p:inputText>
-			</td>
-			<td>
-			<p:outputLabel   value="#{lbl['lbl.sc.document.title']}" />
-			</td>
-			<td>
-			<p:inputText disabled="true" style="width:300px"  value="#{dpCustomerServiceBB.managedBean.docTitle}"></p:inputText>
-			</td>
-			</tr>
-			
-			<tr>
-				<td class="TableFieldLeft" valign="top"><p:outputLabel
-						value=" #{lbl['lbl.sc.customer.service.officer.name']}" /></td>
-				<td colspan="3">
-					<table style="width: 610px">
+				<td><p:outputLabel
+						value=" #{lbl['lbl.sc.customer.service.assign.task']}" /></td>
+				<td>
+					<table style="width: 750px">
 						<tr>
-							<td><p:dataTable id="dpofficerInfoName" var="customerServiceOfficers"
-							value="#{dpCustomerServiceBB.managedBean.customerServiceEntity}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							<td><p:dataTable id="dpofficerInfoName"
+									var="customerServiceOfficers"
+									value="#{dpCustomerServiceBB.managedBean.customerServiceEntity}"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetofficer" rowIndexVar="index">
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
-									<p:column style="width:40%;white-space:normal;"
-										headerText="#{lbl['lbl.sc.status']}">
-										<h:outputText value="#{customerServiceOfficers.statusDesc}" />
-									</p:column>
 
+									<p:column style="width:40%;white-space:normal;"
+										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
+										
+												<h:outputText
+													value="#{lbl['lbl.sc.customer.service.supplier.name']}" rendered="#{customerServiceOfficers.reassignType eq '9' or customerServiceOfficers.reassignType eq '10'}" />
+											
+												<h:outputText value="#{customerServiceOfficers.officerName}" rendered="#{customerServiceOfficers.reassignType ne '9' and  customerServiceOfficers.reassignType ne '10'}"/>
+											
+									</p:column>
 									<p:column style="width:18%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.document.type']}">
 										<h:outputText value="#{customerServiceOfficers.documentType}" />
 									</p:column>
 
-									<p:column style="width:40%;white-space:normal;"
-										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
-										<h:outputText value="#{customerServiceOfficers.officerName}" />
+                                    <p:column style="width:15%;"
+										headerText="#{lbl['lbl.sc.document.no']}">
+										<h:outputText value="#{customerServiceOfficers.documentNum}" />
 									</p:column>
 
+
+									<p:column style="width:25%;white-space:normal;"
+										headerText="#{lbl['lbl.sc.status']}">
+										<h:outputText value="#{customerServiceOfficers.statusDesc}" />
+									</p:column>
 
 								</p:dataTable></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
-			
-			</table>
+
+		</table>
 	</p:panel>
 </ui:composition>

@@ -91,6 +91,7 @@ public class DPCustomerServiceBackingBean extends SourcingBaseBackingBean<DPCust
 			.getLogger(DPCustomerServiceBackingBean.class);
 	private IPagingDataModel<Object[]> dpCustomerServiceSearchModel = new DPCustomerServiceSearchDataModel();
 	private static final String NAV_DP_CUSTOMER_SERVICE_VIEW="/xhtml/sc/directpurchase/customerservice/dpCustomerServiceView.xhtml";
+	private static final String NAV_DP_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/directpurchase/customerservice/dpCustomerServiceMainView.xhtml";
 	private static final String LOI_LOA_DOC_TYPE="PR";
 	private static final String BPM_SYS_USER="weblogic";
 
@@ -113,6 +114,9 @@ public void dpCustomerServiceSearchAction() throws Exception{
 		throw new EpException(MessageConst.ERROR_760443);
 	}
 	
+	if( StringUtils.isBlank(dpCustomerService.getDocumentType()) || StringUtils.isEmpty(dpCustomerService.getDocumentType())){
+		throw new EpException(MessageConst.ERROR_760444);
+	}
 	dpCustomerServiceSearchModel.reloadData();
 	}finally{
 		
@@ -363,9 +367,12 @@ try{
     	 	reqDTO.setTaskId(worklistItem.getTaskId());
     	 	resDTO = getBpmSO().getTaskDetails(reqDTO);
     	 PmStatusDesc statusDesc=	getPmStatusDesc(resDTO.getDocStatus());
+    	 log.info("display doc numner"+resDTO.getDocNumber());
+    	 custServiceEntity.setDocumentNum(resDTO.getDocNumber());
     	 if(null!=statusDesc){
 			custServiceEntity.setStatusDesc(statusDesc.getStatusName());
 			custServiceEntity.setDocumentType(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, statusDesc.getPmStatus().getDocType()));
+			custServiceEntity.setReassignType(statusDesc.getPmStatus().getReasssignType());
     	 }
 			getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 			
@@ -514,6 +521,20 @@ public SelectItem[] getDocTypeDPCustomerServiceDropdownValues() {
 	SelectItem[] items = getDropdownCodeValuesBySearchBean(
 			ParameterTypeConst.DOCUMENT_TYPES, searchBean);
 	return items;
+}
+
+/**
+ *navigate to CustomerService search page.
+ *
+ * 
+ */
+public void preRenderView(){
+	log.info("DP customer service preRenderView");
+	renewSesionObject();
+	FacesContext fc = FacesContext.getCurrentInstance();
+	fc.getApplication()
+	.getNavigationHandler()
+	.handleNavigation(fc, null, NAV_DP_CUSTOMER_SERVICE_SEARCH_VIEW);
 }
 
 /**

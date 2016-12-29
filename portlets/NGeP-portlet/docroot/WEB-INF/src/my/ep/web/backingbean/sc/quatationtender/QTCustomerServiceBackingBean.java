@@ -93,6 +93,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	
 	private IPagingDataModel<ScQt> qtCustomerServiceDataModel = new QTCustomerServiceSearchQtDataModel();
 	private static final String NAV_QT_CUSTOMER_SERVICE_VIEW="/xhtml/sc/qtcustomerservice/qtCustomerServiceViewMain.xhtml";
+	private static final String NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/qtcustomerservice/qtcustomerServiceSearchview.xhtml";
 	private static final String BPM_SYS_USER="weblogic";
 	
 	
@@ -212,9 +213,12 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	    	 	reqDTO.setTaskId(worklistItem.getTaskId());
 	    	 	resDTO = getBpmSO().getTaskDetails(reqDTO);
 	    	 PmStatusDesc statusDesc=	getPmStatusDesc(resDTO.getDocStatus());
+	    	 log.info("display doc numner"+resDTO.getDocNumber());
+	    	 custServiceEntity.setDocumentNum(resDTO.getDocNumber());
 	    	 if(null!=statusDesc){
 				custServiceEntity.setStatusDesc(statusDesc.getStatusName());
 				custServiceEntity.setDocumentType(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, statusDesc.getPmStatus().getDocType()));
+				custServiceEntity.setReassignType(statusDesc.getPmStatus().getReasssignType());
 	    	 }
 				getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 				/*this.getManagedBean().setOfficerName(userIds.toString());
@@ -565,6 +569,19 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		}
 	}
 
+	/**
+	 *navigate to CustomerService search page.
+	 *
+	 * 
+	 */
+	public void preRenderView(){
+		log.info("QT customer service preRenderView");
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+		.getNavigationHandler()
+		.handleNavigation(fc, null, NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW);
+	}
 
 	/**
 	 * @return the qtCustomerServiceDataModel
