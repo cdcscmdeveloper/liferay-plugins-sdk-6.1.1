@@ -10,6 +10,11 @@
 		id="smWorkShopDtPanel">
 		
 		<br />
+		
+		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}">
+			<h:outputText style="float:left" value="#{lbl['lbl.sm.workShop.notApplicable']}" />
+		</p:outputPanel>
+		
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
