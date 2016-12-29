@@ -37,6 +37,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -69,6 +70,7 @@ import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -808,7 +810,13 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 								"pmParameter.parameterCode",
 								SearchOperator.OPERATOR_IN.value(),
 								tempDocTypeList));
-				return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+				List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+				for(PmParameterDesc parameterDesc :  parameterDescs){
+					if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+						parameterDesc.setCodeName(ResourceBundleUtils.getMessage("lbl.rpt.drpdown.contractOrderlbl",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+					}
+				}
+				return parameterDescs;
 			}
 			
 		}
