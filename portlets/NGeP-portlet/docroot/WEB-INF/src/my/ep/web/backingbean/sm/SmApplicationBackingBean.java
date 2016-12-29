@@ -2500,7 +2500,8 @@ public class SmApplicationBackingBean extends
 			}
 			rqDto.setCertBodyIds(certIds);
 		}
-
+		
+		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true);
 		rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
 				.getSupplierType());
 		rqDto.setCompanyTypeCode(getManagedBean().getSmAppl().getSmSupplier()
