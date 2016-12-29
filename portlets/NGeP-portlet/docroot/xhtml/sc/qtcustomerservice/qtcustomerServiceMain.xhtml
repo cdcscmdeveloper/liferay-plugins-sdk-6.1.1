@@ -9,12 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="qtcustomerServiceSearchMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
-		
-		 <ui:include src="qtCustomerServiceSearchInclude.xhtml"></ui:include>
-		  <ui:include src="qtCustomerServiceSearchResult.xhtml"></ui:include>
-		
-		<ac:lovPopup />
+
+		<h:panelGroup id="qtCustomerServicePrerenderView">
+			<f:event listener="#{qtCustomerServiceBB.preRenderView}"
+				type="preRenderView" />
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>

@@ -8,7 +8,6 @@
 	
 	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="dpCustomerServiceSearchPanel">
-				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.search.instruction']}" escape="false" />
 			<table width="1100px">
 				
 				<tr>
@@ -52,7 +51,7 @@
 					<td colspan="3"><p:selectOneMenu
 							value="#{dpCustomerServiceBB.managedBean.dpCustServiceSearchBean.documentType}"
 							style="width:840px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sc.document.type']}" required="true">
+							label="#{lbl['lbl.sc.document.type']}">
 							<f:selectItems
 								value="#{dpCustomerServiceBB.getDocTypeDPCustomerServiceDropdownValues()}" />
 								<p:ajax update="@([id$=dpcustomerServiceStatusId])" process="@this"/>

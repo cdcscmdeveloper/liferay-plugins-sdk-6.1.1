@@ -8,12 +8,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	
+	
 	<ui:define name="contentSection">
-		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
-		
-		<ui:include src="dpCustomerServiceSearchInclude.xhtml"></ui:include>
-		<ui:include src="dpCustomerServiceSearchResult.xhtml"></ui:include>
-		<ac:lovPopup />
+
+		<h:panelGroup id="dpCustomerServicePrerenderView">
+			<f:event listener="#{dpCustomerServiceBB.preRenderView}"
+				type="preRenderView" />
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>
