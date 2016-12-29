@@ -113,6 +113,7 @@ import com.liferay.portal.model.User;
 @RequestScoped
 public class PurchaseInquiryBackingBean extends
 		SourcingBaseBackingBean<PurchaseInquiryManagedBean> {
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger

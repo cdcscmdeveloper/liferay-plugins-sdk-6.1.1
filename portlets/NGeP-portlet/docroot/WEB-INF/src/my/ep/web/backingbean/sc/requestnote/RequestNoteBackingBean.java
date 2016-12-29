@@ -144,7 +144,8 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "requestNoteBackingBean")
 @RequestScoped
 public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteManagedBean> {
-	
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(RequestNoteBackingBean.class);
 	
