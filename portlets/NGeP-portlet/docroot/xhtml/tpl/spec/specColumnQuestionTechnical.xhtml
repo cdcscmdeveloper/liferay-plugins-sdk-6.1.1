@@ -76,7 +76,7 @@
 			rendered="#{isQuestionTypeItem}" />
 		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 	</p:column>
-	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
+	<p:column style="width:125px;" rendered="#{isSpecificationReq and !isSqSpec}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText

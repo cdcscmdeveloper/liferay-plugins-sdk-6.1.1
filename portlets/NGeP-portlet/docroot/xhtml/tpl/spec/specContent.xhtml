@@ -60,6 +60,7 @@
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
+			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer}">
 				<table style="width:100%">
@@ -92,7 +93,7 @@
 					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
 				</c:if>
 				
-				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq))}">
+				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) or isSqSpec}">
 					<ac:lovPopup />
 				</c:if>
 				
@@ -115,14 +116,14 @@
 					<ui:param name="isValidationReq" value="#{param[p:component(delBtnClientId)]==null}" />
 					<ui:param name="isQuestion" value="true" />
 					
-					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) and editable}">
+					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec) and editable}">
 						<ui:decorate template="specColumnQuestion.xhtml" />
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
 					</c:if>
 					<c:if test="#{isContentTypeUpdateSpec and isSpecTypeTechnical and editable}">
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
-					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq and editable}">
+					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq and editable and !isSqSpec}">
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 						<ui:decorate template="specColumnQuestionFinancial.xhtml" />
 					</c:if>
