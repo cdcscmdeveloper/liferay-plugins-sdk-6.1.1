@@ -39,6 +39,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -100,6 +101,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private boolean showFieldChanges;
 	private SmAppl latestAppl;
+	private SmAppl latestRejectedAppl;
 	private SmAssociateCompany latestAssocCompany;
 	private SmAssociationBody latestProfBody;
 	private SmPersonnel latestPersonnel;
@@ -475,6 +477,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String popupAction;
 	private String rejectReasonsMsg;
 	private String applDeclarationAlertMsg;
+	private SmApplInquiry poToSupplierInquiry;
+	private List<SmApplInquiry> poSupplierInquiryHistory;
 	private Long approvedStatusId;
 
 	private BigDecimal currBumiEquity;
@@ -491,6 +495,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Object cloneObject;
 
 	private SmSectionEditorVO editVO;
+	private SmSectionEditorVO supplierEditVO;
 	private List<SmPaymentDetailsVO> paymentDetailsVOList;
 	private BigDecimal totalPaymentAmount;
 	private BigDecimal gstAmount;
@@ -615,6 +620,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultAddr.setPmState(new PmState());
 
 		editVO = new SmSectionEditorVO();
+		supplierEditVO = new SmSectionEditorVO();
 
 		selectedCategories = new ArrayList<SmSupplierCategory>();
 		selectedBranch = new SmSupplierBranch();
@@ -3878,5 +3884,38 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedPrevShareHolder(SmPersonnel selectedPrevShareHolder) {
 		this.selectedPrevShareHolder = selectedPrevShareHolder;
+	}
+
+	public SmApplInquiry getPoToSupplierInquiry() {
+		return poToSupplierInquiry;
+	}
+
+	public void setPoToSupplierInquiry(SmApplInquiry poToSupplierInquiry) {
+		this.poToSupplierInquiry = poToSupplierInquiry;
+	}
+
+	public List<SmApplInquiry> getPoSupplierInquiryHistory() {
+		return poSupplierInquiryHistory;
+	}
+
+	public void setPoSupplierInquiryHistory(
+			List<SmApplInquiry> poSupplierInquiryHistory) {
+		this.poSupplierInquiryHistory = poSupplierInquiryHistory;
+	}
+
+	public SmSectionEditorVO getSupplierEditVO() {
+		return supplierEditVO;
+	}
+
+	public void setSupplierEditVO(SmSectionEditorVO supplierEditVO) {
+		this.supplierEditVO = supplierEditVO;
+	}
+
+	public SmAppl getLatestRejectedAppl() {
+		return latestRejectedAppl;
+	}
+
+	public void setLatestRejectedAppl(SmAppl latestRejectedAppl) {
+		this.latestRejectedAppl = latestRejectedAppl;
 	}
 }
