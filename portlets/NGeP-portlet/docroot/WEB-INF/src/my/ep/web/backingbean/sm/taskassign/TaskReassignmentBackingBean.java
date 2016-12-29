@@ -1270,5 +1270,17 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	public void setUserListDataModel(PagingDataModel<SmPersonnel> userListDataModel) {
 		this.userListDataModel = userListDataModel;
 	}
+	
+	/**
+	 * Get Role description by role code.
+	 * 
+	 * @param roleCode
+	 *            the role code.
+	 * @return role description
+	 */
+	public String getRoleDescByRoleCode(String roleCode) {
+		log.info("getRoleDescByRoleCode");
+		return PmCommonUtil.getRoleDescByRoleCode(roleCode);
+	}
 
 }
