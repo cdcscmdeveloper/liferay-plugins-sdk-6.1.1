@@ -50,50 +50,54 @@
 					<table style="width: 100%">
 							<tr>
 							
-									<td class="columnWidth20">
-	     	            			 	<p:outputLabel  value="#{lbl['lbl.ct.ministry.name']}" style="width:100%"/>
+									<td class="columnWidth15">
+	     	            			 	<p:outputLabel  value="#{lbl['lbl.ct.ministry']}" style="width:100%"/>
 									</td> 
 									<td>
 											<p:inputTextarea id="MinistryName" autoResize="false" maxlength="1000"
-												 disabled="true" rows="1" style="width:600px; margin-bottom:5px;"  
+												 disabled="true" rows="1" style="width:800px; margin-bottom:5px;"  
 												value="#{customerServiceBackingBean.managedBean.ministryName}" />
                 		      		 </td>
                 		   </tr>
 						  
 						  	<tr>		
-									  <td class="columnWidth20">
-											<p:outputLabel id="PtjKumpulan" value="#{lbl['lbl.pm.org.kptjName']}" />
+									  <td class="columnWidth15">
+											<p:outputLabel id="PtjKumpulan" value="#{lbl['lbl.ct.jabatan']}" />
 										</td> 
 										<td>
 								  			    <p:inputTextarea id="KumpulanName" autoResize="false" maxlength="1000"
-												 disabled="true" rows="1" style="width:600px; margin-bottom:5px;"  
+												 disabled="true" rows="1" style="width:800px; margin-bottom:5px;"  
 												value="#{customerServiceBackingBean.managedBean.kumpulanPtjName}" />
 			  							</td>
 			  				</tr>
 			  				<tr>
-			  							<td class="columnWidth20">
+			  							<td class="columnWidth15">
 												<p:outputLabel id="ptjCode" value="#{lbl['lbl.ct.ptj']}" />
 										</td> 
 										<td>
+										 <p:inputTextarea id="PtjName" autoResize="false" maxlength="100"
+												 disabled="true" rows="1" style="width:120px; margin-bottom:5px;"  
+												value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgCode}" />
+												<p:spacer width="5"/>
 										       <p:inputTextarea id="PtjName" autoResize="false" maxlength="1000"
-												 disabled="true" rows="2" style="width:600px; margin-bottom:5px;"  
+												 disabled="true" rows="1" style="width:665px; margin-bottom:5px;"  
 												value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgName}" />
 										</td>
 							</tr>
 			    	
 			    			<tr>
-									<td class="columnWidth20">
+									<td class="columnWidth15">
 										<p:outputLabel for="contractName" value="#{lbl['lbl.ct.contract.title']}" />
 									</td>
 									<td colspan="3">
 										<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-											disabled="true" rows="2" style="width:600px; margin-bottom:5px;"  
+											disabled="true" rows="2" style="width:800px; margin-bottom:5px;"  
 											value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContract.contractName}" />
 									</td>					
 						   </tr>
 						
 							<tr>
-							   <td class="columnWidth20">
+							   <td class="columnWidth15">
 										<p:outputLabel id="startDate" value="#{lbl['lbl.ct.customer.service.start.date']}" />
 									</td>
 							   <td>
@@ -106,13 +110,13 @@
 													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  								</p:inputText>
 								</td>
-								<td class="columnWidth20"></td>
-								<td class="columnWidth20"></td>
+								<td class="columnWidth15"></td>
+								<td class="columnWidth15"></td>
 								<td align="right"  class="columnWidth30">
 									<p:outputLabel id="endDate" value="#{lbl['lbl.ct.customer.service.end.date']}"  />
 								</td>
 								<td class="columnWidth20">
-										<p:inputText for="endDate" disabled="true" style="width:100px;"
+										<p:inputText for="endDate" disabled="true" style="width:102px;"
 												value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContractValue.expDate}">
 												<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  							</p:inputText>
@@ -122,19 +126,29 @@
                 		</td>
                 	</tr>
                 	  <tr>
-							   <td class="columnWidth20"></td>
+                	  <td><p:outputLabel value="#{lbl['lbl.ct.contract.status']}" /></td>
+                	  <td> <table style="width:610px">
+									           <tr>
+														<td><p:inputText style="width:598px"></p:inputText></td>
+											</tr>
+									</table>
+							</td>
+                	  </tr>
+                	  <br/>
+                	  <tr>
+							   <td class="columnWidth15">   <br/>	<p:outputLabel value="#{lbl['lbl.ct.customer.service.task']}" /></td>
 							  		 <td>
 							  				 <table style="width:610px">
 									           <tr>
-														<td><br/>
-														         #{lbl['lbl.ct.customer.service.table.officer']}<BR/>
+														<td>
+														       <br/>
                 												<p:dataTable id="officerInfoName" var="officerInfo"  widgetVar="tableOfficerWidget"
        					 											  value="#{customerServiceBackingBean.managedBean.customerServiceEntity}"   rowIndexVar="index">
                 	        												<p:column style="width:2%" headerText="No.">
-				                  													 <h:outputText value="#{index+1}" style="float:left;"/>
+				                  													 <h:outputText value="#{index+1}." style="float:left;"/>
 			               	  												</p:column>
 			               	  												 <p:column style="width:45%;white-space:normal;" 
-			               	  												     headerText="#{lbl['lbl.ct.customer.service.table.officer.name']}" >
+			               	  												     headerText="#{lbl['lbl.ct.customer.service.table.officer']}" >
 				                											  	  <h:outputText value="#{officerInfo.officerName}"  style="float:left;"/>
 			               													  </p:column>
 			               		  											 <p:column style="width:53%;white-space:normal;" 
@@ -145,15 +159,20 @@
                 									</td>
                 								</tr>
 				                    	</table>
+				                    		<br/>
 				                   </td>
 				               </tr>
 				           </table>
 				</h:panelGroup>
-				<p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
+			</p:panel>
+		
+				<p:panel id="viewAgencyPanel" toggleable="true" 
+    		   		header="#{lbl['lbl.ct.agency.information']}" collapsed="false" toggleSpeed="500" >
+					<p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
        					value="#{customerServiceBackingBean.managedBean.ctContractVer.ctAgencies}"   rowIndexVar="index"  >
          		  		 <ac:paginator for="tableAgencyDetails"/>
          		  		  	   	<p:column style="width:2%" headerText="No.">
-				                  	 <h:outputText value="#{index+1}" style="float:left;"/>
+				                  	 <h:outputText value="#{index+1}." style="float:left;"/>
 			               	  	</p:column>
 	      	               	  		<p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.ministry']}">
 				                 	   <h:outputText value="#{agencyData.ministryName}" style="float:left;"/>
