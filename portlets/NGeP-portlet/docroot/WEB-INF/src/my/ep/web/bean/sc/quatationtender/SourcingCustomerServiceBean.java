@@ -23,6 +23,8 @@ public class SourcingCustomerServiceBean implements Serializable{
 	private String documentType;
 	private String officerName;
 	private String statusDesc;
+	private Integer reassignType;
+	private String documentNum;
 	/**
 	 * @return the documentType
 	 */
@@ -58,6 +60,30 @@ public class SourcingCustomerServiceBean implements Serializable{
 	 */
 	public void setStatusDesc(String statusDesc) {
 		this.statusDesc = statusDesc;
+	}
+	/**
+	 * @return the reassignType
+	 */
+	public Integer getReassignType() {
+		return reassignType;
+	}
+	/**
+	 * @param reassignType the reassignType to set
+	 */
+	public void setReassignType(Integer reassignType) {
+		this.reassignType = reassignType;
+	}
+	/**
+	 * @return the documentNum
+	 */
+	public String getDocumentNum() {
+		return documentNum;
+	}
+	/**
+	 * @param documentNum the documentNum to set
+	 */
+	public void setDocumentNum(String documentNum) {
+		this.documentNum = documentNum;
 	}
 	
 
