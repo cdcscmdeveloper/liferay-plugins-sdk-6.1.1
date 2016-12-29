@@ -1792,8 +1792,12 @@ public class TemplateSpecBackingBean extends
 			for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
 				TplSpecQuestion specQuestion = tplSpecAnswer
 						.getTplSpecQuestion();
-				String priceType = specQuestion.getClPriceTypeCode()
-						.getParameterCode();
+				
+				String priceType = null;
+				if(specQuestion.getClPriceTypeCode()!= null){
+					 priceType = specQuestion.getClPriceTypeCode()
+							.getParameterCode();
+				}
 				BigDecimal quantity = null;
 				
 				if (tplSpecAnswer.getTplSpecZoneQty() != null) {
