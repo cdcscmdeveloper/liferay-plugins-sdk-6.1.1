@@ -35,6 +35,7 @@ public class SmSideMenuIconUtil {
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
+				bean.getSupplierEditVO().setSuppEditCompBasic(false);
 				if (step1CompanyBasicHasDifference(
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
@@ -76,6 +77,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
+				bean.getSupplierEditVO().setSuppEditAssocProj(false);
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
@@ -117,6 +119,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
+				bean.getSupplierEditVO().setSuppEditPersonnel(false);
 				if (step3PersonnelHasDifference(true,
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
@@ -158,6 +161,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
+				bean.getSupplierEditVO().setSuppEditEquity(false);
 				if (step4EquityHasDifference(true,
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
@@ -199,6 +203,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
+				bean.getSupplierEditVO().setSuppEditBank(false);
 				if (step5BankHasDifference(true, bean.getLatestRejectedAppl(),
 						bean.getSmAppl()) && bean.getSmAppl().isResubmit()) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -239,6 +244,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCategory(false);
+				bean.getSupplierEditVO().setSuppEditCategory(false);
 				if (step6CatCodeHasDifference(true,
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
@@ -280,6 +286,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditFacility(false);
+				bean.getSupplierEditVO().setSuppEditFacility(false);
 				if (step7FacilityHasDifference(true,
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
@@ -321,6 +328,7 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquipment(false);
+				bean.getSupplierEditVO().setSuppEditEquipment(false);
 				if (step8EquipmentHasDifference(true,
 						bean.getLatestRejectedAppl(), bean.getSmAppl())
 						&& bean.getSmAppl().isResubmit()) {
