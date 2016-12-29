@@ -133,7 +133,15 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.application.no']} (#{lbl['lbl.sm.companyname']})" disabledSelection="#{tasks.notAllowedToTick}">
-					<br /><p:outputLabel value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /><br />
+					<br />
+						<table style="width: 100%;">
+							<tr>
+								<td style="white-space: nowrap; float: left;">
+								    <p:outputLabel value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" />
+								</td>
+							</tr>
+						</table>
+					<br />
 					
 					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
 						<table style="width: 100%">
