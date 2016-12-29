@@ -25,7 +25,7 @@
 			<h:outputText value="#{question.clItem}" escape="false" rendered="#{isQuestionTypeItem}" />
 		</c:if>
 	</p:column>
-	<p:column rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}"> 
+	<p:column rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }"> 
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.specification']}"/>

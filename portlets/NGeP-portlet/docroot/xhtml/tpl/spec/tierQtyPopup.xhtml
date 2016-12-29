@@ -27,14 +27,14 @@
 					action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 					oncomplete="tierQtyWidget.paginator.endLink.click();"
 					update="tierQtyTbl"
-					rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}"
+					rendered="#{editable and ((isSpecificationReq and (isSpecTypeTechnical or isSqSpec)) or !isSpecificationReq)}"
 					title="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 					partialSubmit="true"
 					action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
 					update="tierQtyTbl"
-					rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}">
+					rendered="#{editable and ((isSpecificationReq and (isSpecTypeTechnical  or isSqSpec)) or !isSpecificationReq)}">
 					<f:setPropertyActionListener target="#{templateSpecBean.selectAll}"
 						value="#{false}" />
 				</p:commandButton>
@@ -49,7 +49,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					partialSubmit="true" process="@this" update="@this"
 					action="#{templateSpecBackingBean.tierQtyCancelAction(templateSpecBean)}"
-					oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable and (!isSpecificationReq or isSpecTypeTechnical)}" />
+					oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable and ((!isSpecificationReq or isSpecTypeTechnical) or isSqSpec)}" />
 			</div>
 		</c:if>
 	</p:dialog>
