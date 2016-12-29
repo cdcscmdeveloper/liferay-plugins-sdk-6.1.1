@@ -32,7 +32,7 @@
 			<tr>
 				<th width="15%"><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /> </th>
 				<td width="60%">
-						<p:inputText styleClass="ppDisplayTextL"
+						<p:inputText styleClass="ppDisplayTextL" readonly="true"
 							value="#{supplierTaskReassignmentBackingBean.managedBean.smSupplier.companyName}"
 							size="60" >
 						</p:inputText></td>
@@ -60,7 +60,7 @@
 						value="#{lbl['lbl.sm.worker.icno']}" rendered="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null}"/> </th>
 				<td width="60%">
 						<p:inputText styleClass="ppDisplayTextL" rendered="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null}"
-							value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.identificationNo}"
+							readonly="true" value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.identificationNo}"
 							size="60" >
 						</p:inputText></td>
 
@@ -71,7 +71,7 @@
 						value="#{lbl['lbl.sm.bankDtls.signPos']}" rendered="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null}"/> </th>
 				<td width="60%">
 						<p:inputText  styleClass="ppDisplayTextL" rendered="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null}"
-							value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.designation}"
+							readonly="true" value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.designation}"
 							size="60" >
 						</p:inputText></td>
 
@@ -82,7 +82,7 @@
 						value="#{lbl['lbl.sm.person.composition.eprole']}" rendered="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null}"/> </th>
 				<td width="60%">
 						<p:inputText  styleClass="ppDisplayTextL" rendered="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null}"
-							value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.epRole}"
+							readonly="true" value="#{supplierTaskReassignmentBackingBean.getRoleDescByRoleCode(supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.epRole)}"
 							size="60" >
 						</p:inputText></td>
 
