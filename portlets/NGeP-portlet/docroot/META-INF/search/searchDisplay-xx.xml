@@ -2145,7 +2145,7 @@
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="epRole" />
+					<property name="methodName" value="supplierTaskReassignmentBackingBean.getRoleDescByRoleCode(entity.epRole)" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.userprofile.eprole" />

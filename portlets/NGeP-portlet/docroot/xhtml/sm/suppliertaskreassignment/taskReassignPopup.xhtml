@@ -67,7 +67,7 @@
 			    	#{user.designation}
 		        </p:column>
 		        <p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}">  
-			    	#{user.epRole}
+			    	#{supplierTaskReassignmentBackingBean.getRoleDescByRoleCode(user.epRole)}
 		        </p:column>
 
 				</p:dataTable>
