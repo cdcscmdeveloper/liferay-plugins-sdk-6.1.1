@@ -53,16 +53,20 @@ public class SmFieldChangeUtil {
 						.getSerializedApplicationByFilePathName(latestRejectedAppl
 								.getSupplierSerFile());
 				if (applRevDTO == null) {
-					bean.setLatestAppl(latestRejectedAppl);
+					bean.setLatestRejectedAppl(latestRejectedAppl);
 				} else {
-					bean.setLatestAppl(applRevDTO.getSmAppl());
+					bean.setLatestRejectedAppl(applRevDTO.getSmAppl());
 				}
-			} else {
-				mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
-				bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()
-						.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
-						.getSmAppl());
+				bean.getLatestRejectedAppl().setHqFacility(
+						SmApplicationUtil.getHqFacilityByAppl(bean
+								.getLatestRejectedAppl()));
+				setApplTableListChangeStatus(bean.getLatestRejectedAppl(),
+						bean.getSmAppl());
 			}
+			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
+			bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
+					.getSmAppl());
 			bean.getLatestAppl()
 					.setHqFacility(
 							SmApplicationUtil.getHqFacilityByAppl(bean
