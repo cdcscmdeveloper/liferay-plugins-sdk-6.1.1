@@ -2505,6 +2505,16 @@ public class SmApplicationBackingBean extends
 				.getSupplierType());
 		rqDto.setCompanyTypeCode(getManagedBean().getSmAppl().getSmSupplier()
 				.getBusinessType());
+		rqDto.setCompanyInfoChanged(getManagedBean().getSupplierEditVO()
+				.isSuppEditCompBasic());
+		rqDto.setAsscProjChanged(getManagedBean().getSupplierEditVO()
+				.isSuppEditAssocProj());
+		rqDto.setCapitalEquityChanged(getManagedBean().getSupplierEditVO()
+				.isSuppEditEquity());
+		rqDto.setPersonnelBranchChanged(getManagedBean().getSupplierEditVO()
+				.isSuppEditPersonnel());
+		rqDto.setBankInfoChanged(getManagedBean().getSupplierEditVO()
+				.isSuppEditBank());
 		DocumentResDTO rsDTO = null;
 		rsDTO = retrieveSupportingDocumentList(rqDto);
 
