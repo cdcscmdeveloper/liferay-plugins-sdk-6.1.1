@@ -79,6 +79,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1048,7 +1049,7 @@ public class SimpleQuoteBackingBean extends
 		CmItem cmItem = null;
 		PmUom uom = null;
 		String ItemName = "";
-		String itemSpec = "";
+		
 		// check flag for panel item or non contract item
 		if (ctPanelItem != null) {
 			if (ctPanelItem.getScRequestItem() != null) {
@@ -1067,7 +1068,6 @@ public class SimpleQuoteBackingBean extends
 				if (ctPanelItem.getItemCategoryId().getParameterCode()
 						.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 					ItemName = ctPanelItem.getItemName();
-					itemSpec = ctPanelItem.getSpecification();
 				}
 				uom = ctPanelItem.getPmUom();
 			}
@@ -1134,7 +1134,7 @@ public class SimpleQuoteBackingBean extends
 						specQuestion.setCmItem(cmItem);
 						specQuestion.setCtPanelItem(ctPanelItem);
 						specQuestion.setClItem(ItemName);
-						specQuestion.setClSpecDetail(itemSpec);
+						addSpecficationQuestions(ctPanelItem, serviceTpl, tplSpecQuestions);
 					}
 				} else{
 					serviceTpl.setCtPanelItem(ctPanelItem);
@@ -1179,7 +1179,8 @@ public class SimpleQuoteBackingBean extends
 							prodQuestion.setCmItem(cmItem);
 							prodQuestion.setCtPanelItem(ctPanelItem);
 							prodQuestion.setClItem(ItemName);
-							prodQuestion.setClSpecDetail(itemSpec);
+							setUserDetails(prodQuestion);
+							addSpecficationQuestions(ctPanelItem, prodTpl, productQuestions);
 						}
 					}
 				} else {
@@ -3953,7 +3954,8 @@ public class SimpleQuoteBackingBean extends
 				TemplateSpecResDTO resDTO = getTemplateSpecSO()
 						.getTemplateMaster(reqDTO);
 				cloneSpecMaster = resDTO.getSpecMaster();
-
+				cloneSpecMaster.setSpecCreatedBySQ(true);
+				
 				// product Tpl Spec master
 				if (ParameterConst.SQ_ITEM_LIST_PRODUCT
 						.equals(productOrService)) {
@@ -6696,5 +6698,24 @@ public class SimpleQuoteBackingBean extends
 		}
 		
 		return null;
+	}
+	
+	private void addSpecficationQuestions(CtPanelItem panelItem,
+			TplSpecMaster specMaster, List<TplSpecQuestion> allquestionsList) {
+		
+		List<CtPanelItemSpec> panelItemSpecs = panelItem.getCtPanelItemSpecs();
+		if (CollectionUtils.isNotEmpty(panelItemSpecs)) {
+			int size = panelItemSpecs.size();
+			for (int i = 0; i < size; i++) {
+				new TemplateSpecBackingBean().addQuestion(
+						new TemplateSpecBean(), specMaster, allquestionsList,
+						allquestionsList.size() - 1,
+						TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
+				CtPanelItemSpec itemSpec = panelItem.getCtPanelItemSpecs().get(i);
+				TplSpecQuestion tplSpecSpecifications = allquestionsList.get(i + 1);
+				tplSpecSpecifications.setClSpecDetail(itemSpec.getSpecification());
+				setUserDetails(tplSpecSpecifications);
+			}
+		}
 	}
 }
