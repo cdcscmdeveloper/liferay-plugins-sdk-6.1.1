@@ -21,7 +21,7 @@
 
      <p:panel id="searchPanelId" header="#{lbl['lbl.ct.search']}" toggleable="true"  toggleSpeed="500">
  		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20">
- 		  	 <p:outputLabel value="#{lbl['lbl.ct.ptj']}" styleClass="required" />
+ 		  	 <p:outputLabel value="#{lbl['lbl.ct.ptj.code']}" styleClass="required" />
  			 	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_FL" size="20" readonly="true"
 						headerText="#{lbl['lbl.ct.ptj']}" 
 						value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgCode}"
@@ -30,7 +30,7 @@
 				</ac:lov>
 			<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
            	 <p:inputText  style="width:600px;"
-           	      value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgName}" > </p:inputText>
+           	      value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgName}" disabled="true"> </p:inputText>
      		<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
            	<p:inputText value="#{customerServiceBackingBean.managedBean.contractNo}" style="width:200px;"></p:inputText>
            	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />

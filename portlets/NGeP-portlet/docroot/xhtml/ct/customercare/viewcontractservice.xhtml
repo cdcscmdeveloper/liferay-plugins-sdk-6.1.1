@@ -75,7 +75,7 @@
 												<p:outputLabel id="ptjCode" value="#{lbl['lbl.ct.ptj']}" />
 										</td> 
 										<td>
-										 <p:inputTextarea id="PtjName" autoResize="false" maxlength="100"
+										 <p:inputTextarea id="PtjCode" autoResize="false" maxlength="100"
 												 disabled="true" rows="1" style="width:120px; margin-bottom:5px;"  
 												value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgCode}" />
 												<p:spacer width="5"/>
@@ -129,14 +129,17 @@
                 	  <td><p:outputLabel value="#{lbl['lbl.ct.contract.status']}" /></td>
                 	  <td> <table style="width:610px">
 									           <tr>
-														<td><p:inputText style="width:598px"></p:inputText></td>
+														<td><p:inputText style="width:598px" disabled="true"
+														         value="#{customerServiceBackingBean.chkContractStatusType(customerServiceBackingBean.managedBean.status)}"/></td>
+														
 											</tr>
 									</table>
 							</td>
                 	  </tr>
                 	  <br/>
                 	  <tr>
-							   <td class="columnWidth15">   <br/>	<p:outputLabel value="#{lbl['lbl.ct.customer.service.task']}" /></td>
+							   <td class="columnWidth15">   <br/>
+							  <p:outputLabel  id="tasksid"  value="#{lbl['lbl.ct.customer.service.tasks']}" /> </td>
 							  		 <td>
 							  				 <table style="width:610px">
 									           <tr>
