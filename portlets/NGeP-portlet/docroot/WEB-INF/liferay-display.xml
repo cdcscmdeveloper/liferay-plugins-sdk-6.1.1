@@ -30,6 +30,7 @@
 			<portlet id="ctRequestTermination" />
 			<portlet id="ctContractSearch" />
 			<portlet id="ctContractDashBoard" />
+			<portlet id="ctCustomerService" />
 		</category>
 		
 		<!-- Profile Management - START -->
