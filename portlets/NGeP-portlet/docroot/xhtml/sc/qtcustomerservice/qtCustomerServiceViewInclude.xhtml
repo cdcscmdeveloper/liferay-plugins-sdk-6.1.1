@@ -96,7 +96,10 @@
 
 									<p:column style="width:40%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
-										<h:outputText value="#{customerServiceOfficers.officerName}" />
+											<h:outputText
+													value="#{lbl['lbl.sc.customer.service.supplier.name']}" rendered="#{customerServiceOfficers.reassignType eq '9' or customerServiceOfficers.reassignType eq '10'}" />
+											
+												<h:outputText value="#{customerServiceOfficers.officerName}" rendered="#{customerServiceOfficers.reassignType ne '9' and  customerServiceOfficers.reassignType ne '10'}"/>
 									</p:column>
 
 

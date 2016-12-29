@@ -15,32 +15,32 @@
 				rowIndexVar="index" lazy="true" rows="10">
 
 				<ac:paginator for="qtCustomerServiceSearchResult" />
-				<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center">
+				<p:column headerText="#{lbl['lbl.sc.no']}" style="width:4%;text-align:center">
 					<h:outputText value="#{index+1}." />
 				</p:column>
 
 				
 
 				<p:column headerText="#{lbl['lbl.sc.qtn.no']}"
-					style="text-align:center">
+					style="width:16%;">
 					<h:outputText value="#{CustomerServiceQt.qtNo}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.title']}"
-					style="text-align:center;white-space:normal;">
+					style="width:45%;white-space:normal;">
 					<h:outputText value="#{CustomerServiceQt.qtTitle}"/>
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;white-space:normal;">
+				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:30%;white-space:normal;">
 					<h:outputText value="#{qtCustomerServiceBB.getStatusDescById(CustomerServiceQt.qtStatus.statusId)}"/>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:6%;text-align: center;">
+					style="width:5%;text-align: center;">
 					<p:commandLink id="qtcustomerserviceeditQTIcon" action="#{qtCustomerServiceBB.viewDoc(CustomerServiceQt,view.viewId,CustomerServiceQt.qtStatus.statusId)}"
 						partialSubmit="true" process="@this">
 						<h:graphicImage
-							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 							styleClass="tasklist_title1" />
 					</p:commandLink>
 
