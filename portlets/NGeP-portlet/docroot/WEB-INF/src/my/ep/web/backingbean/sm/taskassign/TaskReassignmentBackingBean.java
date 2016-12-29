@@ -692,7 +692,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 
 			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
 					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							ITaskAssignmentSO.class);
 			TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
