@@ -2850,7 +2850,16 @@ public class LOIDetailBackingBean extends
 		context.put("supplierAddress", supplierAddress);
 
 		String title = scLoiLoa.getTitle();
-		title = title.replaceAll("&", "&#38;");
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 		
 		boolean isZonal = Boolean.FALSE;
@@ -4193,7 +4202,18 @@ public class LOIDetailBackingBean extends
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
 
-		context.put("title", scLoiLoa.getTitle());
+		String title=	scLoiLoa.getTitle();
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("title", title);
 		/*context.put("fulfilmentType",
 				getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));*/
 		StringBuilder contractDuration = new StringBuilder();

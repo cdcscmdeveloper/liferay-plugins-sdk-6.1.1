@@ -1426,7 +1426,18 @@ public class LOADetailBackingBean extends
 
 		context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
 		context.put("docNo", "");
-		context.put("title", scLoiLoa.getTitle());
+		String title=scLoiLoa.getTitle();
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("title", title);
 		context.put("supplierName", scLoiLoa.getSupplierName());
 		context.put("loaAmt", amountDF.format(scLoa.getLoaAmt()));
 		context.put("fulfilmentType",
@@ -1554,7 +1565,18 @@ public class LOADetailBackingBean extends
 		context.put("subTitle", headerTitle.toLowerCase()); 
 		
 		// loa title
-		context.put("loaTitle", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
+		String title = scLoiLoa.getTitle();
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
@@ -1872,6 +1894,16 @@ public class LOADetailBackingBean extends
 		}
 		String title = procurementMode != null ? procurementMode + " " + 
 		scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 
 		String userName = "Nama Pembekal";
