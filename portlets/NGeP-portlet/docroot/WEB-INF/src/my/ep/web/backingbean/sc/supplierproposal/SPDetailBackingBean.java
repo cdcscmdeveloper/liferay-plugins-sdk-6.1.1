@@ -3551,7 +3551,15 @@ public class SPDetailBackingBean extends
 				pmOrgProfile.getOrgProfileId(), date);
 		log.info("ptjName" + ptjName);
 		if (scQt != null) {
-			context.put("title", scQt.getQtTitle());
+		String	title=scQt.getQtTitle();
+			if (title == null) {
+				title = "";
+			}
+			title=title.replaceAll("\r\n", "<br />");
+			title=title.replaceAll("&", "&#38;");
+			title=title.replaceAll("<", "&#60;");
+			title=title.replaceAll(">", "&#62;");
+			context.put("title", title);
 		}
 
 		if (pmUser != null) {
@@ -4165,7 +4173,15 @@ public class SPDetailBackingBean extends
 				.getOrgCode());
 		context.put("PTJName", ptjName);
 		context.put("QTNo", scQt.getQtNo());
-		context.put("QTTitle", scQt.getQtTitle());
+		String	title=scQt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("QTTitle", title);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,

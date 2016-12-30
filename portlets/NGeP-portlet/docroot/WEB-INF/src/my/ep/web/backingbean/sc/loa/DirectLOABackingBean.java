@@ -4597,7 +4597,18 @@ public class DirectLOABackingBean extends
 		}
 		String title = procurementMode != null ? procurementMode + " " + 
 				scQt.getQtTitle().toUpperCase() : scQt.getQtTitle().toUpperCase();
-		context.put("title", title);
+				if (title == null) {
+					title = "";
+				}
+				
+				//replace all special characters
+				//title = title.replaceAll("\\W", ""); 
+				title=title.replaceAll("\r\n", "<br />");
+				title=title.replaceAll("&", "&#38;");
+				title=title.replaceAll("<", "&#60;");
+				title=title.replaceAll(">", "&#62;");
+				context.put("title", title);
+		
 
 		String userName = "&#60;supplier user name&#62;";
 		String icNo = "&#60;ic no&#62;";
@@ -4865,7 +4876,18 @@ public class DirectLOABackingBean extends
 		context.put("procurementMode", procurementMode);
 		context.put("s1ors2", procurementMode);
 
-		context.put("title", scQt.getQtTitle().replaceAll("&", "&#38;"));
+		String title=	scQt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("title", title);
 
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
@@ -7010,7 +7032,18 @@ public class DirectLOABackingBean extends
 		context.put("subTitle", headerTitle.toLowerCase()); 
 		
 		// loa title
-		context.put("loaTitle", scQt.getQtTitle().replaceAll("&", "&#38;"));
+		String title=	scQt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());

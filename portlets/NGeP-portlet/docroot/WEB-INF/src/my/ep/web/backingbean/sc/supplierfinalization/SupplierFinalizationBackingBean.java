@@ -2500,8 +2500,18 @@ public class SupplierFinalizationBackingBean extends
 		} finally {
 			orgProfileSO = null;
 		}
+		String title = scQt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
 		
-		context.put("qtTitle", scQt.getQtTitle().toUpperCase());
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("qtTitle", title);
 		String committeeTypeStr = ParameterHelper.getInstance()
 				.getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
 						getManagedBean().getCommitteeType(), SourcingConstants.MY_LOCALE);
