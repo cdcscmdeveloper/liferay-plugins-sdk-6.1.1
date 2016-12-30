@@ -1522,7 +1522,11 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		context.put("title", title.replaceAll("&", "&#38;"));
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("title", title);
 		context.put("qtNo", qt.getQtNo());
 
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
@@ -2280,7 +2284,11 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		context.put("title", title.replaceAll("&", "&#38;"));
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("title", title);
 
 		String estimatedPrice = "";
 		if (qt.getEstimatedAmount() != null) {
@@ -2321,7 +2329,11 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		context.put("title", StringUtil.upperCase(title.replaceAll("&", "&#38;")));
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		context.put("title", StringUtil.upperCase(title));
 		context.put("qtNo", qt.getQtNo());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
@@ -2380,7 +2392,15 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		context.put("qtTitle", title.replaceAll("&", "&#38;"));
+		
+		//replace all special characters
+		//title = title.replaceAll("\\W", ""); 
+		title=title.replaceAll("\r\n", "<br />");
+		title=title.replaceAll("&", "&#38;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		
+		context.put("qtTitle", title);
 
 		StringBuilder openType = new StringBuilder();
 		if (openType != null) {
