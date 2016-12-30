@@ -2500,7 +2500,7 @@ public class SmApplicationBackingBean extends
 			}
 			rqDto.setCertBodyIds(certIds);
 		}
-		
+
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true);
 		rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
 				.getSupplierType());
@@ -9798,10 +9798,13 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMandatoryLicenseDocs(
 				new ArrayList<SmLicenseInfoVO>());
 		SmLicenseInfoVO licenseVO = null;
-		int count = mandatoryLicenseDocs.size() + 1;
+		int count = getManagedBean().getMandatoryDocs().size();
 		for (SmApplSupportDoc doc : mandatoryLicenseDocs) {
 			count++;
 			licenseVO = new SmLicenseInfoVO();
+			licenseVO.setL3(getLicenseCategoryL3(doc.getPmDocument()));
+			licenseVO.setCategoryDesc(getLicenseConcatCategories(doc
+					.getPmDocument()));
 			licenseVO.setLicenseSuppDocs(new ArrayList<SmApplSupportDoc>());
 			licenseVO.getLicenseSuppDocs().add(doc);
 			licenseVO.setCount(count);
@@ -9809,30 +9812,34 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public String getLicenseConcatCategories(PmDocument doc) {
-		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
-		if (!EntityHelper.isCollectionEmpty(doc.getPmDocumentRestrs())) {
-			StringBuilder sb = null;
+	public PmCategoryL3 getLicenseCategoryL3(PmDocument doc) {
+		PmCategoryL3 retVal = null;
+		if (doc != null
+				&& !EntityHelper.isCollectionEmpty(doc.getPmDocumentRestrs())) {
 			for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 				if (tmp.getPmCategoryL3() != null) {
 					if (tmp.getPmCategoryL3().getPmCategoryL2() != null
 							&& tmp.getPmCategoryL3().getPmCategoryL2()
 									.getPmCategoryL1() != null) {
-						sb = new StringBuilder();
-						sb.append(
-								tmp.getPmCategoryL3().getPmCategoryL2()
-										.getPmCategoryL1().getCategoryL1Code()
-										+ tmp.getPmCategoryL3()
-												.getPmCategoryL2()
-												.getCategoryL2Code()
-										+ tmp.getPmCategoryL3()
-												.getCategoryL3Code())
-								.append(" (")
-								.append(tmp.getPmCategoryL3().getCategoryName())
-								.append(")").append(",");
+						retVal = tmp.getPmCategoryL3();
+						break;
 					}
 				}
 			}
+		}
+		return retVal;
+	}
+
+	public String getLicenseConcatCategories(PmDocument doc) {
+		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
+		PmCategoryL3 l3 = getLicenseCategoryL3(doc);
+		if (l3 != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(
+					l3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+							+ l3.getPmCategoryL2().getCategoryL2Code()
+							+ l3.getCategoryL3Code()).append(" (")
+					.append(l3.getCategoryName()).append(")").append(",");
 			if (sb != null && sb.length() > 0) {
 				retVal = sb.toString();
 				if (retVal.endsWith(",")) {

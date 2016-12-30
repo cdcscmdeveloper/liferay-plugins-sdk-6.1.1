@@ -25,19 +25,19 @@
 		<ui:repeat var="mainTable"
 			value="#{backingBean.managedBean.mandatoryLicenseDocs}"
 			varStatus="mainTableStatus">
-			<p:dataTable var="table" id="onlineLicenseTableId"
+			<p:dataTable var="onlineLicenseTable" id="onlineLicenseTableId"
 				value="#{mainTable.licenseSuppDocs}" rowIndexVar="index"
 				style="width:100% !important; table-layout: fixed !important;">
 	
 				<p:columnGroup type="header">
-					<p:row>
-						<ui:param name="categoryName" 
-							value="#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.fullCatcode} 
-								#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.categoryName}" />
-						<p:column
-							headerText="#{lbl['lbl.sm.category']} : (#{empty categoryName ? lbl['lbl.txt.na'] : categoryName})"
-							style="background-color:lightblue !important;text-align: left !important;color:black !important"
-							colspan="5" />
+					<p:row>						
+						<p:column colspan="5"
+							style="background-color:lightblue !important;text-align: left !important;color:black !important">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sm.category']} : "/>
+								<h:outputText value="#{mainTable.categoryDesc}"/>
+							</f:facet>
+						</p:column>
 					</p:row>
 				</p:columnGroup>
 	
@@ -48,8 +48,7 @@
 	
 				<p:column style="width : 55% !important;">
 	
-	
-					<h:outputText value="#{table.pmDocument.docName}"
+					<h:outputText value="#{onlineLicenseTable.pmDocument.docName}"
 						style="float: left;white-space: normal;" />
 					
 					<br />
@@ -58,10 +57,10 @@
 						<tr>
 							<td style="border-style: none !important;">
 								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.no']}" />
-								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{onlineLicenseTable.pmDocument.mandatory}"/>
 							</td>
 							<td style="border-style: none !important;">
-								<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoId" required="#{table.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
+								<p:inputText value="#{onlineLicenseTable.licenseNo}" size="20" id="licenseNoId" required="#{onlineLicenseTable.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
 									<p:ajax process="@this" partialSubmit="true"/>
 								</p:inputText>
 								<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
@@ -71,13 +70,13 @@
 						<tr>
 							<td style="border-style: none !important;">
 								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
-								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{onlineLicenseTable.pmDocument.mandatory}"/>
 							</td>
 							<td style="border-style: none !important;">
 								<p:calendar id="licenseEffDateId"
 									navigator="true" required="#{table.pmDocument.mandatory}" 
 									label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
-									value="#{table.licenseEffDate}"
+									value="#{onlineLicenseTable.licenseEffDate}"
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 									readonlyInput="true" size="10" showOn="button" yearRange="-99:+0" >
 									<p:ajax event="dateSelect" update="licenseExpDateId" process="@this"/>
@@ -88,16 +87,16 @@
 							</td>
 							<td style="border-style: none !important;">
 								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
-								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{onlineLicenseTable.pmDocument.mandatory}"/>
 							</td>
 							<td style="border-style: none !important;">
-								<p:calendar id="licenseExpDateId" disabled="#{empty table.licenseEffDate}"
-									navigator="true" required="#{table.pmDocument.mandatory}"
+								<p:calendar id="licenseExpDateId" disabled="#{empty onlineLicenseTable.licenseEffDate}"
+									navigator="true" required="#{onlineLicenseTable.pmDocument.mandatory}"
 									label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
-									value="#{table.licenseExpDate}"
+									value="#{onlineLicenseTable.licenseExpDate}"
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 									readonlyInput="true" size="10" showOn="button" yearRange="-99:+10" 
-									mindate="#{table.licenseEffDate}">
+									mindate="#{onlineLicenseTable.licenseEffDate}">
 									<p:ajax event="dateSelect" process="@this"/>
 								</p:calendar>
 								<p:message id="licenseExpDateIdMsg"
@@ -111,12 +110,12 @@
 	
 				<p:column rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
 					style="width : 10%;text-align: center  !important;">
-					<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+					<h:outputText rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
 						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
 						style="float: left;white-space: normal;" />
 	
-					<p:commandLink rendered="#{table.pmDocument.download}"
-						action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
+					<p:commandLink rendered="#{onlineLicenseTable.pmDocument.download}"
+						action="#{backingBean.downloadSignatureSuppDoc(onlineLicenseTable.pmDocument.docDefinitionKey)}"
 						update=":form" ajax="false">
 						<p:fileDownload value="#{backingBean.file}" />
 						<p:graphicImage value="/css/images/design/download.png"
@@ -128,23 +127,23 @@
 					<p:commandLink
 						oncomplete="uploadLicenseDialog.show();return false;"
 						process="@this" partialSubmit="true"
-						rendered="#{!table.pmDocument.hardCopyReq}"
+						rendered="#{!onlineLicenseTable.pmDocument.hardCopyReq}"
 						update="@([id$=uploadLicenseDialog])"
-						action="#{backingBean.assignSelectedSupportDoc(table)}">
+						action="#{backingBean.assignSelectedSupportDoc(onlineLicenseTable)}">
 						<p:graphicImage value="/css/images/design/upload.png"
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
 				<p:column style="width : 20%;overflow: hidden !important;">
-					<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+					<h:outputText rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
 						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
 						style="float: left;white-space: normal;" />
 	
 					<p:commandLink ajax="false"
-						value="#{table.smApplDocFiles[0].fileName}"
-						rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
+						value="#{onlineLicenseTable.smApplDocFiles[0].fileName}"
+						rendered="#{not empty onlineLicenseTable.smApplDocFiles and !onlineLicenseTable.pmDocument.hardCopyReq}">
 						<p:fileDownload
-							value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
+							value="#{backingBean.commonDownload(onlineLicenseTable.smApplDocFiles[0].filePath,onlineLicenseTable.smApplDocFiles[0].fileName,onlineLicenseTable.smApplDocFiles[0].fileName)}" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
