@@ -1318,39 +1318,38 @@ public class DirectLOABackingBean extends
 
 			scLoa.setScLoaApproval(scLoaApproval);
 		}
-
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
-			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-			int specQuestions = 0;
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions())) {
-				specQuestions = this.getManagedBean().getProdscQtDoc()
-						.getTplSpecMaster().getTplSpecQuestions().size();
-			}
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getServicescQtDoc().getTplSpecMaster()
-					.getTplSpecQuestions())) {
-				specQuestions += this.getManagedBean().getServicescQtDoc()
-						.getTplSpecMaster().getTplSpecQuestions().size();
-			}
-			if (specQuestions < 1) {
-				throw new EpException(MessageConst.ERROR_760354);
-			}
-		} else {
-			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
-			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
-		}
-
+		
+		// validate questions and item code
+		TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
+		TplSpecMaster serviceSpecMaster = this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
-
+			
+			int specQuestions = 0;
+			if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
+				specQuestions = producSpecMaster.getTplSpecQuestions().size();
+			}
+			if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
+				specQuestions += serviceSpecMaster.getTplSpecQuestions().size();
+			}
+			if (specQuestions < 1) {
+				throw new EpException(MessageConst.ERROR_760354);
+			} else{
+				
+				for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
+					if(null == productQuestion.getCmItem()){
+						throw new EpException("please add item code for product items.");
+					}
+				}
+				for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
+					if(null == serviceQuestion.getCmItem()){
+						throw new EpException("please add citem code for service items.");
+					}
+				}
+			}
+			
 		} else {
 
 			saveProgressivePaymntList();
@@ -1360,6 +1359,14 @@ public class DirectLOABackingBean extends
 					freqScheduleValidation(scQtSchedule);
 				}
 			}
+		}
+
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+		} else {
+			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		}
 
 		if (!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))) {
@@ -2735,25 +2742,30 @@ public class DirectLOABackingBean extends
 	 * information.
 	 */
 	public void deleteTreeNode() {
-
 		List<TreeNode> rootTrees = this.getManagedBean().getZoneTrees();
 
-		// LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 		deleteZonesTreeNodes(rootTrees);
 		TplSpecZoneDtl zoneDtl = null;
 		// zone details
-		if (!rootTrees.isEmpty()) {
+		if (rootTrees.isEmpty()) {
 			getManagedBean()
 					.getScQt()
 					.getScQtSupplierCriteria()
 					.getQtZoneCriterias()
-					.setTplSpecZoneDtls(
-							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
+					.setTplSpecZoneDtls(new ArrayList<TplSpecZoneDtl>());
+		} else{
+			getManagedBean()
+			.getScQt()
+			.getScQtSupplierCriteria()
+			.getQtZoneCriterias()
+			.setTplSpecZoneDtls(
+					convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
 		}
 		TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc()
 				.getTplSpecMaster();
 		producSpecMaster.setTplSpecZone(getManagedBean().getScQt()
 				.getScQtSupplierCriteria().getQtZoneCriterias());
+		
 		TplSpecMaster serviceSpecMaster = this.getManagedBean()
 				.getServicescQtDoc().getTplSpecMaster();
 
