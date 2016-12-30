@@ -27,15 +27,15 @@
 				style="width:100% !important; table-layout: fixed !important;">
 				
 				<p:columnGroup type="header">
-					<p:row>
-					
-						<ui:param name="categoryName" 
-							value="#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.fullCatcode} 
-								(#{table.pmDocument.pmDocumentRestrs[0].pmCategoryL3.categoryName})" />
-								
-						<p:column headerText="#{lbl['lbl.sm.category']} : #{empty categoryName ? lbl['lbl.txt.na'] : categoryName}" colspan="2"
-							style="background-color:lightblue !important;text-align: left !important;color:black !important" />
-	                </p:row>
+					<p:row>						
+						<p:column colspan="2"
+							style="background-color:lightblue !important;text-align: left !important;color:black !important">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sm.category']} : "/>
+								<h:outputText value="#{mainTable.categoryDesc}"/>
+							</f:facet>
+						</p:column>
+					</p:row>
 				</p:columnGroup>
 	
 				<p:column style="width : 5% !important;text-align: center !important;">
