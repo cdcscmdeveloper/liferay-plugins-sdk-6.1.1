@@ -1148,8 +1148,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			getManagedBean().getFlRequest().setStatus(statusResDTO.getPmStatus());
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			List<VCmSupplierItem> vCmSupplierItemList = (List<VCmSupplierItem>) externalContext.getApplicationMap().get(facesScopes.getUserSessionBean().getUserId().toString()+contractId.toString());
 			FlTempItem flTempItem = null;
 			if(!getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) && vCmSupplierItemList != null){
@@ -3566,12 +3565,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			// Try to get agency ceiling quantity for Item
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			ciItemResDTO = contractItemSO.getItemCeilingQuantity(reqDTO);
-			getManagedBean().setMaxOrderQuantity(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getTotalMaxQuantity());
+			
 			if(ciItemResDTO.getItemCeilingQuantity()!=null && ciItemResDTO.getItemCeilingQuantity().doubleValue()>0) {
 				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
 			} else { // have to set Item Ceiling Quantity
 				getManagedBean().setCeilingQuantity(BigDecimal.ZERO);
 			}
+			reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setFetchQuantityOnly(true);
+			ciItemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
+			getManagedBean().setMaxOrderQuantity(ciItemResDTO.getItemCeilingQuantity());
 		}
 		if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 			getManagedBean().setStandardPrice(true);
