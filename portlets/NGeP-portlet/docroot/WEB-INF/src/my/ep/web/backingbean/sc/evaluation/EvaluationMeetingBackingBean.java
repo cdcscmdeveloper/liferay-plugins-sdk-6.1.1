@@ -44,6 +44,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -491,7 +492,7 @@ public class EvaluationMeetingBackingBean extends
 			if (member.getMemberRole() != null) {
 				member.setMemberRoleId(member.getMemberRole().getParameterId());
 			}
-			member.setAccessRight(QTConstants.ACCESS_RIGHT);
+			member.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 			member.setScCommittee(this.getManagedBean().getScQtCommittee()
 					.getScCommittee());
 			setUserDetails(member);
@@ -654,7 +655,7 @@ public class EvaluationMeetingBackingBean extends
 						committeeMember.setMemberRoleId(committeeMember
 								.getMemberRole().getParameterId());
 					}
-					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
+					committeeMember.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 					committeeMember.setScCommittee(this.getManagedBean()
 							.getScQtCommittee().getScCommittee());
 					setCommitteeMemberOrgProfile(committeeMember);
