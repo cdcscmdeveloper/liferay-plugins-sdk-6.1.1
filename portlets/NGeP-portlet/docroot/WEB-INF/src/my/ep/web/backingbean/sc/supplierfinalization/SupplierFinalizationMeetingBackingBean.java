@@ -1635,17 +1635,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 		try {
 			Long qtId = this.getManagedBean().getScQt().getQtId();
 			
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			ISearchBean<ScQtCommittee> searchBean = new SearchBean<ScQtCommittee>();
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("scQt.qtId",SearchOperator.OPERATOR_EQUALS.value(),qtId));
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("scCommittee.approvalReq",
-							SearchOperator.OPERATOR_EQUALS.value(), true));
-			reqDTO.setCommSearchBean(searchBean);
-			
 			committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(
 									   ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(qtId);
 			reqDTO.setScQtCommittee(finalizationCommittee);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeSO.validateFcCommitteDetails(reqDTO);
