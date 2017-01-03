@@ -2197,15 +2197,63 @@ public class LOIDetailBackingBean extends
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
 				}
-
+				
+				if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+						.equals(statusId)) {
+					supplierSuccessMessage(messageCode, scLoi.getLoiNo(), Boolean.TRUE);
+				}
+				else{
 				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_INTENT,
 						scLoi.getLoiNo(), Boolean.TRUE);
+				}
 			}
 		} finally {
 			// iqtAwardSO = null;
 		}
 		return awardSupplierResDTO;
+	}
+	
+	/**
+	 *Supplier Success message.
+	 * 
+	 * @param messageCode
+	 *            the message code           
+	 * @param docNo
+	 *            the doc no
+	 * @param isAcknowledgeRequired
+	 *            the is acknowledge required
+	 */
+	public void supplierSuccessMessage(String messageCode, 
+			 String docNo, boolean isAcknowledgeRequired) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(
+								messageCode,
+								new String[] {
+										getMessageCommon("lbl.sc.loi.supplier.response.success.info.message"),
+										docNo },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		if (isAcknowledgeRequired) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+
+	/**
+	 * To get message common
+	 * 
+	 * @param name
+	 * @return String instance
+	 */
+	public static String getMessageCommon(String name) {
+		return ResourceBundleUtils.getMessage(name,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
 	}
 
 	/**
