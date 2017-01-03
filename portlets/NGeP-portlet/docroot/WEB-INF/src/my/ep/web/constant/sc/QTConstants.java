@@ -132,7 +132,6 @@ public interface QTConstants {
 	public static final String BSV_TYPE_BRIEFING_SITEVIST = "B";
 
 	public static final String USER_SELECTION = "E";
-	public static final String ACCESS_RIGHT = "E";
 
 	// SPECIFICATION CONSTANTS
 	public static final String TECHNICAL_DOC_TYPE = "1";
