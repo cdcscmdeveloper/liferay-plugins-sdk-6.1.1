@@ -1345,10 +1345,12 @@ public class DirectLOABackingBean extends
 				}
 				for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
 					if(null == serviceQuestion.getCmItem()){
-						throw new EpException("please add citem code for service items.");
+						throw new EpException("please add item code for service items.");
 					}
 				}
 			}
+			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			
 		} else {
 
@@ -1359,12 +1361,6 @@ public class DirectLOABackingBean extends
 					freqScheduleValidation(scQtSchedule);
 				}
 			}
-		}
-
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
-			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-		} else {
 			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		}
@@ -5146,13 +5142,15 @@ public class DirectLOABackingBean extends
 			
 			String mofCertEffectiveDate = null;
 			String mofCertExpiredDate = null;
-			if(mofCert.getEffDate() != null) {
-				mofCertEffectiveDate = DateUtils
-						.getLocalizeDate(mofCert.getEffDate(), myLocale);
-			}
-			if(mofCert.getExpDate() != null) {
-				mofCertExpiredDate = DateUtils
-						.getLocalizeDate(mofCert.getExpDate(), myLocale);
+			if(mofCert != null){
+				if(mofCert.getEffDate() != null) {
+					mofCertEffectiveDate = DateUtils
+							.getLocalizeDate(mofCert.getEffDate(), myLocale);
+				}
+				if(mofCert.getExpDate() != null) {
+					mofCertExpiredDate = DateUtils
+							.getLocalizeDate(mofCert.getExpDate(), myLocale);
+				}
 			}
 			
 			if(mofCertEffectiveDate != null && mofCertExpiredDate != null) {
