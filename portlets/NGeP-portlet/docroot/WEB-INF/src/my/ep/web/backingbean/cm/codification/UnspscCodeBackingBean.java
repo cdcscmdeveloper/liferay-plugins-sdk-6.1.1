@@ -159,7 +159,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("SUPPLIER_TEMP")
 				|| fs.hasRoleUser("G2G_USER")
 				|| fs.hasRoleUser("G2G_ADMIN")
-				|| fs.hasRoleUser("GOVT_SELLER");
+				|| fs.hasRoleUser("GOVT_SELLER")
+				|| fs.hasRoleUser("CM_USER");
 	}
 
 	public boolean isAllSupplierWithoutTemp() {
