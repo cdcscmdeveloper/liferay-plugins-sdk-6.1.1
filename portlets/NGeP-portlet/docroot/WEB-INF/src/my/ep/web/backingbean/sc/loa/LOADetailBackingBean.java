@@ -157,7 +157,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
-// TODO: Auto-generated Javadoc
+// Auto-generated Javadoc
 /**
  * The Class LOADetailBackingBean.
  *
@@ -169,7 +169,8 @@ import org.primefaces.model.StreamedContent;
 @RequestScoped
 public class LOADetailBackingBean extends
 		SourcingBaseBackingBean<LOADetailManagedBean> {
-	
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
 	
@@ -1578,7 +1579,7 @@ public class LOADetailBackingBean extends
 		title=title.replaceAll(">", "&#62;");
 		context.put("loaTitle", title);
 		
-		context.put("hasLoi", false); // TODO
+		context.put("hasLoi", false);
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "______________";
@@ -3114,7 +3115,7 @@ public class LOADetailBackingBean extends
 
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
 						.equals(contractType)) {
-					// TODO - filter user based on central contract.
+					// filter user based on central contract.
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
 					reqDTO.setOrgProfileId(
@@ -4945,14 +4946,14 @@ public class LOADetailBackingBean extends
 		
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
 		
-		String mofNo = MALAY_NA;
+		//String mofNo = MALAY_NA;
 		String mofValidityDuration = MALAY_NA;
 		String mofCertValidityDuration = MALAY_NA;
 		String isBumi = MALAY_NA;
 		String kodBidang = MALAY_NA;
 		
 		if(mofAccount != null) {
-			mofNo = mofAccount.getMofNo();
+			//mofNo = mofAccount.getMofNo();
 			String mofEffectiveDate = null;
 			String mofExpiredDate = null;
 			if(mofAccount.getEffDate() != null) {
@@ -4973,13 +4974,16 @@ public class LOADetailBackingBean extends
 			
 			String mofCertEffectiveDate = null;
 			String mofCertExpiredDate = null;
-			if(mofCert.getEffDate() != null) {
-				mofCertEffectiveDate = DateUtils
-						.getLocalizeDate(mofCert.getEffDate(), myLocale);
-			}
-			if(mofCert.getExpDate() != null) {
-				mofCertExpiredDate = DateUtils
-						.getLocalizeDate(mofCert.getExpDate(), myLocale);
+			if(mofCert != null){
+
+				if(mofCert.getEffDate() != null) {
+					mofCertEffectiveDate = DateUtils
+							.getLocalizeDate(mofCert.getEffDate(), myLocale);
+				}
+				if(mofCert.getExpDate() != null) {
+					mofCertExpiredDate = DateUtils
+							.getLocalizeDate(mofCert.getExpDate(), myLocale);
+				}
 			}
 			
 			if(mofCertEffectiveDate != null && mofCertExpiredDate != null) {
@@ -5400,8 +5404,6 @@ public class LOADetailBackingBean extends
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			for (TplSpecQuestion specQuestion : specMaster
 					.getTplSpecQuestions()) {
-				/*if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
-						.getQuestionType())) {*/
 					if(specQuestion.getParentSpecQuestion() == null) {
 						int order = specQuestion.getQuestionOrder();
 						if (!questionSpecMap.containsKey(order)) {
@@ -5413,12 +5415,6 @@ public class LOADetailBackingBean extends
 						int parentOrder = specQuestion.getParentSpecQuestion().getQuestionOrder();
 						questionSpecMap.get(parentOrder).getSpecs().add(specQuestion.getClSpecDetail());
 					}
-				/*} else {
-					TplSpecAnswer specAnswer = new TplSpecAnswer();
-					specAnswer.setTplSpecQuestion(specQuestion);
-
-					specAnswers.add(specAnswer);
-				}*/
 			}
 		}
 
