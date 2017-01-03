@@ -428,6 +428,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
 
+		reqDTO.setPmUser(pmUser);
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 
 		codeReqDTO.setExtensionCode(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscCode());
