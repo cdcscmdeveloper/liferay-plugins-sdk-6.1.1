@@ -131,6 +131,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -2647,7 +2648,7 @@ public class LOADetailBackingBean extends
 				} else if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-						messageCode = MessageConst.INFO_700011;
+						messageCode = MessageConst.INFO_700068;
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;
@@ -2656,9 +2657,16 @@ public class LOADetailBackingBean extends
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
 				}
-				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.TRUE);
+
+				 if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+											.equals(statusId)) {
+									supplierSuccessMessage(messageCode,scLoa.getLoaNo(), Boolean.TRUE);
+									
+								}else{
+								successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
+										ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+										scLoa.getLoaNo(), Boolean.TRUE);
+								}
 				
 				renewSesionObject();
 			}
@@ -2668,6 +2676,49 @@ public class LOADetailBackingBean extends
 		}
 		return resDTO;
 	}
+	
+	/**
+	 * Supplier Success message.
+	 * 
+	 * @param messageCode
+	 *            the message code           
+	 * @param docNo
+	 *            the doc no
+	 * @param isAcknowledgeRequired
+	 *            the is acknowledge required
+	 */
+	public void supplierSuccessMessage(String messageCode, 
+			 String docNo, boolean isAcknowledgeRequired) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(
+								messageCode,
+								new String[] {
+										getMessageCommon("lbl.sc.loa.supplier.response.success.info.message"),
+										docNo },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		if (isAcknowledgeRequired) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+
+	/**
+	 * To get message common
+	 * 
+	 * @param name
+	 * @return String instance
+	 */
+	public static String getMessageCommon(String name) {
+		return ResourceBundleUtils.getMessage(name,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+
 	
 	/**
 	 * Parses the reports.
