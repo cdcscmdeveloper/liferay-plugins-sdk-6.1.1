@@ -273,6 +273,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CodificationBackingBean bb = new CodificationBackingBean();
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		reqDTO.setPmUser(pmUser);
 		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 		CmUnspsc commodity = bb.getManagedBean().getSelectedUNSPSCObj();
 		log.info("..............bb.getManagedBean().getSelectedUNSPSCObj()="+commodity);
