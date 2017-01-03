@@ -1269,7 +1269,7 @@ public class QTCommitteBackingBean extends
 			if (member.getMemberRole() != null) {
 				member.setMemberRoleId(member.getMemberRole().getParameterId());	
 			}
-			member.setAccessRight(QTConstants.ACCESS_RIGHT);
+			member.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 			
 
 			member.setScCommittee(scCommittee);
@@ -1412,7 +1412,7 @@ public class QTCommitteBackingBean extends
 					 * }
 					 */
 
-					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
+					committeeMember.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 					committeeMember.setScCommittee(scCommittee);
 					setUserDetails(committeeMember);
 					toBeAddedList.add(committeeMember);
