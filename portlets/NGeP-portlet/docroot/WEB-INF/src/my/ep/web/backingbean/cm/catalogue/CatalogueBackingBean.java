@@ -605,13 +605,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
 		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
 		supplierReqDTO.setAllStatuses(true);
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
-
+		reqDTO.setPmUser(pmUser);
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 		System.out.println("******getTaskId******"+bb.getManagedBean().getTaskId());
 		for(CmRequestCode code : bb.getManagedBean().getReviewExtCodeList()){
