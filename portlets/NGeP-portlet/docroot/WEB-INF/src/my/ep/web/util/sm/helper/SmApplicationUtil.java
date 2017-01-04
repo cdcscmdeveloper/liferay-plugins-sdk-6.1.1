@@ -5192,7 +5192,6 @@ public class SmApplicationUtil {
 			Long siteRefId, String siteType) {
 		SmSvAddress smSvAddress = new SmSvAddress();
 		smSvAddress.setSmSvTask(svTask);
-		smSvAddress.setSmAddress(addr);
 		smSvAddress.setSiteType(siteType);
 		smSvAddress.setSiteRefId(siteRefId);
 		svTask.setSmSvAddress(smSvAddress);
