@@ -25,6 +25,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -41,6 +42,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
@@ -206,7 +208,11 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 			for(WorklistItemVO worklistItem:resDTO.getWorklistVO().getWorklistItem()){
 				SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
 				if(CollectionUtils.isNotEmpty(worklistItem.getAssignees())){
-	    	 	custServiceEntity.setOfficerName(worklistItem.getAssignees().get(0));
+	    	 	//custServiceEntity.setOfficerName(worklistItem.getAssignees().get(0));
+	    	 	IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	    	 	UserReqDTO reqUserDTO = new UserReqDTO();
+		 		reqUserDTO.setLoginId(worklistItem.getAssignees().get(0));
+	    	 	custServiceEntity.setOfficerName(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName());
 				}
 	    	 	reqDTO = new BpmRequestDTO();
 	    	 	reqDTO.setCtxToken(token);
