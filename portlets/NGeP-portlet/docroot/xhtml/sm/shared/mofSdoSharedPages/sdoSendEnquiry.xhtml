@@ -34,4 +34,11 @@
 		</p:dataTable>
 
 	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryTextPanelId" 
+		rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
+		<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" 
+			maxlength="100" cols="70" rows="10"/>
+	</p:panel>
+	
 </ui:composition>

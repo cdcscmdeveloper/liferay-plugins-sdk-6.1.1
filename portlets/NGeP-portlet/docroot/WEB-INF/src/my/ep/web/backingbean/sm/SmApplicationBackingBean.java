@@ -90,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -1227,6 +1228,9 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().removeEquipmentIfNotApplicable(
 				getManagedBean());
 
+		// PO inquiry initialization
+		assignMissingDocsList(false, null);
+
 		// show po remarks and rejection reason for resubmit application
 		if (getManagedBean().isSupplierUser()
 				&& getManagedBean().getSmAppl().isResubmit()) {
@@ -2125,18 +2129,18 @@ public class SmApplicationBackingBean extends
 								getManagedBean().isDisAllowOwnerEdit());
 						break;
 					}
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY:
+					log.info("******* This is PO inquiry page ********");
+					SmApplicationUtil.initPoInquiry(getManagedBean(), false);
+					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
-					// assignApplicationRegistrationStatus(getManagedBean()
-					// .getSmSupplier().getSmAppl().getPmRegStatus());
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
-					// assignApplicationRegistrationStatus(getManagedBean()
-					// .getSmSupplier().getSmAppl().getPmRegStatus());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
@@ -6471,6 +6475,7 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
+		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
 		return submitSmApplToBpm(applType);
 
 	}
@@ -7173,9 +7178,12 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign missing or invalid supporting docs list.
 	 */
-	public void assignMissingDocsList() {
+	public void assignMissingDocsList(boolean isNewInquiry, String dialogId) {
 		log.info("*** Send Inquiry **** ");
-		SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
+		SmApplicationUtil.initPoInquiry(getManagedBean(), isNewInquiry);
+		if (getManagedBean().isPoUser()) {
+			SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
+		}
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
@@ -7186,7 +7194,9 @@ public class SmApplicationBackingBean extends
 		}
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
-		RequestContext.getCurrentInstance().execute("sendInqDialog.show()");
+		if (dialogId != null) {
+			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
+		}
 	}
 
 	/**
@@ -7577,6 +7587,25 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER);
+
+			// add new inquiry by PO
+			if (getManagedBean().getPoToSupplierInquiry() != null
+					&& !StringUtils.isBlank(getManagedBean()
+							.getPoToSupplierInquiry().getInquiryText())) {
+				if (getManagedBean().getSmAppl().getSmApplInquiries() == null) {
+					getManagedBean().getSmAppl().setSmApplInquiries(
+							new ArrayList<SmApplInquiry>());
+				}
+				getManagedBean().getPoToSupplierInquiry().setInquirySubject(
+						SupplierManagementConst.INQUIRY_PO_SUPPLIER);
+				getManagedBean().getPoToSupplierInquiry().setSmAppl(
+						getManagedBean().getSmAppl());
+				getManagedBean().getPoToSupplierInquiry().setInquiryDate(
+						new Date());
+				getManagedBean().getSmAppl().getSmApplInquiries()
+						.add(getManagedBean().getPoToSupplierInquiry());
+			}
+
 			actionDesc = SupplierManagementConst.PO_SEND_INQUIRY_SUPP;
 		}
 		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
