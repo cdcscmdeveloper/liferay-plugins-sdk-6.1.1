@@ -702,18 +702,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     					throw new EpException(MessageConst.ERROR_100062);
     				}
     		}
-    		
-			// Validation for AP201 exempt
-			if (ctBB.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-					&& (ctBB.getManagedBean().getContractVer().getCtContractValue().getAp201FileName() == null 
-					||ctBB.getManagedBean().getContractVer().getCtContractValue().getAp201FileName().equalsIgnoreCase("")) 
-					&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-						getManagedBean().setSelectedTabIndex(0);
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[] {ResourceBundleUtils.getMessage("lbl.ct.attachment.ap201", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
 
 			// Validation for performance bond exempted
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq() 

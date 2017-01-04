@@ -150,17 +150,6 @@
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.concession']}" />
 			 </h:panelGrid>
 		   </h:panelGrid>
-		    <h:panelGrid columns="3"
-		       rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			   	disabled="true" style="text-align:top;">
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 			       <p:selectBooleanCheckbox disabled="true" 
 			             value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
@@ -222,14 +211,5 @@
 		     </h:panelGrid>	
 	    </h:panelGrid>
 		</h:panelGrid>
-		<p:outputPanel id="justificationPanel">
-		<h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
-			rendered="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
-		 	agreementBackingBean.managedBean.contractVer.ctContractValue.concession}">
-			<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
-			<p:inputTextarea id="justificationLbl" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"
-	  			rows="3" style="width:455px;" maxlength="200" autoResize="false" disabled="true" />			
-	    </h:panelGrid> 
-	  	</p:outputPanel>
 	</p:panel>
 </ui:composition>
