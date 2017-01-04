@@ -1124,6 +1124,7 @@ public class QTDetailBackingBean extends
 		// save.
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
+		quationTenderReqDTO.setQtCommittes(scQt.getScQtCommittees());
 		quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 
 		quationTenderReqDTO.setToBeRemoveList(this.getManagedBean()
@@ -2261,7 +2262,6 @@ public class QTDetailBackingBean extends
 						.updateFinalizateSecrataryTask(committeReqDTO);
 
 			} else {
-				qtReqDTO.setQtCommittes(qt.getScQtCommittees());
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(payLoad);
@@ -3794,7 +3794,6 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
 		reqDTO.setSaveFlow(true);
 		reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
-		reqDTO.setQtCommittes(reqDTO.getQtdetail().getScQtCommittees());
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
