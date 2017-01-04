@@ -35,14 +35,12 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 			<h:panelGroup id="ptjPanel">
 			<table>
-				
 				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.fl.ptj.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 560px;"><p:inputTextarea
-							id="ptjOrgProfileId" rows="2" cols="63" readonly="true"
-							autoResize="false" style="resize:none;"
+					<td style="width: 560px;"><p:inputText size="45"
+							id="ptjOrgProfileId" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.ptj.orgCode}"  />					
 					<ac:lov id="ptj" uiMode="link" lovId="PM_ORG_PROFILE_FL"
 							headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
@@ -83,7 +81,7 @@
 							update="docStatusSearch"
 							listener="#{flCustomerServiceBackingBean.selectedDoctype}" />		
 					</p:selectOneMenu></td>
-			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
 			<td><p:inputText size="28" value="#{flCustomerServiceBackingBean.managedBean.searchDocNo}" />
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no']}"/>	
 			</td>
@@ -101,7 +99,7 @@
 									value="#{flCustomerServiceBackingBean.getStatusDropdownValues('FL',flCustomerServiceBackingBean.managedBean.searchDocType)}" />
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
 							</p:selectOneMenu></td>
-						<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+						<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
 						<td><p:inputText size="28" maxlength="17" 
 							value="#{flCustomerServiceBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
 					</tr>
