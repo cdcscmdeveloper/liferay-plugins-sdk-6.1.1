@@ -343,22 +343,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		if(event.getComponent().getId().equalsIgnoreCase("uploadAgency1")){
+		
+		if (event.getComponent().getId().equalsIgnoreCase("uploadAgency1")){
 			getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
-		}else if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
 			getManagedBean().getContractVer().getItemAttachments().add(attachment);
-		}else if(event.getComponent().getId().equalsIgnoreCase("uploadDeductId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadDeductId")){
 			getManagedBean().getContractVer().getDeductionAttachments().add(attachment);
-		}else if(event.getComponent().getId().equalsIgnoreCase("uploadScheduleId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadScheduleId")){
 			getManagedBean().getContractVer().getScheduleAttachments().add(attachment);
-		}else if(event.getComponent().getId().equalsIgnoreCase("uploadItemAmendId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadItemAmendId")){
 			getManagedBean().getContractVer().getItemAmendAttachments().add(attachment);
-		}else if(event.getComponent().getId().equalsIgnoreCase("uploadTermLetterId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadTermLetterId")){
 			getManagedBean().getContractVer().getTerminationLetterAttachments().add(attachment);
 			RequestContext.getCurrentInstance().execute("uploadTermLetterDlg.hide()");
+		} else if (event.getComponent().getId().equalsIgnoreCase("approvalLetterId")){
+			getManagedBean().getContractVer().setApprovalLetterAttachement(attachment);
+		} else if (event.getComponent().getId().equalsIgnoreCase("pbqcDecisionLetterId")){
+			getManagedBean().getContractVer().setPbqcDecisionLetterAttachment(attachment);
+		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
+			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
+		} else {
+		   getManagedBean().getAttachmentList().add(attachment);
 		}
-		else
-		   this.getManagedBean().getAttachmentList().add(attachment);
 	}
 	
 	/**
@@ -422,6 +429,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				   getManagedBean().getDeleteAttachmentList().add(attachment);
 			}
 			this.getManagedBean().getAttachmentList().remove(index);
+	 }
+	
+	/**
+	 * The method used to delete attachment from the list.
+	 * @param index  file index of attachment list
+	 */
+	public void deleteAttachmentAction(CtAttachment ctAttachment) {
+		if (ctAttachment.getAttachmentId() != null){
+			   getManagedBean().getDeleteAttachmentList().add(ctAttachment);
+		}
+		ctAttachment.setFileName(null);
+		ctAttachment.setFilePath(null);		
+	 }
+	
+	/**
+	 * The method used to delete attachment from the list.
+	 * @param index  file index of attachment list
+	 */
+	public void deleteAttachmentAction(int index, List<CtAttachment> ctAttachmentList) {
+		CtAttachment attachment = ctAttachmentList.get(index);
+		if (attachment.getAttachmentId() != null){
+			   getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		ctAttachmentList.remove(index);
 	 }
 	
 	/**
@@ -2168,36 +2199,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 }
 		 
 	 /**
-	 * The method used to set the justification value.
+	 * The method used to set the bond waiver flag value.
 	 */
-	public void chkJustificationAction() {
-		try {
-			if (this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
-				this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
-			}
-			if (this.getManagedBean().getContractVer().getCtContractValue().isConcession()) {
-				this.getManagedBean().getContractVer().getCtContractValue().setConcession(true);  
-				if (!this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
-					this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
-					this.getManagedBean().setChkJustification(true);
-				}
-			}
-			if (this.getManagedBean().isChkJustification() 
-					&& !this.getManagedBean().getContractVer().getCtContractValue().isConcession()) {
-				this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
-				this.getManagedBean().setChkJustification(false);
-			}
-			if (this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() 
-					&& this.getManagedBean().getContractVer().getCtContractValue().isConcession()) {
-				this.getManagedBean().setChkConceValue(true);
-			} else {
-				this.getManagedBean().setChkConceValue(false);
-			}  
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void chkBondWaiverAction(){
 		  if(!getManagedBean().getCtContractAmount().isBondWaived()){
 	            getManagedBean().getCtContractAmount().setBondWaived(false);
@@ -2210,30 +2213,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    		  getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
 	    	  getManagedBean().setBondWaiver(false);
 	      }
-	}  
-	/**
-	 * The method used to upload AP201 file.
-	 * 
-	 * @param  event      the upload event for file upload from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
-	 */
-	public void uploadAp201File(FileUploadEvent event) throws Exception {
-		UploadedFile item = event.getFile();
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		
-			
-		String filePath = getManagedBean().getFileDirectory();
-		File file = new File(filePath);
-		file.mkdirs();
-		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
-	    fileOuputStream.write(item.getContents());
-	    fileOuputStream.close();
-	    
-	    getManagedBean().getContractVer().getCtContractValue().setAp201FileName(item.getFileName());
-	    getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-	    RequestContext.getCurrentInstance().execute("uploadAp201Dlg.hide()");
 	}
 			
 	 /**
@@ -3350,15 +3329,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
-	}
-
-	/**
-	 * The method used to set
-	 * ap201 file path and file name value is null.
-	 */
-	public void del201AttachDoc(){
-		getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(null);
-		getManagedBean().getContractVer().getCtContractValue().setAp201FileName(null);
 	}
 		
 	/**

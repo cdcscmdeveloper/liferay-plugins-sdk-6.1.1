@@ -13,28 +13,33 @@
 	</style>
     <p:panel id="memberPanel" header="#{lbl['lbl.ct.panel.meeting.decision']}" toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" styleClass="panelColumns" >
-             <h:panelGrid columns="2" style="float:right;">
-             <h:outputText value="* " styleClass="mandatory" />
-		       <p:outputLabel value="#{lbl['lbl.ct.decision']}"/>
-		      </h:panelGrid>
+     		<h:panelGrid columns="2" style="float:right;">
+	        	<h:outputText value="* " styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.decision']}"/>
+			</h:panelGrid>
             <p:selectOneMenu   style="width:190px;margin-bottom: 4px;" disabled="true" 
-                value="#{amendmentBackingBean.managedBean.pbQcApproved}" >
-                   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="null"/>
-			       <f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A"/>
-			       <f:selectItem itemLabel="#{lbl['lbl.ct.reject']}" itemValue="R"/>
+     			value="#{amendmentBackingBean.managedBean.pbQcApproved}" >
+              		<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="null"/>
+			       	<f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A"/>
+			       	<f:selectItem itemLabel="#{lbl['lbl.ct.reject']}" itemValue="R"/>
 		    </p:selectOneMenu>
 		   
 		    <h:panelGrid columns="2" style="float:right;">               
-                    <h:outputText value="*" styleClass="mandatory" />
-                    <p:outputLabel for="justificationMember" value="#{lbl['lbl.txt.remarks']}" />
-               
-           </h:panelGrid>
-           <h:panelGrid>
-             <p:inputTextarea id="justificationMember" disabled="true"
-                  rows="4"  maxlength="200"  autoResize="false" style="width:180px;margin-bottom: 4px;" 
-                  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
-          </h:panelGrid>           
-          </h:panelGrid>
+           		<h:outputText value="*" styleClass="mandatory" />
+          		<p:outputLabel for="justificationMember" value="#{lbl['lbl.txt.remarks']}" />               
+           	</h:panelGrid>
+           	<h:panelGrid>
+    			<p:inputTextarea id="justificationMember" disabled="true"
+                  	rows="4"  maxlength="200"  autoResize="false" style="width:180px;margin-bottom: 4px;" 
+                  	value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
+          	</h:panelGrid>
+          	<h:panelGrid columns="2" style="float:right;">
+           		<h:outputText value="* " styleClass="mandatory" />
+		    	<p:outputLabel value="#{lbl['lbl.ct.decision.letter']}"    />
+		  	</h:panelGrid>
+		  	<h:commandLink value="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName}" styleClass="blue_font"
+		  		action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName)}" />        
+    	</h:panelGrid>
           
           <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" styleClass="top-aligned-columns">
                  <p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
