@@ -15,78 +15,82 @@
 	</table>
 
 
-	<table width="100%">
-		<tr>
-			<td style="width: 250px;"><p:outputLabel
-					value="#{lbl['lbl.sc.document.no']}" /></td>
-			<td><p:inputText disabled="true" style="width:250px"
-					value="#{qtCustomerServiceBB.managedBean.customerScQt.qtNo}"></p:inputText>
-			</td>
-			<td style="width: 200px;"><p:outputLabel
-					value="#{lbl['lbl.sc.status']}" /></td>
-			<td><p:inputText disabled="true" style="width:250px"
-					value="#{qtCustomerServiceBB.getStatusDescById(qtCustomerServiceBB.managedBean.customerScQt.qtStatus.statusId)}"></p:inputText>
-			</td>
-		</tr>
-
-	</table>
-	<p:panel header="#{lbl['lbl.sc.customer.service.quotation.tender.info']}"
+	
+	<p:panel
+		header="#{lbl['lbl.sc.customer.service.quotation.tender.info']}"
 		toggleable="true" id="dpCustomerServiceViewInfo">
 		<table width="100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
-				<td><p:inputText disabled="true" style="width:300px"
+				<td><p:inputText disabled="true" style="width:900px"
 						value="#{qtCustomerServiceBB.managedBean.ministryName}"></p:inputText>
 				</td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
-				<td><p:inputText disabled="true" style="width:300px"
+				<td><p:inputText disabled="true" style="width:900px"
 						value="#{qtCustomerServiceBB.managedBean.kampulanPtjName}"></p:inputText>
 				</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.ptj.name']}" /></td>
-				<td><p:inputText disabled="true" style="width:300px"
+				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td><p:inputText disabled="true" style="width:65px"
+						value="#{qtCustomerServiceBB.managedBean.ptjCode}"></p:inputText>
+					<p:spacer width="3px;"></p:spacer> <p:inputText disabled="true"
+						style="width:820px"
 						value="#{qtCustomerServiceBB.managedBean.ptjName}"></p:inputText>
 				</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.ptj.code']}" /></td>
-				<td><p:inputText disabled="true" style="width:300px"
-						value="#{qtCustomerServiceBB.managedBean.ptjCode}"></p:inputText>
+				<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+				<td><p:inputText disabled="true" style="width:150px"
+						value="#{qtCustomerServiceBB.managedBean.customerScQt.qtNo}"></p:inputText>
 				</td>
-
 			</tr>
 
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" />
 				</td>
-				<td><p:inputTextarea disabled="true" style="width:300px" rows="5" cols="150"
+				<td><p:inputTextarea disabled="true" style="width:900px;margin-bottom:5px"
+						rows="5" cols="150"
 						value="#{qtCustomerServiceBB.managedBean.customerScQt.qtTitle}"></p:inputTextarea>
 				</td>
 			</tr>
 
 			<tr>
-				<td class="TableFieldLeft" valign="top"><p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+				<td><p:inputText disabled="true" style="width:400px"
+						value="#{qtCustomerServiceBB.getStatusDescById(qtCustomerServiceBB.managedBean.customerScQt.qtStatus.statusId)}"></p:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
 						value=" #{lbl['lbl.sc.customer.service.officer.name']}" /></td>
 				<td>
-					<table style="width: 610px">
+					<table style="width: 900px">
 						<tr>
-							<td><p:dataTable id="officerInfoName" var="customerServiceOfficers"
-							value="#{qtCustomerServiceBB.managedBean.customerServiceEntity}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							<td><p:dataTable id="officerInfoName"
+									var="customerServiceOfficers"
+									value="#{qtCustomerServiceBB.managedBean.customerServiceEntity}"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetofficer" rowIndexVar="index">
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
+									
+									
 									<p:column style="width:40%;white-space:normal;"
-										headerText="#{lbl['lbl.sc.status']}">
-										<h:outputText value="#{customerServiceOfficers.statusDesc}" />
+										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
+										<h:outputText
+											value="#{lbl['lbl.sc.customer.service.supplier.name']}"
+											rendered="#{customerServiceOfficers.reassignType eq '9' or customerServiceOfficers.reassignType eq '10'}" />
+
+										<h:outputText value="#{customerServiceOfficers.officerName}"
+											rendered="#{customerServiceOfficers.reassignType ne '9' and  customerServiceOfficers.reassignType ne '10'}" />
 									</p:column>
 
 									<p:column style="width:18%;white-space:normal;"
@@ -95,11 +99,8 @@
 									</p:column>
 
 									<p:column style="width:40%;white-space:normal;"
-										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
-											<h:outputText
-													value="#{lbl['lbl.sc.customer.service.supplier.name']}" rendered="#{customerServiceOfficers.reassignType eq '9' or customerServiceOfficers.reassignType eq '10'}" />
-											
-												<h:outputText value="#{customerServiceOfficers.officerName}" rendered="#{customerServiceOfficers.reassignType ne '9' and  customerServiceOfficers.reassignType ne '10'}"/>
+										headerText="#{lbl['lbl.sc.status']}">
+										<h:outputText value="#{customerServiceOfficers.statusDesc}" />
 									</p:column>
 
 
@@ -111,24 +112,21 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.customer.service.schedule.information']}" toggleable="true"
-		id="qtCustomerServiceBriefingdetailsId">
-		<table width="100%">
+	<p:panel
+		header="#{lbl['lbl.sc.customer.service.schedule.information']}"
+		toggleable="true" id="qtCustomerServiceBriefingdetailsId">
+		<table>
 			<tr>
-				<td width="250px;"><p:outputLabel
+				<td ><p:outputLabel
 						value="#{lbl['lbl.sc.qt.customer.service.publish.date.time']}" />
 				</td>
 				<td><p:inputText id="publishDate"
 						value="#{qtCustomerServiceBB.managedBean.customerScQt.publishDate}"
 						disabled="true" style="width: 120px;margin-top:5px;">
 						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					</p:inputText></td>
-				<td width="200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.customer.service.total.proposals.submitted']}" /></td>
-				<td><p:inputText readonly="true" disabled="true" value="#{qtCustomerServiceBB.managedBean.totalProposalSubmitCount}"
-						style="width: 120px;margin-top:5px">
-					</p:inputText></td>
+
 			</tr>
 
 			<tr>
@@ -139,33 +137,35 @@
 						readonly="true" disabled="true"
 						style="width: 120px;margin-top:5px">
 						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					</p:inputText></td>
 			</tr>
 
 			<tr>
 				<td class="TableFieldLeft" valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.customer.service.brief.date.time']}" /></td>
-						
-						<td>
-					<table style="width: 400px">
+
+				<td>
+					<table style="width: 500px">
 						<tr>
-							<td><p:dataTable id="briefingdateId" var="briefingdtls"
-							value="#{qtCustomerServiceBB.managedBean.briefingDtlsList}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							<td><p:dataTable id="briefingdateId" var="briefingdtls" style="margin-bottom:5px;"
+									value="#{qtCustomerServiceBB.managedBean.briefingDtlsList}"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetbrief" rowIndexVar="index">
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
 									<p:column style="width:53%;white-space:normal;"
-										headerText="#{lbl['lbl.sc.zone.location']}" rendered="#{qtCustomerServiceBB.managedBean.customerScQt.zonal}">
-										<h:outputText value="#{briefingdtls.scQtBsv.tplSpecZoneDtl.zoneName}" />
+										headerText="#{lbl['lbl.sc.zone.location']}"
+										rendered="#{qtCustomerServiceBB.managedBean.customerScQt.zonal}">
+										<h:outputText
+											value="#{briefingdtls.scQtBsv.tplSpecZoneDtl.zoneName}" />
 									</p:column>
 									<p:column style="width:53%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.date.time']}">
-										<h:outputText value="#{briefingdtls.bsvDate}" >
-										<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+										<h:outputText value="#{briefingdtls.bsvDate}">
+											<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 										</h:outputText>
 									</p:column>
 
@@ -185,24 +185,26 @@
 						value=" #{lbl['lbl.sc.qt.customer.service.sitevisit.date.time']}" />
 				</td>
 				<td>
-					<table style="width: 400px">
+					<table style="width: 500px">
 						<tr>
 							<td><p:dataTable id="siteVisitdateId" var="siteVisitDtls"
-							value="#{qtCustomerServiceBB.managedBean.siteVisitDtlsList}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+									value="#{qtCustomerServiceBB.managedBean.siteVisitDtlsList}"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetsitevisit" rowIndexVar="index">
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
 									<p:column style="width:53%;white-space:normal;"
-										headerText="#{lbl['lbl.sc.zone.location']}" rendered="#{qtCustomerServiceBB.managedBean.customerScQt.zonal}">
-										<h:outputText  value="#{siteVisitDtls.scQtBsv.tplSpecZoneDtl.zoneName}" />
+										headerText="#{lbl['lbl.sc.zone.location']}"
+										rendered="#{qtCustomerServiceBB.managedBean.customerScQt.zonal}">
+										<h:outputText
+											value="#{siteVisitDtls.scQtBsv.tplSpecZoneDtl.zoneName}" />
 									</p:column>
 									<p:column style="width:53%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.date.time']}">
-										<h:outputText value="#{siteVisitDtls.bsvDate}" >
-										<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+										<h:outputText value="#{siteVisitDtls.bsvDate}">
+											<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 										</h:outputText>
 									</p:column>
 
@@ -214,7 +216,14 @@
 					</table>
 				</td>
 			</tr>
-
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.customer.service.total.proposals.submitted']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{qtCustomerServiceBB.managedBean.totalProposalSubmitCount}"
+						style="width: 120px;margin-top:5px">
+					</p:inputText></td>
+			</tr>
 
 
 
@@ -223,36 +232,36 @@
 
 	<p:panel header="#{lbl['lbl.sc.bidding.details']}" toggleable="true"
 		id="qtCustomerServiceBiddingdetailsId">
-		<table width="100%">
-		
-		<tr>
+		<table>
+
+			<tr>
 
 
-				<td class="TableFieldLeft" width="250px;" valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.schedules']}" />
-				</td>
+				<td class="TableFieldLeft"  valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.schedules']}" /></td>
 				<td>
-					<table>
+					<table style="width: 500px">
 						<tr>
-							<td><p:dataTable id="biddingCustomerServiceId" var="customerServiceBid"
-							value="#{qtCustomerServiceBB.managedBean.bidScheduleList}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							<td><p:dataTable id="biddingCustomerServiceId"
+									var="customerServiceBid"
+									value="#{qtCustomerServiceBB.managedBean.bidScheduleList}"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetbidding" rowIndexVar="index">
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
-									<p:column style="width:53%;white-space:normal;"
+									<p:column style="width:47%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.bidding.start.date.time']}">
-										<h:outputText  value="#{customerServiceBid.startDate}">
-										<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+										<h:outputText value="#{customerServiceBid.startDate}">
+											<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 										</h:outputText>
 									</p:column>
-                                    <p:column style="width:53%;white-space:normal;"
+									<p:column style="width:47%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.bidding.end.date.time']}">
-										<h:outputText  value="#{customerServiceBid.endDate}" >
-										<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+										<h:outputText value="#{customerServiceBid.endDate}">
+											<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 										</h:outputText>
 									</p:column>
 
@@ -266,7 +275,8 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.bidding.total.invited.suppliers']}" /></td>
-				<td><p:inputText style="margin-top:5px;" readonly="true" value="#{qtCustomerServiceBB.totalBidSuppliersCount(qtCustomerServiceBB.managedBean.bidScheduleList)}"></p:inputText></td>
+				<td><p:inputText style="margin-top:5px;" readonly="true"
+						value="#{qtCustomerServiceBB.totalBidSuppliersCount(qtCustomerServiceBB.managedBean.bidScheduleList)}"></p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>

@@ -17,10 +17,10 @@
 					</td>
 					<td colspan="3">
 						<ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ" update="@form"
-						headerText="#{lbl['lbl.sc.ptj.code']}" required="true"
+						headerText="#{lbl['lbl.sc.ptj.code']}" required="true" 
 						saveObject="qtCustomerServiceBB.managedBean.qtCustomerServiceSearchBean.orgProfilePtjCode"
 						value="#{qtCustomerServiceBB.managedBean.qtCustomerServiceSearchBean.orgProfilePtjCode.orgCode}"
-						size="35" readonly="true" postUpdateListener="qtCustomerServiceBB.setorgProfileData()" />
+						size="20" readonly="true" postUpdateListener="qtCustomerServiceBB.setorgProfileData()" />
 					</td>
 				</tr>
 				<tr>
@@ -52,7 +52,7 @@
 					<td style="width:385px">
 						<p:inputText id="docNo"
 							value="#{qtCustomerServiceBB.managedBean.qtCustomerServiceSearchBean.qtNo}"
-							maxlength="21" style="width:288px;">
+							maxlength="21" style="width:145px;">
 							<p:ajax update="@this" process="@this"/>
 							</p:inputText>
 					</td>
