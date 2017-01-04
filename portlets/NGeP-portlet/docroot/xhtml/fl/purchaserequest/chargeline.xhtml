@@ -24,7 +24,7 @@
 				update="chargeLineTbl,@(.chargeLineSection)"
 				disabled="#{purchaseRequestBackingBean.managedBean.selectChargeLineRow=='true'}"></p:ajax>
 			<p:column />
-			<p:column style="white-space:normal;width:2%">
+			<p:column style="white-space:normal;width:2%" rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox 
 						onchange="goToSelectAll()"
