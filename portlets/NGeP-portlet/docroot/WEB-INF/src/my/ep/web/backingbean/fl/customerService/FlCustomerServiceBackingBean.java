@@ -10,6 +10,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+// TODO: Auto-generated Javadoc
+
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -26,9 +29,6 @@ import my.ep.web.bean.ct.CustomerServiceEntity;
 import my.ep.web.managedbean.fl.customerService.FlCustomerServiceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
 
 /**
  * Backingbean for Customer Service.
@@ -165,13 +165,34 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	 *
 	 * @param e the e
 	 */
-	public void selectedOrderType(AjaxBehaviorEvent e) {}
+	public void selectedOrderType(AjaxBehaviorEvent e) {
+		String id = (String) e.getComponent().getAttributes().get("value");
+		getManagedBean().setSearchDocType(null);
+
+		resetSearchCriteria();
+	}
 	
 	/**
 	 * Selected doctype.
 	 *
 	 * @param e the e
 	 */
-	public void selectedDoctype(AjaxBehaviorEvent e) {}
+	public void selectedDoctype(AjaxBehaviorEvent e) {
+		String docType = (String) e.getComponent().getAttributes().get("value");
+		
+		resetSearchCriteria();
+		
+		getManagedBean().setSearchDocType(docType);
+	}
+	
+	/**
+	 * Reset search criteria.
+	 */
+	private void resetSearchCriteria() {
+		getManagedBean().setSearchDocNo(null);
+		getManagedBean().setStatusDescId(null);
+		getManagedBean().setSearchSuppName(null);
+		getManagedBean().setSearchOrderNo(null);
+	}
 	
 }
