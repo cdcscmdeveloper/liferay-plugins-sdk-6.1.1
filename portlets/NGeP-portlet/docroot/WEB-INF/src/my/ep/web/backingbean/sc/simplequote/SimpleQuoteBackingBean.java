@@ -1521,7 +1521,8 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
-
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
+			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
 				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
@@ -2178,7 +2179,8 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
-
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
+			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
 				reqDTO.setSubmit(Boolean.TRUE);
