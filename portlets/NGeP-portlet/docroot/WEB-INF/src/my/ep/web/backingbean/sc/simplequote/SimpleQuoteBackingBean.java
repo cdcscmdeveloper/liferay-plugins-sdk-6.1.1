@@ -6703,18 +6703,23 @@ public class SimpleQuoteBackingBean extends
 	private void addSpecficationQuestions(CtPanelItem panelItem,
 			TplSpecMaster specMaster, List<TplSpecQuestion> allquestionsList) {
 		
-		List<CtPanelItemSpec> panelItemSpecs = panelItem.getCtPanelItemSpecs();
-		if (CollectionUtils.isNotEmpty(panelItemSpecs)) {
-			int size = panelItemSpecs.size();
-			for (int i = 0; i < size; i++) {
-				new TemplateSpecBackingBean().addQuestion(
-						new TemplateSpecBean(), specMaster, allquestionsList,
-						allquestionsList.size() - 1,
-						TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
-				CtPanelItemSpec itemSpec = panelItem.getCtPanelItemSpecs().get(i);
-				TplSpecQuestion tplSpecSpecifications = allquestionsList.get(i + 1);
-				tplSpecSpecifications.setClSpecDetail(itemSpec.getSpecification());
-				setUserDetails(tplSpecSpecifications);
+		if (panelItem != null) {
+			List<CtPanelItemSpec> panelItemSpecs = panelItem.getCtPanelItemSpecs();
+			if (CollectionUtils.isNotEmpty(panelItemSpecs)) {
+				int size = panelItemSpecs.size();
+				for (int i = 0; i < size; i++) {
+					new TemplateSpecBackingBean().addQuestion(
+							new TemplateSpecBean(), specMaster,
+							allquestionsList, allquestionsList.size() - 1,
+							TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
+					CtPanelItemSpec itemSpec = panelItem.getCtPanelItemSpecs()
+							.get(i);
+					TplSpecQuestion tplSpecSpecifications = allquestionsList
+							.get(i + 1);
+					tplSpecSpecifications.setClSpecDetail(itemSpec
+							.getSpecification());
+					setUserDetails(tplSpecSpecifications);
+				}
 			}
 		}
 	}
