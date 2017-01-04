@@ -3,14 +3,16 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui" >
-   <p:panel header="Attachement" toggleable="true">
+   <p:panel header="Attachement" toggleable="true">   	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
 		<table style="width: 100%">
 				    <tr>
 			           <td class="TableFieldLeft" width="14%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			           <td class="TableFieldRight">
 				         <p:commandButton oncomplete="uploadComitteDlg.show();return false;"
-				           disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
-					        update="lampiranComitte, uploadComitteDlg" icon="ui-icon-upload" immediate="true"/>
+				         	value="#{lbl['lbl.txt.attach.files']}"
+				            disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
+					        update="lampiranComitte, uploadComitteDlg" immediate="true"/>
 			           </td>
 		             </tr>
 		             <tr>
@@ -48,17 +50,18 @@
 	</table>
 
 	<p:dialog id="uploadComitteDlg" widgetVar="uploadComitteDlg" resizable="false"
-	   modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	   onShow="singleUploadListener(meetingUploadWV);">
+	   modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" dragDropSupport="false" multiple="false"
-		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{amendmentBackingBean.committeeFileUpload}"
-			mode="advanced" id="CommitteUploadId" widgetVar="meetingUploadWV"
+			mode="advanced" id="CommitteUploadId" multiple="true"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="lampiranComitte" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadComitteDlg.hide();" >
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="lampiranComitte" >
 		</p:fileUpload>
+		
 		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadComitteDlg.hide();" />

@@ -197,19 +197,7 @@
 		</h:panelGroup>
 	  	
 	  	<h:panelGrid style="width:270px; margin-left:5px">
-	  	 <h:panelGrid columns="3" rendered="#{!ctBackingBean.managedBean.directPurchase}">
-			  <p:selectBooleanCheckbox id="exemptCentralId" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    	disabled="#{ctBackingBean.managedBean.chkConceValue or ctBackingBean.managedBean.viewContract}" style="text-align:top;">
-			     <p:ajax event="change" update=":form:justificationCentralPanel" listener="#{ctBackingBean.chkJustificationAction}" process="@this"/> 
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:left;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>
-		    
-		     <h:panelGrid columns="3" 
+	  	 	<h:panelGrid columns="3" 
 		     	rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
@@ -252,16 +240,6 @@
 		     </h:panelGrid> 
 	 	</h:panelGrid>
 	 </h:panelGrid>
-	 <p:outputPanel id="justificationCentralPanel">
-  		<h:panelGrid columns="2" style="width:740px;" 
-  			rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
-   			<p:outputLabel id="justificationOutputLbls" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
-			<p:inputTextarea id="justificationCentralLbl" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.justification}"
-  				rows="3" style="width:455px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
-      			autoResize="false" disabled="#{ctBackingBean.managedBean.viewContract
-      				or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"></p:inputTextarea>	
-   		</h:panelGrid> 
- 	</p:outputPanel>
  	
  	<p:outputPanel>
 	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"

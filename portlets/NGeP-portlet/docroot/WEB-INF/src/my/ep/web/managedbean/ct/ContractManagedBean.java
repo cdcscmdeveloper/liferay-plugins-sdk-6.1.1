@@ -104,8 +104,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtContractAmount ctContractAmount;	
 	private boolean disableGstAmount;	
 	private boolean disableContractAmount = true;
-	private boolean chkConceValue;
-	private boolean chkJustification;
 	private boolean bondWaiver;
 	
 	private boolean selectAll;
@@ -761,34 +759,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableContractAmount(boolean disableContractAmount) {
 		this.disableContractAmount = disableContractAmount;
-	}
-
-	/**
-	 * @return the chkConceValue
-	 */
-	public boolean isChkConceValue() {
-		return chkConceValue;
-	}
-
-	/**
-	 * @param chkConceValue the chkConceValue to set
-	 */
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
-	}
-	
-	/**
-	 * @return the chkJustification
-	 */
-	public boolean isChkJustification() {
-		return chkJustification;
-	}
-
-	/**
-	 * @param chkJustification the chkJustification to set
-	 */
-	public void setChkJustification(boolean chkJustification) {
-		this.chkJustification = chkJustification;
 	}
 	
 	/**

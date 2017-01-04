@@ -54,6 +54,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String editorValue;
 	private String fileDirectory;
 	private String pbQcApproved;
+	private String mofApproved;
 	private String textBeforeSign;
 	private String buttonAction;
 	private String committeeType;
@@ -69,7 +70,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean pbConfirmMeeting;
 	private boolean memberSignOff;
 	private boolean letterOfAcceptance;
-	private boolean bpkSaSkApprover;
 	private boolean prepareLOA;
 	private boolean signOffDecision;
 	private boolean signUpdateDecision;
@@ -89,7 +89,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtLetterOfAcceptance> ctLetterOfAcceptance;
 	private List<String> finalListOfSideMenu;
 	private List<SmPersonnel> supplierList;
-	private List<PmUser> bpkApproverList;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
     private CtContractItem selectedServiceItem;
@@ -223,8 +222,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setPbQcApproved(String pbQcApproved) {
 		this.pbQcApproved = pbQcApproved;
-	}
+	}	
 	
+	/**
+	 * @return the mofApproved
+	 */
+	public String getMofApproved() {
+		return mofApproved;
+	}
+
+	/**
+	 * @param mofApproved the mofApproved to set
+	 */
+	public void setMofApproved(String mofApproved) {
+		this.mofApproved = mofApproved;
+	}
+
 	/**
 	 * @return the textBeforeSign
 	 */
@@ -416,20 +429,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setLetterOfAcceptance(boolean letterOfAcceptance) {
 		this.letterOfAcceptance = letterOfAcceptance;
-	}
-	
-	/**
-	 * @return the bpkSaSkApprover
-	 */
-	public boolean isBpkSaSkApprover() {
-		return bpkSaSkApprover;
-	}
-	
-	/**
-	 * @param bpkSaSkApprover the bpkSaSkApprover to set
-	 */
-	public void setBpkSaSkApprover(boolean bpkSaSkApprover) {
-		this.bpkSaSkApprover = bpkSaSkApprover;
 	}
 	
 	/**
@@ -663,20 +662,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierList(List<SmPersonnel> supplierList) {
 		this.supplierList = supplierList;
-	}
-
-	/**
-	 * @return the bpkApproverList
-	 */
-	public List<PmUser> getBpkApproverList() {
-		return bpkApproverList;
-	}
-
-	/**
-	 * @param bpkApproverList the bpkApproverList to set
-	 */
-	public void setBpkApproverList(List<PmUser> bpkApproverList) {
-		this.bpkApproverList = bpkApproverList;
 	}
 
 	/**

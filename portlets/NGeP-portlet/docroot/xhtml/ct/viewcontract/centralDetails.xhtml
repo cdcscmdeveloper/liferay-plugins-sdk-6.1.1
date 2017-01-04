@@ -150,16 +150,6 @@
 			</table>
 		</h:panelGroup>
 	 </h:panelGrid>
-	 <p:outputPanel id="justificationCentralPanel">
-  		<h:panelGrid columns="2" style="width:740px;" 
-  			rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
-   			<p:outputLabel id="justificationOutputLbls" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
-			<p:inputTextarea id="justificationCentralLbl" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.justification}"
-  				rows="3" style="width:455px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
-      			autoResize="false" disabled="#{ctBackingBean.managedBean.viewContract
-      				or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"></p:inputTextarea>	
-   		</h:panelGrid> 
- 	</p:outputPanel>
  	
  	<p:outputPanel>
 	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
