@@ -90,6 +90,18 @@
 			</p:dataTable>
 
 		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="onlineInquiryPanelId" 
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}">
+			<h:outputText value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" />
+		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.sm.supplier.respond']}" id="onlineResponsePanelId" 
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}">
+			<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.responseText}" 
+				maxlength="100" cols="70" rows="10"/>
+		</p:panel>
+		
 		<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
