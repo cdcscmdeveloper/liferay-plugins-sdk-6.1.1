@@ -65,7 +65,7 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	public void searchDocument(){
 		if(null == getManagedBean().getPtj()){ 
 			throw new EpException(MessageConst.ERROR_100022, 
-					new String[] {ResourceBundleUtils.getMessage("lbl.fl.ptj", 
+					new String[] {ResourceBundleUtils.getMessage("lbl.fl.ptj.code", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 		getManagedBean().getFlDocumentDataModel().reloadData();
