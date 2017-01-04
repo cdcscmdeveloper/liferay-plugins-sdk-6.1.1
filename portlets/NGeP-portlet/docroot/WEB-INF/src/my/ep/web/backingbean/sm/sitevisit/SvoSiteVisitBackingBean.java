@@ -149,7 +149,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//getManagedBean().getSelectedSvTemplate().setSmSvFacility(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getSmFacilities().get(0));
 		log.info("*******setSelectedSmSvFacility*********" + getManagedBean().getSelectedSvTemplate().getSvTemplateId());
 		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility() == null){
-//			log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
+			//log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
 			SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSiteRefId());
 			SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
 
@@ -312,6 +312,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 			retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
+			
+			smSvTask.getSmSvAddress().setAddress(getSmAddressById(smSvTask.getSmSvAddress().getSiteRefId()));
 		}
 		
 	}
@@ -1170,7 +1172,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String lblApplType = SmCommonUtil.getApplTypeDesc(svTask.getSmAppl().getApplType());
 		//Locale locale = new Locale("en");
 		String applType = ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
-		SmAddress compAddress = SmCommonUtil.getInstance().getSmAddressById(svTask.getSmSvAddress().getSiteRefId());
+		SmAddress compAddress = svTask.getSmSvAddress().getAddress();
 		List<SmMofAccount> mofAccountLs = svTask.getSmAppl().getSmSupplier().getSmMofAccounts();
 		
 		context.put("hostUrl", getLogoHeaderPath());
@@ -1211,7 +1213,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 //		String lblTemplate = ResourceBundleUtils.getMessage(strTemplate,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 		
 		VelocityContext context = new VelocityContext();
-		SmAddress compAddress = SmCommonUtil.getInstance().getSmAddressById(svTask.getSmSvAddress().getSiteRefId());
 		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());	
 		context.put("applNo", svTask.getSmAppl().getApplNo());
@@ -1219,8 +1220,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("visitingPurpose", templateDesc.toUpperCase());
 		context.put("catApplicable", getManagedBean().getSupplierCategory());
 		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneNo());
-		context.put("latitude", compAddress.getMapLatitude());
-		context.put("longitute", compAddress.getMapLongitude());
+		context.put("latitude", svTask.getSmSvAddress().getAddress().getMapLatitude());
+		context.put("longitute", svTask.getSmSvAddress().getAddress().getMapLongitude());
 		
 		if(this.getManagedBean().getContactPerson() != null){
 			context.put("contactPersonName", this.getManagedBean().getContactPerson().getName());
@@ -2528,6 +2529,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public String naviToAcknowledgement(){
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
+	}
+	
+	private SmAddress getSmAddressById(Long addressId){
+		SmAddress address = SmCommonUtil.getInstance().getSmAddressById(addressId);
+		return address;
 	}
 	
 	private void retrieveAndSetSmSvDocLicense(){
