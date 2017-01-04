@@ -115,7 +115,7 @@
 							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this"
-								action="#{backingBean.assignMissingDocsList}"
+								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
 								update=":form:tt:sendInqDialog" />
 						</c:when>
 						<c:otherwise>
@@ -163,7 +163,7 @@
 								<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this"
-									action="#{backingBean.assignMissingDocsList}"
+									action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
 									update=":form:tt:sendInqDialog" />
 							</c:if>
 						</c:otherwise>

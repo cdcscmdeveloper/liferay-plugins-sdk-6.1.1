@@ -223,7 +223,7 @@ public class CommonApplBackingBean extends
 				// smSupplier , smAppl of the managedBean
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				smApplBB.assignMissingDocsList();
+				smApplBB.assignMissingDocsList(false,null);
 				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
@@ -248,7 +248,7 @@ public class CommonApplBackingBean extends
 				// smSupplier , smAppl of the managedBean
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				smApplBB.assignMissingDocsList();
+				smApplBB.assignMissingDocsList(false,null);
 				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);

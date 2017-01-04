@@ -8873,34 +8873,37 @@ public class SmApplicationUtil {
 	public static boolean isAllSuppDocAlreadyVerified(
 			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
 		boolean retVal = true;
-		for (SmApplSupportDoc doc : docs) {
-			if ((approver && (doc.getApproverVerifiedFlg() == null || doc
-					.getApproverVerifiedFlg() == 0))
-					|| (!approver && (doc.getVerifiedFlg() == null || doc
-							.getVerifiedFlg() == 0))) {
-				if (suppDocMode != null
-						&& suppDocMode
-								.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-					if (!EntityHelper
-							.isCollectionEmpty(doc.getSmApplDocFiles())
-							&& !StringUtils.isBlank(doc.getSmApplDocFiles()
-									.get(0).getFileName())) {
-						retVal = false;
-						break;
+		if (!EntityHelper.isCollectionEmpty(docs)) {
+			for (SmApplSupportDoc doc : docs) {
+				if ((approver && (doc.getApproverVerifiedFlg() == null || doc
+						.getApproverVerifiedFlg() == 0))
+						|| (!approver && (doc.getVerifiedFlg() == null || doc
+								.getVerifiedFlg() == 0))) {
+					if (suppDocMode != null
+							&& suppDocMode
+									.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+						if (!EntityHelper.isCollectionEmpty(doc
+								.getSmApplDocFiles())
+								&& !StringUtils.isBlank(doc.getSmApplDocFiles()
+										.get(0).getFileName())) {
+							retVal = false;
+							break;
+						}
+					} else {
+						if (doc.getPmDocument().isMandatory()) {
+							retVal = false;
+							break;
+						}
 					}
-				} else {
-					if (doc.getPmDocument().isMandatory()) {
-						retVal = false;
-						break;
-					}
-				}
 
-			} else if ((approver && doc.getApproverVerifiedFlg() == 0)
-					|| (!approver && doc.getVerifiedFlg() == 0)) {
-				retVal = false;
-				break;
+				} else if ((approver && doc.getApproverVerifiedFlg() == 0)
+						|| (!approver && doc.getVerifiedFlg() == 0)) {
+					retVal = false;
+					break;
+				}
 			}
 		}
+
 		return retVal;
 	}
 
@@ -9837,6 +9840,61 @@ public class SmApplicationUtil {
 			}
 		}
 		return SmCommonUtil.getStatusDescByStatusId(statusId);
+	}
+
+	public static void initPoInquiry(SmApplicationManagedBean bean,
+			boolean isNewInquiry) {
+		bean.setPoToSupplierInquiry(null);
+
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+				.getSmApplInquiries())) {
+
+			// sort created date descendent
+			Collections.sort(bean.getSmAppl().getSmApplInquiries(),
+					new Comparator<SmApplInquiry>() {
+						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+							if (o1.getCreatedDate() == null
+									|| o2.getCreatedDate() == null)
+								return 0;
+							return o2.getCreatedDate().compareTo(
+									o1.getCreatedDate());
+						}
+					});
+
+			// set for latest inquiry
+			SmApplInquiry currentInquiry = bean.getSmAppl()
+					.getSmApplInquiries().get(0);
+			bean.setPoToSupplierInquiry(currentInquiry);
+
+			// if PO (Inquiry Section)
+			if (bean.isPoUser()) {
+
+				if (isNewInquiry) {
+					bean.setPoToSupplierInquiry(new SmApplInquiry());
+				} else {
+					// set for inquiry histories
+					bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+					for (SmApplInquiry inquiry : bean.getSmAppl()
+							.getSmApplInquiries()) {
+						if (!StringUtils.isBlank(inquiry.getInquirySubject())
+								&& inquiry
+										.getInquirySubject()
+										.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+							bean.getPoSupplierInquiryHistory().add(inquiry);
+						}
+					}
+				}
+
+			}
+			// if Supplier (Respond to PO inquiry)
+			else if (bean.isSupplierUser()) {
+				bean.getPoToSupplierInquiry()
+						.setResponseText(StringUtils.EMPTY);
+			}
+		} else {
+			// initialize po inquiry
+			bean.setPoToSupplierInquiry(new SmApplInquiry());
+		}
 	}
 
 	private static void addRoles(List<SelectItem> roles, String epRole,

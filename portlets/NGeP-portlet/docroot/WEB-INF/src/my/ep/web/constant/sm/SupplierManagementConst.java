@@ -15,6 +15,9 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 
 public class SupplierManagementConst {
 
+	// Application Inquiry Subject
+	public static final String INQUIRY_PO_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.INQUIRY_PO_SUPPLIER;
+
 	public static final Map<String, String> APPLICATION_BASE_PAGE_BY_TYPE;
 	static {
 		Map<String, String> tmp = new HashMap<String, String>();
@@ -466,6 +469,7 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
 	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
+	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = "POINQUIRY";
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
@@ -954,6 +958,10 @@ public class SupplierManagementConst {
 
 	public String getSM_APPL_PAGE_TYPE_PODEC() {
 		return SM_APPL_PAGE_TYPE_PODEC;
+	}
+	
+	public String getSM_APPL_PAGE_TYPE_POINQUIRY() {
+		return SM_APPL_PAGE_TYPE_POINQUIRY;
 	}
 
 	public String getSM_APPL_PAGE_TYPE_APPRDEC() {

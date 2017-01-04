@@ -150,5 +150,16 @@
 			<p:spacer height="2px;" />
 
 		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="offlineInquiryPanelId" 
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}">
+			<h:outputText value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" />
+		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.sm.supplier.respond']}" id="offlineResponsePanelId" 
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}">
+			<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.responseText}" 
+				maxlength="100" cols="70" rows="10"/>
+		</p:panel>
 	</ui:define>
 </ui:composition>
