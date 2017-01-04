@@ -1539,7 +1539,7 @@ public class CommitteBackingBean extends
 			if (member.getMemberRole() != null) {
 				member.setMemberRoleId(member.getMemberRole().getParameterId());	
 			}			
-			member.setAccessRight("E");
+			member.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 			setCommitteeMemberOrgProfile(member);
 
 			member.setScCommittee(scCommittee);
@@ -1785,7 +1785,7 @@ public class CommitteBackingBean extends
 			if (member.getRepresentativeType() != null) {
 				member.setRepresentativeTypeId(member.getRepresentativeType().getParameterId());
 			}
-			member.setAccessRight("E");
+			member.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 			setCommitteeMemberOrgProfile(member);
 
 			member.setScCommittee(scCommittee);
@@ -1896,7 +1896,7 @@ public class CommitteBackingBean extends
 						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
 					}
 	
-					committeeMember.setAccessRight("E");
+					committeeMember.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 					if (ParameterConst.COMMITTEE_ROLE_MEMBER
 							.equals(userMemberRole.getParameterCode())) {
 						committeeMember.setRepresentativeType(new PmParameter());
