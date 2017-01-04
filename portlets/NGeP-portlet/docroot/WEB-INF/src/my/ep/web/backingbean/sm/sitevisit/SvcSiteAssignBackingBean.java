@@ -19,10 +19,12 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
@@ -79,6 +81,7 @@ public class SvcSiteAssignBackingBean extends
 		//this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		
+		setSiteVisitAddressesFacilityName();
 		getAllSiteVisitCategoryCode();
 		getWorkFlowInfo(getManagedBean().getAppId());
 	}
@@ -285,6 +288,34 @@ public class SvcSiteAssignBackingBean extends
 			return RoleCode.UPS_SVC.value();		
 		else 
 			return null;
+	}
+	
+	/**
+	 * Set site visit address list facility name in data table
+	 */
+	private void setSiteVisitAddressesFacilityName() {
+		SmFacility smFacility = null;
+		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+		if (getManagedBean().getSmAppl().getSmSvTasks().size() > 0) {
+			for (SmSvTask svTask : getManagedBean().getSmAppl().getSmSvTasks()) {
+				log.info("*********smAppl.getSmSvTasks()**********" + svTask.getSmSvAddress().getSiteRefId());
+				if (svTask.getSmSvAddress() != null) {
+					if(svTask.getSmSvAddress() != null){
+						reqDTO.setSmAddressId(svTask.getSmSvAddress().getSiteRefId());
+						smFacility = SmServiceLookup.getSiteVisitSO()
+								.retrieveSmFacilityByAddressId(reqDTO)
+								.getSmFacility();
+						svTask.getSmSvAddress().setFacilityName(smFacility == null ? ""
+								: smFacility.getFacilityName());
+						if(smFacility != null && smFacility.getFacilityType() != null){
+							svTask.getSmSvAddress().setFacilityType(smFacility.getFacilityType());
+						}
+					}
+				}
+			}
+			
+			sortSmSvAddressByFacilityType();
+		}
 	}
 	
 	/**
