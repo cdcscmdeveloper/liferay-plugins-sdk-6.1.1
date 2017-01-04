@@ -19,6 +19,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+// TODO: Auto-generated Javadoc
+
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -28,7 +31,6 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.fl.order.IReliefOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -65,7 +67,6 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
-import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -89,7 +90,6 @@ import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.paymentmatch.PaymentMatchBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
-import my.ep.web.backingbean.fl.relieforder.ReliefOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
@@ -98,9 +98,6 @@ import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
 
 /**
  * Backingbean for Fulfillment document.
@@ -111,6 +108,8 @@ import org.apache.log4j.Logger;
 @ManagedBean(name="flDocumentBackingBean")
 @RequestScoped
 public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentManagedBean>{
+
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(FlDocumentBackingBean.class);
@@ -278,7 +277,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		IReceivedNoteSO receivedNoteSO = null;
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		IPaymentMatchSO paymentSO = null;
-		IReliefOrderSO reliwfOrderSo=null;
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		IFulfilmentSO iFulfilmentSO = null;
@@ -726,63 +724,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			danBB.setAdjustmentNote(resDTO);
 			danBB.getManagedBean().setBackToPrevious(null);
 			navgPage=NAV_TO_ADJUSTMENT_NOTE;
-		}else if(docType.equals(ParameterConst.DOCTYPE_RELIEF_ORDER)){
-			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-			reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
-			reqDTO.setReliefOrderId(Long.valueOf(flDocId));
-			reqDTO.setDocType(ParameterConst.DOCTYPE_RELIEF_ORDER);
-			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByReliefOrderId(reqDTO);
-			
-			reqDTO.setFlOrderId(Long.valueOf(rsResDto.getReliefOrder().getFlFulfilmentOrder().getFulfilmentOrderId()));
-			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
-			ReliefOrderBackingBean reliefOrderBB=new ReliefOrderBackingBean();
-			reliefOrderBB.getManagedBean().setButtonVal(buttonVal);
-			reliefOrderBB.getManagedBean().setSelectedTabIndex(0);
-			reliefOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
-			reliefOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-			reliefOrderBB.getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
-			reliefOrderBB.getManagedBean().setNonReliefItems(new ArrayList<FlReliefOrderItem>());
-			reliefOrderBB.getManagedBean().setReliefItems(new ArrayList<FlReliefOrderItem>());
-			reliefOrderBB.getManagedBean().setNonReliefMenuDisplay(false);
-			for(FlReliefOrderItem  flReliefOrderItem : reliefOrderBB.getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
-				if(!flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
-					reliefOrderBB.getManagedBean().setNonReliefMenuDisplay(true);
-					reliefOrderBB.getManagedBean().getNonReliefItems().add(flReliefOrderItem);
-				}else{
-					reliefOrderBB.getManagedBean().getReliefItems().add(flReliefOrderItem);
-				}
-			}
-			reliefOrderBB.sortReliefOrderItems(reliefOrderBB.getManagedBean().getNonReliefItems());
-			reliefOrderBB.sortReliefOrderItems(reliefOrderBB.getManagedBean().getReliefItems());
-			reliefOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
-			if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract() != null){
-				if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
-					Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
-					contractSupplierReqDTO.setContractId(supplieContractId);
-					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
-					if(contractSupplierResDTO.getFactoring() != null){
-						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
-						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-							reliefOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
-						}
-					}
-				}
-			}
-				
-			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
-				flBB.initializeRemarkAndAttachement(null, rsResDto.getRemarkList(), rsResDto.getAttachmentList());
-				flBB.getManagedBean().setHideRemarks(true);
-			} else {
-				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
-			if(!isGovtSeller()){
-				reliefOrderBB.getManagedBean().setSupplier(hasSupplierRole());
-			}
-			navgPage=NAV_TO_GST_RELIEF;
-		}	
+		}
 		return navgPage;
 	}
 	
