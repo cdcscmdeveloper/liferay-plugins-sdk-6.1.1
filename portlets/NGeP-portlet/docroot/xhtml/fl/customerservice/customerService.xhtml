@@ -43,7 +43,7 @@
 							id="ptjOrgProfileId" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.ptj.orgCode}"  />					
 					<ac:lov id="ptj" uiMode="link" lovId="PM_ORG_PROFILE_FL"
-							headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
+							headerText="#{lbl['lbl.fl.pm.org.code']}"
 							saveObject="flCustomerServiceBackingBean.managedBean.ptj"
 							value="#{flCustomerServiceBackingBean.managedBean.ptj.orgName}"
 							size="50" update=":form:ptjPanel"
@@ -127,7 +127,7 @@
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/>
 			<p:dataTable id="flDocListDt"
 				value="#{flCustomerServiceBackingBean.managedBean.flDocumentDataModel}" lazy="true"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" rows="10"
@@ -158,7 +158,7 @@
 					<p:commandLink 
 							action="#{flCustomerServiceBackingBean.navigateToPage(flDocument.docType,flDocument.docId,flDocument.statusId,flDocument.docNo,flDocument.orderNo)}"
 							style="padding-left:10px">
-							<p:graphicImage value="/css/images/design/view.png" />
+							<p:graphicImage value="/css/images/design/ico-view.png" />
 						</p:commandLink> 
 				</p:column>
 			</p:dataTable>
