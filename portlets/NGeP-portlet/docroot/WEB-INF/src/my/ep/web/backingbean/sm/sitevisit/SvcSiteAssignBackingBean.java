@@ -198,6 +198,7 @@ public class SvcSiteAssignBackingBean extends
 			remark.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVC);
 			remark.setDocId(svTask.getSvTaskId());
 			svTask.setSmRemark(remark);
+			svTask.getSmSvAddress().setAddress(SmCommonUtil.getInstance().getSmAddressById(svTask.getSmSvAddress().getSiteRefId()));
 			
 			SmSvcAssignmentVO svcAssignmentVO = new SmSvcAssignmentVO();
 			svcAssignmentVO.setSmSvTask(svTask);
@@ -299,17 +300,15 @@ public class SvcSiteAssignBackingBean extends
 		if (getManagedBean().getSmAppl().getSmSvTasks().size() > 0) {
 			for (SmSvTask svTask : getManagedBean().getSmAppl().getSmSvTasks()) {
 				log.info("*********smAppl.getSmSvTasks()**********" + svTask.getSmSvAddress().getSiteRefId());
-				if (svTask.getSmSvAddress() != null) {
-					if(svTask.getSmSvAddress() != null){
-						reqDTO.setSmAddressId(svTask.getSmSvAddress().getSiteRefId());
-						smFacility = SmServiceLookup.getSiteVisitSO()
-								.retrieveSmFacilityByAddressId(reqDTO)
-								.getSmFacility();
-						svTask.getSmSvAddress().setFacilityName(smFacility == null ? ""
-								: smFacility.getFacilityName());
-						if(smFacility != null && smFacility.getFacilityType() != null){
-							svTask.getSmSvAddress().setFacilityType(smFacility.getFacilityType());
-						}
+				if(svTask.getSmSvAddress() != null){
+					reqDTO.setSmAddressId(svTask.getSmSvAddress().getSiteRefId());
+					smFacility = SmServiceLookup.getSiteVisitSO()
+							.retrieveSmFacilityByAddressId(reqDTO)
+							.getSmFacility();
+					svTask.getSmSvAddress().setFacilityName(smFacility == null ? ""
+							: smFacility.getFacilityName());
+					if(smFacility != null && smFacility.getFacilityType() != null){
+						svTask.getSmSvAddress().setFacilityType(smFacility.getFacilityType());
 					}
 				}
 			}
