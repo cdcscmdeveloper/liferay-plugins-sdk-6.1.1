@@ -830,7 +830,7 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setDigiSignData(digiSign);
 				committeReqDTO.setSpecApprovalReq(true);
 				committeReqDTO.setApprovalFlow(true);
-				committeReqDTO.setSaveFlow(true);
+				committeReqDTO.setSaveFlow(false);
 				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
