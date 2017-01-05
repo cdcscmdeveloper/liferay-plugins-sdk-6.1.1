@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.web.backingbean.sc.directpurchase.DpCustomerServiceSearchBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.SourcingCustomerServiceBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -44,6 +45,7 @@ private String docNumber;
 private String docTitle;
 private String officerName;
 private List<SourcingCustomerServiceBean> customerServiceEntity;
+private IPagingDataModel<Object[]> dpCustomerServiceSearchModel;
 
 
 /**
@@ -209,6 +211,21 @@ public List<SourcingCustomerServiceBean> getCustomerServiceEntity() {
 public void setCustomerServiceEntity(
 		List<SourcingCustomerServiceBean> customerServiceEntity) {
 	this.customerServiceEntity = customerServiceEntity;
+}
+
+/**
+ * @return the dpCustomerServiceSearchModel
+ */
+public IPagingDataModel<Object[]> getDpCustomerServiceSearchModel() {
+	return dpCustomerServiceSearchModel;
+}
+
+/**
+ * @param dpCustomerServiceSearchModel the dpCustomerServiceSearchModel to set
+ */
+public void setDpCustomerServiceSearchModel(
+		IPagingDataModel<Object[]> dpCustomerServiceSearchModel) {
+	this.dpCustomerServiceSearchModel = dpCustomerServiceSearchModel;
 }
 
 
