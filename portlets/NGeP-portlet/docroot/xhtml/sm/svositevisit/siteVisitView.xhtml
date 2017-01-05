@@ -48,16 +48,16 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
-				<h:outputText rendered="#{not empty svTask.smSvAddress.smAddress.smFacilities[0].facilityType}" 
-				value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.smAddress.smFacilities[0].facilityType)}" />
+				<h:outputText rendered="#{not empty svTask.smSvAddress.address.smFacilities[0].facilityType}" 
+				value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.address.smFacilities[0].facilityType)}" />
 				
-				<h:outputText rendered="#{empty svTask.smSvAddress.smAddress.smFacilities[0].facilityType}" 
-				value="#{svoSiteVisitBackingBean.getBranchOrAssociateCompFaciclityDescByAddrressId(svTask.smSvAddress.smAddress.addressId)}" />
+				<h:outputText rendered="#{empty svTask.smSvAddress.address.smFacilities[0].facilityType}" 
+				value="#{svoSiteVisitBackingBean.getBranchOrAssociateCompFaciclityDescByAddrressId(svTask.smSvAddress.address.addressId)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="width: 50%;white-space: normal;">
-				<h:outputText value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.smAddress)}"
+				<h:outputText value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.address)}"
 					escape="false" style="float : left" />
 			</p:column>
 			
@@ -67,14 +67,14 @@
 						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
 							styleClass="outputLabel-view-label" /></td>
 						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
-							value="#{svTask.smSvAddress.smAddress.mapLatitude}" /></td>
+							value="#{svTask.smSvAddress.address.mapLatitude}" /></td>
 					</tr>
 		
 					<tr>
 						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.longitude']}" style="float:left"
 							styleClass="outputLabel-view-label" /></td>
 						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
-							value="#{svTask.smSvAddress.smAddress.mapLongitude}" /></td>
+							value="#{svTask.smSvAddress.address.mapLongitude}" /></td>
 					</tr>
 				</table>
 				</ui:remove>
@@ -88,9 +88,9 @@
 				
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
 					locationName="#{svTask.smAppl.smCompanyBasic.companyName}"
-					latitude="#{svTask.smSvAddress.smAddress.mapLatitude}" 
-					longitude="#{svTask.smSvAddress.smAddress.mapLongitude}" 
-					address="#{svTask.smSvAddress.smAddress.address1}#{svTask.smSvAddress.smAddress.address2}#{svTask.smSvAddress.smAddress.address3}#{svTask.smSvAddress.smAddress.pmCity.cityName},#{svTask.smSvAddress.smAddress.pmDistrict.districtName}, #{svTask.smSvAddress.smAddress.pmState.stateName},#{svTask.smSvAddress.smAddress.pmCountry.countryName}" />
+					latitude="#{svTask.smSvAddress.address.mapLatitude}" 
+					longitude="#{svTask.smSvAddress.address.mapLongitude}" 
+					address="#{svTask.smSvAddress.address.address1}#{svTask.smSvAddress.address.address2}#{svTask.smSvAddress.address.address3}#{svTask.smSvAddress.address.pmCity.cityName},#{svTask.smSvAddress.address.pmDistrict.districtName}, #{svTask.smSvAddress.address.pmState.stateName},#{svTask.smSvAddress.address.pmCountry.countryName}" />
 			</p:column>
 			
 			<p:column
