@@ -19,6 +19,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QTCustomerServiceSearchBean;
 import my.ep.web.bean.sc.quatationtender.SourcingCustomerServiceBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -50,6 +51,7 @@ private List<ScBidSchedule> bidScheduleList;
 private List<ScQtBsvDtl> briefingDtlsList;
 private List<ScQtBsvDtl> siteVisitDtlsList;
 private Long totalProposalSubmitCount;
+private IPagingDataModel<ScQt> qtCustomerServiceDataModel;
 
 /**
  * Instantiates a new DP CustomerService managed bean.
@@ -242,6 +244,21 @@ public Long getTotalProposalSubmitCount() {
  */
 public void setTotalProposalSubmitCount(Long totalProposalSubmitCount) {
 	this.totalProposalSubmitCount = totalProposalSubmitCount;
+}
+
+/**
+ * @return the qtCustomerServiceDataModel
+ */
+public IPagingDataModel<ScQt> getQtCustomerServiceDataModel() {
+	return qtCustomerServiceDataModel;
+}
+
+/**
+ * @param qtCustomerServiceDataModel the qtCustomerServiceDataModel to set
+ */
+public void setQtCustomerServiceDataModel(
+		IPagingDataModel<ScQt> qtCustomerServiceDataModel) {
+	this.qtCustomerServiceDataModel = qtCustomerServiceDataModel;
 }
 
 
