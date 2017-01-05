@@ -725,7 +725,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			setPersonnelSoftcertInformation(personnel);
 		}
 		setAlreadyHadFreeSoftcert();
-//		setDisableFlUserRowSelection(personnels);
+		setDisableFlUserRowSelection(personnels);
 		setDisableRowSelectionIfSuppTmpNotRequestSoftCert(personnels);
 		initDisableRevokeButton();
 	}
