@@ -8,6 +8,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -23,6 +25,7 @@ import my.ep.constant.pm.KPICodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
@@ -77,6 +80,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private List<SelectItem> docStatusListGroup;
 	private int docStatusGroup;
 	Integer loiPreparationDays = null;
+	private boolean sdoWithMultipleRoles;
 	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -589,6 +593,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
 				reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
+				
+				//SDO User - filer Search
+				sdoSearchFilter(reqDTO);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
@@ -888,6 +895,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setLoiPreparationDays(Integer loiPreparationDays) {
 		this.loiPreparationDays = loiPreparationDays;
 	}
+	
+	public boolean isSDORole(){
+		FacesScopes fs = new FacesScopes();
+		if (fs.hasRoleUser(RoleCode.UPS_SDO.value())){
+			return true;
+		}
+		return false;
+	}
 
 	private boolean viewGlpFlag() {
 		FacesScopes fs = new FacesScopes();
@@ -898,9 +913,33 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 		return false;
 	}
-		
-	
-	
-	
 
+	public boolean isSdoWithMultipleRoles() {
+		return sdoWithMultipleRoles;
+	}
+
+	public void setSdoWithMultipleRoles(boolean sdoWithMultipleRoles) {
+		this.sdoWithMultipleRoles = sdoWithMultipleRoles;
+	}
+	
+	private void sdoSearchFilter(BpmRequestDTO reqDTO){
+		if(isSDORole()){
+			StringBuilder taskTitle = new StringBuilder("verifySupportingDocuments");
+
+			if(StringUtils.isNotBlank(getTaskDescGroup())){
+				taskTitle.append(".");
+				taskTitle.append(getTaskDescGroup());
+			}
+
+
+			if(!isSdoWithMultipleRoles()){
+				reqDTO.setTaskTitle(taskTitle.toString());
+			}else if(isSDORole() && isSdoWithMultipleRoles()){
+				if(getDocStatusGroup() == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION){
+					reqDTO.setTaskTitle(taskTitle.toString());
+				}
+			}
+			
+		}
+	}
 }
