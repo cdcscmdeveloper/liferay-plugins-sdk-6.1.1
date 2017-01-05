@@ -37,12 +37,11 @@
 						 			
 							 			<tr>
 							 			
-							 				<td>
+							 				<td width="60%">
 							 					#{bpmTaskDashSumBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, task.docTypeId)}
 							 				</td>
 				
-											<td>
-	
+											<td width="40%">
 									            <p:commandLink action="#{bpmTaskDashSumBackingBean.goToTaskListFilterDocType(task.docTypeId)}">
 													<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/next-icon2.png" style="width:16px"/>
 												</p:commandLink>
@@ -60,14 +59,14 @@
 						 							
 							 							<tr>
 							 								
-							 								<td width="90%">
+							 								<td width="60%">
 							 									#{bpmTaskDashSumBackingBean.applicationStatus(status.statusId)}
 							 									<h:outputFormat rendered="#{status.critical > 0}"
 																	value="(#{lbl['lbl.cc.task.summary.urgent.request']})">
 																	<f:param value="#{status.critical}" />
 																</h:outputFormat>
 							 								</td>
-							 								<td align="right">
+							 								<td  width="40%" align="right">
 																#{status.total}
 							 								</td>
 							 							
