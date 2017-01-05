@@ -321,6 +321,9 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
 							<h:outputText value="#{person.roleName}" />
+							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+								rendered="#{person.contractSignerFlg eq 1 
+								and viewSmApplBackingBean.managedBean.smAppl.supplierType ne 'J'}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}">
 							<ac:smRoleDesc backingBean="#{viewSmApplBackingBean}" roleCode="#{person.epRole}"/>
