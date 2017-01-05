@@ -36,6 +36,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
@@ -852,6 +853,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		//this.getManagedBean().getTaskListDataModel().reloadData();
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -1021,6 +1024,17 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 
 
+	private boolean sdoWithMultipleRole(){
+		log.info("***********hasManyRole**********");
+		FacesScopes fs = new FacesScopes();
+		long roleCount = PmCommonUtil.retrieveActiveOrg(fs.getUserSessionBean().getUserId()).get(0).getPmUserRoles().size();
+		
+		if(roleCount > 1){
+			return true;
+		}
+		
+		return false;
 
+	}
 
 }
