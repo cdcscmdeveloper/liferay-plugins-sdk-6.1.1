@@ -1229,7 +1229,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean());
 
 		// PO inquiry initialization
-		assignMissingDocsList(false, null);
+		initMissingDocs(false, null);
 
 		// show po remarks and rejection reason for resubmit application
 		if (getManagedBean().isSupplierUser()
@@ -7180,10 +7180,14 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignMissingDocsList(boolean isNewInquiry, String dialogId) {
 		log.info("*** Send Inquiry **** ");
-		SmApplicationUtil.initPoInquiry(getManagedBean(), isNewInquiry);
 		if (getManagedBean().isPoUser()) {
 			SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
 		}
+		initMissingDocs(isNewInquiry, dialogId);
+	}
+
+	public void initMissingDocs(boolean isNewInquiry, String dialogId) {
+		SmApplicationUtil.initPoInquiry(getManagedBean(), isNewInquiry);
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
