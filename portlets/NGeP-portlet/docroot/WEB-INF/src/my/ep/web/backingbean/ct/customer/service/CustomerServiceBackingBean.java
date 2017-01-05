@@ -6,14 +6,14 @@ import java.io.IOException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
+//import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import com.liferay.portal.kernel.exception.PortalException;
+/*import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.theme.ThemeDisplay;*/
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -175,13 +175,16 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 	 * @return complete or incomplete
      */
 	public String chkContractStatusType(int status) {
-		if (status == ContractConst.STATUS_COMPLETE) {
-			return ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if (status == ContractConst.STATUS_INCOMPLETE) {
-			return ResourceBundleUtils.getMessage("lbl.ct.incomplete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else {
-			return ResourceBundleUtils.getMessage("lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		if (status == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			    return ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if(status == ContractConst.CONTRACT_STATUS_INACTIVE){
+			return ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if(status == ContractConst.CONTRACT_STATUS_EXPIRED){
+			return ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if(status == ContractConst.CONTRACT_STATUS_TERMINATED){
+			return ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
+		return null;
 	}
 	
 	/**
