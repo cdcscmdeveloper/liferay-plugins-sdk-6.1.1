@@ -11,57 +11,67 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 
-	<div class="ppRightBtn">
-	<ui:param name="readOnlyTask" value="#{directLOABackingBean.managedBean.readOnly}" />
-		<ui:decorate
-			template="/WEB-INF/facelets/templates/claim_template.xhtml">
-			<ui:define name="outComeSection">
-				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
-					partialSubmit="true" update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{directLOABackingBean.saveAction}" />
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<div class="ppRightBtn">
+					<ui:param name="readOnlyTask"
+						value="#{directLOABackingBean.managedBean.readOnly}" />
+					<ui:decorate
+						template="/WEB-INF/facelets/templates/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+								partialSubmit="true" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								action="#{directLOABackingBean.saveAction}" />
 
-				<c:choose>
-					<c:when test="#{!empty directLOABackingBean.managedBean.taskId}">
-						<ui:repeat var="bpmAction"
-							value="#{directLOABackingBean.managedBean.outComes}">
-							<ui:param name="buttonLabel"
-								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<c:choose>
+								<c:when test="#{!empty directLOABackingBean.managedBean.taskId}">
+									<ui:repeat var="bpmAction"
+										value="#{directLOABackingBean.managedBean.outComes}">
+										<ui:param name="buttonLabel"
+											value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" update="@([id$=spkiOutputPanel])"
-									partialSubmit="true" process="@form"
-									disabled="#{!directLOABackingBean.managedBean.agreeWithTermsConditions}"
-									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-									<f:setPropertyActionListener value="#{bpmAction}"
-										target="#{directLOABackingBean.managedBean.action}" />
-									<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.autoUpdate}" value="false" />
-								</p:commandButton>
-							</h:panelGroup>
+										<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+											<p:commandButton value="#{lbl[buttonLabel]}"
+												styleClass="ui-button" update="@([id$=spkiOutputPanel])"
+												partialSubmit="true" process="@form"
+												disabled="#{!directLOABackingBean.managedBean.agreeWithTermsConditions}"
+												action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+												onstart="blockWidget.show();"
+												oncomplete="blockWidget.hide();">
+												<f:setPropertyActionListener value="#{bpmAction}"
+													target="#{directLOABackingBean.managedBean.action}" />
+												<f:setPropertyActionListener
+													target="#{directLOABackingBean.managedBean.autoUpdate}"
+													value="false" />
+											</p:commandButton>
+										</h:panelGroup>
 
-							<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									oncomplete="blockWidget.hide();"
-									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="@this" update="@this" />
-							</h:panelGroup>
-						</ui:repeat>
-					</c:when>
-				</c:choose>
-				
-				<p:outputPanel id="spkiOutputPanel">
-					<ac:spkiPopup id="spkiPopup"
-						password="#{directLOABackingBean.managedBean.spkiBackingBean.password}"
-						challengeAns1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeAns1}"
-						challengeQues1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeQues1}"
-						postSignAction="#{directLOABackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}"
-						enableAutoUpdate="#{directLOABackingBean.enableAutoUpdate}" />
-					</p:outputPanel>
-			</ui:define>
-		</ui:decorate>
+										<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+											<p:commandButton value="#{lbl[buttonLabel]}"
+												styleClass="ui-button" onstart="blockWidget.show();"
+												oncomplete="blockWidget.hide();"
+												action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+												partialSubmit="true" process="@this" update="@this" />
+										</h:panelGroup>
+									</ui:repeat>
+								</c:when>
+							</c:choose>
 
-	</div>
+							<p:outputPanel id="spkiOutputPanel">
+								<ac:spkiPopup id="spkiPopup"
+									password="#{directLOABackingBean.managedBean.spkiBackingBean.password}"
+									challengeAns1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeAns1}"
+									challengeQues1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeQues1}"
+									postSignAction="#{directLOABackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}"
+									enableAutoUpdate="#{directLOABackingBean.enableAutoUpdate}" />
+							</p:outputPanel>
+						</ui:define>
+					</ui:decorate>
+
+				</div>
+			</td>
+		</tr>
+	</table>
 </ui:composition>
