@@ -9,7 +9,7 @@
 
 
 	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true"
-		toggleable="true">
+		toggleable="true" id="pnlGroupSearch">
 
 
 		<table style="width: 100%">
@@ -53,22 +53,13 @@
 							value="#{bpmTasklistBackingBean.managedBean.docStatusListGroup}"
 							itemLabel="#{docStatus.statusName}" var="docStatus"
 							itemValue="#{docStatus.statusDescId}"></f:selectItems>
+						<p:ajax event="change" update="pnlGroupSearch"></p:ajax>
 					</p:selectOneMenu></td>
 			</tr>
-
-
-
-		</table>
-
-		<div class="clear"></div>
-
-		<div
-			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left; margin-left:7.3%;">
-			<p:outputLabel value="#{lbl['lbl.bpm.date']} : " />
-		</div>
-		<div
-			style="text-align: left; margin-right: 5px; margin-top: 3px; float: left;">
-			<p:selectOneMenu style="width: 150px;"
+			
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.date']} :" /></td>
+				<td width="40%"><p:selectOneMenu style="width: 150px;"
 				value="#{bpmTasklistBackingBean.managedBean.viewByGroup}">
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.day']}" itemValue="DAY"></f:selectItem>
@@ -76,10 +67,23 @@
 					itemValue="WEEK"></f:selectItem>
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}"
 					itemValue="MONTH"></f:selectItem>
-			</p:selectOneMenu>
-
-		</div>
-
+				</p:selectOneMenu></td>
+	
+				<c:if test="#{(bpmTasklistBackingBean.managedBean.isSDORole() and !bpmTasklistBackingBean.managedBean.sdoWithMultipleRoles) or 
+				(bpmTasklistBackingBean.managedBean.isSDORole() and bpmTasklistBackingBean.managedBean.sdoWithMultipleRoles and 
+				bpmTasklistBackingBean.managedBean.docStatusGroup == SupplierMgmtConst.pmStatusPendingSuppDocVerification)}">
+					<td width="10%"><p:outputLabel value="Supporting Document Type : " /></td>
+					<td width="40%">
+						<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.taskDescGroup}">
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}" itemValue="#{SupplierMgmtConst.supportingDocOnline}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}" itemValue="#{SupplierMgmtConst.supportingDocOffline}"></f:selectItem>
+						</p:selectOneMenu></td>
+				</c:if>
+			</tr>
+			
+			
+		</table>
 
 		<div class="clear"></div>
 		<div style="text-align: left; margin-right: 2px; float: right;">
