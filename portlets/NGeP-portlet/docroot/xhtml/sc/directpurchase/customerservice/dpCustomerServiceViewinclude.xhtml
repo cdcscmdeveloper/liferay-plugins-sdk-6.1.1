@@ -96,11 +96,10 @@
 
 									<p:column style="width:60%;white-space:normal;"
 										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
-										
 												<h:outputText
-													value="#{lbl['lbl.sc.customer.service.supplier.name']}" rendered="#{customerServiceOfficers.reassignType eq '9' or customerServiceOfficers.reassignType eq '10'}" />
+													value="#{lbl['lbl.sc.customer.service.supplier.name']}" rendered="#{customerServiceOfficers.status eq DPStatusConstants.priPendingSupplierResponse or customerServiceOfficers.status eq DPStatusConstants.sqPendingSupplierResponse or customerServiceOfficers.status eq QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 											
-												<h:outputText value="#{customerServiceOfficers.officerName}" rendered="#{customerServiceOfficers.reassignType ne '9' and  customerServiceOfficers.reassignType ne '10'}"/>
+												<h:outputText value="#{customerServiceOfficers.officerName}" rendered="#{customerServiceOfficers.status ne DPStatusConstants.priPendingSupplierResponse and customerServiceOfficers.status ne DPStatusConstants.sqPendingSupplierResponse and customerServiceOfficers.status ne QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"/>
 											
 									</p:column>
 									
