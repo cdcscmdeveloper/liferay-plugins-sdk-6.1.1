@@ -91,7 +91,7 @@ public class DPCustomerServiceBackingBean extends SourcingBaseBackingBean<DPCust
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(DPCustomerServiceBackingBean.class);
-	private IPagingDataModel<Object[]> dpCustomerServiceSearchModel = new DPCustomerServiceSearchDataModel();
+	//private IPagingDataModel<Object[]> dpCustomerServiceSearchModel = new DPCustomerServiceSearchDataModel();
 	private static final String NAV_DP_CUSTOMER_SERVICE_VIEW="/xhtml/sc/directpurchase/customerservice/dpCustomerServiceView.xhtml";
 	private static final String NAV_DP_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/directpurchase/customerservice/dpCustomerServiceMainView.xhtml";
 	private static final String LOI_LOA_DOC_TYPE="PR";
@@ -119,7 +119,7 @@ public void dpCustomerServiceSearchAction() throws Exception{
 	if( StringUtils.isBlank(dpCustomerService.getDocumentType()) || StringUtils.isEmpty(dpCustomerService.getDocumentType())){
 		throw new EpException(MessageConst.ERROR_760444);
 	}
-	dpCustomerServiceSearchModel.reloadData();
+	this.getManagedBean().getDpCustomerServiceSearchModel().reloadData();
 	}finally{
 		
 	}
@@ -153,7 +153,7 @@ public void dpCustomerServicereset(){
 		getManagedBean().getDpCustServiceSearchBean().setDocumentType(" ");
 		getManagedBean().getDpCustServiceSearchBean().setDpStatus(" ");
 		getManagedBean().getDpCustServiceSearchBean().setDpTitle(" ");
-	dpCustomerServiceSearchModel.resetData();
+		this.getManagedBean().getDpCustomerServiceSearchModel().resetData();
 	}finally{
 		
 	}
@@ -173,8 +173,8 @@ public SelectItem[] searchStatusDesc() throws NamingException {
 
 private class DPCustomerServiceSearchDataModel extends PagingDataModel<Object[]> {
 	
-	public DPCustomerServiceSearchDataModel() {
-		super("dpCustomerServiceSearchResult",false);
+	public DPCustomerServiceSearchDataModel(String componentId) {
+		super(componentId,false);
 	}
 	@Override
 	public ISearchResultBean<Object[]> pageChangeListener(
@@ -305,7 +305,9 @@ public void viewDoc(Object[] dpObj,String url){
 try{
      String documentDesc	=getManagedBean().getDpDcoumentDescription();
    DpCustomerServiceSearchBean customer=	this.getManagedBean().getDpCustServiceSearchBean();
+   IPagingDataModel<Object[]> customerService=	getManagedBean().getDpCustomerServiceSearchModel();
 	renewSesionObject();
+	getManagedBean().setDpCustomerServiceSearchModel(customerService);
 	this.getManagedBean().setDpCustServiceSearchBean(customer);
 	getManagedBean().setDpDcoumentDescription(documentDesc);
 	log.info("viewDoc");
@@ -378,7 +380,7 @@ try{
     	 if(null!=statusDesc){
 			custServiceEntity.setStatusDesc(statusDesc.getStatusName());
 			custServiceEntity.setDocumentType(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, statusDesc.getPmStatus().getDocType()));
-			custServiceEntity.setReassignType(statusDesc.getPmStatus().getReasssignType());
+			custServiceEntity.setStatus(statusDesc.getPmStatus().getStatusId());
     	 }
 			getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 			
@@ -547,16 +549,14 @@ public void preRenderView(){
  * @return the dpCustomerServiceSearchModel
  */
 public IPagingDataModel<Object[]> getDpCustomerServiceSearchModel() {
-	return dpCustomerServiceSearchModel;
+	IPagingDataModel<Object[]> customerService=	getManagedBean().getDpCustomerServiceSearchModel();
+	if(null==customerService){
+		customerService=new DPCustomerServiceSearchDataModel("dpCustomerServiceSearchResult");
+		getManagedBean().setDpCustomerServiceSearchModel(customerService);
+	}
+	return customerService;
 }
 
-/**
- * @param dpCustomerServiceSearchModel the dpCustomerServiceSearchModel to set
- */
-public void setDpCustomerServiceSearchModel(
-		IPagingDataModel<Object[]> dpCustomerServiceSearchModel) {
-	this.dpCustomerServiceSearchModel = dpCustomerServiceSearchModel;
-}
 
 
 }

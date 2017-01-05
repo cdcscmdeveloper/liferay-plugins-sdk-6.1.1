@@ -93,7 +93,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	private static final Logger log = EpLogger
 			.getLogger(QTCustomerServiceBackingBean.class);
 	
-	private IPagingDataModel<ScQt> qtCustomerServiceDataModel = new QTCustomerServiceSearchQtDataModel();
+	//private IPagingDataModel<ScQt> qtCustomerServiceDataModel = new QTCustomerServiceSearchQtDataModel();
 	private static final String NAV_QT_CUSTOMER_SERVICE_VIEW="/xhtml/sc/qtcustomerservice/qtCustomerServiceViewMain.xhtml";
 	private static final String NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/qtcustomerservice/qtcustomerServiceSearchview.xhtml";
 	private static final String BPM_SYS_USER="weblogic";
@@ -135,7 +135,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 			getManagedBean().getQtCustomerServiceSearchBean().setPublishToDate(null);
 			getManagedBean().getQtCustomerServiceSearchBean().setCloseFromDate(null);
 			getManagedBean().getQtCustomerServiceSearchBean().setCloseToDate(null);
-			qtCustomerServiceDataModel.resetData();
+			this.getManagedBean().getQtCustomerServiceDataModel().resetData();
 		}finally{
 			
 		}
@@ -150,7 +150,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	if(null==orgProfileCode || StringUtils.isBlank(orgProfileCode.getOrgCode()) || StringUtils.isEmpty(orgProfileCode.getOrgCode())){
 		throw new EpException(MessageConst.ERROR_760443);
 	}
-		qtCustomerServiceDataModel.reloadData();
+	this.getManagedBean().getQtCustomerServiceDataModel().reloadData();
 	}
 	
 	
@@ -165,8 +165,10 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		
 	try{
 		QTCustomerServiceSearchBean customerService=this.getManagedBean().getQtCustomerServiceSearchBean();
+	IPagingDataModel<ScQt> customerServiceModel=this.getManagedBean().getQtCustomerServiceDataModel();
 		renewSesionObject();
 		this.getManagedBean().setQtCustomerServiceSearchBean(customerService);
+		this.getManagedBean().setQtCustomerServiceDataModel(customerServiceModel);
 		this.getManagedBean().setOfficerName(" ");
 		if(statusId >=QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT){
 			log.info("=status greater==="+statusId);
@@ -224,7 +226,8 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	    	 if(null!=statusDesc){
 				custServiceEntity.setStatusDesc(statusDesc.getStatusName());
 				custServiceEntity.setDocumentType(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, statusDesc.getPmStatus().getDocType()));
-				custServiceEntity.setReassignType(statusDesc.getPmStatus().getReasssignType());
+				log.info("customer status Id"+statusDesc.getPmStatus().getStatusId());
+				custServiceEntity.setStatus(statusDesc.getPmStatus().getStatusId());
 	    	 }
 				getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 				/*this.getManagedBean().setOfficerName(userIds.toString());
@@ -396,9 +399,9 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		/**
 		 * Instantiates a new QTCustomerService paging data model.
 		 */
-		public QTCustomerServiceSearchQtDataModel() {
+		public QTCustomerServiceSearchQtDataModel(String componentId) {
 
-			super("qtCustomerServiceSearchResult",false);
+			super(componentId,false);
 
 		}
 
@@ -593,17 +596,17 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	 * @return the qtCustomerServiceDataModel
 	 */
 	public IPagingDataModel<ScQt> getQtCustomerServiceDataModel() {
-		return qtCustomerServiceDataModel;
+		IPagingDataModel<ScQt> customerService=	getManagedBean().getQtCustomerServiceDataModel();
+		if(null==customerService){
+			customerService=new QTCustomerServiceSearchQtDataModel("qtCustomerServiceSearchResult");
+			getManagedBean().setQtCustomerServiceDataModel(customerService);
+		}
+		return customerService;
+		
 	}
 
 
-	/**
-	 * @param qtCustomerServiceDataModel the qtCustomerServiceDataModel to set
-	 */
-	public void setQtCustomerServiceDataModel(
-			IPagingDataModel<ScQt> qtCustomerServiceDataModel) {
-		this.qtCustomerServiceDataModel = qtCustomerServiceDataModel;
-	}
+	
 	
 	/**
 	 * Method to get the list of bidding suppliers count.

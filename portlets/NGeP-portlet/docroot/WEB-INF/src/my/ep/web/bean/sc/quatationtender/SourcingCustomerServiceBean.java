@@ -25,6 +25,7 @@ public class SourcingCustomerServiceBean implements Serializable{
 	private String statusDesc;
 	private Integer reassignType;
 	private String documentNum;
+	private Long status=new Long(0L);
 	/**
 	 * @return the documentType
 	 */
@@ -85,6 +86,19 @@ public class SourcingCustomerServiceBean implements Serializable{
 	public void setDocumentNum(String documentNum) {
 		this.documentNum = documentNum;
 	}
+	/**
+	 * @return the status
+	 */
+	public Long getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+	
 	
 
 }
