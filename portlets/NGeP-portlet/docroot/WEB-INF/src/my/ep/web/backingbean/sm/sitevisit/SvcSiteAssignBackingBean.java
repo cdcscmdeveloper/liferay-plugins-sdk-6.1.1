@@ -295,21 +295,15 @@ public class SvcSiteAssignBackingBean extends
 	 * Set site visit address list facility name in data table
 	 */
 	private void setSiteVisitAddressesFacilityName() {
-		SmFacility smFacility = null;
-		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		if (getManagedBean().getSmAppl().getSmSvTasks().size() > 0) {
 			for (SmSvTask svTask : getManagedBean().getSmAppl().getSmSvTasks()) {
 				log.info("*********smAppl.getSmSvTasks()**********" + svTask.getSmSvAddress().getSiteRefId());
+				
 				if(svTask.getSmSvAddress() != null){
-					reqDTO.setSmAddressId(svTask.getSmSvAddress().getSiteRefId());
-					smFacility = SmServiceLookup.getSiteVisitSO()
-							.retrieveSmFacilityByAddressId(reqDTO)
-							.getSmFacility();
-					svTask.getSmSvAddress().setFacilityName(smFacility == null ? ""
-							: smFacility.getFacilityName());
-					if(smFacility != null && smFacility.getFacilityType() != null){
-						svTask.getSmSvAddress().setFacilityType(smFacility.getFacilityType());
-					}
+					SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(svTask.getSmSvAddress().getSiteType(),
+							svTask.getSmSvAddress().getSiteRefId(),svTask.getSmSvAddress());
+					
+					
 				}
 			}
 			

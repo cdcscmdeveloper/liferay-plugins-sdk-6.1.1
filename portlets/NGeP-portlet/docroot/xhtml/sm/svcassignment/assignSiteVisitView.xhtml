@@ -96,7 +96,7 @@
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.svcTaskVOLs}" rowIndexVar="rowIndex">
 				<ui:param name="facilityType" 
-				value="#{svcSiteAssignBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svc.smSvTask.smSvAddress.facilityType)}" />
+				value="#{svc.smSvTask.smSvAddress.facilityType}" />
 				<p:column headerText="#{lbl['lbl.sm.facility.type']}">
 					#{facilityType}
 				</p:column>
