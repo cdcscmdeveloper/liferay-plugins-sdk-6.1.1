@@ -22,7 +22,7 @@
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td align="center">
-            <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>PENGAKUAN PENERIMAAN SURAT SETUJU TERIMA DAN LAMPIRAN YANG BERKAITAN OLEH SYARIKAT</span>
+            <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>PENGAKUAN PENERIMAAN SURAT BERKAITAN KONTRAK TAMBAHAN OLEH SYARIKAT</span>
             <br/> <br/>
         </td>
     </tr>
@@ -30,7 +30,7 @@
 	<tr>
 		<td>
 			 <span style='font-weight:normal;font-size:14px;font-family: Albertus Medium;'>
-				Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini dan lampiran yang berkaitan dengan rujukannya ialah $agencyRefNo bertarikh $govSignDate dan bersetuju dengan terma dan syarat yang terkandung dalam Surat ini tanpa syarat yang mana Salinan kepada Surat ini telahpun disimpan, dan selanjutnya disahkan bahawa tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang terkandung dalam dokumen “sebut harga/ tender dan surat ini telah dikenakan.</span>
+				Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini dengan no. rujukan ialah  $agencyRefNo bertarikh $govSignDate.</span>
 	     <br/> <br/>
 		</td>
 	</tr>	
@@ -38,16 +38,11 @@
 	
 	<tr>
 		<td>
-			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<table border="0" cellpadding="0" cellspacing="0" width="50%">
 			<tr>
-				<td colspan="3" style="font-weight:bold;" align="center">
-				       Pembekal
-				</td>
-				<td>
-				</td>
-				<td colspan="3" style="font-weight:bold;" align="center">
-					Saksi Pembekal
-				</td>
+				<td></td>
+				<td colspan="3" style="font-weight:bold;" align="center">Pembekal</td>
+				<td></td>
 			</tr>
 			<tr valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
 				<td width="17%">
@@ -58,17 +53,6 @@
 				</td>
 				<td width="30%">
 					$supplierName
-				</td>
-				<td width="4%">
-				</td>
-				<td width="17%">
-					Nama Penuh
-				</td>
-				<td width="1%">
-					: 
-				</td>
-				<td width="30%">
-					$witnessName
 				</td>
 			</tr>
 			<tr  valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
@@ -81,17 +65,6 @@
 				<td>
 					$supplierID
 				</td>
-				<td>
-				</td>
-				<td>
-					No. Kad Pengenalan
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessID
-				</td>
 			</tr>
 			<tr  valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
 				<td>
@@ -102,17 +75,6 @@
 				</td>
 				<td>
 					$supplierAddress
-				</td>
-				<td>
-				</td>
-				<td>
-					Alamat 
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessAddress
 				</td>
 			</tr>
 			<tr valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
@@ -125,19 +87,7 @@
 				<td style="white-space: normal;">
 					$supplierAckDate
 				</td>
-				<td>
-				</td>
-				<td>
-					Tarikh
-				</td>
-				<td>
-					: 
-				</td>
-				<td style="white-space: normal;">
-					$witnessDate
-				</td>
 			</tr>
-			
 			</table>
 			 <div class="break"></div>
 		</td>
