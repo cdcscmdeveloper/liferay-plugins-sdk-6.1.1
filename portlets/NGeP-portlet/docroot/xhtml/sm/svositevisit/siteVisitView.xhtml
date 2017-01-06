@@ -48,11 +48,8 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
-				<h:outputText rendered="#{not empty svTask.smSvAddress.address.smFacilities[0].facilityType}" 
-				value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.address.smFacilities[0].facilityType)}" />
-				
-				<h:outputText rendered="#{empty svTask.smSvAddress.address.smFacilities[0].facilityType}" 
-				value="#{svoSiteVisitBackingBean.getBranchOrAssociateCompFaciclityDescByAddrressId(svTask.smSvAddress.address.addressId)}" />
+				<h:outputText 
+				value="#{svTask.smSvAddress.facilityType}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
