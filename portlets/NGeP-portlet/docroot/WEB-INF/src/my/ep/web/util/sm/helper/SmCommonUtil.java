@@ -132,6 +132,7 @@ import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -4580,5 +4581,35 @@ public class SmCommonUtil {
 		SmApplRevisionResDTO resDTO = SmServiceLookup.getSmApplRevisionSO()
 				.readApplicationHist(reqDTO);
 		return resDTO;
+	}
+	
+	public void setSmSvAddressInfoBySiteTypeAndRefId(String siteType, Long refId, SmSvAddress svAddress){
+		SiteVisitReqDTO svReqDTO = new SiteVisitReqDTO();
+		svReqDTO.setSiteType(svAddress.getSiteType());
+		svReqDTO.setRefId(svAddress.getSiteRefId());;
+		Object site = SmServiceLookup.getSiteVisitSO().retrieveSmSvAddressInfoBySiteTypeAndRefId(svReqDTO).getSite();
+		
+		log.info("<<<<<<<Site>>>>>>>>>>" + site);
+		if(site != null){
+			if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ) || 
+					siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY)){
+				SmFacility facility = (SmFacility)site;
+				svAddress.setFacilityName(facility.getFacilityName());
+				svAddress.setSiteType(siteType);
+				svAddress.setAddress(facility.getSmAddress());
+				svAddress.setFacilityType(ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.SUPPLIER_FACILITY_TYPE, facility.getFacilityType()));
+			}else if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH)){
+				SmSupplierBranch branch = (SmSupplierBranch)site;
+				svAddress.setFacilityName(branch.getBranchName());
+				svAddress.setSiteType(siteType);
+				svAddress.setAddress(branch.getSmAddress());
+			}else if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_ASSOCIATE_COMPANY)){
+				SmAssociateCompany assocCompany = (SmAssociateCompany)site;
+				svAddress.setFacilityName(assocCompany.getCompanyName());
+				svAddress.setSiteType(siteType);
+				svAddress.setAddress(assocCompany.getSmAddress());
+			}
+		}
 	}
 }
