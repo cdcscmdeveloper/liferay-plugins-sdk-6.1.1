@@ -384,6 +384,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) 
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) 
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME) 
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) 
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
@@ -423,14 +424,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							    && !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().isEmpty()) {
 						          Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 					      
-					      } if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-						         getManagedBean().setSignUpdateDecision(true);
-						         getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+					      }
+					      if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					    	  getManagedBean().setSignUpdateDecision(true);
+					    	  if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == null) {
+					    		  getManagedBean().setPbQcApproved("");
+					    	  } else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == 1) {
+					    		  getManagedBean().setPbQcApproved("A");
+					    	  } else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == 0) {
+					    		  getManagedBean().setPbQcApproved("R");
+					    	  }
 					     }
 				 } 
 				else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
 					getManagedBean().setSignUpdateDecision(true);  
-					getManagedBean().setMofApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofApproved() ? "A" : "R");
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == null) {
+						getManagedBean().setMofApproved("");
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == 1) {
+						getManagedBean().setMofApproved("A");
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == 0) {
+						getManagedBean().setMofApproved("R");
+					}
 				}
 				else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
@@ -3023,8 +3037,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to set the meeting decision. 
 	 */
 	public void setPbQcDecisionValue() {
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApprovedFlag(0);
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(false);
 		if (getManagedBean().getPbQcApproved()!=null && getManagedBean().getPbQcApproved().equalsIgnoreCase("A")) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApprovedFlag(1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(true);
 		}
 	}
@@ -3033,8 +3049,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to set the MOF meeting decision. 
 	 */
 	public void setMofDecisionValue() {
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApprovedFlag(0);
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApproved(false);
 		if (getManagedBean().getMofApproved()!=null && getManagedBean().getMofApproved().equalsIgnoreCase("A")) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApprovedFlag(1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApproved(true);
 		}
 	}
