@@ -464,11 +464,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
+			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			if(outcome.isEmpty()) {	
 				requestNoteReqDTO.setToken(ctxToken);
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setSubmit(Boolean.TRUE);
-				requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				requestNoteResDTO = getRequestNoteSO().submitRequestNote(requestNoteReqDTO);
 			} else {
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
@@ -1705,6 +1705,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setUomId(scRequestNoteDtl.getRequestItem().getUom().getUomId());
 	    requestNoteReqDTO.setViewSearchBean(viewSearchBean);
 	    requestNoteReqDTO.setCmSupplierItemIds(cmSupplieritemIds);
+	    requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 	    getRequestNoteSO().validateAddToCart(requestNoteReqDTO);
 	    
 		// have to compare duplicate items in request note
