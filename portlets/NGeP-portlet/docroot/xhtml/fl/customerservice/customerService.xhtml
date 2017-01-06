@@ -42,7 +42,7 @@
 					<td style="width: 560px;"><p:inputText size="45"
 							id="ptjOrgProfileId" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.ptj.orgCode}"  />					
-					<ac:lov id="ptj" uiMode="link" lovId="PM_ORG_PROFILE_FL"
+					<ac:lov id="ptj" uiMode="link" lovId="PM_ORG_PROFILE_PTJ"
 							headerText="#{lbl['lbl.fl.pm.org.code']}"
 							saveObject="flCustomerServiceBackingBean.managedBean.ptj"
 							value="#{flCustomerServiceBackingBean.managedBean.ptj.orgName}"
@@ -130,31 +130,33 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/>
 			<p:dataTable id="flDocListDt"
 				value="#{flCustomerServiceBackingBean.managedBean.flDocumentDataModel}" lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" rows="10"
 				width="100%">
 				<ac:paginator for="flDocListDt" />
-				
-				<p:column
-					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}" style="white-space:normal;" >
+				<p:column style="width:2%" headerText="No.">
+				              <h:outputText value="#{rowIndex+1}" style="float:left;"/>
+			       	</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}" style="white-space:normal;width:20%;" >
 					<h:outputText
 						value="#{flCustomerServiceBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" style="width:10%;">
 					<h:outputText value="#{flDocument.docNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.maintain.order.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.order.no']}" style="width:10%;">
 					<h:outputText value="#{flDocument.orderNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}" style="white-space:normal;" >
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}" style="white-space:normal;width:41%;" >
 					<h:outputText value="#{flDocument.title}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;" >
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;width:10%;" >
 					<h:outputText
 						value="#{flCustomerServiceBackingBean.getStatusDescById(flDocument.statusId)}" />
 				</p:column>  
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}" 
-					style="text-align: center">
+					style="text-align: center;width:7%;">
 					<p:commandLink 
 							action="#{flCustomerServiceBackingBean.navigateToPage(flDocument.docType,flDocument.docId,flDocument.statusId,flDocument.docNo,flDocument.orderNo)}"
 							style="padding-left:10px">
