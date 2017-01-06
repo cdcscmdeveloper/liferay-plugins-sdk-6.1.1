@@ -313,7 +313,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 			
-			smSvTask.getSmSvAddress().setAddress(getSmAddressById(smSvTask.getSmSvAddress().getSiteRefId()));
+			log.info("ref Type>>>>>>>>." + smSvTask.getSmSvAddress().getSiteRefId());
+			log.info("ref id>>>>>>>>." + smSvTask.getSmSvAddress().getSiteType());
+			log.info("SV address id>>>>>>>>." + smSvTask.getSmSvAddress().getSvAddressId());
+			
+			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
+					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress());
+			//smSvTask.getSmSvAddress().setAddress(getSmAddressById(smSvTask.getSmSvAddress().getSiteRefId()));
 		}
 		
 	}
