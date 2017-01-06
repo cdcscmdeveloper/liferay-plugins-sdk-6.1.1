@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -409,6 +410,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	/** The max date. */
 	private Date maxDate;
+	
+	/** The template spec backing bean */
+	private TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2618,5 +2622,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setMaxDate(Date maxDate) {
 		this.maxDate = maxDate;
+	}
+	
+	/**
+	 * @return the templateSpecBackingBean
+	 */
+	public TemplateSpecBackingBean getTemplateSpecBackingBean() {
+		return templateSpecBackingBean;
 	}
 }

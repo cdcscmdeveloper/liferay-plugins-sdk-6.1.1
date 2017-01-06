@@ -4667,8 +4667,8 @@ public class SimpleQuoteBackingBean extends
 					productTplSpecBean.setSpecMaster(productMaster);
 					productTplSpecBean
 							.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-					getManagedBean().setProductTemplateSpecBean(
-							productTplSpecBean);
+					getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(productTplSpecBean);
+					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 				}
 
 				if (quoteResDTO.getServiceAnswersTpl() != null
@@ -4681,8 +4681,8 @@ public class SimpleQuoteBackingBean extends
 					serviceTplSpecBean.setSpecMaster(serviceMaster);
 					serviceTplSpecBean
 							.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-					getManagedBean().setServiceTemplateSpecBean(
-							serviceTplSpecBean);
+					getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(serviceTplSpecBean);
+					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 				}
 
 				if (quoteResDTO.getScQuoteSupplier() != null) {
@@ -5206,27 +5206,37 @@ public class SimpleQuoteBackingBean extends
 		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
 				quoteReqDTO);
 		scQuote = quoteResDTO.getQuoteBidDtl();
+		TplSpecMaster productMaster = null;
+		TplSpecMaster serviceMaster = null;
+		if(CollectionUtils.isNotEmpty(scQuote.getQuoteDocs())) {
+			for(ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
+				if(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode().
+						equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)) {
+					productMaster = quoteDoc.getSpecMaster();
+				} else {
+					serviceMaster = quoteDoc.getSpecMaster();
+				}
+			}
+		}
 
 		// service and product
-		if (quoteResDTO.getProductAnswersTpl() != null
-				&& quoteResDTO.getProductAnswersTpl().size() > 0) {
-			productTplSpecBean.setSpecAnswerList(quoteResDTO
-					.getProductAnswersTpl());
-			productTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0)
-					.getSpecMaster());
+		List<TplSpecAnswer> productAnswers = quoteResDTO.getProductAnswersTpl();
+		List<TplSpecAnswer> serviceAnswers = quoteResDTO.getServiceAnswersTpl();
+		if (CollectionUtils.isNotEmpty(productAnswers)) {
+			productTplSpecBean.setSpecAnswerList(productAnswers);
+			productTplSpecBean.setSpecMaster(productMaster);
 			productTplSpecBean
 					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(productTplSpecBean);
 			getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 		}
 
-		if (quoteResDTO.getServiceAnswersTpl() != null
-				&& quoteResDTO.getServiceAnswersTpl().size() > 0) {
-			serviceTplSpecBean.setSpecAnswerList(quoteResDTO
-					.getServiceAnswersTpl());
-			serviceTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0)
-					.getSpecMaster());
+		if (!CollectionUtils.isNotEmpty(serviceAnswers)) {
+			serviceTplSpecBean.setSpecAnswerList(serviceAnswers);
+			serviceTplSpecBean.setSpecMaster(serviceMaster);
 			serviceTplSpecBean
 					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(serviceTplSpecBean);
 			getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 		}
 
