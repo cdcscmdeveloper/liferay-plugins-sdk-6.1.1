@@ -36,6 +36,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -2634,5 +2635,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		return pmOrgProfile;
+	}
+	
+	/**
+	 * Populate values into Representative Type drop down in Committee Members table
+	 * @return  an array of representative type(s)
+	 */
+	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
+		SelectItem[] items = null;
+		
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
+		}
+		return items;
 	}
 }

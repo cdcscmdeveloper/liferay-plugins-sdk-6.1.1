@@ -77,7 +77,7 @@
 					<p:selectOneMenu required="#{!committeemember.selected}"
 						id="representativeType" value="#{committeemember.representativeTypeId}"
 						label="#{lbl['lbl.sc.representative.type']}" style="width: 150px;margin-bottom: 5px;">
-						<f:selectItems value="#{committeBackingBean.managedBean.representativesTypeslist}" />
+						<f:selectItems value="#{committeBackingBean.getRepresentativeTypeDropdownValues(committeBackingBean.managedBean.committeeType)}" />
 						<p:ajax event="change" listener="#{committeBackingBean.representiveTypeChangedListener(committeemember)}"
 							partialSubmit="true" process="@this" />
 					</p:selectOneMenu>
