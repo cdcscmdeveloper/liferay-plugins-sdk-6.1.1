@@ -25,4 +25,10 @@
 		autoUpdateValue="#{evaluationBackingBean.managedBean.autoUpdate}" 
 		readonly="#{evaluationBackingBean.managedBean.readOnly}"
 		update="@([id$=demoremarksupdtls])" />
+		
+		<ac:scSingleFileUploadPopup widgetVar="evaluationManualReportUploadWidget"
+		fileUploadListener="evaluationBackingBean.reportsUploadAttachment"
+		autoUpdateValue="#{evaluationBackingBean.managedBean.autoUpdate}" 
+		readonly="#{evaluationBackingBean.managedBean.readOnly}"
+		update="@([id$=evaluationReportUploadBtn])" />
 </ui:composition>
