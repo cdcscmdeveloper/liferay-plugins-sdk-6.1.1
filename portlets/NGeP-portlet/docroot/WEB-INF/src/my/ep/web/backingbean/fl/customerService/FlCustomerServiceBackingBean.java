@@ -115,6 +115,7 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		String navgPage="/xhtml/fl/customerservice/customerServiceViewResult.xhtml";
+		getManagedBean().setSearchDocType(docType);
 		getManagedBean().setStatusDescId(statusId);
 		getManagedBean().setViewDocNo(docNo);
 		getManagedBean().setViewOrdrNo(ordrNo);
