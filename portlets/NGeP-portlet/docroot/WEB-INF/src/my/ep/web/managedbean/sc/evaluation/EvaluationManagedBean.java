@@ -483,6 +483,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String encryptionKey;
 	
 	private List<ScQtProposalChecklistAttachment> toBeRemovedProposalAttachmentsChecklists;
+	private List<ScQtEvaluationReport> reportsToBeRemovedList;
 	
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
@@ -3355,6 +3356,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the reportsToBeRemovedList
+	 */
+	public List<ScQtEvaluationReport> getReportsToBeRemovedList() {
+		return reportsToBeRemovedList;
+	}
+
+	/**
+	 * @param reportsToBeRemovedList the reportsToBeRemovedList to set
+	 */
+	public void setReportsToBeRemovedList(
+			List<ScQtEvaluationReport> reportsToBeRemovedList) {
+		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
 
 	
