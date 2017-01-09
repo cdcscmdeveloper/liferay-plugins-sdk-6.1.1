@@ -48,7 +48,8 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.applicationstatus']}" /></td>
 				<td><p:selectOneMenu id="searchApplStatusId" label="#{lbl['lbl.sm.applicationstatus']}"
-						value="#{smCustomerServiceBackingBean.managedBean.searchApplStatusId}">
+						value="#{smCustomerServiceBackingBean.managedBean.searchApplStatusId}" 
+						style="width:310px">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems value="#{smCustomerServiceBackingBean.managedBean.applStatusItems}" />
 					</p:selectOneMenu>
