@@ -103,19 +103,17 @@
 						<td><p:inputText size="28" maxlength="17" 
 							value="#{flCustomerServiceBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
 					</tr>
+					<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" /> 
+					</td>
+					<td colspan="3">
+						<p:inputText size="122" value="#{flCustomerServiceBackingBean.managedBean.searchSuppName}" />
+					</td>
+				</tr>
 				</table>
 			</h:panelGroup>
-			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" />
-				<p:inputText size="122"
-					value="#{flCustomerServiceBackingBean.managedBean.searchSuppName}"></p:inputText>
-			</h:panelGrid>
-			<p:outputPanel id="advanceSearchID" style="width:100%">
-			</p:outputPanel>
 
-			<f:verbatim></f:verbatim>
-			<f:verbatim></f:verbatim>
-			<f:verbatim></f:verbatim>
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
