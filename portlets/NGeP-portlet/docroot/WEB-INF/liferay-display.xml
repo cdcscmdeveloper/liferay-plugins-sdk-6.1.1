@@ -308,6 +308,7 @@
 		<portlet id="supplierRegistrationCont"></portlet>
 		<portlet id="smBulkApplication"></portlet>
 		<portlet id="resendAccountActivationEmail"></portlet>
+		<portlet id="smCustomerService"></portlet>
 		
 		<portlet id="SmApplRevisionView"></portlet>
 		<portlet id="SoftCertPayment"></portlet>
