@@ -82,6 +82,7 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	private String viewMinistry;
 	private String viewKumpulanPTJ;
 	private String viewPtjName;
+	private String viewPtjCode;
 	
 	
 	/**
@@ -587,6 +588,14 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	 */
 	public void setViewPtjName(String viewPtjName) {
 		this.viewPtjName = viewPtjName;
+	}
+
+	public String getViewPtjCode() {
+		return viewPtjCode;
+	}
+
+	public void setViewPtjCode(String viewPtjCode) {
+		this.viewPtjCode = viewPtjCode;
 	}
 
 }

@@ -25,29 +25,7 @@
 			</tr>
 		</table>			
 		<table>
-			<tr>
-				<td style="width: 190px;"><p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.doc.type']}" /></td>
-				<td><p:inputText size="28"
-						value="#{flCustomerServiceBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flCustomerServiceBackingBean.managedBean.searchDocType)}" />
-				</td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
-				<td><p:inputText size="28"
-						value="#{flCustomerServiceBackingBean.managedBean.viewDocNo}" />
-				</td>
-			</tr>
-			<tr>
-				<td style="width: 190px;"><p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.doc.status']}" /></td>
-				<td><p:inputText size="28" maxlength="17"
-						value="#{flCustomerServiceBackingBean.getStatusDescById(flCustomerServiceBackingBean.managedBean.statusDescId)}"></p:inputText>
-				</td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
-				<td><p:inputText size="28" maxlength="17"
-						value="#{flCustomerServiceBackingBean.managedBean.viewOrdrNo}"></p:inputText></td>
-			</tr>
+			
 		</table>
 		<p:panel header="#{lbl['lbl.fl.doc.info']}" toggleable="true"
 			id="flDetails">
@@ -62,18 +40,46 @@
 				<tr>
 					<td valign="top" style="width: 106px;"><p:outputLabel
 							value="#{lbl['lbl.fl.jabatan']}" /></td>
-					<td><p:inputTextarea rows="2" cols="67" readonly="true"
-							autoResize="false" style="resize:none;"
+					<td><p:inputText size="66" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.viewKumpulanPTJ}" />
 					</td>
 				</tr>
 				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-					<td><p:inputTextarea rows="2" cols="67" readonly="true"
-							autoResize="false" style="resize:none;"
+					<td><p:inputText size="6" readonly="true"
+							value="#{flCustomerServiceBackingBean.managedBean.viewPtjCode}" />
+						<p:spacer width="1"/>
+						<p:inputText size="53" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.viewPtjName}" />
 						</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;"><p:outputLabel
+							value="#{lbl['lbl.fl.doc.maintain.doc.type']}" /></td>
+					<td><p:inputText size="28"
+							value="#{flCustomerServiceBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flCustomerServiceBackingBean.managedBean.searchDocType)}" />
+					</td>
+				</tr>
+				<tr><td><p:outputLabel
+							value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+					<td><p:inputText size="28"
+							value="#{flCustomerServiceBackingBean.managedBean.viewDocNo}" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+					<td><p:inputText size="28" maxlength="17"
+							value="#{flCustomerServiceBackingBean.managedBean.viewOrdrNo}"></p:inputText></td>
+					
+				</tr>
+				<tr>
+					<td style="width: 190px;"><p:outputLabel
+							value="#{lbl['lbl.fl.doc.maintain.doc.status']}" /></td>
+					<td><p:inputText size="28" maxlength="17"
+							value="#{flCustomerServiceBackingBean.getStatusDescById(flCustomerServiceBackingBean.managedBean.statusDescId)}"></p:inputText>
+					</td>
 				</tr>
 				<tr>
 					<td class="columnWidth20"></td>

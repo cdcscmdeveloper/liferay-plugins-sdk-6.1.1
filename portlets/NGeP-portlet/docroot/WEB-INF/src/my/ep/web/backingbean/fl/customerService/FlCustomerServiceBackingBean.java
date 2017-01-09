@@ -121,6 +121,7 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		getManagedBean().setViewKumpulanPTJ(retrieveJabatanByOrgProfileId(getManagedBean().getPtj().getOrgProfileId()));
 		getManagedBean().setViewMinistry(retrieveMinistryByOrgProfileId(getManagedBean().getPtj().getOrgProfileId()));
 		getManagedBean().setViewPtjName(getManagedBean().getPtj().getOrgName());
+		getManagedBean().setViewPtjCode(getManagedBean().getPtj().getOrgCode());
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		 Object ctxToken = bpmSO.authenticate(sysUserId);
 		 getManagedBean().getCustomerServiceEntity().clear();
