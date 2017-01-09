@@ -6612,7 +6612,7 @@ public class EvaluationBackingBean extends
 			// qtReqDTO.setQtId(qtId);
 			resDTO = evaluationSO.retriveQtDtlsByRemarksAttachments(reqDTO);
 			this.getManagedBean().setScQt(resDTO.getScQt());
-			if (null == this.getManagedBean().getScQtEvaluationReportList()) {
+			
 				resDTO = evaluationSO.retriveReportDetails(reqDTO);
 				if (null != resDTO.getReports()
 						&& !resDTO.getReports().isEmpty()) {
@@ -6620,7 +6620,7 @@ public class EvaluationBackingBean extends
 							resDTO.getReports());
 				}
 
-			}
+		
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				ScAttachment attachment = this.getManagedBean().getScQt()
