@@ -581,11 +581,12 @@ public class TemplateSpecBackingBean extends
 		List<String> filteredList = new ArrayList<String>();
 		boolean specificationReq = specMaster.isSpecificationReq();
 		boolean estCostReq = specMaster.isEstCostReq();
-
+		boolean isSpecCreatedBySQ = specMaster.isSpecCreatedBySQ();
+		
 		if (specMaster.getTplSpecZone() == null) {
 			filteredList.add(ParameterConst.PRICE_TYPE_STANDARD);
 
-			if (specificationReq) {
+			if (specificationReq && !isSpecCreatedBySQ) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
 				// filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
 			} else if (!estCostReq) {
@@ -594,7 +595,7 @@ public class TemplateSpecBackingBean extends
 		} else {
 			filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
 
-			if (specificationReq) {
+			if (specificationReq && !isSpecCreatedBySQ) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
 				// filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
 			} else if (!estCostReq) {
