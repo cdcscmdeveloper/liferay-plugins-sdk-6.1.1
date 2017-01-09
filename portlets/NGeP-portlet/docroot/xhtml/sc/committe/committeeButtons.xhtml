@@ -13,9 +13,15 @@
 					action="#{committeBackingBean.viewSearchBackAction}" partialSubmit="true"
 					process="@this" update="@this"
 					rendered="#{committeBackingBean.managedBean.taskId eq null}" />
+					
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSubmit)}"
+					process="@all" rendered="#{empty committeBackingBean.managedBean.payLoad and isCommitteeRecordStatusActive}" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{committeBackingBean.updateCommitteDetails(null)}"
-					process="@all" rendered="#{isCommitteeRecordStatusActive}" 
+					process="@all" rendered="#{!empty committeBackingBean.managedBean.payLoad}" 
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<ui:repeat var="bpmAction" value="#{committeBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
