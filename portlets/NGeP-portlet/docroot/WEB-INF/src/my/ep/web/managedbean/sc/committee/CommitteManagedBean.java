@@ -139,9 +139,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** The selected pm user. */
 	private List<PmUser> selectedPmUser;
 	
-	/** The representatives typeslist. */
-	private List<SelectItem> representativesTypeslist;
-	
 	/** The add representatives typeslist. */
 	private List<SelectItem> addRepresentativesTypeslist;
 
@@ -1302,25 +1299,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 */
 	public void setUserQCSearchBean(UserCommitteeSearchBean userQCSearchBean) {
 		this.userQCSearchBean = userQCSearchBean;
-	}
-
-	/**
-	 * Gets the representatives typeslist.
-	 *
-	 * @return the representatives typeslist
-	 */
-	public List<SelectItem> getRepresentativesTypeslist() {
-		return representativesTypeslist;
-	}
-
-	/**
-	 * Sets the representatives typeslist.
-	 *
-	 * @param representativesTypeslist the new representatives typeslist
-	 */
-	public void setRepresentativesTypeslist(
-			List<SelectItem> representativesTypeslist) {
-		this.representativesTypeslist = representativesTypeslist;
 	}
 
 	/**
