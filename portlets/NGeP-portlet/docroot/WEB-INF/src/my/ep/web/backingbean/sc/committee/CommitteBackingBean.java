@@ -18,7 +18,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -762,18 +764,30 @@ public class CommitteBackingBean extends
 		List<ScCommitteeMember> toBeAddedMembers = new ArrayList<ScCommitteeMember>();
 		
 		if (CollectionUtils.isNotEmpty(deletedCommitteeMembers) && CollectionUtils.isNotEmpty(committeeMembers)) {
+			Map<String, ScCommitteeMember> currentCommMemberIcs = 
+					new HashMap<String, ScCommitteeMember>();
+
+			for (ScCommitteeMember currCommMem : committeeMembers) {
+				currentCommMemberIcs.put(currCommMem.getIcPassport(),
+						currCommMem);
+			}
+
 			for (ScCommitteeMember deletedCommitteeMember 
 										: deletedCommitteeMembers) {
-				if (committeeMembers.contains(
-							deletedCommitteeMember)) {
-					ScCommitteeMember committeeMember = committeeMembers.get(
-										committeeMembers.indexOf(deletedCommitteeMember));
-					deletedCommitteeMember.setMemberRole(
-								committeeMember.getMemberRole());
-					deletedCommitteeMember.setMemberRoleId(
-								committeeMember.getMemberRole().getParameterId());
+				if (currentCommMemberIcs.containsKey(
+						deletedCommitteeMember.getIcPassport())) {
+					ScCommitteeMember currentCommitteeMember = currentCommMemberIcs
+											.get(deletedCommitteeMember.getIcPassport());
+					deletedCommitteeMember.setDeleted(false);
 					deletedCommitteeMember.setRepresentativeType(
-								committeeMember.getRepresentativeType());
+							currentCommitteeMember.getRepresentativeType());
+					deletedCommitteeMember.setMemberRole(
+							currentCommitteeMember.getMemberRole());
+					deletedCommitteeMember.setMemberRoleId(
+							currentCommitteeMember.getMemberRoleId());
+					committeeMembers.remove(currentCommitteeMember);
+					committeeMembers.add(deletedCommitteeMember);
+					
 					if (deletedCommitteeMember.getRepresentativeType() != null) {
 						deletedCommitteeMember.setRepresentativeTypeId(
 								deletedCommitteeMember.getRepresentativeType().getParameterId());
