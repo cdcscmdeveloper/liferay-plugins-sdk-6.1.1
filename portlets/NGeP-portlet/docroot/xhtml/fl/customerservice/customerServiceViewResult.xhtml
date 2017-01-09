@@ -57,27 +57,27 @@
 				<tr>
 					<td style="width: 190px;"><p:outputLabel
 							value="#{lbl['lbl.fl.doc.maintain.doc.type']}" /></td>
-					<td><p:inputText size="28"
+					<td><p:inputText size="28" readonly="true"
 							value="#{flCustomerServiceBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flCustomerServiceBackingBean.managedBean.searchDocType)}" />
 					</td>
 				</tr>
 				<tr><td><p:outputLabel
 							value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
-					<td><p:inputText size="28"
+					<td><p:inputText size="28" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.viewDocNo}" />
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
-					<td><p:inputText size="28" maxlength="17"
+					<td><p:inputText size="28" maxlength="17" readonly="true"
 							value="#{flCustomerServiceBackingBean.managedBean.viewOrdrNo}"></p:inputText></td>
 					
 				</tr>
 				<tr>
 					<td style="width: 190px;"><p:outputLabel
 							value="#{lbl['lbl.fl.doc.maintain.doc.status']}" /></td>
-					<td><p:inputText size="28" maxlength="17"
+					<td><p:inputText size="28" maxlength="17" readonly="true"
 							value="#{flCustomerServiceBackingBean.getStatusDescById(flCustomerServiceBackingBean.managedBean.statusDescId)}"></p:inputText>
 					</td>
 				</tr>
