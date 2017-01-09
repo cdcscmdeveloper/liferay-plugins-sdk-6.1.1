@@ -113,7 +113,7 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:56px;white-space:normal;"
-		rendered="#{isEstCostReq and !isSpecificationReq}">
+		rendered="#{isEstCostReq and (!isSpecificationReq or isSqSpec)}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}" />
