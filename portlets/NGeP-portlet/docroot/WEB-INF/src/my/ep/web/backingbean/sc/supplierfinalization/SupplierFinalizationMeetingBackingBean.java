@@ -1458,8 +1458,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 						currCommMem.getIcPassport(), currCommMem);
 			}
 			
-			if (CollectionUtils.isNotEmpty(
-					getManagedBean().getDeletedCommitteeMembers())) {
+			if (CollectionUtils.isNotEmpty(deletedCommitteeMembers)) {
 				for (ScCommitteeMember deletedCommitteeMember 
 											: deletedCommitteeMembers) {
 					if (currentCommMemberIcs.containsKey(
