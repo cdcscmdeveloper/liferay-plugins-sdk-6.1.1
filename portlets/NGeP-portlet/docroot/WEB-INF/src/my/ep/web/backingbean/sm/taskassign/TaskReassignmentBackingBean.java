@@ -1150,7 +1150,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	private ISearchResultBean<SmPersonnel> generateUserResultBean(PmStatus status , ISearchBean<SmPersonnel> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,SmTaskReassignmentVO vo){
 		ISearchResultBean<SmPersonnel> resultBean = null;
 		boolean isSearched = false;
-//		Long userId = getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getUserId();
 		Integer subReassignType = null;
 		
 		// filter by user name
@@ -1165,12 +1164,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			roleList = vo.getRoleList();
 		}	
 		
-//		switch (reassignType) {
-//		default:
-//			// not allow to search
-//			isSearched = true;
-//		}
-		
 		if(!isSearched){
 			// Filter By user status
 			searchBean.getDataFilterBeans().add(
@@ -1182,13 +1175,28 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("smAppl.smSupplier.supplierId",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getSmSupplier().getSupplierId()));		
+								getManagedBean().getSmSupplier().getSupplierId()));	
+			
+			// Filter By is softcert
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("softcert",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							status.getPmStatusTask().isSoftcert()));
+
+			// Filter By is contract signer
+			if(status.getPmStatusTask().getPropertyField() != null){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(status.getPmStatusTask().getPropertyField(),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								status.getPmStatusTask().getPropertyValue()));
+			}
+			
 			
 			// not current selected user and not current login user
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmUser.userId",
-										SearchOperator.OPERATOR_NOT_IN.value(),
-										new ArrayList<Long>(Arrays.asList(getFacesScopes().getUserSessionBean().getUserId()))));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUser.userId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							new ArrayList<Long>(Arrays.asList(getFacesScopes().getUserSessionBean().getUserId()))));
 
 			if (roleList == null || roleList.isEmpty()) {
 				roleList = retrieveAvailableRoles(task.getDocStatus().longValue(),reassignType,subReassignType);
