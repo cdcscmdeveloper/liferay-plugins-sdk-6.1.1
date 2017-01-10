@@ -39,12 +39,12 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}"
 				style="width:58%;white-space: normal;">
-				<h:inputText size="100" value="#{scQtEvaluationReport.title}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly}"
+				<h:inputText size="100" value="#{scQtEvaluationReport.title}" required="true"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
 					rendered="#{empty scQtEvaluationReport.pmDocument}" >
 					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 					</h:inputText>
-				<h:outputText value="#{scQtEvaluationReport.title}"
+				<h:outputText value="#{scQtEvaluationReport.title}" 
 					rendered="#{!empty scQtEvaluationReport.pmDocument}" />
 			</p:column>
 
