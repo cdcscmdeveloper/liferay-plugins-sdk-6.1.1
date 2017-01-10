@@ -30,31 +30,22 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<table style="width: 100%;">
-			<tr>
-				<td><p:commandButton
-						action="#{bulkApplicationBackingBean.refreshTaskList}" process="@this"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						value="#{lbl['lbl.bpm.refresh']}" update="@form" /></td>
-				<td style="white-space: nowrap; float: right;"><p:commandButton
-						value="#{lbl['lbl.sm.button.approve']}" style="float:right;"
-						id="approveBtnId" update="@form" onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()"
-						disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
-						action="#{bulkApplicationBackingBean.approveBulkApplication}" /></td>
-			</tr>
-			<tr height="10">
-				<td height="10"></td>
-			</tr>
-		</table>
-
 		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}"
 			toggleable="true" id="unClaimPanelId">
-			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" lazy="true"
+			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" 
 				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				var="unclaim" rowIndexVar="index"
+				var="unclaim" rowIndexVar="index" lazy="true" 
+				selection="#{bulkApplicationBackingBean.managedBean.selectedUnclaimTasks}"
 				value="#{bulkApplicationBackingBean.managedBean.unClaimTaskListDataModel}">
-				<ac:paginator for="unClaimTaskListId"></ac:paginator>
+				<ac:paginator for="unClaimTaskListId" />
+				
+				<p:ajax event="toggleSelect" update="@([id$=claimBtnId])" process="@this"/>
+				<p:ajax event="rowSelect" update="@([id$=claimBtnId])" process="@this" />
+				<p:ajax event="rowSelectCheckbox" update="@([id$=claimBtnId])" process="@this" />
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=claimBtnId])" process="@this" />
+				<p:ajax event="rowUnselect" update="@([id$=claimBtnId])" process="@this" />
+				
+				<p:column selectionMode="multiple" style="width:2% !important;" />
 				
 				<p:column style="white-space:normal;"
 					headerText="#{lbl['lbl.sm.date.received']}">
@@ -91,18 +82,22 @@
 				<p:column headerText="#{lbl['lbl.sm.siteassign.processing.officer']}">
 					<h:outputText value="#{unclaim.po.userName}" />
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.cm.action']}">
-					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{bulkApplicationBackingBean.onClaimBpmTask}"
-						update="@form" process="@this">
-						<f:param name="taskId" value="#{unclaim.taskId}" />
-					</p:commandButton>
-				</p:column>
 			</p:dataTable>
 		</p:panel>
 		
+		<br />
+		<div align="right" >
+			<p:commandButton
+				action="#{bulkApplicationBackingBean.refreshTaskList}" process="@this"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				value="#{lbl['lbl.bpm.refresh']}" update="@form" />
+			&#160;
+			<p:commandButton value="#{lbl['lbl.sm.button.approve']}" id="claimBtnId"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{bulkApplicationBackingBean.onClaimBpmTask}"
+				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedUnclaimTasks}"
+				update="@form" process="@this"/>
+		</div>
 		<br />
 
 		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}"
@@ -115,15 +110,15 @@
 				selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
 				<ac:paginator for="claimTaskListId" />
 
-				<p:ajax event="toggleSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])"  
+				<p:ajax event="toggleSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}"  
 					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this"/>
-				<p:ajax event="rowSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+				<p:ajax event="rowSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
 					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
-				<p:ajax event="rowSelectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+				<p:ajax event="rowSelectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
 					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
-				<p:ajax event="rowUnselectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+				<p:ajax event="rowUnselectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
 					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
-				<p:ajax event="rowUnselect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+				<p:ajax event="rowUnselect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
 					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
 					
 				<p:column selectionMode="multiple" style="width:2% !important;" disabledSelection="#{tasks.notAllowedToTick}"/>
@@ -201,9 +196,9 @@
 						</p:column>
 						<p:column style="width : 10%;white-space : normal">
 							<h:outputText value="#{lbl['lbl.sm.approved']}"
-								rendered="#{catBean.approvedByPo}" />
+								rendered="#{catBean.poDecFlg eq 1}" />
 							<h:outputText value="#{lbl['lbl.sm.rejected']}"
-								rendered="#{!catBean.approvedByPo}" />
+								rendered="#{catBean.poDecFlg eq 0}" />
 						</p:column>
 						<p:column style="width : 10%;white-space : normal">
 							<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
@@ -237,6 +232,22 @@
 			</p:dataTable>
 
 		</p:panel>
+		
+		<br />
+		<div align="right" >
+			<p:commandButton
+				value="#{lbl['lbl.btn.submit']}"
+				id="approveBtnId" update="@form" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
+				action="#{bulkApplicationBackingBean.approveBulkApplication}" />
+			&#160;
+			<p:commandButton
+				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
+				action="#{bulkApplicationBackingBean.onReleaseBpmTask}" process="@this"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				value="#{lbl['lbl.btn.cancel']}" update="@form" id="cancelBtnId"/>
+		</div>
 
 	</ui:define>
 
