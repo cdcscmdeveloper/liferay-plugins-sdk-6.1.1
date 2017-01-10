@@ -2317,25 +2317,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		SmAppl appl = reqSO.retrieveSiteVisitInfoByAppId(reqDTO).getSmAppl();
 		getManagedBean().setSmAppl(appl);
-/*		if(appl != null){
-			getManagedBean().setSmAppl(appl);
-			Map<String, List<SmSvTask>> templateTaskMap = new HashMap<String,List<SmSvTask>>();
-			if(appl.getSmSvTasks().size() > 0){
-				for(SmSvTask svTask : appl.getSmSvTasks()){
-					//Long templateId = svTask.getSmSvTemplate().getPmParameter().getParameterId();
-					String template = svTask.getSmSvTemplate().getPmParameter().getParameterCode();
-					if(!templateTaskMap.containsKey(template)){
-						
-						templateTaskMap.put(template, new ArrayList<SmSvTask>());
-					}
-					templateTaskMap.get(template).add(svTask);
-				}
-			}
-			getManagedBean().setTemplateTaskMap(templateTaskMap);
-			log.info("templateTaskMap size=" + templateTaskMap.size());
-		}
 		
-		log.info("TemplateTaskMap=" + getManagedBean().getTemplateTaskMap().size());*/
+		for(SmSvTask smSvTask : appl.getSmSvTasks()){
+			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
+					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress());
+		}
+
 	}
 	
 	/**
