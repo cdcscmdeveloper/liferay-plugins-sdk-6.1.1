@@ -10,18 +10,20 @@
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.upload.loa']}" escape="false"/><br/>
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" style="width:900px;" >
-		<h:panelGrid columns="2" style="width:500px;" >
+		<h:panelGrid columns="3" style="width:500px;" >
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" styleClass="required" style="width:250px;"/> 
      			<p:calendar style="width:80px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
 			   		 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" 
-					    disabled="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
+					     disabled="#{amendmentBackingBean.disableBtn(0)}"
 					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.govtSignDate}">
 				</p:calendar>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
 		</h:panelGrid>
-			<h:panelGrid columns="2" style="width:400px;">
+			<h:panelGrid columns="3" style="width:400px;">
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.agency.no']}" styleClass="required" style="width:200px;" /> 
-				<p:outputLabel value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}" /> 
+				<p:outputLabel value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}" style="text-align:left;float:left;" /> 
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.agency.no']}" />
 		</h:panelGrid>
 	</h:panelGrid>
 		<p:spacer height="5"/>
@@ -30,13 +32,20 @@
 	    		 value="#{amendmentBackingBean.managedBean.ctLetterOfAcceptance}">
 				 <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:45%;" styleClass="column-align-center">
 					    <h:outputText value="#{loaReportVar.contentTypeDesc}" style="float:left;" />
+					   
 			     </p:column>
 				 
 				 <p:column headerText="#{lbl['lbl.ct.amend.sample']}" styleClass="column-align-center" style="width:10%;">
-               			 <p:commandLink  action="#{amendmentBackingBean.downloadLOAContent()}"  
+                     	 <p:commandLink  action="#{amendmentBackingBean.getDownloadLOAContent()}"  
                			          disabled="#{amendmentBackingBean.disableBtn(index)}">
 								 <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 					     </p:commandLink>
+					  <p:outputPanel rendered="#{index == 0}">
+					    	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.ct.letter']}"  />
+					   </p:outputPanel>
+					<p:outputPanel rendered="#{index == 1}">
+					    	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.sup.letter']}"  />
+					  </p:outputPanel>
 				 </p:column>
 				 
 				 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:45%;">
