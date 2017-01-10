@@ -808,13 +808,14 @@ public class CommitteBackingBean extends
 		committeReqDTO.setScQtCommittee(scQtCommittee);
 		committeReqDTO.setToBeDeletedMembers(
 				getManagedBean().getToBeDelCommitteMemebers());
+		FacesScopes facesScopes = new FacesScopes();
 		if (null != this.getManagedBean().getPayLoad()) {
 			SCEvaluationDataType evalDataType = (SCEvaluationDataType) this
 					.getManagedBean().getPayLoad();
 			committeReqDTO.setQtId(Long.valueOf(evalDataType.getQtId()));
 			committeReqDTO.setCommitteeType(evalDataType.getCommitteeType());
 			committeReqDTO.setPayLoad(evalDataType);
-			// committeReqDTO.setToken(this.getManagedBean().getTaskName());
+			committeReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 
 		} else {
@@ -822,8 +823,6 @@ public class CommitteBackingBean extends
 			committeReqDTO.setCommitteeType(this.getManagedBean()
 					.getCommitteeType());
 		}
-		FacesScopes facesScopes = new FacesScopes();
-		committeReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		committeReqDTO.setUserLocale(facesScopes.getUserLocale());
 		return committeReqDTO;
 	}
