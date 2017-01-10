@@ -219,7 +219,7 @@ public class OrganisationBackingBean extends
 
 		this.getManagedBean().getDeliveryAddress()
 				.setPmAddress(PmCommonUtil.getNewPmAddress());
-
+		getManagedBean().setNotFirstRun(true);
 		if (id != null && id > 0) {
 			maintainOrganisation(id);
 

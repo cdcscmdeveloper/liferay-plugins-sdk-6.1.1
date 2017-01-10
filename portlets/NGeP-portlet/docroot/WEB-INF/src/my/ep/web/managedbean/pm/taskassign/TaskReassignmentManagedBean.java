@@ -42,6 +42,8 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private PmTaskReassignmentVO taskReassignmentVO;
 	private String backURL;
 	private boolean disableForTaskAssignment;
+	private boolean isModulePostUpdate;
+	private List<Integer> statusIds;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -268,6 +270,34 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableForTaskAssignment(boolean disableForTaskAssignment) {
 		this.disableForTaskAssignment = disableForTaskAssignment;
+	}
+
+	/**
+	 * @return the isModulePostUpdate
+	 */
+	public boolean isModulePostUpdate() {
+		return isModulePostUpdate;
+	}
+
+	/**
+	 * @param isModulePostUpdate the isModulePostUpdate to set
+	 */
+	public void setModulePostUpdate(boolean isModulePostUpdate) {
+		this.isModulePostUpdate = isModulePostUpdate;
+	}
+
+	/**
+	 * @return the statusIds
+	 */
+	public List<Integer> getStatusIds() {
+		return statusIds;
+	}
+
+	/**
+	 * @param statusIds the statusIds to set
+	 */
+	public void setStatusIds(List<Integer> statusIds) {
+		this.statusIds = statusIds;
 	}
 
 	

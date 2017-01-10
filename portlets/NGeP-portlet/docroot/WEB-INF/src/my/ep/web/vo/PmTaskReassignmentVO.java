@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 
 
 
@@ -35,6 +37,7 @@ public class PmTaskReassignmentVO implements Serializable {
 	private BigDecimal orderAmount;
 	private boolean supplier;
 	private List<TrackingDiaryReqDTO> trackingDiaryList;
+	private ISearchResultBean<PmUser> resultBean;
 	
 	
 	public PmTaskReassignmentVO(){
@@ -264,6 +267,24 @@ public class PmTaskReassignmentVO implements Serializable {
 	public void setTrackingDiaryList(List<TrackingDiaryReqDTO> trackingDiaryList) {
 		this.trackingDiaryList = trackingDiaryList;
 	}
+
+
+	/**
+	 * @return the resultBean
+	 */
+	public ISearchResultBean<PmUser> getResultBean() {
+		return resultBean;
+	}
+
+
+	/**
+	 * @param resultBean the resultBean to set
+	 */
+	public void setResultBean(ISearchResultBean<PmUser> resultBean) {
+		this.resultBean = resultBean;
+	}
+
+
 	
 
 }
