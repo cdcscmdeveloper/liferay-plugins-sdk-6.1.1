@@ -8,7 +8,11 @@
 		<h:panelGrid style="width:100%" columns="2">
 			<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.termAndConditionFlg}" 
 				disabled="#{!bpmTasklistBackingBean.managedBean.claim}" />
-			<p:editor controls="" id="loaEditor" value="#{amendmentBackingBean.managedBean.editorValue}" width="800" height="430" disabled="true"/>
+			  <p:media value="#{amendmentStreamContent.populateLoaStreamContent()}" 
+		         	width="100%" height="500px" player="pdf" > 
+		         	  <f:param name="filePath" value="#{amendmentBackingBean.downloadLOAContent}" />
+		</p:media>
+		
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
