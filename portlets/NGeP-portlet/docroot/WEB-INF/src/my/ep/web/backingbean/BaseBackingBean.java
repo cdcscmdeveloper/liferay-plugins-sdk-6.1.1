@@ -312,46 +312,57 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Claim bpm task.
 	 */
 	public void claimBpmTask() {
-		
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
 
-			String taskId = FacesContext.getCurrentInstance()
-					.getExternalContext().getRequestParameterMap()
-					.get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
 
-			FacesScopes face = new FacesScopes();
-			Object token = face.getBPMAuthenticationCtxToken();
+		claimTaskByTaskId(taskId);
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setTaskId(taskId);
-			reqDTO.setCtxToken(token);
-			bpmSO.claimTask(reqDTO);
-		
 	}
 
 	/**
 	 * Release bpm task.
 	 */
 	public void releaseBpmTask() {
-		System.out.println("**********releaseTask");
-		
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
+		releaseTaskByTaskId(taskId);
+	}
 
-			String taskId = FacesContext.getCurrentInstance()
-					.getExternalContext().getRequestParameterMap()
-					.get("taskId");
+	/**
+	 * Claim BPM task by taskId
+	 * 
+	 * @param String
+	 *            taskId
+	 */
+	public void claimTaskByTaskId(String taskId) {
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
 
-			FacesScopes face = new FacesScopes();
-			Object token = face.getBPMAuthenticationCtxToken();
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setTaskId(taskId);
+		reqDTO.setCtxToken(token);
+		bpmSO.claimTask(reqDTO);
+	}
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setTaskId(taskId);
-			reqDTO.setCtxToken(token);
-			bpmSO.releaseTask(reqDTO);
-		
+	/**
+	 * Release BPM task by taskId
+	 * 
+	 * @param String
+	 *            taskId
+	 */
+	public void releaseTaskByTaskId(String taskId) {
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
 
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setTaskId(taskId);
+		reqDTO.setCtxToken(token);
+		bpmSO.releaseTask(reqDTO);
 	}
 
 	/*
