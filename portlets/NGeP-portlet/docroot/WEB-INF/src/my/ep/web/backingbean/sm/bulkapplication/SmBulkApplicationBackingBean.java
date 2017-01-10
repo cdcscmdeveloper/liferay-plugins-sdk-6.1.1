@@ -262,13 +262,33 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void onClaimBpmTask() {
-		claimBpmTask();
-		refreshTaskList();
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedUnclaimTasks())) {
+
+			for (SmBulkApplicationVO bulkAppl : getManagedBean()
+					.getSelectedUnclaimTasks()) {
+				if (!StringUtils.isBlank(bulkAppl.getTaskId())) {
+					claimTaskByTaskId(bulkAppl.getTaskId());
+					refreshTaskList();
+				}
+			}
+			getManagedBean().getSelectedUnclaimTasks().clear();
+		}
 	}
 
 	public void onReleaseBpmTask() {
-		releaseBpmTask();
-		refreshTaskList();
+		if (!EntityHelper
+				.isCollectionEmpty(getManagedBean().getSelectedTasks())) {
+
+			for (SmBulkApplicationVO bulkAppl : getManagedBean()
+					.getSelectedTasks()) {
+				if (!StringUtils.isBlank(bulkAppl.getTaskId())) {
+					releaseTaskByTaskId(bulkAppl.getTaskId());
+					refreshTaskList();
+				}
+			}
+			getManagedBean().getSelectedTasks().clear();
+		}
 	}
 
 	public void refreshTaskList() {
