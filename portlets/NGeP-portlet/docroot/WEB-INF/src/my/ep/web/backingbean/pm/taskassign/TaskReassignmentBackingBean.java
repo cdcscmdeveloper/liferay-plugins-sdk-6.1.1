@@ -20,6 +20,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -32,6 +33,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -62,6 +64,7 @@ import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -602,6 +605,7 @@ public class TaskReassignmentBackingBean extends
 						.getOrgProfile());
 		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
 		this.getManagedBean().setTaskLazy(true);
+		getManagedBean().setStatusIds(retrieveAvailableStatusId());
 		reloadAllTaskList();
 		log.info("searchDocument - End");
 
@@ -627,7 +631,7 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
-			List<Integer> statusIds = null;
+			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
 
@@ -636,7 +640,6 @@ public class TaskReassignmentBackingBean extends
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
 				if (loginId != null && loginId.length() > 0) {
-					statusIds = retrieveAvailableStatusId();
 					if (statusIds != null && !statusIds.isEmpty()) {
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 								.getServiceObject(IBpmSO.class);
@@ -675,31 +678,6 @@ public class TaskReassignmentBackingBean extends
 						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 						responseDTO = bpmSO.getReassignedItems(reqDTO);
 
-//						// User/Group/Others Task
-//						switch (taskListType) {
-//						case 0:
-//							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-//							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
-//							responseDTO = bpmSO.getReassignedItems(reqDTO);
-//							break;
-//						case 1:
-//							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-//							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
-//							reqDTO.setIsClaimed(false);
-//							responseDTO = bpmSO.getReassignedItems(reqDTO);
-//							break;
-//						case 2:
-//							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-//							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-//							responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
-//							break;
-//
-//						default:
-//							break;
-//						}
-
-						// Invoke BPM
-						// responseDTO = bpmSO.getReassignedItems(reqDTO);
 
 						// Set resultBean for UI
 						resultBean = new SearchResultBean<WorklistItemVO>();
@@ -815,7 +793,7 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
-			List<Integer> statusIds = null;
+			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
 
@@ -824,7 +802,7 @@ public class TaskReassignmentBackingBean extends
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
 				if (loginId != null && loginId.length() > 0) {
-					statusIds = retrieveAvailableStatusId();
+					
 					if (statusIds != null && !statusIds.isEmpty()) {
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 								.getServiceObject(IBpmSO.class);
@@ -978,7 +956,7 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
-			List<Integer> statusIds = null;
+			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
 
@@ -987,7 +965,6 @@ public class TaskReassignmentBackingBean extends
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
 				if (loginId != null && loginId.length() > 0) {
-					statusIds = retrieveAvailableStatusId();
 					if (statusIds != null && !statusIds.isEmpty()) {
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 								.getServiceObject(IBpmSO.class);
@@ -1199,6 +1176,8 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
 			resetAvailableUser();
+			this.getManagedBean().setTaskReassignmentVO(null);
+			this.getManagedBean().setModulePostUpdate(false);
 //			this.getManagedBean().setAvailableUsers(
 //					generateAvailableUsers(item));
 		} catch (Exception e) {
@@ -1327,7 +1306,7 @@ public class TaskReassignmentBackingBean extends
 	 * @param task
 	 * @return PmTaskReassignmentVO
 	 */
-	private PmTaskReassignmentVO retrieveCtTaskReassignmentDetails(WorklistItemVO task) {
+	private PmTaskReassignmentVO retrieveCtTaskReassignmentDetails(WorklistItemVO task,ISearchBean<PmUser> userSearchBean) {
 		log.info("retrieveCtTaskReassignmentDetails");
 		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
 		IContractIntegrationSO ctIntegrationSO = null;
@@ -1338,6 +1317,8 @@ public class TaskReassignmentBackingBean extends
 					IContractIntegrationSO.class);
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setDocType(task.getDocType());
+			reqDTO.setStatusId(task.getDocStatus().longValue());
+			reqDTO.setUserSearchBean(userSearchBean);
 			ContractIntegrationResDTO resDTO = ctIntegrationSO
 					.retrieveTaskAssignmentRole(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -1562,6 +1543,7 @@ public class TaskReassignmentBackingBean extends
 					.getUserId());
 			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
 					.getUser());
+			reqDTO.setModulePostUpdate(getManagedBean().isModulePostUpdate());
 			//For Tracking Diary List (CT)
 			if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
 				reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
@@ -1654,36 +1636,40 @@ public class TaskReassignmentBackingBean extends
 						.longValue());
 				if (status != null) {
 					ISearchResultBean<PmUser> resultBean = null;
-					PmTaskReassignmentVO vo = null;
+					PmTaskReassignmentVO vo = getManagedBean().getTaskReassignmentVO();
+					
 					List<String> roleList = new ArrayList<String>();
-					int reassignType = status.getReasssignType() != null ? status
-							.getReasssignType() : 0;
-							
-					String moduleCode = status.getModuleCode();
-					if (ModuleCodeConst.CONTRACT_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveCtTaskReassignmentDetails(task);
-					} else if (ModuleCodeConst.SUPPLIER_SELECTION
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveSourcingTaskReassignmentDetail(task);
-					} else if (ModuleCodeConst.ORDER_FULFILLMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveFLTaskReassignmentDetail(task);
-					}else if (ModuleCodeConst.PROCUREMENT_PLAN
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrievePpTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveCMTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.PROFILE_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrievePMTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = new PmTaskReassignmentVO();
+					int reassignType = status.getPmStatusTask() != null 
+							&& status.getPmStatusTask().getReasssignType() != null 
+							? status.getPmStatusTask().getReasssignType() : 0;
+							String moduleCode = status.getModuleCode();
+					if(vo == null ){
+						if (ModuleCodeConst.CONTRACT_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveCtTaskReassignmentDetails(task,searchBean);
+						} else if (ModuleCodeConst.SUPPLIER_SELECTION
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveSourcingTaskReassignmentDetail(task);
+						} else if (ModuleCodeConst.ORDER_FULFILLMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveFLTaskReassignmentDetail(task);
+						}else if (ModuleCodeConst.PROCUREMENT_PLAN
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrievePpTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveCMTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.PROFILE_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrievePMTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = new PmTaskReassignmentVO();
+						}
 					}
 					
-					if(vo != null){
+					
+					if(vo != null){						
 						getManagedBean().setTaskReassignmentVO(vo);
 						// 99 - MIXTURE(Sub Reassign Type)
 						if(reassignType == ProfileManagementConst.REASSIGN_TYPE_MIXTURE){
@@ -1795,9 +1781,22 @@ public class TaskReassignmentBackingBean extends
 							SearchOperator.OPERATOR_EQUALS.value(),
 							orgProfileId));
 			break;
-		// case 2:
-		//
-		// break;
+		case ProfileManagementConst.REASSIGN_TYPE_S2:
+			// 2: S2/CT Committee Task
+			
+			// not current selected user and not current login user
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("userId",
+//							SearchOperator.OPERATOR_NOT_IN.value(),
+//								new ArrayList<Long>(Arrays.asList(userId,
+//									getFacesScopes().getUserSessionBean()
+//										.getUserId()))));
+//			
+//			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
+//			getManagedBean().setModulePostUpdate(true);
+			
+			isSearched = true;
+			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
 			if(vo.getOrgProfileId() != null){
@@ -2133,6 +2132,24 @@ public class TaskReassignmentBackingBean extends
 		fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
 
+	}
+	
+	private ISearchResultBean<PmUser> generateCommitteAssignees(ISearchBean<PmUser> searchBean,
+			Long docId, String docType, List<String> roleCodeList ){
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setDocId(docId);
+			committeReqDTO.setDocType(docType);
+			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
+			committeReqDTO.setUserSearchBean(searchBean);
+			return committeSO.retrieveUserListByCommType(committeReqDTO)
+					.getUserResultBean();
+		} finally {
+			committeSO = null;
+		}
 	}
 	
 	
