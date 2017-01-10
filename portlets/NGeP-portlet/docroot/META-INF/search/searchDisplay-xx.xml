@@ -564,21 +564,21 @@
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 	            <bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="latestContractVer.contractPhysicalNo" />
+					<property name="columnName" value="currentContractVer.contractPhysicalNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.contract.physical.no" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				 <bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="latestContractVer.ctContractValue.loaNo" />
+					<property name="columnName" value="loa.loaNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.contract.loa.referece.no" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				 <bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="latestContractVer.ctContractValue.loaPhysicalNo" />
+					<property name="columnName" value="loaPhysicalNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.contract.loa.physical.no" />
