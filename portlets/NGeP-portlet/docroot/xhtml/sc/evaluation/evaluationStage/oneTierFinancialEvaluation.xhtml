@@ -29,7 +29,7 @@
 							update="@form" />
 					</c:if>
 
-					<c:if
+					<!-- <c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 
 
@@ -37,7 +37,7 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveOneTierRecommendationSupplierSummary}"
 							update="@form" />
-					</c:if>
+					</c:if> -->
 
 				</p:tabMenu></td>
 			<td width="80%;" valign="top"><c:if
@@ -47,10 +47,12 @@
 				</c:if> <c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
 					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
-				</c:if> <c:if
+				</c:if> 
+				<c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '2'}">
 					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
-				</c:if></td>
+				</c:if>
+				</td>
 		</tr>
 	</table>
 
