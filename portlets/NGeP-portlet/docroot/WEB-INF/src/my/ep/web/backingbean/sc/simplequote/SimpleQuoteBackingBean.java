@@ -5231,7 +5231,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 		}
 
-		if (!CollectionUtils.isNotEmpty(serviceAnswers)) {
+		if (CollectionUtils.isNotEmpty(serviceAnswers)) {
 			serviceTplSpecBean.setSpecAnswerList(serviceAnswers);
 			serviceTplSpecBean.setSpecMaster(serviceMaster);
 			serviceTplSpecBean
