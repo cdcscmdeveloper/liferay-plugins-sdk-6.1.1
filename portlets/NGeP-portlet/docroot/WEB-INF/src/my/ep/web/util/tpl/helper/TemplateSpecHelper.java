@@ -156,11 +156,13 @@ public class TemplateSpecHelper {
 						TplSpecQuestion newSpecQuestion = (TplSpecQuestion) BeanUtils.cloneBean(specQuestion);
 						
 						if (newSpecQuestion != null) {
+							String quesType = newSpecQuestion.getQuestionType();
+							boolean  isSQSpec = newSpecMaster.isSpecCreatedBySQ();
+							
 							if (isTechnicalSpec || 
 									(!isTechnicalSpec && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(
-											newSpecQuestion.getQuestionType())|| 
-											newSpecMaster.isSpecCreatedBySQ())) {
-								
+											quesType))|| isSQSpec) {
+											
 								newSpecQuestion.setSpecQuestionId(null);
 								newSpecQuestion.setTplSpecMaster(newSpecMaster);
 								newSpecQuestion.setTplSpecAnswers(null);
@@ -168,7 +170,7 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecScorings(null);
 								
 								if (isTechnicalSpec) {
-									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newSpecQuestion.getQuestionType())){
+									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
 										newSpecQuestion.setAnswerTypeCode(null);
 									} else{
 										if (newSpecQuestion.getAnswerTypeCode() == null) {
@@ -221,6 +223,12 @@ public class TemplateSpecHelper {
 									}
 								} else {
 									newSpecQuestion.setParentSpecQuestion(null);
+								}
+								// Required to clear if cloned any questions of SQ's which have specification along with item   
+								if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)
+										&& newSpecQuestion.getClSpecDetail() != null
+										&& isSQSpec) {
+									newSpecQuestion.setClSpecDetail(null);
 								}
 								
 								// clone spec quantities
