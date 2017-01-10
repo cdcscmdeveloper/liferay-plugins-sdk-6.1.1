@@ -147,6 +147,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
 
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
@@ -170,8 +171,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			initializeRemarks();
 			if(ctBB == null) {
 				ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			}    
+			}
+			ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}			
 
 		if(getManagedBean().getUserMap().size()==0) {

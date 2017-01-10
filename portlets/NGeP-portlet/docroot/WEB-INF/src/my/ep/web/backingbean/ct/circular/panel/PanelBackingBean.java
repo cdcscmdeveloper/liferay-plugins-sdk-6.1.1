@@ -153,6 +153,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 @ViewScoped
 public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private ContractBackingBean ctBB = new ContractBackingBean();
@@ -177,8 +178,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			initializeRemarks();
 			if(ctBB == null){
 		    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			    ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			}
+			ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
     	}  
    
 		/*Setting list of approver during initialization*/
