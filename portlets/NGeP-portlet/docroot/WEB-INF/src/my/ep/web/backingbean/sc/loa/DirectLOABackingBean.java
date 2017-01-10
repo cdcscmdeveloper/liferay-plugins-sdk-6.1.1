@@ -1339,12 +1339,12 @@ public class DirectLOABackingBean extends
 			} else{
 				
 				for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
-					if(null == productQuestion.getCmItem()){
+					if(null == productQuestion.getCmItem() && productQuestion.getClSpecDetail().isEmpty()){
 						throw new EpException("please add item code for product items.");
 					}
 				}
 				for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
-					if(null == serviceQuestion.getCmItem()){
+					if(null == serviceQuestion.getCmItem() && serviceQuestion.getClSpecDetail().isEmpty()){
 						throw new EpException("please add item code for service items.");
 					}
 				}
@@ -2160,6 +2160,74 @@ public class DirectLOABackingBean extends
 		
 		//get loa report due to fulfilment change
 		getLoaReports();
+		
+		// update scQT existing 
+		DirectAwardReqDTO awardReqDTO = new DirectAwardReqDTO();
+		awardReqDTO.setScQt(scQt);
+		awardReqDTO.setScLoa(loa);
+		DirectAwardResDTO awardResDTO = getQtDirectAwardSO().getScQtDocs(awardReqDTO);
+		
+		// Product
+		this.getManagedBean().setProdscQtDoc(awardResDTO.getProductDoc());
+		if(awardResDTO.getProductDoc() != null){
+			setUserDetails(awardResDTO.getProductDoc());
+		}
+
+		TemplateSpecBean bean = new TemplateSpecBean(
+				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+		bean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
+				.getTplSpecMaster());
+		this.getManagedBean().setProdTemplateSpecBean(bean);
+		bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier());
+		if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+				.isBrandNew()) {
+
+			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+			backingBean.retrieveTemplateSpecMaster(bean);
+			this.getManagedBean()
+					.getProdscQtDoc()
+					.setTplSpecMaster(
+							this.getManagedBean().getProdTemplateSpecBean()
+									.getSpecMaster());
+		}
+
+		// Service
+		this.getManagedBean().setServicescQtDoc(awardResDTO.getServiceDoc());
+		if(awardResDTO.getServiceDoc() != null){
+			setUserDetails(awardResDTO.getServiceDoc());
+		}
+		
+		TemplateSpecBean serviceBean = new TemplateSpecBean(
+				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+		serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
+				.getTplSpecMaster());
+		serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier());
+		this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
+
+		if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+				.isBrandNew()) {
+
+			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+			backingBean.retrieveTemplateSpecMaster(serviceBean);
+			this.getManagedBean()
+					.getServicescQtDoc()
+					.setTplSpecMaster(
+							this.getManagedBean().getSpecTemplateSpecBean()
+									.getSpecMaster());
+		}
+		
+		setUserDetails(scQt);
+		this.getManagedBean().setScQt(scQt);
+		this.getManagedBean().setApproverUser(new PmUser());
+		if (scQt.isZonal()) {
+			List<TplSpecZoneDtl> zoneDetails = awardResDTO.getSpecZoneDetails();
+			constructTreeNodeForzones(zoneDetails);
+			
+			// Code to reset tplspecEstimations.
+			updateTplSpecMasterNDetails(Boolean.TRUE);
+		}
 	}
 
 	/**
@@ -3998,10 +4066,13 @@ public class DirectLOABackingBean extends
 					beans.add(zonesBean);
 				}
 
-				getManagedBean().getZoneTrees().add(
+				List<TreeNode> zoneTrees = getManagedBean().getZoneTrees();
+				if(null == zoneTrees){
+					zoneTrees = new ArrayList<TreeNode>();
+				}
+				zoneTrees.add(
 						LocationSingleton.getInstance().constuctTreeNode(zone,
 								zone.getTplSpecZoneLocs()));
-
 			}
 			getManagedBean().setZoneBeans(beans);
 		}
