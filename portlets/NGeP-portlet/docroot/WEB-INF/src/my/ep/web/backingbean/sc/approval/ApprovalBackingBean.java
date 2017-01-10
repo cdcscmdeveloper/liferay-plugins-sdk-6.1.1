@@ -763,6 +763,7 @@ public class ApprovalBackingBean extends
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
+				List<String> committeeTypes = new ArrayList<String>();
 
 				updateApprovalRequest(this.getManagedBean()
 						.getScQtApprovalRequestList(), outcome);
@@ -797,6 +798,7 @@ public class ApprovalBackingBean extends
 						qtCommittee.setQtCommitteRemarks(this.getManagedBean()
 								.getQtCommitteeRemarks());
 						qtCommitees.add(qtCommittee);
+						committeeTypes.add(qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
 					}
 					qt.setScQtCommittees(qtCommitees);
 				}
@@ -834,6 +836,7 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				committeReqDTO.setCommitteeTypes(committeeTypes);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
