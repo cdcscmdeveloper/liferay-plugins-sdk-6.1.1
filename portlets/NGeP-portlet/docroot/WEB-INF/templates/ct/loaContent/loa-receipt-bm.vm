@@ -1,15 +1,14 @@
 <html>
 <head>
 	<style>
-		@page {
-			size: A4 portrait;
-         	@top-left { content: "$contractName"; }
-         	@bottom-center { content: "Page " counter(page) " / " counter(pages); }
-         	@bottom-left { content: "$contractNo"; }
-		}
-		
-		li {text-align: justify;word-spacing: -10px;}
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
 				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		li {text-align: justify;word-spacing: -10px;}		
         @media print {
          .break {page-break-after: always;}
         }
@@ -18,19 +17,17 @@
 	</style>
 </head>
 <body>
-	<div style="border: 1px solid #a1a1a1;">
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td align="center">
-            <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>PENGAKUAN PENERIMAAN SURAT BERKAITAN KONTRAK TAMBAHAN OLEH SYARIKAT</span>
+              <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>PENGAKUAN PENERIMAAN SURAT BERKAITAN KONTRAK TAMBAHAN OLEH SYARIKAT</span>
             <br/> <br/>
         </td>
     </tr>
     
 	<tr>
 		<td>
-			 <span style='font-weight:normal;font-size:14px;font-family: Albertus Medium;'>
-				Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini dengan no. rujukan ialah  $agencyRefNo bertarikh $govSignDate.</span>
+				Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini dengan no. rujukan ialah  $agencyRefNo bertarikh $govSignDate.
 	     <br/> <br/>
 		</td>
 	</tr>	
@@ -38,24 +35,29 @@
 	
 	<tr>
 		<td>
-			<table border="0" cellpadding="0" cellspacing="0" width="50%">
+			<table border="0" cellpadding="0" cellspacing="0" width="40%">
 			<tr>
-				<td></td>
-				<td colspan="3" style="font-weight:bold;" align="center">Pembekal</td>
-				<td></td>
+				<td style="font-weight:bold;" align="center">Pembekal
+				<br/>  <br/></td>
 			</tr>
-			<tr valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
-				<td width="17%">
+		</table>
+	</td>
+	</tr>
+	<tr>
+		<td>
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr valign="top">
+				<td width="18%">
 					Nama Penuh 
 				</td>
 				<td width="1%">
 					: 
 				</td>
-				<td width="30%">
+				<td width="50%">
 					$supplierName
 				</td>
 			</tr>
-			<tr  valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+			<tr  valign="top" >
 				<td>
 					No. Kad Pengenalan
 				</td>
@@ -66,7 +68,7 @@
 					$supplierID
 				</td>
 			</tr>
-			<tr  valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+			<tr  valign="top">
 				<td>
 					Alamat 
 				</td>
@@ -77,7 +79,7 @@
 					$supplierAddress
 				</td>
 			</tr>
-			<tr valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+			<tr valign="top" >
 				<td>
 					Tarikh
 				</td>
