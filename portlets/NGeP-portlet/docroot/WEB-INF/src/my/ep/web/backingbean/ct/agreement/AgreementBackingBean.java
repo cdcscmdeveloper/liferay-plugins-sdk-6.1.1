@@ -1256,6 +1256,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		} else if (agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_GENERATED_FROM_FULFILMENT)) {
 			downloadBondAttachment();
 		} else {
+			if (agreementContent.getFilePath() == null) {
+				throw new EpException(MessageConst.INFO_100052,
+						new String[] {agreementContent.getTitle()});
+			}
 			downloadFile(agreementContent.getFilePath(), agreementContent.getFileName());
 		}
 	}
