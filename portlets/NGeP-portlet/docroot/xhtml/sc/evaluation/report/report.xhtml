@@ -39,7 +39,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}"
 				style="width:58%;white-space: normal;">
-				<h:inputText size="100" value="#{scQtEvaluationReport.title}" required="true"
+				<h:inputText  value="#{scQtEvaluationReport.title}" required="true" style="width:500px;"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
 					rendered="#{empty scQtEvaluationReport.pmDocument}" >
 					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
