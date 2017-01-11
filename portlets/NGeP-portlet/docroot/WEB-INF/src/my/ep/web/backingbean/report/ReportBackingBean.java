@@ -119,6 +119,7 @@ import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -18740,11 +18741,14 @@ public class ReportBackingBean extends
 
 					StringBuffer reportUrl = new StringBuffer(paramConstrString.replace("&", " "));
 					
+					PmUser user = new FacesScopes().getUserSessionBean();
+					new LogKey().setUserId(user.getUserId());
+					
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IRPTRequestSO.class);
 					
-					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, isExcel);
+					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, user.getUserId(), isExcel);
 					
 					System.out.println("jimmy reportbackingbean - " + reportTitle);
 					
