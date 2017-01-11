@@ -9,9 +9,9 @@
 
 
 	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true"
-		toggleable="true" id="pnlGroupSearch">
-
-
+		toggleable="true">
+		
+		<p:outputPanel id="outPnlGroupSearch">
 		<table style="width: 100%">
 
 			<tr>
@@ -30,12 +30,12 @@
 						<f:selectItems
 							value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
 						<p:ajax listener="#{bpmTasklistBackingBean.findDocStatusGroup}"
-							update="docStatusGroup" />
+							update="outPnlGroupSearch" />
 					</p:selectOneMenu></td>
 
 			</tr>
 			<tr>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.ptj']} :" /></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.ptj']} : - #{bpmTasklistBackingBean.managedBean.docTypeGroup eq ParameterConst.doctypeSupplierApplication}" /></td>
 				<td width="40%"><ac:lov id="lovMinistry1"
 						lovId="PM_ORG_PROFILE" size="56" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -53,7 +53,7 @@
 							value="#{bpmTasklistBackingBean.managedBean.docStatusListGroup}"
 							itemLabel="#{docStatus.statusName}" var="docStatus"
 							itemValue="#{docStatus.statusDescId}"></f:selectItems>
-						<p:ajax event="change" update="pnlGroupSearch"></p:ajax>
+						<p:ajax event="change" update="outPnlGroupSearch"></p:ajax>
 					</p:selectOneMenu></td>
 			</tr>
 			
@@ -71,7 +71,8 @@
 	
 				<c:if test="#{(bpmTasklistBackingBean.managedBean.isSDORole() and !bpmTasklistBackingBean.managedBean.sdoWithMultipleRoles) or 
 				(bpmTasklistBackingBean.managedBean.isSDORole() and bpmTasklistBackingBean.managedBean.sdoWithMultipleRoles and 
-				bpmTasklistBackingBean.managedBean.docStatusGroup == SupplierMgmtConst.pmStatusPendingSuppDocVerification)}">
+				bpmTasklistBackingBean.managedBean.docStatusGroup == SupplierMgmtConst.pmStatusPendingSuppDocVerification and 
+				bpmTasklistBackingBean.managedBean.docTypeGroup eq ParameterConst.doctypeSupplierApplication)}">
 					<td width="10%"><p:outputLabel value="Supporting Document Type : " /></td>
 					<td width="40%">
 						<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.taskDescGroup}">
@@ -84,6 +85,7 @@
 			
 			
 		</table>
+		</p:outputPanel>
 
 		<div class="clear"></div>
 		<div style="text-align: left; margin-right: 2px; float: right;">
