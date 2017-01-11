@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 public class SmSideMenuIconUtil {
 	private static final String ICON_TICK = "/css/images/design/ico-tick-checkbox.png";
 	private static final String ICON_UNTICK = "/css/images/design/ico-disabled-chckbx.png";
+	private static final String ICON_VIEW = "/css/images/design/ico-view.png";
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
@@ -411,7 +412,7 @@ public class SmSideMenuIconUtil {
 
 	public static String getSideMenuVerificationIcon(
 			SmApplicationManagedBean bean, String sectionType) {
-		String retVal = StringUtils.EMPTY;
+		String retVal = ICON_VIEW;
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()
@@ -469,7 +470,7 @@ public class SmSideMenuIconUtil {
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 						|| bean.getSmAppl().getApplType()
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
-					retVal = StringUtils.EMPTY;
+					retVal = ICON_VIEW;
 				} else {
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
