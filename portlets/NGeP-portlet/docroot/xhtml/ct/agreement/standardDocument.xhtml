@@ -49,8 +49,9 @@
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
 				   	<h:panelGroup>
-						<h:commandLink disabled="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
-				   				and !agreementBackingBean.managedBean.validBondAttachment}"
+						<h:commandLink rendered="#{contentsVar.contentType.parameterCode != ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
+				   			or (contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
+				   				and agreementBackingBean.managedBean.validBondAttachment)}"
 							action="#{agreementBackingBean.clickDownloadIcon(contentsVar)}" immediate="true">
 							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
