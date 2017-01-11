@@ -225,9 +225,8 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setParentSpecQuestion(null);
 								}
 								// Required to clear if cloned any questions of SQ's which have specification along with item   
-								if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)
-										&& newSpecQuestion.getClSpecDetail() != null
-										&& isSQSpec) {
+								if (isSQSpec && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)
+										&& newSpecQuestion.getClSpecDetail() != null ) {
 									newSpecQuestion.setClSpecDetail(null);
 								}
 								
