@@ -1338,14 +1338,19 @@ public class DirectLOABackingBean extends
 				throw new EpException(MessageConst.ERROR_760354);
 			} else{
 				
-				for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
-					if(null == productQuestion.getCmItem() && productQuestion.getClSpecDetail().isEmpty()){
-						throw new EpException("please add item code for product items.");
+				if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
+					for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
+						if(null == productQuestion.getCmItem() && StringUtils.isBlank(productQuestion.getClSpecDetail())){
+							throw new EpException(MessageConst.ERROR_760445, new String[] {productQuestion.getClItem()});
+						}
 					}
 				}
-				for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
-					if(null == serviceQuestion.getCmItem() && serviceQuestion.getClSpecDetail().isEmpty()){
-						throw new EpException("please add item code for service items.");
+				
+				if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
+					for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
+						if(null == serviceQuestion.getCmItem() && StringUtils.isBlank(serviceQuestion.getClSpecDetail())){
+							throw new EpException(MessageConst.ERROR_760445, new String[] {serviceQuestion.getClItem()});
+						}
 					}
 				}
 			}
@@ -2161,7 +2166,7 @@ public class DirectLOABackingBean extends
 		//get loa report due to fulfilment change
 		getLoaReports();
 		
-		// update scQT existing 
+		// update existing scQts  
 		DirectAwardReqDTO awardReqDTO = new DirectAwardReqDTO();
 		awardReqDTO.setScQt(scQt);
 		awardReqDTO.setScLoa(loa);
