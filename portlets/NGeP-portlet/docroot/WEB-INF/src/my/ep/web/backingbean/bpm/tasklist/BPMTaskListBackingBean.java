@@ -836,6 +836,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		this.getManagedBean().setTaskDescGroup("");
 		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
 		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
+		this.getManagedBean().setDocStatusGroup(0);
+		this.getManagedBean().setDocTypeGroup("");
 		//this.getManagedBean().setAssignment("ALL");
 
 		HttpServletRequest servletRequest = PortalUtil
@@ -1020,6 +1022,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			log.info("*********doc type empty*********");
 			this.getManagedBean().setDocTypeGroup("");
 			this.getManagedBean().setDocStatusListGroup(null);
+			this.getManagedBean().setDocStatusGroup(0);
 		}
 	}
 
