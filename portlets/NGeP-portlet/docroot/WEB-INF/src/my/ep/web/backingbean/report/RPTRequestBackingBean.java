@@ -33,6 +33,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.rpt.RPTRequest;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -289,6 +290,10 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		IRPTRequestSO reqSO = (IRPTRequestSO) BusinessDelegate.getInstance()
 				.getServiceObject("rpt", IRPTRequestSO.class);
+		
+		PmUser user = new FacesScopes().getUserSessionBean();
+		rptRequest.setChangedBy(user.getUserId());
+		new LogKey().setUserId(user.getUserId());
 		
 		reqSO.updateStatusCode(rptRequest);
 		
