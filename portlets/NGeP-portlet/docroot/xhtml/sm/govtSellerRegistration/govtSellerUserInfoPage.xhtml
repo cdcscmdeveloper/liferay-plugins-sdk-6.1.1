@@ -449,106 +449,110 @@
 								value="#{bb.managedBean.sameAddress}">
 								<p:ajax event="change" update="pnlContactInfo"  />
 							</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.sm.sameasabove']}"></h:outputText></td>
+						<td class="tdTitle">&#160;</td>
+						<td class="tdContent">&#160;</td>
 					</tr>
-		
-					<tr>
-						<td class="tdTitle"></td>
-						<td class="tdContent" ><p:inputText size="40"
-								id="conAddress1" maxlength="35"
-								required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.correspondenceadd']}"
-								value="#{bb.managedBean.smResAdd.address1}"
-								disabled="#{bb.managedBean.sameAddress}" /> 
-							<p:message id="conAddress1Msg" for="conAddress1" display="icon" />
-						</td>
-		
-						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.state']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td class="tdContent"><p:selectOneMenu id="cmbResState"
-								required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.state']}" style="width:80%"
-								value="#{bb.managedBean.smResAdd.pmState.stateId}"
-								disabled="#{bb.managedBean.sameAddress}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems var="resState"
-									value="#{bb.managedBean.residentialStateLs}" />
-								<p:ajax event="change"
-									listener="#{bb.onChangeState(bb.managedBean.smResAdd.pmState,'USER_RESIDENTIAL_ADDRESS')}"
-									update="cmbResDistrict cmbResCity" />
-							</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
-						</td>
-					</tr>
-		
-					<tr>
-						<td class="tdTitle"></td>
-						<td class="tdContent"><p:inputText size="40"
-								id="conAddress2" maxlength="35"
-								value="#{bb.managedBean.smResAdd.address2}"
-								disabled="#{bb.managedBean.sameAddress}" /></td>
-		
-						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.district']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td class="tdContent"><p:selectOneMenu id="cmbResDistrict"
-								required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.district']}" style="width:80%"
-								disabled="#{bb.managedBean.sameAddress}"
-								value="#{bb.managedBean.smResAdd.pmDistrict.districtId}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems var="dist"
-									value="#{bb.managedBean.residentialDistrictLs}" />
-								<p:ajax event="change"
-									listener="#{bb.onChangeDistrict(bb.managedBean.smResAdd.pmDistrict,'USER_RESIDENTIAL_ADDRESS')}"
-									update="cmbResCity" />
-							</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
-								display="icon" /></td>
-					</tr>
-		
-					<tr>
-						<td class="tdTitle"></td>
-						<td class="tdContent"><p:inputText size="40"
-								id="conAddress3" maxlength="35"
-								value="#{bb.managedBean.smResAdd.address3}"
-								disabled="#{bb.managedBean.sameAddress}" /></td>
-		
-						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td class="tdContent"><p:selectOneMenu id="cmbResCity"
-								required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.towncity']}" style="width:80%"
-								disabled="#{bb.managedBean.sameAddress}"
-								value="#{bb.managedBean.smResAdd.pmCity.cityId}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems var="city"
-									value="#{bb.managedBean.residentialCityLs}" />
-							</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
-					</tr>
-		
-					<tr>
-						<td class="tdTitle"></td>
-						<td class="tdContent"></td>
-		
-						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td class="tdContent">
-							<p:inputText maxlength="5" required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
-										label="#{lbl['lbl.sm.postcode']}" id="conPostCodeMy" disabled="#{bb.managedBean.sameAddress}"
-										value="#{bb.managedBean.smResAdd.postcode}"
-										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-										size="40">
-										<f:validator validatorId="postcodeValidator" />
-									</p:inputText>
-									<p:message id="conPostCodeMyMsg" for="conPostCodeMy"
-										showSummary="true" showDetail="false" display="icon" />
-						</td>
-					</tr>
+					
+					<c:if test="#{!bb.managedBean.sameAddress}">
+						<tr>
+							<td class="tdTitle"></td>
+							<td class="tdContent" ><p:inputText size="40"
+									id="conAddress1" maxlength="35"
+									required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.correspondenceadd']}"
+									value="#{bb.managedBean.smResAdd.address1}"
+									disabled="#{bb.managedBean.sameAddress}" /> 
+								<p:message id="conAddress1Msg" for="conAddress1" display="icon" />
+							</td>
+			
+							<td class="tdTitle">
+								<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+								<p:outputLabel value="*" styleClass="mandatory" />
+							</td>
+							<td class="tdContent"><p:selectOneMenu id="cmbResState"
+									required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.state']}" style="width:80%"
+									value="#{bb.managedBean.smResAdd.pmState.stateId}"
+									disabled="#{bb.managedBean.sameAddress}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="resState"
+										value="#{bb.managedBean.residentialStateLs}" />
+									<p:ajax event="change"
+										listener="#{bb.onChangeState(bb.managedBean.smResAdd.pmState,'USER_RESIDENTIAL_ADDRESS')}"
+										update="cmbResDistrict cmbResCity" />
+								</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
+							</td>
+						</tr>
+			
+						<tr>
+							<td class="tdTitle"></td>
+							<td class="tdContent"><p:inputText size="40"
+									id="conAddress2" maxlength="35"
+									value="#{bb.managedBean.smResAdd.address2}"
+									disabled="#{bb.managedBean.sameAddress}" /></td>
+			
+							<td class="tdTitle">
+								<p:outputLabel value="#{lbl['lbl.sm.district']}" />
+								<p:outputLabel value="*" styleClass="mandatory" />
+							</td>
+							<td class="tdContent"><p:selectOneMenu id="cmbResDistrict"
+									required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.district']}" style="width:80%"
+									disabled="#{bb.managedBean.sameAddress}"
+									value="#{bb.managedBean.smResAdd.pmDistrict.districtId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="dist"
+										value="#{bb.managedBean.residentialDistrictLs}" />
+									<p:ajax event="change"
+										listener="#{bb.onChangeDistrict(bb.managedBean.smResAdd.pmDistrict,'USER_RESIDENTIAL_ADDRESS')}"
+										update="cmbResCity" />
+								</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
+									display="icon" /></td>
+						</tr>
+			
+						<tr>
+							<td class="tdTitle"></td>
+							<td class="tdContent"><p:inputText size="40"
+									id="conAddress3" maxlength="35"
+									value="#{bb.managedBean.smResAdd.address3}"
+									disabled="#{bb.managedBean.sameAddress}" /></td>
+			
+							<td class="tdTitle">
+								<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+								<p:outputLabel value="*" styleClass="mandatory" />
+							</td>
+							<td class="tdContent"><p:selectOneMenu id="cmbResCity"
+									required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.towncity']}" style="width:80%"
+									disabled="#{bb.managedBean.sameAddress}"
+									value="#{bb.managedBean.smResAdd.pmCity.cityId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="city"
+										value="#{bb.managedBean.residentialCityLs}" />
+								</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
+						</tr>
+			
+						<tr>
+							<td class="tdTitle"></td>
+							<td class="tdContent"></td>
+			
+							<td class="tdTitle">
+								<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
+								<p:outputLabel value="*" styleClass="mandatory" />
+							</td>
+							<td class="tdContent">
+								<p:inputText maxlength="5" required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
+											label="#{lbl['lbl.sm.postcode']}" id="conPostCodeMy" disabled="#{bb.managedBean.sameAddress}"
+											value="#{bb.managedBean.smResAdd.postcode}"
+											validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+											size="40">
+											<f:validator validatorId="postcodeValidator" />
+										</p:inputText>
+										<p:message id="conPostCodeMyMsg" for="conPostCodeMy"
+											showSummary="true" showDetail="false" display="icon" />
+							</td>
+						</tr>
+					</c:if>
 				</table>
 			</p:outputPanel>
 		</p:panel>
