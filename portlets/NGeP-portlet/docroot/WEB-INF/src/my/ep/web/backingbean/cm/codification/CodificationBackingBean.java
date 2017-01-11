@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -26,6 +27,8 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.exception.EpException;
@@ -39,11 +42,13 @@ import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -2625,6 +2630,26 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		reqDTO.setCatalogueAdminRequest(true);
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
+		
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		
+		if(isCatalogueAdmin()){
+			System.out.println("**isCatalogueAdmin***");
+
+			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+				for(PmUser user :userResDTO.getUserList()){
+					System.out.println("user.getLoginId():"+user.getLoginId());
+					reqDTO.getCdAdminList().add(user.getLoginId());
+				}
+			}
+
+
+		}
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
 
@@ -2636,6 +2661,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 								new FacesScopes().getUserLocale())));
 
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
+	}
+	
+	public boolean isCatalogueAdmin() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("CM_ADMIN");
 	}
 
 	public String requestExtensionCodeII() {
