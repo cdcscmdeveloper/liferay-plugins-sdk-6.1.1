@@ -284,11 +284,10 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
 					update="@([id$=Msg])" process="poEnquiryBlockPanel"
-					disabled="#{backingBean.managedBean.missinDocs.size() == 0}"
-					onclick="poEnquiryBlockWidget.show()" oncomplete="poEnquiryBlockWidget.hide();sendInqDialog.hide();"
+					onclick="poEnquiryBlockWidget.show()" oncomplete="poEnquiryBlockWidget.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					onclick="sendInqDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
+					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
 			</div>
 			<p:blockUI block="poEnquiryBlockPanel" widgetVar="poEnquiryBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

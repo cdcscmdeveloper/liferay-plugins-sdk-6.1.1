@@ -7184,6 +7184,13 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
 		}
 		initMissingDocs(isNewInquiry, dialogId);
+
+		// if missing docs is empty, set other application inquiry to required
+		if (dialogId != null
+				&& EntityHelper.isCollectionEmpty(getManagedBean()
+						.getMissinDocs())) {
+			assignValReqdToTrue();
+		}
 	}
 
 	public void initMissingDocs(boolean isNewInquiry, String dialogId) {
@@ -7200,6 +7207,12 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getMissinDocs().size());
 		if (dialogId != null) {
 			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
+		}
+	}
+
+	public void cancelInquiry() {
+		if (getManagedBean().isValueReqd()) {
+			assignValReqdToFalse();
 		}
 	}
 
@@ -7819,17 +7832,6 @@ public class SmApplicationBackingBean extends
 
 				reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
-				/*
-				 * if (revApplicationResDTO.isSuccessful()) { // to auto
-				 * generate mof cert if (res.equalsIgnoreCase(my.ep.constant.
-				 * sm.SupplierManagementConst.APPROVE)) { try {
-				 * SmVirtualCertHelper.getInstance() .autoGenerateVirtualCert(
-				 * getManagedBean().getSmAppl() .getApplId()); } catch
-				 * (Exception ex) { log.info(
-				 * "<<<<MOF Approval - error when generate Virtual Cert>>>>" +
-				 * ex.getMessage()); } } }
-				 */
-
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -7837,6 +7839,14 @@ public class SmApplicationBackingBean extends
 				renewSesionObject();
 				retMsg = SmApplicationUtil.getApplicationErrorPage();
 
+				// hide inquiry dialog (for inquiry section or po decision
+				// section)
+				if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
+					RequestContext.getCurrentInstance().execute(
+							"inquiryDialog.hide()");
+					RequestContext.getCurrentInstance().execute(
+							"sendInqDialog.hide()");
+				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
