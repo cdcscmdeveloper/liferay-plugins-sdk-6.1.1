@@ -1892,8 +1892,7 @@ public class QTCommitteBackingBean extends
 			}
 		} else {
 			String taskName = this.getManagedBean().getTaskName();
-			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
-					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId))
+			if (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return true;
 			} else if (isQTStatusAfterScheduleDoc(currentStatusId)
