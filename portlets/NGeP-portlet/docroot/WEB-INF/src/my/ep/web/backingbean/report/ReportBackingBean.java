@@ -18739,6 +18739,14 @@ public class ReportBackingBean extends
 				
 				if(testing){
 
+					boolean isTempAccess = false;
+					
+					int i = Integer.parseInt(this.getManagedBean().getReportUrlValue());
+					
+					if(i == 1){
+						isTempAccess = true;
+					}
+					
 					StringBuffer reportUrl = new StringBuffer(paramConstrString.replace("&", " "));
 					
 					PmUser user = new FacesScopes().getUserSessionBean();
@@ -18748,7 +18756,7 @@ public class ReportBackingBean extends
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IRPTRequestSO.class);
 					
-					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, user.getUserId(), isExcel);
+					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, user.getUserId(), isExcel, isTempAccess);
 					
 					System.out.println("jimmy reportbackingbean - " + reportTitle);
 					
