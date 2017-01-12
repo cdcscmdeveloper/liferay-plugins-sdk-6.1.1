@@ -2665,14 +2665,10 @@ public class SmApplicationUtil {
 	 */
 	public static void validateSupportingDocsDecision(
 			SmApplicationManagedBean managedBean) {
-		for (SmApplSupportDoc doc : managedBean.getSmAppl()
-				.getSmApplSupportDocs()) {
-			if (doc.getVerifiedFlg() == null
-					&& !EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())
-					&& !StringUtils.isBlank(doc.getSmApplDocFiles().get(0)
-							.getFileName())) {
-				throw new EpException(MessageConst.ERROR_722559);
-			}
+		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
+				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
+				.getSupportingDocMode(), managedBean.isApproverUser())) {
+			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
 

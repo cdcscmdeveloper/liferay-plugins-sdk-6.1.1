@@ -15,6 +15,7 @@
 		
 		<ac:smPoApproverOnlineSuppDoc tableId="mandatoryTableId"
 			smApplSupportDocs="#{backingBean.managedBean.mandatoryDocs}" mandatory="true" />
+		<ui:include src="onlineLicenseInfoForm.xhtml" />
 		<ac:smPoApproverOnlineSuppDoc tableId="nonMandatoryTableId"
 			smApplSupportDocs="#{backingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
 	</p:panel>

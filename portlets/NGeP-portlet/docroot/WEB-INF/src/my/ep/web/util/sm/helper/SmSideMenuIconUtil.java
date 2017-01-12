@@ -412,7 +412,7 @@ public class SmSideMenuIconUtil {
 
 	public static String getSideMenuVerificationIcon(
 			SmApplicationManagedBean bean, String sectionType) {
-		String retVal = ICON_VIEW;
+		String retVal = StringUtils.EMPTY;
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()

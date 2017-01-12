@@ -2520,6 +2520,13 @@ public class SmApplicationBackingBean extends
 				.isSuppEditPersonnel());
 		rqDto.setBankInfoChanged(getManagedBean().getSupplierEditVO()
 				.isSuppEditBank());
+
+		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
+				.getSmAppl());
+		if (hq != null) {
+			rqDto.setForHomeOffice(hq.getFacilityType().equals("H") ? true
+					: false);
+		}
 		DocumentResDTO rsDTO = null;
 		rsDTO = retrieveSupportingDocumentList(rqDto);
 
