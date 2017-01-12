@@ -4152,7 +4152,7 @@ public class SupplierFinalizationBackingBean extends
 		// Briefing Paper Menu Item
 		menuItem = new MenuItem();
 		menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.briefing.paper",
+							"lbl.sc.briefing.paper.preparation",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 		menuItem.setStyle("width:15%;");
