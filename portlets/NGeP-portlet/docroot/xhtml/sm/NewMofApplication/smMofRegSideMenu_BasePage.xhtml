@@ -285,7 +285,7 @@
 											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
 									</c:if>
 									<c:choose>
-										<c:when test="#{empty backingBean.managedBean.smAppl.smAppl.smApplInquiries}">
+										<c:when test="#{empty backingBean.managedBean.smAppl.smApplInquiries}">
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 												<ui:include src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 											</c:if>
@@ -302,7 +302,7 @@
 								</c:when>
 								<c:otherwise>
 									<c:choose>
-										<c:when test="#{empty backingBean.managedBean.smAppl.smAppl.smApplInquiries}">
+										<c:when test="#{empty backingBean.managedBean.smAppl.smApplInquiries}">
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 												<ui:include src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 											</c:if>
