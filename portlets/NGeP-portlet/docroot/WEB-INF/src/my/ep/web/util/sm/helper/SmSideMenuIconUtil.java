@@ -33,14 +33,17 @@ public class SmSideMenuIconUtil {
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
+		SmAppl srcAppl = null;
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
-				if (step1CompanyBasicHasDifference(
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step1CompanyBasicHasDifference(srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
+
+				// used to check got changes to display supporting doc
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditCompBasic(true);
@@ -77,11 +80,13 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
-				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step2AssocCompProjExpHasDifference(true, srcAppl,
+						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditAssocProj(true);
@@ -118,11 +123,12 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
-				if (step3PersonnelHasDifference(true,
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step3PersonnelHasDifference(true, srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditPersonnel(true);
@@ -159,11 +165,12 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
-				if (step4EquityHasDifference(true,
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step4EquityHasDifference(true, srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditEquity(true);
@@ -200,10 +207,12 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
-				if (step5BankHasDifference(true, bean.getLatestRejectedAppl(),
-						bean.getSmAppl()) && bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step5BankHasDifference(true, srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditBank(true);
@@ -240,11 +249,12 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCategory(false);
-				if (step6CatCodeHasDifference(true,
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step6CatCodeHasDifference(true, srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditCategory(true);
@@ -281,11 +291,12 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditFacility(false);
-				if (step7FacilityHasDifference(true,
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step7FacilityHasDifference(true, srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditFacility(true);
@@ -322,11 +333,12 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquipment(false);
-				if (step8EquipmentHasDifference(true,
-						bean.getLatestRejectedAppl(), bean.getSmAppl())
-						&& bean.getSmAppl().isResubmit()) {
+				srcAppl = bean.getSmAppl().isResubmit() ? bean
+						.getLatestRejectedAppl() : bean.getLatestAppl();
+				if (step8EquipmentHasDifference(true, srcAppl, bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
+				// used to check got changes to display supporting doc
 				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditEquipment(true);
