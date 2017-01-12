@@ -43,6 +43,9 @@
 					
 		<p:outputPanel layout="block" id="inquiryBlockPanel">
 			<ui:remove><ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" /></ui:remove>
+			
+			<p:messages id="poInquirySecMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+				
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
 		
@@ -73,18 +76,22 @@
 			
 			<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryOtherMainPanelId" 
 				rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
+				<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;
 				<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" 
-					maxlength="100" cols="70" rows="10"/>
+					label="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryOtherMainTxtId"
+					maxlength="100" cols="70" rows="10" required="#{backingBean.managedBean.valueReqd}"/>
+				<p:message id="inquiryOtherMainTxtIdMsg"
+					for="inquiryOtherMainTxtId" showSummary="true" showDetail="false"
+					display="icon" />
 			</p:panel>
 	
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
-					update="@([id$=Msg])" process="inquiryBlockPanel"
-					disabled="#{empty backingBean.managedBean.missinDocs}"
-					onclick="inquiryBlockWidget.show()" oncomplete="inquiryBlockWidget.hide();inquiryDialog.hide();"
+					process="inquiryBlockPanel" update="@([id$=Msg])"
+					onclick="inquiryBlockWidget.show()" oncomplete="inquiryBlockWidget.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					onclick="inquiryDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
+					oncomplete="inquiryDialog.hide();" action="#{backingBean.cancelInquiry}"/>
 			</div>
 			<p:blockUI block="inquiryBlockPanel" widgetVar="inquiryBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

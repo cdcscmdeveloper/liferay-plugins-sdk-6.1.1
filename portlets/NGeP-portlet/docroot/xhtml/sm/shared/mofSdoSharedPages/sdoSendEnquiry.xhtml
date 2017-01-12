@@ -5,6 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:messages id="poInquiryMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
 
 	<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 		id="InqSuppDocPanel">
@@ -35,10 +38,13 @@
 
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryTextPanelId" 
+	<p:panel id="inquiryTextPanelId" 
 		rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
+		<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;
 		<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" 
-			maxlength="100" cols="70" rows="10"/>
+			label="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryTextId"
+			maxlength="100" cols="70" rows="10" required="#{backingBean.managedBean.valueReqd}"/>
+		<p:message id="inquiryTextIdMsg" for="inquiryTextId" showSummary="true" showDetail="false" display="icon" />
 	</p:panel>
 	
 </ui:composition>
