@@ -51,7 +51,7 @@
 		<ui:include src="#{consolidationReportFolderPath}/consolidationReportHeader.xhtml"/>
 
 		<p:tabMenu id="tab" activeIndex="#{consolidationReportBackingBean.managedBean.activeIndex}">
-			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(0)}" 
 				process="@form" update="@form" partialSubmit="true" style="width:150px;">
 			</p:menuitem>
