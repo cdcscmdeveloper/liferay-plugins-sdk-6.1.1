@@ -477,6 +477,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		                for(CtContractItem ctitems : ctCircularContract.getCtContractVer().getCtContractItems()){
 			                 CtCircularItem item = new CtCircularItem();
 			                 item.setCtContractItem(ctitems);
+			                 item.setMinimumOrderQty(new BigDecimal(1));
 			                 ctCircularContract.getCtCircularItems().add(item);
 		             	 }
 					}
@@ -970,7 +971,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				for(CtContractItem contractItem : getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
 					if (circularItem.getCtContractItem().getScRequestItem().getRequestNoteItemId().equals(contractItem.getScRequestItem().getRequestNoteItemId())) {
 						if(contractItem.getRecordStatusFlg() == 1 || (contractItem.getRecordStatusFlg() == 0 && (currentDate.before(contractItem.getEffDate()) || currentDate.after(contractItem.getExpDate())))) {
-							circularItem.setMinimumOrderQty(new BigDecimal(1.0));
 							activeItemList.add(circularItem);						
 						}
 						break;
