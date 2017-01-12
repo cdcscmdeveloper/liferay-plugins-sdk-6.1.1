@@ -2189,7 +2189,7 @@ public class QTCommitteBackingBean extends
 
 		return (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || isQTStatusInBetween(statusId,
 				QTStatusConst.QT_PENDING_PB_APPROVAL,
-				QTStatusConst.QT_PROPOSAL_PREPARATION));
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION));
 
 	}
 	
