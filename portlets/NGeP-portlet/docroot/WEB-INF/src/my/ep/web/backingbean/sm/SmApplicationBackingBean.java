@@ -722,6 +722,7 @@ public class SmApplicationBackingBean extends
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
+		getManagedBean().setPoSupplierInquiryHistory(null);
 		assignValReqdToFalse();
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
