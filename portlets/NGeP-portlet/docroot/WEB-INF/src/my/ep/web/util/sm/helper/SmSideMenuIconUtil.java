@@ -1022,22 +1022,24 @@ public class SmSideMenuIconUtil {
 
 		if (applPrev != null && applCurr != null) {
 
+			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
+					"apprvrDecFlg", "poDecFlg", "approvedByPo",
+					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
+					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
+					"approvedDate", "approvedByAp", "prevApprovedByAp" };
+
 			// smSupplierCategory
 			if (isSupplier) {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmSupplierCategories(),
 						applCurr.getSmSupplierCategories(), null,
-						new String[] { "pmCategoryL3" }, null);
+						new String[] { "pmCategoryL3" }, arrExcludeProps);
 			} else {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmSupplierCategories(),
 						applCurr.getSmSupplierCategories(),
 						new String[] { "supplierCategoryId" }, null,
-						new String[] { "prevApprDecFlg", "apprvrDecFlg",
-								"poDecFlg", "approvedByPo", "prevApprovedByPo",
-								"prevPoDecFlg", "poRemarks", "approverRemarks",
-								"prevPoRemarks", "prevApproverRemarks",
-								"approvedDate" });
+						arrExcludeProps);
 			}
 		}
 		return retVal;
