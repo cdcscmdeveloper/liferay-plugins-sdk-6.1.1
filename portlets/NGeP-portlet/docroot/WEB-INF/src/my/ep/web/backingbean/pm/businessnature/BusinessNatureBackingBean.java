@@ -894,8 +894,7 @@ public class BusinessNatureBackingBean extends
 			
 			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 			reqDTO.setBusinessNatureSearchBean(searchBean);
-			reqDTO.setBusinessLevel(getManagedBean().getCategoryLvl()
-					.toString());
+			reqDTO.setBusinessLevel(businessNature.getBusinessLevel());
 	
 			businessNatureSO = (IBusinessNatureSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
