@@ -51,16 +51,21 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
 					style="width:15%;white-space: normal;word-wrap: break-word;">
+					
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfaceAgOffice.processStatus==0}" />
+						
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
 						rendered="#{pmInterfaceAgOffice.processStatus==1}" />
+						
 					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
 						rendered="#{pmInterfaceAgOffice.processStatus==2}" />
+						
 					<h:outputText value="#{lbl['lbl.gfmas.process.dependency']}"
-						rendered="#{pmInterfacePrgAct.processStatus==3}" />
+						rendered="#{pmInterfaceAgOffice.processStatus==3}" />
+						
 					<h:outputText value="#{lbl['lbl.gfmas.process.error']}"
-						rendered="#{pmInterfacePrgAct.processStatus==4}" />
+						rendered="#{pmInterfaceAgOffice.processStatus==4}" />
 				</p:column>
 
 			</p:dataTable>
