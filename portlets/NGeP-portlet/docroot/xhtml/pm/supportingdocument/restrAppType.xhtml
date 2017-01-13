@@ -9,12 +9,12 @@
 	<p:outputPanel
 		rendered="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
 		<p:dataTable id="dtAppType"
-			emptyMessage="#{lbl['lbl.pp.no.record.found']}"			
-			rowKey="#{restrict}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}" rowKey="#{restrict}"
+			rowIndexVar="rowIndex"
 			value="#{supportDocBackingBean.managedBean.appTypeRestrictions}"
 			var="restrict">
 			<ac:paginator for="dtAppType" />
-			<p:column>
+			<p:column style="width:35%;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.application.type']}" />
@@ -33,30 +33,65 @@
 						supportDocBackingBean.restrApp)}" />
 				</p:selectOneMenu>
 				<p:message id="somAppTypeMsg" for="somAppType" display="icon" />
-			</p:column>		
-			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
-	           <p:commandLink partialSubmit="true" 
-					process="@this" 
+			</p:column>
+			<p:column style="width:40%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.suppdoc.section']}" />
+					<ac:iconTooltip value="#{lbl['lbl.pm.suppdoc.section.tooltip']}" />
+				</f:facet>
+				<div style="display: table; width: 100%;">
+					<div style="display: table-cell; width: 90%;white-space:normal;">
+						<h:outputText value="#{supportDocBackingBean.constructSectionString(restrict)}" />
+					</div>
+					<div style="display: table-cell; width: 10%; text-align: right;">
+						<p:commandLink partialSubmit="true" 
+						    process="@this"
+						    action="#{supportDocBackingBean.showsSectionPopup()}"
+							update=":form:tvDocRestriction:dlRestApTypeSection">
+							<p:graphicImage title="#{lbl['lbl.pm.org.edit']}"
+								value="/css/images/design/edit.png" />
+							<f:setPropertyActionListener
+								target="#{supportDocBackingBean.managedBean.selectedAppTypeRestr}"
+								value="#{restrict}" />
+						</p:commandLink>
+					</div>
+				</div>
+			</p:column>
+			<p:column style="width:10%;text-align:center;">
+				<f:facet name="header">
+					<h:outputText
+						value="#{lbl['lbl.sm.facility.facilityType.home.office']}" />
+					<ac:iconTooltip value="#{lbl['lbl.pm.suppdoc.homeoffice.tooltip']}" />
+				</f:facet>
+				<p:selectBooleanCheckbox id="chkHomeOffice"
+					value="#{restrict.homeOffice}" />
+			</p:column>
+			<p:column style="width:5%;text-align:center;"
+				headerText="#{lbl['lbl.pm.action']}">
+				<p:commandLink partialSubmit="true" process="@this"
 					oncomplete="appTypeDeletePopUp.show();"
-					update="@([id$=#{appTypeDeleteId}])"  >
+					update="@([id$=#{appTypeDeleteId}])">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.deleteRowIndex}" 
-							value="#{rowIndex}" />
+					<f:setPropertyActionListener
+						target="#{supportDocBackingBean.managedBean.deleteRowIndex}"
+						value="#{rowIndex}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		
+
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType"
+				process="@this"
 				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"
-				immediate="true" />			
+				immediate="true" />
 		</div>
-		<ac:confirmationPopup id="appTypeDeleteId"
-				widget="appTypeDeletePopUp"
-				okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
-				width="400" height="100"
-				title="#{lbl['lbl.msg.confirm.delete.header']}"
-				content="#{lbl['lbl.msg.confirm.delete']}" 
-				update=":#{p:component('dtAppType')}" />
+		<ac:confirmationPopup id="appTypeDeleteId" widget="appTypeDeletePopUp"
+			okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}"
+			update=":#{p:component('dtAppType')}" />
+
+		<ui:include src="/xhtml/pm/supportingdocument/restrAppTypePopUp.xhtml" />
 	</p:outputPanel>
 </ui:composition>
