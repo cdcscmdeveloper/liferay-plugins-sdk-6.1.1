@@ -7854,6 +7854,8 @@ public class SmApplicationBackingBean extends
 							"inquiryDialog.hide()");
 					RequestContext.getCurrentInstance().execute(
 							"sendInqDialog.hide()");
+					RequestContext.getCurrentInstance().execute(
+							"blockWidget.hide()");
 				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
