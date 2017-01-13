@@ -1415,51 +1415,13 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> deletedMeetingList = this.getManagedBean().getDeletedMeetingList();
 			reqDTO.setDeletedMeetingList(deletedMeetingList);
 			
-			Map<String, ScCommitteeMember> currentCommMemberIcs = 
-										new HashMap<String, ScCommitteeMember>();
-			List<ScCommitteeMember> toBeAddedMembers = 
-										new ArrayList<ScCommitteeMember>();
+			
 			List<ScCommitteeMember> currentCommitteeMembers = 
 										getManagedBean().getCommitteeMembersList();
 			List<ScCommitteeMember> deletedCommitteeMembers =
 										getManagedBean().getDeletedCommitteeMembers();
 			
-			for (ScCommitteeMember currCommMem : 
-							currentCommitteeMembers) {
-				currentCommMemberIcs.put(
-						currCommMem.getIcPassport(), currCommMem);
-			}
-			
-			if (CollectionUtils.isNotEmpty(deletedCommitteeMembers)) {
-				for (ScCommitteeMember deletedCommitteeMember 
-											: deletedCommitteeMembers) {
-					if (currentCommMemberIcs.containsKey(
-							deletedCommitteeMember.getIcPassport())) {
-						ScCommitteeMember currentCommitteeMember = currentCommMemberIcs
-												.get(deletedCommitteeMember.getIcPassport());
-						deletedCommitteeMember.setDeleted(false);
-						deletedCommitteeMember.setRepresentativeType(
-								currentCommitteeMember.getRepresentativeType());
-						deletedCommitteeMember.setMemberRole(
-								currentCommitteeMember.getMemberRole());
-						deletedCommitteeMember.setMemberRoleId(
-								currentCommitteeMember.getMemberRoleId());
-						currentCommitteeMembers.remove(currentCommitteeMember);
-						currentCommitteeMembers.add(deletedCommitteeMember);
-						
-						if (deletedCommitteeMember.getRepresentativeType() != null) {
-							deletedCommitteeMember.setRepresentativeTypeId(
-									deletedCommitteeMember.getRepresentativeType().getParameterId());
-						}
-						toBeAddedMembers.add(deletedCommitteeMember);
-					}
-				}
-			}
-			if (CollectionUtils.isNotEmpty(
-							toBeAddedMembers)) {
-				deletedCommitteeMembers.removeAll(
-								 toBeAddedMembers);
-			}
+	
 			
 			scQtCommittee.getScCommittee().setScCommitteeMembers(
 										   currentCommitteeMembers);
