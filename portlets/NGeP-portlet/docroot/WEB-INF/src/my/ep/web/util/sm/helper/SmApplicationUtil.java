@@ -5087,6 +5087,24 @@ public class SmApplicationUtil {
 					new FacesScopes().getUserLocale().getLanguage());
 			for (SmSiteVisitFacilityVO facVO : voList) {
 
+				// add headquarters address to site visit
+				if (!SmCommonUtil.isCollectionEmpty(facVO.getHeadQuarters())) {
+					for (SmFacility hq : facVO.getHeadQuarters()) {
+						if (hq.isSelected()) {
+
+							// set smSvTask related table
+							setSmSvTask(
+									bean,
+									bumiType,
+									facVO,
+									svTask,
+									hq.getSmAddress(),
+									hq.getFacilityId(),
+									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ);
+						}
+					}
+				}
+
 				// add assocCompany address to site visit
 				if (!SmCommonUtil.isCollectionEmpty(facVO.getAssocCompanies())) {
 					for (SmAssociateCompany assoc : facVO.getAssocCompanies()) {
@@ -5136,11 +5154,7 @@ public class SmApplicationUtil {
 									svTask,
 									fac.getSmAddress(),
 									fac.getFacilityId(),
-									(fac.getFacilityType()
-											.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || fac
-											.getFacilityType()
-											.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) ? my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ
-											: my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY);
+									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY);
 						}
 					}
 				}
