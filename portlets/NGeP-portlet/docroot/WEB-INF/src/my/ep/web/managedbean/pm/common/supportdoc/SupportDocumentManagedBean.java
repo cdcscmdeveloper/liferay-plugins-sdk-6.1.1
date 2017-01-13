@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -52,6 +51,12 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	private PmParameter supplierDocParameter;
 	private Integer deleteRowIndex;
+	private PmDocumentRestr selectedAppTypeRestr;
+	private boolean isCompanyInfoChanged;
+	private boolean isAsscProjChanged;
+	private boolean isPersonnelBranchChanged;
+	private boolean isCapitalEquityChanged;
+	private boolean isBankChanged;
 	
 	public SupportDocumentManagedBean(){}
 
@@ -364,6 +369,90 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierDocParameter(PmParameter supplierDocParameter) {
 		this.supplierDocParameter = supplierDocParameter;
+	}
+
+	/**
+	 * @return the selectedAppTypeRestr
+	 */
+	public PmDocumentRestr getSelectedAppTypeRestr() {
+		return selectedAppTypeRestr;
+	}
+
+	/**
+	 * @param selectedAppTypeRestr the selectedAppTypeRestr to set
+	 */
+	public void setSelectedAppTypeRestr(PmDocumentRestr selectedAppTypeRestr) {
+		this.selectedAppTypeRestr = selectedAppTypeRestr;
+	}
+
+	/**
+	 * @return the isCompanyInfoChanged
+	 */
+	public boolean isCompanyInfoChanged() {
+		return isCompanyInfoChanged;
+	}
+
+	/**
+	 * @param isCompanyInfoChanged the isCompanyInfoChanged to set
+	 */
+	public void setCompanyInfoChanged(boolean isCompanyInfoChanged) {
+		this.isCompanyInfoChanged = isCompanyInfoChanged;
+	}
+
+	/**
+	 * @return the isAsscProjChanged
+	 */
+	public boolean isAsscProjChanged() {
+		return isAsscProjChanged;
+	}
+
+	/**
+	 * @param isAsscProjChanged the isAsscProjChanged to set
+	 */
+	public void setAsscProjChanged(boolean isAsscProjChanged) {
+		this.isAsscProjChanged = isAsscProjChanged;
+	}
+
+	/**
+	 * @return the isPersonnelBranchChanged
+	 */
+	public boolean isPersonnelBranchChanged() {
+		return isPersonnelBranchChanged;
+	}
+
+	/**
+	 * @param isPersonnelBranchChanged the isPersonnelBranchChanged to set
+	 */
+	public void setPersonnelBranchChanged(boolean isPersonnelBranchChanged) {
+		this.isPersonnelBranchChanged = isPersonnelBranchChanged;
+	}
+
+	/**
+	 * @return the isCapitalEquityChanged
+	 */
+	public boolean isCapitalEquityChanged() {
+		return isCapitalEquityChanged;
+	}
+
+	/**
+	 * @param isCapitalEquityChanged the isCapitalEquityChanged to set
+	 */
+	public void setCapitalEquityChanged(boolean isCapitalEquityChanged) {
+		this.isCapitalEquityChanged = isCapitalEquityChanged;
+	}
+
+	/**
+	 * @return the isBankChanged
+	 */
+	public boolean isBankChanged() {
+		return isBankChanged;
+	}
+
+	/**
+	 * @param isBankChanged the isBankChanged to set
+	 */
+	public void setBankChanged(boolean isBankChanged) {
+		this.isBankChanged = isBankChanged;
 	}
 
 	

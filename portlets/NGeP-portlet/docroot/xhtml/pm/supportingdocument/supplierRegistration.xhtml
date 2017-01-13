@@ -115,17 +115,32 @@
 						</p:selectOneMenu> <p:message id="somDocStatusMsg" for="somDocStatus" display="icon" />
 					</td>
 					<th></th>
-					<td><p:selectBooleanCheckbox id="chkMandatory"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.mandatory}" />
-							<h:outputText value="#{lbl['lbl.pm.mandatory']}" /></td>
-					<th></th>
-					<td><p:selectBooleanCheckbox id="chkLicense"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.licenseReq}" />
-							 <h:outputText value="#{lbl['lbl.pm.license.required']}" /></td>
-					<th></th>
-					<td><p:selectBooleanCheckbox id="chkHardCopy"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.hardCopyReq}" />
-							<h:outputText value="#{lbl['lbl.pm.hard.copy']}" /></td>
+					<td colspan="5">
+						<table>
+							<tr>
+							 	<td><p:selectBooleanCheckbox id="chkMandatory"
+									value="#{supportDocBackingBean.managedBean.selectedDocument.mandatory}" />
+									<h:outputText value="#{lbl['lbl.pm.mandatory']}" />
+							 	</td>
+							 	<th></th>
+							 	<td><p:selectBooleanCheckbox id="chkLicense"
+									value="#{supportDocBackingBean.managedBean.selectedDocument.licenseReq}" />
+									 <h:outputText value="#{lbl['lbl.pm.license.required']}" />
+							 	</td>
+							 	<th></th>
+							 	<td><p:selectBooleanCheckbox id="chkHardCopy"
+										value="#{supportDocBackingBean.managedBean.selectedDocument.hardCopyReq}" />
+										<h:outputText value="#{lbl['lbl.pm.hard.copy']}" />
+							 	</td>
+							 	<th></th>
+							 	<td><p:selectBooleanCheckbox id="chkGST"
+										value="#{supportDocBackingBean.managedBean.selectedDocument.gst}" />
+										<h:outputText value="#{lbl['lbl.pm.gst']}" />
+							 	</td>
+							 	
+							</tr>
+						</table>
+					</td>				
 							
 				</tr>
 			</table>
