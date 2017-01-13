@@ -38,7 +38,7 @@
 
 	</p:panel>
 	
-	<p:panel id="inquiryTextPanelId" 
+	<p:panel id="inquiryTextPanelId" header="#{lbl['lbl.sm.other.application.inquiry']}"
 		rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
 		<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;
 		<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" 
