@@ -118,7 +118,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	private CtTerminationReason[] selectedTerminationReasonsList;
 	private CtAgency selectedRecommendedAgency;
 	private IPagingDataModel<CtAgency> agencyDataModel = new AgencyPagingDataModel();	
-	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	 /**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
