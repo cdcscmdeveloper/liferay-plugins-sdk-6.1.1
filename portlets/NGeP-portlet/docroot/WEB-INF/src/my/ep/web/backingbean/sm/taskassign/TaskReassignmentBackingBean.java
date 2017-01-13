@@ -1151,7 +1151,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		ISearchResultBean<SmPersonnel> resultBean = null;
 		boolean isSearched = false;
 		Integer subReassignType = null;
-		
+		Long userId = getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getUserId();
 		// filter by user name
 		if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
 			searchBean.getDataFilterBeans().add(
@@ -1178,10 +1178,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 								getManagedBean().getSmSupplier().getSupplierId()));	
 			
 			// Filter By is softcert
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("softcert",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							status.getPmStatusTask().isSoftcert()));
+			if(status.getPmStatusTask().isSoftcert()){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("softcert",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								status.getPmStatusTask().isSoftcert()));
+			}
 
 			// Filter By is contract signer
 			if(status.getPmStatusTask().getPropertyField() != null){
@@ -1196,7 +1198,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmUser.userId",
 							SearchOperator.OPERATOR_NOT_IN.value(),
-							new ArrayList<Long>(Arrays.asList(getFacesScopes().getUserSessionBean().getUserId()))));
+							new ArrayList<Long>(Arrays.asList(userId))));
 
 			if (roleList == null || roleList.isEmpty()) {
 				roleList = retrieveAvailableRoles(task.getDocStatus().longValue(),reassignType,subReassignType);
