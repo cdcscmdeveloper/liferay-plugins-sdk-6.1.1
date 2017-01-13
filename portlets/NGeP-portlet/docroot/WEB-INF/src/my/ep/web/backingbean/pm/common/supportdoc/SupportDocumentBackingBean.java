@@ -72,6 +72,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * Backing Bean for Support Document
@@ -2775,5 +2776,72 @@ public class SupportDocumentBackingBean extends
 			bodySO = null;
 		}
 		return certBodyList;
+	}
+	
+	public void showsSectionPopup(){
+		log.info("showsSectionPopup");
+		PmDocumentRestr restr = getManagedBean().getSelectedAppTypeRestr();
+		if(restr != null){
+			getManagedBean().setCompanyInfoChanged(restr.isCompanyInfoChanged());
+			getManagedBean().setAsscProjChanged(restr.isAsscProjChanged());
+			getManagedBean().setPersonnelBranchChanged(restr.isPersonnelBranchChanged());
+			getManagedBean().setBankChanged(restr.isBankChanged());
+			getManagedBean().setCapitalEquityChanged(restr.isCapitalEquityChanged());
+			RequestContext.getCurrentInstance().execute("dlRestApTypeSection.show();");
+			
+		}else{
+			getManagedBean().setCompanyInfoChanged(false);
+			getManagedBean().setAsscProjChanged(false);
+			getManagedBean().setPersonnelBranchChanged(false);
+			getManagedBean().setBankChanged(false);
+			getManagedBean().setCapitalEquityChanged(false);
+		}
+	}
+	
+	public void okSectionAction(){
+		log.info("okSectionAction");
+		PmDocumentRestr restr = getManagedBean().getSelectedAppTypeRestr();
+		if(restr != null){
+			restr.setCompanyInfoChanged(getManagedBean().isCompanyInfoChanged());
+			restr.setAsscProjChanged(getManagedBean().isAsscProjChanged());
+			restr.setPersonnelBranchChanged(getManagedBean().isPersonnelBranchChanged());
+			restr.setBankChanged(getManagedBean().isBankChanged());
+			restr.setCapitalEquityChanged(getManagedBean().isCapitalEquityChanged());
+		}
+		
+	}
+	
+	public String constructSectionString(PmDocumentRestr restr){
+		StringBuilder sb = new StringBuilder();
+		if(restr.isCompanyInfoChanged()){
+			sb.append(PmCommonUtil.getMessage("lbl.sm.companyStepLbl", null));
+			sb.append(", ");
+		}
+		
+		if(restr.isAsscProjChanged()){
+			sb.append(PmCommonUtil.getMessage("lbl.sm.branchStepLbl", null));
+			sb.append(", ");
+		}
+		
+		if(restr.isPersonnelBranchChanged()){
+			sb.append(PmCommonUtil.getMessage("lbl.sm.personStepLbl", null));
+			sb.append(", ");
+		}
+		
+		if(restr.isCapitalEquityChanged()){
+			sb.append(PmCommonUtil.getMessage("lbl.sm.capitalStepLbl", null));
+			sb.append(", ");
+		}
+		
+		if(restr.isBankChanged()){
+			sb.append(PmCommonUtil.getMessage("lbl.sm.bankStepLbl", null));		
+		}
+		
+		String sections = sb.toString();
+		if(StringUtils.isNotBlank(sections) && sections.endsWith(", ")){
+			sections = sections.substring(0,sections.length()-2);
+		}
+				
+		return sections;
 	}
 }
