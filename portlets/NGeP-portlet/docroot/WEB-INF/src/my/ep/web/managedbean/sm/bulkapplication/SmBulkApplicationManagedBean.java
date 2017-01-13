@@ -53,6 +53,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private List<SmBulkApplicationVO> initSelectedTasks;
 	private List<PmStatusDesc> regStatusDescList;
 	private List<SmAppl> failedSubmittedList;
+	private String maxBulkApprovalMsg;
 	private int maxBulkApprovalCount;
 
 	private class ClaimTaskPagingDataModel extends
@@ -378,5 +379,13 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedUnclaimTasks(
 			List<SmBulkApplicationVO> selectedUnclaimTasks) {
 		this.selectedUnclaimTasks = selectedUnclaimTasks;
+	}
+
+	public String getMaxBulkApprovalMsg() {
+		return maxBulkApprovalMsg;
+	}
+
+	public void setMaxBulkApprovalMsg(String maxBulkApprovalMsg) {
+		this.maxBulkApprovalMsg = maxBulkApprovalMsg;
 	}
 }

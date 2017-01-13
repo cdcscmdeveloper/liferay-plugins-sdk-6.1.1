@@ -50,6 +50,10 @@ public class SmBulkApplicationBackingBean extends
 		SmCommonUtil.setMDCUserId();
 		getManagedBean().setMaxBulkApprovalCount(
 				SmRuleHelper.getInstance().getMaxBulkApproval());
+		getManagedBean().setMaxBulkApprovalMsg(
+				SmCommonUtil.getMessage("lbl.sm.bulk.max.application",
+						new String[] { getManagedBean()
+								.getMaxBulkApprovalCount() + "" }));
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",
 				null);

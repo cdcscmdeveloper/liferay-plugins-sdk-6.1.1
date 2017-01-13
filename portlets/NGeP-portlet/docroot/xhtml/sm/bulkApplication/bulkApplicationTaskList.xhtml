@@ -103,6 +103,8 @@
 		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}"
 			toggleable="true" id="resultPanelId">
 			
+			<h:outputText styleClass="instruction" value="#{bulkApplicationBackingBean.managedBean.maxBulkApprovalMsg}"/>
+			
 			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true"
 				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 				rowIndexVar="indexMain" var="tasks"
