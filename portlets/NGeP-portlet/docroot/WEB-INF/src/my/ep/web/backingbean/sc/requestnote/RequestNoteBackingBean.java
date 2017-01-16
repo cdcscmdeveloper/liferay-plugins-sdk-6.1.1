@@ -571,16 +571,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void parseRequestNote(ScRequestNote requestNote, String outcome) {
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
+		List<ScRequestNoteDtl>	deletedRequestNoteDtls  = this.getManagedBean().getDeleteRequestNoteDtls();
+		List<ScRequestNoteDtl>	allRequestNoteDtls  = new ArrayList<ScRequestNoteDtl>();
+		
+		allRequestNoteDtls.addAll(requestNoteDtls);
+		allRequestNoteDtls.addAll(deletedRequestNoteDtls);
 		// Target Approver
 		formApprover(requestNote);
 
 		// check empty Objects. and concatenation RN title
-		if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
+		// to parse all requestnoteDtl include the deleted one before save
+		if (requestNoteDtls != null && allRequestNoteDtls.size() > 0) {
 			List<String> results = new ArrayList<String>();
 			StringBuilder sb  = new StringBuilder();
 			String spacer = " ";
 			int counter = 1;
-			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
+			for (ScRequestNoteDtl requestNoteDtl : allRequestNoteDtls) {
 				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) {
 					requestNoteDtl.setPriceType(null);
 				} else if(requestNoteDtl.getPriceType() != null){
@@ -595,7 +601,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				if(!results.contains(requestNoteDtl.getProcurementTitle())){
+				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
 					if(requestNoteDtls.size() != counter){
 						results.add(spacer);	
@@ -607,7 +613,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				if(!BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					// title validation
-					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+					if(!requestNoteDtl.isDeleted() && StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
 						throw new EpException(
 								MessageConst.ERROR_760315,
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
