@@ -463,12 +463,21 @@ public class PurchaseInquiryBackingBean extends
 	private ScRequestItem createRequestItem(CmSupplierItem cmSupplierItem) {
 		ScRequestItem scRequestItem = new ScRequestItem();
 		CmItem cmItem = cmSupplierItem.getCmItem();
-		String ItemCode = cmItem.getExtensionCode();
-		CharSequence charSeq = ItemCode.subSequence(0, 2);
-		Integer itemCode = Integer.valueOf(charSeq.toString());
+		boolean prodOrService = false;
+		String extensionCode = cmItem.getExtensionCode();
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
+		
+		if(extensionCode != null) {
+			String pOrS = catalogueSO.checkProductOrService(extensionCode);
+			if(pOrS.equalsIgnoreCase("P")) {
+				prodOrService = true;
+			}
+		}
 
-		// checking first two digits in itemCode whether service or product
-		if (itemCode >= 70 && itemCode <= 94) { // for service between 70 and 94
+		if (!prodOrService) { 
 			scRequestItem.setItemType(getParameterByTypeAndCode(
 					ParameterTypeConst.SC_ITEM_TYPE,
 					ParameterConst.ITEM_TYPE_SERVICE));

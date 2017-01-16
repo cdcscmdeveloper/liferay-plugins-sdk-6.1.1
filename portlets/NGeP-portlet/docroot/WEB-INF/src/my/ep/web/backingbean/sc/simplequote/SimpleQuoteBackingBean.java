@@ -1045,10 +1045,15 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private void prepareQuestions(CtPanelItem ctPanelItem,
 			CmSupplierItem cmSupplierItem, boolean isSpecificOrGenOrNonCtItem) {
-		int itemCode = 0;
 		CmItem cmItem = null;
 		PmUom uom = null;
 		String ItemName = "";
+		String extensionCode = null;
+		boolean isProduct = false;
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
 		
 		// check flag for panel item or non contract item
 		if (ctPanelItem != null) {
@@ -1056,14 +1061,11 @@ public class SimpleQuoteBackingBean extends
 				ScRequestItem scRequestItem = ctPanelItem.getScRequestItem();
 				cmItem = scRequestItem.getCmItem();
 				if (scRequestItem.getCmItem() != null) {
-					String extCode = cmItem.getExtensionCode();
-					CharSequence charSeq = extCode.subSequence(0, 2);
-					itemCode = Integer.valueOf(charSeq.toString());
+					extensionCode = cmItem.getExtensionCode();
 					ItemName = cmItem.getItemName();
-
 				} else {
 					// panel item - product by default when the cmItem is null
-					itemCode = 2;
+					isProduct = true;
 				}
 				if (ctPanelItem.getItemCategoryId().getParameterCode()
 						.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
@@ -1072,15 +1074,12 @@ public class SimpleQuoteBackingBean extends
 				uom = ctPanelItem.getPmUom();
 			}
 		} else if (cmSupplierItem != null) {
-			String extCode = cmSupplierItem.getCmItem().getExtensionCode();
-			CharSequence charSeq = extCode.subSequence(0, 2);
-			itemCode = Integer.valueOf(charSeq.toString());
+			extensionCode = cmSupplierItem.getCmItem().getExtensionCode();
 			cmItem = cmSupplierItem.getCmItem();
 			ItemName = cmSupplierItem.getCmItem().getItemName();
 			uom = cmSupplierItem.getPmUom();
 		}
 
-		// checking two digits in itemCode whether service or product
 		ScQuote scQuote = getManagedBean().getScQuote();
 		List<ScQuoteDoc>  quoteDocs = null;
 		if(scQuote != null) {
@@ -1102,6 +1101,16 @@ public class SimpleQuoteBackingBean extends
 		if (templateSpecBackingBean == null) {
 			templateSpecBackingBean = new TemplateSpecBackingBean();
 		}
+		
+		// CALL API TO CHECK PRODUCT OR SERVICE
+		if(extensionCode != null) {
+			String pOrS = catalogueSO.checkProductOrService(extensionCode);
+			if(pOrS.equalsIgnoreCase("P")) {
+				isProduct = true;
+			} else {
+				isProduct = false;
+			}
+		}
 
 		for (ScQuoteDoc quoteDoc : quoteDocs) {
 			if (ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc
@@ -1122,8 +1131,7 @@ public class SimpleQuoteBackingBean extends
 					tplSpecQuestions = new ArrayList<TplSpecQuestion>();
 				}
 				if (isSpecificOrGenOrNonCtItem) {
-					if (itemCode >= 70 && itemCode <= 94) { // for service
-															// between 70 and 94
+					if (!isProduct) { 
 						templateSpecBackingBean.addQuestion(serviceTemplateSpecBean, 
 								serviceTpl,
 								tplSpecQuestions, tplSpecQuestions.size() - 1,
@@ -1164,24 +1172,20 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				if (isSpecificOrGenOrNonCtItem) {
-					if (itemCode > 0) {
-						if (itemCode < 70 || itemCode > 94) { // for product <
-																// 70 and > 94
-
-							templateSpecBackingBean.addQuestion(productTemplateSpecBean,
-									prodTpl,
-									productQuestions,
-									productQuestions.size() - 1,
-									TemplateSpecConst.QUESTION_TYPE_ITEM);
-							TplSpecQuestion prodQuestion = productQuestions
-									.get(productQuestions.size() - 1);
-							prodQuestion.setClUom(uom);
-							prodQuestion.setCmItem(cmItem);
-							prodQuestion.setCtPanelItem(ctPanelItem);
-							prodQuestion.setClItem(ItemName);
-							setUserDetails(prodQuestion);
-							addSpecficationQuestions(ctPanelItem, prodTpl, productQuestions);
-						}
+					if (isProduct) { 
+						templateSpecBackingBean.addQuestion(productTemplateSpecBean,
+								prodTpl,
+								productQuestions,
+								productQuestions.size() - 1,
+								TemplateSpecConst.QUESTION_TYPE_ITEM);
+						TplSpecQuestion prodQuestion = productQuestions
+								.get(productQuestions.size() - 1);
+						prodQuestion.setClUom(uom);
+						prodQuestion.setCmItem(cmItem);
+						prodQuestion.setCtPanelItem(ctPanelItem);
+						prodQuestion.setClItem(ItemName);
+						setUserDetails(prodQuestion);
+						addSpecficationQuestions(ctPanelItem, prodTpl, productQuestions);
 					}
 				} else {
 					prodTpl.setCtPanelItem(ctPanelItem);
