@@ -2326,7 +2326,6 @@ public class DirectLOABackingBean extends
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(ParameterConst.DOCTYPE_QUOTATION);
-		sb.append("%");
 		String qtNoPrefix = sb.toString();
 		
 		StringBuilder conditionFieldSb = new StringBuilder();
@@ -2348,9 +2347,13 @@ public class DirectLOABackingBean extends
 		conditionFieldSb.append(SearchOperator.OPERATOR_EQUALS.value());
 		conditionFieldSb.append("|");
 		conditionFieldSb.append("scQtStatus.pmStatus.statusId^");
-		conditionFieldSb.append(QTStatusConst.QT_AWARDED);
+		
+		List<Long> statusIds = new ArrayList<Long>();
+		statusIds.add(QTStatusConst.QT_AWARDED);
+		statusIds.add(QTStatusConst.QT_CANCELLED);
+		conditionFieldSb.append(StringUtils.join(statusIds, ","));
 		conditionFieldSb.append("^");
-		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_EQUALS.value());
+		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_IN.value());
 		
 		PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
 				.getPmOrgProfile();
