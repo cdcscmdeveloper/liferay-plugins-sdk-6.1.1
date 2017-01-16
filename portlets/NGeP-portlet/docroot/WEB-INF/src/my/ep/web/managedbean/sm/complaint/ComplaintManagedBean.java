@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.sm.DisciplinaryActionConst;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
@@ -231,6 +232,7 @@ public class ComplaintManagedBean extends BaseManagedBean {
 			try {	
 				ISearchBean<SmComplaint> searchBeanData = getComplaintSearchBeanData(searchBean);
 				ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+				searchBeanData.getSortColumns().add(new SearchOrderBean("createdDate", true));
 				reqDTO.setComplaintSearchBean(getComplaintSearchBeanData(searchBeanData));
 				
 				IComplaintSO reqSO = SmServiceLookup.getComplaintSO();
