@@ -130,7 +130,6 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.application.no']} (#{lbl['lbl.sm.companyname']})" disabledSelection="#{tasks.notAllowedToTick}">
-					<br />
 						<table style="width: 100%;">
 							<tr>
 								<td style="white-space: nowrap; float: left;">
@@ -138,7 +137,6 @@
 								</td>
 							</tr>
 						</table>
-					<br />
 					
 					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
 						<table style="width: 100%">
@@ -190,7 +188,7 @@
 							<h:outputText
 								value="#{catBean.pmCategoryL3.categoryL3Code} -  #{empty catBean.categoryL3Name ? catBean.pmCategoryL3.categoryName : catBean.categoryL3Name}" />
 						</p:column>
-						<p:column style="width : 15%;white-space : normal">
+						<p:column style="width : 10%;white-space : normal">
 							<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 								rendered="#{!catBean.specialCategory}" />
 							<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
@@ -218,9 +216,9 @@
 									listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 							</p:selectOneRadio>
 						</p:column>
-						<p:column style="width : 10%;white-space : normal">
+						<p:column style="width : 15%;white-space : normal">
 							<p:inputTextarea value="#{catBean.approverRemarks}" maxlength="200"
-								style="width : auto;" rows="5" cols="20"
+								style="width : 100%;" rows="4"   
 								label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} 
 										#{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 								id="apprvrCatDecisionRmrk">
