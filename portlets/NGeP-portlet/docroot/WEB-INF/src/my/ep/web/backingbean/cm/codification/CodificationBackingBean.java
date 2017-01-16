@@ -2420,11 +2420,29 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		} else {
 			log.info("***catalogue admin*** REQUEST EXTENSION");
 			reqDTO.setOutCome("REQUEST_EXTENSION");
+
 		}
 
 		reqDTO.getRequestExtList().add(
 				unspscBB.getManagedBean().getRequestCode());
+		
+		UserReqDTO userReqDTO = new UserReqDTO();
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+		if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+			for(PmUser user :userResDTO.getUserList()){
+				System.out.println("user.getLoginId():"+user.getLoginId());
+				reqDTO.getCdcList().add(user.getLoginId());
+			}
+		}
+		
 		resDTO = unspscSO.updateExtensionRequest(reqDTO);
+		
+		
+		
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(
 				null,
