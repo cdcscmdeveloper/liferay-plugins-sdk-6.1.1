@@ -1290,12 +1290,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private ScRequestItem createRequestItem(CmSupplierItem cmSupplierItem){
 		ScRequestItem scRequestItem	= new ScRequestItem();
 		CmItem cmItem = cmSupplierItem.getCmItem();
-		String ItemCode = cmItem.getExtensionCode();
-		CharSequence charSeq = ItemCode.subSequence(0, 2);
-		Integer itemCode = Integer.valueOf(charSeq.toString());
+		boolean prodOrService = false;
+		String extensionCode = cmItem.getExtensionCode();
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
 		
-		//  checking first two digits in itemCode  whether service or product
-		if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+		if(extensionCode != null) {
+			String pOrS = catalogueSO.checkProductOrService(extensionCode);
+			if(pOrS.equalsIgnoreCase("P")) {
+				prodOrService = true;
+			}
+		}
+		
+		if (!prodOrService) { 
 			scRequestItem.setItemType(getParameterByTypeAndCode(
 					ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_SERVICE));
 		} else  {
@@ -1901,22 +1910,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
 		log.debug("checkServiceOrProduct");
 		boolean prodOrService = false;
+		String extensionCode = null;
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
 		if(scRequestNoteDtl.getRequestItem() != null){
 			ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 			
 			if(requestItem.getCmItem() != null){
-				String ItemCode = requestItem.getCmItem().getExtensionCode();
-				CharSequence charSeq = ItemCode.subSequence(0, 2); 
-				Integer itemCode = Integer.valueOf(charSeq.toString()); 
-
-				if(ItemCode != null && !ItemCode.isEmpty()){
-					//  checking first two digits in itemCode whether service or product 
-					if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-						prodOrService = false;
-					} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-						prodOrService = true;
-					} 
-				} 
+				extensionCode = requestItem.getCmItem().getExtensionCode();
+				String pOrS = catalogueSO.checkProductOrService(extensionCode);
+				if(pOrS.equalsIgnoreCase("P")) {
+					prodOrService = true;
+				}
 			} else{
 				if(requestItem.getTplSpecQuestion() != null){
 					TplSpecQuestion specQuestion =requestItem.getTplSpecQuestion();
