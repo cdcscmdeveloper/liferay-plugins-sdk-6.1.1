@@ -17,7 +17,12 @@
 		</ui:remove>
 		
 		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode)}" update="pnlDisplay,tabIndex" 
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" />
+				rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" />
+					
+		<p:menuitem value="#{lbl['lbl.sm.sv.templ.bumiputera']}" update="pnlDisplay,tabIndex" 
+				rendered="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}"
+				actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" />
+					
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(4,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
