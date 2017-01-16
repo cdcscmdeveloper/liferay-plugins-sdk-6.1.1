@@ -1302,8 +1302,7 @@ public class PurchaseInDefaultBackingBean extends
 			debugLogger("viewMarketResearch - item code" + itemCode);
 			paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);
 			
-			if(scPurchaseInDefault.getReasonType() != null && 
-					scPurchaseInDefault.getReasonType().getReasonCode().equals(ParameterConst.PID_UN)) {
+			if(!getManagedBean().isVisibleOrderQty()) {
 				if(scPurchaseInDefault.getPanelItem() != null) {
 					paramMap.put(ReportConst.PARAM_PANEL_CONTRACT_ITEM_ID, 
 							scPurchaseInDefault.getPanelItem().getPanelItemId() + "");
