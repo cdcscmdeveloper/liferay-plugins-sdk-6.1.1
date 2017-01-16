@@ -1184,8 +1184,6 @@ public class SmPersonnelBackingBean extends
 			if (resDTO.isSuccessful()) {
 				SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
 						MessageConst.INFO_100002, null);
-				RequestContext.getCurrentInstance().execute(
-						"blockWidget.hide()");
 				getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
 			} else {
 				throw new EpException(MessageConst.ERROR_722632);
