@@ -291,12 +291,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().setSelectedSvTemplate(smSvTask.getSmSvTemplate());
 			getManagedBean().setBusinessTypeDesc(getBusinessTypeDesc());
 			getManagedBean().setCompanyAddress(getCompanyAddressInLine());
-			getManagedBean().setSiteVisitNo(getSvTaskCountByApplIdAndCategoryId());
-			getManagedBean().setSupplierCategory(retrieveSupplierCategoryByApplIdAndCategoryL3Id());
-			setMachineList();
+			if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
+				getManagedBean().setSiteVisitNo(getSvTaskCountByApplIdAndCategoryId());
+				getManagedBean().setSupplierCategory(retrieveSupplierCategoryByApplIdAndCategoryL3Id());
+				setMachineList();
+			}
 			
 			if(smSvTask.getSmSvDocLicenses() == null || smSvTask.getSmSvDocLicenses().size() < 1){
+				if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
 				retrieveAndSetSmSvDocLicense(); //retrieve and set SmSvDocLicense (Additional License)
+				}
 			}
 			
 			SmMofAccount mofAccount =  SmApplicationUtil.getActiveMofAccount(smSvTask.getSmAppl().getSmSupplier().getSmMofAccounts(),
@@ -2463,6 +2467,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		ISiteVisitSO siteVisitSO = SmServiceLookup.getSiteVisitSO();
 		SiteVisitResDTO resDTO = siteVisitSO.retrieveSiteVisitCountByApplIdAndCategoryL3Id(reqDTO);
+		
+		log.info("getSvTaskCountByApplIdAndCategoryId>>>>>>>>>>>" + resDTO.getSiteVisitCount());
 		
 		return resDTO.getSiteVisitCount();
 	}
