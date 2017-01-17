@@ -39,7 +39,7 @@
 						value="#{false}" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
-					action="#{templateSpecBackingBean.tierQtyOkAction(templateSpecBean)}"
+					action="#{templateSpecBackingBean.tierQtyOkAction(templateSpecBean,editable)}"
 					partialSubmit="true" process="@this, tierQtyPnl"
 					update="tierQtyPnl">
 					<f:setPropertyActionListener
