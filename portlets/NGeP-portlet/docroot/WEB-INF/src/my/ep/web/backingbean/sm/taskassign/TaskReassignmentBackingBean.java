@@ -6,6 +6,8 @@ package my.ep.web.backingbean.sm.taskassign;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -1183,6 +1185,16 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						new SearchFilterBean("softcert",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								status.getPmStatusTask().isSoftcert()));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUser.pmUserDigiCert.pmDigiCert.validFrom",
+								SearchOperator.OPERATOR_LESS_EQUAL.value(),
+								getCurrentDateWithoutTime()));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUser.pmUserDigiCert.pmDigiCert.validTo",
+								SearchOperator.OPERATOR_GREATER.value(),
+								getCurrentDateWithoutTime()));
 			}
 
 			// Filter By is contract signer
@@ -1297,6 +1309,21 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	public String getRoleDescByRoleCode(String roleCode) {
 		log.info("getRoleDescByRoleCode");
 		return PmCommonUtil.getRoleDescByRoleCode(roleCode);
+	}
+	
+	/**
+	 * Retrieve current date without time. 
+	 * To compare with effective and expiry date.
+	 * 
+	 * @return Date object
+	 */
+	protected Date getCurrentDateWithoutTime() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
 	}
 
 }
