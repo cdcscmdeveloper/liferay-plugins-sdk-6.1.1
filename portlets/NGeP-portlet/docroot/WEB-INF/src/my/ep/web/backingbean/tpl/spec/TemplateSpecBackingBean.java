@@ -1452,7 +1452,7 @@ public class TemplateSpecBackingBean extends
 	 * @param templateSpecBean
 	 *            the TemplateSpecBean instance
 	 */
-	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
+	public void tierQtyOkAction(TemplateSpecBean templateSpecBean,boolean isEditable) {
 		debugLogger("tierQtyOkAction");
 
 		ITemplateSpecSO templateSpecSO = null;
@@ -1468,7 +1468,7 @@ public class TemplateSpecBackingBean extends
 			templateSpecSO.validateTierQty(selectedSpecQuestion, specTierQties, new FacesScopes().getUserLocale());
 
 			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
-					.equals(templateSpecBean.getContentType())) {
+					.equals(templateSpecBean.getContentType())&& isEditable) {
 				TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(
 						templateSpecBean,
 						selectedSpecQuestion.getTplSpecAnswers());
