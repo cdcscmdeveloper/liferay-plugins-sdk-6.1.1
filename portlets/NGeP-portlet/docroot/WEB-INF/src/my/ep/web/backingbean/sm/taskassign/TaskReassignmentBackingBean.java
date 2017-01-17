@@ -1212,7 +1212,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							SearchOperator.OPERATOR_NOT_IN.value(),
 							new ArrayList<Long>(Arrays.asList(userId))));
 
-			if (roleList == null || roleList.isEmpty()) {
+			if (roleList == null || roleList.isEmpty() || roleList.get(0) == null) {
 				roleList = retrieveAvailableRoles(task.getDocStatus().longValue(),reassignType,subReassignType);
 			}
 
