@@ -278,9 +278,14 @@
 					<ui:param name="isValidationReq" value="#{param[p:component(delBtnClientId)]==null}" />
 					<ui:param name="isQuestion" value="true" />
 					
-					<ui:decorate template="specColumnQuestion.xhtml" />
-					<ui:decorate template="specColumnQuestionAnswer.xhtml" />
-				</p:dataTable>
+						<c:if test="#{editable}">
+							<ui:decorate template="specColumnQuestion.xhtml" />
+							<ui:decorate template="specColumnQuestionAnswer.xhtml" />
+						</c:if>
+						<c:if test="#{!editable}">
+							<ui:decorate template="specColumnQuestionAnswerView.xhtml" />
+						</c:if>
+					</p:dataTable>
 				
 				<ui:include src="deleteConfirmPopup.xhtml" />
 				<ui:include src="tierQtyPopup.xhtml" />
