@@ -11660,15 +11660,16 @@ private void retriveCommitteeRemarksList(){
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> finanialSummaryDropDownValues(){
+		log.info("finanialSummaryDropDownValues");
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		selectItems.add(new SelectItem(null, ResourceBundleUtils
 				.getMessage("lbl.txt.select",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())));
-	boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
+	//boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
 	//medicineCategoryCode=false;
-	log.info("finanialSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
-	if(!medicineCategoryCode){
+	//log.info("finanialSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
+	if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())){
 		selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
 				.getMessage("lbl.sc.evaluation.view.by.package.preference.margin",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -11686,15 +11687,16 @@ private void retriveCommitteeRemarksList(){
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> recommendationSummaryDropDownValues(){
+		log.info("recommendationSummaryDropDownValues");
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		selectItems.add(new SelectItem(null, ResourceBundleUtils
 				.getMessage("lbl.txt.select",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())));
-		boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
-		log.info("recommendationSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
+		//boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
+		//log.info("recommendationSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
 		//medicineCategoryCode=false;
-		if(!medicineCategoryCode){
+		if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())){
 		selectItems.add(new SelectItem(QTConstants.RECOMMENDATION_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
 				.getMessage("lbl.sc.evaluation.view.by.package.preference.margin",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
