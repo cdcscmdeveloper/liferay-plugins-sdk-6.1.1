@@ -213,15 +213,15 @@
 										<c:otherwise>
 											<c:choose>
 												<c:when test="#{empty backingBean.managedBean.poSupplierInquiryHistory}">
-													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 														<ui:include src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 													</c:if>
 												</c:when>
 												<c:otherwise>
-													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 														<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryMain.xhtml" />
 													</c:if>
-													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 11}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
 														<ui:include src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 													</c:if>
 												</c:otherwise>
@@ -247,7 +247,7 @@
 											</c:if>
 										</c:when>
 										<c:otherwise>
-											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 												<ui:include
 													src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
 											</c:if>
