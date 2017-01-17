@@ -1239,7 +1239,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
 							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getLatestAppl()));
+									.getSmAppl()));
 		}
 
 		// set payment details section only for supplier and application type is
@@ -7850,12 +7850,20 @@ public class SmApplicationBackingBean extends
 				// hide inquiry dialog (for inquiry section or po decision
 				// section)
 				if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
-					RequestContext.getCurrentInstance().execute(
-							"inquiryDialog.hide()");
-					RequestContext.getCurrentInstance().execute(
-							"sendInqDialog.hide()");
-					RequestContext.getCurrentInstance().execute(
-							"blockWidget.hide()");
+					log.info(">>>>>>>>>>>>>>SEND PO INQUIRY:"
+							+ getManagedBean().getCurrentPageType()
+							+ "<<<<<<<<<<<<");
+					if (getManagedBean()
+							.getCurrentPageType()
+							.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)) {
+						RequestContext.getCurrentInstance().execute(
+								"inquiryDialog.hide()");
+					} else if (getManagedBean().getCurrentPageType().equals(
+							SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)) {
+						RequestContext.getCurrentInstance().execute(
+								"sendInqDialog.hide()");
+					}
+
 				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
