@@ -178,6 +178,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.RoleCode;
 import my.ep.type.sm.ApplType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -4613,5 +4614,32 @@ public class SmCommonUtil {
 				svAddress.setAddress(assocCompany.getSmAddress());
 			}
 		}
+	}
+	
+	/**
+	 * get user role value
+	 * 
+	 * @return String
+	 */
+	public static String getUserRoleValue() {
+		FacesScopes sc = new FacesScopes();
+		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		} else if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		} else if(sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		} else if(sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		} else if(sc.hasRoleUser(RoleCode.FL_USER.value())) {
+			return RoleCode.FL_USER.value();
+		} else if(sc.hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return RoleCode.GOVT_SELLER.value();
+		} else if(sc.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return RoleCode.G2G_SUPPLIER_ADMIN.value();
+		} else if(sc.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return RoleCode.G2G_SUPPLIER_USER.value();
+		}
+		return null;
 	}
 }

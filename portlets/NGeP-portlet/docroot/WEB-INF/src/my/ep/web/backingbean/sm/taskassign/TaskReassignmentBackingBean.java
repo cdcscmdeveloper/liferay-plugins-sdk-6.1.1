@@ -619,7 +619,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			reqDTO.setGroupDocId(vo.getGroupDocId() != null ? vo.getGroupDocId() : null);
 			reqDTO.setGroupDocType(StringUtils.isNotBlank(vo.getGroupDocType()) ? vo.getGroupDocType() : null);
 			reqDTO.setDocStatus(task.getDocStatus());
-			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
+			reqDTO.setRoleCode(SmCommonUtil.getUserRoleValue());
 			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean()
 					.getUserId());
 			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
