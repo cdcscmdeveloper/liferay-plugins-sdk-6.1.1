@@ -449,6 +449,7 @@ public class SimpleQuoteBackingBean extends
 						IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
 		boolean isPanelItemAdded = Boolean.FALSE;
+		boolean isZoneEventRequired = true;
 		
 		if (scQuote == null) {
 			scQuote = new ScQuote();
@@ -478,6 +479,7 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 						// add multiple panel specific items
 						isPanelItemAdded = Boolean.FALSE;
+						isZoneEventRequired = false;
 					} 
 					
 					if(!panelItemFlag){
@@ -555,7 +557,7 @@ public class SimpleQuoteBackingBean extends
 						prepareQuestions(selectedPanelItem, null, isGeneralOrSpecific);
 					}
 					
-					if(!isPanelItemAdded) {
+					if(!isPanelItemAdded && isZoneEventRequired) {
 						
 						if (!isGeneralOrSpecific) {
 							// panel item general
@@ -801,7 +803,8 @@ public class SimpleQuoteBackingBean extends
 					&& prodSpecMaster.getTplSpecQuestions().size() > 0) {
 				for (TplSpecQuestion question : prodSpecMaster
 						.getTplSpecQuestions()) {
-					if(question.getCtPanelItem() != null) {
+					if(question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM) &&
+							question.getCtPanelItem() != null) {
 						panelItem = question.getCtPanelItem();
 						break;
 					}
@@ -815,7 +818,8 @@ public class SimpleQuoteBackingBean extends
 					&& serviceSpecMaster.getTplSpecQuestions().size() > 0) {
 				for (TplSpecQuestion question : serviceSpecMaster
 						.getTplSpecQuestions()) {
-					if (question.getCtPanelItem() != null) {
+					if (question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM) &&
+							question.getCtPanelItem() != null) {
 						panelItem = question.getCtPanelItem();
 						break;
 					}
@@ -849,23 +853,24 @@ public class SimpleQuoteBackingBean extends
 						&& prodSpecMaster.getTplSpecQuestions().size() > 0) {
 					for (TplSpecQuestion question : prodSpecMaster
 							.getTplSpecQuestions()) {
-						if(cmSupplierItem != null) {
-							if (cmSupplierItem.getCmItem() != null
-									&& question.getCmItem() != null) {
-								if (cmSupplierItem.getCmItem().getItemId()
-										.equals(question.getCmItem().getItemId())) {
-									exists = true;
-									break;
+						if(question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+							if(cmSupplierItem != null) {
+								if (cmSupplierItem.getCmItem() != null
+										&& question.getCmItem() != null) {
+									if (cmSupplierItem.getCmItem().getItemId()
+											.equals(question.getCmItem().getItemId())) {
+										exists = true;
+										break;
+									}
+								}
+							} else if(ctPanelItem != null){
+								if (ctPanelItem.getPanelItemId()
+											.equals(question.getCtPanelItem().getPanelItemId())) {
+										exists = true;
+										break;
 								}
 							}
-						} else if(ctPanelItem != null){
-							if (ctPanelItem.getPanelItemId()
-										.equals(question.getCtPanelItem().getPanelItemId())) {
-									exists = true;
-									break;
-							}
 						}
-						
 					}
 				}
 				// service
@@ -876,23 +881,25 @@ public class SimpleQuoteBackingBean extends
 							&& serviceSpecMaster.getTplSpecQuestions().size() > 0) {
 						for (TplSpecQuestion question : serviceSpecMaster
 								.getTplSpecQuestions()) {
-							if(cmSupplierItem != null) {
-								if (cmSupplierItem.getCmItem() != null && 
-										question.getCmItem() != null) {
-									if (cmSupplierItem
-											.getCmItem()
-											.getItemId()
-											.equals(question.getCmItem()
-													.getItemId())) {
+							if(question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+								if(cmSupplierItem != null) {
+									if (cmSupplierItem.getCmItem() != null && 
+											question.getCmItem() != null) {
+										if (cmSupplierItem
+												.getCmItem()
+												.getItemId()
+												.equals(question.getCmItem()
+														.getItemId())) {
+											exists = true;
+											break;
+										}
+									}
+								} else if(ctPanelItem != null) {
+									if (ctPanelItem.getPanelItemId()
+											.equals(question.getCtPanelItem().getPanelItemId())) {
 										exists = true;
 										break;
 									}
-								}
-							} else if(ctPanelItem != null) {
-								if (ctPanelItem.getPanelItemId()
-										.equals(question.getCtPanelItem().getPanelItemId())) {
-									exists = true;
-									break;
 								}
 							}
 						}
@@ -6689,6 +6696,31 @@ public class SimpleQuoteBackingBean extends
 				"lbl.sc.sq.resp.duration.min.max", new String[] {Integer.toString(minHours), Integer.toString(maxDays)});
 	}
 	
+	/**
+	 * Get the counter of questions in Simple Quote
+	 * @return number of question in simple quote
+	 */
+	public int getNoQuestionInSQ(){
+		TplSpecMaster prodMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+		TplSpecMaster serviceMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
+		int counter = 0;
+		if(prodMaster != null && CollectionUtils.isNotEmpty(prodMaster.getTplSpecQuestions())) {
+			for(TplSpecQuestion question : prodMaster.getTplSpecQuestions()) {
+				if(question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					counter++;
+				}
+			}
+		}
+		if(serviceMaster != null && CollectionUtils.isNotEmpty(serviceMaster.getTplSpecQuestions())) {
+			for(TplSpecQuestion question : serviceMaster.getTplSpecQuestions()) {
+				if(question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					counter++;
+				}
+			}
+		}
+		return counter;
+	}
+	
 	private PmConfigRuleValue getDurationRuleValue() {
 		IRuleSO ruleSO = null;
 		try {
@@ -6724,17 +6756,15 @@ public class SimpleQuoteBackingBean extends
 			if (CollectionUtils.isNotEmpty(panelItemSpecs)) {
 				int size = panelItemSpecs.size();
 				for (int i = 0; i < size; i++) {
-					new TemplateSpecBackingBean().addQuestion(
+					TplSpecQuestion specQuestion = new TemplateSpecBackingBean().addQuestion(
 							new TemplateSpecBean(), specMaster,
 							allquestionsList, allquestionsList.size() - 1,
 							TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
 					CtPanelItemSpec itemSpec = panelItem.getCtPanelItemSpecs()
 							.get(i);
-					TplSpecQuestion tplSpecSpecifications = allquestionsList
-							.get(i + 1);
-					tplSpecSpecifications.setClSpecDetail(itemSpec
+					specQuestion.setClSpecDetail(itemSpec
 							.getSpecification());
-					setUserDetails(tplSpecSpecifications);
+					setUserDetails(specQuestion);
 				}
 			}
 		}
