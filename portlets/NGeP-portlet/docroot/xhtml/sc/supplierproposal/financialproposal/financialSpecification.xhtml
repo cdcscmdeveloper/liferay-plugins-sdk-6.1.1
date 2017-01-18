@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:panelGroup id="finSpecification">
 	<table>
 		<tr>
 			<TD><h:outputText styleClass="instruction"
@@ -32,5 +33,6 @@
 			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
 			title="#{lbl['lbl.sc.spec.financial.title']}" />
 	</c:if>
+	</h:panelGroup>
 
 </ui:composition>
