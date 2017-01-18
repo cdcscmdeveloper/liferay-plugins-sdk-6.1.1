@@ -251,7 +251,7 @@
 									disabled="#{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls) eq '0'}" />
 
 								<p:commandButton
-									value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specMaster.tplSpecQuestions.size() + simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specMaster.tplSpecQuestions.size()} )"
+									value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.getNoQuestionInSQ()} )"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									id="simpleQuoteId"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction(null, false, null)}"
