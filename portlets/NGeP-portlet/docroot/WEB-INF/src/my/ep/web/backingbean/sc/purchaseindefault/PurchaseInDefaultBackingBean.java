@@ -513,6 +513,7 @@ public class PurchaseInDefaultBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			// reqDTO.setConditionField(getManagedBean().getConditionField());
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO
 					.submitPurchaseInDefault(reqDTO);
@@ -607,6 +608,7 @@ public class PurchaseInDefaultBackingBean extends
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setDigiSignData(digiSign);
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
 
 			if (resDTO.isSuccessful()) {
