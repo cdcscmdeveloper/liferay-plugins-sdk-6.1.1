@@ -17,7 +17,7 @@
 		<ui:param name="validityDaysExpiredQt"
 				  value="#{consolidationReportBackingBean.checkProposalValidityDateReach(
 		     					consolidationReportBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-
+ <ui:param name="itemOnly" value="#{consolidationReportBackingBean.managedBean.scQt.evaluateBy == consolidationReportBackingBean.evalTypeItem() }" />
 		<p:messages id="consolidationReportErr" showDetail="true" showSummary="false" 
 					autoUpdate="true" closable="true" severity="error, info" />
 
@@ -58,7 +58,7 @@
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}" 
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
 				process="@form" update="@form" partialSubmit="true" style="width:150px;"
-				disabled="#{consolidationReportBackingBean.managedBean.procCategoryMedicine}">
+				disabled="#{itemOnly}" >
 			</p:menuitem>			
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}" 
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
