@@ -75,6 +75,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
@@ -1549,6 +1550,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private boolean specMaintenance=Boolean.FALSE;
     private String specMaintenanceScreen="SC";
     private boolean isUpdateSpec=Boolean.TRUE;
+    private ScQtFinalization scQtFinalization;
     
 	/**
 	 * Sets the panel suppliers.
@@ -9747,9 +9749,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isUpdateSpec = isUpdateSpec;
 	}
 
-	
+	/**
+	 * @return the scQtFinalization
+	 */
+	public ScQtFinalization getScQtFinalization() {
+		return scQtFinalization;
+	}
 
-	
-	
+	/**
+	 * @param scQtFinalization the scQtFinalization to set
+	 */
+	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
+		this.scQtFinalization = scQtFinalization;
+	}
 
 }
