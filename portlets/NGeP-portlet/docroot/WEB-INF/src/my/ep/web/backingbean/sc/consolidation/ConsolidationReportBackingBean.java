@@ -705,7 +705,12 @@ public class ConsolidationReportBackingBean extends
 			
 			boolean isMedicalProcCategory = isMultipleProposalCategory(
 					scQt, null);
-			getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
+			if(isMedicalProcCategory){
+				if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())) {
+				this.getManagedBean().getScQt().setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+				}
+			}
+			//getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
 
 			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
 			getManagedBean().setZoneDetails(zoneDetails);
@@ -1032,7 +1037,7 @@ public class ConsolidationReportBackingBean extends
 		}
 		
 		// Package wise validation
-		if (!getManagedBean().isProcCategoryMedicine()) {
+		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())) {
 			qualifiedSupplierBeans = 
 					getQtEvaluationResultDtlBeansWithRank(specZoneDtl, null, qualifiedSuppliers);
 			validateRanking(qualifiedSupplierBeans, false, null, 
@@ -1620,4 +1625,10 @@ public class ConsolidationReportBackingBean extends
 		return null;
 	}
 	
+	/**
+	 * @method returns eval Type Item.
+	 */
+	public String evalTypeItem(){
+	return SourcingConstants.EVALUATE_BY__ITEM;	
+	}
 }
