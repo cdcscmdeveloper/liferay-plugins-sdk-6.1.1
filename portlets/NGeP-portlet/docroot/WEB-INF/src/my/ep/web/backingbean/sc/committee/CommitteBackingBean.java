@@ -778,20 +778,10 @@ public class CommitteBackingBean extends
 						deletedCommitteeMember.getIcPassport())) {
 					ScCommitteeMember currentCommitteeMember = currentCommMemberIcs
 											.get(deletedCommitteeMember.getIcPassport());
-					deletedCommitteeMember.setDeleted(false);
-					deletedCommitteeMember.setRepresentativeType(
-							currentCommitteeMember.getRepresentativeType());
-					deletedCommitteeMember.setMemberRole(
-							currentCommitteeMember.getMemberRole());
-					deletedCommitteeMember.setMemberRoleId(
-							currentCommitteeMember.getMemberRoleId());
+					
+					deletedCommitteeMember=setCommitteeMemberData(deletedCommitteeMember, currentCommitteeMember);
 					committeeMembers.remove(currentCommitteeMember);
 					committeeMembers.add(deletedCommitteeMember);
-					
-					if (deletedCommitteeMember.getRepresentativeType() != null) {
-						deletedCommitteeMember.setRepresentativeTypeId(
-								deletedCommitteeMember.getRepresentativeType().getParameterId());
-					}
 					toBeAddedMembers.add(deletedCommitteeMember);
 				}
 			}
