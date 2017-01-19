@@ -1027,7 +1027,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void addCloneToEcDtl() {
 		debugLogger("addCloneToEcDtl");
-		checkIsSpecCommitteFormOrNot();
+		
 		// TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getCommittemembers();
@@ -1134,7 +1134,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void addCloneToTecDtl() {
 		debugLogger("addCloneToTecDtl");
-		checkIsSpecCommitteFormOrNot();
+		//checkIsSpecCommitteFormOrNot();
 		// TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getCommittemembers();
@@ -1730,39 +1730,15 @@ public class QTCommitteBackingBean extends
 			List<ScCommitteeMember> newMembers) {
 		if (!existingMembers.isEmpty()) {
 			for (ScCommitteeMember member : newMembers) {
-				if (existingMembers.contains(member)) {
-					return true;
+				for (ScCommitteeMember exMember:existingMembers) {
+					if (exMember.getIcPassport() != null
+							&& exMember.getIcPassport().equals(member.getIcPassport())) {
+						return true;
+					}
 				}
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Check is spec committe form or not.
-	 */
-	private void checkIsSpecCommitteFormOrNot() {
-		ScCommittee committe = null;
-		for (TabBean tabBean : this.getManagedBean()
-				.getScCommitteeMemberTabList()) {
-
-			if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
-					.equalsIgnoreCase(tabBean.getTabType())) {
-				committe = tabBean.getScQtCommittee().getScCommittee();
-
-				break;
-			}
-		}
-		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setScCommittee(committe);
-		reqDTO.setScQt(this.getManagedBean().getQt());
-		reqDTO.setUser(new FacesScopes().getUserSessionBean());
-		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-		committeSO.validateCommitteDtls(reqDTO);
-
 	}
 
 	/**
