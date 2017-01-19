@@ -7188,9 +7188,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignMissingDocsList(boolean isNewInquiry, String dialogId) {
 		log.info("*** Send Inquiry **** ");
-		if (getManagedBean().isPoUser()) {
-			SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
-		}
 		initMissingDocs(isNewInquiry, dialogId);
 
 		// if missing docs is empty, set other application inquiry to required
