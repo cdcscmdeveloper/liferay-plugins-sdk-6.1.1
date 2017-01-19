@@ -3324,12 +3324,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @return the selected supplier branch dtl
 	 */
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
-		Long supplierBranchId = (Long) e.getComponent().getAttributes().get("value");
-		if(supplierBranchId!=null) {
+		Long supplierBranchCode = (Long) e.getComponent().getAttributes().get("value");
+		if(supplierBranchCode!=null) {
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setSupplierBranchId(supplierBranchId);
-			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
+			reqDTO.setSupplierBranchCode(supplierBranchCode);
+			reqDTO.setLatestApplId(getManagedBean().getFlRequest().getSmSupplier().getSmAppl().getApplId());
+			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchCode(reqDTO);
 			
 			SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
 			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
