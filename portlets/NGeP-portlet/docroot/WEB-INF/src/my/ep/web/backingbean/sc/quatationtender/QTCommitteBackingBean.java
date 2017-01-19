@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.MessageConst;
@@ -57,6 +58,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -74,6 +76,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -1798,15 +1801,15 @@ public class QTCommitteBackingBean extends
 	 }
 
 	/**
-	 * Checks if is committe info editable.
+	 * Checks if is committee info editable.
 	 * 
 	 * @param committeStatus
 	 *            the committe status
 	 * @param commType
-	 *            the comm type
-	 * @return true, if is committe info editable
+	 *            the committee type
+	 * @return true, if is committee info editable
 	 */
-	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
+	public boolean isCommitteeInfoEditable(Long committeStatus, String commType) {
 		Long currentStatusId = null;
 		ScQt scQt = getManagedBean().getQt();
 		if (scQt.getQtStatus() != null) {
@@ -1828,7 +1831,7 @@ public class QTCommitteBackingBean extends
 							
 							if (ocWorkFlowStatus != null) {
 								if (QTStatusConst.OC_COMPLETED.equals(ocWorkFlowStatus.getPmStatus().getStatusId())) {
-									return true;
+									return false;
 								}
 							}
 						} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
@@ -1838,11 +1841,11 @@ public class QTCommitteBackingBean extends
 							
 							if (tecWorkFlowStatus != null) {
 								if (QTStatusConst.TEC_COMPLETED.equals(tecWorkFlowStatus.getPmStatus().getStatusId())) {
-									return true;
+									return false;
 								}
 							}
 						} else {
-							return true;
+							return false;
 						}
 						
 					} else {
@@ -1853,48 +1856,95 @@ public class QTCommitteBackingBean extends
 										DateUtils.setDefaultDateTime(closingDate)) <= 7 &&
 								(QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) || 
 										QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
-							return true;
+							return false;
 						}
 					}
 				} else {
-					return true;
+					return false;
 				}
 				
 			} else if (!isEligibleStatusForBtns(currentStatusId)) {
-				return true;
+				return false;
 			} 
 			if (getManagedBean().isReadOnly()) {
-				return true;
+				return false;
 			}
 		} else {
 			String taskName = this.getManagedBean().getTaskName();
 			if (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				return true;
-			} else if (isQTStatusAfterScheduleDoc(currentStatusId)
-					&& !(SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
-							|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)
-							|| (SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
-									&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
-											|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)))
-							|| (SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)
-									&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType))
-							|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-								.equalsIgnoreCase(taskName))) {
-				return true;
+				return false;
+			} else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
+				if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
+				} else if ((SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
+								&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
+										|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)))) {
+				} else if ((SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)
+								&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType))) {
+				} else if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
+					ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+					if (scQtFinalization == null) {
+						IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+						try {
+							qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+							SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+							reqDTO.setQtId(scQt.getQtId());
+							scQtFinalization = qtSuppFinalizationSO
+									.retrieveSupplierFinalizationByQtId(reqDTO)
+									.getScQtFinalization();
+							getManagedBean().setScQtFinalization(scQtFinalization);
+
+						} finally {
+							qtSuppFinalizationSO = null;
+						}			
+					}
+					
+					if (scQtFinalization != null) {
+						if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+						} else if (scQtFinalization.isReEvaluateCompReq() && ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(commType)) {
+						} else if (scQtFinalization.isReEvaluateTechReq() && ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+						} else if (scQtFinalization.isReEvaluateFinReq() && ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+						} else {
+							return false;		
+						}
+					}
+				} else {
+					return false;
+				}
+				
 			}
 		}
 		if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
 				|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
 						.equals(committeStatus)) {
-			return true;
+			return false;
 		} else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus)
 				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 
+	}
+	
+	/**
+	 * Checks if send for approval checkbox is disabled.
+	 * 
+	 * @param committeeType
+	 *            the committee type
+	 * @return true, if send for approval checkbox is disabled
+	 */
+	public boolean isDisabledSendForApproval(String committeeType) {
+		String taskName = getManagedBean().getTaskName();
+		return ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeType)
+				|| (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equals(taskName) && 
+						(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType) || ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType))) 
+				|| (SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equals(taskName) && ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType)) 
+				|| (SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equals(taskName) && ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType)) 
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equals(taskName);
 	}
 	
 	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
@@ -1941,7 +1991,9 @@ public class QTCommitteBackingBean extends
 				return !this.getManagedBean().isReadOnly();
 			} 
 		}else {
-			return true;
+			if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT)) {
+				return true;
+			} 
 		}
 		return false;
 	}
@@ -2108,30 +2160,46 @@ public class QTCommitteBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 				.equalsIgnoreCase(commType)) {
 			ScQt scQt = this.getManagedBean().getQt();
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			String fetchCommType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+			ScQtCommittee qtCommittee = null;
 			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt
 					.getEvaluationType())) {
 				fetchCommType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
 			}
-			reqDTO.setCommitteeType(fetchCommType);
-			reqDTO.setQtId(scQt.getQtId());
-			CommitteResDTO resDTO = null;
-			ICommitteSO committeSO;
-			try {
-				committeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
-				ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
-				if (qtCommitte != null && qtCommitte.getScCommittee() != null) {
-					Long committeeStatus = qtCommitte.getScCommittee().getCommitteStatus().getStatusId();
-					isRenderBtn = !isCommitteInfoEditable(committeeStatus,fetchCommType);
-				} else {
-					isRenderBtn = !isCommitteInfoEditable(QTStatusConst.CMT_PENDING_SUBMISSION,fetchCommType);
+			
+			List<TabBean> scCommitteeMemberTabList = getManagedBean().getScCommitteeMemberTabList();
+			if (CollectionUtils.isNotEmpty(scCommitteeMemberTabList)) {
+				for (TabBean scCommitteeMemberTab: scCommitteeMemberTabList) {
+					ScQtCommittee scQtCommittee = scCommitteeMemberTab.getScQtCommittee();
+					if (scQtCommittee != null && fetchCommType.equals(scQtCommittee.getScCommittee().getCommitteeType().getParameterCode())) {
+						qtCommittee = scQtCommittee;
+						break;
+					}
 				}
-			} finally {
-				committeSO = null;
 			}
+			
+			if (qtCommittee == null) {
+				ICommitteSO committeSO;
+				try {
+					committeSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+					CommitteReqDTO reqDTO = new CommitteReqDTO();
+					reqDTO.setCommitteeType(fetchCommType);
+					reqDTO.setQtId(scQt.getQtId());
+					qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO)
+							.getScQtCommittee();
+				} finally {
+					committeSO = null;
+				}
+			}
+			
+			if (qtCommittee != null && qtCommittee.getScCommittee() != null) {
+				Long committeeStatus = qtCommittee.getScCommittee().getCommitteStatus().getStatusId();
+				isRenderBtn = isCommitteeInfoEditable(committeeStatus,fetchCommType);
+			} else {
+				isRenderBtn = isCommitteeInfoEditable(QTStatusConst.CMT_PENDING_SUBMISSION,fetchCommType);
+			}
+			
 		}
 		return isRenderBtn;
 
@@ -2177,7 +2245,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isEnableCheckboxes(Long committeStatus, String commType) {
 
-		boolean isEnableCheckboxes = !isCommitteInfoEditable(committeStatus,commType);
+		boolean isEnableCheckboxes = isCommitteeInfoEditable(committeStatus,commType);
 		if (!isEnableCheckboxes) {
 			isEnableCheckboxes = renderECOrTECButton(this
 					.getManagedBean().getCurrentStatusId(), commType);
