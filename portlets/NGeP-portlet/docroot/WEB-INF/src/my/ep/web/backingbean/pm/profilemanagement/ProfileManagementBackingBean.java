@@ -2567,6 +2567,12 @@ public class ProfileManagementBackingBean extends
 		logger.info("getSearchBeanData - Start");
 		UserProfilesSearchBean upSearchBean = this.getManagedBean()
 				.getUserProfileSearchBean();
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmOrgProfile.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));	
+		
 		if (upSearchBean.getSelectedOrgProfileId() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.orgProfileId",
