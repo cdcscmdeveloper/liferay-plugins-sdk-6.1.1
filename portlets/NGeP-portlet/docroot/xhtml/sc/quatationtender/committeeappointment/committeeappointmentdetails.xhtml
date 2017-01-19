@@ -12,7 +12,7 @@
 	<ui:param name="evaluationType" value="#{qTDetailBB.managedBean.qt.evaluationType}"/>
 	<ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
 	<ui:param name="isCommitteeInfoEditable"
-			value="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
+			value="#{qTCommitteBackingBean.isCommitteeInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
 	<ui:param name="isEnablChkBoxes" value="#{qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />	
 	<p:panel header="#{lbl['lbl.sc.qt.committee.appointment']}" toggleable="true">
 	
