@@ -10,7 +10,8 @@
 	<p:column style="width: 15%;white-space: normal;"
 		headerText="#{lbl['lbl.tpl.spec.content.item']}">
 		<h:outputText value="#{question.clItem}" escape="false"
-			rendered="#{!isRepeated}" />
+			rendered="#{!isRepeated}" /><br /><br />
+			#{question.cmItem.extensionCode}
 	</p:column>
 	<p:column style="width: 22%;white-space: normal;"
 		headerText="#{lbl['lbl.tpl.spec.content.specification']}"
