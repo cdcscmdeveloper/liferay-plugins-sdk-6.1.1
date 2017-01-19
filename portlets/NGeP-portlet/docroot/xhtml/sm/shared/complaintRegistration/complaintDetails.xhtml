@@ -57,11 +57,13 @@
 				<td class="tdTitle" valign="top"><p:outputLabel
 						value="#{lbl['lbl.sm.complaint.details']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td class="tdContent" colspan="3"><p:inputTextarea required="#{!empty param['disableValidation']}"  
-						label="#{lbl['lbl.sm.complaint.details']}"
+				<td class="tdContent" colspan="3"><p:inputTextarea required="#{!empty param['disableValidation']}" 
+						label="#{lbl['lbl.sm.complaint.details']}" autoResize="false" maxlength="2500" 
 						value="#{complaintBackingBean.managedBean.smComplaint.complaintDesc}"
 						readonly="#{complDtlViewFLag}" id="complDetails"
-						rows="8" cols="100" />
+						rows="10" cols="100">
+							<f:validateLength maximum="2500" />
+						</p:inputTextarea>
 					<p:message id="complDetailsMsg" for="complDetails" display="icon" />		
 				</td>
 			</tr>
