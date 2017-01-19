@@ -45,23 +45,23 @@
 						<f:setPropertyActionListener target="#{qTDetailBB.managedBean.committemembers}" value="#{null}"></f:setPropertyActionListener>
 					</p:commandButton>
 				
-				<c:if test="#{isQTStatusChecklistAndAfter}">
-					<ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton(statusId,committe.committeeType.parameterCode)}"></ui:param>
-					<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"
-						process="@this, specificationcommitteeid"
-						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-						rendered="#{isRender and (qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2)}"
-						actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
-						title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" 
-						disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
-		
-					<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}" styleClass="BtnSpacing"
-						process="@this, specificationcommitteeid"
-						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-						rendered="#{isRender and (qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1)}"
-						actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
-						title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" 
-						disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
+				<c:if test="#{isQTStatusChecklistAndAfter and qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTCommitteBackingBean.renderECOrTECButton(statusId,committe.committeeType.parameterCode)}">
+					<c:if test="#{qTDetailBB.managedBean.qt.evaluationType eq ParameterConst.evaluationTypesTwoTier}">
+						<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"
+							process="@this, specificationcommitteeid"
+							update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
+							actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
+							title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" 
+							disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.qt.evaluationType eq ParameterConst.evaluationTypesOneTier}">
+						<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}" styleClass="BtnSpacing"
+							process="@this, specificationcommitteeid"
+							update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
+							actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
+							title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" 
+							disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
+					</c:if>
 				</c:if>
 			</div>
 			<ui:param name="committeeAppointmentDeleteId"
