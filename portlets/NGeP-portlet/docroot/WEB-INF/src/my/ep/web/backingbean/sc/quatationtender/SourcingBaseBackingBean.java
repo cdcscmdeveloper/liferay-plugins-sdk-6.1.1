@@ -2662,4 +2662,39 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return items;
 	}
+	
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 *  @param currentScMember
+	 */
+	public ScCommitteeMember setCommitteeMemberData(ScCommitteeMember deletedCommitteeMember,ScCommitteeMember currentCommitteeMember) {
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(
+				currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(
+				currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(
+				currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
+		deletedCommitteeMember.setScCommittee(currentCommitteeMember.getScCommittee());
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(
+					deletedCommitteeMember.getMemberRole().getParameterId());	
+		}
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember.setRepresentativeTypeId(
+					deletedCommitteeMember.getRepresentativeType().getParameterId());
+		}
+		
+		return deletedCommitteeMember;
+	}
 }
