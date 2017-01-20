@@ -931,6 +931,9 @@ public class ReportsGenerateBean implements Serializable {
 	/** The sm soft cert exp date view. */
 	private boolean smSoftCertExpDateView = false;
 
+	/** The sm soft cert renewal date view. */
+	private boolean smSoftCertRenewalDateView = false;
+	
 	/** The sm activation date view. */
 	private boolean smActivationDateView = false;
 
@@ -1165,8 +1168,8 @@ public class ReportsGenerateBean implements Serializable {
 	/** The sm user name view. */
 	private boolean smUserNameView = false;
 
-	/** The sm request expiry date view. */
-	private boolean smRequestExpiryDateView = false;
+	/** The sm request expiry renewal date view. */
+	private boolean smRequestExpiryRenewalDateView = false;
 
 	/** The sm year from view. */
 	private boolean smYearFromView = false;
@@ -4376,8 +4379,8 @@ public class ReportsGenerateBean implements Serializable {
 	/** The sm user name var. */
 	private String smUserNameVar = ReportConst.EMPTY_VAL;
 
-	/** The sm request expiry date var. */
-	private String smRequestExpiryDateVar = ReportConst.EMPTY_VAL;
+	/** The sm request expiry renewal date var. */
+	private String smRequestExpiryRenewalDateVar = ReportConst.EMPTY_VAL;
 
 	/** The sm profile status var. */
 	private String smProfileStatusVar = ReportConst.EMPTY_VAL;
@@ -6708,41 +6711,41 @@ public class ReportsGenerateBean implements Serializable {
 	}
 
 	/**
-	 * Checks if is sm request expiry date view.
+	 * Checks if is sm request expiry date renewal view.
 	 * 
-	 * @return true, if is sm request expiry date view
+	 * @return true, if is sm request expiry date reenwal view
 	 */
-	public boolean isSmRequestExpiryDateView() {
-		return smRequestExpiryDateView;
+	public boolean isSmRequestExpiryRenewalDateView() {
+		return smRequestExpiryRenewalDateView;
 	}
 
 	/**
-	 * Sets the sm request expiry date view.
+	 * Sets the sm request expiry renewal date view.
 	 * 
-	 * @param smRequestExpiryDateView
-	 *            the new sm request expiry date view
+	 * @param smRequestExpiryRenewalDateView
+	 *            the new sm request expiry renewal date view
 	 */
-	public void setSmRequestExpiryDateView(boolean smRequestExpiryDateView) {
-		this.smRequestExpiryDateView = smRequestExpiryDateView;
+	public void setSmRequestExpiryRenewalDateView(boolean smRequestExpiryRenewalDateView) {
+		this.smRequestExpiryRenewalDateView = smRequestExpiryRenewalDateView;
 	}
 
 	/**
-	 * Gets the sm request expiry date var.
+	 * Gets the sm request expiry renewal date var.
 	 * 
-	 * @return the sm request expiry date var
+	 * @return the sm request expiry renewal date var
 	 */
-	public String getSmRequestExpiryDateVar() {
-		return smRequestExpiryDateVar;
+	public String getSmRequestExpiryRenewalDateVar() {
+		return smRequestExpiryRenewalDateVar;
 	}
 
 	/**
-	 * Sets the sm request expiry date var.
+	 * Sets the sm request expiry renewal date var.
 	 * 
 	 * @param smRequestExpiryDateVar
-	 *            the new sm request expiry date var
+	 *            the new sm request expiry renewal date var
 	 */
-	public void setSmRequestExpiryDateVar(String smRequestExpiryDateVar) {
-		this.smRequestExpiryDateVar = smRequestExpiryDateVar;
+	public void setSmRequestExpiryRenewalDateVar(String smRequestExpiryRenewalDateVar) {
+		this.smRequestExpiryRenewalDateVar = smRequestExpiryRenewalDateVar;
 	}
 
 	/**
@@ -16859,6 +16862,25 @@ public class ReportsGenerateBean implements Serializable {
 	 */
 	public void setSmSoftCertExpDateView(boolean smSoftCertExpDateView) {
 		this.smSoftCertExpDateView = smSoftCertExpDateView;
+	}
+	
+	/**
+	 * Checks if is sm soft cert renewal date view.
+	 * 
+	 * @return the smSoftCertRenewalDateView
+	 */
+	public boolean isSmSoftCertRenewalDateView() {
+		return smSoftCertRenewalDateView;
+	}
+
+	/**
+	 * Sets the sm soft cert renewal date view.
+	 * 
+	 * @param smSoftCertRenewalDateView
+	 *            the smSoftCertRenewalDateView to set
+	 */
+	public void setSmSoftCertRenewalDateView(boolean smSoftCertRenewalDateView) {
+		this.smSoftCertRenewalDateView = smSoftCertRenewalDateView;
 	}
 
 	/**

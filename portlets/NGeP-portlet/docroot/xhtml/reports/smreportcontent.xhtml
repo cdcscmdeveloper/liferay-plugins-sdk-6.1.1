@@ -2351,14 +2351,18 @@
 						</c:if>
 						
 						<c:if
-							test="#{scReportBackingBean.managedBean.rptGenBean.smRequestExpiryDateView}">
+							test="#{scReportBackingBean.managedBean.rptGenBean.smRequestExpiryRenewalDateView}">
 							<p:outputLabel value="" />
 							<p:selectOneRadio id="reqexpdate" style="width:376px"
-								value="#{reportBackingBean.smRequestExpiryDate}">
+								value="#{reportBackingBean.smRequestExpiryRenewalDate}">
 								<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}"
 									itemValue="R" />
+								<br/>
 								<f:selectItem itemLabel="#{lbl['lbl.rptsoftexpdate']}"
 									itemValue="E" />
+								<br/>
+								<f:selectItem itemLabel="#{lbl['lbl.rptsoftrenewaldate']}"
+									itemValue="N" />
 								<p:ajax event="change"
 									listener="#{reportBackingBean.changeSoftCertSelection}"
 									partialSubmit="true" update="@form" />
@@ -3877,6 +3881,8 @@
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.schedulesitevisitdatefrom']}" /></TD>
 					</c:if>
+					
+					
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smSoftCertReqDateView}">
 						<TD class="columnGenClass"><p:outputLabel
@@ -3887,6 +3893,12 @@
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.softcertexpdatefrom']}" /></TD>
 					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smSoftCertRenewalDateView}">
+						<TD class="columnGenClass"><p:outputLabel
+								value="#{lbl['lbl.rpt.softcertrenewaldatefrom']}" /></TD>
+					</c:if>
+					
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryExpectedSiteVisiRpttDateView}">
 						<TD class="columnGenClass"><p:outputLabel
