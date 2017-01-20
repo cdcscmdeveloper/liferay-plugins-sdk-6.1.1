@@ -1337,19 +1337,20 @@ public class DirectLOABackingBean extends
 			if (specQuestions < 1) {
 				throw new EpException(MessageConst.ERROR_760354);
 			} else{
-				
-				if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
-					for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
-						if(null == productQuestion.getCmItem() && StringUtils.isBlank(productQuestion.getClSpecDetail())){
-							throw new EpException(MessageConst.ERROR_760445, new String[] {productQuestion.getClItem()});
+				if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+					if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
+						for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
+							if(null == productQuestion.getCmItem() && StringUtils.isBlank(productQuestion.getClSpecDetail())){
+								throw new EpException(MessageConst.ERROR_760445, new String[] {productQuestion.getClItem()});
+							}
 						}
 					}
-				}
-				
-				if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
-					for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
-						if(null == serviceQuestion.getCmItem() && StringUtils.isBlank(serviceQuestion.getClSpecDetail())){
-							throw new EpException(MessageConst.ERROR_760445, new String[] {serviceQuestion.getClItem()});
+
+					if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
+						for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
+							if(null == serviceQuestion.getCmItem() && StringUtils.isBlank(serviceQuestion.getClSpecDetail())){
+								throw new EpException(MessageConst.ERROR_760445, new String[] {serviceQuestion.getClItem()});
+							}
 						}
 					}
 				}
