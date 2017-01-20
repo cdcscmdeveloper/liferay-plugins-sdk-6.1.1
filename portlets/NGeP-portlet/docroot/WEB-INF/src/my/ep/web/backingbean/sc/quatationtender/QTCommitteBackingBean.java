@@ -2026,7 +2026,11 @@ public class QTCommitteBackingBean extends
 		}else {
 			if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT)) {
 				return true;
-			} 
+			} else if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(currentQtStatus)) {
+				if (SCProcessNameConst.ASSIGN_FC_SECRETARY.equals(getManagedBean().getTaskName())) {
+					return true;	
+				}
+			}
 		}
 		return false;
 	}
