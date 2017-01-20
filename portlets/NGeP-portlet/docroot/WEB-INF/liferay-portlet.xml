@@ -906,6 +906,16 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smcustomerservice-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>selfRequestSupplierAdmin</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>selfrequestsupplieradmin-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Supplier Management End venkat -->
 	
 	<!-- Supplier Management Syazwan -->

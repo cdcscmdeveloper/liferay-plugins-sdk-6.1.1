@@ -309,7 +309,7 @@
 		<portlet id="smBulkApplication"></portlet>
 		<portlet id="resendAccountActivationEmail"></portlet>
 		<portlet id="smCustomerService"></portlet>
-		
+		<portlet id="selfRequestSupplierAdmin"></portlet>
 		<portlet id="SmApplRevisionView"></portlet>
 		<portlet id="SoftCertPayment"></portlet>
 		<portlet id="ApplicationPayment"></portlet>

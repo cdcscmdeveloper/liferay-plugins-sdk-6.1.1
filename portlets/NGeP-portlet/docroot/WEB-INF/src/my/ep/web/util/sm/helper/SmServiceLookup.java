@@ -42,6 +42,7 @@ import my.ep.biz.service.sm.rule.ISmRuleSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -530,6 +531,17 @@ public class SmServiceLookup {
 	}
 
 	/**
+	 * Get ISelfRequestSupplierAdminSO
+	 * 
+	 * @return ISelfRequestSupplierAdminSO
+	 */
+	public static ISelfRequestSupplierAdminSO getSelfRequestSupplierAdminSO() {
+		return (ISelfRequestSupplierAdminSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISelfRequestSupplierAdminSO.class);
+	}
+
+	/**
 	 * Get IReasonSO
 	 * 
 	 * @return IReasonSO
@@ -570,26 +582,24 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDiMyidentitySO.class);
 	}
-	
+
 	/**
 	 * Get IPmKpiSO
 	 * 
 	 * @return IPmKpiSO
 	 */
 	public static IPmKpiSO getPmKpiSO() {
-		return (IPmKpiSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IPmKpiSO.class);
+		return (IPmKpiSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
 	}
-	
+
 	/**
 	 * Get IPoWorkloadSO
 	 * 
 	 * @return IPoWorkloadSO
 	 */
 	public static IPoWorkloadSO getPoWorkloadSO() {
-		return (IPoWorkloadSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IPoWorkloadSO.class);
+		return (IPoWorkloadSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPoWorkloadSO.class);
 	}
 }

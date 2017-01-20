@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true" id="basHdPan">
+		
+		<table>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.selfrequest.mof.number']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="mofNoId" value="#{selfRequestSupplierAdminBackingBean.managedBean.mofNo}"
+						size="35" required="true" maxlength="12" label="#{lbl['lbl.sm.selfrequest.mof.number']}" >
+					<p:ajax event="blur" process="@this" update="compNameOutPanelId" partialSubmit="true" 
+						listener="#{selfRequestSupplierAdminBackingBean.onBlurMofNo()}"/>
+					</p:inputText>
+					<p:message id="mofNoIdMsg" for="mofNoId" showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<p:outputPanel id="compNameOutPanelId">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.supplier.companyName}"
+							id="compNameId" size="35" disabled="true" />
+					</td>
+				</tr>
+			</p:outputPanel>
+		</table>
+	
+	</p:panel>
+
+</ui:composition>
