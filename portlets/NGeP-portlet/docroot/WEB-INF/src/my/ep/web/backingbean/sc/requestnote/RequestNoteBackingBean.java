@@ -405,6 +405,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
 					itemSearchBackBtn = Boolean.FALSE;
 				}
+			} else {
+				if(null == scRequestNoteDtl.getAssignedUser()){
+					scRequestNoteDtl.setAssignedUser(new PmUser());	
+				}
+				if(null == scRequestNoteDtl.getPriceType()){
+					scRequestNoteDtl.setPriceType(new PmParameter());
+				}
+				ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
+				SmSupplier  smSupplier = new SmSupplier();
+				requestSupplierItem.setSmSupplier(smSupplier);
+				scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 			}
 			if(scRequestNoteDtl.getScRequestSupplierItem() != null && scRequestNoteDtl.getPriceType() != null){
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
@@ -835,10 +846,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
 					itemSearchBackBtn = Boolean.FALSE;
 					getPurchaseInDefaultExpiredMessage(docStatusId);
-				}
-				
-				// Purchase In Default ->  Simple Quote  -> Request Note
-				if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getQuote() != null){
+				} else if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getQuote() != null){
+					// Purchase In Default ->  Simple Quote  -> Request Note
 					getPurchaseInDefaultExpiredMessage(docStatusId);
 				}
 				
@@ -1812,16 +1821,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public List<PmParameter>  getPriceTypeByPrice(List<ScSupplierItemPrice> supplierItemPrices) {
 		List<Long> checkIds = new ArrayList<Long>();
 		List<PmParameter> params = new ArrayList<PmParameter>();
-		for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
-			if(scSupplierItemPrice.getPriceType() != null){
-				if(scSupplierItemPrice.getPriceType().getParameterId() != null){
-					scSupplierItemPrice.setPriceType(getParameterByTypeAndCode(
-							ParameterTypeConst.PRICE_TYPE, scSupplierItemPrice.getPriceType().getParameterCode()));
-				}
-				
-				if(!checkIds.contains(scSupplierItemPrice.getPriceType().getParameterId())){
-					checkIds.add(scSupplierItemPrice.getPriceType().getParameterId());
-					params.add(scSupplierItemPrice.getPriceType());
+		if(CollectionUtils.isNotEmpty(supplierItemPrices)) {
+			for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
+				if(scSupplierItemPrice.getPriceType() != null){
+					if(scSupplierItemPrice.getPriceType().getParameterId() != null){
+						scSupplierItemPrice.setPriceType(getParameterByTypeAndCode(
+								ParameterTypeConst.PRICE_TYPE, scSupplierItemPrice.getPriceType().getParameterCode()));
+					}
+					
+					if(!checkIds.contains(scSupplierItemPrice.getPriceType().getParameterId())){
+						checkIds.add(scSupplierItemPrice.getPriceType().getParameterId());
+						params.add(scSupplierItemPrice.getPriceType());
+					}
 				}
 			}
 		}
