@@ -285,7 +285,10 @@ public class SupplierFinalizationBackingBean extends
 
 			boolean isMedicalProcCategory = isMultipleProposalCategory(
 					scQt, null);
-			getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
+			if(isMedicalProcCategory){
+				this.getManagedBean().getScQt().setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+			}
+			//getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
 
 			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
 			getManagedBean().setZoneDetails(zoneDetails);
@@ -4346,7 +4349,8 @@ public class SupplierFinalizationBackingBean extends
 		String finalizationMethod = getManagedBean().getFinalizationMethod();
 
 		// Disable award by package when procurement category is medicine
-		if (getManagedBean().isProcCategoryMedicine()) {
+		//getManagedBean().isProcCategoryMedicine()
+		if (SourcingConstants.EVALUATE_BY__ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())) {
 			PmParameter itemRecommendType = getPmParameterByTypeAndCode(
 					ParameterTypeConst.SC_RECOMMEND_TYPE,
 					ParameterConst.RECOMMEND_TYPE_ITEM);
@@ -6528,6 +6532,13 @@ public class SupplierFinalizationBackingBean extends
 		return BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
+	}
+	
+	/**
+	 * @method returns eval Type Item.
+	 */
+	public String evalTypeItem(){
+	return SourcingConstants.EVALUATE_BY__ITEM;	
 	}
 	
 }

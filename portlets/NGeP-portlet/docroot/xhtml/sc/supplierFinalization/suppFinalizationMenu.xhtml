@@ -29,7 +29,9 @@
 		<ui:param name="isBPKTaskAndClaimed"  value="#{isBPKTask and !readOnlyTask}" />		
 		
 		<ui:param name="isSecretaryUser" 
-				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />		
+				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />	
+				  
+	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
