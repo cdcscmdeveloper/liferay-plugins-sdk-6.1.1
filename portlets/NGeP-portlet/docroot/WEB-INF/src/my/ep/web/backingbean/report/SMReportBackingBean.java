@@ -635,7 +635,7 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_LIST_OF_USERS:
 			rptGenBean.setSmListOfUsersSCRView(true);
-			rptGenBean.setSmRequestExpiryDateView(true);
+			rptGenBean.setSmRequestExpiryRenewalDateView(true);
 			rptGenBean.setSmUserNameView(true);
 			rptGenBean.setSmIdentificationNumberView(true);
 			rptGenBean.setSmSupplierView(true);

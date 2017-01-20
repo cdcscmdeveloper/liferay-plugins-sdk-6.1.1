@@ -1052,8 +1052,8 @@ public class ReportBackingBean extends
 	/** The sm user name. */
 	private String smUserName;
 
-	/** The sm request expiry date. */
-	private String smRequestExpiryDate;
+	/** The sm request expiry renewal date. */
+	private String smRequestExpiryRenewalDate;
 
 	/** The sm profile status. */
 	private String smProfileStatus;
@@ -3130,22 +3130,22 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the sm request expiry date.
+	 * Gets the sm request expiry renewal date.
 	 * 
-	 * @return the smRequestExpiryDate
+	 * @return the smRequestExpiryRenewalDate
 	 */
-	public String getSmRequestExpiryDate() {
-		return smRequestExpiryDate;
+	public String getSmRequestExpiryRenewalDate() {
+		return smRequestExpiryRenewalDate;
 	}
 
 	/**
-	 * Sets the sm request expiry date.
+	 * Sets the sm request expiry renewal date.
 	 * 
-	 * @param smRequestExpiryDate
-	 *            the new sm request expiry date
+	 * @param smRequestExpiryRenewalDate
+	 *            the new sm request expiry renewal date
 	 */
-	public void setSmRequestExpiryDate(String smRequestExpiryDate) {
-		this.smRequestExpiryDate = smRequestExpiryDate;
+	public void setSmRequestExpiryRenewalDate(String smRequestExpiryRenewalDate) {
+		this.smRequestExpiryRenewalDate = smRequestExpiryRenewalDate;
 	}
 
 	/**
@@ -15582,8 +15582,8 @@ public class ReportBackingBean extends
 				|| (this.getFromDate() != null && this.getFromDate().toString() != ReportConst.EMPTY_VAL)
 				|| (this.getToDate() != null && this.getToDate().toString() != ReportConst.EMPTY_VAL)
 				|| StringUtils.isNotEmpty(this.getSmUserName())
-				|| (this.getSmRequestExpiryDate() != null && this
-						.getSmRequestExpiryDate().toString() != ReportConst.EMPTY_VAL)
+				|| (this.getSmRequestExpiryRenewalDate() != null && this
+						.getSmRequestExpiryRenewalDate().toString() != ReportConst.EMPTY_VAL)
 				|| StringUtils.isNotEmpty(this.getSmProfileStatus())
 				|| StringUtils.isNotEmpty(this.getSmThresholdFromYear())
 				|| StringUtils.isNotEmpty(this.getSmThresholdToYear())
@@ -15717,11 +15717,18 @@ public class ReportBackingBean extends
 				rptGenBean.setSmUserNameVar(ReportConst.AMP_SM_USER_NAME_EQ
 						+ this.getSmUserName());
 			}
-			if (StringUtils.isNotEmpty(this.getSmRequestExpiryDate())) {
+
+			
+			if (StringUtils.isNotEmpty(this.getSmRequestExpiryRenewalDate())) {
 				rptGenBean
-						.setSmRequestExpiryDateVar(ReportConst.AMP_SM_REQ_ENQ_DATE_EQ
-								+ this.getSmRequestExpiryDate());
+						.setSmRequestExpiryRenewalDateVar(ReportConst.AMP_SM_REQ_ENQ_DATE_EQ
+								+ this.getSmRequestExpiryRenewalDate());
 			}
+			
+			
+			
+			
+			
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			if ((this.getFromDate() != null)
@@ -16189,7 +16196,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getSmThresholdFromYearVar()
 						+ rptGenBean.getSmThresholdToYearVar()
 						+ rptGenBean.getSmUserNameVar()
-						+ rptGenBean.getSmRequestExpiryDateVar()
+						+ rptGenBean.getSmRequestExpiryRenewalDateVar()
 						+ rptGenBean.getSmProcessingOfficerNameVar()
 						+ rptGenBean.getApplicationTypeTotVar()
 						+ rptGenBean.getStateTotVar()
@@ -18148,7 +18155,7 @@ public class ReportBackingBean extends
 			this.setSmCancellationBy(null);
 			this.setSmThresholdFromYear(null);
 			this.setSmThresholdToYear(null);
-			this.setSmRequestExpiryDate(null);
+			this.setSmRequestExpiryRenewalDate(null);
 			this.setSmUserName(null);
 			this.setSmProfileStatus(null);
 			this.setSmGSTRegisteredStatus(null);
@@ -19604,22 +19611,29 @@ public class ReportBackingBean extends
 		this.getManagedBean().setRptGenBean(rptGenBean);
 		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
 		this.getManagedBean().getRptGenBean().setSmSoftCertExpDateView(false);
+		this.getManagedBean().getRptGenBean().setSmSoftCertRenewalDateView(false);
 		this.getManagedBean().getRptGenBean().setSmSoftCertReqDateView(false);
 
-		if (StringUtils.isNotEmpty(this.getSmRequestExpiryDate())) {
-			if (this.getSmRequestExpiryDate().equals("R")) {
+		if (StringUtils.isNotEmpty(this.getSmRequestExpiryRenewalDate())) {
+			if (this.getSmRequestExpiryRenewalDate().equals("R")) {
 				this.getManagedBean().getRptGenBean()
 						.setSmNonMandatoryDateView(true);
 				this.getManagedBean().getRptGenBean()
 						.setSmSoftCertReqDateView(true);
-			} else if (this.getSmRequestExpiryDate().equals("E")) {
+			} else if (this.getSmRequestExpiryRenewalDate().equals("E")) {
 				this.getManagedBean().getRptGenBean()
 						.setSmNonMandatoryDateView(true);
 				this.getManagedBean().getRptGenBean()
 						.setSmSoftCertExpDateView(true);
+			} else if (this.getSmRequestExpiryRenewalDate().equals("N")) {
+				this.getManagedBean().getRptGenBean()
+				.setSmNonMandatoryDateView(true);
+				this.getManagedBean().getRptGenBean()
+				.setSmSoftCertRenewalDateView(true);
 			}
+		
 		} else {
-			this.setSmRequestExpiryDate("R");
+			this.setSmRequestExpiryRenewalDate("R");
 			this.getManagedBean().getRptGenBean()
 					.setSmNonMandatoryDateView(true);
 			this.getManagedBean().getRptGenBean()
