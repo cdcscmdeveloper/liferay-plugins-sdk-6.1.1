@@ -87,7 +87,7 @@
 								<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}" 
 									disabled="#{!(isSecretaryUser or
-													isBPKTaskAndClaimed) or suppFinalizationBackingBean.managedBean.procCategoryMedicine or 
+													isBPKTaskAndClaimed) or itemOnly or 
 														suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
 													( isQTStatusReFinalized and 
 														(suppFinalizationBackingBean.managedBean.scQt.zonal or 
