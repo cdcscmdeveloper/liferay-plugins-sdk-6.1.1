@@ -526,6 +526,9 @@ public class SupplierManagementConst {
 	// PM Cert body
 	public static final String PM_CERT_BODY_OTHERS = "LL";
 
+	// delete pending application reason
+	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
+
 	// Pm category facility types
 	public static final long CATEGORY_TYPE_ID_TRANSPORTATION = 203;
 	public static final long CATEGORY_TYPE_ID_WORKSHOP = 204;
@@ -959,7 +962,7 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_PODEC() {
 		return SM_APPL_PAGE_TYPE_PODEC;
 	}
-	
+
 	public String getSM_APPL_PAGE_TYPE_POINQUIRY() {
 		return SM_APPL_PAGE_TYPE_POINQUIRY;
 	}
