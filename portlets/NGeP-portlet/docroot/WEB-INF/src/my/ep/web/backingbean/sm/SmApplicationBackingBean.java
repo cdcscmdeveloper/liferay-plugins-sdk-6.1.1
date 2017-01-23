@@ -51,6 +51,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
@@ -82,6 +83,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -2278,20 +2280,34 @@ public class SmApplicationBackingBean extends
 	 * Verify selected rejection reason
 	 */
 	public void verifySelectedRejectReasons() {
-		getManagedBean().setRejectReasonReqd(false);
-
-		if (getManagedBean().getReasonId() != null) {
-			for (Long resId : getManagedBean().getReasonId()) {
-				if (resId.compareTo(getManagedBean()
-						.getRejectionOtherReasonId()) == 0) {
-					getManagedBean().setRejectReasonReqd(true);
-					break;
-				}
+		getManagedBean().setRejectReasonReqd(isDpaOthersSelected());
+		if (!getManagedBean().isRejectReasonReqd()) {
+			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+		}
+	}
+	
+	/**
+	 * Return true or false whether there is Others selected in Delete Pending
+	 * Application Reason
+	 * 
+	 * @return boolean
+	 */
+	private boolean isDpaOthersSelected() {
+		boolean retVal = false;
+		for (Long reasonId : getManagedBean().getReasonId()) {
+			ReasonReqDTO reqDTO = new ReasonReqDTO();
+			reqDTO.setReasonId(reasonId);
+			PmReason reason = SmServiceLookup.getReasonSO()
+					.retrieveReasonById(reqDTO).getPmReason();
+			if (reason != null
+					&& !StringUtils.isBlank(reason.getReasonCode())
+					&& reason.getReasonCode().equals(
+							SupplierManagementConst.DPA_REASON_OTHERS)) {
+				retVal = true;
+				break;
 			}
 		}
-		if (!getManagedBean().isRejectReasonReqd()) {
-			getManagedBean().setApplnRejectionRemarks("");
-		}
+		return retVal;
 	}
 
 	/**
@@ -10443,6 +10459,7 @@ public class SmApplicationBackingBean extends
 		}
 		return retVal;
 	}
+
 
 	/**
 	 * Get whether address fields is mandatory for role staff
