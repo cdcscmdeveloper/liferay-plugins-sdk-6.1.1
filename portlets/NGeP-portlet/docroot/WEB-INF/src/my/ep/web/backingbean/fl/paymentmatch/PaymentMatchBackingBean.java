@@ -873,7 +873,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						getManagedBean().setSubSetiaCode((subSetiaCode));
 						getManagedBean().setSetiaCode(childData.getPmSubSetia().getSetiaCode());
 						getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
-						getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingType().getParameterCode());
+						getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingTypeValue());
 					}
 				}
 			}

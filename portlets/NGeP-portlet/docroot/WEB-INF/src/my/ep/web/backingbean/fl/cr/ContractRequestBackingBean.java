@@ -3443,7 +3443,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().getPmSubSetia().setSubSetiaCode("");
 			getManagedBean().getPmSubSetia().setSetiaCode("");
 			getManagedBean().getPmSubSetia().setProjectCode("");
-			getManagedBean().getPmSubSetia().setFinancingType(null);
+			getManagedBean().getPmSubSetia().setFinancingTypeValue(null);
 		}
 		getManagedBean().setPmPrgActivity(null);
 
