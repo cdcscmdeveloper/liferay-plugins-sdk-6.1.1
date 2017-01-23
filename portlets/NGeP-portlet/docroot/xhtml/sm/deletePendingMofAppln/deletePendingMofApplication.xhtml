@@ -17,19 +17,8 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:panel
-			header="#{lbl['lbl.sm.pending.mof.delete']} - #{backingBean.managedBean.smAppl.applNo}">
+		<p:panel header="#{lbl['lbl.sm.pending.mof.delete']} - #{backingBean.managedBean.smAppl.applNo}">
 
-			<!-- <div>
-
-				<h4
-					style="color: blue; text-decoration: underline; text-align: center;">
-					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
-					<h:outputText value="Delete Pending MOF Application" />
-					<h:outputText value=" " />
-
-				</h4>
-			</div> -->
 			<br />
 			<table style="width: 100%;">
 				<tr>
@@ -44,23 +33,23 @@
 					<td><p:inputText value="#{lbl['lbl.sm.mofReg.headerLbl']}"
 							readonly="true" disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}"
-							size="35" /> <p:inputText
+							size="60" /> <p:inputText
 							value="#{lbl['lbl.sm.renewMof.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
-							size="35" /> <p:inputText
+							size="60" /> <p:inputText
 							value="#{lbl['lbl.sm.updateMof.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'U'}"
-							size="35" /> <p:inputText
+							size="60" /> <p:inputText
 							value="#{lbl['lbl.sm.bumi.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'B'}"
-							size="35" /> <p:inputText
+							size="60" /> <p:inputText
 							value="#{lbl['lbl.sm.addnlCat.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'A'}"
-							size="35" /></td>
+							size="60" /></td>
 
 				</tr>
 				<tr>
@@ -77,56 +66,52 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.current.status']} : " /></td>
 					<td><p:inputText readonly="true"
 							value="#{backingBean.managedBean.currentStatus}" disabled="true"
-							size="35" /></td>
+							size="60" /></td>
 
 				</tr>
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
-							value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
+							value="#{lbl['lbl.sm.del.pending.appl.reasons']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 
 					<td><p:selectManyMenu showCheckbox="true"
-							id="applRejectSelBox" required="true"
-							label="#{lbl['lbl.sm.rejection.reasons']}"
+							id="applRejectSelBox" required="#{!empty param['validate']}"
+							label="#{lbl['lbl.sm.del.pending.appl.reasons']}"
 							value="#{backingBean.managedBean.reasonId}"
 							style="height:200px;width:750px;">
 							<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
 								var="res" itemLabel="#{res.reasonDesc}"
 								itemValue="#{res.pmReason.reasonId}" />
-							<p:ajax update="delPendRejRemarksPanelTst" event="change"
-								process="applRejectSelBox"
+							<p:ajax update="@form" event="change" process="applRejectSelBox"
 								listener="#{backingBean.verifySelectedRejectReasons()}" />
 						</p:selectManyMenu> <p:message id="applRejectSelBoxMsg" for="applRejectSelBox"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-			</table>
-			<p:outputPanel id="delPendRejRemarksPanelTst">
-				<table style="width: 100%; margin-top: 10px;">
+				<p:outputPanel rendered="#{backingBean.managedBean.rejectReasonReqd}">
 					<tr>
-						<td style="width: 14.5%;"><p:outputLabel
-								value="#{lbl['lbl.sm.reason']} : "
-								rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
-								value="*" styleClass="mandatory"
-								rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+						<td style="vertical-align: top"><p:outputLabel
+								value="#{lbl['lbl.sm.reason']} : " /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:inputTextarea cols="122"
 								style="margin-bottom : 5px;width: 75%;" rows="5"
 								required="#{backingBean.managedBean.rejectReasonReqd}"
-								id="delPendResn" label="#{lbl['lbl.sm.reason']}"
-								rendered="#{backingBean.managedBean.rejectReasonReqd}"
+								id="delPendResn" label="#{lbl['lbl.sm.reason']}" 
 								value="#{backingBean.managedBean.supplierRemarks}"
 								maxlength="2500"
 								validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}">
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="delPendResnMsg" for="delPendResn" display="icon" /></td>
-
+	
 					</tr>
-				</table>
-			</p:outputPanel>
+				</p:outputPanel>
+			</table>
+			
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{backingBean.onDisplayConfirmDelPending}"
-					partialSubmit="true" update="@([id$=Msg])" />
-
+					partialSubmit="true" update="@([id$=Msg])" >
+					<f:param name="validate" value="true" />
+				</p:commandButton>
 			</div>
 		</p:panel>
 
