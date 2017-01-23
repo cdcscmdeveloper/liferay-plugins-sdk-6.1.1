@@ -36,6 +36,17 @@
 				</tr>
 			</p:outputPanel>
 		</table>
+		
+		<div class="nav-wrapper" align="justify">
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
+				update="@form" style="float:right;"/>
+			
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="left;"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+				action="#{selfRequestSupplierAdminBackingBean.navigateToPersonnel}" />
+		</div>
 	
 	</p:panel>
 

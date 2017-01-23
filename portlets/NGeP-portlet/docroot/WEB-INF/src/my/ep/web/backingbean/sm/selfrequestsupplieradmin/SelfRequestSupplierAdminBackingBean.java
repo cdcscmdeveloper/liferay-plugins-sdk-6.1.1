@@ -1,12 +1,11 @@
 package my.ep.web.backingbean.sm.selfrequestsupplieradmin;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-
-import org.apache.commons.lang3.StringUtils;
 
 import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
 import my.ep.helper.EntityHelper;
@@ -20,6 +19,8 @@ import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdmi
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang3.StringUtils;
+
 @ManagedBean(name = "selfRequestSupplierAdminBackingBean")
 @RequestScoped
 public class SelfRequestSupplierAdminBackingBean extends
@@ -30,7 +31,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 	 */
 	private static final long serialVersionUID = 4774616656344235966L;
 
-	private static final String COMPANY_PAGE = "1";
+	private static final String COMPANY_VALIDATION_PAGE = "1";
 	private static final String PERSONNEL_PAGE = "2";
 
 	public void preRender() {
@@ -42,15 +43,18 @@ public class SelfRequestSupplierAdminBackingBean extends
 	}
 
 	public void navigateToCompanyInfo() {
-		getManagedBean().setPage(COMPANY_PAGE);
+		getManagedBean().setPage(COMPANY_VALIDATION_PAGE);
 		getManagedBean().setSupplier(new SmSupplier());
 	}
 
+	public void navigateToPersonnel() {
+		getManagedBean().setPage(PERSONNEL_PAGE);
+	}
+
 	public void onBlurMofNo() {
-		String mofStatusMsg = SmCommonUtil.getMessage(
-				"lbl.sm.selfrequest.mofstatus.notvalid.expired", null);
-		String suppAdminStatusMsg = SmCommonUtil.getMessage(
-				"lbl.sm.selfrequest.suppadmin.not.appointed", null);
+		String mofStatusMsg = "lbl.sm.selfrequest.msg.mofstatus.notvalid.expired";
+		String suppAdminStatusMsg = "lbl.sm.selfrequest.msg.suppadmin.not.appointed";
+		String suppAdminName = "lbl.sm.selfrequest.msg.suppadmin.none";
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
 		reqDTO.setMofNo(getManagedBean().getMofNo());
 		getManagedBean().setSupplier(
@@ -62,10 +66,16 @@ public class SelfRequestSupplierAdminBackingBean extends
 				.get(0);
 
 		if (mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-				&& mofAcc.getExpDate() != null
-				&& mofAcc.getExpDate().after(new Date())) {
-			mofStatusMsg = SmCommonUtil.getMessage(
-					"lbl.sm.selfrequest.mofstatus.notvalid.expired", null);
+				&& mofAcc.getExpDate() != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(mofAcc.getExpDate());
+			c.add(Calendar.YEAR, 1);
+			Date expiryDate = c.getTime();
+
+			// check if expire date less than a year
+			if (expiryDate.after(new Date())) {
+				mofStatusMsg = "lbl.sm.selfrequest.msg.mofstatus.valid";
+			}
 		}
 
 		// set supplier admin status
@@ -83,11 +93,62 @@ public class SelfRequestSupplierAdminBackingBean extends
 										RoleCode.BASIC_SUPPLIER_ADMIN.value()) || per
 								.getEpRole().equals(
 										RoleCode.MOF_SUPPLIER_ADMIN.value())))) {
-					suppAdminStatusMsg = SmCommonUtil.getMessage(
-							"lbl.sm.selfrequest.suppadmin.appointed", null);
+					suppAdminStatusMsg = "lbl.sm.selfrequest.msg.suppadmin.appointed";
+					suppAdminName = per.getName();
 				}
 			}
 		}
+
+		// set full alert message
+		StringBuilder fullMsg = new StringBuilder();
+		fullMsg.append(
+				SmCommonUtil.getMessage("lbl.sm.selfrequest.msg.alert", null))
+				.append("<br />");
+		fullMsg.append(
+				SmCommonUtil.getMessage(
+						"lbl.sm.selfrequest.msg.status.as.below",
+						new String[] { getManagedBean().getMofNo() })).append(
+				"<br />");
+
+		// check if mof status is not valid
+		if (mofStatusMsg
+				.equals("lbl.sm.selfrequest.msg.mofstatus.notvalid.expired")) {
+			fullMsg.append(SmCommonUtil.getMessage(
+					"lbl.sm.selfrequest.msg.click.newreg", null));
+		}
+		// if mof status is valid
+		else {
+
+			fullMsg.append(SmCommonUtil.getMessage(
+					"lbl.sm.selfrequest.msg.mofstatus",
+					new String[] { mofStatusMsg }));
+			fullMsg.append(SmCommonUtil.getMessage(
+					"lbl.sm.selfrequest.msg.suppadmin.status",
+					new String[] { suppAdminStatusMsg }));
+			fullMsg.append(SmCommonUtil.getMessage(
+					"lbl.sm.selfrequest.msg.suppadmin.name.appointed",
+					new String[] { suppAdminName }));
+
+			// if supp admin not assigned
+			if (suppAdminStatusMsg
+					.equals("lbl.sm.selfrequest.msg.suppadmin.not.appointed")) {
+				fullMsg.append(SmCommonUtil.getMessage(
+						"lbl.sm.selfrequest.msg.click.proceed", null));
+			}
+
+			// if supp admin already assigned
+			else {
+				fullMsg.append(SmCommonUtil.getMessage(
+						"lbl.sm.selfrequest.msg.click.login", null));
+			}
+		}
+	}
+
+	public void redirectToMainPage() {
+		String url = SmCommonUtil.getBasePortalUrl();
+		url = StringUtils.isBlank(url) ? SmCommonUtil
+				.getBasePortalAppUrlFromProperties() : url;
+		SmCommonUtil.redirectToExternalUrl(url);
 	}
 
 }
