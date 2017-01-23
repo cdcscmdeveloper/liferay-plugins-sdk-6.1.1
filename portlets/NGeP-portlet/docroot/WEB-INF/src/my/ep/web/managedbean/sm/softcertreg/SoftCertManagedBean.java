@@ -59,6 +59,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private boolean allAuthSuppUserAlreadyRequested;
 	private boolean basicAppl;
 	private PmDigiSign digiSign;
+	private String gstPercentageLabel;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -321,6 +322,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setDigiSign(PmDigiSign digiSign) {
 		this.digiSign = digiSign;
+	}
+
+	public String getGstPercentageLabel() {
+		return gstPercentageLabel;
+	}
+
+	public void setGstPercentageLabel(String gstPercentageLabel) {
+		this.gstPercentageLabel = gstPercentageLabel;
 	}
 
 }
