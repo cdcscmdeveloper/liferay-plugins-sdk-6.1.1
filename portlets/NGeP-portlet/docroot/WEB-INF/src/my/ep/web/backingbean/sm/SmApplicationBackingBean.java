@@ -2285,7 +2285,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
 		}
 	}
-	
+
 	/**
 	 * Return true or false whether there is Others selected in Delete Pending
 	 * Application Reason
@@ -7247,7 +7247,7 @@ public class SmApplicationBackingBean extends
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
+		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
 		RequestContext.getCurrentInstance()
 				.execute("submitApprvrDialog.show()");
@@ -10459,7 +10459,6 @@ public class SmApplicationBackingBean extends
 		}
 		return retVal;
 	}
-
 
 	/**
 	 * Get whether address fields is mandatory for role staff
