@@ -946,7 +946,7 @@
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName"
-						value="financingType.pmParameterDescs[0].codeName" />
+ 						value="financingTypeValue" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.fl.cp" />

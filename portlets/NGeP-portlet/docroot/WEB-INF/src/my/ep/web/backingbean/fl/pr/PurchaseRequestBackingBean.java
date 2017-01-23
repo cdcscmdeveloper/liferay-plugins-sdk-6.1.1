@@ -2387,7 +2387,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 			reqDTO.setSubSetiaId(subSetiaId);
 			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetia(reqDTO);
-			getManagedBean().setFinancingTypeCode(resDTO.getPmSubSetia().getFinancingType().getParameterCode());
+			getManagedBean().setFinancingTypeCode(resDTO.getPmSubSetia().getFinancingTypeValue());
 		}
 	}
 	
@@ -2931,7 +2931,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().getPmSubSetia().setSubSetiaCode("");
 			getManagedBean().getPmSubSetia().setSetiaCode("");
 			getManagedBean().getPmSubSetia().setProjectCode("");
-			getManagedBean().getPmSubSetia().setFinancingType(null);
+			getManagedBean().getPmSubSetia().setFinancingTypeValue(null);
 		}
 		getManagedBean().setPmPrgActivity(null);
 		if(null != getManagedBean().getPmVoteFund()){

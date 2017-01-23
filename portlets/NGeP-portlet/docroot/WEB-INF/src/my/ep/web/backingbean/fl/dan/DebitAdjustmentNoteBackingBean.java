@@ -273,7 +273,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 						getManagedBean().setSetiaCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getSetiaCode());
 						getManagedBean().setProjectCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getProjectCode());
 					}
-					getManagedBean().setFinancingTypeCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
+					getManagedBean().setFinancingTypeCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getFinancingTypeValue());
 				}
 			}
 		}
