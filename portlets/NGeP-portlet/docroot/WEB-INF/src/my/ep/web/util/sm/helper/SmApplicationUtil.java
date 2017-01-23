@@ -2681,6 +2681,12 @@ public class SmApplicationUtil {
 	 */
 	public static void validateCategoryAndDocsDecision(
 			SmApplicationManagedBean managedBean) {
+		validateCategoriesDecision(managedBean);
+		validateSupportingDocsDecision(managedBean);
+	}
+
+	public static void validateCategoriesDecision(
+			SmApplicationManagedBean managedBean) {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -2698,8 +2704,6 @@ public class SmApplicationUtil {
 
 			}
 		}
-		validateSupportingDocsDecision(managedBean);
-
 	}
 
 	/**
