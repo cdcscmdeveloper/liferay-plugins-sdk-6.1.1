@@ -3266,6 +3266,10 @@ public class SimpleQuoteBackingBean extends
 							for (TreeNode treeNode : removedList) {
 								List<TplSpecZoneLoc> locationDTOs = getLocations(treeNode);
 
+								tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
+								if (tplSpecZoneDtl.getPanelZone() != null) {
+									deletePanelItemSuppliers(tplSpecZoneDtl);
+								}
 								deleteStateOrDivOrDist(tplSpecZoneDtl,
 										locationDTOs);
 							}
