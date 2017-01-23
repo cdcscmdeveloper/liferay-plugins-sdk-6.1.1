@@ -6,6 +6,11 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
+<style type="text/css">
+.columnLineBreak {
+    white-space: normal;
+}
+</style>
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
 		<div>
 		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.panel.item']}" escape="false"/><br/>
@@ -73,7 +78,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								          </f:facet>
 								         
 								          <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-								          	<p:inputTextarea id="panelItemGroupTxtAreaId" rows="2" cols="15" readonly="true" autoResize="false" style="resize:none;" 
+								          	<p:inputTextarea id="panelItemGroupTxtAreaId" rows="2" cols="10" readonly="true" autoResize="false" style="resize:none;" 
 						                          value="#{panelItemsVar.ctPanelItemGroup.groupName}" />					
 					                             <ac:lov id="itemGroupLovId" uiMode="link" 
 					                            	lovId="CT_PANEL_ITEM_GROUP" headerText="#{lbl['lbl.ct.item.group']}"
@@ -102,7 +107,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							             </c:if>
 				                   </p:column>
               
-                                   <p:column style="width:16%;white-space:normal;" styleClass="column-align-center">
+                                   <p:column style="width:16%;" styleClass="column-align-center">
                                        <f:facet name="header">
 			                               <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required" />
 			                        		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.panel.item.name']}" />
@@ -125,9 +130,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					                   </p:commandLink>
                                   </p:column>
 			  
-			                      <p:column styleClass="column-align-center" style="width:15%;white-space:pre-line">
+			                      <p:column styleClass="column-align-center" style="width:10%;">
 				  	                    <f:facet name="header" >
-						                    <h:outputText value="#{lbl['lbl.ct.uom']}"  styleClass="required"  />
+						                    <h:outputText value="#{lbl['lbl.ct.uom']}"  styleClass="required columnLineBreak"   />
 	                            	    </f:facet>
 	                            	        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 			                            	    <p:inputTextarea id="panelItemUomTxtAreaId" rows="2"  cols="7" readonly="true" 
