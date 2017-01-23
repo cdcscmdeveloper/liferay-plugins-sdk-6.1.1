@@ -200,6 +200,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		updateAmount();
 		setSoftCertPaymentBpmTask();
 		setSoftcertApplyFor();
+		getManagedBean().setGstPercentageLabel(
+				SmCommonUtil.getMessage("lbl.sm.gst.percent",
+						new String[] { getManagedBean().getGstRate().toString() }));
+		
 		getManagedBean().setTargetPage(PAYMENT_PAGE);
 	}
 
