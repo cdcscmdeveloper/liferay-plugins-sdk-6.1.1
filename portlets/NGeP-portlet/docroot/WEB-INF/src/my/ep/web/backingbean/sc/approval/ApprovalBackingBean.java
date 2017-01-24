@@ -509,6 +509,11 @@ public class ApprovalBackingBean extends
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
 			
+			if (getManagedBean().getQt().isBsvRequired()) {
+				QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+				qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();	
+			}
+			
 			ScQt scQt = getManagedBean().getQt();
 			// Set New publish date for update publish date. To solve issue on publish date reset back to original time during primefaces calender update phase.
 			scQt.setNewPublishDate(scQt.getPublishDate());
