@@ -105,18 +105,12 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		if(zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SABAH) 
 				|| zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SARAWAK)){
 			for(SmApplSupportDoc applSuppDocSbhSrk : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-				if(applSuppDocSbhSrk.getSmApplDocFiles().size() > 0){
-					if(!applSuppDocSbhSrk.isReceived()){
+				if(!applSuppDocSbhSrk.isReceived()){
+					if(applSuppDocSbhSrk.getPmDocument().isMandatory()){
 						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
 					}
-				}else{
-					if(!applSuppDocSbhSrk.isReceived()){
-						if(applSuppDocSbhSrk.getPmDocument().isMandatory()){
-							this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
-						}
-					}
 				}
-				
+
 				this.getManagedBean().getSupportingDocMap().put(applSuppDocSbhSrk.getApplSupportDocId(), applSuppDocSbhSrk);
 			}
 		}else{
