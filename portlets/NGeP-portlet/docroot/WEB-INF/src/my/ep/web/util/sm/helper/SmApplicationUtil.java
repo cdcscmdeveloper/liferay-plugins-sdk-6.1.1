@@ -11177,6 +11177,9 @@ public class SmApplicationUtil {
 				cat.setCategoryL3Name(l3.getCategoryName());
 			}
 		}
+		if(cat.getApplRefId() == null) {
+			cat.setApplRefId(cat.getSmAppl().getApplId());
+		}
 	}
 
 	/**
