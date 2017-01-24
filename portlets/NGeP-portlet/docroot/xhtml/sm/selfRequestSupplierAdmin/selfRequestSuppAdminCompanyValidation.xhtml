@@ -17,10 +17,12 @@
 				<td>
 					<p:inputText id="mofNoId" value="#{selfRequestSupplierAdminBackingBean.managedBean.mofNo}"
 						size="35" required="true" maxlength="12" label="#{lbl['lbl.sm.selfrequest.mof.number']}" >
-					<p:ajax event="blur" process="@this" update="compNameOutPanelId" partialSubmit="true" 
-						listener="#{selfRequestSupplierAdminBackingBean.onBlurMofNo()}"/>
+					<p:ajax event="blur" process="@this" update="@form" partialSubmit="true" 
+						listener="#{selfRequestSupplierAdminBackingBean.onBlurMofNo(selfRequestSupplierAdminBackingBean.managedBean.mofNo)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</p:inputText>
-					<p:message id="mofNoIdMsg" for="mofNoId" showSummary="true" showDetail="false" display="icon" />
+					<p:messages for="mofNoId" showDetail="true" closable="true" showSummary="false" escape="false"/>
+					<p:messages for="mofNoInvalid" showDetail="true" closable="true" showSummary="false" escape="false"/>
 				</td>
 			</tr>
 			<p:outputPanel id="compNameOutPanelId">
@@ -37,15 +39,15 @@
 			</p:outputPanel>
 		</table>
 		
-		<div class="nav-wrapper" align="justify">
+		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 				action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
-				update="@form" style="float:right;"/>
+				update="@form" />
 			
-			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="left;"
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-				action="#{selfRequestSupplierAdminBackingBean.navigateToPersonnel}" />
+				action="#{selfRequestSupplierAdminBackingBean.navigateToSuppAdmin}" />
 		</div>
 	
 	</p:panel>
