@@ -848,34 +848,35 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				PmStatus status = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue());
 				if (status != null) {
 					ISearchResultBean<SmPersonnel> resultBean = null;
-					SmTaskReassignmentVO vo = null;
+					SmTaskReassignmentVO vo = getManagedBean().getTaskReassignmentVO();
 					List<String> roleList = new ArrayList<String>();
-					int reassignType = status.getReasssignType() != null ? status.getReasssignType() : 0;
+					int reassignType = status.getPmStatusTask().getReasssignType() != null ? status.getPmStatusTask().getReasssignType() : 0;
 							
 					String moduleCode = status.getModuleCode();
-					if (ModuleCodeConst.CONTRACT_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveCtTaskReassignmentDetails(task);
-					} else if (ModuleCodeConst.SUPPLIER_SELECTION
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveSourcingTaskReassignmentDetail(task);
-					} else if (ModuleCodeConst.ORDER_FULFILLMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveFLTaskReassignmentDetail(task);
-					}else if (ModuleCodeConst.PROCUREMENT_PLAN
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrievePpTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrieveCMTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.PROFILE_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = retrievePMTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
-							.equalsIgnoreCase(moduleCode)) {
-						vo = new SmTaskReassignmentVO();
+					if(vo == null){
+						if (ModuleCodeConst.CONTRACT_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveCtTaskReassignmentDetails(task);
+						} else if (ModuleCodeConst.SUPPLIER_SELECTION
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveSourcingTaskReassignmentDetail(task);
+						} else if (ModuleCodeConst.ORDER_FULFILLMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveFLTaskReassignmentDetail(task);
+						}else if (ModuleCodeConst.PROCUREMENT_PLAN
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrievePpTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrieveCMTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.PROFILE_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = retrievePMTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
+								.equalsIgnoreCase(moduleCode)) {
+							vo = new SmTaskReassignmentVO();
+						}
 					}
-					
 					if(vo != null){
 						getManagedBean().setTaskReassignmentVO(vo);
 						// 99 - MIXTURE(Sub Reassign Type)
