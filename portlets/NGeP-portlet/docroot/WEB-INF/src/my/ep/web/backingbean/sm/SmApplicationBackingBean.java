@@ -5622,6 +5622,10 @@ public class SmApplicationBackingBean extends
 	 *            - the personel type to define equity or not
 	 */
 	public void assignNewShareHolder() {
+		if (getManagedBean().getIdentificationTypes() == null) {
+			getManagedBean()
+					.setIdentificationTypes(getPmIdTypeDropdownValues());
+		}
 		getManagedBean().setPopupAction("N");
 		SmApplicationUtil.initNewSmPersonnel(getManagedBean(), currentTab);
 
