@@ -28,6 +28,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -174,6 +175,7 @@ import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
+import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -4285,6 +4287,60 @@ public class QTDetailBackingBean extends
 							log.error(e.getMessage());
 						}
 					} 
+				} else if (QTStatusConst.QT_PENDING_PUBLICATION.equals(currentStatusId)) {
+					if (amendMentBean != null) {						
+						List<String> enableFields = QTFieldMapper.getEnableFieldsByStatus(currentStatusId,
+								true, !getManagedBean().isReadOnly());
+						if (CollectionUtils.isNotEmpty(enableFields)) {
+							List<String> updatedQTFields = new ArrayList<String>();
+							
+							for (String enableField : enableFields) {
+								if (QTFieldConst.FIELD_QT_DOCUMENTS.equals(enableField)) {
+									QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(enableField);
+									if (valueBean != null && valueBean.getOldValue() != null) {
+										TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
+										tplDocBB.previewAction();
+										valueBean.setNewValue(tplDocBB.getManagedBean().getPreviewValue());
+										
+										if (valueBean.getNewValue() != null && !valueBean.getOldValue().equals(valueBean.getNewValue())) {
+											updatedQTFields.add(enableField);
+										}
+									}
+									
+								} else if (QTFieldConst.FIELD_QT_BSVDETAILS.equals(enableField)) {
+									List<ScQtBsv> scQtBsvs = qtDetails.getScQtBriefings();
+									if (CollectionUtils.isNotEmpty(scQtBsvs)) {
+										String[] bsvFields = QTFieldConst.BSV_FIELDS;
+										for (ScQtBsv scQtBsv : scQtBsvs) {
+											for (ScQtBsvDtl scQtBsvDtl : scQtBsv.getScQtBsvDtls()) {
+												String fieldPrefix = scQtBsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR;
+												for (String bsvField : bsvFields) {
+													QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(fieldPrefix + bsvField);
+													if (valueBean != null && !updatedQTFields.contains(enableField)) {
+														updatedQTFields.add(enableField);
+														break;	
+													}
+												}
+											}
+										}	
+									}
+									
+								} else {
+									QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(enableField);
+									if (valueBean != null) {
+										updatedQTFields.add(enableField);
+									}
+								}
+							}
+							
+							// regenerate documents based on qt field changes.
+							if (CollectionUtils.isNotEmpty(updatedQTFields)) {
+								for (String updatedQTField : updatedQTFields) {
+									new QTDocumentsBackingBean().reGenerateDocuments(qtDetails.getQtId(), updatedQTField);	
+								}
+							}
+						}
+					}
 				}
 				
 				String msgCode;

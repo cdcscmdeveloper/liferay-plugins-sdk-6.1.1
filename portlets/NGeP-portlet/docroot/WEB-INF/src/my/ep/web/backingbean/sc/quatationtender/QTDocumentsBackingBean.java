@@ -32,6 +32,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -53,6 +55,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
@@ -655,6 +658,7 @@ public class QTDocumentsBackingBean extends
 
 		String templateDocUrl = null;
 		try {
+			ScQt scQt = getManagedBean().getQt();
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 
@@ -675,12 +679,30 @@ public class QTDocumentsBackingBean extends
 				// save clone to db
 				docMaster = saveClonedTplDocMaster(scQtDocReport);
 			}
-			retriveTemplateDocParams(tplDocBB,getManagedBean().getQt());
+			retriveTemplateDocParams(tplDocBB, scQt);
 			this.getManagedBean().getScQtDocReportList().remove(index);
 			this.getManagedBean().getScQtDocReportList()
 					.add(index, this.getManagedBean().getScQtDocReport());
 			
 			templateDocUrl = tplDocBB.goToMaint(docMaster,this.isReadOnly());
+			
+			Long currentStatusId = scQt.getQtStatus().getStatusId();
+			if (!this.isReadOnly() && super.isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_PUBLICATION)) {
+				QtAmendMentBean amendMentBean = this.getManagedBean()
+						.getAmendMentBean();
+				if (null == amendMentBean) {
+					amendMentBean = new QtAmendMentBean();	
+					this.getManagedBean().setAmendMentBean(amendMentBean);
+				}
+				String key = QTFieldConst.FIELD_QT_DOCUMENTS;
+				QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(key);
+				if (valueBean == null) {
+					valueBean = new QtAmendMentValueBean();
+					amendMentBean.getValueMap().put(key, valueBean);
+				}
+				tplDocBB.previewAction();
+				valueBean.setOldValue(tplDocBB.getManagedBean().getPreviewValue());
+			}
 
 		} finally {
 		}
@@ -2635,7 +2657,7 @@ public class QTDocumentsBackingBean extends
 	 *             the exception
 	 */
 	public void reGenerateDocuments(Long qtId, String qtField) {
-		debugLogger("reGenerateDocuments");
+		debugLogger("reGenerateDocuments-->qtId: " + qtId + ", qtField: " + qtField);
 		
 		IQTDocumentSO qtDocumentSO;
 		try {
