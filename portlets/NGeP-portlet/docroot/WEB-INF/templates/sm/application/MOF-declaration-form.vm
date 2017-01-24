@@ -24,25 +24,25 @@ body {margin-top: 0px;margin-left: 0px;}
 
 
 
-.ft0{font: 11px 'Arial';line-height: 14px;}
-.ft1{font: bold 15px 'Arial';line-height: 18px;}
-.ft2{font: bold 13px 'Arial';line-height: 16px;}
-.ft3{font: 11px 'Arial';margin-left: 19px;line-height: 14px;}
-.ft4{font: 11px 'Arial';text-decoration: underline;line-height: 14px;}
-.ft5{font: 10px 'Arial';line-height: 13px;}
-.ft6{font: 10px 'Arial';margin-left: 19px;line-height: 13px;}
-.ft7{font: 10px 'Arial';text-decoration: underline;line-height: 13px;}
-.ft8{font: 10px 'Arial';margin-left: 12px;line-height: 13px;}
-.ft9{font: 1px 'Arial';line-height: 1px;}
-.ft10{font: 1px 'Arial';line-height: 5px;}
-.ft11{font: 1px 'Arial';line-height: 6px;}
-.ft12{font: 1px 'Arial';line-height: 7px;}
-.ft13{font: 9px 'Arial';line-height: 12px;}
-.ft14{font: 1px 'Arial';line-height: 8px;}
-.ft15{font: 1px 'Arial';line-height: 10px;}
-.ft16{font: 1px 'Arial';line-height: 4px;}
-.ft17{font: 11px 'Arial';line-height: 13px;}
-.ft18{font: 1px 'Arial';line-height: 13px;}
+.ft0{font: 11px 'sans-serif';line-height: 14px;}
+.ft1{font: bold 15px 'sans-serif';line-height: 18px;}
+.ft2{font: bold 13px 'sans-serif';line-height: 16px;}
+.ft3{font: 11px 'sans-serif';margin-left: 19px;line-height: 14px;}
+.ft4{font: 11px 'sans-serif';text-decoration: underline;line-height: 14px;}
+.ft5{font: 10px 'sans-serif';line-height: 13px;}
+.ft6{font: 10px 'sans-serif';margin-left: 19px;line-height: 13px;}
+.ft7{font: 10px 'sans-serif';text-decoration: underline;line-height: 13px;}
+.ft8{font: 10px 'sans-serif';margin-left: 12px;line-height: 13px;}
+.ft9{font: 1px 'sans-serif';line-height: 1px;}
+.ft10{font: 1px 'sans-serif';line-height: 5px;}
+.ft11{font: 1px 'sans-serif';line-height: 6px;}
+.ft12{font: 1px 'sans-serif';line-height: 7px;}
+.ft13{font: 9px 'sans-serif';line-height: 12px;}
+.ft14{font: 1px 'sans-serif';line-height: 8px;}
+.ft15{font: 1px 'sans-serif';line-height: 10px;}
+.ft16{font: 1px 'sans-serif';line-height: 4px;}
+.ft17{font: 11px 'sans-serif';line-height: 13px;}
+.ft18{font: 1px 'sans-serif';line-height: 13px;}
 
 .p0{text-align: right;padding-right: 78px;margin-top: 0px;margin-bottom: 0px;}
 .p1{text-align: left;padding-left: 79px;margin-top: 12px;margin-bottom: 0px;}
@@ -96,8 +96,8 @@ body {margin-top: 0px;margin-left: 0px;}
 .tr16{height: 13px;}
 .tr17{height: 32px;}
 
-.t0{width: 266px;margin-left: 71px;margin-top: 10px;font: 11px 'Arial';}
-.t1{width: 661px;margin-left: 61px;margin-top: 54px;font: 11px 'Arial';}
+.t0{width: 266px;margin-left: 71px;margin-top: 10px;font: 11px 'sans-serif';}
+.t1{width: 661px;margin-left: 61px;margin-top: 54px;font: 11px 'sans-serif';}
 
 </style>
 </head>
