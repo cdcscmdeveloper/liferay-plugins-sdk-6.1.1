@@ -3265,8 +3265,8 @@ public class SupplierFinalizationBackingBean extends
 							(getManagedBean().isInitialDecisionFwdToBPK() || 
 								(getManagedBean().isInitialDecisionFwdHighAuth() &&
 									(scQtFinalization.getHigherSecretary() != null &&
-										scQtFinalization.getHigherSecretary().getUserId()
-											.equals(loggedInUserId))))) {
+									   loggedInUserId.equals(
+											scQtFinalization.getHigherSecretary().getUserId()))))) {
 					scQtRecommend.setDisabled(false);
 				} else if (loggedInUserId.equals(
 								getManagedBean().getOriginalFinalizationSecretaryUserId())) {
