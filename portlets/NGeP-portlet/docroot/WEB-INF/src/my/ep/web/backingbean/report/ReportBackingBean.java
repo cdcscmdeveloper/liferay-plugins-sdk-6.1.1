@@ -4846,7 +4846,7 @@ public class ReportBackingBean extends
 	private String reportURL;
 
 	/** The constructed param string. */
-	private String constructedParamString;
+	private String constructedparamConstrString;
 
 	/** The report file name jsp. */
 	private String reportFileNameJSP;
@@ -6705,20 +6705,20 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the constructed param string.
 	 * 
-	 * @return the constructedParamString
+	 * @return the constructedparamConstrString
 	 */
-	public String getConstructedParamString() {
-		return constructedParamString;
+	public String getConstructedparamConstrString() {
+		return constructedparamConstrString;
 	}
 
 	/**
 	 * Sets the constructed param string.
 	 * 
-	 * @param constructedParamString
+	 * @param constructedparamConstrString
 	 *            the new constructed param string
 	 */
-	public void setConstructedParamString(String constructedParamString) {
-		this.constructedParamString = constructedParamString;
+	public void setConstructedparamConstrString(String constructedparamConstrString) {
+		this.constructedparamConstrString = constructedparamConstrString;
 	}
 
 	/**
@@ -14771,7 +14771,7 @@ public class ReportBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT)) {
 				generatePMReport();
 			}
-			if (StringUtils.isNotEmpty(constructedParamString)) {
+			if (StringUtils.isNotEmpty(constructedparamConstrString)) {
 				// try {
 				//getManagedBean().getRptGenBean().setGenerateButtonView(true);
 				// generateReportTimer();
@@ -14779,11 +14779,11 @@ public class ReportBackingBean extends
 
 				/*
 				 * 1.TO replace '%20' as in total white spacce Of
-				 * constructedParamString 2.Report Server(Linux Env) Consider
+				 * constructedparamConstrString 2.Report Server(Linux Env) Consider
 				 * white space as '%20'
 				 */
 
-				String spaceRemovalParameter = constructedParamString
+				String spaceRemovalParameter = constructedparamConstrString
 						.replaceAll(" ", "%20");
 				if (StringUtils.isNotEmpty(strLanguage)
 						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
@@ -14814,11 +14814,11 @@ public class ReportBackingBean extends
 				 * if (StringUtils.isNotEmpty(strLanguage) &&
 				 * (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 				 * fileGenerateReport(getManagedBean().getReportTitle(),
-				 * constructedParamString); } else if
+				 * constructedparamConstrString); } else if
 				 * (StringUtils.isNotEmpty(strLanguage) && (strLanguage
 				 * .equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 				 * fileGenerateReport(getManagedBean().getReportTitle(),
-				 * constructedParamString); }
+				 * constructedparamConstrString); }
 				 */
 
 				/*
@@ -14978,7 +14978,7 @@ public class ReportBackingBean extends
 				@Override
 				public void run() {
 					fileGenerateReport(getManagedBean().getReportTitle(),
-							constructedParamString);
+							constructedparamConstrString);
 				}
 			};
 			Future<?> f = service.submit(rnbl);
@@ -15006,7 +15006,7 @@ public class ReportBackingBean extends
 			@Override
 			public void run() {
 				fileGenerateReport(getManagedBean().getReportTitle(),
-						constructedParamString);
+						constructedparamConstrString);
 			}
 		});
 		thread.start();
@@ -15309,7 +15309,7 @@ public class ReportBackingBean extends
 
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getCtContractNoVar()
 						+ rptGenBean.getCtPhysicalContractNoVar()
@@ -15484,7 +15484,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getSmMandatoryCreatedFromYearVar()
 						+ rptGenBean.getSmMandatoryCreatedToYearVar()
@@ -15509,7 +15509,7 @@ public class ReportBackingBean extends
 		 * rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp()); if
 		 * ((rptGenBean.getUrlReportJSPName() != null) &&
 		 * (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
-		 * setConstructedParamString(ReportConst.AMP_REPORT_NAME +
+		 * setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME +
 		 * rptGenBean.getUrlReportJSPName() + rptGenBean.getReportValueIdVar() +
 		 * rptGenBean.getUserIdVar()); } else { throw new
 		 * EpException(MessageConst.ERROR_REPORT_780007); } }
@@ -16131,7 +16131,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getItemNameTotVar()
 						+ rptGenBean.getItemTypeTotVar()
@@ -16232,7 +16232,7 @@ public class ReportBackingBean extends
 		 * rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp()); if
 		 * ((rptGenBean.getUrlReportJSPName() != null) &&
 		 * (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
-		 * setConstructedParamString(ReportConst.AMP_REPORT_NAME +
+		 * setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME +
 		 * rptGenBean.getUrlReportJSPName() + rptGenBean.getReportValueIdVar() +
 		 * rptGenBean.getUserIdVar()); } else { throw new
 		 * EpException(MessageConst.ERROR_REPORT_780007); } } else
@@ -16597,7 +16597,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getQuotationIdTotVar()
 						+ rptGenBean.getEstimatedAmntTotVar()
@@ -17022,7 +17022,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getItemNameTotVar()
 						+ rptGenBean.getItemTypeTotVar()
@@ -17463,7 +17463,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getItemNameTotVar()
 						+ rptGenBean.getItemTypeTotVar()
@@ -17577,7 +17577,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getPpPTJVar()
 						+ rptGenBean.getPpMinistryVar()
@@ -17736,7 +17736,7 @@ public class ReportBackingBean extends
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getPmServiceTypeVar()
 						+ rptGenBean.getPmBusinessRegNoVar()
@@ -18753,8 +18753,15 @@ public class ReportBackingBean extends
 					if(i == 1){
 						isTempAccess = true;
 					}
+
+					paramConstrString = paramConstrString.replace("&", " ");
+					paramConstrString = paramConstrString.replaceAll("^\\s+", "");
+					paramConstrString = paramConstrString.replaceAll("\\s+$", "");
+					paramConstrString = paramConstrString.replaceAll("(=)","$1\"");
+					paramConstrString = paramConstrString.replaceAll("( )","\"$1");
+					paramConstrString = paramConstrString + "\"";
 					
-					StringBuffer reportUrl = new StringBuffer(paramConstrString.replace("&", " "));
+					StringBuffer reportUrl = new StringBuffer(paramConstrString);
 					
 					PmUser user = new FacesScopes().getUserSessionBean();
 					new LogKey().setUserId(user.getUserId());
