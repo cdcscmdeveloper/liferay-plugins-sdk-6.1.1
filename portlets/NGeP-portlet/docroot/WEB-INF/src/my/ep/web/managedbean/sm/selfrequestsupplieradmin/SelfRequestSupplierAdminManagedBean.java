@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -11,17 +12,18 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "selfRequestSupplierAdminMB")
 @SessionScoped
-public class SelfRequestSupplierAdminManagedBean extends
-		BaseManagedBean {
+public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3794823811578323532L;
 	private String mofNo;
+	private String icNo;
+	private Long selectedPersonnelId;
+	private List<SelectItem> personnelItems;
 	private SmSupplier supplier;
 	private SmPersonnel selectedAdmin;
-	private List<SmPersonnel> personnelList;
 	private boolean agreeTC;
 	private String page;
 
@@ -39,14 +41,6 @@ public class SelfRequestSupplierAdminManagedBean extends
 
 	public void setSelectedAdmin(SmPersonnel selectedAdmin) {
 		this.selectedAdmin = selectedAdmin;
-	}
-
-	public List<SmPersonnel> getPersonnelList() {
-		return personnelList;
-	}
-
-	public void setPersonnelList(List<SmPersonnel> personnelList) {
-		this.personnelList = personnelList;
 	}
 
 	public boolean isAgreeTC() {
@@ -71,6 +65,30 @@ public class SelfRequestSupplierAdminManagedBean extends
 
 	public void setPage(String page) {
 		this.page = page;
+	}
+
+	public String getIcNo() {
+		return icNo;
+	}
+
+	public void setIcNo(String icNo) {
+		this.icNo = icNo;
+	}
+
+	public List<SelectItem> getPersonnelItems() {
+		return personnelItems;
+	}
+
+	public void setPersonnelItems(List<SelectItem> personnelItems) {
+		this.personnelItems = personnelItems;
+	}
+
+	public Long getSelectedPersonnelId() {
+		return selectedPersonnelId;
+	}
+
+	public void setSelectedPersonnelId(Long selectedPersonnelId) {
+		this.selectedPersonnelId = selectedPersonnelId;
 	}
 
 }

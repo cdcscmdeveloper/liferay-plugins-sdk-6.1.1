@@ -56,11 +56,11 @@
 		</p:selectBooleanCheckbox>
 		#{lbl['lbl.sm.selfrequest.agreed.tnc']}
 		
-		<div class="nav-wrapper" align="justify">
+		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
-				onclick="clickLogout();" style="float:right;"/>
+				onclick="clickLogout();" />
 			
-			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="left;"
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 				disabled="#{!selfRequestSupplierAdminBackingBean.managedBean.agreeTC}" 
 				action="#{selfRequestSupplierAdminBackingBean.navigateToCompanyInfo}" />
