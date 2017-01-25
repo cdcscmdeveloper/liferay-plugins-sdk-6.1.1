@@ -70,7 +70,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private String termsConditions;
 
 	/** The selected supplier branch name. */
-	private String selectedSupplierBranchName;
+	private Long supplierBranchId;
 
 	/** The attachment doc type. */
 	private String attachmentDocType;
@@ -404,25 +404,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setTermsConditions(String termsConditions) {
 		this.termsConditions = termsConditions;
-	}
-
-	/**
-	 * Gets the selected supplier branch name.
-	 * 
-	 * @return the selectedSupplierBranchName
-	 */
-	public String getSelectedSupplierBranchName() {
-		return selectedSupplierBranchName;
-	}
-
-	/**
-	 * Sets the selected supplier branch name.
-	 * 
-	 * @param selectedSupplierBranchName
-	 *            the selectedSupplierBranchName to set
-	 */
-	public void setSelectedSupplierBranchName(String selectedSupplierBranchName) {
-		this.selectedSupplierBranchName = selectedSupplierBranchName;
 	}
 
 	/**
@@ -1703,6 +1684,18 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setFileTypePdf(String fileTypePdf) {
 		this.fileTypePdf = fileTypePdf;
 	}
-	
-	
+
+	/**
+	 * @return the supplierBranchId
+	 */
+	public Long getSupplierBranchId() {
+		return supplierBranchId;
+	}
+
+	/**
+	 * @param supplierBranchId the supplierBranchId to set
+	 */
+	public void setSupplierBranchId(Long supplierBranchId) {
+		this.supplierBranchId = supplierBranchId;
+	}
 }
