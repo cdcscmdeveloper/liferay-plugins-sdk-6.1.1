@@ -697,11 +697,13 @@ public class QTDocumentsBackingBean extends
 				String key = QTFieldConst.FIELD_QT_DOCUMENTS;
 				QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(key);
 				if (valueBean == null) {
+					// set the current html content into old value.
+					tplDocBB.previewAction();
 					valueBean = new QtAmendMentValueBean();
+					valueBean.setOldValue(tplDocBB.getManagedBean().getPreviewValue());
+					
 					amendMentBean.getValueMap().put(key, valueBean);
 				}
-				tplDocBB.previewAction();
-				valueBean.setOldValue(tplDocBB.getManagedBean().getPreviewValue());
 			}
 
 		} finally {
