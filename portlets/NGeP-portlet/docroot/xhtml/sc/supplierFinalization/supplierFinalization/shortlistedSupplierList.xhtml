@@ -119,6 +119,12 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
+				<p:commandLink oncomplete="preferenceMarginSuppDetailsPopup.show(); return false;"   rendered="#{!suppFinalizationBackingBean.managedBean.itemize and 
+								  			   	shortlistedSupp.proposalAmount ne null and 
+											  		!isRefinalizedAndBiddingAward}"
+								   process="@this" update="@([id$=preferenceMarginSuppDetailsPopupId])">
+							<f:setPropertyActionListener value="#{shortlistedSupp}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}"
 								  rendered="#{!suppFinalizationBackingBean.managedBean.itemize and 
 								  			   	shortlistedSupp.proposalAmount ne null and 
@@ -126,6 +132,7 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
 														CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
+					</p:commandLink>
 					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.offeredPrice}"
 								  rendered="#{suppFinalizationBackingBean.managedBean.itemize and 
 								  			  !isRefinalizedAndBiddingAward}">
@@ -263,6 +270,12 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
+				<p:commandLink oncomplete="preferenceMarginSuppDetailsPopup.show(); return false;"  rendered="#{!suppFinalizationBackingBean.managedBean.itemize and 
+								  			   	shortlistedSupp.proposalAmount ne null and 
+											  		!isRefinalizedAndBiddingAward}" 
+								   process="@this" update="@([id$=preferenceMarginSuppDetailsPopupId])">
+							<f:setPropertyActionListener value="#{shortlistedSupp}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />	
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}"
 								  rendered="#{!suppFinalizationBackingBean.managedBean.itemize and 
 								  			   	shortlistedSupp.proposalAmount ne null and 
@@ -270,6 +283,7 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
 														CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
+					</p:commandLink>
 					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.offeredPrice}"
 								  rendered="#{suppFinalizationBackingBean.managedBean.itemize and 
 								  			  !isRefinalizedAndBiddingAward}">

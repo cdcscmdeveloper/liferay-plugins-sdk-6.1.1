@@ -18,6 +18,14 @@
 				  value="#{consolidationReportBackingBean.checkProposalValidityDateReach(
 		     					consolidationReportBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
  <ui:param name="itemOnly" value="#{consolidationReportBackingBean.managedBean.scQt.evaluateBy == consolidationReportBackingBean.evalTypeItem() }" />
+ <ui:param name="isOneTier"
+			  value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier}" />
+	<ui:param name="isOneTierWithTechnical"
+			  value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier  
+			  			and consolidationReportBackingBean.managedBean.scQt.techEvaluationReq}" />
+	<ui:param name="isTwoTier"
+			  value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />	
+	<ui:param name="hasPresentationDemo" value="#{consolidationReportBackingBean.managedBean.scQt.demoRequired}" />
 		<p:messages id="consolidationReportErr" showDetail="true" showSummary="false" 
 					autoUpdate="true" closable="true" severity="error, info" />
 
@@ -80,7 +88,8 @@
 					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
 			</c:if>
 		</p:panel>
-
+		 <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
+        <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
 		<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
 
 		<ac:scSingleFileUploadPopup widgetVar="briefingReportAttWidget"
