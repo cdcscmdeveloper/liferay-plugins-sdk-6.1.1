@@ -222,6 +222,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private Object[] selectedCommonSupplier;
 	private IPagingDataModel<Object[]> shortlistedCommonSuppliers;
+	private ScQtEvaluationResultDtl preferenceMarginDtls;
 	
 	/**
 	 * @return the activeIndex
@@ -1985,6 +1986,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCommonSupplier(Object[] selectedCommonSupplier) {
 		this.selectedCommonSupplier = selectedCommonSupplier;
+	}
+
+	/**
+	 * @return the preferenceMarginDtls
+	 */
+	public ScQtEvaluationResultDtl getPreferenceMarginDtls() {
+		return preferenceMarginDtls;
+	}
+
+	/**
+	 * @param preferenceMarginDtls the preferenceMarginDtls to set
+	 */
+	public void setPreferenceMarginDtls(ScQtEvaluationResultDtl preferenceMarginDtls) {
+		this.preferenceMarginDtls = preferenceMarginDtls;
 	}
 
 
