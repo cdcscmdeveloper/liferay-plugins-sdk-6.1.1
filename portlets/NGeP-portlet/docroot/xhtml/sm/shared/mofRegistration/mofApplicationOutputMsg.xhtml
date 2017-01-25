@@ -18,19 +18,31 @@
 	<ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
 			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" /><br/>
-			<div align="center">
-				<p:commandButton id="pyDetailsBtnId" value="#{lbl['lbl.sm.print.payment.details']}" 
-					ajax="false" rendered="#{smOutputMsgBackingBean.managedBean.smAppl.applType eq 'N' 
-						or smOutputMsgBackingBean.managedBean.smAppl.applType eq 'R'}">
-					<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentDetails()}" />
-				</p:commandButton>
-				<p:commandButton id="applDetailsBtnId" value="#{lbl['lbl.sm.print.application.details']}" ajax="false">
-					<p:fileDownload value="#{smOutputMsgBackingBean.printSupplierProfile()}" />
-				</p:commandButton>
-				<p:commandButton id="pyAckBtnId" value="#{lbl['lbl.sm.print.acknowledgement']}" ajax="false">
-					<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentAck()}" />
-				</p:commandButton>
-			</div>
+			
+			<p:outputPanel rendered="#{smOutputMsgBackingBean.managedBean.smAppl.applType eq 'N' 
+				or smOutputMsgBackingBean.managedBean.smAppl.applType eq 'R'}">
+				<div align="center">
+					<p:commandButton id="pyDetailsBtnId" value="#{lbl['lbl.sm.print.payment.details']}" ajax="false">
+						<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentDetails()}" />
+					</p:commandButton>
+					<p:commandButton id="applDetailsBtnId" value="#{lbl['lbl.sm.print.application.details']}" ajax="false">
+						<p:fileDownload value="#{smOutputMsgBackingBean.printSupplierProfile()}" />
+					</p:commandButton>
+					<p:commandButton id="pyAckBtnId" value="#{lbl['lbl.sm.print.acknowledgement']}" ajax="false">
+						<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentAck()}" />
+					</p:commandButton>
+				</div>
+			</p:outputPanel>
+			
+			<p:outputPanel rendered="#{smOutputMsgBackingBean.managedBean.smAppl.applType ne 'N' 
+				and smOutputMsgBackingBean.managedBean.smAppl.applType ne 'R'}">
+				<div align="right">
+					<p:commandButton id="appl2DetailsBtnId" value="#{lbl['lbl.sm.print.application.details']}" ajax="false">
+						<p:fileDownload value="#{smOutputMsgBackingBean.printSupplierProfile()}" />
+					</p:commandButton>
+				</div>
+			</p:outputPanel>
+			
 		</p:panel> 
 	</ui:define>
 	
