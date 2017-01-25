@@ -6541,4 +6541,22 @@ public class SupplierFinalizationBackingBean extends
 	return SourcingConstants.EVALUATE_BY__ITEM;	
 	}
 	
+	
+	/**
+	 * Get the Preference Margin data.
+	 * @param scQtEvaluationResultDtls evalresultdtls
+	 * @return evaluationResultDtls.
+	 */
+	public List<ScQtEvaluationResultDtl> getPreferenceMarginList(ScQtEvaluationResultDtl evalResultDtls){
+	List<ScQtEvaluationResultDtl> evaluationResultDtls=new ArrayList<ScQtEvaluationResultDtl>();
+	try{
+		if(null!=evalResultDtls){
+			evaluationResultDtls.add(evalResultDtls);
+		}
+	}finally{
+		
+	}
+	return evaluationResultDtls;
+	}
+	
 }
