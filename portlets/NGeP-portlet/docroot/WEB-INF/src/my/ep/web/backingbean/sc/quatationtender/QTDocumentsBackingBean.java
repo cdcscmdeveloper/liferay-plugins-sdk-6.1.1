@@ -2656,8 +2656,8 @@ public class QTDocumentsBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void reGenerateDocuments(Long qtId, String qtField) {
-		debugLogger("reGenerateDocuments-->qtId: " + qtId + ", qtField: " + qtField);
+	public void reGenerateDocuments(Long qtId, String... qtFields) {
+		debugLogger("reGenerateDocuments-->qtId: " + qtId + ", qtFields: " + StringUtils.join(qtFields, "|"));
 		
 		IQTDocumentSO qtDocumentSO;
 		try {
@@ -2666,7 +2666,7 @@ public class QTDocumentsBackingBean extends
 			
 			QTDocumentReqDTO quationTenderReqDTO = new QTDocumentReqDTO();
 			quationTenderReqDTO.setQtId(qtId);
-			quationTenderReqDTO.setQtField(qtField);
+			quationTenderReqDTO.setQtFields(qtFields);
 			List<ScReport> reports = qtDocumentSO.retriveRegenDocumentListByQTField(
 					quationTenderReqDTO).getScReports();
 

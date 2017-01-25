@@ -4335,9 +4335,8 @@ public class QTDetailBackingBean extends
 							
 							// regenerate documents based on qt field changes.
 							if (CollectionUtils.isNotEmpty(updatedQTFields)) {
-								for (String updatedQTField : updatedQTFields) {
-									new QTDocumentsBackingBean().reGenerateDocuments(qtDetails.getQtId(), updatedQTField);	
-								}
+								new QTDocumentsBackingBean().reGenerateDocuments(qtDetails.getQtId(), 
+										updatedQTFields.toArray(new String[updatedQTFields.size()]));	
 							}
 						}
 					}
