@@ -17,6 +17,8 @@
 		</h:outputText>
 				
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
+		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
+							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
 			<p:dataTable id="qualifiedSuppliers"
 				var="qualifiedSupp" widgetVar="shortlistedSuppDtls" 
 				value="#{consolidationReportBackingBean.managedBean.qualifiedSuppliersDataModel}"
@@ -31,7 +33,18 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eval.ranking']}" style="width:5%; text-align:center;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eval.ranking']}" style="width:5%; text-align:center;">
+		               	<f:facet name="header">
+								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
+								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
+									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
+									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+								</p:commandLink>		               		
+			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
+									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+								</p:commandLink>								
+		               		</f:facet>
+		               	</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" style="width:5%; text-align:center;" />
@@ -59,17 +72,23 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
+					<p:commandLink oncomplete="preferenceMarginSuppDetailsPopup.show(); return false;" rendered="#{!consolidationReportBackingBean.managedBean.itemized and qualifiedSupp.proposalAmount ne null}" 
+								   process="@this" update="@([id$=preferenceMarginSuppDetailsPopupId])">
+							<f:setPropertyActionListener value="#{qualifiedSupp}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />	
 					<h:outputText value="#{qualifiedSupp.proposalAmount.proposalAmt}"
 								  rendered="#{!consolidationReportBackingBean.managedBean.itemized  
 								  					and qualifiedSupp.proposalAmount ne null}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
+					</p:commandLink>
 					<h:outputText value="#{qualifiedSupp.qtEvaluationResult.offeredPrice}"
 								  rendered="#{consolidationReportBackingBean.managedBean.itemized}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 
+					
 				</p:column>				
 	
 				<p:column style="text-align:right;">

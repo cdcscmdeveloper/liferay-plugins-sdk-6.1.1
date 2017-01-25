@@ -67,18 +67,29 @@
 
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:5%; white-space:normal; text-align:right;" 
 					  rendered="#{isFinancialEvalStageByPkg}">
-				<h:outputText value="" />
+				<h:outputText value="#{qualifiedSupp.priceDifference}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:15%; text-align:center;" 
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:15%; text-align:right;" 
 					  rendered="#{isFinancialEvalStageByPkg}">
-				<h:outputText value="" />
+				<h:outputText value="#{qualifiedSupp.percentageDifference}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" 
 					  style="width:5%; text-align:right; white-space:normal;" 
 					  rendered="#{isFinancialEvalStageByPkg}">
-				<h:outputText value="" />
+				<h:outputText
+					rendered="#{qualifiedSupp.preferenceMargin gt 0}"
+					value="#{qualifiedSupp.preferenceMargin}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
 			</p:column>
 
 		</p:dataTable>
