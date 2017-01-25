@@ -692,6 +692,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSuppBank.setPmFinancialOrg(new PmFinancialOrg());
 		smSuppBank.setSmAppl(this.getManagedBean().getSmAppl());
 		smSuppBank.setAccountPurpose(defaultAccPurpose);
+		smSuppBank.setForHqFlg(1);
 		this.getManagedBean().getSmAppl().getSmSupplierBanks().add(smSuppBank);
 		// this.getManagedBean().getSmSuppBanks().add(new SmSupplierBank());
 	}
