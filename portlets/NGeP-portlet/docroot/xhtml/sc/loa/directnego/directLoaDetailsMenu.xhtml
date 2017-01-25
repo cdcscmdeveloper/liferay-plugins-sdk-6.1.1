@@ -74,14 +74,14 @@
 								<c:choose>
 									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 										<p:selectOneMenu id="branch"
-											value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
+											value="#{directLOABackingBean.managedBean.scLoa.supplierBranchCode}"
 											style="width: 246px;margin-bottom: 5px;"
 											label="#{lbl['lbl.sc.branch']}">
 											<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 											<f:selectItems
 												value="#{directLOABackingBean.managedBean.branchsList}"
 												var="smSupplierBranch"
-												itemValue="#{smSupplierBranch.branchName}"
+												itemValue="#{smSupplierBranch.branchCode}"
 												itemLabel="#{smSupplierBranch.branchName}" />
 											<p:ajax event="change"
 												listener="#{directLOABackingBean.handleBranchDetailsChanged}"
