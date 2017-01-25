@@ -59,6 +59,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -1630,5 +1631,45 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public String evalTypeItem(){
 	return SourcingConstants.EVALUATE_BY__ITEM;	
+	}
+	
+	
+	/**
+	 * Retrieve Qualified suppliers by evaluation stage
+	 */
+	public void retrieveQualifiedSuppliersInfoByEvalStage() {
+		String evalStageId = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("evaluationStageId");
+		log.info("evalStageId"+evalStageId);
+		int evaluationStageId = 0;
+		if (evalStageId != null) {
+			evaluationStageId = Integer.parseInt(evalStageId);
+		}
+		SupplierFinalizationBackingBean supplierFinalizationBB=new SupplierFinalizationBackingBean();
+		supplierFinalizationBB.getManagedBean().setScQt(this.getManagedBean().getScQt());
+		supplierFinalizationBB.getManagedBean().setItemize(Boolean.FALSE);
+		supplierFinalizationBB.getManagedBean().setItemRowSelect(Boolean.FALSE);
+		//supplierFinalizationBB.getManagedBean().setQualifiedSuppliersByEvalStage(null);
+		if(this.getManagedBean().getActiveIndex()==PACKAGE_TYPE_TAB_INDEX){
+			log.info("PACKAGE_TYPE_TAB_INDEX"+this.getManagedBean().getActiveIndex());
+			this.getManagedBean().setSelectedItem(null);
+		}else if(this.getManagedBean().getActiveIndex()==ITEMIZED_TYPE_TAB_INDEX){
+			log.info("ITEMIZED_TYPE_TAB_INDEX"+this.getManagedBean().getActiveIndex());
+			 if(evaluationStageId==2){
+				supplierFinalizationBB.getManagedBean().setItemize(Boolean.TRUE);
+			 if(null!=this.getManagedBean().getSelectedItem()){
+				 log.info("getSelectedItem"+this.getManagedBean().getSelectedItem());
+				 supplierFinalizationBB.getManagedBean().setSelectedItem(this.getManagedBean().getSelectedItem());
+				supplierFinalizationBB.getManagedBean().setItemRowSelect(Boolean.TRUE);
+			}
+			}
+			
+			log.info("setItemize"+supplierFinalizationBB.getManagedBean().isItemize());
+		}
+		TplSpecZoneDtl specZoneDtl=this.getManagedBean().getSelectedZone();
+		log.info("specZoneDtl"+specZoneDtl);
+		supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
+		supplierFinalizationBB.retrieveQualifiedSuppliersInfoByEvalStage();
+		
 	}
 }
