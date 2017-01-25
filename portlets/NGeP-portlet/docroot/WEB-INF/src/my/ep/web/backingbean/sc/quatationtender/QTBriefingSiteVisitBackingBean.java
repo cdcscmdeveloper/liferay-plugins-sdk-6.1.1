@@ -839,8 +839,10 @@ public class QTBriefingSiteVisitBackingBean extends
 		RequestContext.getCurrentInstance().execute("addbsvdtls.show();");
 		retrievePmStateList();
 		
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(this
-				.getManagedBean().getCurrentStatusId())){
+		if (super.isQTStatusInBetween(getManagedBean().getCurrentStatusId(), 
+				QTStatusConst.QT_PENDING_PUBLICATION, 
+				QTStatusConst.QT_BRIEFING_SITE_VISIT)){
+			
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
 			ScAddress currentAddress = bsvDtl.getAddress();
 			ScAddress tempPmAddress = new ScAddress();
