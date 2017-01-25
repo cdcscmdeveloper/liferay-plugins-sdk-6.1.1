@@ -96,10 +96,9 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
 			action="#{evaluationBackingBean.downloadAllReports}"
-			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				styleClass="BtnSpacing" />
 			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
-				styleClass="BtnSpacing" disabled="#{evaluationBackingBean.managedBean.readOnly}"
+				styleClass="BtnSpacing" 
 				action="#{evaluationBackingBean.downloadReport}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
