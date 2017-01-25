@@ -14783,8 +14783,8 @@ public class ReportBackingBean extends
 				 * white space as '%20'
 				 */
 
-				String spaceRemovalParameter = constructedparamConstrString
-						.replaceAll(" ", "%20");
+				String spaceRemovalParameter = constructedparamConstrString;
+						
 				if (StringUtils.isNotEmpty(strLanguage)
 						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 					fileGenerateReport(getManagedBean().getReportTitle(),
