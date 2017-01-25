@@ -1285,12 +1285,16 @@ public class TemplateSpecBackingBean extends
 				.getSelectedSpecQuestion();
 		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE
 				.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		String priceType = specQuestion.getClPriceTypeCode()
+				.getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper
+				.isPriceTypeZonalStandard(priceType);
+		
 		if(CollectionUtils.isEmpty(specQuestion.getTplSpecAnswers())) {
-			String priceType = specQuestion.getClPriceTypeCode()
-					.getParameterCode();
+			
 			TplSpecZone specZone = specQuestion.getTplSpecMaster()
 					.getTplSpecZone();
-			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
 			List<TplSpecZoneDtl> specZoneDtls = null;
 			if (specZone != null) {
@@ -1318,8 +1322,6 @@ public class TemplateSpecBackingBean extends
 						specZoneLocSO = null;
 					}
 				}
-				boolean isPriceTypeZonalStandard = specHelper
-						.isPriceTypeZonalStandard(priceType);
 
 				for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
 					if (isPriceTypeZonalStandard) {
@@ -1341,8 +1343,31 @@ public class TemplateSpecBackingBean extends
 			}
 
 			specQuestion.setTplSpecAnswers(specAnswers);
+		} else{
+			// update new zone qts when TplSpecAnswers exists
+			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
+					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
+
+						for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+							
+							if(tplSpecZoneQty.getTplSpecZoneDtl().getZoneName().
+									equals(tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName())){
+								tplSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);
+							}
+							
+							if (isPriceTypeZonalStandard) {
+								calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService);
+
+							} 
+
+						}
+					}
+
+				}
+			}
 		}
-			
+
 	}
 
 	/**
@@ -1538,23 +1563,28 @@ public class TemplateSpecBackingBean extends
 		debugLogger("zoneQtyCancelAction");
 
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
-		TplSpecMaster tplSpecMaster = templateSpecBean
-				.getSpecMaster();
+		//TplSpecMaster tplSpecMaster = templateSpecBean.getSpecMaster();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
 				.getSelectedSpecQuestion();
 		List<TplSpecZoneQty> tplSpecZoneQties = selectedSpecQuestion.getTplSpecZoneQties();
 		
-		// add into specZoneQtiesToDelete list.
+		// update original Qty
 		if (tplSpecZoneQties != null && tplSpecZoneQties.size() > 0) {
 			for (TplSpecZoneQty specZoneQty : tplSpecZoneQties) {
-				if (!specZoneQty.isBrandNew()) {
+				/*if (!specZoneQty.isBrandNew()) {
 					specZoneQty.setDeleted(true);	
 				}
+				*/
+				for (TplSpecZoneQty oriSpecZoneQty : oriSpecQuestion.getTplSpecZoneQties()) {
+					if(specZoneQty.getTplSpecZoneDtl().getZoneName().equals(oriSpecZoneQty.getTplSpecZoneDtl().getZoneName())){
+						specZoneQty.setQty(oriSpecZoneQty.getQty());
+					}
+				}
 			}
-			tplSpecMaster.getSpecZoneQtiesToDelete().addAll(tplSpecZoneQties);
+			//tplSpecMaster.getSpecZoneQtiesToDelete().addAll(tplSpecZoneQties);
 		}
 		
-		selectedSpecQuestion.setTplSpecZoneQties(oriSpecQuestion.getTplSpecZoneQties());
+		//selectedSpecQuestion.setTplSpecZoneQties(oriSpecQuestion.getTplSpecZoneQties());
 
 		templateSpecBean.setSelectedSpecQuestion(null);
 	}
