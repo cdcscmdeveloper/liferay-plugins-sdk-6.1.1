@@ -159,6 +159,7 @@ import org.primefaces.model.StreamedContent;
 @RequestScoped
 public class LOIDetailBackingBean extends
 		SourcingBaseBackingBean<LOIDetailManagedBean> {
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(LOIDetailBackingBean.class);
