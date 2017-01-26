@@ -94,6 +94,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -2416,7 +2418,29 @@ public class SupplierFinalizationBackingBean extends
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
-		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);		
+		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		StringBuilder ulasan=new StringBuilder();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
+		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+			for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
+				if(StringUtils.isNotBlank(remark.getRemark())){
+					ulasan.append(remark.getRemark() + "\n");
+				}
+			}
+		}
+		StringBuilder pengesyoran=new StringBuilder();
+		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
+		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
+			for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
+				if(StringUtils.isNotBlank(remark.getRemark())){
+					pengesyoran.append(remark.getRemark() + "\n");
+				}
+			}
+		}
+		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
+				StringUtils.EMPTY : ulasan.toString());
+		paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
+				StringUtils.EMPTY : pengesyoran.toString());
 
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
