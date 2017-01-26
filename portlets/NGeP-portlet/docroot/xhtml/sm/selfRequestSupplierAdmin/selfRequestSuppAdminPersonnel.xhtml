@@ -14,7 +14,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.selfrequest.mof.number']}" />
 				</td>
 				<td>
-					<p:inputText id="mofNoId" value="#{selfRequestSupplierAdminBackingBean.managedBean.mofNo}"
+					<p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.mofNo}"
 						size="35" disabled="true"/>
 				</td>
 			</tr>
@@ -24,13 +24,19 @@
 				</td>
 				<td>
 					<p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.supplier.companyName}"
-						id="compNameId" size="35" disabled="true" />
+						size="35" disabled="true" />
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.selfrequest.suppadmin.name']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:commandLink rendered="#{selfRequestSupplierAdminBackingBean.managedBean.personnelItems.size() gt 10}"
+						title="#{lbl['lbl.cm.search']}" id="searchIconId" update="@form"
+						action="#{selfRequestSupplierAdminBackingBean.searchSuppAdmin}">
+						<p:graphicImage value="/css/images/design/search.png"
+							style="20px;"></p:graphicImage>
+					</p:commandLink>
 				</td>
 				<td>
 					<p:selectOneMenu id="suppAdminNameId"
@@ -38,7 +44,8 @@
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedPersonnelId}"
 						style="width: 207px;margin-bottom: 5px;" required="true">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{smPersonnelBackingBean.managedBean.personnelItems}" />
+						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.personnelItems}" />
+						<p:ajax event="change" process="@this" update="@this" partialSubmit="true" />
 					</p:selectOneMenu>
 					<p:messages for="suppAdminNameId" showDetail="true" closable="true" showSummary="false" escape="false"/>
 				</td>
@@ -49,15 +56,17 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<p:inputText label="#{lbl['lbl.sm.person.icNum']}"
-						required="true" id="icNoId"
+					<p:inputText label="#{lbl['lbl.sm.person.icNum']}" id="icNoId"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.icNo}"
 						size="35" maxlength="12"
 						validatorMessage="#{lbl['lbl.sm.userprofile.idno']} - #{lbl['lbl.sm.invalidNo']}">
-						<p:ajax event="blur" process="@this" update="@form" partialSubmit="true" />
-						<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
+						<p:ajax event="blur" process="@this" update="@form" partialSubmit="true" 
+							listener="#{selfRequestSupplierAdminBackingBean.onBlurIcNo}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+						<f:attribute name="labelName" value="#{lbl['lbl.sm.person.icNum']}" />
 					</p:inputText>
-					<p:messages for="icNoId" showDetail="true" closable="true" showSummary="false" escape="false"/>
+					<p:messages for="icNoId" showDetail="true" closable="true" showSummary="false" 
+						escape="false"/>
 				</td>
 			</tr>
 		</table>
@@ -75,9 +84,9 @@
 						action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
 						update="@form" />
 					
-					<p:commandButton id="btnSubmit" value="#{lbl['lbl.sm.next']}" 
+					<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-						action="#{selfRequestSupplierAdminBackingBean.submit}" />
+						action="#{selfRequestSupplierAdminBackingBean.navigateToCompanyInfo}" />
 				</td>
 			</tr>
 		</table>
