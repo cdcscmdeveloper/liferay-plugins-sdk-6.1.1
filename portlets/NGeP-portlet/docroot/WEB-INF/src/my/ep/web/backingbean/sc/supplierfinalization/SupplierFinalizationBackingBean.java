@@ -431,13 +431,17 @@ public class SupplierFinalizationBackingBean extends
 	
 	private void initializeFinalizationEndorsementRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-
+		List<ScQtFinalizationEndorsementRemarks> remarks=null;
 		// Retrieve finalization endorsement remarks
-		List<ScQtFinalizationEndorsementRemarks> remarks = initializeRemarks(scQtFinalization,
+		if(this.getManagedBean().isSecretaryUser()){
+		 remarks = initializeRemarks(scQtFinalization,
 				scQtFinalization.getCurrentStatus(), 
 				scQtFinalization.getScQtFinalizationEndorsementRemarks(), 
 				ScQtFinalizationEndorsementRemarks.class);
 		scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
+	}else{
+		remarks=scQtFinalization.getScQtFinalizationEndorsementRemarks();
+	}
 
 		// Finalization Endorsement Remarks list
 		getManagedBean().setFinalizationEndorsementRemarks(remarks);		
