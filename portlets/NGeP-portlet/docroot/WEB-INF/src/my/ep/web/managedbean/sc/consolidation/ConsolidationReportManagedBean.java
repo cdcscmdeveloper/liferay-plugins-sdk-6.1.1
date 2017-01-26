@@ -17,6 +17,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -85,6 +87,8 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 
 	private List<ScQtFinalizationRemarks> finalizationRemars;
 	private boolean isProcCategoryMedicine;
+	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
+	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -546,5 +550,37 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setProcCategoryMedicine(boolean isProcCategoryMedicine) {
 		this.isProcCategoryMedicine = isProcCategoryMedicine;
 	}
+
+	/**
+	 * @return the finalizationUlasanremarks
+	 */
+	public List<ScQtRecommendationUlasanRemarks> getFinalizationUlasanremarks() {
+		return finalizationUlasanremarks;
+	}
+
+	/**
+	 * @param finalizationUlasanremarks the finalizationUlasanremarks to set
+	 */
+	public void setFinalizationUlasanremarks(
+			List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks) {
+		this.finalizationUlasanremarks = finalizationUlasanremarks;
+	}
+
+	/**
+	 * @return the finalizationPengreysonremarks
+	 */
+	public List<ScQtRecommendationPengesyoranRemarks> getFinalizationPengreysonremarks() {
+		return finalizationPengreysonremarks;
+	}
+
+	/**
+	 * @param finalizationPengreysonremarks the finalizationPengreysonremarks to set
+	 */
+	public void setFinalizationPengreysonremarks(
+			List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks) {
+		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
+	}
+
+	
 
 }
