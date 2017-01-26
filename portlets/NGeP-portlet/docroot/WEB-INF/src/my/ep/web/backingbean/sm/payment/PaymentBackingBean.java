@@ -677,7 +677,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
 			
 			if(personnel != null){
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || 
+						personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					this.getManagedBean().getSoftCertReqPersonnels()
 					.add(personnel);
 				}
