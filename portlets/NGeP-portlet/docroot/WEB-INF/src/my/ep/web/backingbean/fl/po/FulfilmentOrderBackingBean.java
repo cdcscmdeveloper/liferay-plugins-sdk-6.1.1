@@ -1053,6 +1053,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}
 				}
 				crBB.getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(crBB.getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),crBB.getManagedBean().getFlRequest().getAgApprovedDate()));
+				crBB.setFulfilmentItemAddr(crBB.getManagedBean().getFlRequest());
+				crBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+						getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 				return NAV_CR;
 			}if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
