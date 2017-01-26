@@ -173,6 +173,7 @@ import com.liferay.portal.model.User;
 @RequestScoped
 public class SimpleQuoteBackingBean extends
 		SourcingBaseBackingBean<SimpleQuoteManagedBean> {
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
@@ -4973,19 +4974,24 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void supplierSubmit() {
 		debugLogger("supplierSubmit");
-		
+		boolean isProdContainPrice = Boolean.FALSE;
+		boolean isServiceContainPrice = Boolean.FALSE;
 		// validate tpl spec - product before spki authenticate
 		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
 				.getSpecAnswerList();
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
-			getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+			 isProdContainPrice = getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
 		}
 
 		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
-			getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+		}
+		
+		if (!isServiceContainPrice && !isProdContainPrice) {
+			throw new EpException(MessageConst.ERROR_700105);
 		}
 		
 		//gpki for only govt seller
@@ -5048,10 +5054,6 @@ public class SimpleQuoteBackingBean extends
 				pmDigiSign.setSpkiSignedData(signedData);
 			}
 
-			
-			// hide blcok ui
-			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-
 			// tpl spec - service
 			if (getManagedBean().getServiceTemplateSpecBean()
 					.getSpecAnswerList() != null) {
@@ -5113,6 +5115,8 @@ public class SimpleQuoteBackingBean extends
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, "supplerView");
+					
+					
 				} else {
 					fc.getApplication()
 							.getNavigationHandler()
@@ -5128,7 +5132,7 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			// quoteSO = null;
 		}
-		return null;
+		return "supplerView";
 	}
 
 	/**
