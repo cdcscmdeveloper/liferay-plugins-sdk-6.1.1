@@ -103,6 +103,9 @@
 						</p:tab>
                 	</p:tabView>
 				</p:tab>
+				<p:tab title="#{lbl['lbl.pm.settings.qt.value']}">
+					<ui:include src="qtValue.xhtml"></ui:include>
+				</p:tab>
 				
 			</p:tabView>
 
@@ -111,6 +114,7 @@
     <ac:lovPopup />
     <ui:include src="/xhtml/pm/settings/general/common/ItemCodePopUp.xhtml" />
     <ui:include src="/xhtml/pm/settings/general/common/extensionPopUp.xhtml" />
+    <ui:include src="/xhtml/pm/settings/general/common/ptjPopupForQtValue.xhtml" />
     
 		</p:outputPanel>
 	</ui:define>

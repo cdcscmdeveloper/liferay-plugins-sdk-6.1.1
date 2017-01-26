@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.settings;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,13 +22,13 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
 import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -123,6 +124,18 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmCategoryL3 selectedCategoryL3;
 	private PmOrgProfile currentActiveOrg;
 	private Integer deleteRowIndex;
+	private List<PmPtjSpecialApproval> ptjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> newPtjSpecialApprovalList;
+	private PmPtjSpecialApproval selectedPtjSpecialApproval;
+	private Long selectedMinistryId;
+	private Long ministryProfileId;
+	private boolean disabledSelectedMinistryId;
+	private Long jabatanProfileId;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	private List<PmOrgProfile> ptjList;
+	private BigDecimal qtLimit;
 
 	public RuleCatalogueManageBean() {
 
@@ -1213,5 +1226,164 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedRuleDescType(PmConfigRuleDesc selectedRuleDescType) {
 		this.selectedRuleDescType = selectedRuleDescType;
 	}
+	/**
+	 * @return the ptjSpecialApprovalList
+	 */
+	public List<PmPtjSpecialApproval> getPtjSpecialApprovalList() {
+		if(ptjSpecialApprovalList == null){
+			ptjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return ptjSpecialApprovalList;
+	}
+	/**
+	 * @param ptjSpecialApprovalList the ptjSpecialApprovalList to set
+	 */
+	public void setPtjSpecialApprovalList(List<PmPtjSpecialApproval> ptjSpecialApprovalList) {
+		this.ptjSpecialApprovalList = ptjSpecialApprovalList;
+	}
+	/**
+	 * @return the deletedPtjSpecialApprovalList
+	 */
+	public List<PmPtjSpecialApproval> getDeletedPtjSpecialApprovalList() {
+		if(deletedPtjSpecialApprovalList == null){
+			deletedPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return deletedPtjSpecialApprovalList;
+	}
+	/**
+	 * @param deletedPtjSpecialApprovalList the deletedPtjSpecialApprovalList to set
+	 */
+	public void setDeletedPtjSpecialApprovalList(
+			List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList) {
+		this.deletedPtjSpecialApprovalList = deletedPtjSpecialApprovalList;
+	}
+	/**
+	 * @return the selectedPtjSpecialApproval
+	 */
+	public PmPtjSpecialApproval getSelectedPtjSpecialApproval() {
+		return selectedPtjSpecialApproval;
+	}
+	/**
+	 * @param selectedPtjSpecialApproval the selectedPtjSpecialApproval to set
+	 */
+	public void setSelectedPtjSpecialApproval(PmPtjSpecialApproval selectedPtjSpecialApproval) {
+		this.selectedPtjSpecialApproval = selectedPtjSpecialApproval;
+	}
+	/**
+	 * @return the ministryProfileId
+	 */
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+	/**
+	 * @return the jabatanProfileId
+	 */
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+	/**
+	 * @return the ptjCodeNameSearchValues
+	 */
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+	/**
+	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
+	 */
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+	/**
+	 * @return the ptjList
+	 */
+	public List<PmOrgProfile> getPtjList() {
+		if(ptjList == null){
+			ptjList = new ArrayList<PmOrgProfile>();
+		}
+		return ptjList;
+	}
+	/**
+	 * @param ptjList the ptjList to set
+	 */
+	public void setPtjList(List<PmOrgProfile> ptjList) {
+		this.ptjList = ptjList;
+	}
+	/**
+	 * @return the selectedMinistryId
+	 */
+	public Long getSelectedMinistryId() {
+		return selectedMinistryId;
+	}
+	/**
+	 * @param selectedMinistryId the selectedMinistryId to set
+	 */
+	public void setSelectedMinistryId(Long selectedMinistryId) {
+		this.selectedMinistryId = selectedMinistryId;
+	}
+	/**
+	 * @return the qtLimit
+	 */
+	public BigDecimal getQtLimit() {
+		return qtLimit;
+	}
+	/**
+	 * @param qtLimit the qtLimit to set
+	 */
+	public void setQtLimit(BigDecimal qtLimit) {
+		this.qtLimit = qtLimit;
+	}
+	/**
+	 * @return the disabledSelectedMinistryId
+	 */
+	public boolean isDisabledSelectedMinistryId() {
+		return disabledSelectedMinistryId;
+	}
+	/**
+	 * @param disabledSelectedMinistryId the disabledSelectedMinistryId to set
+	 */
+	public void setDisabledSelectedMinistryId(boolean disabledSelectedMinistryId) {
+		this.disabledSelectedMinistryId = disabledSelectedMinistryId;
+	}
+	/**
+	 * @return the newPtjSpecialApprovalList
+	 */
+	public List<PmPtjSpecialApproval> getNewPtjSpecialApprovalList() {
+		if(newPtjSpecialApprovalList == null){
+			newPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return newPtjSpecialApprovalList;
+	}
+	/**
+	 * @param newPtjSpecialApprovalList the newPtjSpecialApprovalList to set
+	 */
+	public void setNewPtjSpecialApprovalList(
+			List<PmPtjSpecialApproval> newPtjSpecialApprovalList) {
+		this.newPtjSpecialApprovalList = newPtjSpecialApprovalList;
+	}
+
 
 }
