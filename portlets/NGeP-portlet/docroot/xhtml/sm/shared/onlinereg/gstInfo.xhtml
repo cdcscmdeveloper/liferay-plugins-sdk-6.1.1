@@ -109,7 +109,7 @@
 		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{registrationBackingBean.handleFileUpload}"
 			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="/(\.|\/)(pdf|doc|docx)$/" update="dtGstDocId"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 			oncomplete="uploadDlg.hide();return false;" 
 			uploadLabel="#{lbl['lbl.btn.upload.all']}"  
 			label="#{lbl['lbl.btn.choose']}" widgetVar="uploadWV"
