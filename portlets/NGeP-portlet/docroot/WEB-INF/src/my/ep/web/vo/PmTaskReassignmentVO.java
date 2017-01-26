@@ -38,6 +38,7 @@ public class PmTaskReassignmentVO implements Serializable {
 	private boolean supplier;
 	private List<TrackingDiaryReqDTO> trackingDiaryList;
 	private ISearchResultBean<PmUser> resultBean;
+	private boolean roleUpdate;
 	
 	
 	public PmTaskReassignmentVO(){
@@ -282,6 +283,22 @@ public class PmTaskReassignmentVO implements Serializable {
 	 */
 	public void setResultBean(ISearchResultBean<PmUser> resultBean) {
 		this.resultBean = resultBean;
+	}
+
+
+	/**
+	 * @return the roleUpdate
+	 */
+	public boolean isRoleUpdate() {
+		return roleUpdate;
+	}
+
+
+	/**
+	 * @param roleUpdate the roleUpdate to set
+	 */
+	public void setRoleUpdate(boolean roleUpdate) {
+		this.roleUpdate = roleUpdate;
 	}
 
 

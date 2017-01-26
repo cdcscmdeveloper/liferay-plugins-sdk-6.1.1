@@ -44,6 +44,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean disableForTaskAssignment;
 	private boolean isModulePostUpdate;
 	private List<Integer> statusIds;
+	private boolean isRemarkRequired;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -298,6 +299,20 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setStatusIds(List<Integer> statusIds) {
 		this.statusIds = statusIds;
+	}
+
+	/**
+	 * @return the isRemarkRequired
+	 */
+	public boolean isRemarkRequired() {
+		return isRemarkRequired;
+	}
+
+	/**
+	 * @param isRemarkRequired the isRemarkRequired to set
+	 */
+	public void setRemarkRequired(boolean isRemarkRequired) {
+		this.isRemarkRequired = isRemarkRequired;
 	}
 
 	
