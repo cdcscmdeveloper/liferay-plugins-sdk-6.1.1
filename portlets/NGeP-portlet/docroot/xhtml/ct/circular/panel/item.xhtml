@@ -98,7 +98,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							             </f:facet>
 							             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 						                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:110px;">
-									           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
+									           <f:selectItems value="#{panelBackingBean.itemTypeValues}"/>
 									           <p:ajax  process="@this"/>
 									         </p:selectOneMenu>
 									    </c:if>
