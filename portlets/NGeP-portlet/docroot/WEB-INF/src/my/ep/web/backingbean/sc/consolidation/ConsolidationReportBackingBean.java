@@ -50,6 +50,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -616,6 +618,8 @@ public class ConsolidationReportBackingBean extends
 		retrieveQTDetails();
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
+		initializeFinalizationUlasanRemarks();
+		initializeFinalizationPengreysonRemarks();
 	}
 	
 	private void setZoneAndTabIndexOnException(boolean isItemized, TplSpecZoneDtl zoneDtl) {
@@ -1011,6 +1015,17 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
+		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getFinalizationPengreysonremarks();
+		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
+			for (int i = 0; i < pengerysonRemarks.size(); i++) {
+				String userRemark = pengerysonRemarks.get(i).getRemark();
+				if (null == userRemark || StringUtils.isBlank(userRemark)) {
+					navigateToBriefingPaperTab();
+					throw new EpException(MessageConst.ERROR_760446);
+				}
+				
+			}
+		}
 		
 		boolean isZonal = getManagedBean().getScQt().isZonal();
 		Map<Long,List<ScQtRecommend>> itemsByZone = scQtFinalization.getScQtRecommendsByZone();
@@ -1223,7 +1238,8 @@ public class ConsolidationReportBackingBean extends
 		reqDTO.setCachedSupplierBeans(cachedSuppliers);
 
 		finalizeRemarks();
-		
+		finalizeUlasanremarks();
+		finalizePengrysonremarks();
 		return reqDTO;
 	}
 	
@@ -1325,7 +1341,28 @@ public class ConsolidationReportBackingBean extends
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
-
+		StringBuilder ulasan=new StringBuilder();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getFinalizationUlasanremarks();
+		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+			for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
+				if(StringUtils.isNotBlank(remark.getRemark())){
+					ulasan.append(remark.getRemark() + "\n");
+				}
+			}
+		}
+		StringBuilder pengesyoran=new StringBuilder();
+		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getFinalizationPengreysonremarks();
+		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
+			for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
+				if(StringUtils.isNotBlank(remark.getRemark())){
+					pengesyoran.append(remark.getRemark() + "\n");
+				}
+			}
+		}
+		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
+				StringUtils.EMPTY : ulasan.toString());
+		paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
+				StringUtils.EMPTY : pengesyoran.toString());
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 	
@@ -1672,4 +1709,55 @@ public class ConsolidationReportBackingBean extends
 		supplierFinalizationBB.retrieveQualifiedSuppliersInfoByEvalStage();
 		
 	}
+	
+	private void initializeFinalizationUlasanRemarks() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		// Retrieve finalization endorsement remarks
+		List<ScQtRecommendationUlasanRemarks> remarks = initializeRemarks(scQtFinalization,
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtRecommendationUlasanRemarks(), 
+				ScQtRecommendationUlasanRemarks.class);
+		scQtFinalization.setScQtRecommendationUlasanRemarks(remarks);
+
+		// Finalization Ulasan Remarks list
+		getManagedBean().setFinalizationUlasanremarks(remarks);		
+	}
+	
+	private void initializeFinalizationPengreysonRemarks() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		// Retrieve finalization endorsement remarks
+		List<ScQtRecommendationPengesyoranRemarks> remarks = initializeRemarks(scQtFinalization,
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtRecommendationPengesyoranRemarks(), 
+				ScQtRecommendationPengesyoranRemarks.class);
+		scQtFinalization.setScQtRecommendationPengesyoranRemarks(remarks);
+
+		// Finalization Pengesyoran  Remarks list
+		getManagedBean().setFinalizationPengreysonremarks(remarks);		
+	}
+	
+	private void finalizeUlasanremarks(){
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getFinalizationUlasanremarks();
+		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+			List<ScQtRecommendationUlasanRemarks> remarksList = super.finalizeRemarks(
+					ulasanRemarks);
+			scQtFinalization.setScQtRecommendationUlasanRemarks(remarksList);
+			setUserDetails(scQtFinalization);
+		}
+	}
+	private void finalizePengrysonremarks(){
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getFinalizationPengreysonremarks();
+		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
+			List<ScQtRecommendationPengesyoranRemarks> remarksList = super.finalizeRemarks(
+					pengerysonRemarks);
+			scQtFinalization.setScQtRecommendationPengesyoranRemarks(remarksList);
+			setUserDetails(scQtFinalization);
+		}
+	}
+	
+	
 }
