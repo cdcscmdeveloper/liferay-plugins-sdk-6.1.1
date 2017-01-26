@@ -182,8 +182,8 @@
 		resizable="false" modal="true">
 		
 		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}" 
-			onstart="blockWidget.show();return isRunGPKIEnableAutoUpdate()" 
-			oncomplete="setRunGPKIEnableAutoUpdate(true);blockWidget.hide();" 
+			onstart="gpkiBlockWidget.show();return isRunGPKIEnableAutoUpdate()" 
+			oncomplete="setRunGPKIEnableAutoUpdate(true);gpkiBlockWidget.hide();" 
 			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
 				
 		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
