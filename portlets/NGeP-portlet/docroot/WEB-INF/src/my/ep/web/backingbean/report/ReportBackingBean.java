@@ -14783,8 +14783,8 @@ public class ReportBackingBean extends
 				 * white space as '%20'
 				 */
 
-				String spaceRemovalParameter = constructedparamConstrString;
-						
+				String spaceRemovalParameter = constructedparamConstrString
+						.replaceAll(" ", "%20");
 				if (StringUtils.isNotEmpty(strLanguage)
 						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 					fileGenerateReport(getManagedBean().getReportTitle(),
@@ -18761,6 +18761,8 @@ public class ReportBackingBean extends
 					paramConstrString = paramConstrString.replaceAll("( )","\"$1");
 					paramConstrString = paramConstrString + "\"";
 					
+					paramConstrString = paramConstrString.replaceAll("%20" , " ");
+
 					StringBuffer reportUrl = new StringBuffer(paramConstrString);
 					
 					PmUser user = new FacesScopes().getUserSessionBean();
