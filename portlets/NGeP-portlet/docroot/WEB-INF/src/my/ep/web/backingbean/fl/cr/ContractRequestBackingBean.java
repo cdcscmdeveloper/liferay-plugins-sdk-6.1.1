@@ -3779,7 +3779,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 *
 	 * @param flRequest the new fulfilment item address
 	 */
-	private void setFulfilmentItemAddr(FlFulfilmentRequest flRequest) {
+	public void setFulfilmentItemAddr(FlFulfilmentRequest flRequest) {
 		if(getManagedBean().getItemAddrList()==null) {
 			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 			
