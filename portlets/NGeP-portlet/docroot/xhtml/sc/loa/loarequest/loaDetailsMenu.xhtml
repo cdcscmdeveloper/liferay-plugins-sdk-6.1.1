@@ -101,7 +101,7 @@
 									<f:selectItems
 										value="#{lOADetailBackingBean.supplierBranches}" />
 									<p:ajax event="change"
-										listener="#{lOADetailBackingBean.handleBranchDetailsChanged}"
+										listener="#{lOADetailBackingBean.handleBranchDetailsChanged(true)}"
 										partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstDeclaredDateId, gstEffDateId, gstRegNoId , gstAmtId, ContractAmtId" />
 								</p:selectOneMenu>
 								<p:message id="branchMsg" for="branch" display="icon" />

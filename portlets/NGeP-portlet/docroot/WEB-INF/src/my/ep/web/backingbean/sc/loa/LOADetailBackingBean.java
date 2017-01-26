@@ -681,7 +681,7 @@ public class LOADetailBackingBean extends
 			scLoa.setSupplierBranch(scLoa.getScLoiLoa().getScLois().get(0).getSupplierBranch());
 			scLoa.setLoiCreated(Boolean.TRUE);
 		}
-		handleBranchDetailsChanged();
+		handleBranchDetailsChanged(false);
 		
 		// Supplier Witness
 		ScLoaWitness loaSupplierWitness = null;
@@ -2172,7 +2172,7 @@ public class LOADetailBackingBean extends
 	 * Handle branch details changed.
 	 *  shows the supplier address details.
 	 */
-	public void handleBranchDetailsChanged() {
+	public void handleBranchDetailsChanged(boolean isBranchChanged) {
 		debugLogger("handleBranchDetailsChanged");
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		String selectedSupplierBranch = scLoa.getSupplierBranch();
@@ -2201,7 +2201,10 @@ public class LOADetailBackingBean extends
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier()
 							.getSupplierId();
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
-					setGSTInfo(resDTO, scLoa);
+					if(isBranchChanged){
+						setGSTInfo(resDTO, scLoa);
+					}
+					
 					break;
 				}
 			}
