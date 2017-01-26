@@ -15,18 +15,21 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<p:messages for="commonMessage" showDetail="true" closable="true" showSummary="false" escape="false"/>
-		<p:messages for="companyValidationMsg" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		<p:messages for="validationMsg" showDetail="true" closable="true" showSummary="false" escape="false"/>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:outputPanel id="personnelListPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '1'}">
+		<p:outputPanel id="companyValidationPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '1'}">
 			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminCompanyValidation.xhtml" />
 		</p:outputPanel>
 		
-		<p:outputPanel id="uploadDocPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '2'}">
+		<p:outputPanel id="suppAdminPersonnelPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '2'}">
 			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminPersonnel.xhtml" />
+		</p:outputPanel>
+		
+		<p:outputPanel id="suppAdminDetailsPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '3'}">
+			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminDetails.xhtml" />
 		</p:outputPanel>
 	</ui:define>
 		
