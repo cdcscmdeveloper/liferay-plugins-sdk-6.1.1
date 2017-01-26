@@ -4805,7 +4805,7 @@ public class RuleCatalogueBackingBean extends
 			getManagedBean().setDisabledSelectedMinistryId(true);
 			initQuotationWithTenderValue();
 			getManagedBean().getPtjSpecialApprovalList().addAll(getManagedBean().getNewPtjSpecialApprovalList());
-			sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
+			//sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
 			
 		}
 		RequestContext.getCurrentInstance().execute("ptjSearchPopup.hide();");
