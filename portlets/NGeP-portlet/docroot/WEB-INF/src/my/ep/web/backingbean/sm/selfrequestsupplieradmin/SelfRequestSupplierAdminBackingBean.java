@@ -90,15 +90,20 @@ public class SelfRequestSupplierAdminBackingBean extends
 		}
 	}
 
-	public void backFromSuppAdmin() {
-		getManagedBean().setPage(COMPANY_VALIDATION_PAGE);
+	public void back(String page) {
+		getManagedBean().setPage(page);
 	}
 
-	public void navigateToCompanyInfo() {
+	public void navigateToSuppAdminDetails() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String invalidMsg = getInValidIcErrMsg(getManagedBean().getIcNo());
 		if (StringUtils.isBlank(invalidMsg)) {
 			getManagedBean().setPage(SUPP_ADMIN_DETAILS_PAGE);
+			SmPersonnel suppAdmin = (SmPersonnel) EntityHelper
+					.getEntityBySinglePropertyFromList(getManagedBean()
+							.getIcNo(), getManagedBean().getSupplier()
+							.getSmAppl().getSmPersonnels(), "identificationNo");
+			getManagedBean().setSelectedAdmin(suppAdmin);
 		} else {
 			fc.addMessage("icNoId", new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null, invalidMsg));
@@ -264,7 +269,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 		if (!StringUtils.isBlank(errMsg)) {
 			fc.addMessage("icNoId", new FacesMessage(
-					FacesMessage.SEVERITY_INFO, null, errMsg));
+					FacesMessage.SEVERITY_ERROR, null, errMsg));
 		}
 
 	}
