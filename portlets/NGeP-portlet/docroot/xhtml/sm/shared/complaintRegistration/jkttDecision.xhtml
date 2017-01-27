@@ -77,7 +77,7 @@
 				#{jkttDecisionDocs.fileName}
 			</p:column>
 			
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink oncomplete="jkttDocDeleteDlg.show()" action="#{complaintBackingBean.showDeleteDialog(jkttDecisionDocs)}" 
 						update="@([id$=jkttDocDeleteDlg])" rendered="#{complaintBackingBean.managedBean.jkttReview.brandNew}">
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
