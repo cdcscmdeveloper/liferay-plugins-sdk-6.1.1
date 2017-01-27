@@ -9477,22 +9477,22 @@ public class SmApplicationBackingBean extends
 	 */
 	public void setRevUrl() {
 		String url = SmCommonUtil.getEpBaseUrl() + "/view-revision-application";
-
-		String revApprvrAppNo = "";
-		String revSupplAppNo = "";
+		String approveApplNo = StringUtils.EMPTY;
+		String revApprvrAppNo = StringUtils.EMPTY;
+		String revSupplAppNo = StringUtils.EMPTY;
 		if (getManagedBean().getSmAppl() != null) {
 			if (getManagedBean().getSmAppl().getApprovedSerFile() != null
 					&& StringUtils.isNotBlank(getManagedBean().getSmAppl()
 							.getApprovedSerFile())) {
-				revApprvrAppNo = getManagedBean()
+				approveApplNo = getManagedBean()
 						.getSmAppl()
 						.getApprovedSerFile()
 						.substring(
 								getManagedBean().getSmAppl()
 										.getApprovedSerFile().lastIndexOf('/') + 1,
 								getManagedBean().getSmAppl()
-										.getApprovedSerFile().indexOf("_APP"))
-						+ "_APP";
+										.getApprovedSerFile().indexOf("_APP"));
+				revApprvrAppNo = approveApplNo + "_APP";
 			}
 
 			revSupplAppNo = getManagedBean().getSmAppl().getApplNo() == null ? ""
@@ -9502,14 +9502,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setRevisionApproverAppNoParam(revApprvrAppNo);
 		getManagedBean().setRevisionSupplierAppNoParam(revSupplAppNo);
 		getManagedBean().setRevisionBaseUrl(url);
-		setRevisionApplicationType();
+		setRevisionApplicationType(approveApplNo);
 	}
 
 	/**
 	 * Sets the revision application type.
 	 */
-	private void setRevisionApplicationType() {
-		String applType = "";
+	private void setRevisionApplicationType(String approveApplNo) {
+		String applType = StringUtils.EMPTY;
 
 		if (getManagedBean().getRevisionApproverAppNoParam() != null
 				&& StringUtils.isNotBlank(getManagedBean()
@@ -9517,6 +9517,13 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getRevisionApproverAppNoParam().length() > 2) {
 			applType = Character.toString(getManagedBean()
 					.getRevisionApproverAppNoParam().charAt(1));
+			if (StringUtils.isBlank(applType)
+					|| !Character.isLetter(applType.charAt(0))) {
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setApplNo(approveApplNo);
+				applType = SmServiceLookup.getMofRegistrationSO()
+						.retrieveApplTypeByApplNo(reqDTO).getApplType();
+			}
 		}
 		getManagedBean().setRevisionApplType(applType);
 	}
