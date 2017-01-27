@@ -7,7 +7,7 @@
 	
 	<p:panel header="#{lbl['lbl.sm.complaint.show.cause.letter']}" toggleable="true" id="pnlShowCauseLetter">
 		<p:dataTable value="#{complaintBackingBean.managedBean.showCauseLetters}" var="scLetter">
-			<p:column headerText="Document Name">
+			<p:column headerText="#{lbl['lbl.sm.complainant.document.name']}">
 				#{scLetter.fileName}
 			</p:column>
 			
