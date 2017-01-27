@@ -373,7 +373,6 @@ public class RuleCatalogueBackingBean extends
 			initFeeSettings();
 			initOperationThreshold();
 			initGst();
-			resetQtValues();
 			initQuotationWithTenderValue();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
@@ -4582,34 +4581,33 @@ public class RuleCatalogueBackingBean extends
 
 	public void initQuotationWithTenderValue() {
 			IPtjSpecialApprovalSO ptjSpecialApprovalSO = null;
-			try {			
+			try {
+				this.getManagedBean().setDisabledSelectedMinistryId(false);
+				this.getManagedBean().setMinistryProfileId(null);
+				this.getManagedBean().getNewPtjSpecialApprovalList().clear();
+				this.getManagedBean().getDeletedPtjSpecialApprovalList().clear();
+				this.getManagedBean().getMainPtjSpecialApprovalList().clear();
+				this.getManagedBean().getPtjSpecialApprovalList().clear();
+				
 				ptjSpecialApprovalSO = (IPtjSpecialApprovalSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IPtjSpecialApprovalSO.class);
 				PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();				
-				reqDTO.setMinistryOrgProfileId(getManagedBean().getSelectedMinistryId());
+				//reqDTO.setMinistryOrgProfileId(getManagedBean().getSelectedMinistryId());
 				PtjSpecialApprovalResDTO resDTO = ptjSpecialApprovalSO.searchPtjSpecialApproval(reqDTO);
 				if(resDTO.isSuccessful() && resDTO.getPtjSpecialApprovalList() != null 
 						&& !resDTO.getPtjSpecialApprovalList().isEmpty()){
 					sortPmPtjSpecialApprovalByMinistryName(resDTO.getPtjSpecialApprovalList());
+					this.getManagedBean().setMainPtjSpecialApprovalList(
+							resDTO.getPtjSpecialApprovalList());
 					this.getManagedBean().setPtjSpecialApprovalList(
 							resDTO.getPtjSpecialApprovalList());
-						this.getManagedBean().setSelectedPtjSpecialApproval(
-							resDTO.getPtjSpecialApprovalList().get(0));
 				}
 
 			} finally {
 				ptjSpecialApprovalSO = null;
 			}
 
-	}
-	
-	private void resetQtValues(){
-		this.getManagedBean().setDisabledSelectedMinistryId(false);
-		this.getManagedBean().setMinistryProfileId(null);
-		this.getManagedBean().getNewPtjSpecialApprovalList().clear();
-		this.getManagedBean().getDeletedPtjSpecialApprovalList().clear();
-		this.getManagedBean().getPtjSpecialApprovalList().clear();
 	}
 	
 	public void deleteQtValue() {
@@ -4790,6 +4788,7 @@ public class RuleCatalogueBackingBean extends
 	public void addQtValues(){
 		log.info("addQtValues");
 		PmPtjSpecialApproval approval = null;
+		getManagedBean().getMainPtjSpecialApprovalList().removeAll(getManagedBean().getNewPtjSpecialApprovalList());
 		for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
 			if(orgProfile.isSelected()){	
 				approval = new PmPtjSpecialApproval();
@@ -4800,11 +4799,23 @@ public class RuleCatalogueBackingBean extends
 				getManagedBean().getNewPtjSpecialApprovalList().add(approval);	
 			}
 		}		
-		if(!getManagedBean().getNewPtjSpecialApprovalList().isEmpty()){	
+		if(!getManagedBean().getNewPtjSpecialApprovalList().isEmpty()){			
 			getManagedBean().setSelectedMinistryId(null);
+//			initQuotationWithTenderValue();			
 			getManagedBean().setDisabledSelectedMinistryId(true);
-			initQuotationWithTenderValue();
-			getManagedBean().getPtjSpecialApprovalList().addAll(getManagedBean().getNewPtjSpecialApprovalList());
+			//copy to main list
+			for(PmPtjSpecialApproval current1 : getManagedBean().getMainPtjSpecialApprovalList()){
+				for(PmPtjSpecialApproval current2 : getManagedBean().getPtjSpecialApprovalList()){
+					if(current1.getPtjSpecialApprovalId() != null && current2.getPtjSpecialApprovalId() != null
+							&& current1.getPtjSpecialApprovalId().equals(current2.getPtjSpecialApprovalId())){
+						current1.setEffDate(current2.getEffDate());
+						current1.setExpDate(current2.getExpDate());
+						current1.setProcureAmt(current2.getProcureAmt());
+					}
+				}
+			}
+			getManagedBean().getMainPtjSpecialApprovalList().addAll(getManagedBean().getNewPtjSpecialApprovalList());
+			getManagedBean().setPtjSpecialApprovalList(getManagedBean().getMainPtjSpecialApprovalList());
 			//sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
 			
 		}
@@ -4818,11 +4829,11 @@ public class RuleCatalogueBackingBean extends
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
-		for (int i = 0; i < this.getManagedBean().getPtjSpecialApprovalList().size(); i++) {
-			approval=this.getManagedBean().getPtjSpecialApprovalList().get(i);
+		for (int i = 0; i < this.getManagedBean().getMainPtjSpecialApprovalList().size(); i++) {
+			approval=this.getManagedBean().getMainPtjSpecialApprovalList().get(i);
 			// check validation
-			for (int j = i + 1; j <= (this.getManagedBean().getPtjSpecialApprovalList().size() - 1); j++) {				
-				 compare = this.getManagedBean().getPtjSpecialApprovalList().get(j);
+			for (int j = i + 1; j <= (this.getManagedBean().getMainPtjSpecialApprovalList().size() - 1); j++) {				
+				 compare = this.getManagedBean().getMainPtjSpecialApprovalList().get(j);
 				 log.info("....approval=" + approval.getPmOrgProfile().getOrgProfileId());
 				 log.info("....compare=" + compare.getPmOrgProfile().getOrgProfileId());
 				if(approval.getPmOrgProfile().getOrgProfileId().equals(compare.getPmOrgProfile().getOrgProfileId())){					
@@ -4846,11 +4857,10 @@ public class RuleCatalogueBackingBean extends
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IPtjSpecialApprovalSO.class);
 			PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();
-			getManagedBean().getPtjSpecialApprovalList().addAll(getManagedBean().getDeletedPtjSpecialApprovalList());
-			reqDTO.setPtjSpecialApprovalList(getManagedBean().getPtjSpecialApprovalList());
+			getManagedBean().getMainPtjSpecialApprovalList().addAll(getManagedBean().getDeletedPtjSpecialApprovalList());
+			reqDTO.setPtjSpecialApprovalList(getManagedBean().getMainPtjSpecialApprovalList());
 			PtjSpecialApprovalResDTO resDTO = approvalSO.updatePtjSpecialApprovalList(reqDTO);
 			if(resDTO.isSuccessful()){	
-				resetQtValues();
 				initQuotationWithTenderValue();
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
@@ -4891,6 +4901,18 @@ public class RuleCatalogueBackingBean extends
 			}
 		};
 		Collections.sort(list, comparator);
+	}
+	
+	public void selectQtValues(){
+		if(getManagedBean().getSelectedMinistryId() != null){
+			getManagedBean().setPtjSpecialApprovalList(new ArrayList<PmPtjSpecialApproval>());
+			for(PmPtjSpecialApproval approval : getManagedBean().getMainPtjSpecialApprovalList()){
+				if(approval.getMinistry().getOrgProfileId().equals(getManagedBean().getSelectedMinistryId())){
+					getManagedBean().getPtjSpecialApprovalList().add(approval);
+				}
+			}
+			sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
+		}
 	}
 
 }
