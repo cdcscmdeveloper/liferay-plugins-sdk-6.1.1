@@ -8,11 +8,10 @@
 
 
 	<p:panel id="qtValuePnlId">
-		<table style="width: 100%;margin-bottom:5px;">
+		<table style="width: 100%; margin-bottom: 5px;">
 			<tr>
-				<td>
-					<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.settings.qt.tooltip']}" />
-				</td>
+				<td><h:outputText styleClass="instruction"
+						value="#{lbl['lbl.pm.settings.qt.tooltip']}" /></td>
 				<td>
 					<div align="right" style="width: 100%">
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
@@ -24,29 +23,25 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:selectOneMenu id="somMinistryForQtVal" styleClass="ptjPopupSomWidth"
-						label="#{lbl['lbl.pm.org.ptj.search.ministry']}" 
+				<td><p:selectOneMenu id="somMinistryForQtVal"
+						styleClass="ptjPopupSomWidth"
+						label="#{lbl['lbl.pm.org.ptj.search.ministry']}"
 						disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
 						value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
 						<f:selectItems
 							value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update=":form:settingTabId:qtValueTableId" 
-							listener="#{ruleCatalogueBackingBean.initQuotationWithTenderValue()}"/>
-					</p:selectOneMenu>
-				</td>
-				<td>
-				</td>
+							update=":form:settingTabId:qtValueTableId"
+							listener="#{ruleCatalogueBackingBean.selectQtValues()}" />
+					</p:selectOneMenu></td>
+				<td></td>
 			</tr>
 		</table>
-	
+
 		<p:dataTable id="qtValueTableId" widgetVar="qtValueTableWidget"
 			var="ptjSpecialApproval" rows="10"
-			value="#{ruleCatalogueBackingBean.managedBean.ptjSpecialApprovalList}"
-			selection="#{ruleCatalogueBackingBean.managedBean.selectedPtjSpecialApproval}"
-			rowKey="#{ptjSpecialApproval}" rowIndexVar="rowIndex"
-			selectionMode="single">
+			value="#{ruleCatalogueBackingBean.managedBean.ptjSpecialApprovalList}"			
+			rowKey="#{ptjSpecialApproval}" rowIndexVar="rowIndex">
 			<ac:paginator for="qtValueTableId" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 				update=":form:settingTabId:qtValuePnlId" />
@@ -68,9 +63,19 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.settings.qt.limit']}"
 				style="width:10%;white-space:normal;">
-				<p:inputText id="qtProcureAmtId"
+				<p:inputText id="qtProcureAmtId" style="text-align:right;"
 					disabled="#{not ptjSpecialApproval.brandNew}"
-					value="#{ptjSpecialApproval.procureAmt}" />
+					value="#{ptjSpecialApproval.procureAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="min" value="0" />
+					<f:attribute name="max" value="9999999.99" />
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this, qtProcureAmtIdMsg" />
+				</p:inputText>
+				<p:message id="qtProcureAmtIdMsg" for="qtProcureAmtId"
+					display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" width="10%">
 				<p:calendar showOn="button" id="qtValueeffDateId" navigator="true"
@@ -116,8 +121,8 @@
 		</p:dataTable>
 
 		<div style="text-align: right;">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				id="qtValuesAddBtn" process="@this" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" id="qtValuesAddBtn"
+				process="@this" partialSubmit="true"
 				update="@([id$=ptjSearchPopup])" style="float:right;"
 				oncomplete="ptjSearchPopup.show();"
 				action="#{ruleCatalogueBackingBean.initPtjPopup}">
