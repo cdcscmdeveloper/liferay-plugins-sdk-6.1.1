@@ -11,7 +11,12 @@
 					 
 	<ac:scRemarkAndAttachment remarkList="#{suppFinalizationBackingBean.managedBean.finalizationEndorsementRemarks}"
 							  showAttachment="false" readonly="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"
-							  numberOfCols="80"/>				
+							  numberOfCols="80"/>	
+							
+	<ac:scRemarkAndAttachment remarkList="#{suppFinalizationBackingBean.managedBean.finalizationPengreysonremarks}"
+							  showAttachment="false" header="#{lbl['lbl.sc.recommendation']}" readonly="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"
+							  numberOfCols="80"/>							  
+							  			
 
 	<p:commandButton value="#{lbl['lbl.sc.btn.refresh']}" update="@([id$=endorsementReportContentId])" 
 					 style="margin-left: 12%;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />							  
