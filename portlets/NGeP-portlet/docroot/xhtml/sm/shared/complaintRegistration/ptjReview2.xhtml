@@ -55,7 +55,7 @@
 				#{secondPtpkDecisionDocs.fileName}
 			</p:column>
 			
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink oncomplete="secondPtpkDocDeleteDlg.show()" action="#{complaintBackingBean.showDeleteDialog(secondPtpkDecisionDocs)}" 
 						update="@([id$=secondPtpkDocDeleteDlg2])" rendered="#{complaintBackingBean.managedBean.secondReview.brandNew}">
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
