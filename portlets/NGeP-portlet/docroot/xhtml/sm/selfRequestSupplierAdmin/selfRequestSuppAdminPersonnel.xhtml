@@ -52,16 +52,16 @@
 			</tr>
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.person.icNum']}" />
+					<p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
 					<p:inputText label="#{lbl['lbl.sm.person.icNum']}" id="icNoId"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.icNo}"
-						size="35" maxlength="12"
+						size="35" maxlength="15"
 						validatorMessage="#{lbl['lbl.sm.userprofile.idno']} - #{lbl['lbl.sm.invalidNo']}">
 						<p:ajax event="blur" process="@this" update="@form" partialSubmit="true" 
-							listener="#{selfRequestSupplierAdminBackingBean.onBlurIcNo}"
+							listener="#{selfRequestSupplierAdminBackingBean.onBlurIcNo(selfRequestSupplierAdminBackingBean.managedBean.icNo)}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						<f:attribute name="labelName" value="#{lbl['lbl.sm.person.icNum']}" />
 					</p:inputText>
@@ -75,7 +75,7 @@
 			<tr>
 				<td>
 					<p:commandButton value="#{lbl['lbl.btn.prev']}" update="@form"
-						immediate="true" action="#{selfRequestSupplierAdminBackingBean.backFromSuppAdmin}" 
+						immediate="true" action="#{selfRequestSupplierAdminBackingBean.back('1')}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
@@ -84,9 +84,9 @@
 						action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
 						update="@form" />
 					
-					<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}" 
+					<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.proceed']}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-						action="#{selfRequestSupplierAdminBackingBean.navigateToCompanyInfo}" />
+						action="#{selfRequestSupplierAdminBackingBean.navigateToSuppAdminDetails}" />
 				</td>
 			</tr>
 		</table>
