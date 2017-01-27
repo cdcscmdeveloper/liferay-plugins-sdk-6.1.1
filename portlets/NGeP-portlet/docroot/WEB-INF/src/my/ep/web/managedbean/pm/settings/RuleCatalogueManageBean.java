@@ -124,10 +124,10 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmCategoryL3 selectedCategoryL3;
 	private PmOrgProfile currentActiveOrg;
 	private Integer deleteRowIndex;
-	private List<PmPtjSpecialApproval> ptjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> mainPtjSpecialApprovalList;
+    private List<PmPtjSpecialApproval> ptjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> newPtjSpecialApprovalList;
-	private PmPtjSpecialApproval selectedPtjSpecialApproval;
 	private Long selectedMinistryId;
 	private Long ministryProfileId;
 	private boolean disabledSelectedMinistryId;
@@ -1226,21 +1226,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedRuleDescType(PmConfigRuleDesc selectedRuleDescType) {
 		this.selectedRuleDescType = selectedRuleDescType;
 	}
-	/**
-	 * @return the ptjSpecialApprovalList
-	 */
-	public List<PmPtjSpecialApproval> getPtjSpecialApprovalList() {
-		if(ptjSpecialApprovalList == null){
-			ptjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return ptjSpecialApprovalList;
-	}
-	/**
-	 * @param ptjSpecialApprovalList the ptjSpecialApprovalList to set
-	 */
-	public void setPtjSpecialApprovalList(List<PmPtjSpecialApproval> ptjSpecialApprovalList) {
-		this.ptjSpecialApprovalList = ptjSpecialApprovalList;
-	}
+
 	/**
 	 * @return the deletedPtjSpecialApprovalList
 	 */
@@ -1257,18 +1243,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 			List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList) {
 		this.deletedPtjSpecialApprovalList = deletedPtjSpecialApprovalList;
 	}
-	/**
-	 * @return the selectedPtjSpecialApproval
-	 */
-	public PmPtjSpecialApproval getSelectedPtjSpecialApproval() {
-		return selectedPtjSpecialApproval;
-	}
-	/**
-	 * @param selectedPtjSpecialApproval the selectedPtjSpecialApproval to set
-	 */
-	public void setSelectedPtjSpecialApproval(PmPtjSpecialApproval selectedPtjSpecialApproval) {
-		this.selectedPtjSpecialApproval = selectedPtjSpecialApproval;
-	}
+	
 	/**
 	 * @return the ministryProfileId
 	 */
@@ -1383,6 +1358,37 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setNewPtjSpecialApprovalList(
 			List<PmPtjSpecialApproval> newPtjSpecialApprovalList) {
 		this.newPtjSpecialApprovalList = newPtjSpecialApprovalList;
+	}
+	/**
+	 * @return the mainPtjSpecialApprovalList
+	 */
+	public List<PmPtjSpecialApproval> getMainPtjSpecialApprovalList() {
+		if(mainPtjSpecialApprovalList == null){
+			mainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return mainPtjSpecialApprovalList;
+	}
+	/**
+	 * @param mainPtjSpecialApprovalList the mainPtjSpecialApprovalList to set
+	 */
+	public void setMainPtjSpecialApprovalList(
+			List<PmPtjSpecialApproval> mainPtjSpecialApprovalList) {
+		this.mainPtjSpecialApprovalList = mainPtjSpecialApprovalList;
+	}
+	/**
+	 * @return the ptjSpecialApprovalList
+	 */
+	public List<PmPtjSpecialApproval> getPtjSpecialApprovalList() {
+		if(ptjSpecialApprovalList == null){
+			ptjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return ptjSpecialApprovalList;
+	}
+	/**
+	 * @param ptjSpecialApprovalList the ptjSpecialApprovalList to set
+	 */
+	public void setPtjSpecialApprovalList(List<PmPtjSpecialApproval> ptjSpecialApprovalList) {
+		this.ptjSpecialApprovalList = ptjSpecialApprovalList;
 	}
 
 
