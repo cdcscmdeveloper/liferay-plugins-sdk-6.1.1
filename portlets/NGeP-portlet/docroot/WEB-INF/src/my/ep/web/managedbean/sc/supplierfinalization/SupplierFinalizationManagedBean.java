@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRecommendationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -223,6 +224,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Object[] selectedCommonSupplier;
 	private IPagingDataModel<Object[]> shortlistedCommonSuppliers;
 	private ScQtEvaluationResultDtl preferenceMarginDtls;
+	private List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks;
 	
 	/**
 	 * @return the activeIndex
@@ -2000,6 +2002,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setPreferenceMarginDtls(ScQtEvaluationResultDtl preferenceMarginDtls) {
 		this.preferenceMarginDtls = preferenceMarginDtls;
+	}
+
+	/**
+	 * @return the finalizationPengreysonremarks
+	 */
+	public List<ScQtFinalizationEndorsementRecommendationRemarks> getFinalizationPengreysonremarks() {
+		return finalizationPengreysonremarks;
+	}
+
+	/**
+	 * @param finalizationPengreysonremarks the finalizationPengreysonremarks to set
+	 */
+	public void setFinalizationPengreysonremarks(
+			List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks) {
+		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
 	}
 
 
