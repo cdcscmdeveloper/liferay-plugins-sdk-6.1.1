@@ -85,6 +85,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRecommendationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -391,6 +392,7 @@ public class SupplierFinalizationBackingBean extends
 		initializeCommitteeRemarks();
 		initializeFinalizationRemarks();
 		initializeFinalizationEndorsementRemarks();
+		initializeFinalizationPengreysonRemarks();
 		
 		if (this.getManagedBean().getResetSupplierList() == null) {
 			this.getManagedBean().setResetSupplierList(
@@ -447,6 +449,25 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setFinalizationEndorsementRemarks(remarks);		
 	}		
 
+	private void initializeFinalizationPengreysonRemarks() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		List<ScQtFinalizationEndorsementRecommendationRemarks> remarks=null;
+		// Retrieve finalization endorsement remarks
+		if(this.getManagedBean().isSecretaryUser()){
+		 remarks = initializeRemarks(scQtFinalization,
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtFinalizationEndorsmentRecommendationRemarks(), 
+				ScQtFinalizationEndorsementRecommendationRemarks.class);
+		scQtFinalization.setScQtFinalizationEndorsmentRecommendationRemarks(remarks);
+		}else{
+			remarks=scQtFinalization.getScQtFinalizationEndorsmentRecommendationRemarks();
+		}
+
+		// Finalization Pengesyoran  Remarks list
+		getManagedBean().setFinalizationPengreysonremarks(remarks);		
+	}
+	
+	
 	private void navigateToCommitteeEndorsementStatusTab() {
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCommEndorsementTabIndex());
@@ -1075,8 +1096,11 @@ public class SupplierFinalizationBackingBean extends
 					
 					List<ScQtFinalizationEndorsementRemarks> finalizationEndorsementRemarks = 
 							finalizeRemarks(getManagedBean().getFinalizationEndorsementRemarks());
+					List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationEndorsementRecommendationRemarks = 
+							finalizeRemarks(getManagedBean().getFinalizationPengreysonremarks());
 					scQtFinalization.setScQtFinalizationEndorsementRemarks(
 											 finalizationEndorsementRemarks);
+					scQtFinalization.setScQtFinalizationEndorsmentRecommendationRemarks(finalizationEndorsementRecommendationRemarks);
 					setUserDetails(scQtFinalization);
 	
 					reqDTO.setScQtCommittee(_scQtCommittee);
@@ -2799,8 +2823,21 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
+		StringBuilder pengerysonRemarks = new StringBuilder();
+		List<ScQtFinalizationEndorsementRecommendationRemarks> endorsmentPengeryson=this.getManagedBean().getFinalizationPengreysonremarks();
+		if (CollectionUtils.isNotEmpty(
+				endorsmentPengeryson)) {
+			for (ScQtFinalizationEndorsementRecommendationRemarks pengeryson
+						: endorsmentPengeryson) {
+				if (StringUtils.isNotBlank(pengeryson.getRemark())) {
+					pengerysonRemarks.append(pengeryson.getRemark() + "\n");
+				}
+			}
+		}
 		context.put("endorsementRemarks", endorsementRemarks.length() == 0 ? 
 					StringUtils.EMPTY : endorsementRemarks.toString());
+		context.put("endorsementPengerysonRemarks", pengerysonRemarks.length() == 0 ? 
+				StringUtils.EMPTY : pengerysonRemarks.toString());
 		context.put("reportDTO", reportDTO);
 		context.put("zoneDetailsMap", zoneDetailsMap);
 		context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
