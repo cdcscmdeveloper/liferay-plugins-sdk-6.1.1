@@ -5115,8 +5115,6 @@ public class SimpleQuoteBackingBean extends
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, "supplerView");
-					
-					
 				} else {
 					fc.getApplication()
 							.getNavigationHandler()
@@ -5132,7 +5130,7 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			// quoteSO = null;
 		}
-		return "supplerView";
+		return null;
 	}
 
 	/**
