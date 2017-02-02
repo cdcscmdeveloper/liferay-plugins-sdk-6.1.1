@@ -497,13 +497,10 @@ public class SmApplicationBackingBean extends
 													new FacesMessage(
 															FacesMessage.SEVERITY_INFO,
 															null,
-															MessageUtils
+															SmCommonUtil
 																	.getMessage(
 																			"lbl.sm.submit.questionaire.msg",
-																			null,
-																			MessageUtils.BUNDLE_COMMON_MESSAGES,
-																			new FacesScopes()
-																					.getUserLocale())));
+																			null)));
 								}
 
 								// for application that is not yet active, will
