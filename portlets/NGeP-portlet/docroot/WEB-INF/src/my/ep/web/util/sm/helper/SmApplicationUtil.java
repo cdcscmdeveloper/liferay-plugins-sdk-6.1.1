@@ -10673,7 +10673,7 @@ public class SmApplicationUtil {
 			}
 			PropertyUtils.setProperty(childObject, "smPersonnel",
 					selectedPersonnel);
-			PropertyUtils.setProperty(bean, "selectedJobFunction", childObject);
+			PropertyUtils.setProperty(bean, beanPropName, childObject);
 			assignValReqdToTrue(bean);
 			RequestContext.getCurrentInstance().execute(
 					addPopupName + ".show()");
