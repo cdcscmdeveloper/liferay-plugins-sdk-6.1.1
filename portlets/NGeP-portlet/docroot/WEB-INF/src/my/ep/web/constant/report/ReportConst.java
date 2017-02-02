@@ -191,6 +191,8 @@ public class ReportConst {
 
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	public static final String SC_MARKET_RESEARCH_RPT_JSP = "SC_ITEM_PRICING_SUM.jsp";
+	public static final String SC_SUPPLIER_PROPOSAL_REPORT = "SC_PROPOSAL.jsp";
+	
 	// SC Module reports start
 	// CM Module reports start
 	public static final String LST_PUB_CAT_ITM_RPT_VAL = "CM_001";
