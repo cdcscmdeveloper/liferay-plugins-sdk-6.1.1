@@ -15,7 +15,8 @@
 
 	<cc:implementation>
 		<p:dataTable var="offTable" id="#{cc.attrs.tableId}" style="width:100% !important;"
-			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index">
+			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
 			<p:columnGroup type="header">
 				<p:row>

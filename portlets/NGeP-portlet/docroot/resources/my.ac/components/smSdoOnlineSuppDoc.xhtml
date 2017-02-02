@@ -15,7 +15,8 @@
 
 	<cc:implementation>
 		<p:dataTable var="suppDoc" value="#{cc.attrs.smApplSupportDocs}" id="#{cc.attrs.tableId}" 
-			rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;">
+			rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 					
 			<p:columnGroup type="header">
 				<p:row>

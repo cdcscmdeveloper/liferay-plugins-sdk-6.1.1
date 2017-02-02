@@ -15,7 +15,7 @@
 
 	<cc:implementation>
 		<p:dataTable var="onTable" id="#{cc.attrs.tableId}" style="width:100% !important; table-layout: fixed !important;"
-			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index">
+			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="#{cc.attrs.tableId}" />
 			
 			<p:columnGroup type="header">
