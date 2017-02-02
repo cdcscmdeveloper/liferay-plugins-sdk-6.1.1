@@ -29,34 +29,35 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
-public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManagedBean> {
+public class QuestionnaireBackingBean extends
+		BaseBackingBean<QuestionnaireManagedBean> {
 	public static Logger log = Logger.getLogger(QuestionnaireBackingBean.class);
 
 	public QuestionnaireBackingBean() {
 		SmCommonUtil.setMDCUserId();
-//		if (MDC.get(LogKey.USER_ID) == null) {
-//			MDC.put(LogKey.USER_ID, 1L);
-//		}
+		// if (MDC.get(LogKey.USER_ID) == null) {
+		// MDC.put(LogKey.USER_ID, 1L);
+		// }
 	}
 
 	/*
-	public void retrieveSupplierInfo() {
-		log.info("***********retrieveSupplierInfo**************");
-		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(27);
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IRegistrationSO.class);
-		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
-		log.info("***********retrieveSupplierInfo**************"
-				+ resDTO.getSmSupp().getRegNo());
-		this.getManagedBean().setSmSupp(resDTO.getSmSupp());
-		resDTO.getSmSupp().getSmAppl().getApplType();
-	}*/
+	 * public void retrieveSupplierInfo() {
+	 * log.info("***********retrieveSupplierInfo**************");
+	 * RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+	 * reqDTO.setSupplierId(27); IRegistrationSO reqSO = (IRegistrationSO)
+	 * BusinessDelegate .getInstance().getServiceObject("sm",
+	 * IRegistrationSO.class); RegistrationResDTO resDTO =
+	 * reqSO.retrieveSuppOnlineAcc(reqDTO);
+	 * log.info("***********retrieveSupplierInfo**************" +
+	 * resDTO.getSmSupp().getRegNo());
+	 * this.getManagedBean().setSmSupp(resDTO.getSmSupp());
+	 * resDTO.getSmSupp().getSmAppl().getApplType(); }
+	 */
 
 	public void retrieveQuestionnaire() {
 		// this.test();
 		log.info("***********retrieveQuestionnaire**************");
-		//QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
+		// QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
 		QuestionnaireResDTO resDTO = reqSO.retrieveActiveQuestion();
@@ -67,17 +68,20 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 			smSuppAns.setSmAppl(this.getManagedBean().getSmAppl());
 			smSuppAns.setSmQuestion(smQues);
 			smSuppAns.setSmAnswer(getApplicationTypeAnswer(smQues));
-			smSuppAns.setSmAnswer(getApplicationStatus(smQues,smSuppAns.getSmAnswer()));
+			smSuppAns.setSmAnswer(getApplicationStatus(smQues,
+					smSuppAns.getSmAnswer()));
 			smSuppAnswerLs.add(smSuppAns);
-			
-			if(smQues.getSmAnswerCategory().getAnswerCategoryId() == 2){
-				smSuppAns.getSmAnswer().setAnswerId(smQues.getSmAnswerCategory().getSmAnswers().get(0).getAnswerId());
+
+			if (smQues.getSmAnswerCategory().getAnswerCategoryId() == 2) {
+				smSuppAns.getSmAnswer().setAnswerId(
+						smQues.getSmAnswerCategory().getSmAnswers().get(0)
+								.getAnswerId());
 			}
 			// /smSuppAns.setSupplierAnswerId(supplierAnswerId)
 		}
 		this.getManagedBean().setSmSuppAnswerLs(smSuppAnswerLs);
-		
-		//retrieve MOF Info - to display MOF Account No
+
+		// retrieve MOF Info - to display MOF Account No
 		retrievMOFInfo();
 	}
 
@@ -112,11 +116,12 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		useList.add(loginUser.getLoginId());
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
-		reqDTO.setResetLatestResubmitAppl(getManagedBean().isResetLatestResubmitAppl());
+		reqDTO.setResetLatestResubmitAppl(getManagedBean()
+				.isResetLatestResubmitAppl());
 
 		reqSO.questionnaireSubmission(reqDTO);
-		
-		//for resubmit application directly inject to task list
+
+		// for resubmit application directly inject to task list
 		if (this.getManagedBean().getRejectedAppl() != null) {
 			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
 					SmCommonUtil.getMessage("lbl.sm.submit.questionaire.msg",
@@ -128,26 +133,31 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 
 		renewSesionObject();
 	}
-	
-	public String getsupplierApplTypeDesc(String applType){
+
+	public String getsupplierApplTypeDesc(String applType) {
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
-	
-	public void retrievMOFInfo(){
+
+	public void retrievMOFInfo() {
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		
-		IMofAccountSO mofSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
+
+		IMofAccountSO mofSO = (IMofAccountSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IMofAccountSO.class);
 		reqDTO.setSupplierId(this.getManagedBean().getSmSupp().getSupplierId());
-		reqDTO.setSupplierType(this.getManagedBean().getSmAppl().getSupplierType());
-		MofAccountResDTO resDTO = mofSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
-		
-		if(resDTO.getMofAccount() != null){
-			this.getManagedBean().setMofAccountNo(resDTO.getMofAccount().getMofNo());
+		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
+				.getSupplierType());
+		MofAccountResDTO resDTO = mofSO
+				.retriveMOFAccountBySupplierIdAndType(reqDTO);
+
+		if (resDTO.getMofAccount() != null) {
+			this.getManagedBean().setMofAccountNo(
+					resDTO.getMofAccount().getMofNo());
 		}
 	}
-	
+
 	/**
 	 * Default answer for Jenis Permohonan based on Application Type
+	 * 
 	 * @param smQues
 	 * @return SmAnswer
 	 */
@@ -211,5 +221,5 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		}
 		return smAnswer;
 	}
-	
+
 }

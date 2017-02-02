@@ -677,7 +677,7 @@ public class SmApplicationUtil {
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			break;
 		case "B":
 			fc.getApplication()
