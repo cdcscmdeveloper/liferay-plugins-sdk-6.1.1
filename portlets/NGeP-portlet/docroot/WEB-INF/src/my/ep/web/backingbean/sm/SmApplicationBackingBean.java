@@ -6777,7 +6777,8 @@ public class SmApplicationBackingBean extends
 						|| sts.getPmStatus()
 								.getStatusId()
 								.compareTo(
-										SupplierManagementConst.PM_STATUS_PENDING_VERIFY_SUPP_DOCS) == 0) {
+										SupplierManagementConst.PM_STATUS_PENDING_VERIFY_SUPP_DOCS) == 0 
+						|| sts.getPmStatus().getStatusId().compareTo(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_INQUIRY) == 0) {
 					msg = MessageConst.INFO_700056;
 				} else {
 					msg = MessageConst.INFO_700057;
