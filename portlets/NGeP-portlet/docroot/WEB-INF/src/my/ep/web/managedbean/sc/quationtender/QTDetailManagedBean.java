@@ -33,6 +33,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -982,9 +983,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The panel item list. */
 	private List<CtPanelItem> panelItemList;
 
-	/** The is panel. */
-	private boolean isPanel;
-
 	/** The ct zone trees. */
 	private TreeNode ctZoneTrees;
 
@@ -1551,6 +1549,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private String specMaintenanceScreen="SC";
     private boolean isUpdateSpec=Boolean.TRUE;
     private ScQtFinalization scQtFinalization;
+    private PmPtjSpecialApproval ptjSpecialApproval;
+    private boolean isProcMethodDropdownPresent;
+    // Defined wrapper class to set null when ever is required
+    private Boolean panel = Boolean.TRUE;
     
 	/**
 	 * Sets the panel suppliers.
@@ -7752,20 +7754,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the isPanel
-	 */
-	public boolean isPanel() {
-		return isPanel;
-	}
-
-	/**
-	 * @param isPanel the isPanel to set
-	 */
-	public void setPanel(boolean isPanel) {
-		this.isPanel = isPanel;
-	}
-
-	/**
 	 * @return the ctZoneTrees
 	 */
 	public TreeNode getCtZoneTrees() {
@@ -9761,6 +9749,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
+	}
+
+	public PmPtjSpecialApproval getPtjSpecialApproval() {
+		return ptjSpecialApproval;
+	}
+
+	public void setPtjSpecialApproval(PmPtjSpecialApproval ptjSpecialApproval) {
+		this.ptjSpecialApproval = ptjSpecialApproval;
+	}
+
+	public boolean isProcMethodDropdownPresent() {
+		return isProcMethodDropdownPresent;
+	}
+
+	public void setProcMethodDropdownPresent(boolean isProcMethodDropdownPresent) {
+		this.isProcMethodDropdownPresent = isProcMethodDropdownPresent;
+	}
+
+	public Boolean getPanel() {
+		return panel;
+	}
+
+	public void setPanel(Boolean panel) {
+		this.panel = panel;
 	}
 
 }
