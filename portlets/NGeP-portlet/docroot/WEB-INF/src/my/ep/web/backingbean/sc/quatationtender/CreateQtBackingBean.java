@@ -75,6 +75,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -228,13 +229,8 @@ public class CreateQtBackingBean extends
 	 */
 	public void panelConformation(ScQt scQt) {
 
-		Boolean isPanel = scQt.isPanel();
-		/*
-		 * Boolean isPanel = (Boolean) event.getComponent().getAttributes()
-		 * .get("value");
-		 */
+		Boolean isPanel = this.getManagedBean().getPanel();
 		scQt.setPanel(isPanel);
-
 		if (!isPanel) {
 			if (scQt.isBrandNew() == false) {
 				RequestContext.getCurrentInstance().execute(
@@ -291,16 +287,27 @@ public class CreateQtBackingBean extends
 		try {
 
 			ScQt scQt = new ScQt();
+			scQt.setCircularVer(new CtCircularVer());
+			scQt.setPanel(this.getManagedBean().getPanel());
 			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
 			if (pmOrgProfile != null) {
 				scQt.setPmOrgProfile(pmOrgProfile);
 				scQt.setOwnerOrgProfile(pmOrgProfile);
+				// check whether ptj have the special approval or not for login user
+				PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile
+						.getOrgProfileId());
+				if (ptjSpecialApproval != null) {
+					scQt.setCircularVer(null);
+					this.getManagedBean().setPanel(null);
+					scQt.setPanel(false);
+					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
+				}
 			}
+			
 			scQt.setProcurementMode(new PmParameter());
 			scQt.setProcurementTypeCatId(new PmParameter());
 			scQt.setFulfilmentType(new PmParameter());
 			scQt.setPmProcurementCategory(new PmParameter());
-			scQt.setPanel(true);
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 			
 			/*ScQtCommittee qtCommitte = new ScQtCommittee();
@@ -346,7 +353,7 @@ public class CreateQtBackingBean extends
 			
 			this.getManagedBean().setActiveIndex(0);
 			scQt.setContractType(new PmParameter());
-			scQt.setCircularVer(new CtCircularVer());
+			
 			setUserDetails(scQt);
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
@@ -640,22 +647,29 @@ public class CreateQtBackingBean extends
 									.format(prThreshold) });
 				}
 			}
-
-			// Procurement Mode
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO
-					.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
-			if (isQuotationThresHold || isPanel) {
+			
+				// Procurement Mode
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO
-						.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
-			} else {
-				parameterReqDTO
-						.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
-			}
-			ParameterResDTO parameterResDTO = parameterSo
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-			scQt.setProcurementMode(parameterResDTO.getPmParameter());
-
+						.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+				this.getManagedBean().setProcMethodDropdownPresent(false);
+				if (isQuotationThresHold || isPanel) {
+					parameterReqDTO
+							.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+				} else if (scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval() && amount.intValue() < this
+						.getManagedBean().getPtjSpecialApproval().getProcureAmt().intValue()){
+					this.getManagedBean().setProcMethodDropdownPresent(true);
+					//scQt.setProcurementMode(new PmParameter());
+				}else {
+					parameterReqDTO
+							.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
+				}
+				if(!this.getManagedBean().isProcMethodDropdownPresent()){
+					ParameterResDTO parameterResDTO = parameterSo
+							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					scQt.setProcurementMode(parameterResDTO.getPmParameter());
+				}
+				
 			debugLogger("setProcurementMode, @procurementMode = "
 					+ scQt.getProcurementMode());
 			if (estimatedAmount == null) {
@@ -2810,5 +2824,89 @@ public class CreateQtBackingBean extends
 			}
 		}
 		scQt.setScQtSuppliers(supplierList);
+	}
+	
+	/**
+	 * Set PmPtjSpecialApproval based on selection 
+	 * 
+	 * @param scQt
+	 */
+	public void ptjSpecialApprovalConformation(ScQt scQt) {
+
+		Boolean isSpecialApproval = scQt.getObtainSpecialApproval();
+		if (isSpecialApproval) {
+			scQt.setPtjSpecialApproval(this.getManagedBean()
+					.getPtjSpecialApproval());
+		} else {
+			scQt.setPtjSpecialApproval(null);
+			this.getManagedBean().setProcMethodDropdownPresent(false);
+		}
+		scQt.setProcurementMode(new PmParameter());
+		BigDecimal amount = scQt.getTmpExpectedIntendedPrice() != null ? scQt
+				.getTmpExpectedIntendedPrice() : scQt.getEstimatedAmount();
+		if (amount != null) {
+			setProcurementMode(scQt, amount);
+		}
+	}
+	
+	/**
+	 * Gets the procurement mode dropdown values.
+	 * 
+	 * @return the procurement mode dropdown values
+	 */
+	public SelectItem[] getProcurementModeDropdownValues() {
+		
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> excludedList = new ArrayList<String>();
+		excludedList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+		excludedList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), excludedList));
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		
+		return items;
+	}
+	
+	/**
+	 * Procurement Mode dropdown change action
+	 */
+	public void procurementModeChange(AjaxBehaviorEvent event) {
+		
+		IParameterSO parameterSO = null;
+		Long parameterId = (Long) event.getComponent().getAttributes().get("value");
+				
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			this.getManagedBean().getQt()
+					.setProcurementMode(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
+	/**
+	 * Reset the PmPtjSpecialApproval based on org profile id.
+	 *  
+	 */
+	public void resetPTJSpecApproval() {
+
+		ScQt scQt = this.getManagedBean().getQt();
+		if (scQt.getPmOrgProfile() != null) {
+			PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(scQt
+					.getPmOrgProfile().getOrgProfileId());
+			this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
+			scQt.setObtainSpecialApproval(null);
+			scQt.setPtjSpecialApproval(null);
+			if(ptjSpecialApproval == null){
+				this.getManagedBean().setPanel(true);
+				scQt.setPanel(true);
+			}
+		}
 	}
 }
