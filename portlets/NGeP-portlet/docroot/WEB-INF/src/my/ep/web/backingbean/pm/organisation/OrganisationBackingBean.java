@@ -1055,7 +1055,9 @@ public class OrganisationBackingBean extends
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.MINISTRY.value())) {
+							OrganizationType.MINISTRY.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.OTHERS.value())) {
 				validateUniqueOrgCode(orgProfile,getManagedBean().getOrgType());
 				validateUniqueOrgName(orgProfile,getManagedBean().getOrgType());
 			}
@@ -2476,6 +2478,8 @@ public class OrganisationBackingBean extends
 			List<String> searchOrgTypes = new ArrayList<String>();
 			if(OrganizationType.MINISTRY.value().equals(orgType)){
 				searchOrgTypes.add(OrganizationType.MINISTRY.value());//added ministry
+			}else if(OrganizationType.OTHERS.value().equals(orgType)){
+				searchOrgTypes.add(OrganizationType.OTHERS.value());//added others		
 			}else{
 				searchOrgTypes.add(OrganizationType.STATE_GOVERNMENT.value());
 				searchOrgTypes.add(OrganizationType.LOCAL_AUTHORITY.value());
