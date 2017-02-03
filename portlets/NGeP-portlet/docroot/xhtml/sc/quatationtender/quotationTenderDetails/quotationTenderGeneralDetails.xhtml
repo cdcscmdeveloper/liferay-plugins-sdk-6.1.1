@@ -28,6 +28,43 @@
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false"
 			rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 		<table style="width: 100%;">
+			<c:if test="#{createQtBB.managedBean.ptjSpecialApproval !=  null or scQt.obtainSpecialApproval != null}">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.qt.special.approval']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="3">
+						<table>
+							<tr>
+								<td><c:choose>
+										<c:when
+											test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
+											<p:selectOneRadio id="specialApprovId" required="true"
+												label="#{lbl['lbl.sc.qt.special.approval']}"
+												value="#{scQt.obtainSpecialApproval}">
+												<f:selectItems
+													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+												<p:ajax event="change"
+													listener="#{createQtBB.ptjSpecialApprovalConformation(scQt)}"
+													process="@this" partialSubmit="true" update="@form"></p:ajax>
+											</p:selectOneRadio>
+											<p:message id="specialApprovMsgId" for="specialApprovId"
+												display="icon" />
+										</c:when>
+										<c:otherwise>
+											<p:inputText id="specalApprovalTxtId"
+												value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.obtainSpecialApproval))}"
+												style="width:195px;" disabled="true" />
+
+										</c:otherwise>
+									</c:choose></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.special.approval.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</c:if>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -39,7 +76,7 @@
 									<c:when
 										test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
 										<p:selectOneRadio id="panelTitle" required="true"
-											label="#{lbl['lbl.sc.spec.panel']}" value="#{scQt.panel}">
+											label="#{lbl['lbl.sc.spec.panel']}" value="#{createQtBB.managedBean.panel}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											<p:ajax event="change"
@@ -150,9 +187,10 @@
 							lovId="PM_ORG_PROFILE_AUTH_TYPE"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							saveObject="createQtBB.managedBean.qt.pmOrgProfile"
-							value="#{createQtBB.managedBean.qt.pmOrgProfile.orgName}"
-							size="105" readonly="true" conditionField="recordStatus^1" /> <p:message
-							id="ptjMsg" for="ptjProfAuthId" display="icon" /></td>
+							value="#{createQtBB.managedBean.qt.pmOrgProfile.orgName}" update="@form"
+							size="105" readonly="true" conditionField="recordStatus^1" postUpdateListener="createQtBB.resetPTJSpecApproval()"/> <p:message
+							id="ptjMsg" for="ptjProfAuthId" display="icon" 
+							/></td>
 				</tr>
 			</c:if>
 
@@ -207,10 +245,28 @@
 
 
 
-						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-						<td><p:inputText
-								value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
-								disabled="true" style="width:200px;" readonly="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" />
+							<p:outputLabel value="*" styleClass="mandatory"
+								rendered="#{createQtBB.managedBean.procMethodDropdownPresent}" /></td>
+						<td><c:choose>
+								<c:when
+									test="#{createQtBB.managedBean.procMethodDropdownPresent}">
+									<p:selectOneMenu id="procMode" required="true"
+										value="#{scQt.procurementMode.parameterId}"
+										style="width: 205px;margin-bottom: 5px;"
+										label="#{lbl['lbl.sc.procurement.mode']}">
+										<f:selectItems value="#{createQtBB.getProcurementModeDropdownValues()}" />
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											update="@form" listener="#{createQtBB.procurementModeChange}" />
+									</p:selectOneMenu>
+									<p:message id="procModeMsg" for="procMode" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText
+										value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
+										disabled="true" style="width:200px;" readonly="true" />
+								</c:otherwise>
+							</c:choose></td>
 					</tr>
 				</c:when>
 				<c:otherwise>
@@ -242,10 +298,30 @@
 						</tr>
 					</c:if>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-						<td colspan="3"><p:inputText
-								value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
-								disabled="true" style="width:195px;" readonly="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /> <p:outputLabel
+								value="*" styleClass="mandatory"
+								rendered="#{createQtBB.managedBean.procMethodDropdownPresent}" /></td>
+						<td colspan="3"><c:choose>
+								<c:when
+									test="#{qtStatusChecklistScoringAndBefore and !isReadOnly and createQtBB.managedBean.procMethodDropdownPresent}">
+									<p:selectOneMenu id="procMode" required="true"
+										value="#{scQt.procurementMode.parameterId}"
+										style="width: 205px;margin-bottom: 5px;"
+										label="#{lbl['lbl.sc.procurement.mode']}">
+										<f:selectItems
+											value="#{createQtBB.getProcurementModeDropdownValues()}" />
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											update="@form"
+											listener="#{createQtBB.procurementModeChange}" />
+									</p:selectOneMenu>
+									<p:message id="procModeMsg" for="procMode" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText
+										value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
+										disabled="true" style="width:200px;" readonly="true" />
+								</c:otherwise>
+							</c:choose></td>
 					</tr>
 				</c:otherwise>
 			</c:choose>
