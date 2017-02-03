@@ -17,7 +17,7 @@
 	
 	<ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
-			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" severity="INFO"/><br/>
+			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" /><br/>
 			
 			<p:outputPanel rendered="#{smOutputMsgBackingBean.managedBean.smAppl.applType eq 'N' 
 				or smOutputMsgBackingBean.managedBean.smAppl.applType eq 'R'}">
