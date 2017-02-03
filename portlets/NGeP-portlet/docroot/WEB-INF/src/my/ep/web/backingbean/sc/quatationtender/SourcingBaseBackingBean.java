@@ -45,6 +45,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -67,6 +68,8 @@ import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -86,6 +89,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -2697,4 +2701,39 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return deletedCommitteeMember;
 	}
+	
+	/**
+	 * Get PmPtjSpecialApproval based on ptj orgprofile id
+	 * 
+	 * @param orgProfileId
+	 * @return PmPtjSpecialApproval
+	 */
+	public PmPtjSpecialApproval getPtjSpecialApprovalByOrgProfileId(
+			Long orgProfileId) {
+
+		PmPtjSpecialApproval ptjSpecApproval = null;
+		if (orgProfileId != null) {
+			IPtjSpecialApprovalSO ptjSpecialApprovalSO = null;
+			try {
+				ptjSpecialApprovalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IPtjSpecialApprovalSO.class);
+
+				PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();
+				reqDTO.setOrgProfileId(orgProfileId);
+				//reqDTO.setOrgProfileId(238501L);
+				PtjSpecialApprovalResDTO resDTO = ptjSpecialApprovalSO
+						.isPtjSpecialApproval(reqDTO);
+				if (resDTO.isValid()) {
+					ptjSpecApproval = resDTO.getPtjSpecialApproval();
+				}
+
+			} finally {
+				ptjSpecialApprovalSO = null;
+			}
+		}
+
+		return ptjSpecApproval;
+	}
+	
 }
