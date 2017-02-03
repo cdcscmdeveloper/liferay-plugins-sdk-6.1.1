@@ -721,7 +721,6 @@ public class SmApplicationBackingBean extends
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
-		getManagedBean().setPoSupplierInquiryHistory(null);
 		assignValReqdToFalse();
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -7862,24 +7861,6 @@ public class SmApplicationBackingBean extends
 				renewSesionObject();
 				retMsg = SmApplicationUtil.getApplicationErrorPage();
 
-				// hide inquiry dialog (for inquiry section or po decision
-				// section)
-				if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
-					log.info(">>>>>>>>>>>>>>SEND PO INQUIRY:"
-							+ getManagedBean().getCurrentPageType()
-							+ "<<<<<<<<<<<<");
-					if (getManagedBean()
-							.getCurrentPageType()
-							.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)) {
-						RequestContext.getCurrentInstance().execute(
-								"inquiryDialog.hide()");
-					} else if (getManagedBean().getCurrentPageType().equals(
-							SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)) {
-						RequestContext.getCurrentInstance().execute(
-								"sendInqDialog.hide()");
-					}
-
-				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
 						null,

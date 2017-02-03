@@ -274,7 +274,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
 					update="@([id$=Msg])" process="poEnquiryBlockPanel"
-					onclick="poEnquiryBlockWidget.show()" oncomplete="poEnquiryBlockWidget.hide();"
+					oncomplete="sendInqDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
 					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
