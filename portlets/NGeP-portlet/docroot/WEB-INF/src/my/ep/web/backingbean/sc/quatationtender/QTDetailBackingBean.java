@@ -3211,6 +3211,7 @@ public class QTDetailBackingBean extends
 					if (tenderResDTO.getQtDetail() != null) {
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
+						this.getManagedBean().setPanel(scQt.isPanel());
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
 						this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -3244,6 +3245,16 @@ public class QTDetailBackingBean extends
 								}
 							}
 						}
+						//Setting special approval info for login user
+						if (isQTStatusLessThanOrEquals(
+								currentStatus,
+								QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+							this.getManagedBean().setPtjSpecialApproval(
+									getPtjSpecialApprovalByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId()));
+											
+						} else {
+							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
+						}
 
 					}
 
@@ -3259,6 +3270,7 @@ public class QTDetailBackingBean extends
 						getManagedBean().getQt().setProcurementTypeCatId(
 								new PmParameter());
 					}
+					
 
 				} else {
 					if (scQt.getEstimatedAmount() == null) {
