@@ -79,6 +79,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" width="10%">
 				<p:calendar showOn="button" id="qtValueeffDateId" navigator="true"
+					disabled="#{ptjSpecialApproval.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					yearRange="#{DateUtils.getCalendarMaxYearRange(ptjSpecialApproval.effDate)}"
 					style="width :100px;" required="true"
 					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
@@ -93,6 +94,7 @@
 			<p:column width="10%" headerText="#{lbl['lbl.pm.as.expdate']}">
 				<p:calendar showOn="button" id="qtValueexpDateId" navigator="true"
 					style="width :100px;"
+					disabled="#{ptjSpecialApproval.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					yearRange="#{DateUtils.getCalendarMaxYearRange(ptjSpecialApproval.expDate)}"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
