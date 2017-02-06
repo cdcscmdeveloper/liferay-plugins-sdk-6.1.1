@@ -921,6 +921,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
+				
+				calculatePricePerItem(scRequestNoteDtl);
+				
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
 			getManagedBean().setRequestNoteDtl(requestNote.getRequestNoteDtls().get(0));
@@ -1799,6 +1802,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		updateWorkFlowAndRemarks(requestNote);
 
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		calculatePricePerItem(scRequestNoteDtl);
 		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		getManagedBean().setRequestNote(requestNote);
 
@@ -1971,6 +1975,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
 					if(requestNoteDtl.equals(selectedRequestNoteDtl)){
 						requestNoteDtl.getRequestItem().setQuantity(quantity);
+						calculatePricePerItem(requestNoteDtl);
 						//requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().setQuantity(quantity);
 						requestNoteDtls.add(requestNoteDtl);
 					} else{
@@ -3683,5 +3688,120 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		append(requestItem.getUom().getUomId());
 		
 		return sb.toString();
+	}
+	
+	/**
+	 * Calculate price per item
+	 */
+	public BigDecimal calculatePricePerItem(ScRequestNoteDtl requestNoteDtl) {
+		ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+		String fulfilmentType = null;
+		if(requestNoteDtl.getFulfilmentType() != null) {
+			fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+		}
+		
+		ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
+		BigDecimal orderQuantity = requestItem.getQuantity();
+		BigDecimal subTotalAmount = BigDecimal.ZERO;
+
+		if (orderQuantity != null) {
+			if(!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				BigDecimal zonalSubTotalAmount = orderQuantity;
+				TplSpecQuestion specQuestion = requestItem.getTplSpecQuestion();
+				if(specQuestion != null) {
+					BigDecimal uomFrequency = requestItem.getTplSpecQuestion().getClUomFrequency();
+					BigDecimal uomPerDay = specQuestion.getClUomPerDay();
+					BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
+					BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
+
+					if (uomFrequency != null) {
+						zonalSubTotalAmount = zonalSubTotalAmount.multiply(uomFrequency);
+					}
+
+					if (uomPerDay != null) {
+						zonalSubTotalAmount = zonalSubTotalAmount.multiply(uomPerDay);
+					}
+
+					if (uomPerMonth != null) {
+						zonalSubTotalAmount = zonalSubTotalAmount.multiply(uomPerMonth);
+					}
+
+					if (itemDurationMonth != null) {
+						zonalSubTotalAmount = zonalSubTotalAmount.multiply(itemDurationMonth);
+					} else {
+						BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
+
+						if (durationMonth != null) {
+							zonalSubTotalAmount = zonalSubTotalAmount.multiply(durationMonth);
+						}
+					}
+				}
+				for(ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+					subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+				}
+			} else {
+				ScSupplierItemPrice itemPrice = getTopZonalTierPrice(requestSupplierItem.getSupplierItemPrices(),
+						orderQuantity,
+						requestNoteDtl.getPriceType().getParameterCode(),
+						requestItem.getItemName());
+				
+				subTotalAmount = itemPrice.getItemPrice().multiply(orderQuantity);
+			}
+		}
+		requestNoteDtl.setTotalPricePerItem(subTotalAmount);
+		
+		return subTotalAmount;
+	}
+	
+	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 
+			BigDecimal orderQuantity, String priceType, String itemName) {
+		List<ScSupplierItemPrice> groupedItemPrice = new ArrayList<ScSupplierItemPrice>();
+		boolean isTierPriceMatched = false;
+		boolean isTierPrice = false;
+		ScSupplierItemPrice topPricedItem = null;
+		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
+			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
+				BigDecimal toQty = itemPrice.getToQty();
+				BigDecimal fromQty = itemPrice.getFromQty();
+				if (fromQty != null
+						&& orderQuantity != null) {
+					isTierPrice = true;
+					if (fromQty.compareTo(orderQuantity) <= 0
+							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
+						isTierPriceMatched = true;
+						groupedItemPrice.add(itemPrice);
+					} 
+				} else {
+					groupedItemPrice.add(itemPrice);
+				}
+			}
+		}
+		if(isTierPrice && !isTierPriceMatched) {
+			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+		} else {
+			topPricedItem = findMaxPriceItem(groupedItemPrice);
+		}
+		return topPricedItem;
+	}
+	
+	/**
+	 * Find max price item.
+	 *
+	 * @param items the items
+	 * @return the sc loi loa item
+	 */
+	private ScSupplierItemPrice findMaxPriceItem(List<ScSupplierItemPrice> items) {
+		Comparator<ScSupplierItemPrice> comparator = new Comparator<ScSupplierItemPrice>() {
+			@Override
+			public int compare(ScSupplierItemPrice o1, ScSupplierItemPrice o2) {
+				if(o1.getItemPrice() != null && o2.getItemPrice() != null){
+					return new CompareToBuilder().append(o1.getItemPrice(),
+							o2.getItemPrice()).toComparison();
+				}
+				return 0;
+			}
+		};
+		ScSupplierItemPrice scSupplierItemPrice = Collections.max(items, comparator);
+		return scSupplierItemPrice;
 	}
 }
