@@ -45,7 +45,7 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @RequestScoped
 public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> {
-	
+	private static final long serialVersionUID = 1L;
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(QtLOABackingBean.class);
 
