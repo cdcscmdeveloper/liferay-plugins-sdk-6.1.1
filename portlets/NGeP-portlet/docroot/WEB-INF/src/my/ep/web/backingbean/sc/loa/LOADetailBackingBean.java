@@ -334,10 +334,6 @@ public class LOADetailBackingBean extends
 			
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
-			if (!scLoa.isBrandNew()) {
-				getManagedBean().setSelectedBankId(
-						getSelectedBankIdByScLoa(scLoa));
-			}
 			
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
@@ -2175,10 +2171,13 @@ public class LOADetailBackingBean extends
 	public void handleBranchDetailsChanged(boolean isBranchChanged) {
 		debugLogger("handleBranchDetailsChanged");
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		String selectedSupplierBranch = scLoa.getSupplierBranch();
+		Long selectedSupplierBranchCode = scLoa.getSupplierBranchCode();
         String supplierBranchAsHQ = QTConstants.SUPPLIER_INFO_HQ;
-		if (null == selectedSupplierBranch
-				|| supplierBranchAsHQ.equals(selectedSupplierBranch)) {
+        
+        String BranchName = getSupplierBranchNameByBranchCode(selectedSupplierBranchCode);
+        
+		if (null == BranchName
+				|| supplierBranchAsHQ.equals(BranchName)) {
 			SmPersonnel supplierHQPersonnel = this.getManagedBean()
 					.getSupplierHQPersonnel();
 			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl()
@@ -2213,8 +2212,8 @@ public class LOADetailBackingBean extends
 					.getBranchsList();
 
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
-				if (selectedSupplierBranch.equals(supplierBranch
-						.getBranchName().replaceAll("\\s+", " ").trim())) {
+				if (supplierBranch.getBranchCode().equals(
+						selectedSupplierBranchCode)) {
 					log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
@@ -2234,7 +2233,9 @@ public class LOADetailBackingBean extends
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
-					setGSTInfo(resDTO,scLoa);
+					if(isBranchChanged){
+						setGSTInfo(resDTO,scLoa);
+					}
 					break;
 				}
 			}
@@ -2248,14 +2249,14 @@ public class LOADetailBackingBean extends
 	public void handleBankDetailsChanged() {
 		debugLogger("handleBankDetailsChanged");
 
-		Long selectedBankId = this.getManagedBean().getSelectedBankId();
+		//Long selectedBankId = this.getManagedBean().getSelectedBankId();
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 
-		if (selectedBankId != null) {
+		if (scLoa.getBankAccNo() != null) {
 			List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
 
 			for (SmSupplierBank supplierBank : bankList) {
-				if (supplierBank.getSupplierBankId().equals(selectedBankId)) {
+				if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
 					log.info("found supplier bank");
 
 					scLoa.setBankAccNo(supplierBank.getAccountNo());
@@ -4716,33 +4717,6 @@ public class LOADetailBackingBean extends
 			}
 	    }
 	}
-
-	/**
-	 * Gets the supplier branches.
-	 *
-	 * @return the supplier branches
-	 */
-	public SelectItem[]  getSupplierBranches(){
-		SelectItem[] items = null;
-        boolean isBranch = Boolean.FALSE;
-		if(getManagedBean().getBranchsList() != null && getManagedBean().getBranchsList().size()>0){
-			items = new SelectItem[getManagedBean().getBranchsList().size()+1];
-			isBranch = Boolean.TRUE;
-		} else{
-			items = new SelectItem[1];
-		}
-
-		int i = 1;
-		items[0] = new SelectItem("HQ", "HQ");
-		if(isBranch){
-			for(SmSupplierBranch smSupplierBranch : getManagedBean().getBranchsList()) {
-				items[i] = new SelectItem(smSupplierBranch.getBranchName().replaceAll("\\s+", " ").trim(), smSupplierBranch.getBranchName().trim().replaceAll("\\s+", " ").trim());
-				i++;
-			}	
-		}
-
-		return items;
-	}
 	
 	/**
 	 * Sum of gstAmount & loa offer price
@@ -5473,5 +5447,20 @@ public class LOADetailBackingBean extends
 		}
 
 		return new ArrayList<ItemBean>(questionSpecMap.values());
+	}
+	
+	private String getSupplierBranchNameByBranchCode(Long branchCode){
+		List<SmSupplierBranch> supplierBranchs = this.getManagedBean()
+				.getBranchsList();
+		String branchName = null;
+		if(supplierBranchs != null && branchCode != null){
+			for (SmSupplierBranch supplierBranch : supplierBranchs) {
+				if (supplierBranch.getBranchCode().equals(
+						branchCode)) {
+					branchName = supplierBranch.getBranchName();
+				}
+			}
+		}
+		return branchName;
 	}
 }
