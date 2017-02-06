@@ -11,7 +11,7 @@
 		headerText="#{lbl['lbl.tpl.spec.content.item']}">
 		<h:outputText value="#{question.clItem}" escape="false"
 			rendered="#{!isRepeated}" /><br /><br />
-			#{question.cmItem.extensionCode}
+		<h:outputText value="#{question.cmItem.extensionCode}" rendered="#{!isRepeated}" />
 	</p:column>
 	<p:column style="width: 22%;white-space: normal;"
 		headerText="#{lbl['lbl.tpl.spec.content.specification']}"
