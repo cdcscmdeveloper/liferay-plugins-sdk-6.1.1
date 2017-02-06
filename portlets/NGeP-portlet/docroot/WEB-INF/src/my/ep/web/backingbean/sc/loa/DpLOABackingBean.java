@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 @ManagedBean
 @RequestScoped
 public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> {
-	
+	private static final long serialVersionUID = 1L;
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(DpLOABackingBean.class);
 
