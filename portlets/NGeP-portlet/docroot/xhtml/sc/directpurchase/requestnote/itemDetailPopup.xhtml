@@ -91,8 +91,8 @@
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 										value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.quantity}">
-										<p:ajax partialSubmit="true" process="@this" update="@this, itemTotalPriceId" />
-										<p:ajax event="blur" update="itemTotalPriceId" />
+										<p:ajax partialSubmit="true" process="@this" update="@this" />
+										<p:ajax event="blur" update="itemTotalPriceId" listener="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}" />
 										<ac:validateNumber
 											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 											maxIntegerDigits="10" />
@@ -110,7 +110,7 @@
 					<td><p:inputText size="30" styleClass="ppRightBtn"
 							disabled="true" id="itemTotalPriceId"
 							label="#{lbl['lbl.sc.totalprice']}"
-							value="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}">
+							value="#{requestNoteDtl.totalPricePerItem}">
 						</p:inputText></td>
 				</tr>
 				<tr>

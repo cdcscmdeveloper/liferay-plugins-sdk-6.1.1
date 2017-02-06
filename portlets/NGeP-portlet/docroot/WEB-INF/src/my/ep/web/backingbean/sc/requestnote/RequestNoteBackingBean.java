@@ -2479,6 +2479,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteDtl.setPriceType(new PmParameter());
 			scRequestSupplierItem.setSupplierItemPrice(null);
 		}
+		
+		calculatePricePerItem(requestNoteDtl);
 	}
 
 
