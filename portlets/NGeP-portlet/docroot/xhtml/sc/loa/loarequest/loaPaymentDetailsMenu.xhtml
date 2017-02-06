@@ -17,7 +17,7 @@
 				<c:if test="#{isSupplierAckStatus}">
 					<p:selectOneMenu id="accountNoId"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.selectedBankId}"
+						value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}"
 						style="width: 277px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.account.no']}">
@@ -25,7 +25,7 @@
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.bankList}"
 							var="smSupplierBank" 
-							itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo}" />
+							itemValue="#{smSupplierBank.accountNo}" itemLabel="#{smSupplierBank.accountNo}" />
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
 							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />

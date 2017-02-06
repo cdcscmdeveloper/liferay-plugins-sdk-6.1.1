@@ -17,14 +17,14 @@
 					<c:choose>
 						<c:when test="#{isSupplierAckStatus and !directLOABackingBean.managedBean.readOnly}">
 							<p:selectOneMenu id="accountNoId"
-								value="#{directLOABackingBean.managedBean.selectedBankId}"
+								value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
 								style="width:277px;margin-bottom: 5px;"
 								required="true" label="#{lbl['lbl.sc.account.no']}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{directLOABackingBean.managedBean.bankList}"
 									var="smSupplierBank"
-									itemValue="#{smSupplierBank.supplierBankId}"
+									itemValue="#{smSupplierBank.accountNo}"
 									itemLabel="#{smSupplierBank.accountNo}" />
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.handleBankDetailsChanged}"
