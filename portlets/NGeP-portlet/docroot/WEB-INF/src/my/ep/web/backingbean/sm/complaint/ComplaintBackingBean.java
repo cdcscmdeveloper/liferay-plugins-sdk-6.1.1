@@ -98,14 +98,14 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	 * @return String
 	 */
 	public String lodgeComplaint() {
-		String complNo = String.valueOf((new Date()).getTime());
+		//String complNo = String.valueOf((new Date()).getTime());
 		Date date = new Date();
 		Timestamp currDate = new Timestamp(date.getTime());
 		
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
 		
 		this.getManagedBean().getSmComplaint().setComplaintDate(currDate);
-		this.getManagedBean().getSmComplaint().setComplaintNo(complNo);
+		//this.getManagedBean().getSmComplaint().setComplaintNo(complNo);
 		this.getManagedBean().getSmComplaint().setComplaintCategory("O");
 		this.getManagedBean().getSmComplaint().setPmStatus(SmCommonUtil.getInstance().retrievePmStatusById(DisciplinaryActionConst.NEW_COMPLAINT));
 
@@ -132,6 +132,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IComplaintSO.class);
 		reqDTO.setSmComplaint(this.getManagedBean().getSmComplaint());
 		ComplaintResDTO resDTO = reqSO.lodgeComplaint(reqDTO);
+		String complNo = resDTO.getSmComplaint().getComplaintNo();
 
 		renewSesionObject();
 		FacesContext.getCurrentInstance().addMessage(null,
