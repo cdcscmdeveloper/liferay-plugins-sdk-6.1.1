@@ -110,7 +110,7 @@ public class UpdatePersonnelBackingBean extends
 		getManagedBean().setePRoleList(
 				SmApplicationUtil.getPersonnelRoleItems(personnel,
 						getManagedBean().getSmAppl(), getManagedBean()
-								.isValidSmUserLimit()));
+								.getAuthVO()));
 	}
 
 	/**
@@ -794,12 +794,10 @@ public class UpdatePersonnelBackingBean extends
 	private void calcAuthorizedPersonnel() {
 		// set already reach valid max authorized personnel and justification
 		SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil
-				.getSmAuthorizedPersonnelCountVO(getManagedBean()
-						.getSmSupplier().getSupplierId(), getManagedBean()
-						.getSmAppl().getApplType(), getManagedBean()
-						.getSmAppl().getApplId(), false);
+				.getSmAuthorizedPersonnelCountVO(getManagedBean().getSmAppl());
 		getManagedBean().setValidSmUserLimit(
 				countVO.isReachAuthorizedPersonnelLimit());
+		getManagedBean().setAuthVO(countVO);
 	}
 
 	/**

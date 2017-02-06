@@ -301,6 +301,56 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Set personnel authorization count
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @return SmAuthorizedPersonnelCountVO
+	 */
+	public static SmAuthorizedPersonnelCountVO getSmAuthorizedPersonnelCountVO(
+			SmAppl appl) {
+		SmAuthorizedPersonnelCountVO vo = new SmAuthorizedPersonnelCountVO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplNo(appl.getApplNo());
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
+
+		if (!EntityHelper.isCollectionEmpty(personnels)) {
+			int maxAuthorizedSupplierUser = SmRuleHelper.getInstance()
+					.getMaxAdditionalMofAuthorizedUser();
+
+			int countAp = 0;
+			int countApSupplierUser = 0;
+			for (SmPersonnel per : personnels) {
+				if (per.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& per.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					countAp++;
+					if (!StringUtils.isBlank(per.getEpRole())
+							&& (per.getEpRole().equals(
+									RoleCode.MOF_SUPPLIER_USER.value())
+									|| per.getEpRole()
+											.equals(RoleCode.MOF_SUPPLIER_ADMIN
+													.value())
+									|| per.getEpRole().equals(
+											RoleCode.SUPPLIER_TEMP.value()) || per
+									.getEpRole().equals(
+											RoleCode.BASIC_SUPPLIER_ADMIN
+													.value()))) {
+						countApSupplierUser++;
+					}
+				}
+			}
+			if (countAp >= maxAuthorizedSupplierUser) {
+				vo.setReachAuthorizedPersonnelLimit(true);
+			}
+			if (countApSupplierUser >= maxAuthorizedSupplierUser) {
+				vo.setReachSupplierUserAuthorizedLimit(true);
+			}
+		}
+		return vo;
+	}
+
+	/**
 	 * Validate new category added.Check if at least one new category is added
 	 * within that particular application.
 	 * 
@@ -9371,12 +9421,6 @@ public class SmApplicationUtil {
 		}
 		assignSelShareHolderAddress(shr, bean);
 
-		// display justification
-		shr.setJustificationReqd(getSmAuthorizedPersonnelCountVO(
-				bean.getSmSupplier().getSupplierId(),
-				bean.getSmAppl().getApplType(), bean.getSmAppl().getApplId(),
-				true).isJustificationRequired());
-
 		bean.setSelectedShareHolder(shr);
 		if (bean.isValidSmUserLimit()) {
 			bean.setUserWithRole(false);
@@ -9389,7 +9433,7 @@ public class SmApplicationUtil {
 			bean.getSelectedShareHolder().setAuthorizedFlg(0);
 		}
 		bean.setePRoleList(getPersonnelRoleItems(bean.getSelectedShareHolder(),
-				bean.getSmAppl(), bean.isValidSmUserLimit()));
+				bean.getSmAppl(), bean.getAuthVO()));
 
 		bean.setRedirectToPersonPage(true);
 
@@ -9421,7 +9465,7 @@ public class SmApplicationUtil {
 	 * Builds the role list.
 	 */
 	public static List<SelectItem> getPersonnelRoleItems(SmPersonnel personnel,
-			SmAppl smAppl, boolean isValidSmUserLimit) {
+			SmAppl smAppl, SmAuthorizedPersonnelCountVO authVO) {
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 
 		// If authorized and current role is FL_USER, set to
@@ -9445,7 +9489,7 @@ public class SmApplicationUtil {
 						RoleCode.MOF_SUPPLIER_USER.value())) {
 			addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 		} else {
-			if (!isValidSmUserLimit
+			if (!authVO.isReachAuthorizedPersonnelLimit()
 					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 			}
@@ -9456,7 +9500,7 @@ public class SmApplicationUtil {
 				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
 			addRoles(roles, RoleCode.FL_USER.value(), false);
 		} else {
-			if (isValidSmUserLimit
+			if (authVO.isReachSupplierUserAuthorizedLimit()
 					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				// add if already reach limit and personnel role is empty
 				if (StringUtils.isBlank(personnel.getEpRole())) {
@@ -9474,9 +9518,11 @@ public class SmApplicationUtil {
 			}
 		}
 
-		// only add CM_USER for contractor that transact with federal govt
-		if (smAppl.getSupplierType().equalsIgnoreCase(
-				SupplierManagementConst.STYPE_CONTRACTOR)
+		// only add CM_USER if authorized and for contractor that transact with
+		// federal govt
+		if (personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& smAppl.getSupplierType().equalsIgnoreCase(
+						SupplierManagementConst.STYPE_CONTRACTOR)
 				&& smAppl.getSmCompanyBasic() != null
 				&& smAppl.getSmCompanyBasic().isWithFederal()) {
 			addRoles(roles, RoleCode.CM_USER.value(), false);
@@ -9768,7 +9814,7 @@ public class SmApplicationUtil {
 		}
 		bean.setePRoleList(SmApplicationUtil.getPersonnelRoleItems(
 				bean.getSelectedShareHolder(), bean.getSmAppl(),
-				bean.isValidSmUserLimit()));
+				bean.getAuthVO()));
 		bean.setDisableAuthorizedRadio(SmApplicationUtil
 				.isDisableAuthorizedRadio(bean.getSelectedShareHolder(),
 						bean.isValidSmUserLimit()));
@@ -10155,7 +10201,7 @@ public class SmApplicationUtil {
 		bean.setRedirectToPersonPage(true);
 		bean.setRemoveEpRole(false);
 		bean.setePRoleList(getPersonnelRoleItems(bean.getSelectedShareHolder(),
-				bean.getSmAppl(), bean.isValidSmUserLimit()));
+				bean.getSmAppl(), bean.getAuthVO()));
 
 		if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
@@ -11177,7 +11223,7 @@ public class SmApplicationUtil {
 				cat.setCategoryL3Name(l3.getCategoryName());
 			}
 		}
-		if(cat.getApplRefId() == null) {
+		if (cat.getApplRefId() == null) {
 			cat.setApplRefId(cat.getSmAppl().getApplId());
 		}
 	}
