@@ -81,6 +81,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmApplStatusInfoVO;
+import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
@@ -493,7 +494,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmAppl poAppl;
 
 	private Object cloneObject;
-
+	private SmAuthorizedPersonnelCountVO authVO;
 	private SmSectionEditorVO editVO;
 	private SmSectionEditorVO supplierEditVO;
 	private List<SmPaymentDetailsVO> paymentDetailsVOList;
@@ -3917,5 +3918,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestRejectedAppl(SmAppl latestRejectedAppl) {
 		this.latestRejectedAppl = latestRejectedAppl;
+	}
+
+	public SmAuthorizedPersonnelCountVO getAuthVO() {
+		return authVO;
+	}
+
+	public void setAuthVO(SmAuthorizedPersonnelCountVO authVO) {
+		this.authVO = authVO;
 	}
 }
