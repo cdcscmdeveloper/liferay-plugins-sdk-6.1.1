@@ -91,7 +91,8 @@
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 										value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.quantity}">
-										<p:ajax partialSubmit="true" process="@this" update="@this" />
+										<p:ajax partialSubmit="true" process="@this" update="@this, itemTotalPriceId" />
+										<p:ajax event="blur" update="itemTotalPriceId" />
 										<ac:validateNumber
 											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 											maxIntegerDigits="10" />
@@ -99,6 +100,18 @@
 							</tr>
 						</table>
 					</td>
+				</tr>
+				
+				<ui:param name="requestNoteDtl"
+					value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>
+					
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.totalprice']}" /></td>
+					<td><p:inputText size="30" styleClass="ppRightBtn"
+							disabled="true" id="itemTotalPriceId"
+							label="#{lbl['lbl.sc.totalprice']}"
+							value="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}">
+						</p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.ceiling.price']}"
@@ -108,8 +121,6 @@
 							rendered="#{requestNoteBackingBean.managedBean.itemCheck}" /></td>
 				</tr>
 
-				<ui:param name="requestNoteDtl"
-					value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.request.note.price.type']}" /> <p:outputLabel
@@ -126,7 +137,7 @@
 								itemLabel="#{requestNoteBackingBean.getParameterDesc(pmParameter)}"
 								itemValue="#{pmParameter.parameterId}" />
 
-							<p:ajax event="change" partialSubmit="true" process="@this"
+							<p:ajax event="change" partialSubmit="true" process="@this" update="itemTotalPriceId"
 								listener="#{requestNoteBackingBean.priceTypeChangeListener(requestNoteDtl.priceTypeId, requestNoteDtl)}" />
 						</h:selectOneMenu> <p:message id="priceTypeMsg" for="priceType" display="icon" /></td>
 				</tr>
