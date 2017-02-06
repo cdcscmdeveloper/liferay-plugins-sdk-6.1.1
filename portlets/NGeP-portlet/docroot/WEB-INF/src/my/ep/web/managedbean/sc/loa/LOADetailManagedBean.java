@@ -31,8 +31,6 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.primefaces.model.StreamedContent;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class LOADetailManagedBean.
