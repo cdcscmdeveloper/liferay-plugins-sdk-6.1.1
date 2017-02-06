@@ -3195,6 +3195,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
 			
 		}finally{
