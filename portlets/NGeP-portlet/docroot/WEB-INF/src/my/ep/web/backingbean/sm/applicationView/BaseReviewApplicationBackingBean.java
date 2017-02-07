@@ -2639,7 +2639,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 					}
 
-					// only category that have facilities
+					// only add category that have facilities
 					if (cat.getPmCategoryL3() != null
 							&& !EntityHelper.isCollectionEmpty(cat
 									.getPmCategoryL3().getFacilityList())) {
