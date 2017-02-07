@@ -2249,7 +2249,6 @@ public class LOADetailBackingBean extends
 	public void handleBankDetailsChanged() {
 		debugLogger("handleBankDetailsChanged");
 
-		//Long selectedBankId = this.getManagedBean().getSelectedBankId();
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 
 		if (scLoa.getBankAccNo() != null) {
@@ -2271,32 +2270,7 @@ public class LOADetailBackingBean extends
 			}
 		}
 	}
-
-	/**
-	 * Gets the selected bank id by sc loa.
-	 *
-	 * @param scLoa the sc loa
-	 * @return the selected bank id by sc loa
-	 */
-	private Long getSelectedBankIdByScLoa(ScLoa scLoa) {
-		Long selectedBankId = null;
-		SupplierBankFK loaSupplierBankFK = new SupplierBankFK(scLoa);
-		List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
-		if (bankList != null) {
-			for (SmSupplierBank supplierBank : bankList) {
-				if (new SupplierBankFK(supplierBank).equals(loaSupplierBankFK)) {
-					log.info("found supplier bank");
-
-					selectedBankId = supplierBank.getSupplierBankId();
-
-					break;
-				}
-			}
-		}
-
-		return selectedBankId;
-	}
-
+	
 	/**
 	 * The Class SupplierBankFK.
 	 */
