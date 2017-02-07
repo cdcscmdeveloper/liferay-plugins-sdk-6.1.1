@@ -2639,7 +2639,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 					}
 
-					categoryFacilityVOList.add(cat.getPmCategoryL3());
+					// only category that have facilities
+					if (cat.getPmCategoryL3() != null
+							&& !EntityHelper.isCollectionEmpty(cat
+									.getPmCategoryL3().getFacilityList())) {
+						categoryFacilityVOList.add(cat.getPmCategoryL3());
+					}
 				}
 			}
 		}
