@@ -454,9 +454,6 @@ public class DirectLOABackingBean extends
 
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
-
-			this.getManagedBean().setSelectedBankId(
-					getBankByAccountNo(scLoa.getBankAccNo()));
 			
 			// overall ct amount or loa amt
 			BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
@@ -1011,14 +1008,13 @@ public class DirectLOABackingBean extends
 	public void handleBankDetailsChanged() {
 		debugLogger("handleBankDetailsChanged");
 
-		Long selectedBankId = this.getManagedBean().getSelectedBankId();
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 
-		if (selectedBankId != null) {
+		if (scLoa.getBankAccNo() != null) {
 			List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
 
 			for (SmSupplierBank supplierBank : bankList) {
-				if (supplierBank.getSupplierBankId().equals(selectedBankId)) {
+				if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
 					log.info("found supplier bank");
 
 					scLoa.setBankAccNo(supplierBank.getAccountNo());
