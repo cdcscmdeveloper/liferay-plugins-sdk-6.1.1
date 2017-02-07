@@ -1346,6 +1346,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				this.getManagedBean().getSelectedReason().setSourceMethod(paramObj);
 				System.out.println(paramObj.getParameterCode());
 				
+			}else{
+				this.getManagedBean().getSelectedReason().setSourceMethod(null);
 			}
 		}
 		
