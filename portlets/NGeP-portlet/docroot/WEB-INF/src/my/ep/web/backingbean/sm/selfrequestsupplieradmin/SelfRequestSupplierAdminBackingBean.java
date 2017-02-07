@@ -43,6 +43,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 	public void preRender() {
 		renewSesionObject();
+		getManagedBean().setCurrDate(new Date());
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminTnc.xhtml",
@@ -104,6 +105,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 							.getIcNo(), getManagedBean().getSupplier()
 							.getSmAppl().getSmPersonnels(), "identificationNo");
 			getManagedBean().setSelectedAdmin(suppAdmin);
+			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 		} else {
 			fc.addMessage("icNoId", new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null, invalidMsg));
