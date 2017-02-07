@@ -1695,11 +1695,13 @@ public class LOADetailBackingBean extends
 		
 		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
 			jadualHarga = mappingJadualHarga(item);
-			itemType = item.getScRequestItem().getItemType().getParameterCode();
-			if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
-				productItemBeans.add(jadualHarga);
-			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-				serviceItemBeans.add(jadualHarga);
+			if(null != item.getScRequestItem().getItemType()){
+				itemType = item.getScRequestItem().getItemType().getParameterCode();
+				if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
+					productItemBeans.add(jadualHarga);
+				} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+					serviceItemBeans.add(jadualHarga);
+				}
 			}
 		}
 		jadualHargaItemBean.setProductItemBeans(productItemBeans);
