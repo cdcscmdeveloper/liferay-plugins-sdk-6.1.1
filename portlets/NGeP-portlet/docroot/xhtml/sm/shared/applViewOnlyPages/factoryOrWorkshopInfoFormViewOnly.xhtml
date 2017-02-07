@@ -9,10 +9,8 @@
 	<p:panel header="#{lbl['lbl.sm.factory.details']}" toggleable="true"
 		id="smFacilityFactoryDtPanel">
 		
-		<br />
-		
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}">
-			<h:outputText style="float:left" value="#{lbl['lbl.sm.factory.notApplicable']}" />
+			<h:outputText value="#{lbl['lbl.sm.factory.notApplicable']}" />
 		</p:outputPanel>
 		
 		<ui:repeat var="factoryCatVar" value="#{viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
