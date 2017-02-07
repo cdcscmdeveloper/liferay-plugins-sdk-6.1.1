@@ -60,9 +60,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The source id. */
 	private Long sourceId;
 
-	/** The selected bank id. */
-	private Long selectedBankId;
-
 	/** The agree with terms conditions. */
 	private boolean agreeWithTermsConditions;
 
@@ -347,25 +344,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setSourceId(Long sourceId) {
 		this.sourceId = sourceId;
-	}
-
-	/**
-	 * Gets the selected bank id.
-	 * 
-	 * @return the selectedBankId
-	 */
-	public Long getSelectedBankId() {
-		return selectedBankId;
-	}
-
-	/**
-	 * Sets the selected bank id.
-	 * 
-	 * @param selectedBankId
-	 *            the selectedBankId to set
-	 */
-	public void setSelectedBankId(Long selectedBankId) {
-		this.selectedBankId = selectedBankId;
 	}
 
 	/**
