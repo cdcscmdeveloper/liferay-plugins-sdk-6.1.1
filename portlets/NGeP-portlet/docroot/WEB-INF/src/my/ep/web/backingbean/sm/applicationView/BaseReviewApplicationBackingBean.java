@@ -34,6 +34,7 @@ import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -71,6 +72,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -793,20 +795,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		getManagedBean().setDockYardFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
+				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
 		getManagedBean().setWorkshopFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
+				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
 		getManagedBean().setStoreFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
+				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
 		getManagedBean().setFactoryFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
+				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
 	}
 
@@ -2582,12 +2580,69 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setSmAppl(smAppl);
 			reqDTO.setSrcAppl(srcAppl);
-			SmAppl retVal = SmServiceLookup.getMofRegistrationSO()
-					.cloneApplicationExcludeApplNo(reqDTO).getSmAppl();
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 				"Clone Success!!!"));
 		RequestContext.getCurrentInstance().execute("cloneDialog.hide()");
+	}
+
+	/**
+	 * Construct and get category and facility list to display in facility
+	 * section
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return List<SmCategoryFacilityVO>
+	 */
+	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
+			String facType) {
+		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
+		if (smAppl != null
+				&& !EntityHelper.isCollectionEmpty(smAppl
+						.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+						&& cat.getPmCategoryL3() != null
+						&& !StringUtils.isBlank(cat.getPmCategoryL3()
+								.getFacilityType())
+						&& cat.getPmCategoryL3().getFacilityType()
+								.equalsIgnoreCase(facType)) {
+
+					cat.getPmCategoryL3().setFacilityList(
+							new ArrayList<SmFacility>());
+					cat.getPmCategoryL3().setSelectedFacilityList(
+							new ArrayList<SmFacility>());
+
+					for (SmFacility fac : smAppl.getSmFacilities()) {
+						if (!EntityHelper.isCollectionEmpty(fac
+								.getSmSupplierCategoryFacilities())) {
+							SmSupplierCategoryFacility catTmp = (SmSupplierCategoryFacility) EntityHelper
+									.getEntityBySinglePropertyFromList(cat
+											.getPmCategoryL3()
+											.getCategoryL3Id(), fac
+											.getSmSupplierCategoryFacilities(),
+											"pmCategoryL3");
+
+							if (catTmp != null) {
+								SmFacility facTmp = (SmFacility) EntityHelper
+										.getEntityBySinglePropertyFromList(fac
+												.getFacilityId(), cat
+												.getPmCategoryL3()
+												.getFacilityList(),
+												"facilityId");
+								if (facTmp == null) {
+									cat.getPmCategoryL3().getFacilityList()
+											.add(fac);
+								}
+							}
+						}
+					}
+
+					categoryFacilityVOList.add(cat.getPmCategoryL3());
+				}
+			}
+		}
+		return categoryFacilityVOList;
 	}
 }
