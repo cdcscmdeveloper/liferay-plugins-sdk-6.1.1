@@ -9,10 +9,8 @@
 	<p:panel header="#{lbl['lbl.sm.workshop.details']}" toggleable="true"
 		id="smWorkShopDtPanel">
 		
-		<br />
-		
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}">
-			<h:outputText style="float:left" value="#{lbl['lbl.sm.workShop.notApplicable']}" />
+			<h:outputText value="#{lbl['lbl.sm.workShop.notApplicable']}" />
 		</p:outputPanel>
 		
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">

@@ -8,10 +8,8 @@
 
 	<p:panel header="#{lbl['lbl.sm.store.details']}" toggleable="true" id="smStrDtPanel">
 		
-		<br />
-		
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.storeFacilitiesVOList}">
-			<h:outputText style="float:left" value="#{lbl['lbl.sm.store.notApplicable']}" />
+			<h:outputText value="#{lbl['lbl.sm.store.notApplicable']}" />
 		</p:outputPanel>
 		
 		<ui:repeat var="storeCatVar" value="#{viewSmApplBackingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">

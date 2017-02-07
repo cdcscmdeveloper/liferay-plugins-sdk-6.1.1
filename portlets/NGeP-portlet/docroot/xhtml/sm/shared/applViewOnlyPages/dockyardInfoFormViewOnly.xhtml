@@ -7,11 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true" id="smDocDtPanel">
-	
-		<br />
 		
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}">
-			<h:outputText style="float:left" value="#{lbl['lbl.sm.dockyard.notApplicable']}" />
+			<h:outputText value="#{lbl['lbl.sm.dockyard.notApplicable']}" />
 		</p:outputPanel>
 		
 		<ui:repeat var="dockyardCatVar" value="#{viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
