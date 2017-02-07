@@ -208,7 +208,7 @@
 				</p:dataTable>
 				<div class="clear"></div>
 				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
+					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}" rendered="#{codificationBackingBean.managedBean.isSourcing()}"
 						action="#{codificationBackingBean.requestExtensionCodeII}" />
 
 					<p:commandButton value="#{lbl['lbl.cm.assign']}"
