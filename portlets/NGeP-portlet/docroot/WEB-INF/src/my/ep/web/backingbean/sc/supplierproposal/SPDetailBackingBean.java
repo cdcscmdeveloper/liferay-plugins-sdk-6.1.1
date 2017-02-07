@@ -464,7 +464,7 @@ public class SPDetailBackingBean extends
 		}catch(Exception e){
 			
 		}
-		paramMap.put("P_KEY", key);
+		paramMap.put("PKEY", key);
 		paramMap.put("QT_ID", getManagedBean().getQt().getQtId().toString());
 		if(getManagedBean().getSmSupplier()== null){
 			retrievePaidUpCapitalNdDeclarationDtls();
