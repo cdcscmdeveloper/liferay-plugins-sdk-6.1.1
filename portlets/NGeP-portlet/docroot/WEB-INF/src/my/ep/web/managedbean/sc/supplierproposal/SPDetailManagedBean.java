@@ -210,6 +210,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	private String previousPageUrl;	
 	private boolean isProcCategoryMedicine;
+	
+	/** report download filename. */
+	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
 
 	/**
 	 * Gets the spki backing bean.
@@ -1784,6 +1787,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setContactPerson(SmPersonnel contactPerson) {
 		this.contactPerson = contactPerson;
+	}
+
+	/**
+	 * @return the reportDownloadFileName
+	 */
+	public String getReportDownloadFileName() {
+		return reportDownloadFileName;
+	}
+
+	/**
+	 * @param reportDownloadFileName the reportDownloadFileName to set
+	 */
+	public void setReportDownloadFileName(String reportDownloadFileName) {
+		this.reportDownloadFileName = reportDownloadFileName;
 	}
 
 }
