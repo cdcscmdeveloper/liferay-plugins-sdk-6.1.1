@@ -4912,6 +4912,9 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 			sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
+		}else{
+			getManagedBean().setPtjSpecialApprovalList(getManagedBean().getMainPtjSpecialApprovalList());
+			sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
 		}
 	}
 
