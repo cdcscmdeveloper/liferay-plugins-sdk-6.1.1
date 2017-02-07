@@ -12,7 +12,10 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
    	   </f:facet>
-       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"/><br/><br/>
+       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"
+       		rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
+       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item.central']}" escape="false"
+       		rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"/><br/><br/>
        <h:panelGrid  style="width:100%;">
              
              <p:dataTable id="itemTable" var="ctItemVar" 
