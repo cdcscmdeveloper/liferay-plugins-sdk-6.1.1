@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.selfrequestsupplieradmin;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -7,6 +8,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -22,10 +24,14 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private String icNo;
 	private Long selectedPersonnelId;
 	private List<SelectItem> personnelItems;
+	private List<SelectItem> countryItems;
+	private List<SelectItem> identificationTypeItems;
 	private SmSupplier supplier;
 	private SmPersonnel selectedAdmin;
+	private SmPersonnelAddress selectedAdminPermAddr;
 	private boolean agreeTC;
 	private String page;
+	private Date currDate;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -89,6 +95,38 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 
 	public void setSelectedPersonnelId(Long selectedPersonnelId) {
 		this.selectedPersonnelId = selectedPersonnelId;
+	}
+
+	public List<SelectItem> getCountryItems() {
+		return countryItems;
+	}
+
+	public void setCountryItems(List<SelectItem> countryItems) {
+		this.countryItems = countryItems;
+	}
+
+	public Date getCurrDate() {
+		return currDate;
+	}
+
+	public void setCurrDate(Date currDate) {
+		this.currDate = currDate;
+	}
+
+	public SmPersonnelAddress getSelectedAdminPermAddr() {
+		return selectedAdminPermAddr;
+	}
+
+	public void setSelectedAdminPermAddr(SmPersonnelAddress selectedAdminPermAddr) {
+		this.selectedAdminPermAddr = selectedAdminPermAddr;
+	}
+
+	public List<SelectItem> getIdentificationTypeItems() {
+		return identificationTypeItems;
+	}
+
+	public void setIdentificationTypeItems(List<SelectItem> identificationTypeItems) {
+		this.identificationTypeItems = identificationTypeItems;
 	}
 
 }

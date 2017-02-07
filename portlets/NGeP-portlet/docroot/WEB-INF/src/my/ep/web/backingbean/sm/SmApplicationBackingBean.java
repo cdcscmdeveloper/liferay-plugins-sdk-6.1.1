@@ -6512,6 +6512,8 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
+		
+		validateNoChangesBeenMadeToApplication();
 
 		// try {
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
@@ -9276,6 +9278,17 @@ public class SmApplicationBackingBean extends
 	private boolean validateSupportingDocs() {
 		return SmApplicationUtil.validateSupportingDocs(getManagedBean()
 				.getSmAppl().getSmApplSupportDocs());
+	}
+
+	/**
+	 * Validate if no changes been made to application not allowed to submit
+	 */
+	private void validateNoChangesBeenMadeToApplication() {
+		// check if supporting docs is empty means no changes been made
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmApplSupportDocs())) {
+			throw new EpException(MessageConst.ERROR_722648);
+		}
 	}
 
 	/**
