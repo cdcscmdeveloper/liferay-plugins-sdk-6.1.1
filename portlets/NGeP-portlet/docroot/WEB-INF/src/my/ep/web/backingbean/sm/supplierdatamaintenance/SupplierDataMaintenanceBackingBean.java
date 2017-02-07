@@ -28,9 +28,6 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.common.PmZone;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -55,6 +52,11 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class SupplierDataMaintenanceBackingBean extends
 		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3781591594455061750L;
 
 	/**
 	 * Pre-render and redirect to Search Page
@@ -99,13 +101,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		checkIfSupplierHasActiveTransaction(false);
 		getManagedBean().setExistingRegStatus(
 				getManagedBean().getSmAppl().getPmRegStatus());
-		if (getManagedBean().getSmMofAccount() != null) {
-			getManagedBean().setExistingMofExpiryDate(
-					getManagedBean().getSmMofAccount().getExpDate());
-		}
-		if (getManagedBean().getSmMofAccount() == null) {
-			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
-		}
+		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		getManagedBean().setExistingMofExpiryDate(
+				getManagedBean().getSmMofAccount().getExpDate());
 		getManagedBean().setDeleteApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedApprovedCategories(
@@ -163,7 +161,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
 			reqDTO.setOldMofExpiryDate(getManagedBean()
 					.getExistingMofExpiryDate());
-			setSupplierRegistrationAndBumiStatusChanged();
 
 			// set active status for newly added category
 			setActiveStatusForNewAddedCategories();
@@ -200,15 +197,15 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(nex.getMessage());
 		} catch (RuntimeException re) {
 			throw new EpException(re.getMessage());
-		} finally {
-			reqDTO = null;
-			getManagedBean().setDisplaySearchPage(true);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO,
-					MessageUtils.getMessage(MessageConst.INFO_721215,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale()), null);
 		}
+
+		reqDTO = null;
+		getManagedBean().setDisplaySearchPage(true);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
+				.getMessage(MessageConst.INFO_721215,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale()), null);
 	}
 
 	/**
@@ -724,39 +721,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
-	 * Set supplier registration status and bumi status
-	 */
-	private void setSupplierRegistrationAndBumiStatusChanged() {
-		if (getManagedBean().getSmAppl().getPmRegStatus() != null
-				&& getManagedBean()
-						.getExistingRegStatus()
-						.getRegStatusId()
-						.compareTo(
-								getManagedBean().getSmAppl().getPmRegStatus()
-										.getRegStatusId()) != 0) {
-			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
-					.getStatusId();
-			for (PmStatusDesc desc : getManagedBean().getRegStatusDescList()) {
-				if (pmStatId.equals(desc.getPmStatus().getStatusId())) {
-					getManagedBean().getSmAppl()
-							.setPmStatus(desc.getPmStatus());
-					if (desc.getPmStatus().getPmRegStatus() != null) {
-						getManagedBean().getSmAppl().setPmRegStatus(
-								desc.getPmStatus().getPmRegStatus());
-						getManagedBean()
-								.getSmAppl()
-								.getSmSupplier()
-								.setBumi(
-										desc.getPmStatus().getPmRegStatus()
-												.isBumiAppl());
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Initialized data for search supplier
 	 */
 	private void initDataForSearchSupplier() {
@@ -843,40 +807,6 @@ public class SupplierDataMaintenanceBackingBean extends
 						}
 					}
 				}
-			}
-		}
-		return retVal;
-	}
-
-	/**
-	 * Check if the login user has the same zone as supplier zone
-	 * 
-	 * @return boolean
-	 */
-	private boolean isLoginUserZoneSameAsSupplier() {
-		boolean retVal = false;
-		PmZone supplierZone = null;
-		Long userZoneId = getManagedBean().getSearchPmZoneId();
-		if (userZoneId != null
-				&& getManagedBean().getSmAppl() != null
-				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
-				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getSmCompanyAddresses())
-				&& getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().get(0).getSmAddress() != null) {
-			SmAddress compAddress = getManagedBean().getSmAppl()
-					.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-					.getSmAddress();
-			if (compAddress.getPmState() != null) {
-				ZoneReqDTO reqDTO = new ZoneReqDTO();
-				reqDTO.setStateId(compAddress.getPmState().getStateId());
-				supplierZone = SmServiceLookup.getZoneSO()
-						.retrieveZoneByStateId(reqDTO).getPmZone();
-			}
-
-			if (supplierZone != null && supplierZone.getZoneId() != null
-					&& supplierZone.getZoneId().compareTo(userZoneId) == 0) {
-				retVal = true;
 			}
 		}
 		return retVal;
