@@ -11,6 +11,10 @@
 			<tr>
 				<td style="width: 23%"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
+						
+				<ui:param name="isPanel"
+					value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"></ui:param>
+					
 				<td colspan="3">
 					<table>
 						<tr>
@@ -96,7 +100,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
-									styleClass="commonLabel" disabled="#{!isEditable}"
+									styleClass="commonLabel" disabled="#{!isEditable or isPanel}"
 									id="procurementType" required="true"
 									label="#{lbl['lbl.sc.procurement.type']}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
