@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -100,6 +101,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -435,6 +437,44 @@ public class SPDetailBackingBean extends
 				}
 			}
 		}
+	}
+	
+	public void downloadProposalReport() throws Exception{
+		debugLogger("downloadProposalReport");
+		String  reportName = null;
+		//TODO 
+		ScQt scQt = getManagedBean().getQt();
+		ScAttachment reportAttachment = new ScQtProposalReportAttachment();
+		StringBuilder fileName = new StringBuilder(
+				getManagedBean().getReportDownloadFileName());
+		fileName.append(".pdf");
+		reportAttachment.setFileName(fileName.toString());
+		reportAttachment.setDocNo(scQt.getQtNo());
+		ScAttachment attachment = (ScAttachment)reportAttachment;
+		//TODO 
+		populateAttachmentDetails(attachment);
+		reportName = ReportConst.SC_SUPPLIER_PROPOSAL_REPORT;
+		
+		Map<String, String> paramMap = new HashMap<String, String>();
+		String key = null;
+		try{
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setScQt(scQt);
+			key = getProposalSO().getGeneratedEncrpyptedKey(reqDTO);
+		}catch(Exception e){
+			
+		}
+		paramMap.put("P_KEY", key);
+		paramMap.put("QT_ID", getManagedBean().getQt().getQtId().toString());
+		if(getManagedBean().getSmSupplier()== null){
+			retrievePaidUpCapitalNdDeclarationDtls();
+		}
+		paramMap.put("P_SUPP", getManagedBean().getSmSupplier().getSupplierId().toString());
+		
+		super.generatePdfFromOracle(reportName,
+			 paramMap, attachment,
+			false);
+		
 	}
 
 	/**
@@ -1078,8 +1118,8 @@ public class SPDetailBackingBean extends
 					}
 
 				} else if (finProposalChecklist.isSubmitted()
-						|| finProposalChecklist.getCompliance().equals(
-								Boolean.TRUE)) {
+						|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
+								.getCompliance().equals(Boolean.TRUE))) {
 					if (finProposalChecklist
 							.getScQtProposalChecklistAttachment() != null) {
 						finProposalChecklist.setCompliance(Boolean.FALSE);
@@ -3551,14 +3591,14 @@ public class SPDetailBackingBean extends
 				pmOrgProfile.getOrgProfileId(), date);
 		log.info("ptjName" + ptjName);
 		if (scQt != null) {
-		String	title=scQt.getQtTitle();
+			String title = scQt.getQtTitle();
 			if (title == null) {
 				title = "";
 			}
-			title=title.replaceAll("\r\n", "<br />");
-			title=title.replaceAll("&", "&#38;");
-			title=title.replaceAll("<", "&#60;");
-			title=title.replaceAll(">", "&#62;");
+			title = title.replaceAll("\r\n", "<br />");
+			title = title.replaceAll("&", "&#38;");
+			title = title.replaceAll("<", "&#60;");
+			title = title.replaceAll(">", "&#62;");
 			context.put("title", title);
 		}
 
@@ -4131,11 +4171,11 @@ public class SPDetailBackingBean extends
 		if (sampleLabelStreamContent == null) {
 			ScSlAttachment slAttachment = new ScSlAttachment();
 			slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
-			generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
-					.getQt());
-			sampleLabelStreamContent = getAttachmentStreamContent(
-					slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);	
-		}		
+			generateSampleLabelsFromVelocityToPdf(slAttachment,
+					getManagedBean().getQt());
+			sampleLabelStreamContent = getAttachmentStreamContent(slAttachment,
+					CommonConstants.FILE_CONTENT_TYPE_PDF);
+		}
 		return sampleLabelStreamContent;
 	}
 
@@ -4173,14 +4213,14 @@ public class SPDetailBackingBean extends
 				.getOrgCode());
 		context.put("PTJName", ptjName);
 		context.put("QTNo", scQt.getQtNo());
-		String	title=scQt.getQtTitle();
+		String title = scQt.getQtTitle();
 		if (title == null) {
 			title = "";
 		}
-		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
+		title = title.replaceAll("&", "&#38;");
+		title = title.replaceAll("<", "&#60;");
+		title = title.replaceAll(">", "&#62;");
 		context.put("QTTitle", title);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
@@ -4338,12 +4378,14 @@ public class SPDetailBackingBean extends
 			public int compare(ScQtProposalChecklist checklist1,
 					ScQtProposalChecklist checklist2) {
 
-				//return checklist1.getScQtCheckList().getChecklistSeq()
-						//- checklist2.getScQtCheckList().getChecklistSeq();
-				  return new CompareToBuilder()
-	                .append(checklist1.getScQtCheckList().getChecklistSeq(),checklist2.getScQtCheckList().getChecklistSeq())
-	                .append(checklist1.getScQtCheckList().getCreatedDate(), checklist2.getScQtCheckList().getCreatedDate())
-	               .toComparison();
+				// return checklist1.getScQtCheckList().getChecklistSeq()
+				// - checklist2.getScQtCheckList().getChecklistSeq();
+				return new CompareToBuilder()
+						.append(checklist1.getScQtCheckList().getChecklistSeq(),
+								checklist2.getScQtCheckList().getChecklistSeq())
+						.append(checklist1.getScQtCheckList().getCreatedDate(),
+								checklist2.getScQtCheckList().getCreatedDate())
+						.toComparison();
 			}
 		});
 	}
