@@ -1383,12 +1383,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String applType = this.getManagedBean().getApplType();
 		SelectItem[] items = null;
 		String businessType = getManagedBean().getSmSupp().getBusinessType();
+		FacesScopes fs = new FacesScopes();
 		
 		if(applType.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
 			items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
-		}else{
-			FacesScopes fs = new FacesScopes();
+			List<SelectItem> basicBusinessLs = new ArrayList<SelectItem>();
+			basicBusinessLs.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						fs.getUserLocale())));
 			
+			//to filter out professional body
+			for(SelectItem item : items){
+				if(item.getValue() != null){
+					if(!item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)){
+						basicBusinessLs.add(item);
+					}
+				}
+			}
+			
+			return  basicBusinessLs.toArray(new SelectItem[basicBusinessLs.size()]);
+		}else{
 			String supplierType = this.getManagedBean().getSmAppl().getSupplierType();
 			if(supplierType != null){
 				if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
