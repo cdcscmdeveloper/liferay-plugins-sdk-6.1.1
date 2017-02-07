@@ -33,8 +33,7 @@
 						<td style="text-align: right;"><p:commandButton
 								id="taSearchUserBtn" value="#{lbl['lbl.btn.search']}"
 								action="#{taskReassignmentBackingBean.searchAvailableUser}"
-								partialSubmit="true" process="searchPanel"
-								update="resultPanel">
+								partialSubmit="true" process="searchPanel" update="resultPanel">
 							</p:commandButton> <p:commandButton id="taResetUserBtn"
 								value="#{lbl['lbl.btn.reset']}"
 								action="#{taskReassignmentBackingBean.resetAvailableUser}"
@@ -52,7 +51,8 @@
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 					selection="#{taskReassignmentBackingBean.managedBean.selectedUser}"
 					rowIndexVar="index" rowKey="#{user}" var="user"
-					selectionMode="single" lazy="true" rows="10"
+					selectionMode="single" lazy="true"
+					rows="#{taskReassignmentBackingBean.managedBean.remarkRequired ? '5' : '10'}"
 					value="#{taskReassignmentBackingBean.userListDataModel}">
 					<p:ajax event="rowSelect" />
 					<ac:paginator for="dtTaskReassign" />
@@ -63,16 +63,33 @@
 
 				</p:dataTable>
 				<table style="width: 100%;">
+					<c:if
+						test="#{taskReassignmentBackingBean.managedBean.remarkRequired}">
+						<tr>
+							<td>
+							<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+							</td>
+							<td style="text-align: left;"><p:inputText
+									label="#{lbl['lbl.txt.remarks']}" size="60" 
+									required="#{!empty param['disableValidation']}"
+									value="#{taskReassignmentBackingBean.managedBean.remarks}" /></td>
+						</tr>
+					</c:if>
+
 					<tr>
-						<td style="text-align: right;">
-								<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}"
-									oncomplete="dlTaskReassignment.hide()"
-									action="#{taskReassignmentBackingBean.confirmReassignTask()}"
-									update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole" immediate="true" />
-							<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}"
+						<td colspan="2" style="text-align: right;">
+							<p:commandButton
+								value="#{lbl['lbl.pm.ta.btn.assign']}"
+								action="#{taskReassignmentBackingBean.confirmReassignTask()}"
+								update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole"
+								immediate="true" >
+									 <f:param name="disableValidation" value="true" />
+							</p:commandButton>
+							 <p:commandButton id="cbCancel"
+								value="#{lbl['lbl.btn.cancel']}" process="@this"
 								oncomplete="dlTaskReassignment.hide()" immediate="true" /></td>
 					</tr>
-					</table>
+				</table>
 			</h:panelGroup>
 		</p:panel>
 	</p:dialog>
