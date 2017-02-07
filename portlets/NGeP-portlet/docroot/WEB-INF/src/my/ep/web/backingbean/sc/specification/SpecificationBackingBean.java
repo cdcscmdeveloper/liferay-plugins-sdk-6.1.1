@@ -9806,6 +9806,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 			}
 			this.getManagedBean().setPtjSpecialApproval(this.getManagedBean().getQt().getPtjSpecialApproval());
+			this.getManagedBean().setPanel(this.getManagedBean().getQt().isPanel());
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
