@@ -211,7 +211,7 @@ public class FacesScopes implements Serializable {
 					}
 				}
 				
-				log.info("stored in user session:" + (user != null ? user.getUserId() : null));
+				log.info("stored in user session(" + loginId + "):" + (user != null ? user.getUserId() : null));
 				
 				setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
