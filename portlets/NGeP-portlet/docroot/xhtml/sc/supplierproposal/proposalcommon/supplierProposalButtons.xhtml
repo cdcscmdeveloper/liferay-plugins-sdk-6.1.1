@@ -9,31 +9,31 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-	
+
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				immediate="true" 
-				action="#{supplierProposalDetailBackingBean.backAction}"
-				rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+					immediate="true"
+					action="#{supplierProposalDetailBackingBean.backAction}"
+					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 			</td>
-		<td align="right">
-			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-				style="float:right;"
-				action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
-				immediate="true" 
-				rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
-					
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				styleClass="BtnSpacing" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()"
-				action="#{supplierProposalDetailBackingBean.spkiSignAction}"
-				rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
-				update="spkiOutputPanel" process="@form">
-			</p:commandButton>
-		</td>
-	</tr>
+			<td align="right"><p:commandLink
+					value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
+					immediate="true"
+					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+
+				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
+					styleClass="BtnSpacing" partialSubmit="true" process="@this"
+					action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
+
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					styleClass="BtnSpacing" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()"
+					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
+					update="spkiOutputPanel" process="@form" /></td>
+		</tr>
 	</table>
 
 	<p:outputPanel id="spkiOutputPanel">
