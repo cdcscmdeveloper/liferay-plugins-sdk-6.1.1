@@ -20,7 +20,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -1178,6 +1177,13 @@ public class TaskReassignmentBackingBean extends
 			resetAvailableUser();
 			this.getManagedBean().setTaskReassignmentVO(null);
 			this.getManagedBean().setModulePostUpdate(false);
+			this.getManagedBean().setRemarks(null);
+			if(ProfileManagementConst.TASK_REASSIGN_REMARKS_CT.contains(item.getDocStatus().longValue())
+					|| ProfileManagementConst.TASK_REASSIGN_REMARKS_S2.contains(item.getDocStatus().longValue())){
+				getManagedBean().setRemarkRequired(true);
+			}else{
+				getManagedBean().setRemarkRequired(false);
+			}
 //			this.getManagedBean().setAvailableUsers(
 //					generateAvailableUsers(item));
 		} catch (Exception e) {
@@ -1331,7 +1337,16 @@ public class TaskReassignmentBackingBean extends
 				//For Tracking Diary 
 				if(resDTO.getCircularList() != null && !resDTO.getCircularList().isEmpty()){
 					vo.setTrackingDiaryList(resDTO.getCircularList());
-				}
+				}				
+//				if(resDTO.getRoleCodeList() != null){
+//					for(String roleCode : vo.getRoleList()){
+//						if(roleCode.endsWith("_MEMBER") || roleCode.endsWith("_CHAIRPERSON")){
+//							vo.setRoleUpdate(true);
+//							break;
+//						}
+//					}	
+//				}
+				
 			}
 		}catch(Exception e){
 			throw new EpException("unable to get task reassignment details from Contract Management Module.");
@@ -1543,10 +1558,25 @@ public class TaskReassignmentBackingBean extends
 					.getUserId());
 			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
 					.getUser());
-			reqDTO.setModulePostUpdate(getManagedBean().isModulePostUpdate());
+			reqDTO.setModulePostUpdate(getManagedBean().isModulePostUpdate());	
+			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
+			reqDTO.setRemark(getManagedBean().getRemarks());
+			
 			//For Tracking Diary List (CT)
 			if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
 				reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
+			}
+		
+			//For Role Update (CT)
+			if(vo.getStatus() != null 
+					&& ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(vo.getStatus().getModuleCode()) 
+					&& vo.getRoleList() != null){
+				for(String roleCode : vo.getRoleList()){
+					if(roleCode.endsWith("_MEMBER") || roleCode.endsWith("_CHAIRPERSON")){
+						reqDTO.setRoleUpdate(true);
+						break;
+					}
+				}	
 			}
 
 			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
@@ -1557,6 +1587,8 @@ public class TaskReassignmentBackingBean extends
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
+				RequestContext.getCurrentInstance()
+					.execute("dlTaskReassignment.hide()");
 				reloadAllTaskList();
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770104, 
@@ -1669,7 +1701,8 @@ public class TaskReassignmentBackingBean extends
 					}
 					
 					
-					if(vo != null){						
+					if(vo != null){
+						vo.setStatus(status);
 						getManagedBean().setTaskReassignmentVO(vo);
 						// 99 - MIXTURE(Sub Reassign Type)
 						if(reassignType == ProfileManagementConst.REASSIGN_TYPE_MIXTURE){
@@ -1678,11 +1711,11 @@ public class TaskReassignmentBackingBean extends
 								PmStatusRole statusRole = PmCommonUtil.retrieveStatusRoleByStatusIdAndRoleCode(task.getDocStatus().longValue(), roleList.get(0));
 								if(statusRole != null && statusRole.getReasssignType() !=null){
 									reassignType = statusRole.getReasssignType();
-									resultBean = generateUserResultBean(status , searchBean, task,reassignType,roleList,vo);
+									resultBean = generateUserResultBean(searchBean, task,reassignType,roleList,vo);
 								}
 							}
 						}else{
-							resultBean = generateUserResultBean(status, searchBean, task,reassignType,roleList,vo);
+							resultBean = generateUserResultBean(searchBean, task,reassignType,roleList,vo);
 						}
 						
 						if(resultBean != null && resultBean.getResultList() != null){
@@ -1744,7 +1777,7 @@ public class TaskReassignmentBackingBean extends
 	 * @return ISearchResultBean<PmUser>
 	 */
 	private ISearchResultBean<PmUser> generateUserResultBean(
-			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
+			 ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
 		PmOrgProfile orgProfile = null;
 		ISearchResultBean<PmUser> resultBean = null;
 		boolean isSearched = false;
@@ -1784,17 +1817,28 @@ public class TaskReassignmentBackingBean extends
 		case ProfileManagementConst.REASSIGN_TYPE_S2:
 			// 2: S2/CT Committee Task
 			
-			// not current selected user and not current login user
-//			searchBean.getDataFilterBeans().add(
-//					new SearchFilterBean("userId",
-//							SearchOperator.OPERATOR_NOT_IN.value(),
-//								new ArrayList<Long>(Arrays.asList(userId,
-//									getFacesScopes().getUserSessionBean()
-//										.getUserId()))));
-//			
-//			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
-//			getManagedBean().setModulePostUpdate(true);
+			//TODO ignore S2 Endorsement and Sign Off (Waiting Confirmation)
+			boolean valid = true;
+			if(vo.getStatus() != null && ModuleCodeConst.SUPPLIER_SELECTION.equalsIgnoreCase(vo.getStatus().getModuleCode())){
+				PmStatusDesc desc = retrieveStatusDesc(vo.getStatus().getStatusId());
+				if(desc != null && (desc.getStatusName().toLowerCase().contains("sign off") 
+						|| desc.getStatusName().toLowerCase().contains("endorsement") )){
+					valid = false;
+				}
+			} 
+			if(valid){
+				// not current selected user and not current login user
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("userId",
+								SearchOperator.OPERATOR_NOT_IN.value(),
+									new ArrayList<Long>(Arrays.asList(userId,
+										getFacesScopes().getUserSessionBean()
+											.getUserId()))));			
+				
+				resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
+				getManagedBean().setModulePostUpdate(true);			}
 			
+					
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
@@ -2150,6 +2194,31 @@ public class TaskReassignmentBackingBean extends
 		} finally {
 			committeSO = null;
 		}
+	}
+	
+	private PmStatusDesc retrieveStatusDesc(Long statusId){
+		IStatusSO statusSO;
+		PmStatusDesc statusDesc;
+		try {
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(statusId);
+			reqDTO.setLanguageCode("en");
+			
+			// Get status description from db.
+			StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
+			
+			statusDesc = resDTO.getPmStatusDesc();		    
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			statusSO = null;
+		}
+		
+		return statusDesc;
 	}
 	
 	
