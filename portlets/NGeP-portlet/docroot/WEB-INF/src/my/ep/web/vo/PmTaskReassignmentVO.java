@@ -10,6 +10,7 @@ import java.util.List;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatus;
 
 
 
@@ -38,7 +39,7 @@ public class PmTaskReassignmentVO implements Serializable {
 	private boolean supplier;
 	private List<TrackingDiaryReqDTO> trackingDiaryList;
 	private ISearchResultBean<PmUser> resultBean;
-	private boolean roleUpdate;
+	private PmStatus status;
 	
 	
 	public PmTaskReassignmentVO(){
@@ -285,20 +286,19 @@ public class PmTaskReassignmentVO implements Serializable {
 		this.resultBean = resultBean;
 	}
 
-
 	/**
-	 * @return the roleUpdate
+	 * @return the status
 	 */
-	public boolean isRoleUpdate() {
-		return roleUpdate;
+	public PmStatus getStatus() {
+		return status;
 	}
 
 
 	/**
-	 * @param roleUpdate the roleUpdate to set
+	 * @param status the status to set
 	 */
-	public void setRoleUpdate(boolean roleUpdate) {
-		this.roleUpdate = roleUpdate;
+	public void setStatus(PmStatus status) {
+		this.status = status;
 	}
 
 
