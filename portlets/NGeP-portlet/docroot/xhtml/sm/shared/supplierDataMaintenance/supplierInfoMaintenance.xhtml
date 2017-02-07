@@ -23,7 +23,7 @@
 								value="#{supplierDataMaintenanceBackingBean.managedBean.regStatusDescList}" var="reg"
 								itemLabel="#{reg.statusName}"
 								itemValue="#{reg.pmStatus.statusId}" />
-	
+							<p:ajax event="change" partialSubmit="true" process="@this" update="@this"/>
 						</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -37,7 +37,9 @@
 							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							mindate="#{CommonConstants.CURRENT_DATE}"
-							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}" />
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}" >
+							<p:ajax event="change" process="@this" partialSubmit="true"/>
+						</p:calendar>
 						<p:message id="expDateMsg" for="expDate"
 								showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
