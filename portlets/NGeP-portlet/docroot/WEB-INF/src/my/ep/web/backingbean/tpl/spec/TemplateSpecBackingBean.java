@@ -2375,15 +2375,15 @@ public class TemplateSpecBackingBean extends
 				new SearchFilterBean("orgProfile.orgProfileId",
 						SearchOperator.OPERATOR_IS_NULL.value(),
 						null));
-		SearchFilterBean ownerOrgProfile = new SearchFilterBean();
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchMultiFilterBean(
+						orgFilterBean, ownFilterBean), allFilterBean));
+		/*SearchFilterBean ownerOrgProfile = new SearchFilterBean();
 		ownerOrgProfile.setAndOr(SearchCondition.CONDITION_OR.value());
 		ownerOrgProfile.setSearchField("ownerOrgProfile.orgProfileId");
 		ownerOrgProfile.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 		ownerOrgProfile.setSearchValue(ptjByloginUser.getOrgProfileId());
-		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(new SearchMultiFilterBean(
-						orgFilterBean, ownFilterBean), allFilterBean));				
-		searchBean.getDataFilterBeans().add(ownerOrgProfile);				
+		searchBean.getDataFilterBeans().add(ownerOrgProfile);		*/		
 	}
 	
 	private List<Long> getMinistryPTJOrgIds(PmOrgProfile pmOrgProfile) {
