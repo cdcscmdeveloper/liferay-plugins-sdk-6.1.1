@@ -185,6 +185,7 @@ import my.ep.web.vo.FLSupplierItemVO;
 @ManagedBean(name = "purchaseRequestBackingBean")
 @ViewScoped
 public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<PurchaseRequestManagedBean> {
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	private boolean checkFlg = false;
@@ -397,7 +398,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean(ParameterConst.DOCTYPE_PURCHASE_REQUEST, resDTO.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 		flBB.initializeRemarkAndAttachement(resDTO.getFlFulfilmentRequest().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setSelectedTabIndex(0);
-		getManagedBean().getFulfilmentRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFulfilmentRequest().getAgApprovedDate()));
+		//getManagedBean().getFulfilmentRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFulfilmentRequest().getAgApprovedDate()));
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		if(resDTO.getFlFulfilmentRequest().getApproverId() != null){
 			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApproverId());
