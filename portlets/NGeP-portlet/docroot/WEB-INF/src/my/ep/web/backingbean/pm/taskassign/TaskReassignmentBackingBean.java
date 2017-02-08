@@ -1834,6 +1834,8 @@ public class TaskReassignmentBackingBean extends
 									new ArrayList<Long>(Arrays.asList(userId,
 										getFacesScopes().getUserSessionBean()
 											.getUserId()))));			
+				// Order by user name
+				searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 				
 				resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
 				getManagedBean().setModulePostUpdate(true);			}
