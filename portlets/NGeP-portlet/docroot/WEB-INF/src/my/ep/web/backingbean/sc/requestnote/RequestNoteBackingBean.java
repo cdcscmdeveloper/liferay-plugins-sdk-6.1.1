@@ -363,28 +363,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 				}
 
-				// set condition field for saved request note
-				if (!scRequestNoteDtl.isReRecommend()) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("requestNoteItem.requestNoteItemId^");
-					sb.append(scRequestNoteDtl.getRequestItem()
-							.getRequestNoteItemId());
-
-					if (scRequestNoteDtl.getPiRequestSupplierItem() != null){
-						ScPrInquiry scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
-						if(scPrInquiry != null && scPrInquiry.getIsStockAvailable().equals(ParameterConst.PI_NO_STOCK)) {
-							sb.append("|");
-							sb.append("requestSupplierItemId^");
-							sb.append(scRequestNoteDtl.getPiRequestSupplierItem()
-									.getRequestSupplierItemId());
-
-							sb.append("^");
-							sb.append(SearchOperator.OPERATOR_NOT_IN.value());
-						}
-					}
-					scRequestNoteDtl.setConditionField(sb.toString());
-				}
-
 				// check purchase inquiry 
 				if(scRequestNoteDtl.isShowPurchaseInquiry()){
 					// back to search catalouge button hide and show
@@ -422,6 +400,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestSupplierItem.setSmSupplier(smSupplier);
 				scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 			}
+			
+			// set condition field for saved request note
+			if (!scRequestNoteDtl.isReRecommend()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("requestNoteItem.requestNoteItemId^");
+				sb.append(scRequestNoteDtl.getRequestItem()
+						.getRequestNoteItemId());
+
+				if (scRequestNoteDtl.getPiRequestSupplierItem() != null){
+					ScPrInquiry scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
+					if(scPrInquiry != null && scPrInquiry.getIsStockAvailable().equals(ParameterConst.PI_NO_STOCK)) {
+						sb.append("|");
+						sb.append("requestSupplierItemId^");
+						sb.append(scRequestNoteDtl.getPiRequestSupplierItem()
+								.getRequestSupplierItemId());
+
+						sb.append("^");
+						sb.append(SearchOperator.OPERATOR_NOT_IN.value());
+					}
+				}
+				scRequestNoteDtl.setConditionField(sb.toString());
+			}
+			
 			if(scRequestNoteDtl.getScRequestSupplierItem() != null && scRequestNoteDtl.getPriceType() != null){
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
@@ -3772,27 +3773,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isTierPriceMatched = false;
 		boolean isTierPrice = false;
 		ScSupplierItemPrice topPricedItem = null;
-		if(CollectionUtils.isNotEmpty(supplierItemPrices)) {
-			for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
-				if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
-					BigDecimal toQty = itemPrice.getToQty();
-					BigDecimal fromQty = itemPrice.getFromQty();
-					if (fromQty != null
-							&& orderQuantity != null) {
-						isTierPrice = true;
-						if (fromQty.compareTo(orderQuantity) <= 0
-								&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
-							isTierPriceMatched = true;
-							groupedItemPrice.add(itemPrice);
-						} 
-					} else {
+		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
+			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
+				BigDecimal toQty = itemPrice.getToQty();
+				BigDecimal fromQty = itemPrice.getFromQty();
+				if (fromQty != null
+						&& orderQuantity != null) {
+					isTierPrice = true;
+					if (fromQty.compareTo(orderQuantity) <= 0
+							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
+						isTierPriceMatched = true;
 						groupedItemPrice.add(itemPrice);
-					}
+					} 
+				} else {
+					groupedItemPrice.add(itemPrice);
 				}
 			}
-			if(isTierPrice && !isTierPriceMatched) {
-				throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
-			} else {
+		}
+		if(isTierPrice && !isTierPriceMatched) {
+			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+		} else {
+			if(CollectionUtils.isNotEmpty(groupedItemPrice)) {
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
 			}
 		}
