@@ -10,8 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.service.sm.payment.IPaymentSO;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
@@ -22,14 +26,9 @@ import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.util.sm.helper.SmVirtualCertHelper;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Servlet implementation class MolPayServlet
@@ -38,7 +37,6 @@ import com.liferay.portal.util.PortalUtil;
 public class MolPayServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(MolPayServlet.class);
-	private final String vKey = EpPropertiesUtils.getInstance().getProperty("molpay.vkey");
 	private final String merchantId = EpPropertiesUtils.getInstance().getProperty("molpay.merchantid");
 	private final String molIpnUrl = EpPropertiesUtils.getInstance().getProperty("molpay.ipnurl");
 
@@ -86,7 +84,14 @@ public class MolPayServlet extends HttpServlet {
 		log.info("channel:" + channel);
 
 		if(nbcb != null){
-			//To verify the data integrity sending by MOLPay
+			Long ordId = Long.valueOf(orderId);
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			PaymentReqDTO reqDTO = new PaymentReqDTO();
+			reqDTO.setPaymentId(ordId);
+			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
+			
+			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
+			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
 
@@ -94,14 +99,7 @@ public class MolPayServlet extends HttpServlet {
 			log.info("Key1>>>>" + key1);
 			if(skey.equals(key1)){
 				log.info("SKey & Key1 Are Match>>>>");
-				IPaymentSO reqSO = SmServiceLookup.getPaymentSO();
-				PaymentReqDTO reqDTO = new PaymentReqDTO();
 
-
-				log.info("SKey & Key1 Are Match>>>>");
-				Long ordId = Long.valueOf(orderId);
-				reqDTO.setPaymentId(ordId);
-				PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 				BigDecimal txAmount = new BigDecimal(amount);
 				boolean validPayment = false;
 
