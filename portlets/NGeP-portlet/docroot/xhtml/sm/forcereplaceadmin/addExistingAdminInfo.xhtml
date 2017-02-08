@@ -106,7 +106,7 @@
 						<p:commandButton value="#{lbl['lbl.sm.declare']}" id="declareBtnId"
 							action="#{forceReplaceSuppAdminBackingBean.replaceWithExistingUser}"
 							disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					</td>
 				</tr>
 			</table>
