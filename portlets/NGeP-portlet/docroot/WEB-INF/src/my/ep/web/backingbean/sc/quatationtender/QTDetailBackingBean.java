@@ -715,6 +715,9 @@ public class QTDetailBackingBean extends
 			}	
 			this.getManagedBean().getCtContract()
 					.setContractNo(selectedScQt.getExistingContractNo());
+			this.getManagedBean().setPtjSpecialApproval(
+					selectedScQt.getPtjSpecialApproval());
+			this.getManagedBean().setPanel(scQt.isPanel());
 			
 			setAmmendMentBean(resDTO.getAmendMentBean());
 
