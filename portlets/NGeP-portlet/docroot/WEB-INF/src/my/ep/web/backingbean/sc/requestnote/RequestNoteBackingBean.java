@@ -412,6 +412,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(null == scRequestNoteDtl.getPriceType()){
 					scRequestNoteDtl.setPriceType(new PmParameter());
 				}
+				if(null == scRequestNoteDtl.getProcurementTypeCategory()){
+					scRequestNoteDtl.setProcurementTypeCategory(new PmParameter());
+				} else {
+					scRequestNoteDtl.setProcTypeCategoryId(scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
+				}
 				ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
 				SmSupplier  smSupplier = new SmSupplier();
 				requestSupplierItem.setSmSupplier(smSupplier);
@@ -423,6 +428,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			requestNoteDtls.add(scRequestNoteDtl);
+			
+			calculatePricePerItem(scRequestNoteDtl);
 		}
 
 		// item search back button 
@@ -1735,6 +1742,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 	    getRequestNoteSO().validateAddToCart(requestNoteReqDTO);
 	    
+	    calculatePricePerItem(scRequestNoteDtl);
+	    
 		// have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
 			getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
@@ -1802,7 +1811,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		updateWorkFlowAndRemarks(requestNote);
 
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-		calculatePricePerItem(scRequestNoteDtl);
+		
 		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		getManagedBean().setRequestNote(requestNote);
 
@@ -3747,7 +3756,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						requestNoteDtl.getPriceType().getParameterCode(),
 						requestItem.getItemName());
 				
-				subTotalAmount = itemPrice.getItemPrice().multiply(orderQuantity);
+				if(itemPrice != null) {
+					subTotalAmount = itemPrice.getItemPrice().multiply(orderQuantity);
+				}
 			}
 		}
 		requestNoteDtl.setTotalPricePerItem(subTotalAmount);
@@ -3761,28 +3772,31 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isTierPriceMatched = false;
 		boolean isTierPrice = false;
 		ScSupplierItemPrice topPricedItem = null;
-		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
-			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
-				BigDecimal toQty = itemPrice.getToQty();
-				BigDecimal fromQty = itemPrice.getFromQty();
-				if (fromQty != null
-						&& orderQuantity != null) {
-					isTierPrice = true;
-					if (fromQty.compareTo(orderQuantity) <= 0
-							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
-						isTierPriceMatched = true;
+		if(CollectionUtils.isNotEmpty(supplierItemPrices)) {
+			for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
+				if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
+					BigDecimal toQty = itemPrice.getToQty();
+					BigDecimal fromQty = itemPrice.getFromQty();
+					if (fromQty != null
+							&& orderQuantity != null) {
+						isTierPrice = true;
+						if (fromQty.compareTo(orderQuantity) <= 0
+								&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
+							isTierPriceMatched = true;
+							groupedItemPrice.add(itemPrice);
+						} 
+					} else {
 						groupedItemPrice.add(itemPrice);
-					} 
-				} else {
-					groupedItemPrice.add(itemPrice);
+					}
 				}
 			}
+			if(isTierPrice && !isTierPriceMatched) {
+				throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			} else {
+				topPricedItem = findMaxPriceItem(groupedItemPrice);
+			}
 		}
-		if(isTierPrice && !isTierPriceMatched) {
-			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
-		} else {
-			topPricedItem = findMaxPriceItem(groupedItemPrice);
-		}
+		
 		return topPricedItem;
 	}
 	
