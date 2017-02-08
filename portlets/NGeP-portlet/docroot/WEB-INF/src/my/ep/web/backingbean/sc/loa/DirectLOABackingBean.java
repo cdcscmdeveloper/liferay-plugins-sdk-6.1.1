@@ -1046,7 +1046,38 @@ public class DirectLOABackingBean extends
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+			// validate questions and item code
+			TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
+			TplSpecMaster serviceSpecMaster = this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
+			int specQuestions = 0;
+			if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
+				specQuestions = producSpecMaster.getTplSpecQuestions().size();
+			}
+			if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
+				specQuestions += serviceSpecMaster.getTplSpecQuestions().size();
+			}
+			if (specQuestions < 1) {
+				throw new EpException(MessageConst.ERROR_760354);
+			} else{
+				if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+					if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
+						for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
+							if(null == productQuestion.getCmItem() && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(productQuestion.getQuestionType())){
+								throw new EpException(MessageConst.ERROR_760445, new String[] {productQuestion.getClItem()});
+							}
+						}
+					}
 
+					if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
+						for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
+							if(null == serviceQuestion.getCmItem() && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(serviceQuestion.getQuestionType())){
+								throw new EpException(MessageConst.ERROR_760445, new String[] {serviceQuestion.getClItem()});
+							}
+						}
+					}
+				}
+			}
+			// validate terms and conditions 
 			if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
 			}
@@ -1313,42 +1344,12 @@ public class DirectLOABackingBean extends
 			scLoa.setScLoaApproval(scLoaApproval);
 		}
 		
-		// validate questions and item code
 		TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
 		TplSpecMaster serviceSpecMaster = this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
-			
-			int specQuestions = 0;
-			if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
-				specQuestions = producSpecMaster.getTplSpecQuestions().size();
-			}
-			if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
-				specQuestions += serviceSpecMaster.getTplSpecQuestions().size();
-			}
-			if (specQuestions < 1) {
-				throw new EpException(MessageConst.ERROR_760354);
-			} else{
-				if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
-					if (CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())) {
-						for (TplSpecQuestion productQuestion : producSpecMaster.getTplSpecQuestions()) {
-							if(null == productQuestion.getCmItem() && StringUtils.isBlank(productQuestion.getClSpecDetail())){
-								throw new EpException(MessageConst.ERROR_760445, new String[] {productQuestion.getClItem()});
-							}
-						}
-					}
-
-					if (CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())) {
-						for (TplSpecQuestion serviceQuestion : serviceSpecMaster.getTplSpecQuestions()) {
-							if(null == serviceQuestion.getCmItem() && StringUtils.isBlank(serviceQuestion.getClSpecDetail())){
-								throw new EpException(MessageConst.ERROR_760445, new String[] {serviceQuestion.getClItem()});
-							}
-						}
-					}
-				}
-			}
 			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			
