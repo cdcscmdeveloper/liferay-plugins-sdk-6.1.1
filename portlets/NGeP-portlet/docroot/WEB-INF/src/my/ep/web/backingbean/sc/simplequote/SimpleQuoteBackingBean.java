@@ -1270,6 +1270,7 @@ public class SimpleQuoteBackingBean extends
 		Long defaultCountryId = getManagedBean().getDefaultCountryId();
 		boolean autoUpdate = getManagedBean().isAutoUpdate();
 		Date pidExpDate = getManagedBean().getPidExpiryDate();
+		Long doUserId = getManagedBean().getDoUserId();
 		try {
 			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -1548,8 +1549,10 @@ public class SimpleQuoteBackingBean extends
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
 					reqDTO.setQuoteId(scQuote.getQuoteId());
 					reqDTO.setFetchSubEntity(true);
+					reqDTO.setDoUserId(doUserId);
 					scQuote = getQuoteSO().getQuoteDtl(reqDTO).getQuoteBidDtl();
 					// quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
+					getManagedBean().setDoUserId(doUserId);
 					getManagedBean().setOutComes(outcomes);
 					getManagedBean().setTaskId(taskId);
 					getManagedBean().setDefaultCountryId(defaultCountryId);
@@ -4552,6 +4555,12 @@ public class SimpleQuoteBackingBean extends
 		}
 		if (directPurchaseDataType.getPidApprover() != null) {
 			getManagedBean().setPidApprovers(directPurchaseDataType.getPidApprover());
+		}
+		
+		if (directPurchaseDataType.getDeskOfficer() != null) {
+			Long doUserId = Long.valueOf(directPurchaseDataType.getDeskOfficer());
+			getManagedBean().setDoUserId(doUserId);
+			quoteReqDTO.setDoUserId(doUserId);
 		}
 
 		Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
