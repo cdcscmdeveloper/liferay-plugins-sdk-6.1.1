@@ -266,7 +266,7 @@ public class CreateQtBackingBean extends
 			scQt.setPanel(false);
 			scQt.setCircularVer(null);
 			scQt.setItemGroup(null);
-			scQt.setPanel(false);
+			this.getManagedBean().setPanel(false);
 		} else {
 			scQt.setPanel(true);
 			this.getManagedBean().setPanel(true);
