@@ -259,13 +259,17 @@ public class CreateQtBackingBean extends
 	 * Panel no conformation.change panel yes to No or No to yes Confirmation .
 	 */
 	public void panelNoConformation() {
-		Boolean panel = this.getManagedBean().getQt().isPanel();
+		
+		Boolean panel = this.getManagedBean().getPanel();
+		ScQt scQt = this.getManagedBean().getQt();
 		if (panel) {
-			this.getManagedBean().getQt().setPanel(false);
-			this.getManagedBean().getQt().setCircularVer(null);
-			this.getManagedBean().getQt().setItemGroup(null);
+			scQt.setPanel(false);
+			scQt.setCircularVer(null);
+			scQt.setItemGroup(null);
+			scQt.setPanel(false);
 		} else {
-			this.getManagedBean().getQt().setPanel(true);
+			scQt.setPanel(true);
+			this.getManagedBean().setPanel(true);
 		}
 
 	}
@@ -2178,6 +2182,7 @@ public class CreateQtBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 		scQt.setZonal(false);
 		scQt.setZoneLocationLevel(null);
+		scQt.setPanel(this.getManagedBean().getPanel());
 		if (null == scQt.getPmProcurementCategory()) {
 			scQt.setPmProcurementCategory(new PmParameter());
 		}
