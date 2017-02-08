@@ -414,6 +414,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The template spec backing bean */
 	private TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 	
+	/** The Do user Id for requote purpose */
+	private Long doUserId;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2629,5 +2632,19 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public TemplateSpecBackingBean getTemplateSpecBackingBean() {
 		return templateSpecBackingBean;
+	}
+
+	/**
+	 * @return the doUserId
+	 */
+	public Long getDoUserId() {
+		return doUserId;
+	}
+
+	/**
+	 * @param doUserId the doUserId to set
+	 */
+	public void setDoUserId(Long doUserId) {
+		this.doUserId = doUserId;
 	}
 }
