@@ -34,7 +34,7 @@
 
 										<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 											<p:commandButton value="#{lbl[buttonLabel]}"
-												styleClass="ui-button" update="@([id$=spkiOutputPanel])"
+												styleClass="ui-button" update="@form"
 												partialSubmit="true" process="@form"
 												disabled="#{!directLOABackingBean.managedBean.agreeWithTermsConditions}"
 												action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
