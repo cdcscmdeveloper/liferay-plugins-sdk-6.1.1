@@ -142,6 +142,8 @@ public class CreateQtBackingBean extends
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(CreateQtBackingBean.class);
+	
+	private static final String PTJ_ADDRESS_TYPE_ERROR_MSG_KEY = "lbl.sc.qt.ptj.address.not.found";
 
 	/**
 	 * Instantiates a new QT detail backing bean.
@@ -305,6 +307,7 @@ public class CreateQtBackingBean extends
 					this.getManagedBean().setPanel(null);
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
+					scQt.setObtainSpecialApproval(false);
 				}
 			}
 			
@@ -364,6 +367,16 @@ public class CreateQtBackingBean extends
 					.getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			FacesContext fc = FacesContext.getCurrentInstance();
+			
+			if (pmOrgProfile != null && !isPtjAddressTypePresent(pmOrgProfile.getOrgProfileId())) {
+				fc.addMessage(null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_ERROR,null,
+								ResourceBundleUtils.getMessage(
+												PTJ_ADDRESS_TYPE_ERROR_MSG_KEY,
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale())));
+			}
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/sc/quatationtender/quatationtendercreation.xhtml");
@@ -2903,15 +2916,20 @@ public class CreateQtBackingBean extends
 
 		ScQt scQt = this.getManagedBean().getQt();
 		if (scQt.getPmOrgProfile() != null) {
-			PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(scQt
-					.getPmOrgProfile().getOrgProfileId());
+
+			Long orgProfileId = scQt.getPmOrgProfile().getOrgProfileId();
+			PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(orgProfileId);
 			this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
-			scQt.setObtainSpecialApproval(null);
 			scQt.setPtjSpecialApproval(null);
-			if(ptjSpecialApproval == null){
+			if (ptjSpecialApproval != null) {
+				scQt.setObtainSpecialApproval(false);
+			} else {
 				this.getManagedBean().setPanel(true);
 				scQt.setPanel(true);
+				scQt.setObtainSpecialApproval(null);
 			}
 		}
+
 	}
+	
 }
