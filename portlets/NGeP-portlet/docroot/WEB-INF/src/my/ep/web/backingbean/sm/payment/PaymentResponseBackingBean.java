@@ -100,34 +100,36 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			responseRedirect();
 		}else{
 			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
-			Long ordId = Long.valueOf(orderId);
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
-			PaymentReqDTO reqDTO = new PaymentReqDTO();
-			reqDTO.setPaymentId(ordId);
-			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
-			
-			if(resDTO.getPyPayment() != null && ordId != null){
-				String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
-				// To verify the data integrity sending by MOLPay
-				String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
-				String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
+			if(orderId != null){
+				Long ordId = Long.valueOf(orderId);
+				IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+				PaymentReqDTO reqDTO = new PaymentReqDTO();
+				reqDTO.setPaymentId(ordId);
+				PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 
-				log.info("SKey>>>>" + skey);
-				log.info("Key1>>>>" + key1);
-				if (skey.equals(key1)) {
-					String billType = StringUtils.EMPTY;
-					if(resDTO.getPyPayment() != null){
-						billType = resDTO.getPyPayment().getPyBill().getBillType();
+				if(resDTO.getPyPayment() != null && ordId != null){
+					String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
+					// To verify the data integrity sending by MOLPay
+					String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
+					String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
+
+					log.info("SKey>>>>" + skey);
+					log.info("Key1>>>>" + key1);
+					if (skey.equals(key1)) {
+						String billType = StringUtils.EMPTY;
+						if(resDTO.getPyPayment() != null){
+							billType = resDTO.getPyPayment().getPyBill().getBillType();
+						}
+						showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType) ;
+					}else{
+						showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
 					}
-					showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType) ;
 				}else{
 					showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
 				}
-			}else{
-				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+				log.info("<<<<<<<>PostConstruct Parameter - End>>>>>>>>>>>");
+				responseRedirect();
 			}
-			log.info("<<<<<<<>PostConstruct Parameter - End>>>>>>>>>>>");
-			responseRedirect();
 		}
 	}
 
@@ -374,7 +376,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			}else{
 				msgCode = MessageConst.INFO_721064;
 			}
-
+			
+			PaymentAcknowledgeBackingBean pymtAckBB = new PaymentAcknowledgeBackingBean();
+			pymtAckBB.getManagedBean().setPaymentId(paymentId);
+			
 			getManagedBean().setMessageId(msgCode);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
 			paymentStatus = true;
