@@ -2736,4 +2736,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return ptjSpecApproval;
 	}
 	
+	/**
+	 * @param orgProfileId
+	 * @return true if addressType present
+	 */
+	public boolean isPtjAddressTypePresent(Long orgProfileId) {
+
+		boolean isPtjAddressTypePresent = false;
+		if (orgProfileId != null) {
+			IOrgProfileSO orgProfile = null;
+			try {
+				orgProfile = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileResDTO orgResDto = orgProfile
+						.retrieveOrgStateCodeByOrgProfileId(orgProfileId);
+				if (orgResDto.getStateStatusId() != null) {
+					isPtjAddressTypePresent = true;
+				}
+			} finally {
+				orgProfile = null;
+			}
+		}
+		return isPtjAddressTypePresent;
+	}
 }
