@@ -221,6 +221,8 @@ public class QTDetailBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
 	
+	private static final String PTJ_ADDRESS_TYPE_ERROR_MSG_KEY = "lbl.sc.qt.ptj.address.not.found";
+	
 	private static final int FORM_NO_ACTION = 0;
 	private static final int FORM_SC = 1;
 	private static final int FORM_OC = 2;
@@ -511,6 +513,17 @@ public class QTDetailBackingBean extends
 		debugLogger("start of saveQtDetailsAction");
 		this.getManagedBean().setSaveFlow(true);
 		try {
+			
+			Long currentStatus = this.getManagedBean().getCurrentStatusId();
+			PmOrgProfile qtOrgProfile = this.getManagedBean().getQt().getPmOrgProfile();
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus)
+					&& qtOrgProfile != null
+					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
+				throw new EpException(ResourceBundleUtils.getMessage(
+						PTJ_ADDRESS_TYPE_ERROR_MSG_KEY,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+			}
 			validateQtDetails();
 			FacesContext
 					.getCurrentInstance()
@@ -551,10 +564,20 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setSaveFlow(false);
 		IQTDetailSO detailSO;
 		try {
+			ScQt scQt_ = this.getManagedBean().getQt();
+			PmOrgProfile qtOrgProfile = scQt_.getPmOrgProfile();
+			if (qtOrgProfile != null
+					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
+				throw new EpException(ResourceBundleUtils.getMessage(
+						PTJ_ADDRESS_TYPE_ERROR_MSG_KEY,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+			}
+			
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
-			updateApprovalDetails(this.getManagedBean().getQt());
+			updateApprovalDetails(scQt_);
 			//Required to fetch the approvers when are trying to Save/Submit from other than the Approval tab 
 			retrieveApprovalTabDtl();
 			
