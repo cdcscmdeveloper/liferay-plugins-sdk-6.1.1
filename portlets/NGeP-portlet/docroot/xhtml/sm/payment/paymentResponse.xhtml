@@ -8,12 +8,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		#{paymentResponseBB.getData()}
-		<div align="center">
-			<h3>#{lbl['lbl.sm.payment.in.progress']}</h3>
-		</div>
-		<p:remoteCommand autoRun="true" name="paymentRespRemote" action="#{paymentResponseBB.responseRedirect}">
-		</p:remoteCommand>
-
+		<f:event listener="#{paymentResponseBB.responseRedirect}" type="preRenderView"></f:event>
 	</ui:define>
 </ui:composition>

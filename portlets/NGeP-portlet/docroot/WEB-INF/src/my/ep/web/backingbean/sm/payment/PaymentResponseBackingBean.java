@@ -17,6 +17,11 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.payment.PaymentReqDTO;
@@ -37,14 +42,13 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
-
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
 public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseManagedBean>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
@@ -52,9 +56,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public PaymentResponseBackingBean(){
 
 	}
-
+	
 	@PostConstruct
 	public void init() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+
+		log.info("<<<<<<@PostConstruct>>>>>>>>");
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
@@ -62,11 +68,67 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 		String paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		Object paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		
+		String orderId = httpServletRequest.getParameter("orderid");
+		String tranID = httpServletRequest.getParameter("tranID");
+		String status = httpServletRequest.getParameter("status");
+		String domain = httpServletRequest.getParameter("domain");
+		String amount = httpServletRequest.getParameter("amount");
+		String currency = httpServletRequest.getParameter("currency");
+		String appcode = httpServletRequest.getParameter("appcode");
+		String paydate = httpServletRequest.getParameter("paydate");
+		String skey = httpServletRequest.getParameter("skey");
+		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
+		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
+		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
 
+/*		log.info("orderId: " + orderId);
+		log.info("tranID: " + tranID);
+		log.info("status:" + status);
+		log.info("domain:" + domain);
+		log.info("amount :" + amount);
+		log.info("currency:" + currency);
+		log.info("appcode: " + appcode);
+		log.info("paydate:" + paydate);
+		log.info("skey:" + skey);
+		log.info("error_code:" + errorCode);
+		log.info("error_desc:" + errorDesc);
+		log.info("channel:" + channel);*/
+		
 		if(paymentTaskId != null && paymentBpmPojo != null){
 			responsePreRender();
-		}
+			responseRedirect();
+		}else{
+			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
+			Long ordId = Long.valueOf(orderId);
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			PaymentReqDTO reqDTO = new PaymentReqDTO();
+			reqDTO.setPaymentId(ordId);
+			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
+			
+			if(resDTO.getPyPayment() != null && ordId != null){
+				String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
+				// To verify the data integrity sending by MOLPay
+				String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
+				String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
 
+				log.info("SKey>>>>" + skey);
+				log.info("Key1>>>>" + key1);
+				if (skey.equals(key1)) {
+					String billType = StringUtils.EMPTY;
+					if(resDTO.getPyPayment() != null){
+						billType = resDTO.getPyPayment().getPyBill().getBillType();
+					}
+					showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType) ;
+				}else{
+					showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+				}
+			}else{
+				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+			}
+			log.info("<<<<<<<>PostConstruct Parameter - End>>>>>>>>>>>");
+			responseRedirect();
+		}
 	}
 
 	/**
@@ -285,6 +347,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}else{
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
 		}
+
 	}
 
 	/**
@@ -296,9 +359,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 *            paymentId
 	 */
 	public void showPaymentResponse(String status, Long paymentId, String errorDesc, String billType) {
+		log.info(">>>>showPaymentResponse<<<<<<<<<<" + status);
+		
 		boolean paymentStatus = false;
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
+			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
 			String msgCode = null;
 
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
@@ -315,36 +381,41 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_FAIL:
+			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
 			getManagedBean().setErrDesc(getPaymentMsgLabel(billType,true));
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
+			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.INFO_721055);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
 			break;
 
 		case SupplierManagementConst.PAYMENT_INVALID_RES:
+			log.info(">>>>PAYMENT_INVALID_RES<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.EP_MAJ_00001);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
 			break;
 
 		}
 
+		
+		
 		if (paymentStatus && paymentId != null) {
-			//PaymentAcknowledgeBackingBean paymentAckBB = new PaymentAcknowledgeBackingBean();
 			getManagedBean().setPaymentId(paymentId);
 			getManagedBean().setPaymentStatus(true);
-			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
 		}else{
 			getManagedBean().setPaymentId(null);
 			getManagedBean().setPaymentStatus(false);
-			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
 		}
+		
+		log.info("Severity >>>>>>>>" + getManagedBean().getMessageSeverity().toString());
+		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId().toString());
+		log.info("Payment Id >>>>>>>>" + getManagedBean().getPaymentId());
+		log.info("Payment Status >>>>>>>>" + getManagedBean().isPaymentStatus());
 
-
-		getManagedBean().setBillTypeLbl(getPaymentMsgLabel(billType,false));
 	}
 
 	/**
@@ -394,28 +465,24 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		return feeType;
 	}
 
-	public String getData(){
-		return "";
+	public void getData(){
+		
 	}
 
 	public void responseRedirect(){
 		log.info("*************responseRedirect*********");
-
-		//this.renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 
-		log.info("Severity >>>>>>>>" + getManagedBean().getMessageSeverity().toString());
-		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId().toString());
-		log.info("Payment Id >>>>>>>>" + getManagedBean().getPaymentId());
-		log.info("Payment Status >>>>>>>>" + getManagedBean().isPaymentStatus());
-
 		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
-		fc.addMessage(
-				null,
-				new FacesMessage(getManagedBean().getMessageSeverity(), null,
-						MessageUtils.getMessage(getManagedBean().getMessageId(),new String[]{errorDesc},
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		if(fc.getMessageList().size() < 1){
+			fc.addMessage(
+					null,
+					new FacesMessage(getManagedBean().getMessageSeverity(), null,
+							MessageUtils.getMessage(getManagedBean().getMessageId(),new String[]{errorDesc},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		
+		}
 
 		fc.getApplication()
 		.getNavigationHandler()
@@ -435,4 +502,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 		generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 	}
+	
+
 }
