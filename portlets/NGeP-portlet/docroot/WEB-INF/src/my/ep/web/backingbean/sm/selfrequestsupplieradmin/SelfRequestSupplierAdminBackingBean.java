@@ -9,18 +9,22 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -106,6 +110,25 @@ public class SelfRequestSupplierAdminBackingBean extends
 							.getSmAppl().getSmPersonnels(), "identificationNo");
 			getManagedBean().setSelectedAdmin(suppAdmin);
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
+			getManagedBean().setIdentificationTypeItems(
+					SmCommonUtil.getInstance().getPmIdTypeDropdownValues());
+			getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
+			SmPersonnelAddress permAddr = (SmPersonnelAddress) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
+							getManagedBean().getSelectedAdmin()
+									.getSmPersonnelAddresses(), "addressType");
+			if (permAddr == null) {
+				permAddr = new SmPersonnelAddress();
+				permAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+			}
+			getManagedBean().setSelectedAdminPermAddr(permAddr);
+			onChangeCountry(getManagedBean().getSelectedAdminPermAddr()
+					.getSmAddress());
+			onChangeState(getManagedBean().getSelectedAdminPermAddr()
+					.getSmAddress());
+			onChangeDistrict(getManagedBean().getSelectedAdminPermAddr()
+					.getSmAddress());
 		} else {
 			fc.addMessage("icNoId", new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null, invalidMsg));
@@ -276,9 +299,71 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 	}
 
+	public void onChangeCountry(SmAddress addr) {
+		Long countryId = addr.getCountryId() == null ? addr.getPmCountry()
+				.getCountryId() : addr.getCountryId();
+		addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+		addr.setCountryId(countryId);
+
+		List<SelectItem> stateItems = SmCommonUtil.getStateList(countryId);
+		getManagedBean().setStateItems(stateItems);
+		getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
+		getManagedBean().setCityItems(new ArrayList<SelectItem>());
+
+		addr.setStateId(null);
+		addr.setDistrictId(null);
+		addr.setCityId(null);
+	}
+
+	public void onChangeState(SmAddress addr) {
+		Long stateId = addr.getStateId() == null ? addr.getPmState()
+				.getStateId() : addr.getStateId();
+		addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+		addr.setStateId(stateId);
+
+		List<SelectItem> districtItems = SmCommonUtil.getDistrictList(stateId);
+		getManagedBean().setDistrictItems(districtItems);
+		getManagedBean().setCityItems(new ArrayList<SelectItem>());
+
+		addr.setDistrictId(null);
+		addr.setCityId(null);
+	}
+
+	public void onChangeDistrict(SmAddress addr) {
+		Long districtId = addr.getDistrictId() == null ? addr.getPmDistrict()
+				.getDistrictId() : addr.getDistrictId();
+		addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
+				districtId));
+		addr.setDistrictId(districtId);
+
+		List<SelectItem> cityItems = SmCommonUtil.getCityList(districtId);
+		getManagedBean().setCityItems(cityItems);
+
+		addr.setCityId(null);
+	}
+
+	public void onChangeCity(SmAddress addr) {
+		Long cityId = addr.getCityId() == null ? addr.getPmCity().getCityId()
+				: addr.getCityId();
+		addr.setPmCity(SmCommonUtil.getInstance().getCityById(cityId));
+		addr.setCityId(cityId);
+	}
+
 	public void searchSuppAdmin() {
 		RequestContext.getCurrentInstance().execute(
 				"searchSuppAdminDialog.show();");
+	}
+
+	/**
+	 * Assign selected personnel identity type.
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent
+	 */
+	public void assignPersonIdentType(AjaxBehaviorEvent e) {
+		SmApplicationUtil
+				.setSelectedPersonnelIdentificationType(getManagedBean()
+						.getSelectedAdmin());
 	}
 
 	private String getInValidIcErrMsg(String icNo) {

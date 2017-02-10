@@ -3217,10 +3217,14 @@ public class SmCommonUtil {
 	}
 
 	public PmCountry getCountryById(Long countryId) {
-		CountryReqDTO reqDTO = new CountryReqDTO();
-		reqDTO.setCountryId(countryId);
-		return SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO)
-				.getPmCountry();
+		if (countryId != null) {
+			CountryReqDTO reqDTO = new CountryReqDTO();
+			reqDTO.setCountryId(countryId);
+			return SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO)
+					.getPmCountry();
+		} else {
+			return null;
+		}
 	}
 
 	public PmState getStateById(Long stateId) {
@@ -4585,37 +4589,46 @@ public class SmCommonUtil {
 				.readApplicationHist(reqDTO);
 		return resDTO;
 	}
-	
-	public void setSmSvAddressInfoBySiteTypeAndRefId(String siteType, Long refId, SmSvAddress svAddress){
+
+	public void setSmSvAddressInfoBySiteTypeAndRefId(String siteType,
+			Long refId, SmSvAddress svAddress) {
 		SiteVisitReqDTO svReqDTO = new SiteVisitReqDTO();
 		svReqDTO.setSiteType(svAddress.getSiteType());
-		svReqDTO.setRefId(svAddress.getSiteRefId());;
-		Object site = SmServiceLookup.getSiteVisitSO().retrieveSmSvAddressInfoBySiteTypeAndRefId(svReqDTO).getSite();
-		
+		svReqDTO.setRefId(svAddress.getSiteRefId());
+		;
+		Object site = SmServiceLookup.getSiteVisitSO()
+				.retrieveSmSvAddressInfoBySiteTypeAndRefId(svReqDTO).getSite();
+
 		log.info("<<<<<<<Site>>>>>>>>>>" + site);
-		if(site != null){
-			if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ) || 
-					siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY)){
-				SmFacility facility = (SmFacility)site;
+		if (site != null) {
+			if (siteType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)
+					|| siteType
+							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY)) {
+				SmFacility facility = (SmFacility) site;
 				svAddress.setFacilityName(facility.getFacilityName());
 				svAddress.setSiteType(siteType);
 				svAddress.setAddress(facility.getSmAddress());
-				svAddress.setFacilityType(ParameterHelper.getInstance().getParameterDesc(
-						ParameterTypeConst.SUPPLIER_FACILITY_TYPE, facility.getFacilityType()));
-			}else if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH)){
-				SmSupplierBranch branch = (SmSupplierBranch)site;
+				svAddress.setFacilityType(ParameterHelper.getInstance()
+						.getParameterDesc(
+								ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
+								facility.getFacilityType()));
+			} else if (siteType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH)) {
+				SmSupplierBranch branch = (SmSupplierBranch) site;
 				svAddress.setFacilityName(branch.getBranchName());
 				svAddress.setSiteType(siteType);
 				svAddress.setAddress(branch.getSmAddress());
-			}else if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_ASSOCIATE_COMPANY)){
-				SmAssociateCompany assocCompany = (SmAssociateCompany)site;
+			} else if (siteType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_ASSOCIATE_COMPANY)) {
+				SmAssociateCompany assocCompany = (SmAssociateCompany) site;
 				svAddress.setFacilityName(assocCompany.getCompanyName());
 				svAddress.setSiteType(siteType);
 				svAddress.setAddress(assocCompany.getSmAddress());
 			}
 		}
 	}
-	
+
 	/**
 	 * get user role value
 	 * 
@@ -4623,23 +4636,98 @@ public class SmCommonUtil {
 	 */
 	public static String getUserRoleValue() {
 		FacesScopes sc = new FacesScopes();
-		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+		if (sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 			return RoleCode.MOF_SUPPLIER_ADMIN.value();
-		} else if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+		} else if (sc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return RoleCode.MOF_SUPPLIER_USER.value();
-		} else if(sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+		} else if (sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
-		} else if(sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+		} else if (sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return RoleCode.BASIC_SUPPLIER_USER.value();
-		} else if(sc.hasRoleUser(RoleCode.FL_USER.value())) {
+		} else if (sc.hasRoleUser(RoleCode.FL_USER.value())) {
 			return RoleCode.FL_USER.value();
-		} else if(sc.hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+		} else if (sc.hasRoleUser(RoleCode.GOVT_SELLER.value())) {
 			return RoleCode.GOVT_SELLER.value();
-		} else if(sc.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+		} else if (sc.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
 			return RoleCode.G2G_SUPPLIER_ADMIN.value();
-		} else if(sc.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+		} else if (sc.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
 			return RoleCode.G2G_SUPPLIER_USER.value();
 		}
 		return null;
+	}
+
+	/**
+	 * Retrieve identity type from PM.
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getPmIdTypeDropdownValues() {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		Map<Long, Object> identityType = new HashMap<Long, Object>();
+		for (PmParameterDesc pmDesc : parameterDescs) {
+			identityType.put(pmDesc.getPmParameter().getParameterId(),
+					pmDesc.getPmParameter());
+		}
+
+		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.IDENTIFICATION_TYPES, null);
+
+		for (SelectItem selectItem : items) {
+
+			if (selectItem.getValue() == null) {
+				itemList.add(selectItem);
+			} else {
+				PmParameter pmParameter = (PmParameter) identityType
+						.get(selectItem.getValue());
+				if (!pmParameter.getParameterCode().equals("A")) {
+					itemList.add(selectItem);
+				}
+			}
+
+		}
+
+		return itemList.toArray(new SelectItem[itemList.size()]);
+
+	}
+
+	/**
+	 * Get parameter id select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	private SelectItem[] getDropdownValuesBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 }
