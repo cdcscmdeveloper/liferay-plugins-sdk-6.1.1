@@ -497,7 +497,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	}
 		
 	public void attachmentDownload(RPTRequest rptRequest) throws IOException{
-		
+		logger.info("attachmentDownload");
 		String dir = EpPropertiesUtils.getInstance().getProperty("document.repository.shared.report.dir");
 		
 		String path = dir + "/" + rptRequest.getReportPath();
@@ -506,8 +506,8 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		String displayName = this.getReportName(rptRequest.getReportCode());
 		
-		System.out.println(new File(dir).getAbsolutePath());
-		
+		logger.info(new File(dir).getAbsolutePath());
+		logger.info(displayName);
 		this.commonDownloadUtil(path, displayName + "." + fileType);
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
