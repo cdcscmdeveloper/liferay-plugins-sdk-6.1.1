@@ -5963,7 +5963,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
 		SmApplicationUtil
-				.setSelectedPersonnelIdentificationType(getManagedBean());
+				.setSelectedPersonnelIdentificationType(getManagedBean()
+						.getSelectedShareHolder());
 	}
 
 	/**
@@ -6512,7 +6513,7 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
-		
+
 		validateNoChangesBeenMadeToApplication();
 
 		// try {
@@ -9725,32 +9726,7 @@ public class SmApplicationBackingBean extends
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] getPmIdTypeDropdownValues() {
-		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
-		Map<Long, Object> identityType = new HashMap<Long, Object>();
-		for (PmParameterDesc pmDesc : parameterDescs) {
-			identityType.put(pmDesc.getPmParameter().getParameterId(),
-					pmDesc.getPmParameter());
-		}
-
-		List<SelectItem> itemList = new ArrayList<SelectItem>();
-		SelectItem[] items = getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
-
-		for (SelectItem selectItem : items) {
-
-			if (selectItem.getValue() == null) {
-				itemList.add(selectItem);
-			} else {
-				PmParameter pmParameter = (PmParameter) identityType
-						.get(selectItem.getValue());
-				if (!pmParameter.getParameterCode().equals("A")) {
-					itemList.add(selectItem);
-				}
-			}
-
-		}
-
-		return itemList.toArray(new SelectItem[itemList.size()]);
+		return SmCommonUtil.getInstance().getPmIdTypeDropdownValues();
 
 	}
 

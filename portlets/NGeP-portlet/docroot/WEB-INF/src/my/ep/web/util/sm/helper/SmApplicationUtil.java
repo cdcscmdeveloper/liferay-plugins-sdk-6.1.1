@@ -9864,19 +9864,18 @@ public class SmApplicationUtil {
 	 *            bean
 	 */
 	public static void setSelectedPersonnelIdentificationType(
-			SmApplicationManagedBean bean) {
-		if (bean.getSelectedShareHolder().getIdentificationTypeId() != null) {
-			bean.getSelectedShareHolder().setIdentificationType(
+			SmPersonnel per) {
+		if (per.getIdentificationTypeId() != null) {
+			per.setIdentificationType(
 					SmApplicationUtil
-							.retrievePmParameterById(bean
-									.getSelectedShareHolder()
+							.retrievePmParameterById(per
 									.getIdentificationTypeId()));
-			if (bean.getSelectedShareHolder().getIdentificationType() == null) {
-				bean.getSelectedShareHolder().setIdentificationType(
+			if (per.getIdentificationType() == null) {
+				per.setIdentificationType(
 						new PmParameter());
 			}
 		} else {
-			bean.getSelectedShareHolder().setIdentificationType(
+			per.setIdentificationType(
 					new PmParameter());
 		}
 	}

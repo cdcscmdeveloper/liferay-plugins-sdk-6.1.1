@@ -22,10 +22,14 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 3794823811578323532L;
 	private String mofNo;
 	private String icNo;
+	private Long myCountryId;
 	private Long selectedPersonnelId;
 	private List<SelectItem> personnelItems;
 	private List<SelectItem> countryItems;
-	private List<SelectItem> identificationTypeItems;
+	private List<SelectItem> stateItems;
+	private List<SelectItem> districtItems;
+	private List<SelectItem> cityItems;
+	private SelectItem[] identificationTypeItems;
 	private SmSupplier supplier;
 	private SmPersonnel selectedAdmin;
 	private SmPersonnelAddress selectedAdminPermAddr;
@@ -121,12 +125,44 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 		this.selectedAdminPermAddr = selectedAdminPermAddr;
 	}
 
-	public List<SelectItem> getIdentificationTypeItems() {
+	public SelectItem[] getIdentificationTypeItems() {
 		return identificationTypeItems;
 	}
 
-	public void setIdentificationTypeItems(List<SelectItem> identificationTypeItems) {
+	public void setIdentificationTypeItems(SelectItem[] identificationTypeItems) {
 		this.identificationTypeItems = identificationTypeItems;
+	}
+
+	public List<SelectItem> getStateItems() {
+		return stateItems;
+	}
+
+	public void setStateItems(List<SelectItem> stateItems) {
+		this.stateItems = stateItems;
+	}
+
+	public List<SelectItem> getDistrictItems() {
+		return districtItems;
+	}
+
+	public void setDistrictItems(List<SelectItem> districtItems) {
+		this.districtItems = districtItems;
+	}
+
+	public List<SelectItem> getCityItems() {
+		return cityItems;
+	}
+
+	public void setCityItems(List<SelectItem> cityItems) {
+		this.cityItems = cityItems;
+	}
+
+	public Long getMyCountryId() {
+		return myCountryId;
+	}
+
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
 	}
 
 }
