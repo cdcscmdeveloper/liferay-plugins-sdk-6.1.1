@@ -1016,8 +1016,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ displayFileName);
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
 
