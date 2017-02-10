@@ -15,7 +15,7 @@
 			<p:outputPanel rendered="#{(paymentResponseBB.managedBean.paymentId != null) and (paymentResponseBB.managedBean.paymentStatus)}">
 				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']} " ajax="false">
-					<p:fileDownload value="#{paymentResponseBB.printReceipt()}" />
+					<p:fileDownload value="#{paymentAcknowledgeBB.printReceipt()}" />
 				</p:commandLink>
 				<h:outputText value=" #{lbl['lbl.sm.payment.to.download.receipt']}" />
 			</p:outputPanel>
