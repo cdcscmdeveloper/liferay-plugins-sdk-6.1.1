@@ -3272,9 +3272,7 @@ public class QTDetailBackingBean extends
 							}
 						}
 						//Setting special approval info for login user
-						if (isQTStatusLessThanOrEquals(
-								currentStatus,
-								QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+						if (scQt.getObtainSpecialApproval() != null && !scQt.getObtainSpecialApproval()) {
 							this.getManagedBean().setPtjSpecialApproval(
 									getPtjSpecialApprovalByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId()));
 											
