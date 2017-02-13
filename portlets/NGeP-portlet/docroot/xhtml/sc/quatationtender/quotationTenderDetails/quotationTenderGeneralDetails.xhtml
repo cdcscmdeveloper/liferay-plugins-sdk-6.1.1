@@ -303,7 +303,7 @@
 								rendered="#{createQtBB.managedBean.procMethodDropdownPresent}" /></td>
 						<td colspan="3"><c:choose>
 								<c:when
-									test="#{qtStatusChecklistScoringAndBefore and !isReadOnly and createQtBB.managedBean.procMethodDropdownPresent}">
+									test="#{!isReadOnly and createQtBB.managedBean.procMethodDropdownPresent}">
 									<p:selectOneMenu id="procMode" required="true"
 										value="#{scQt.procurementMode.parameterId}"
 										style="width: 205px;margin-bottom: 5px;"
