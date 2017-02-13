@@ -64,6 +64,7 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -158,6 +159,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
@@ -3888,11 +3890,22 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} 
 			}
 		}
-		if(countChargelineLimit > FulfilmentConst.CHARGELINE_LIMIT){
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-				throw new EpException(MessageConst.ERROR_740049, new String[]{getManagedBean().getFulfilmentRequest().getDocNo(),FulfilmentConst.CHARGELINE_LIMIT.toString()});
-			}else {
-				throw new EpException(MessageConst.ERROR_740050, new String[]{getManagedBean().getFulfilmentRequest().getDocNo(),FulfilmentConst.CHARGELINE_LIMIT.toString()});
+		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		if(gfmasEnable.equalsIgnoreCase("true")){
+			if(countChargelineLimit > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+					throw new EpException(MessageConst.ERROR_740049, new String[]{getManagedBean().getFulfilmentRequest().getDocNo(),FulfilmentConst.GFMAS_CHARGELINE_LIMIT.toString()});
+				}else {
+					throw new EpException(MessageConst.ERROR_740050, new String[]{getManagedBean().getFulfilmentRequest().getDocNo(),FulfilmentConst.GFMAS_CHARGELINE_LIMIT.toString()});
+				}
+			}
+		}else{
+			if(countChargelineLimit > FulfilmentConst.ESPKB_CHARGELINE_LIMIT){
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+					throw new EpException(MessageConst.ERROR_740049, new String[]{getManagedBean().getFulfilmentRequest().getDocNo(),FulfilmentConst.ESPKB_CHARGELINE_LIMIT.toString()});
+				}else {
+					throw new EpException(MessageConst.ERROR_740050, new String[]{getManagedBean().getFulfilmentRequest().getDocNo(),FulfilmentConst.ESPKB_CHARGELINE_LIMIT.toString()});
+				}
 			}
 		}
 	}
