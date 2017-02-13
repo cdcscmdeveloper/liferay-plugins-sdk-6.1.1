@@ -1561,6 +1561,7 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setModulePostUpdate(getManagedBean().isModulePostUpdate());	
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setRemark(getManagedBean().getRemarks());
+			reqDTO.setTaskRoleCode(vo.getRoleList() !=null ? vo.getRoleList().get(0) : null);
 			
 			//For Tracking Diary List (CT)
 			if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
