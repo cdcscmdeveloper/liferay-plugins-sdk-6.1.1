@@ -101,7 +101,7 @@ public class TemplateSpecBackingBean extends
 
 	private static Logger log = Logger.getLogger(TemplateSpecBackingBean.class);
 
-	public static final String NAVIGATE_TO_SEARCH = "templateSpecSearch";
+	public static final String NAVIGATE_TO_SEARCH = "templateSpecSearch.xhtml";
 	private static final String TPL_SPEC_KEY = "lbl.sc.template.spec";
 
 	private IPagingDataModel<TplSpecMaster> specMasterDataModel = new SpecMasterPagingDataModel();
@@ -117,6 +117,29 @@ public class TemplateSpecBackingBean extends
 	 * Constructor for template specification backing bean
 	 */
 	public TemplateSpecBackingBean() {
+	}
+	
+	/**
+	 * Navigate to Tempalte Search screen 
+	 */
+	public void preRenderView() {
+		
+		super.renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAVIGATE_TO_SEARCH);
+	}
+	
+	public void backBtn() {
+		
+		this.getManagedBean().setSearchItemTypeId(null);
+		this.getManagedBean().setSearchSpecName(null);
+		this.getManagedBean().setSearchSpecDesc(null);
+		this.getManagedBean().setSearchProcurementCategoryId(null);
+		this.getManagedBean().setSearchTemplateTypeCode(null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAVIGATE_TO_SEARCH);
 	}
 
 	/**
