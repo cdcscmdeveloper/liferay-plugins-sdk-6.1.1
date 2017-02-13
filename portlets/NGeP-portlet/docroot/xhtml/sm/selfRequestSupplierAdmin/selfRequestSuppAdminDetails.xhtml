@@ -445,9 +445,9 @@
 						action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
 						update="@form" />
 					
-					<p:commandButton id="btnSubmitSuppAdminDetails" value="#{lbl['lbl.btn.proceed']}" 
+					<p:commandButton id="btnSubmitSuppAdminDetails" value="#{lbl['lbl.btn.submit']}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-						action="#{selfRequestSupplierAdminBackingBean.navigateToSuppAdminDetails}" />
+						action="#{selfRequestSupplierAdminBackingBean.submit}" />
 				</td>
 			</tr>
 		</table>
