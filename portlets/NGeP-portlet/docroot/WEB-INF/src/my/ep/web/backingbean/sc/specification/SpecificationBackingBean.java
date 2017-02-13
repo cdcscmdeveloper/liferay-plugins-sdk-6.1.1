@@ -9011,6 +9011,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+		ScQt scQt = this.getManagedBean().getQt();
 		if (null == this.getManagedBean().getQt().getContractType()) {
 			this.getManagedBean().getQt().setContractType(new PmParameter());
 		}
@@ -9023,6 +9024,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setFulfilmentType(
 					this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
 		}
+		if (!this.getManagedBean().isReadOnly()) {
+			if(scQt.getTmpExpectedIntendedPrice() != null){
+				new CreateQtBackingBean().setProcurementMode(scQt,
+						scQt.getTmpExpectedIntendedPrice());
+			}
+		}
+		
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
 				.getNavigationHandler()
@@ -9510,6 +9518,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			boolean specNewable = this.getManagedBean().isSpecNewable();
 			boolean updateSpec = this.getManagedBean().isUpdateSpec();
 			String loginRoleType=this.getManagedBean().getLoginRoleType();
+			boolean isPanel = this.getManagedBean().getPanel();
+			boolean isDropdownPresent = this.getManagedBean().isProcMethodDropdownPresent();
+					
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
 					.getDeliveryLocRemoveList();
@@ -9806,7 +9817,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 			}
 			this.getManagedBean().setPtjSpecialApproval(this.getManagedBean().getQt().getPtjSpecialApproval());
-			this.getManagedBean().setPanel(this.getManagedBean().getQt().isPanel());
+			this.getManagedBean().setPanel(isPanel);
+			this.getManagedBean().setProcMethodDropdownPresent(isDropdownPresent);
+			
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */

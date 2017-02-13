@@ -799,6 +799,11 @@ public class QTDetailBackingBean extends
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean()
 					.getCurrentStatusId())) {
 				this.getManagedBean().setCreateQt(true);
+				if(selectedScQt.getTmpExpectedIntendedPrice() != null){
+					new CreateQtBackingBean().setProcurementMode(selectedScQt,
+							selectedScQt.getTmpExpectedIntendedPrice());
+				}
+				
 			}
 			debugLogger("end of editQuationTenderDetails");
 					} finally {
@@ -2108,8 +2113,13 @@ public class QTDetailBackingBean extends
 				retrieveQuationTenderDetails(new Long(qtId));
 			}
 
+			ScQt scQt = this.getManagedBean().getQt();
 			if (null == this.getManagedBean().getQt().getProcurementMode()) {
 				this.getManagedBean().getQt().setProcurementMode(new PmParameter());
+			} 
+			if (scQt.getTmpExpectedIntendedPrice() != null) {
+				new CreateQtBackingBean().setProcurementMode(scQt,
+						scQt.getTmpExpectedIntendedPrice());
 			}
 
 			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
@@ -3820,7 +3830,9 @@ public class QTDetailBackingBean extends
         boolean readOnly = this.getManagedBean().isReadOnly();
 		boolean isCommitteeAppointment = this.getManagedBean().isCommitteeAppointment();
 		boolean isCommitteeAppointmentRemark = this.getManagedBean().isCommitteeAppointmentRemark();
-
+		boolean isPanel = this.getManagedBean().getPanel();
+		boolean isdropdownPresent  = this.getManagedBean().isProcMethodDropdownPresent();
+		
 		QuationTenderResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
@@ -3980,6 +3992,8 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setCreateQt(isCreateQt);
 		this.getManagedBean().setMaintanceFlow(isMaintFlow);
 		this.getManagedBean().setReadOnly(readOnly);
+		this.getManagedBean().setPanel(isPanel);
+		this.getManagedBean().setProcMethodDropdownPresent(isdropdownPresent);
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
