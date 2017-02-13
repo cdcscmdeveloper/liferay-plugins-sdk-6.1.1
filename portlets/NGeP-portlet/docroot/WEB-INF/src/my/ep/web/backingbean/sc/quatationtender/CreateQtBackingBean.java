@@ -2855,13 +2855,14 @@ public class CreateQtBackingBean extends
 		if (isSpecialApproval) {
 			scQt.setPtjSpecialApproval(this.getManagedBean()
 					.getPtjSpecialApproval());
+			this.getManagedBean().setProcMethodDropdownPresent(true);
 		} else {
 			scQt.setPtjSpecialApproval(null);
 			this.getManagedBean().setProcMethodDropdownPresent(false);
 		}
-		scQt.setProcurementMode(new PmParameter());
-		BigDecimal amount = scQt.getTmpExpectedIntendedPrice() != null ? scQt
-				.getTmpExpectedIntendedPrice() : scQt.getEstimatedAmount();
+		
+		BigDecimal amount = scQt.getEstimatedAmount() != null ? scQt
+				.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
 		if (amount != null) {
 			setProcurementMode(scQt, amount);
 		}
