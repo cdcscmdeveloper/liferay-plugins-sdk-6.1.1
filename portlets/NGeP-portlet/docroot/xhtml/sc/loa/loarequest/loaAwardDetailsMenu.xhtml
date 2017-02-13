@@ -40,7 +40,8 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.item']}">
-				#{scLoiLoaItem.scRequestItem.itemName}
+				#{scLoiLoaItem.scRequestItem.itemName} <br /><br />
+				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
