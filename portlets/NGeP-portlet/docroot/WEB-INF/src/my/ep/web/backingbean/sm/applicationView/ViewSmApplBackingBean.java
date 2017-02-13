@@ -12,13 +12,17 @@ import org.apache.log4j.Logger;
 public class ViewSmApplBackingBean extends
 		BaseReviewApplicationBackingBean<ViewSmApplManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3813287377990129080L;
 	public static Logger log = Logger.getLogger(ViewSmApplBackingBean.class);
 
 	/**
 	 *  Initialized and construct ViewSmApplBackingBean
 	 */
 	public ViewSmApplBackingBean() {
-		initMain();
+		
 	}
 
 }

@@ -100,6 +100,7 @@ import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -410,6 +411,21 @@ public class SmCommonUtil {
 		ParameterResDTO resDTO = SmServiceLookup.getParameterSO()
 				.retrieveParameterById(reqDTO);
 		return resDTO.getPmParameter();
+	}
+
+	/**
+	 * Retrieve application by application no
+	 * 
+	 * @param String
+	 *            applNo
+	 * @return SmAppl
+	 */
+	public static SmAppl retrieveSmApplByApplNo(String applNo) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(applNo);
+		MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
+				.retrieveSmApplWithChildByApplNo(reqDTO);
+		return resDTO.getSmAppl();
 	}
 
 	/**
