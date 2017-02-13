@@ -4821,6 +4821,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 			
 		    List<Object[]> list = resDTO.getOrgProfileDDList();
+		    if(list==null) {
+		    	list = new ArrayList<Object[]>();
+		    }
 		    items = new SelectItem[list.size() + 1];
 		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
