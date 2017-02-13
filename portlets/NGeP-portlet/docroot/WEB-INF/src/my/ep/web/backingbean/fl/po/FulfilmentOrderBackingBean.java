@@ -416,7 +416,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
-				getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFlRequest().getAgApprovedDate()));
+				
 				if(getManagedBean().getFlRequest().getCtContract().isFactored()){
 					IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 
@@ -556,7 +556,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-				getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFlRequest().getAgApprovedDate()));
+				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}  
@@ -1052,7 +1052,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						}
 					}
 				}
-				crBB.getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(crBB.getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),crBB.getManagedBean().getFlRequest().getAgApprovedDate()));
+				
 				crBB.setFulfilmentItemAddr(crBB.getManagedBean().getFlRequest());
 				crBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 						getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
@@ -1077,7 +1077,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				prBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-				prBB.getManagedBean().getFulfilmentRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(prBB.getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId(),prBB.getManagedBean().getFulfilmentRequest().getAgApprovedDate()));
+				
 				return NAV_PR;
 			}
 			return null;
