@@ -15,36 +15,6 @@
     	 	  <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	 	 	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
 	  		 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
-      		<h:panelGroup id ="panelCtSharingAttach">
-      			   <table style="width: 100%">
-					<tr>
-							<td class="TableFieldLeft" width="15%">  <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.refno']}"/></td>
-							<td class="TableFieldRight">  <p:inputText id="uploadRefNoDoc"   style="width:130px;"   
-							        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}" 
-							       disabled="#{ctBackingBean.managedBean.disableAmendDetails}" rendered="#{!ctBackingBean.managedBean.viewContract}">
-							       <p:ajax process="@this"/></p:inputText>
-							</td>
-				   </tr>
-				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}"/>     </td>
-				           <td> <p:commandButton id="uploadSharingDoc" oncomplete="ctSharingAttachDlg.show();return false;" 
-				                      rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
-					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"/>
-
-		     					 <h:commandLink
-										value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.fileName)}"						
-										style="float:left;margin-top:10px;" styleClass="blue_font"
-										action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements)}" />
-						
-			   					<p:commandLink process="@this" partialSubmit="true"
-			   						   onclick="delCtSharingAttachDlg.show();"  
-			   						   disabled="#{ctBackingBean.managedBean.viewContract}"
-									  rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath != null}">
-			   								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" style="margin-bottom:-10px;"/>
-			 					</p:commandLink>
-		    </td>
-		    </tr>
-		    </table>
-		    </h:panelGroup>
 		    <br/>
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
        					value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
@@ -158,6 +128,39 @@
 				</p:tooltip>
 			</p:commandButton>
 	  	</div>
+	  	<br/>
+	  	<br/>
+	  	<h:panelGroup id ="panelCtSharingAttach">
+	  	             <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.doc']}" escape="false"/><br/><br/>
+      			   <table style="width: 100%">
+					<tr>
+							<td class="TableFieldLeft" width="15%">  <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.refno']}"/></td>
+							<td class="TableFieldRight">  <p:inputText id="uploadRefNoDoc"   style="width:130px;"   
+							        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}" 
+							       disabled="#{ctBackingBean.managedBean.disableAmendDetails}" rendered="#{!ctBackingBean.managedBean.viewContract}">
+							       <p:ajax process="@this"/></p:inputText>
+							</td>
+				   </tr>
+				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}"/>     </td>
+				           <td> <p:commandButton id="uploadSharingDoc" oncomplete="ctSharingAttachDlg.show();return false;" 
+				                      rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
+					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"/>
+
+		     					 <h:commandLink
+										value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.fileName)}"						
+										style="float:left;margin-top:10px;" styleClass="blue_font"
+										action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements)}" />
+						
+			   					<p:commandLink process="@this" partialSubmit="true"
+			   						   onclick="delCtSharingAttachDlg.show();"  
+			   						   disabled="#{ctBackingBean.managedBean.viewContract}"
+									  rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath != null}">
+			   								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" style="margin-bottom:-10px;"/>
+			 					</p:commandLink>
+		    </td>
+		    </tr>
+		    </table>
+		    </h:panelGroup>
 	  	<p:confirmDialog id="dlgDelid" widgetVar="dlgAgenyDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                          <div class="ppRightBtn">
