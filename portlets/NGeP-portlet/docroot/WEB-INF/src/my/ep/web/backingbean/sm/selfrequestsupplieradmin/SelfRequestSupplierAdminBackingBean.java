@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.constant.MessageConst;
 import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -24,6 +25,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -133,6 +135,35 @@ public class SelfRequestSupplierAdminBackingBean extends
 			fc.addMessage("icNoId", new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null, invalidMsg));
 		}
+	}
+
+	public void submit() {
+		SmPersonnelAddress permAddr = (SmPersonnelAddress) EntityHelper
+				.getEntityBySinglePropertyFromList(
+						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
+						getManagedBean().getSelectedAdmin()
+								.getSmPersonnelAddresses(), "addressType");
+
+		// new permanent addresses added
+		if (permAddr == null) {
+			getManagedBean().getSelectedAdmin().setSmPersonnelAddresses(
+					new ArrayList<SmPersonnelAddress>());
+			getManagedBean().getSelectedAdmin().getSmPersonnelAddresses()
+					.add(getManagedBean().getSelectedAdminPermAddr());
+		}
+
+		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
+		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setBaseUrl(SmCommonUtil.getBasePortalUrl());
+
+		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
+				reqDTO);
+
+		SmCommonUtil.redirectToPage(
+				SmApplicationUtil.getApplicationErrorPage(),
+				MessageConst.INFO_721227, new String[] { getManagedBean()
+						.getSupplier().getCompanyName() });
 	}
 
 	public void onBlurMofNo(String mofNo) {
