@@ -473,8 +473,8 @@ public class SPDetailBackingBean extends
 		
 		super.generatePdfFromOracle(reportName,
 			 paramMap, attachment,
-			false);
-		
+			true);
+		downloadFile(attachment);
 	}
 
 	/**
