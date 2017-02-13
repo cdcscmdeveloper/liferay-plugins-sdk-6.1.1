@@ -649,6 +649,7 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM pageSize*****" + getPageSize());
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
+						statusIds.add(62101);
 
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -1550,6 +1551,7 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setDocNumber(StringUtils.isNotBlank(vo.getDocNo())? vo.getDocNo() : task.getDocNumber());
 			reqDTO.setDocId(vo.getDocId() != null ? vo.getDocId().intValue() : task.getDocId());		
 			reqDTO.setDocType(vo.getDocType() != null ? vo.getDocType() : task.getDocType());
+			reqDTO.setTaskDocType(task.getDocType());
 			reqDTO.setGroupDocId(vo.getGroupDocId() != null ? vo.getGroupDocId() : null);
 			reqDTO.setGroupDocType(StringUtils.isNotBlank(vo.getGroupDocType()) ? vo.getGroupDocType() : null);
 			reqDTO.setDocStatus(task.getDocStatus());
