@@ -38,7 +38,7 @@
 							<tr>
 								<td><c:choose>
 										<c:when
-											test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
+											test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_OBTAIN_SPEC_APPROVAL) and !isReadOnly}">
 											<p:selectOneRadio id="specialApprovId" required="true"
 												label="#{lbl['lbl.sc.qt.special.approval']}"
 												value="#{scQt.obtainSpecialApproval}">
