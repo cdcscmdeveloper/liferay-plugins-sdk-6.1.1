@@ -1730,7 +1730,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					orderBackingBean.getManagedBean().setFactoringCheck("false");
 				}
 				orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
-				orderBackingBean.getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(orderBackingBean.getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),orderBackingBean.getManagedBean().getFlRequest().getAgApprovedDate()));
+			
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());

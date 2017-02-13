@@ -639,17 +639,4 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return null;
 	}
 	
-	public String retrieveAgOfficeNameByOrgProfileId(Long orgProfileId,Date agApprovedDate){
-		IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
-		AgOfficeReqDTO agReqDTO = new AgOfficeReqDTO();
-		String officeName = null;
-		agReqDTO.setOrgProfileId(orgProfileId);
-		agReqDTO.setAgApprovedDate(agApprovedDate);
-		AgOfficeResDTO agResDTO = agOfficeSO.retrieveAgOfficeByOrgProfileId(agReqDTO);
-		if(agResDTO.getAgOffice() != null){
-			officeName = agResDTO.getAgOffice().getOfficeName();
-		}
-
-		return officeName;
-	}
 }

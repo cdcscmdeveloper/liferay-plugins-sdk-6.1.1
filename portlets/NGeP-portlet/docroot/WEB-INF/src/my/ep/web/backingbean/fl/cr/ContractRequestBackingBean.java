@@ -445,7 +445,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().getFlRequest().setTitle(getManagedBean().getFlRequest().getTitle().trim());
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.initializeRemarkAndAttachement(getManagedBean().getFlRequest().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-		getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFlRequest().getAgApprovedDate()));
+		
 		getManagedBean().setSelectedTabIndex(0);
 		getSumOrderedQty(getManagedBean().getFlRequest());
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
