@@ -5,6 +5,7 @@ import javax.faces.bean.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.constant.MessageConst;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -30,18 +31,42 @@ public class ViewPreRenderSmApplBackingBean {
 				.getParameter("applicationType");
 
 		String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
+		SmAppl smAppl = null;
 
 		if (StringUtils.isNotBlank(applNo) && StringUtils.isNotBlank(applType)) {
-			redirectToAppl = applNo.substring(applNo.length() - 3,
-					applNo.length()).equals("APP") ? SmApplicationUtil
-					.getReviewApplicationBasePage(applType) : SmApplicationUtil
-					.getReviewApplicationSupplierBasePage(applType);
-			SmCommonUtil.redirectToPage(redirectToAppl, "",null);
+			String serFileType = applNo.substring(applNo.length() - 3,
+					applNo.length());
+			applNo = applNo.substring(0, applNo.length() - 4);
+
+			if (serFileType.equals("APP")) {
+				redirectToAppl = SmApplicationUtil
+						.getReviewApplicationBasePage(applType);
+
+				ViewSmApplBackingBean viewSmApplBackingBean = new ViewSmApplBackingBean();
+				smAppl = SmCommonUtil.retrieveSmApplByApplNo(applNo);
+
+				if (smAppl != null) {
+					viewSmApplBackingBean.setApplication(smAppl);
+					if (!SmCommonUtil.isSerFileExist(applNo, serFileType)) {
+						SmCommonUtil.createSerFile(smAppl, serFileType);
+					}
+				} else {
+					SmCommonUtil.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721212, null);
+				}
+			} else {
+				redirectToAppl = SmApplicationUtil
+						.getReviewApplicationSupplierBasePage(applType);
+
+				ViewSmSuppApplBackingBean viewSmSuppApplBackingBean = new ViewSmSuppApplBackingBean();
+				viewSmSuppApplBackingBean.initMain();
+			}
+			SmCommonUtil.redirectToPage(redirectToAppl, "", null);
 		} else {
 			SmCommonUtil.redirectToPage(redirectToAppl,
-					MessageConst.INFO_721212,null);
+					MessageConst.INFO_721212, null);
 		}
 
 	}
-
 }
