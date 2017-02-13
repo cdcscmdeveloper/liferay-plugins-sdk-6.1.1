@@ -1109,12 +1109,14 @@ public class PurchaseInquiryBackingBean extends
 							scRequestNoteDtl.setScRequestSupplierItem(null);
 						}
 						
-						// validate pi if no stock
-						if (scRequestNoteDtl
+						String procType = scRequestNoteDtl
 								.getProcurementType()
-								.getParameterCode()
-								.equalsIgnoreCase(
-										ParameterConst.PROC_TYPE_NORMAL)) {
+								.getParameterCode();
+						// validate pi if no stock
+						if (procType.equalsIgnoreCase(
+										ParameterConst.PROC_TYPE_NORMAL) ||
+										procType.equalsIgnoreCase(
+												ParameterConst.PROC_TYPE_PK7)) {
 							PrInquiryReqDTO inquiryReqDTO = new PrInquiryReqDTO();
 							inquiryReqDTO.setRequestItemId(scRequestNoteDtl
 									.getRequestItem().getRequestNoteItemId());
