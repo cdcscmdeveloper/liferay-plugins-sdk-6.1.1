@@ -44,7 +44,15 @@
 								target="#{specificationBackingBean.managedBean.buttonOutCome}"
 								value="save" />
 						</p:commandButton>
-					</ui:fragment></td>
+					</ui:fragment>
+					<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}">
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@all"
+							style="float:right;" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" 
+							action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}">
+							</p:commandButton>
+					</ui:fragment>
+					</td>
 			</tr>
 		</table>
 
