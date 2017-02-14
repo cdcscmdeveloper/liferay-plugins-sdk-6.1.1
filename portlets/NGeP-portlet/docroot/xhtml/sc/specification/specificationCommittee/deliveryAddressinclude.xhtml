@@ -54,7 +54,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 			styleClass="BtnSpacing"
 				partialSubmit="true" update="@([id$=deliveryAddrDlg])"
-				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				action="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 				oncomplete="deliveryAddress.show();" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
