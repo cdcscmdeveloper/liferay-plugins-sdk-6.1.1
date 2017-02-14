@@ -13478,4 +13478,137 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			
 	}
+	
+	/**
+	 * Spec committe Maintenance bpm task.Event handle Submit/Endorsment in specification
+	 * committee.
+	 * 
+	 * @param action
+	 *            (String action)
+	 * @return navigate to acknowledgement page.
+	 */
+	public String submitSpecMaintenanceDtls(String action){
+		log.info("start submitSpecMaintenanceDtls"+action);
+		this.getManagedBean().setLocalOutCome(action);
+		log.info("end submitSpecMaintenanceDtls"+action);
+		SpecificationResDTO resDTO=new SpecificationResDTO();
+				//updateSpecCommitteMaintenaceDtls(action,null);
+		resDTO.setSuccessful(Boolean.TRUE);
+		if (resDTO.isSuccessful()) {
+			//ScQt qt = resDTO.getScQt();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(action),
+													new String[] {
+															getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
+															this.getManagedBean().getQt().getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+	return null;	
+	}
+	private SpecificationResDTO updateSpecCommitteMaintenaceDtls(String action,
+			PmDigiSign digiSign) {
+		SpecificationResDTO resDTO=new SpecificationResDTO();
+		ScQt scQt=this.getManagedBean().getQt();
+		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+		spReqDTO.setOutcome(action);
+	
+		List<ScQtCommitteeActivity> committeActivities = this
+				.getManagedBean().getCommitteeActivities();
+		spReqDTO.setCommitteActivities(committeActivities);
+		if (null != digiSign) {
+			updatePmDigiSignData(digiSign,
+					ParameterConst.DOCTYPE_SPEC_COMMITTE, scQt.getQtId(),
+					scQt.getQtNo());
+		}
+		
+		spReqDTO.setDigiSignData(digiSign);
+		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+		FacesScopes facesScopes = new FacesScopes();
+		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		spReqDTO.setPmUser(facesScopes.getUserSessionBean());
+		spReqDTO.setRoleCode(getUserRoleCode());
+		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
+				.getCurrentStatusId());
+		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		IQTSpecSO specSO = getSpecSO();
+		try {
+			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
+
+		} finally {
+			specSO = null;
+		}
+		return resDTO;
+		
+		
+	}
+	
+	/**
+	 * Load prepare specMaintenance committee details.Event handle click on submit button
+	 * to retrieve all the Specification Committee menus information.
+	 * 
+	 * @param qtId
+	 *            (Long qtId)
+	 * 
+	 */
+	private void loadPrepareSpecCommitteeMaintenanceDetails(Long qtId) {
+		log.info("start loadPrepareSpecCommitteeMaintenanceDetails");
+
+		retriveSpecdetails(qtId);
+
+		retriveSupplierQualificationCriteria("SC");
+		retriveTechnicalCheckList();
+		retriveTechnicalScoring();
+		retriveFinancialCheckList();
+		retriveFinancialScoring();
+		retriveRecommendationDetails();
+		retriveFulfilmentDtls();
+		retriveDeliveryDetails();
+		retriveCommitteeEndorsment();
+		
+		if (!this.getManagedBean().isReadOnly() && getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen())) {
+			log.info("if condition loadPrepareSpecCommitteeMaintenanceDetails");
+			checktemplateSpecStatus(this.getManagedBean().getQt());
+			checkFinancialSpecStatus(this.getManagedBean().getQt());
+			validateTechnicalPassingScoring(this.getManagedBean()
+					.getTechnicalScoreSetting());
+			validateTechnicalDemoPassingScoring(this.getManagedBean()
+					.getDemoScoreSetting());
+			technicalWeightageCalculate();
+			validateFinancialPackageItemPassingScoring(this.getManagedBean()
+					.getFinancialScoreSetting(), this.getManagedBean()
+					.getFinacialItemScoreSetting());
+			financialWeightageCalculate();
+			financialItemScoreCalculate(this.getManagedBean()
+					.getFinacialItemScoreSetting());
+			calculateRecommendationPackageAndItemScores(this.getManagedBean()
+					.getRecommendationPackageScore(), this.getManagedBean()
+					.getRecommendationScore());
+			validateTechnicalUserScoringAttachment(this.getManagedBean()
+					.isTechnicalUserScoringSchema());
+
+			validateFinancialUserScoringAttachment(this.getManagedBean()
+					.isFinancialUserScoringSchema());
+			//setTechncialChecklistEvaluationStatus(this.getManagedBean()
+					//.getScQtCheckSt2techProposal());
+			//setFinancialChecklistEvaluationStatus(this.getManagedBean()
+					//.getScQtCheckSt2financeProposalList());
+		}
+		log.info("end loadPrepareSpecCommitteeMaintenanceDetails");
+		// this.getManagedBean().setActiveIndex(0);
+
+	}
 }
