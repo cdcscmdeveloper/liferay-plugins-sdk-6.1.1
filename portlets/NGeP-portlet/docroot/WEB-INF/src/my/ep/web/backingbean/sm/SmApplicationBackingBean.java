@@ -2533,6 +2533,9 @@ public class SmApplicationBackingBean extends
 				.isSuppEditPersonnel());
 		rqDto.setBankInfoChanged(getManagedBean().getSupplierEditVO()
 				.isSuppEditBank());
+		rqDto.setForeigner(SmApplicationUtil
+				.isCompanyHasForeignPersonnel(getManagedBean().getSmAppl()
+						.getSmPersonnels()));
 
 		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
 				.getSmAppl());
