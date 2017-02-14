@@ -753,7 +753,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/customercare/customerservice.xhtml</value>
+			<value>/xhtml/ct/customercare/preRenderService.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
