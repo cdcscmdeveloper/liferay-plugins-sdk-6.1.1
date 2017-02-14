@@ -392,6 +392,14 @@ try{
 			log.info("========staus===="+worklistItem.getState());
 		}
 	}
+	if(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE.equals(statusId)){
+		if(null==getManagedBean().getCustomerServiceEntity()){
+			getManagedBean().setCustomerServiceEntity(new ArrayList<SourcingCustomerServiceBean>());
+		}
+		SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
+		custServiceEntity.setStatus(statusId);
+		getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+	}
 	
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication()
