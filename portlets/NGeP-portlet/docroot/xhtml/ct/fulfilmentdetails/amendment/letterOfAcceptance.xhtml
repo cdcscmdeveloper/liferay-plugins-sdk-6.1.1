@@ -22,7 +22,8 @@
 		</h:panelGrid>
 			<h:panelGrid columns="3" style="width:400px;">
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.agency.no']}" styleClass="required" style="width:200px;" /> 
-				<p:outputLabel value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}" style="text-align:left;float:left;" /> 
+				 <h:outputText style="text-align:left;float:left;"
+				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}-#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}"  /> 
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.agency.no']}" />
 		</h:panelGrid>
 	</h:panelGrid>
