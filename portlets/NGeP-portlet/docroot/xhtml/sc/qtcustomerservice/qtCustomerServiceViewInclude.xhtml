@@ -87,10 +87,10 @@
 										headerText="#{lbl['lbl.sc.customer.service.officer.name']}">
 										<h:outputText
 											value="#{lbl['lbl.sc.customer.service.supplier.name']}"
-											rendered="#{customerServiceOfficers.status eq QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT or customerServiceOfficers.status eq QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT or customerServiceOfficers.status eq QTStatusConst.PCB_PENDING_SUPPLIER_ACCEPTANCE}" />
+											rendered="#{customerServiceOfficers.status eq QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT or customerServiceOfficers.status eq QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT or customerServiceOfficers.status eq QTStatusConst.PCB_PENDING_SUPPLIER_ACCEPTANCE or customerServiceOfficers.status eq QTStatusConst.QT_PROPOSAL_PREPARATION}" />
 
 										<h:outputText value="#{customerServiceOfficers.officerName}"
-											rendered="#{customerServiceOfficers.status ne QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT and customerServiceOfficers.status ne QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT and customerServiceOfficers.status ne QTStatusConst.PCB_PENDING_SUPPLIER_ACCEPTANCE}" />
+											rendered="#{customerServiceOfficers.status ne QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT and customerServiceOfficers.status ne QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT and customerServiceOfficers.status ne QTStatusConst.PCB_PENDING_SUPPLIER_ACCEPTANCE and customerServiceOfficers.status ne QTStatusConst.QT_PROPOSAL_PREPARATION}" />
 									</p:column>
 
 									<p:column style="width:18%;white-space:normal;"
