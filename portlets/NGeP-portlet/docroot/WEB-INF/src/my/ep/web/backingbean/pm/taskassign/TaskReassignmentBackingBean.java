@@ -649,7 +649,7 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM pageSize*****" + getPageSize());
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
-						statusIds.add(62101);
+				
 
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
