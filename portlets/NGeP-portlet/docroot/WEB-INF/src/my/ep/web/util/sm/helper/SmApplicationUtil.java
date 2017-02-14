@@ -2400,6 +2400,30 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Check if company had foreign personnels
+	 * 
+	 * @param List
+	 *            <SmPersonnel> personnels
+	 * @return boolean
+	 */
+	public static boolean isCompanyHasForeignPersonnel(
+			List<SmPersonnel> personnels) {
+		boolean retVal = false;
+		if (!EntityHelper.isCollectionEmpty(personnels)) {
+			for (SmPersonnel per : personnels) {
+				if (per.getPmCountry() != null
+						&& !per.getPmCountry()
+								.getCountryCode()
+								.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
 	 * Sets the default addr with country Malaysia and address lines empty.
 	 * 
 	 * @param defCntry
@@ -9863,20 +9887,15 @@ public class SmApplicationUtil {
 	 * @param SmApplicationManagedBean
 	 *            bean
 	 */
-	public static void setSelectedPersonnelIdentificationType(
-			SmPersonnel per) {
+	public static void setSelectedPersonnelIdentificationType(SmPersonnel per) {
 		if (per.getIdentificationTypeId() != null) {
-			per.setIdentificationType(
-					SmApplicationUtil
-							.retrievePmParameterById(per
-									.getIdentificationTypeId()));
+			per.setIdentificationType(SmApplicationUtil
+					.retrievePmParameterById(per.getIdentificationTypeId()));
 			if (per.getIdentificationType() == null) {
-				per.setIdentificationType(
-						new PmParameter());
+				per.setIdentificationType(new PmParameter());
 			}
 		} else {
-			per.setIdentificationType(
-					new PmParameter());
+			per.setIdentificationType(new PmParameter());
 		}
 	}
 
