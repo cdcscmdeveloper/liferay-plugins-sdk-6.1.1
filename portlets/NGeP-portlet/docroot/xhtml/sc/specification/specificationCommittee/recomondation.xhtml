@@ -34,7 +34,7 @@
 								value="#{lbl['lbl.sc.spec.financial']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="3"
 								readonly="true"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								disabled="true"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
 
 								<p:ajax event="blur" update="@([id$=package])"
