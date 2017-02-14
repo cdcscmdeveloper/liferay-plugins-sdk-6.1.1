@@ -59,6 +59,16 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 	}
 	
 	/**
+	 * The method used to clear the previous viewed information before
+	 * rendering the contract search screen.
+	 */
+	public void preRenderService() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_SERVICE_PAGE);
+	}
+	
+	/**
 	 * The method used for searching the contract.
 	 * A warning message will display on screen when searching
 	 * with empty search criteria.
