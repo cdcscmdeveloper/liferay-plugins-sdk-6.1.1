@@ -67,7 +67,7 @@ private static final long serialVersionUID = 1L;
 private static Logger log = Logger
 .getLogger(SpecificationMaintenanceBackingBean.class);
 
-private IPagingDataModel<ScQt> specMaintenanceDataModel = new SpecMaintenanceSearchQtDataModel();
+//private IPagingDataModel<ScQt> specMaintenanceDataModel = new SpecMaintenanceSearchQtDataModel();
 
 
 public SpecificationMaintenanceBackingBean(){
@@ -326,7 +326,7 @@ private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
  * Method to search the quationtenders based on serach date.
  */
 public void searchSpeMaintenanceQTAction() {
-	specMaintenanceDataModel.reloadData();
+	this.getManagedBean().getSearchQTDataModel().reloadData();
 }
 
 /**
@@ -335,6 +335,7 @@ public void searchSpeMaintenanceQTAction() {
 public void specCommitteeMaintenancereset() {
 	QTDetailBackingBean detailBackingBean=new QTDetailBackingBean();
 	detailBackingBean.reset();
+	this.getManagedBean().getSearchQTDataModel().resetData();
 }
 
 /**
@@ -343,17 +344,20 @@ public void specCommitteeMaintenancereset() {
  * @param Boolean true/false.
  */
 public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,String SpecMaintenanceScreen){
+	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
+	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
 	renewSesionObject();
 	log.info("start editSpecificationMaintenance");
-	
+	this.getManagedBean().setQtnTenderSearchBean(qtTnderBean);
+	this.getManagedBean().setSearchQTDataModel(qtdataModel);
 	this.getManagedBean().setMaintanceFlow(true);
 	 FacesContext fc = FacesContext.getCurrentInstance();
      boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
     specCommitteeSecreatry=true;
+    this.getManagedBean().setAssignedState(Boolean.FALSE);
 	if(specCommitteeSecreatry){
 		this.getManagedBean().setReadOnly(false);
 		this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
-		this.getManagedBean().setAssignedState(Boolean.TRUE);
 	}else{
 		this.getManagedBean().setReadOnly(true);
 	}
@@ -431,7 +435,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
  * @return the string
  */
 public String gotoSpecMaintenanceSearchPage(){
-renewSesionObject();
+//renewSesionObject();
 return QTConstants.SPEC_MAINTENANCE_SEARCH_PAGE;	
 }
 
@@ -444,15 +448,16 @@ private boolean isSpecCommitteeSecretary() {
  * @return the specMaintenanceDataModel
  */
 public IPagingDataModel<ScQt> getSpecMaintenanceDataModel() {
-	return specMaintenanceDataModel;
+	IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
+			.getSearchQTDataModel();
+	if (searchQTDataModel == null) {
+		searchQTDataModel = new SpecMaintenanceSearchQtDataModel();
+		getManagedBean().setSearchQTDataModel(searchQTDataModel);
+	}
+	return searchQTDataModel;
 }
 
-/**
- * @param specMaintenanceDataModel the specMaintenanceDataModel to set
- */
-public void setSpecMaintenanceDataModel(
-		IPagingDataModel<ScQt> specMaintenanceDataModel) {
-	this.specMaintenanceDataModel = specMaintenanceDataModel;
-}
+
+
 
 }
