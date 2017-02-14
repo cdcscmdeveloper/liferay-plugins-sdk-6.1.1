@@ -245,6 +245,14 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 				log.info("========staus===="+worklistItem.getState());
 			}
 		}
+		if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(statusId)){
+			if(null==getManagedBean().getCustomerServiceEntity()){
+				getManagedBean().setCustomerServiceEntity(new ArrayList<SourcingCustomerServiceBean>());
+			}
+			SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
+			custServiceEntity.setStatus(statusId);
+			getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 		.getNavigationHandler()
