@@ -1346,7 +1346,8 @@ public class DirectLOABackingBean extends
 		
 		TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
 		TplSpecMaster serviceSpecMaster = this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && 
+				BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
