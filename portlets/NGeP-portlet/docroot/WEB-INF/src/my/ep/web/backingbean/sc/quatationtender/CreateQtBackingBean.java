@@ -2853,8 +2853,15 @@ public class CreateQtBackingBean extends
 
 		Boolean isSpecialApproval = scQt.getObtainSpecialApproval();
 		if (isSpecialApproval) {
-			scQt.setPtjSpecialApproval(this.getManagedBean()
-					.getPtjSpecialApproval());
+			PmPtjSpecialApproval ptjSpecialApproval = this.getManagedBean()
+					.getPtjSpecialApproval();
+			
+			if (ptjSpecialApproval == null) {
+				ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(scQt
+						.getPmOrgProfile().getOrgProfileId());
+				this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
+			}
+			scQt.setPtjSpecialApproval(ptjSpecialApproval);
 			this.getManagedBean().setProcMethodDropdownPresent(true);
 		} else {
 			scQt.setPtjSpecialApproval(null);
