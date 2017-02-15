@@ -139,7 +139,7 @@ public class DateUtils {
 	    long milliseconds1 = calendar1.getTimeInMillis();
 	    long milliseconds2 = calendar2.getTimeInMillis();
 	    long diff = milliseconds2 - milliseconds1;	    	        
-	    return (diff / (24 * 60 * 60 * 1000));
+	    return ((diff / (24 * 60 * 60 * 1000))+1);
 	}
 	
 	/**
