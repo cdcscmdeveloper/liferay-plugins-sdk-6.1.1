@@ -89,7 +89,7 @@
 								<td>
 									<p:dataTable id="officerInfoName" var="officerInfo"
 										widgetVar="tableOfficerWidget"
-										value="#{customerServiceBackingBean.managedBean.customerServiceEntity}"
+										value="#{flCustomerServiceBackingBean.managedBean.customerServiceEntity}"
 										rowIndexVar="index">
 										<p:column style="width:2%" headerText="No.">
 											<h:outputText value="#{index+1}" style="float:left;" />
@@ -99,7 +99,8 @@
 											<h:outputText value="#{officerInfo.officerName}"
 												style="float:left;" />
 										</p:column>
-									</p:dataTable></td>
+									</p:dataTable>
+								</td>
 							</tr>
 						</table>
 					</td>
