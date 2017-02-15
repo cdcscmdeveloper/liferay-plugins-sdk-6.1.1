@@ -95,7 +95,7 @@
 							<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
 						</c:if>
 						
-						<c:if test="#{template == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
+						<c:if test="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}">
 							<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
 						</c:if>
 
