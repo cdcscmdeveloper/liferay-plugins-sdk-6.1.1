@@ -13,6 +13,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.TreeNode;
+
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
@@ -24,10 +26,9 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.web.bean.pm.VotSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.TaxInvoiceVO;
-
-import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -55,6 +56,10 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private String docType;
 	private TreeNode chargeLineItemRoot;
 	private TreeNode selectedNode;
+	private VotSearchBean votSearchBean;
+	private Object[] selectedFundObj;
+	private Object[] selectedVotObj;
+	private FlPaymentDeduction selectedDeduction;
 
 	// set chargeline for selected items
 	private String votFundCode;
@@ -91,6 +96,9 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean showDeductionTab;
 	private String buttonVal;
 	private PmUser pmUser;
+	private Long selectedVotFundId;
+	private String searchVotField;
+	private Long selectedVotValue;
 
 	// getSuplier address details
 	private String supplierAddress;
@@ -1399,5 +1407,62 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 
 	public void setCtDeductionMap(Map<Long, CtDeduction> ctDeductionMap) {
 		this.ctDeductionMap = ctDeductionMap;
-	}	
+	}
+
+	public Long getSelectedVotFundId() {
+		return selectedVotFundId;
+	}
+
+	public void setSelectedVotFundId(Long selectedVotFundId) {
+		this.selectedVotFundId = selectedVotFundId;
+	}
+
+	public VotSearchBean getVotSearchBean() {
+		return votSearchBean;
+	}
+
+	public void setVotSearchBean(VotSearchBean votSearchBean) {
+		this.votSearchBean = votSearchBean;
+	}
+
+	public Long getSelectedVotValue() {
+		return selectedVotValue;
+	}
+
+	public void setSelectedVotValue(Long selectedVotValue) {
+		this.selectedVotValue = selectedVotValue;
+	}
+
+	public String getSearchVotField() {
+		return searchVotField;
+	}
+
+	public void setSearchVotField(String searchVotField) {
+		this.searchVotField = searchVotField;
+	}
+
+	public void setSelectedFundObj(Object[] selectedFundObj) {
+		this.selectedFundObj = selectedFundObj;
+	}
+
+	public void setSelectedVotObj(Object[] selectedVotObj) {
+		this.selectedVotObj = selectedVotObj;
+	}
+
+	public Object[] getSelectedFundObj() {
+		return selectedFundObj;
+	}
+
+	public Object[] getSelectedVotObj() {
+		return selectedVotObj;
+	}
+
+	public FlPaymentDeduction getSelectedDeduction() {
+		return selectedDeduction;
+	}
+
+	public void setSelectedDeduction(FlPaymentDeduction selectedDeduction) {
+		this.selectedDeduction = selectedDeduction;
+	}
+
 }

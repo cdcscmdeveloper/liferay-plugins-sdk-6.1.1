@@ -44,14 +44,12 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.deduction.amanah']}"/>
 				</f:facet>
 				<p:outputPanel id="danaPnl">
-					<ac:lov id="dana" update=":form:deductionDataTable"
-						disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
-						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.payment.match.amanah']}"
-						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
-						readonly="true" size="4"
-						conditionField="recordStatusFlg^1|votFundType^A"
-						value="#{deduction.pmVotFund.votFundCode}">
-					</ac:lov>
+					<p:inputText id="dana" value="#{deduction.pmVotFund.votFundCode}"  disabled="true"></p:inputText>
+					<p:commandLink id="votfundLink" disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
+						onclick="deductionPopup.show();" >
+						<f:setPropertyActionListener value="#{deduction}" target="#{paymentMatchBackingBean.managedBean.selectedDeduction}"/>
+						<p:graphicImage value="/css/images/design/search.png"/>
+					</p:commandLink>
 				</p:outputPanel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width:15%;">
@@ -92,7 +90,7 @@
 		<div style="width: 100%; text-align: right" id="deductionButton">
 			<p:commandButton id="addButton" rendered="#{paymentMatchBackingBean.managedBean.buttonVal != BpmOutcomeConstant.bpmView}"
 			disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
-			value="#{lbl['lbl.btn.add']}" action="#{paymentMatchBackingBean.addDeductionRow()}" update="@form" />
+			value="#{lbl['lbl.btn.add']}" action="#{paymentMatchBackingBean.addDeductionRow()}" update="deductionDataTable" />
 			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.buttonVal != BpmOutcomeConstant.bpmView}"
 				disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 			id="deleteDeductionBtn" value="#{lbl['lbl.btn.delete']}" action="#{paymentMatchBackingBean.removeAddRow()}" update="@form"/>
@@ -115,5 +113,6 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	<ui:include src="/xhtml/fl/paymentmatch/deductionPopUp.xhtml" />
 	<ac:lovPopup />	
 </ui:composition>

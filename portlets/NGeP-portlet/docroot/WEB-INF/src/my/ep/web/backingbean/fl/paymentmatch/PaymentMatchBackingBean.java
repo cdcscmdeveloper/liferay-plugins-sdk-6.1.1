@@ -17,11 +17,12 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -30,6 +31,7 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -42,8 +44,10 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
+import my.ep.biz.service.pm.common.fund.IFundSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -60,9 +64,13 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
+import my.ep.dto.pm.common.fund.FundReqDTO;
+import my.ep.dto.pm.common.fund.FundResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.votfund.VotFundReqDTO;
+import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -106,6 +114,8 @@ import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -121,9 +131,9 @@ import my.ep.web.vo.TaxInvoiceVO;
  * @since 30/10/2013
  */
 @ManagedBean(name = "paymentMatchBackingBean")
-@RequestScoped
+@ViewScoped
 public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMatchManagedBean>{
-	
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PaymentMatchBackingBean.class);
 	private String className="@(.myPmClassName)";
 	
@@ -138,6 +148,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
 	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl//receivednote/frnBasePage.xhtml";
+	private IPagingDataModel<Object[]> searchVot = new SearchVotPagingDataModel();
+	private IPagingDataModel<Object[]> searchFund = new SearchFundPagingDataModel();
 	
 	
 	/**
@@ -1046,9 +1058,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			deduction.getCtDeduction().setDeductionType(resDTO.getPmParameter());
 		}
+		if(mapDeduction.getDeductionDesc() != null){
 			deduction.setDeductionDesc(mapDeduction.getDeductionDesc());
-			deduction.setPmGlAccount(null);
-			deduction.setPmVotFund(null);
+		}
+//			deduction.setPmGlAccount(null);
+//			deduction.setPmVotFund(null);
 		if(deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(ctDeduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
@@ -1683,6 +1697,233 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pmBasePage?faces-redirect=true");
 		}
 	}
+	
+	/**
+	 * retrieve VOT and Fund values
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getDropdownVOTFund() {
 
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<String> votFundType = new ArrayList<String>();
+			votFundType.add(ResourceBundleUtils.getMessage(
+					"lbl.gfmas.gldanadef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			votFundType.add(ResourceBundleUtils.getMessage(
+					"lbl.gfmas.glvotdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+			items = new SelectItem[votFundType.size()+1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (String votFund : votFundType) {
+				items[i++] = new SelectItem(i,votFund);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	public void searchAction(){
+		if(getManagedBean().getSelectedVotFundId() != null){
+			if(getManagedBean().getSelectedVotFundId() == 2){//Dana
+				getSearchFund().reloadData();
+			}else if(getManagedBean().getSelectedVotFundId() == 3){// Vot
+				getSearchVot().reloadData();
+			}
+		}
+		
+	}
+	
+	public void resetAction(){
+		getManagedBean().setSelectedFundObj(null);
+		getManagedBean().setSelectedVotObj(null);
+		getSearchVot().resetData();
+		getSearchFund().resetData();
+		getManagedBean().setSelectedVotFundId(null);
+		getManagedBean().setSelectedVotValue(null);
+		getManagedBean().setSearchVotField(null);
+	}
+	
+	public boolean isSelectButtonDisable() {
+		if(getManagedBean().getSelectedVotObj()!=null) {
+			return false;
+		}
+		if(getManagedBean().getSelectedFundObj()!=null) {
+			return false;
+		}
+		return true;
+	}
+
+	private class SearchVotPagingDataModel extends PagingDataModel<Object[]> {
+		private static final long serialVersionUID = 1L;
+
+		public SearchVotPagingDataModel() {
+			super("votList",false);
+		}
+
+		@Override
+		public ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			IVotFundSO votFundSO;
+
+			try {
+				VotFundReqDTO votReqDTO = new VotFundReqDTO();
+				votReqDTO.setVotRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
+				if(StringUtils.isNotBlank(getManagedBean().getSearchVotField())){
+					if(getManagedBean().getSelectedVotValue() ==  2){
+						votReqDTO.setVotFundCode(getManagedBean().getSearchVotField());
+					}else if(getManagedBean().getSelectedVotValue() ==  3){
+						votReqDTO.setVotFundDesc(getManagedBean().getSearchVotField());
+					}
+					
+				}
+				
+				votReqDTO.setVotFundObjectSearchBean(searchBean);
+				votFundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IVotFundSO.class);
+				VotFundResDTO resDTO = votFundSO.searchVotFundData(votReqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getVotObjectResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+
+			return null;
+		}
+	}
+
+	public IPagingDataModel<Object[]> getSearchVot() {
+		return searchVot;
+	}
+
+	public void setSearchVot(IPagingDataModel<Object[]> searchVot) {
+		this.searchVot = searchVot;
+	}
+	
+	private class SearchFundPagingDataModel extends PagingDataModel<Object[]> {
+		private static final long serialVersionUID = 1L;
+
+		public SearchFundPagingDataModel() {
+			super("fundList",false);
+		}
+
+		@Override
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			IFundSO fundSO;
+
+			try {
+//				ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
+				FundReqDTO fundReqDTO = new FundReqDTO();
+				if(StringUtils.isNotBlank(getManagedBean().getSearchVotField())){
+					if(getManagedBean().getSelectedVotValue() ==  2){
+						fundReqDTO.setFundCode(getManagedBean().getSearchVotField());
+					}else if(getManagedBean().getSelectedVotValue() ==  3){
+						fundReqDTO.setFundName(getManagedBean().getSearchVotField());
+					}
+					
+				}
+
+				fundReqDTO.setFundRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
+				
+				fundReqDTO.setFundSearchBean(searchBean);
+				fundSO = (IFundSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IFundSO.class);
+				FundResDTO resDTO = fundSO.searchFundData(fundReqDTO);
+
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getFundResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+
+			return null;
+		}
+	}
+
+	public IPagingDataModel<Object[]> getSearchFund() {
+		return searchFund;
+	}
+
+	public void setSearchFund(IPagingDataModel<Object[]> searchFund) {
+		this.searchFund = searchFund;
+	}
+	
+	/**
+	 * retrieve VOT and Fund values
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getDropdownVotCodeAndDesc() {
+
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<String> columnValues = new ArrayList<String>();
+			columnValues.add(ResourceBundleUtils.getMessage(
+					"lbl.pm.category.code.only", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			columnValues.add(ResourceBundleUtils.getMessage(
+					"lbl.pm.category.desc.only", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+			items = new SelectItem[columnValues.size()+1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (String value : columnValues) {
+				items[i++] = new SelectItem(i,value);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	public void populateSelectedObj(){
+		Object[] obj = null;
+		BigDecimal votFundId = null;
+		if(getManagedBean().getSelectedFundObj() != null){
+			obj = getManagedBean().getSelectedFundObj();
+			votFundId  = (BigDecimal) obj[5];
+		}else if(getManagedBean().getSelectedVotObj() != null){
+			obj = getManagedBean().getSelectedVotObj();
+			votFundId  = (BigDecimal) obj[7];
+		}
+		IVotFundSO votFundSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
+		VotFundReqDTO reqDTO = new VotFundReqDTO();
+		reqDTO.setVotFundId(votFundId.longValue());
+		getManagedBean().getSelectedDeduction().setPmVotFund(votFundSO.retrieveVotFundByFundId(reqDTO).getPmVotFund());
+		
+	}
+	
 }
 
