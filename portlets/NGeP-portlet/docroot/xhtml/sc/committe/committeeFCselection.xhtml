@@ -74,15 +74,22 @@
 					<h:outputText value="#{lbl['lbl.sc.representative.type']}" />
 				</f:facet>
 				<ui:fragment rendered="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
-					<p:selectOneMenu required="#{!committeemember.selected}"
-						id="representativeType" value="#{committeemember.representativeTypeId}"
-						label="#{lbl['lbl.sc.representative.type']}" style="width: 150px;margin-bottom: 5px;">
-						<f:selectItems value="#{committeBackingBean.getRepresentativeTypeDropdownValues(committeBackingBean.managedBean.committeeType)}" />
-						<p:ajax event="change" listener="#{committeBackingBean.representiveTypeChangedListener(committeemember)}"
-							partialSubmit="true" process="@this" />
-					</p:selectOneMenu>
+					<c:choose>
+						<c:when test="#{isCommitteeRecordStatusActive}">
+							<p:selectOneMenu required="#{!committeemember.selected}"
+								id="representativeType" value="#{committeemember.representativeTypeId}"
+								label="#{lbl['lbl.sc.representative.type']}" style="width: 150px;margin-bottom: 5px;">
+								<f:selectItems value="#{committeBackingBean.getRepresentativeTypeDropdownValues(committeBackingBean.managedBean.committeeType)}" />
+								<p:ajax event="change" listener="#{committeBackingBean.representiveTypeChangedListener(committeemember)}"
+									partialSubmit="true" process="@this" />
+							</p:selectOneMenu>
+							<p:message id="representiveMsg" for="representativeType" display="icon" />
+						</c:when>
+						<c:otherwise>
+							#{committeBackingBean.getParameterDesc(committeemember.representativeType)}
+						</c:otherwise>
+					</c:choose>
 				</ui:fragment>
-				<p:message id="representiveMsg" for="representativeType" display="icon" />
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
