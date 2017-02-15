@@ -6858,7 +6858,7 @@ public class SmApplicationUtil {
 				reqSO = null;
 			}
 			long dayBal = DateUtils.getDaysDifference(new Date(),
-					smAppl.getDraftExpiryDate()) + 1;
+					smAppl.getDraftExpiryDate()) ;
 			String[] dayLeftParam = { dayBal + "" };
 			Date saveDate = smAppl.getApplSaveDate() == null ? smAppl
 					.getChangedDate() : smAppl.getApplSaveDate();
