@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.sm.customerservice;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -7,6 +9,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -30,6 +33,7 @@ public class SmCustomerServiceManagedBean extends
 	private int noOfCatRejected;
 	private String mofRegStatus;
 	private SmPersonnel suppAdmin;
+	private List<CmRequestCode> requestCodeLs;
 
 	private IPagingDataModel<Object[]> smSupplierDataModel = new SmSupplierPagingDataModel();
 
@@ -148,6 +152,14 @@ public class SmCustomerServiceManagedBean extends
 
 	public void setNoOfCatRejected(int noOfCatRejected) {
 		this.noOfCatRejected = noOfCatRejected;
+	}
+
+	public List<CmRequestCode> getRequestCodeLs() {
+		return requestCodeLs;
+	}
+
+	public void setRequestCodeLs(List<CmRequestCode> requestCodeLs) {
+		this.requestCodeLs = requestCodeLs;
 	}
 
 }
