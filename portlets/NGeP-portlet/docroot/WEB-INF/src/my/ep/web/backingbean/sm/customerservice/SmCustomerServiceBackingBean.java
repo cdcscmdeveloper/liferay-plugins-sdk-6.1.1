@@ -7,10 +7,19 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.codification.IRequestCodeSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.codification.RequestCodeReqDTO;
+import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -18,6 +27,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.managedbean.sm.customerservice.SmCustomerServiceManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -119,7 +129,12 @@ public class SmCustomerServiceBackingBean extends
 		}
 		getManagedBean().getSmAppl().getSmPersonnels()
 				.removeAll(personnelsToRemove);
-
+		
+		//retrieve supplier's catalogues
+		retrieveSupplierCatalogueStatusCountBySupplierId(getManagedBean().getSmAppl().getSmSupplier().getSupplierId());
+		
+		//retrieve supplier's code request
+		retrieveSupplierCatalogueRequestBySupplierId(getManagedBean().getSmAppl().getSmSupplier().getSupplierId());
 	}
 
 	/**
@@ -135,5 +150,44 @@ public class SmCustomerServiceBackingBean extends
 	public void back() {
 		getManagedBean().setTargetPage(SEARCH_PAGE);
 	}
+	
+	/**
+	 * retrieve supplier's catalogues by supplierId
+	 * @param Long supplierId
+	 */
+	private void retrieveSupplierCatalogueStatusCountBySupplierId(Long supplierId){
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		
+		ICatalogueSO reqSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+		CatalogueResDTO resDTO = reqSO.retrieveSupplierItemBySupplierId(reqDTO);
 
+		if(resDTO.getSupplierItemList().size() > 0){
+			for(CmSupplierItem cmSuppItem : resDTO.getSupplierItemList()){
+				if(cmSuppItem.getItemStatus().equalsIgnoreCase(SupplierManagementConst.CATALOGUE_APPROVED)){
+					getManagedBean().setNoOfCatApproved(getManagedBean().getNoOfCatApproved()+1);
+				}else if(cmSuppItem.getItemStatus().equalsIgnoreCase(SupplierManagementConst.CATALOGUE_REJECTED)){
+					getManagedBean().setNoOfCatRejected(getManagedBean().getNoOfCatRejected()+1);
+				}else if(cmSuppItem.getItemStatus().equalsIgnoreCase(SupplierManagementConst.CATALOGUE_EXPIRED)){
+					getManagedBean().setNoOfCatExpired(getManagedBean().getNoOfCatExpired()+1);
+				}else if(cmSuppItem.getItemStatus().equalsIgnoreCase(SupplierManagementConst.CATALOGUE_PUBLISHED)){
+					getManagedBean().setNoOfCatPublished(getManagedBean().getNoOfCatPublished()+1);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * retrieve supplier's catalogue request by supplierId
+	 * @param Long supplierId
+	 */
+	private void retrieveSupplierCatalogueRequestBySupplierId(Long supplierId){
+		RequestCodeReqDTO reqDTO = new RequestCodeReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		
+		IRequestCodeSO reqSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IRequestCodeSO.class);
+		RequestCodeResDTO resDTO = reqSO.retrieveRequestCodeBySupplierId(reqDTO);
+		
+		getManagedBean().setRequestCodeLs(resDTO.getRequestLs());
+	}
 }
