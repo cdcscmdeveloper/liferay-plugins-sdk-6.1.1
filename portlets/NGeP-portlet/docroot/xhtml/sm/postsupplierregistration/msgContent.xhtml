@@ -27,6 +27,17 @@
 		<!-- Basic Account-->
 		<p:outputPanel
 			rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
+			<ui:remove>
+			<script>
+				$(document).ready(function(e){
+					var myAppLink =  $('a[href$="my-application"]');
+					if(myAppLink != null) {
+						myAppLink.parent().hide();
+					}
+				});
+			</script>
+			</ui:remove>
+			
 			<c:choose>
 				<c:when
 					test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeG2g}">
