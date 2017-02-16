@@ -9025,9 +9025,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
 		}
 		if (!this.getManagedBean().isReadOnly()) {
-			if(scQt.getTmpExpectedIntendedPrice() != null){
-				new CreateQtBackingBean().setProcurementMode(scQt,
-						scQt.getTmpExpectedIntendedPrice());
+			if(scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval()){
+				checkForProcumentMethodDropdown(scQt);
 			}
 		}
 		
@@ -13610,5 +13609,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		log.info("end loadPrepareSpecCommitteeMaintenanceDetails");
 		// this.getManagedBean().setActiveIndex(0);
 
+	}
+	
+	private void checkForProcumentMethodDropdown(ScQt scQt) {
+
+		if (scQt.getTmpExpectedIntendedPrice().intValue() < 
+				scQt.getPtjSpecialApproval().getProcureAmt()
+				.intValue()) {
+					this.getManagedBean().setProcMethodDropdownPresent(true);
+		}
 	}
 }
