@@ -126,18 +126,35 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 				 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					   for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
 					    	 		CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
-					    	 		UserReqDTO reqUserDTO = new UserReqDTO();
-					    	 		reqUserDTO.setLoginId(worklistItemVO.getAssignees().get(0));
-						    	 	custServiceEntity.setOfficerName(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName());
+					    	         /*Retrieve assign user name*/
+									UserReqDTO reqUserDTO = new UserReqDTO();
+									StringBuilder concat =  new StringBuilder();
+									for(String Assignees : worklistItemVO.getAssignees()){
+										     reqUserDTO.setLoginId(Assignees);
+										     concat.append(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName()+",");
+									}
+						    	 	custServiceEntity.setOfficerName(RemoveLastString(concat.toString()));
+						    	
+						    	 	/*Retrieve status for document*/
 						    	 	bpmReqDTO = new BpmRequestDTO();
 									bpmReqDTO.setCtxToken(ctxToken);
 									bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
 									bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
 									custServiceEntity.setDocumentStatusDesc(getPmStatusDesc(bpmResDTO.getDocStatus()));
+									
 									getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 					    	 }	
 				}
 		  return SERVICE_VIEW_PAGE;
+	}
+	
+	public String RemoveLastString(String str) {
+	    if (str.charAt(str.length()-1)==','){
+	        str = str.replace(str.substring(str.length()-1), "");
+	        return str;
+	    } else{
+	        return str;
+	    }
 	}
 	
 	/**
