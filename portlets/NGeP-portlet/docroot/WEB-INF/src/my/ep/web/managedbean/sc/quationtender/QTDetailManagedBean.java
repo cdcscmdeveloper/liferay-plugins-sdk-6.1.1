@@ -52,6 +52,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -1553,6 +1554,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private boolean isProcMethodDropdownPresent;
     // Defined wrapper class to set null when ever is required
     private Boolean panel = Boolean.TRUE;
+    private ScWorkFlowStatus specMaintenanceWorkFlowStatus;
     private boolean isPtjPresent = true;
     
 	/**
@@ -9752,26 +9754,59 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtFinalization = scQtFinalization;
 	}
 
+	/**
+	 * @return the specMaintenanceWorkFlowStatus
+	 */
+	public ScWorkFlowStatus getSpecMaintenanceWorkFlowStatus() {
+		return specMaintenanceWorkFlowStatus;
+	}
+
+	/**
+	 * @param specMaintenanceWorkFlowStatus the specMaintenanceWorkFlowStatus to set
+	 */
+	public void setSpecMaintenanceWorkFlowStatus(
+			ScWorkFlowStatus specMaintenanceWorkFlowStatus) {
+		this.specMaintenanceWorkFlowStatus = specMaintenanceWorkFlowStatus;
+	}
+
+	/**
+	 * @return the ptjSpecialApproval
+	 */
 	public PmPtjSpecialApproval getPtjSpecialApproval() {
 		return ptjSpecialApproval;
 	}
 
+	/**
+	 * @param ptjSpecialApproval the ptjSpecialApproval to set
+	 */
 	public void setPtjSpecialApproval(PmPtjSpecialApproval ptjSpecialApproval) {
 		this.ptjSpecialApproval = ptjSpecialApproval;
 	}
 
+	/**
+	 * @return the isProcMethodDropdownPresent
+	 */
 	public boolean isProcMethodDropdownPresent() {
 		return isProcMethodDropdownPresent;
 	}
 
+	/**
+	 * @param isProcMethodDropdownPresent the isProcMethodDropdownPresent to set
+	 */
 	public void setProcMethodDropdownPresent(boolean isProcMethodDropdownPresent) {
 		this.isProcMethodDropdownPresent = isProcMethodDropdownPresent;
 	}
 
+	/**
+	 * @return the panel
+	 */
 	public Boolean getPanel() {
 		return panel;
 	}
 
+	/**
+	 * @param panel the panel to set
+	 */
 	public void setPanel(Boolean panel) {
 		this.panel = panel;
 	}
