@@ -1553,6 +1553,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private boolean isProcMethodDropdownPresent;
     // Defined wrapper class to set null when ever is required
     private Boolean panel = Boolean.TRUE;
+    private boolean isPtjPresent = true;
     
 	/**
 	 * Sets the panel suppliers.
@@ -9774,5 +9775,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanel(Boolean panel) {
 		this.panel = panel;
 	}
+
+	public boolean isPtjPresent() {
+		return isPtjPresent;
+	}
+
+	public void setPtjPresent(boolean isPtjPresent) {
+		this.isPtjPresent = isPtjPresent;
+	}
+
+	
 
 }
