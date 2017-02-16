@@ -13,14 +13,18 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -28,6 +32,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.bean.ct.CustomerServiceEntity;
 import my.ep.web.managedbean.fl.customerService.FlCustomerServiceManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
@@ -133,9 +138,15 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		 bpmReqDTO.setCtxToken(ctxToken);
 		 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 		 if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
-				   for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
+			 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	    	 	UserReqDTO reqUserDTO = new UserReqDTO();
+	    	 		for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
+				 		reqUserDTO.setLoginId(worklistItemVO.getAssignees().get(0));
+				 		UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
 				    	 		CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
-					    	 	custServiceEntity.setOfficerName(worklistItemVO.getAssignees().get(0));
+				    	 		if(null!=userResDTO && null!=userResDTO.getPmUser()){
+							 		custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+							 	}
 					    	 	bpmReqDTO = new BpmRequestDTO();
 								bpmReqDTO.setCtxToken(ctxToken);
 								bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
