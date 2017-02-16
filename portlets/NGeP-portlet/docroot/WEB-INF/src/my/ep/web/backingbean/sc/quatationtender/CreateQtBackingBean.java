@@ -144,6 +144,7 @@ public class CreateQtBackingBean extends
 			.getLogger(CreateQtBackingBean.class);
 	
 	private static final String PTJ_ADDRESS_TYPE_ERROR_MSG_KEY = "lbl.sc.qt.ptj.address.not.found";
+	private static final String PTJ_ERROR_MSG_KEY = "lbl.sc.qt.ptj.not.found";
 
 	/**
 	 * Instantiates a new QT detail backing bean.
@@ -291,7 +292,7 @@ public class CreateQtBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()) });
 		try {
-
+			FacesContext fc = FacesContext.getCurrentInstance();
 			ScQt scQt = new ScQt();
 			scQt.setCircularVer(new CtCircularVer());
 			scQt.setPanel(this.getManagedBean().getPanel());
@@ -309,6 +310,15 @@ public class CreateQtBackingBean extends
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
 				}
+			}else{
+				fc.addMessage(null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_ERROR,null,
+								ResourceBundleUtils.getMessage(
+												PTJ_ERROR_MSG_KEY,
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale())));
+				this.getManagedBean().setPtjPresent(false);
 			}
 			
 			scQt.setProcurementMode(new PmParameter());
@@ -366,7 +376,7 @@ public class CreateQtBackingBean extends
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			FacesContext fc = FacesContext.getCurrentInstance();
+			
 			
 			if (pmOrgProfile != null && !isPtjAddressTypePresent(pmOrgProfile.getOrgProfileId())) {
 				fc.addMessage(null,
