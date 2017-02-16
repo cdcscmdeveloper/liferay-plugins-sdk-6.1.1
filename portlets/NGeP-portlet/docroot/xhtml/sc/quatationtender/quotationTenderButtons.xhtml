@@ -33,7 +33,8 @@
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
-					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" />
+					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
@@ -53,7 +54,7 @@
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
 							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" />
+							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					</c:when>
 					<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
