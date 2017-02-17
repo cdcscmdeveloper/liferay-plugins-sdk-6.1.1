@@ -119,7 +119,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			 BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			 bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getContractNo());
 			 bpmReqDTO.setUserId(sysUserId);
-			//bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 			 bpmReqDTO.setCtxToken(ctxToken);
 			 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 			 if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
@@ -137,7 +137,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 									  /*Retrieve assign user name*/
 									UserReqDTO reqUserDTO = new UserReqDTO();
 									StringBuilder concat =  new StringBuilder();
-									if(bpmResDTO.isClaimed()){
+									if(bpmResDTO.isGroupTask() && bpmResDTO.isClaimed()){
 											for(String userlist : bpmResDTO.getUserList()){
 													reqUserDTO.setLoginId(userlist);
 													concat.append(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName()+",");
