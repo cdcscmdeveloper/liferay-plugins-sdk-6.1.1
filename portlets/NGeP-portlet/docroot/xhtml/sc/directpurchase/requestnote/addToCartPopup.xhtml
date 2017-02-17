@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
-		header="#{lbl['lbl.sc.add.to.cart']}" width="580" resizable="false"
+		header="#{lbl['lbl.sc.add.to.cart']}" width="600" resizable="false"
 		closable="false"
 		 modal="true" dynamic="true">
 		<p:panel id="addToCartId">
@@ -123,7 +123,7 @@
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
 						</h:panelGroup></td>
 					<td><h:panelGroup id="justValue">
-							<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
+							<h:selectOneMenu style="margin-bottom: 5px; width: 225px;"
 							    panelStyle="width:650px"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 								id="justificationId" label="#{lbl['lbl.sc.reason']}"
@@ -131,7 +131,7 @@
 								value="#{requestNoteBackingBean.managedBean.justificationType}">
 								<f:selectItems
 									value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-							</p:selectOneMenu>
+							</h:selectOneMenu>
 							<p:message id="justTypeMsg" for="justificationId" display="icon" />
 						</h:panelGroup></td>
 				</tr>
