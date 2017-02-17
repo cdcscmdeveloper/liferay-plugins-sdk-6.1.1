@@ -165,6 +165,7 @@ import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
@@ -9261,7 +9262,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		int portNo = fs.getRequest().getServerPort();
 
 		String softCertPath = "supptemp-request-soft-cert";
-		String url = "http://" + hostName + ":" + String.valueOf(portNo) + "/web/epapp/" + softCertPath;
+		String url = SmCommonUtil.getBasePortalUrl();
 
 		log.info("*******Str Url**********" + url);
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
