@@ -4,9 +4,12 @@
 package my.ep.web.backingbean.sc.marketresearch;
 
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -29,10 +32,13 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -41,11 +47,14 @@ import my.ep.web.bean.sc.quatationtender.MarketResearchSearchBean;
 import my.ep.web.managedbean.sc.marketresearch.MarketResearchManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.MarketResearchVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 
 
 
@@ -265,6 +274,7 @@ public class MarketResearchBackingBean extends
 				getManagedBean().setQt(true);
 				getManagedBean().setMarketResearchVO(vo);
 				getManagedBean().setScLoa(loa);
+				getManagedBean().setScQt(qt);
 			}
 		}catch(Exception e){
 			throw new EpException(e.getMessage());
@@ -385,6 +395,56 @@ public class MarketResearchBackingBean extends
 		}
 	}
 	
+	
+	/**
+	 * Generate specification pdf.
+	 *
+	 * @throws Exception the exception
+	 */
+	public void generateSpecificationPdf() throws Exception {
+		ScLoa loa= getManagedBean().getScLoa();
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
+		generateSpecificationPdfFromVelacity((ScAttachment) pbAttachment, loa);
+	}
+	
+	
+	private void generateSpecificationPdfFromVelacity(ScAttachment attachment,
+			ScLoa scLoa) throws Exception {
+
+		attachment.setFileName("Specification Report.pdf");
+		populateAttachmentDetails(attachment);
+		VelocityContext context = new VelocityContext();
+		ScQt scQt = getManagedBean().getScQt();
+		
+		if(CollectionUtils.isNotEmpty(scQt.getScQtDocs())){
+			for (ScQtDoc scQtDoc : scQt.getScQtDocs()) {
+				context.put("itemOrignCode", getParameterDesc(scQtDoc.getTplSpecMaster().getItemOriginCode()));
+				break;
+			}
+		}
+		context.put("scLoa", scLoa);
+		
+		List<ScLoiLoaItem> productItems = new ArrayList<ScLoiLoaItem>();
+		List<ScLoiLoaItem> serviceItems = new ArrayList<ScLoiLoaItem>();
+		for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+			if(scLoiLoaItem.getScRequestItem() != null && 
+					scLoiLoaItem.getScRequestItem().getItemType() != null){
+				if(scLoiLoaItem.getScRequestItem().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+					productItems.add(scLoiLoaItem);
+				} else{
+					serviceItems.add(scLoiLoaItem);
+				}
+			}
+		}
+		context.put("productItems", productItems);
+		context.put("serviceItems", serviceItems);
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_SPECIFICATION, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+		downloadFile(getActualFilePath(attachment));
+	}
 	
 	private ScQtFinalization retrieveSupplierFinalization(ScQt qt) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
