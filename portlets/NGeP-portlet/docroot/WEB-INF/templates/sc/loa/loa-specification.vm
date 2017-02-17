@@ -96,7 +96,7 @@
 	<br />
 
 	<table class="table1" width='100%' cellpadding="10px">
-	 <caption>PRODUCT</caption>
+	 <caption>PRODUK</caption>
 		<tr>
 			#if ($isZonal)
 			<th rowspan="2">Zone</th> #end
@@ -146,7 +146,7 @@
 
 
 	<table class="table1" width='100%' cellpadding="10px">
-	 <caption>SERVICE</caption>
+	 <caption>PERKHIDMATAN</caption>
 		<tr>
 			#if ($isZonal)
 			<th rowspan="2">Zone</th> #end
