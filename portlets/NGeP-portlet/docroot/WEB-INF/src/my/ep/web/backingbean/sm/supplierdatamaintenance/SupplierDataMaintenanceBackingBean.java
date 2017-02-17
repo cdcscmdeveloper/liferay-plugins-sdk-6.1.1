@@ -505,9 +505,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					&& cat.getPmCategoryL3()
 							.getCategoryL3Id()
 							.equals(getManagedBean().getSelectedCategory()
-									.getPmCategoryL3().getCategoryL3Id())
-					&& cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
 				throw new EpException(MessageConst.ERROR_722533);
 			}
@@ -692,9 +690,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		while (apprCatIt.hasNext()) {
 			SmSupplierCategory apprCat = apprCatIt.next();
 			SmSupplierCategory delCat = (SmSupplierCategory) EntityHelper
-					.getEntityBySinglePropertyFromList(
-							apprCat.getSupplierCategoryId(), categories,
-							"supplierCategoryId");
+					.getEntityByMultiplePropertiesFromList(apprCat, categories,
+							null, new String[] { "pmCategoryL1",
+									"pmCategoryL2", "pmCategoryL3" }, null);
 			if (delCat != null) {
 				if (delCat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
 					apprCatIt.remove();
