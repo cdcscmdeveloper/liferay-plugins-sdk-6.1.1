@@ -17,6 +17,8 @@
 			<td>
 				<div align="right" style="width: 100%">
 					<p:commandButton update="@form"
+						onstart="userGroupBlockWidget.show()" 
+						oncomplete="userGroupBlockWidget.hide()"
 						value="#{usergroupBackingBean.managedBean.userGroup.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
 						action="#{usergroupBackingBean.saveUserGroup}"
 						style="float:right;" />
