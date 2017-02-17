@@ -4,6 +4,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.bean.sc.quatationtender.MarketResearchSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.MarketResearchVO;
@@ -28,6 +29,7 @@ public class MarketResearchManagedBean extends BaseManagedBean{
 	private boolean isQt;
 	private String procurementMethod;
 	private String itemSpec;
+	private ScQt scQt;
 	
 	public MarketResearchManagedBean(){
 		
@@ -149,6 +151,18 @@ public class MarketResearchManagedBean extends BaseManagedBean{
 		this.itemSpec = itemSpec;
 	}
 
-	
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
 	
 }
