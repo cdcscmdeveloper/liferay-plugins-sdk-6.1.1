@@ -91,6 +91,8 @@
 						<f:selectItems
 							value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
 							<p:ajax event="change"
+									onstart="userGroupBlockWidget.show()" 
+									oncomplete="userGroupBlockWidget.hide()"
 									listener="#{usergroupBackingBean.userGroupStatusChange()}"
 									partialSubmit="true" process="@this"
 									update="@this, usergroupmsg" />	
