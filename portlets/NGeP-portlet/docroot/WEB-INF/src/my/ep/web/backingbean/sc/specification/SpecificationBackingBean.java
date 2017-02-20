@@ -57,6 +57,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -100,6 +101,8 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -128,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -2701,7 +2705,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL) || this
 									.getManagedBean()
 									.getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) || !this.getManagedBean().isReadOnly())) {
+									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) || this
+									.getManagedBean()
+									.getCurrentStatusId()
+									.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -2732,7 +2739,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL) || (this
 									.getManagedBean()
 									.getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this.getManagedBean().isReadOnly())|| !this.getManagedBean().isReadOnly())) {
+									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this.getManagedBean().isReadOnly()) || this
+									.getManagedBean()
+									.getCurrentStatusId()
+									.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -7086,6 +7096,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setTobeRemoveList(null);
 			getManagedBean().setMarkDeletedTechChecklist(null);
 			getManagedBean().setMarkDeletedFinChecklist(null);
+			saveSpecMaintenanceWorkFlowStatus();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -7259,6 +7270,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setTobeRemoveList(null);
 			getManagedBean().setMarkDeletedTechChecklist(null);
 			getManagedBean().setMarkDeletedFinChecklist(null);
+			saveSpecMaintenanceWorkFlowStatus();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -9519,6 +9531,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			String loginRoleType=this.getManagedBean().getLoginRoleType();
 			boolean isPanel = this.getManagedBean().getPanel();
 			boolean isDropdownPresent = this.getManagedBean().isProcMethodDropdownPresent();
+		ScWorkFlowStatus scWorkFlowStatus=	this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
 					
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
@@ -9818,6 +9831,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setPtjSpecialApproval(this.getManagedBean().getQt().getPtjSpecialApproval());
 			this.getManagedBean().setPanel(isPanel);
 			this.getManagedBean().setProcMethodDropdownPresent(isDropdownPresent);
+			this.getManagedBean().setSpecMaintenanceWorkFlowStatus(scWorkFlowStatus);
 			
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
@@ -10370,8 +10384,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return navigate to acknowledgement page.
 	 */
 	public String gpkiSignAction(PmDigiSign digiSign) {
-		SpecificationResDTO resDTO = updateSpecCommitteDtls(this
+		SpecificationResDTO resDTO=null;
+		if(null!= this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
+			log.info("====maintenance flow====");
+			resDTO=loadSpecMaintenanceBPmDetails(this
 				.getManagedBean().getLocalOutCome(), digiSign);
+		}
+		else{
+	 resDTO = updateSpecCommitteDtls(this
+				.getManagedBean().getLocalOutCome(), digiSign);
+		}
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
 			FacesContext
@@ -10722,7 +10744,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			specCommitteeResetData();
 			// settemplateSpecList(savedCheckLists);
 			setTechnicalCheckList(savedCheckLists.get(0));
-			
+			saveSpecMaintenanceWorkFlowStatus();
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -11311,6 +11333,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						new ArrayList<TreeNode>());
 				retriveSpecdetails(this.getManagedBean().getQt().getQtId());
 			}
+			saveSpecMaintenanceWorkFlowStatus();
 			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 		}
 		return null;
@@ -13490,11 +13513,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		log.info("start submitSpecMaintenanceDtls"+action);
 		this.getManagedBean().setLocalOutCome(action);
 		log.info("end submitSpecMaintenanceDtls"+action);
-		SpecificationResDTO resDTO=new SpecificationResDTO();
-				//updateSpecCommitteMaintenaceDtls(action,null);
+		SpecificationResDTO resDTO=
+				updateSpecCommitteMaintenaceDtls(action,null);
 		resDTO.setSuccessful(Boolean.TRUE);
 		if (resDTO.isSuccessful()) {
-			//ScQt qt = resDTO.getScQt();
+			ScQt qt = resDTO.getScQt();
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -13518,6 +13541,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	private SpecificationResDTO updateSpecCommitteMaintenaceDtls(String action,
 			PmDigiSign digiSign) {
+		log.info("start updateSpecCommitteMaintenaceDtls"+action);
 		SpecificationResDTO resDTO=new SpecificationResDTO();
 		ScQt scQt=this.getManagedBean().getQt();
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
@@ -13529,7 +13553,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setCommitteActivities(committeActivities);
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
-					ParameterConst.DOCTYPE_SPEC_COMMITTE, scQt.getQtId(),
+					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
 					scQt.getQtNo());
 		}
 		
@@ -13550,10 +13574,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			specSO = null;
 		}
+		log.info("end updateSpecCommitteMaintenaceDtls"+action);
 		return resDTO;
 		
 		
 	}
+	
+	
 	
 	/**
 	 * Load prepare specMaintenance committee details.Event handle click on submit button
@@ -13608,6 +13635,366 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		log.info("end loadPrepareSpecCommitteeMaintenanceDetails");
 		// this.getManagedBean().setActiveIndex(0);
+
+	}
+	
+
+	private void saveSpecMaintenanceWorkFlowStatus(){
+		IQTSpecSO QtSpecSO = null;
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(getSpecMaintenance()) && null==this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
+			QtSpecSO = getSpecSO();
+			SpecificationReqDTO specReqDTo=new SpecificationReqDTO();
+			specReqDTo.setScQt(this.getManagedBean().getQt());
+			QtSpecSO.updateSpecMaintananceWorkFlowStatus(specReqDTo);
+			
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT);
+			reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setStatusIds(Arrays.asList(QTStatusConst.SE_PENDING_SUBMISSION));
+			ScWorkFlowStatusResDTO workFlowResDTo= workFlowStatusSO.retrieveWorkFlowStatus(reqDTO);
+			if(CollectionUtils.isNotEmpty(workFlowResDTo.getWorkFlowStatusList())){
+				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowResDTo.getWorkFlowStatusList().get(0));	
+			}
+			}
+			
+		} finally {
+			QtSpecSO = null;
+		}
+	}
+	
+	/**
+	 * user click on task  in task list menu.it will call specificationMaintenanceEndorsmentPrerenderview() method and Renders the
+	 * specification committe screens or pages..
+	 */
+	public void specificationMaintenanceEndorsmentPrerenderview(){
+		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(
+				SCQuotationTenderDataType.class, null);
+		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(quotationTenderDataType.getQtId().longValue());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO
+				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		CommitteResDTO resDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		this.getManagedBean().setMaintanceFlow(true);
+		ScCommitteeMember member = resDTO.getCommMember();
+		if (null != member) {
+
+			if (member.getMemberRole().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				this.getManagedBean().setReadOnly(false);
+                this.getManagedBean().setSpecMaintenance(true);
+			} else {
+
+				this.getManagedBean().setReadOnly(true);
+			}
+		}
+		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+		ScQt scQt = this.getManagedBean().getQt();
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+		}
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+
+		}
+		if (null != this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().setFulfilmentType(
+					this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
+		}
+		if (!this.getManagedBean().isReadOnly()) {
+			if(scQt.getTmpExpectedIntendedPrice() != null){
+				new CreateQtBackingBean().setProcurementMode(scQt,
+						scQt.getTmpExpectedIntendedPrice());
+			}
+		}
+		this.getManagedBean().setSpecMaintenanceScreen(getSpecMaintenance());
+      retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+      if(null!=this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
+    	  log.info("spec maintenance status id==="+this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+    	  this.getManagedBean().setCurrentStatusId(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+      }
+		   
+		this.getManagedBean().setLoginRoleType("SC");
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+	}
+	
+	/**
+	 * Spec committe Maintenance bpm task.Event handle Submit/Revise/Accept in specification
+	 * committee.
+	 * 
+	 * @param action
+	 *            (String action)
+	 * @return navigate to acknowledgement page.
+	 */
+	public String specCommitteMaintenanceBpmTask(String action){
+		log.info("start specCommitteMaintenanceBpmTask");
+		FacesScopes facesScopes = new FacesScopes();
+
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO
+				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		CommitteResDTO CommitteeresDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		if (member != null
+				&& member
+						.getMemberRole()
+						.getParameterCode()
+						.equalsIgnoreCase(
+								ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			this.getManagedBean().setLocalOutCome(action);
+			getManagedBean().setAutoUpdate(false);	
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		}else{
+			this.getManagedBean().setLocalOutCome(action);
+
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				retriveCommitteeEndorsment();
+				List<ScQtSpecificationRemark> remarks = this.getManagedBean()
+						.getSpecificationRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						ScQtSpecificationRemark Remark = remarks.get(0);
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_760154);
+						} else if (null == Remark.getRemarkId()) {
+							RequestContext.getCurrentInstance().execute(
+									"revicespecMaintenanceEndorsmentDlgs.show()");
+						} else {
+							reviseSpecificationCommitteeEndorsmentMaintenance();
+							return CommonUIConst.ACKNOWLEDGE_PAGE;
+						}
+					}
+
+				}
+				
+
+			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							&& !this.getManagedBean().isReadOnly()) {
+						//boolean technical = validateTechnicalStandardCheckListSubmit();
+/*
+						if (!technical
+								&& !this.getManagedBean()
+										.isTechnicalOtherChecklistSubmit()) {
+							RequestContext
+									.getCurrentInstance()
+									.execute(
+											"technicalStandardChecklistDlgsSubmit.show()");
+							return null;
+						}*/
+						//boolean financial = validateFinancialStandardCheckListSubmit();
+						/*if (!financial
+								&& !this.getManagedBean()
+										.isFinancialOtherChecklistSubmit()) {
+							RequestContext
+									.getCurrentInstance()
+									.execute(
+											"financialStandardChecklistDlgsSubmit.show()");
+							return null;
+						}*/
+
+					}
+					SpecificationResDTO resDTO = loadSpecMaintenanceBPmDetails(action,
+							null);
+					if (resDTO.isSuccessful()) {
+						ScQt qt = resDTO.getScQt();
+						FacesContext
+								.getCurrentInstance()
+								.addMessage(
+										null,
+										new FacesMessage(
+												FacesMessage.SEVERITY_INFO,
+												null,
+												MessageUtils
+														.getMessage(
+																getMessgeConstant(action),
+																new String[] {
+																		getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
+																		qt.getQtNo() },
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes()
+																		.getUserLocale())));
+
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
+					SpecificationResDTO resDTO = loadSpecMaintenanceBPmDetails(action,
+							null);
+					if (resDTO.isSuccessful()) {
+						ScQt qt = resDTO.getScQt();
+						FacesContext
+								.getCurrentInstance()
+								.addMessage(
+										null,
+										new FacesMessage(
+												FacesMessage.SEVERITY_INFO,
+												null,
+												MessageUtils
+														.getMessage(
+																getMessgeConstant(action),
+																new String[] {
+																		getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
+																		qt.getQtNo() },
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes()
+																		.getUserLocale())));
+
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					SpecificationResDTO resDTO = loadSpecMaintenanceBPmDetails(action,
+							null);
+					if (resDTO.isSuccessful()) {
+						ScQt qt = resDTO.getScQt();
+						FacesContext
+								.getCurrentInstance()
+								.addMessage(
+										null,
+										new FacesMessage(
+												FacesMessage.SEVERITY_INFO,
+												null,
+												MessageUtils
+														.getMessage(
+																getMessgeConstant(action),
+																new String[] {
+																		getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
+																		qt.getQtNo() },
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes()
+																		.getUserLocale())));
+
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				}
+			}
+		}
+		return null;	
+		}
+		
+	
+	
+	private SpecificationResDTO loadSpecMaintenanceBPmDetails(String action,
+			PmDigiSign digiSign) {
+		log.info("start loadSpecMaintenanceBPmDetails"+action);
+		SpecificationResDTO resDTO=new SpecificationResDTO();
+		ScQt scQt=this.getManagedBean().getQt();
+		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+		spReqDTO.setOutcome(action);
+	
+		List<ScQtCommitteeActivity> committeActivities = this
+				.getManagedBean().getCommitteeActivities();
+		spReqDTO.setCommitteActivities(committeActivities);
+		if (null != digiSign) {
+			updatePmDigiSignData(digiSign,
+					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
+					scQt.getQtNo());
+		}
+		
+		spReqDTO.setDigiSignData(digiSign);
+		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+		FacesScopes facesScopes = new FacesScopes();
+		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		spReqDTO.setPmUser(facesScopes.getUserSessionBean());
+		spReqDTO.setRoleCode(getUserRoleCode());
+		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
+				.getCurrentStatusId());
+		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		IQTSpecSO specSO = getSpecSO();
+		try {
+			resDTO = specSO.updateSpecEndorsmentBPmAction(spReqDTO);
+
+		} finally {
+			specSO = null;
+		}
+		log.info("end updateSpecCommitteMaintenaceDtls"+action);
+		return resDTO;
+		
+		
+	}
+	
+	private void retrieveStatusByTypeAndId(String docType, Long docId) {
+		log.info("Start retrieveStatusByTypeAndId");
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(docType);
+			reqDTO.setDocId(docId);
+			
+			reqDTO.setStatusIds(Arrays.asList(QTStatusConst.SE_PENDING_SUBMISSION));
+			ScWorkFlowStatusResDTO workFlowResDTo= workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO);
+			if(null!=workFlowResDTo.getWorkFlowStatus()){
+				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowResDTo.getWorkFlowStatus());	
+			}
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+	
+	/**
+	 * Revise specification committee Maintenance endorsment.Event handle revise in specification
+	 * committee .
+	 * 
+	 * @return navigate to acknowledgement page.
+	 */
+	public String reviseSpecificationCommitteeEndorsmentMaintenance() {
+		log.info("start reviseSpecificationCommitteeEndorsmentMaintenance");
+		SpecificationResDTO resDTO = loadSpecMaintenanceBPmDetails(this
+				.getManagedBean().getLocalOutCome(), null);
+		if (resDTO.isSuccessful()) {
+			ScQt qt = resDTO.getScQt();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(this
+															.getManagedBean()
+															.getLocalOutCome()),
+													new String[] {
+															getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
+															qt.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
 
 	}
 	
