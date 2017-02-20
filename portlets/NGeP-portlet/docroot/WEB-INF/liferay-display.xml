@@ -164,6 +164,7 @@
 			<portlet id="scSpecCommitteeMaintenance" />
 			<portlet id="dpCustomerService" />
 			<portlet id="qtCustomerService" />
+			<portlet id="scSpecificationCommitteeEndorsment" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
