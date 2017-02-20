@@ -346,18 +346,18 @@
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.approvedLabel']}"
-									itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.approvedVal']}"></f:selectItem>
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
-									itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.cancelledVal']}"></f:selectItem>
 								<f:selectItem 
 									itemLabel="#{lbl['lbl.rpt.drpdown.pendingApprovalLabel']}"
-									itemValue="#{lbl['lbl.rpt.scPendingApproval']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.pendingApprovalVal']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingRevisionLabel']}"
-									itemValue="#{lbl['lbl.rpt.scPendingRevision']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.pendingRevisionVal']}"></f:selectItem>
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}"
-									itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.rejectedVal']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScRequestNoteStatus()}" 
 									update="@form" />
 							</p:selectOneMenu>
