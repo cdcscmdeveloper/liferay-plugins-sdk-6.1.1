@@ -23,46 +23,58 @@
 				border: 1px solid #dddddd;
 			}
 		</style>
-
-		<!-- Basic Account-->
-		<p:outputPanel
-			rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-			<ui:remove>
-			<script>
-				$(document).ready(function(e){
-					var myAppLink =  $('a[href$="my-application"]');
-					if(myAppLink != null) {
-						myAppLink.parent().hide();
-					}
-				});
-			</script>
-			</ui:remove>
+		
+		<c:choose>					
+			<!-- SELF REQUEST ADMIN -->
+			<c:when test="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
+				<p class="title">#{lbl['lbl.sm.selfrequest.breadcrumb.title']}</p>
+			</c:when>
 			
-			<c:choose>
-				<c:when
-					test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeG2g}">
-					<p class="title">#{lbl['lbl.sm.basic.pls.proceed.g2g']}</p>
-				</c:when>
+			<!-- NOT SELF REQUEST ADMIN -->
+			<c:otherwise>
+				<!-- Basic Account-->
+				<p:outputPanel
+					rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
+					<ui:remove>
+					<script>
+						$(document).ready(function(e){
+							var myAppLink =  $('a[href$="my-application"]');
+							if(myAppLink != null) {
+								myAppLink.parent().hide();
+							}
+						});
+					</script>
+					</ui:remove>
+					
+					<c:choose>
+						<c:when
+							test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeG2g}">
+							<p class="title">#{lbl['lbl.sm.basic.pls.proceed.g2g']}</p>
+						</c:when>
+		
+						<c:otherwise>
+							<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
+						</c:otherwise>
+					</c:choose>
+				</p:outputPanel>
+		
+				<!-- MOF Account-->
+				<p:outputPanel
+					rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+					<c:choose>
+						<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
+							<p class="title">#{lbl['lbl.sm.basic.mof.title.rejected']}</p>
+						</c:when>
+						
+						<c:otherwise>
+							<p class="title">#{lbl['lbl.sm.basic.mof.title.proceed']}</p>
+						</c:otherwise>
+					</c:choose>
+				</p:outputPanel>
+			</c:otherwise>
+		</c:choose>
 
-				<c:otherwise>
-					<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
-				</c:otherwise>
-			</c:choose>
-		</p:outputPanel>
-
-		<!-- MOF Account-->
-		<p:outputPanel
-			rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-			<c:choose>
-				<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
-					<p class="title">#{lbl['lbl.sm.basic.mof.title.rejected']}</p>
-				</c:when>
-				
-				<c:otherwise>
-					<p class="title">#{lbl['lbl.sm.basic.mof.title.proceed']}</p>
-				</c:otherwise>
-			</c:choose>
-		</p:outputPanel>
+		
 
 		<div align="left">
 			<table class="cTbl">
@@ -83,9 +95,17 @@
 					<td class="header-info-text">
 						#{postSupplierRegBB.managedBean.smSupplier.regNo}</td>
 				</tr>
+				<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
+						<td class="header-info-text">
+							#{lbl['lbl.sm.selfrequest.valid.registered.mof']}</td>
+					</tr>
+				</p:outputPanel>
 			</table>
 			<br />
 		</div>
+		
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"
 			id="basicPanelId">
 			<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
@@ -141,56 +161,75 @@
 					<div class="cover-container-content">
 						<div class="flow-chartbox">
 							<div class="flow-chart">
-								<!-- Basic Account-->
-								<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-									<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
-								</p:outputPanel>
-							
-								<!-- MOF Account-->
-								<p:outputPanel
-									rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-									<c:choose>
-										<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
+								
+								<c:choose>
+								
+									<!-- SELF REQUEST ADMIN -->
+									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
+										<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
+									</c:when>
+									
+									<!-- NOT SELF REQUEST ADMIN -->
+									<c:otherwise>
+										<!-- Basic Account-->
+										<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
+											<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
+										</p:outputPanel>
+									
+										<!-- MOF Account-->
+										<p:outputPanel
+											rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 											<c:choose>
-												<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-													<ui:include
-														src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofContractorFederal.xhtml"></ui:include>
-												</c:when>
-												<c:otherwise>
-													<ui:include
-														src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofCommon.xhtml"></ui:include>
-												</c:otherwise>
-											</c:choose>
-										</c:when>
-
-										<c:otherwise>
-											<c:choose>
-												<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">
+												<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
 													<c:choose>
-														<c:when
-															test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
+														<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
 															<ui:include
-																src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
+																src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofContractorFederal.xhtml"></ui:include>
 														</c:when>
+														<c:otherwise>
+															<ui:include
+																src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofCommon.xhtml"></ui:include>
+														</c:otherwise>
+													</c:choose>
+												</c:when>
+		
+												<c:otherwise>
+													<c:choose>
+														<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">
+															<c:choose>
+																<c:when
+																	test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
+																	<ui:include
+																		src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
+																</c:when>
+																<c:otherwise>
+																	<ui:include
+																		src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+																</c:otherwise>
+															</c:choose>
+														</c:when>
+		
 														<c:otherwise>
 															<ui:include
 																src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 														</c:otherwise>
 													</c:choose>
-												</c:when>
-
-												<c:otherwise>
-													<ui:include
-														src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 												</c:otherwise>
 											</c:choose>
-										</c:otherwise>
-									</c:choose>
-								</p:outputPanel>
+										</p:outputPanel>
+									</c:otherwise>
+								</c:choose>
 							</div>
 						</div>
 					</div>
 				</div>
+				
+				<!-- SELF REQUEST ADMIN-->
+				<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
+					<br />
+					<p class="title">#{lbl['lbl.sm.selfrequest.breadcrumb.footer']}</p>
+				</p:outputPanel>
+			
 			</c:if>
 		</p:outputPanel>
 	</ui:define>
