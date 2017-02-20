@@ -137,37 +137,43 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist);
 				path = TASK_LIST_PATH;
 
-			}else{	
-				//MOF APPL
-				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
-					if(workFlowStatus != null && 
-						(workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED || 
-						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || 
-						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)){
-						path = mofSupplierFlowAfterApproval(supplier,isRejectedApplExist);
-					}else{
-						SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
-						if(wfStatus != null){
-							if(wfStatus.getPmStatus() != null && 
-								(wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
-								wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)){
-								getManagedBean().setFlowStatus(3);
-								
-								path = RESUBMIT_APPLICATION + wfStatus.getDocId();
-								getManagedBean().setFlowStatus(3);
+			}else{
+				
+				//Self Request Supplier Admin
+				if(supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+					path = basicAccountFlow(supplier);
+				}else{
+					//MOF APPL
+					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+						SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
+						if(workFlowStatus != null && 
+							(workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED || 
+							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || 
+							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)){
+							path = mofSupplierFlowAfterApproval(supplier,isRejectedApplExist);
+						}else{
+							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
+							if(wfStatus != null){
+								if(wfStatus.getPmStatus() != null && 
+									(wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
+									wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)){
+									getManagedBean().setFlowStatus(3);
+									
+									path = RESUBMIT_APPLICATION + wfStatus.getDocId();
+									getManagedBean().setFlowStatus(3);
+								}else{
+									path = MOF_REG_PATH;
+									getManagedBean().setFlowStatus(1);
+								}
 							}else{
 								path = MOF_REG_PATH;
 								getManagedBean().setFlowStatus(1);
 							}
-						}else{
-							path = MOF_REG_PATH;
-							getManagedBean().setFlowStatus(1);
 						}
+						log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
+					}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
+						path = basicAccountFlow(supplier);
 					}
-					log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
-				}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
-					path = basicAccountFlow(supplier);
 				}
 			}
 		}
