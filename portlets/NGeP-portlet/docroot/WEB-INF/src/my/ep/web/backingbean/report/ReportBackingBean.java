@@ -19414,22 +19414,22 @@ public class ReportBackingBean extends
 	public List<SelectItem> getPaymentTypeMethodList() {
 		log.info("ReportBackingBean-getPaymentTypeMethodList");
 		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
+		SelectItem item = new SelectItem();
+		item.setValue(ReportConst.SM_REPORT_CREDIT);
+		item.setLabel(ResourceBundleUtils.getMessage(
+					"lbl.rpt.credit",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		paymentTypeMethodList.add(item);
+		item = new SelectItem();
+		String fpx = ResourceBundleUtils.getMessage(
+					"lbl.rpt.fpx",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale());
+		item.setValue(fpx);
+		item.setLabel(fpx);
+		paymentTypeMethodList.add(item);
 
-		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IPMReportSO.class);
-
-		List<Object[]> paymentTypeList = reportSO
-				.retrievePayementTypeMethodList();
-
-		if (CollectionUtils.isNotEmpty(paymentTypeList)) {
-			for (Object object : paymentTypeList) {
-				SelectItem selectItem1 = new SelectItem();
-				selectItem1.setValue(object);
-				selectItem1.setLabel(object.toString());
-				paymentTypeMethodList.add(selectItem1);
-			}
-		}
 		return paymentTypeMethodList;
 	}
 

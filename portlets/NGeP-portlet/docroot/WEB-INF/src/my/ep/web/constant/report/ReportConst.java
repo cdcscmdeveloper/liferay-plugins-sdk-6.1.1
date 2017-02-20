@@ -614,6 +614,7 @@ public class ReportConst {
 	public static final String PARAM_MODULE_TYPE = "REP";
 	public static final String LA_VALUE="LA";
 	public static final String AMP_EP_NO_EQ = "&epno=";
+	public static final String SM_REPORT_CREDIT="Credit";
 
 	/** The Constant AMP_TO_DATE_EQ. */
 	public static final String AMP_TO_DATE_EQ = "&todt=";
