@@ -2066,23 +2066,29 @@ public class QTDetailBackingBean extends
 						reqDTO.setQtId(qtId);
 						ScQtFinalization scQtFinalization = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO)
 							.getScQtFinalization();
+						ScQt scQt = this.getManagedBean().getQt();
 						int formCommitteeFlag = FORM_NO_ACTION;
 						int reformCommitteeFlag = REFORM_NO_ACTION;
-						if (scQtFinalization.isReEvaluateCompReq()) {
+						if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType())) {
+							if (scQtFinalization.isReEvaluateCompReq()) {
+								formCommitteeFlag += FORM_OC;
+								reformCommitteeFlag += REFORM_OC;
+							}
+							if (scQtFinalization.isReEvaluateTechReq()) {
+								formCommitteeFlag += FORM_TEC;
+								reformCommitteeFlag += REFORM_TEC;
+							}
+							if (scQtFinalization.isReEvaluateFinReq()) {
+								formCommitteeFlag += FORM_FEC;
+								reformCommitteeFlag += REFORM_FEC;
+							}
+						} else {
 							formCommitteeFlag += FORM_OC;
 							reformCommitteeFlag += REFORM_OC;
 						}
-						if (scQtFinalization.isReEvaluateTechReq()) {
-							formCommitteeFlag += FORM_TEC;
-							reformCommitteeFlag += REFORM_TEC;
-						}
-						if (scQtFinalization.isReEvaluateFinReq()) {
-							formCommitteeFlag += FORM_FEC;
-							reformCommitteeFlag += REFORM_FEC;
-						}
 						retrieveCommitteeAppointmentTabDtl(formCommitteeFlag, 
 								reformCommitteeFlag);
-						removeCommitteeActivityDetails(this.getManagedBean().getQt());
+						removeCommitteeActivityDetails(scQt);
 
 					} finally {
 						qtSuppFinalizationSO = null;
