@@ -244,6 +244,7 @@ public class SchedulerConstants {
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "CM JOB GROUP";
 	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
 	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "CM JOB GROUP";
+	public static final String CM_DROP_SEQUENCE_JOB = "DROP SEQUENCE JOB";
 
 
 	// NOTIFICATIONS

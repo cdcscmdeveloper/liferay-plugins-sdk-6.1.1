@@ -73,7 +73,7 @@ public class CmSchedulerServlet extends HttpServlet {
 
 		// /CM Drop Doc Sequence
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
+				SchedulerConstants.CM_DROP_SEQUENCE_JOB,
 				SchedulerConstants.CM_DROP_DOC_SEQ_JOB_GROUP),
 				CmDropSequenceJob.class,
 				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
