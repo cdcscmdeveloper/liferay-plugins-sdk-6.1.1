@@ -6858,7 +6858,7 @@ public class SmApplicationUtil {
 				reqSO = null;
 			}
 			long dayBal = DateUtils.getDaysDifference(new Date(),
-					smAppl.getDraftExpiryDate()) ;
+					smAppl.getDraftExpiryDate());
 			String[] dayLeftParam = { dayBal + "" };
 			Date saveDate = smAppl.getApplSaveDate() == null ? smAppl
 					.getChangedDate() : smAppl.getApplSaveDate();
@@ -9386,7 +9386,6 @@ public class SmApplicationUtil {
 						cat.setApprovedDate(new Date());
 					}
 					cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
-					setCategoryNameForApprovedCategory(cat);
 					setSupplierCategoryEffectiveDate(cat, smAppl.getApplType());
 				} else {
 					cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -9397,6 +9396,7 @@ public class SmApplicationUtil {
 					cat.setApprvrDecFlg(null);
 					cat.setApproverRemarks(null);
 				}
+				setCategoryNameForApprovedCategory(cat);
 			}
 		}
 	}
