@@ -153,6 +153,15 @@ public class SelfRequestSupplierAdminBackingBean extends
 		}
 
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
+		// to set the softcert Flag all supplier type will mark to
+		// "SOFT_CERT_PENDING_REQ", except supplier type is "Consultant"
+		if (!getManagedBean().getSupplier().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			getManagedBean().getSelectedAdmin().setSoftcertFlg(
+					SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		} else {
+			getManagedBean().getSelectedAdmin().setSoftcertFlg(0);
+		}
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setBaseUrl(SmCommonUtil.getBasePortalUrl());
