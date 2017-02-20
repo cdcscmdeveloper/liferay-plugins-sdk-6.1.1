@@ -4848,7 +4848,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelMachineSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
+		// set default machine if null to avoid null in screen dialog after save
+		if (getManagedBean().getSelectedMachine().getMachine() == null) {
+			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
+		}
 		if (getManagedBean().getSelectedMachine().getMachineDtlId() == null) {
 			getManagedBean().getSelectedMachine().setValue(
 					new BigDecimal(SupplierManagementConst.MIN_AMT_RANGE));
@@ -5012,10 +5015,7 @@ public class SmApplicationBackingBean extends
 	 * Populate machine when on change category code selected
 	 */
 	public void onChangeCategoryCode() {
-
 		// set dropdown machines
-		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
-		getManagedBean().getSelectedMachine().setMachineType(StringUtils.EMPTY);
 		getManagedBean().setMachineItems(
 				SmApplicationUtil.getMachineItemsByMachineDetails(
 						getManagedBean().getSelectedMachine(), getManagedBean()
@@ -5035,6 +5035,10 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedMachine().setMachineType(
 						StringUtils.EMPTY);
 			}
+		} else {
+			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
+			getManagedBean().getSelectedMachine().setMachineType(
+					StringUtils.EMPTY);
 		}
 	}
 
