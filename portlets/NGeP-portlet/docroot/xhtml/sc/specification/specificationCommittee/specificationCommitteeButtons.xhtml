@@ -18,11 +18,11 @@
 				<td align="right">
 				
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}" rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+					action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}" rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null}"
 					partialSubmit="true"
 					process="@this"
 					update="@this" />
-			
+			<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
 				<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{bpmAction ne '~'}">
@@ -45,12 +45,29 @@
 								value="save" />
 						</p:commandButton>
 					</ui:fragment>
+					</ui:fragment>
 					<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}">
+					<ui:param name="workflowStatus" value="#{specificationBackingBean.managedBean.specMaintenanceWorkFlowStatus}"></ui:param>
+					
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@all"
 							style="float:right;" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" 
+							oncomplete="blockWidget.hide();" rendered="#{(!specificationBackingBean.managedBean.readOnly and workflowStatus ==null) or (!specificationBackingBean.managedBean.readOnly and workflowStatus !=null and workflowStatus.pmStatus.statusId == QTStatusConst.SE_PENDING_SUBMISSION )}"
 							action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}">
 							</p:commandButton>
+							
+							<ui:repeat var="bpmAction"
+						value="#{specificationBackingBean.managedBean.outComes}">
+						<ui:fragment rendered="#{bpmAction ne '~'}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+                          
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								styleClass="ui-button" style="float:right;"
+								action="#{specificationBackingBean.specCommitteMaintenanceBpmTask(bpmAction)}" />
+								
+						</ui:fragment>
+						</ui:repeat>
 					</ui:fragment>
 					</td>
 			</tr>
@@ -120,6 +137,27 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
 					actionListener="#{specificationBackingBean.checkListNoConfirmationSubmit('F')}"
 					oncomplete="financialStandardChecklistDlgsSubmit.hide();" />
+			</div>
+		</p:dialog>
+		
+		
+		<p:dialog id="revicespecMaintenanceEndorsmentDlgs" widgetVar="revicespecMaintenanceEndorsmentDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="revicespecMaintenanceEndorsmentDlgs.hide();"
+					action="#{specificationBackingBean.reviseSpecificationCommitteeEndorsmentMaintenance}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="revicespecMaintenanceEndorsmentDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
 

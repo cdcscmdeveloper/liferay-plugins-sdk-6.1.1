@@ -26,13 +26,16 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -355,11 +358,22 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
      boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
     specCommitteeSecreatry=true;
     this.getManagedBean().setAssignedState(Boolean.FALSE);
+    ScWorkFlowStatus workFlowStatus=retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+    this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
 	if(specCommitteeSecreatry){
-		this.getManagedBean().setReadOnly(false);
+	log.info("workFlowStatus"+workFlowStatus);
+	if(null==workFlowStatus || QTStatusConst.SE_PENDING_SUBMISSION.equals(workFlowStatus.getPmStatus().getStatusId())){
+		log.info("secretary Inner value workFlowStatus"+workFlowStatus);
+		this.getManagedBean().setReadOnly(Boolean.FALSE);
 		this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
 	}else{
-		this.getManagedBean().setReadOnly(true);
+		log.info("secretary else value workFlowStatus"+workFlowStatus);
+		this.getManagedBean().setReadOnly(Boolean.TRUE);
+		this.getManagedBean().setSpecMaintenance(Boolean.FALSE);	
+	}
+	}else{
+		log.info("otherthan secretary else value workFlowStatus"+workFlowStatus);
+		this.getManagedBean().setReadOnly(Boolean.TRUE);
 	}
 
 	
@@ -378,6 +392,10 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
 			.getQtStatus().getStatusId());
 	this.getManagedBean().setSpecMaintenanceScreen(SpecMaintenanceScreen);
 	this.getManagedBean().setLoginRoleType("SC");
+	if(null!=this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
+		log.info("Workflow status not null"+this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+		this.getManagedBean().setCurrentStatusId(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+	}
 	fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
@@ -457,7 +475,21 @@ public IPagingDataModel<ScQt> getSpecMaintenanceDataModel() {
 	return searchQTDataModel;
 }
 
-
+private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+	log.info("Start retrieveStatusByTypeAndId");
+	IScWorkFlowStatusSO workFlowStatusSO;
+	try {
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocType(docType);
+		reqDTO.setDocId(docId);
+		
+		return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+	} finally {
+		workFlowStatusSO = null;
+	}
+}
 
 
 }
