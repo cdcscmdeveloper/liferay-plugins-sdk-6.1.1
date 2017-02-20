@@ -555,8 +555,19 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 					+ SCProcessNameConst.VERIFY_MANUAL_LOA,
 					SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
+			
+			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
+					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
+			
+			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING,
+					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
 
-
+			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING,
+					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
+			
 			this.getManagedBean().setBpmMap(temp);
 		}
 
