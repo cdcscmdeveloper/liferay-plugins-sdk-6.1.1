@@ -362,14 +362,16 @@ try{
 	if(null!=resDTO &&  null!=resDTO.getWorklistVO() && null!=resDTO.getWorklistVO().getWorklistItem() && resDTO.getWorklistVO().getWorklistItem().size()>0){
 		this.getManagedBean().setCustomerServiceEntity(new ArrayList<SourcingCustomerServiceBean>());
 		for(WorklistItemVO worklistItem:resDTO.getWorklistVO().getWorklistItem()){
-			SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
+		
 			if(CollectionUtils.isNotEmpty(worklistItem.getAssignees())){
     	 	//custServiceEntity.setOfficerName(worklistItem.getAssignees().get(0));
+			for(int i=0;i<worklistItem.getAssignees().size();i++){
+			SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
     	 	UserReqDTO reqUserDTO = new UserReqDTO();
-	 		reqUserDTO.setLoginId(worklistItem.getAssignees().get(0));
+	 		reqUserDTO.setLoginId(worklistItem.getAssignees().get(i));
     	 	custServiceEntity.setOfficerName(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName());
-			}
+			
     	 	reqDTO = new BpmRequestDTO();
     	 	reqDTO.setCtxToken(token);
     	 	reqDTO.setTaskId(worklistItem.getTaskId());
@@ -384,6 +386,8 @@ try{
     	 }
 			getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 			
+			}
+			}
 			/*this.getManagedBean().setOfficerName(userIds.toString());
 			if(StringUtils.isNotBlank(this.getManagedBean().getOfficerName()) && StringUtils.isNotEmpty(this.getManagedBean().getOfficerName())){
 				String replaceString=	this.getManagedBean().getOfficerName().substring(1, this.getManagedBean().getOfficerName().length()-1).trim();
