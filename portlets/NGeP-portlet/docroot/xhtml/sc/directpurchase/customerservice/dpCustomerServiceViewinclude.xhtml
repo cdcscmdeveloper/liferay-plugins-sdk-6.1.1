@@ -86,10 +86,11 @@
 					<table style="width: 315px;">
 						<tr>
 							<td><p:dataTable id="dpofficerInfoName"
-									var="customerServiceOfficers"
+									var="customerServiceOfficers" rows="10"
 									value="#{dpCustomerServiceBB.managedBean.customerServiceEntity}"
 									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetofficer" rowIndexVar="index">
+									<ac:paginator for="dpofficerInfoName"></ac:paginator>
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
