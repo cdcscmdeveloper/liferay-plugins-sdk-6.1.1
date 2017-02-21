@@ -9,7 +9,8 @@
     
 
 	<p:remoteCommand name="resetAllData" update="searchPanel deductionTitle resultPanel" partialSubmit="true" action="#{paymentMatchBackingBean.resetAction}" process="@this" />
-	<p:dialog id="deductionPopup" widgetVar="deductionPopup" modal="true" width="700" position="top" onHide="resetAllData();" resizable="false">
+	<p:dialog id="deductionPopup" widgetVar="deductionPopup" modal="true" width="700" position="top" resizable="false">
+		<p:ajax event="close" listener="#{paymentMatchBackingBean.resetAction}" />
 		<f:facet name="header">
 			<h:panelGroup id="deductionTitle">#{lbl['lbl.lov.listing']} - #{lbl['lbl.fl.payment.match.amanah']} </h:panelGroup>
 		</f:facet>
@@ -114,7 +115,7 @@
 					id="slbtn"
 					value="#{lbl['lbl.btn.select']}"
 					oncomplete="deductionPopup.hide();"
-					update=":form,:form:deductionDataTable" 
+					update=":form,:form:deductionDataTable,:form:deductionDataTable:paymentMethod" 
 					disabled="#{paymentMatchBackingBean.isSelectButtonDisable()}"
 					styleClass="BtnSpacing"
 					action="#{paymentMatchBackingBean.populateSelectedObj}"/>	
