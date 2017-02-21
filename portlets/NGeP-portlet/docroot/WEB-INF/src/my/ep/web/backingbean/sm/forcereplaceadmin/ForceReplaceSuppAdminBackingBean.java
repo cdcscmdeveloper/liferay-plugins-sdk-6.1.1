@@ -359,7 +359,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 							getManagedBean().getNewAdmin()
 									.getIdentificationNo(),
 							getManagedBean().getPermAddr().getSmAddress()
-									.getPostcode(),null);
+									.getPostcode(), null);
 		}
 	}
 
@@ -532,6 +532,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				DbValueConst.RECORD_STATUS_ACTIVE);
 		getManagedBean().getNewAdmin().setContractSignerFlg(
 				DbValueConst.RECORD_STATUS_ACTIVE);
+		getManagedBean().getNewAdmin().setContactPerson(
+				getManagedBean().getOldAdmin().isContactPerson());
 
 		PmCountry country = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
