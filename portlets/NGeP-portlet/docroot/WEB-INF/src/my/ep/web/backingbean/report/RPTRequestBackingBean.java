@@ -403,11 +403,17 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		if(reportStatus == 1 || reportStatus == 2 || reportStatus == 3
 		   || reportStatus == 9 || reportStatus == 10){
-			return "In Progress";
+			return ResourceBundleUtils.getMessage(
+					"lbl.rpt.inprogress", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
 		} else if (reportStatus == 4){
-			return "Success";
+			return ResourceBundleUtils.getMessage(
+					"lbl.rpt.success", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
 		} else {
-			return "Fail";
+			return ResourceBundleUtils.getMessage(
+					"lbl.rpt.fail", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
 		}
 	}
 	
