@@ -284,12 +284,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
-	<p:dialog width="70%" height="70%" closable="false"
+	<p:dialog width="70%" height="60%" closable="false"
 		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
 		id="svcDialog" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		
-		<p:scrollPanel style="height:700px;border:0;" mode="native">
+		<p:scrollPanel style="height:600px;border:0;" mode="native">
 			<p:outputPanel layout="block" id="assignSvcBlockPanel">
 					<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
 				<p:blockUI block="assignSvcBlockPanel" widgetVar="assignSvcBlockWidget">
