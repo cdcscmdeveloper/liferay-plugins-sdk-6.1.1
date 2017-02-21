@@ -129,7 +129,7 @@
 							 selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode ne 'MY'}"/>
 						<p:selectOneRadio rendered="#{not empty selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry 
 							and selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode eq 'MY'}" 
-							required="true" value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.bumiFlgTrans}"
+							required="true" value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.bumiFlg}"
 							label="#{lbl['lbl.sm.person.bumi']}" id="suppAdminBumi">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -169,7 +169,7 @@
 							label="#{lbl['lbl.sm.person.religion']}"
 							rendered="#{not empty selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry 
 							and selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode eq 'MY'}"
-							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.muslimFlgTrans}" required="true">
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.muslimFlg}" required="true">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
 						</p:selectOneRadio>
