@@ -40,13 +40,13 @@
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
-				<p:commandLink rendered="#{isDocTypeQuotation}" process="@this" partialSubmit="true"
+				<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
 						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scLoa.scQt,true)}">
-				<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}" rendered="#{isDocTypeQuotation}" escape="false" />
+				       #{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
 					</p:commandLink>
 				 <h:outputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
-						rendered="#{!isDocTypeQuotation}" /></td>
+						rendered="#{!(isDocTypeQuotation or isDocTypeDirectNego)}" /></td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
 				<td class="header-info-text">
