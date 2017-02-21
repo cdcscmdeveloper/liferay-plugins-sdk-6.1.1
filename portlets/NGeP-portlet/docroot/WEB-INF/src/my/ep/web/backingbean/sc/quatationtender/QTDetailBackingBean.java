@@ -2221,7 +2221,8 @@ public class QTDetailBackingBean extends
 			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
-					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)) {
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION)) {
 
 				// check if its Pending Schedule and Documents , only execute
 				// this part
@@ -5124,7 +5125,8 @@ public class QTDetailBackingBean extends
 		if (!this.getManagedBean().isMaintanceFlow()) {
 			if (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(statusId)
 					|| QTStatusConst.QT_PENDING_PB_APPROVAL.equals(statusId)
-					|| QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(statusId)) {
+					|| QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(statusId)
+					|| QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(statusId)) {
 				isStatusOfBpkOrScheduleRevise = true;
 			}
 		}
