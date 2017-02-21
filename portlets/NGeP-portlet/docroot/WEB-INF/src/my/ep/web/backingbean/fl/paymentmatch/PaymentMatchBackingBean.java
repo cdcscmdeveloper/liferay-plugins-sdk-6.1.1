@@ -46,6 +46,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.fund.IFundSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -68,6 +69,8 @@ import my.ep.dto.pm.common.fund.FundReqDTO;
 import my.ep.dto.pm.common.fund.FundResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
@@ -103,6 +106,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
@@ -1336,6 +1340,32 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				getManagedBean().setPaidPerc(ctRes.getPaidAdvancePaymentAmt().divide(deductionAmt,2,RoundingMode.HALF_UP).multiply(new BigDecimal(100)));	
 			}
 			getManagedBean().setBalanceAmt(deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt()));
+			
+			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
+				IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
+				ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+				ProjectSetiaResDTO resDTO = new ProjectSetiaResDTO();
+				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
+					if(deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())
+							|| deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) 
+							|| deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())){
+						deduction.setEnableCp(true);
+					}else{
+						deduction.setEnableCp(false);
+					}
+					if(deduction.getPmVotFund().getVotFundId() != null){
+						reqDTO.setVotFundId(deduction.getPmVotFund().getVotFundId());
+						resDTO = projectSetiaSO.retrieveSubSetiaFinancingTypeListByVotFundId(reqDTO);
+						if(getManagedBean().getPopulateSubSetiaList()== null || getManagedBean().getPopulateSubSetiaList().isEmpty()){
+							if (resDTO.getFinancingTypeValueList() != null) {
+								for (String subSetia : resDTO.getFinancingTypeValueList()) {
+									getManagedBean().getPopulateSubSetiaList().add(new SelectItem(subSetia,subSetia));
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	
@@ -1923,6 +1953,40 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		reqDTO.setVotFundId(votFundId.longValue());
 		getManagedBean().getSelectedDeduction().setPmVotFund(votFundSO.retrieveVotFundByFundId(reqDTO).getPmVotFund());
 		
+		resetAction();
+	}
+	
+	/**
+	 * Gets the dropdown values that vot type is not Vot A, vot B,vot T .
+	 *
+	 * @return the dropdown values 
+	 */
+	public List<SelectItem> getFinancingTypeDropdownValues(){
+		IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
+		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+		ProjectSetiaResDTO resDTO = new ProjectSetiaResDTO();
+		if(getManagedBean().getSelectedDeduction() != null && getManagedBean().getSelectedDeduction().getPmVotFund() != null){
+			if(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())
+					|| getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) 
+					|| getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())){
+				getManagedBean().getSelectedDeduction().setEnableCp(true);
+			}else{
+				getManagedBean().getSelectedDeduction().setEnableCp(false);
+			}
+			if(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundId() != null){
+				reqDTO.setVotFundId(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundId());
+				resDTO = projectSetiaSO.retrieveSubSetiaFinancingTypeListByVotFundId(reqDTO);
+			}
+		}
+		
+		if(getManagedBean().getPopulateSubSetiaList()== null || getManagedBean().getPopulateSubSetiaList().isEmpty()){
+			if (resDTO.getFinancingTypeValueList() != null) {
+				for (String subSetia : resDTO.getFinancingTypeValueList()) {
+					getManagedBean().getPopulateSubSetiaList().add(new SelectItem(subSetia,subSetia));
+				}
+			}
+		}
+		return getManagedBean().getPopulateSubSetiaList();
 	}
 	
 }
