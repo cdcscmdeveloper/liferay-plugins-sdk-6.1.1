@@ -60,6 +60,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private Object[] selectedFundObj;
 	private Object[] selectedVotObj;
 	private FlPaymentDeduction selectedDeduction;
+	private List<SelectItem> populateSubSetiaList;
 
 	// set chargeline for selected items
 	private String votFundCode;
@@ -1463,6 +1464,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 
 	public void setSelectedDeduction(FlPaymentDeduction selectedDeduction) {
 		this.selectedDeduction = selectedDeduction;
+	}
+
+	public List<SelectItem> getPopulateSubSetiaList() {
+		if(populateSubSetiaList == null){
+			populateSubSetiaList = new ArrayList<SelectItem>();
+		}
+		return populateSubSetiaList;
+	}
+
+	public void setPopulateSubSetiaList(List<SelectItem> populateSubSetiaList) {
+		this.populateSubSetiaList = populateSubSetiaList;
 	}
 
 }

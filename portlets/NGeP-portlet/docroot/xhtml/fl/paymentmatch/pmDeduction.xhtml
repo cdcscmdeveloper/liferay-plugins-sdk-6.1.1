@@ -52,6 +52,13 @@
 					</p:commandLink>
 				</p:outputPanel>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.cp']}" style="width:8%;">
+				<p:selectOneMenu id="paymentMethod" value="#{deduction.financingType}" disabled="#{deduction.enableCp}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="payment" 
+						value="#{paymentMatchBackingBean.getFinancingTypeDropdownValues()}"/>
+				</p:selectOneMenu>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width:15%;">
 			<f:facet name="header" style="width:15%;">
 					<h:outputText value="#{lbl['lbl.fl.gosodo']}"/>
@@ -68,7 +75,7 @@
 					</ac:lov>
 				</p:outputPanel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right;width:15%">
+			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center;width:7%">
 				<p:outputPanel id="deductionAmtPnl">
 					<h:outputText styleClass="colFloatRight"
 						value="#{deduction.deductionAmt}"
