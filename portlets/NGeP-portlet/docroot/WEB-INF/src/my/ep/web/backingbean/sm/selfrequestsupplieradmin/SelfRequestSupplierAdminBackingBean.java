@@ -131,6 +131,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 					.getSmAddress());
 			onChangeDistrict(getManagedBean().getSelectedAdminPermAddr()
 					.getSmAddress());
+			onChangeCity(getManagedBean().getSelectedAdminPermAddr()
+					.getSmAddress());
 		} else {
 			fc.addMessage("icNoId", new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null, invalidMsg));
