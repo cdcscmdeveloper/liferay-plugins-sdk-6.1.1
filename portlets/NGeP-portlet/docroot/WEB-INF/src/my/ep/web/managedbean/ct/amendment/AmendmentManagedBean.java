@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import org.primefaces.model.DualListModel;
 
@@ -102,6 +103,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
+	private SelectItem[] secretaryList;
 	
 	@ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
@@ -917,6 +919,18 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setDisableLoaLetter(boolean disableLoaLetter) {
 		this.disableLoaLetter = disableLoaLetter;
 	}
-	
-	
+
+	/**
+	 * @return the secretaryList
+	 */
+	public SelectItem[] getSecretaryList() {
+		return secretaryList;
+	}
+
+	/**
+	 * @param secretaryList the secretaryList to set
+	 */
+	public void setSecretaryList(SelectItem[] secretaryList) {
+		this.secretaryList = secretaryList;
+	}		
 }
