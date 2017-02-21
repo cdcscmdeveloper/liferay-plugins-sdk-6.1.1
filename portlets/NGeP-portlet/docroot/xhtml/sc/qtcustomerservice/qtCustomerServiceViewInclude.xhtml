@@ -74,10 +74,11 @@
 					<table style="width: 900px">
 						<tr>
 							<td><p:dataTable id="officerInfoName"
-									var="customerServiceOfficers"
+									var="customerServiceOfficers" rows="10"
 									value="#{qtCustomerServiceBB.managedBean.customerServiceEntity}"
 									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									widgetVar="tableOfficerWidgetofficer" rowIndexVar="index">
+									<ac:paginator for="officerInfoName"></ac:paginator>
 									<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 										<h:outputText value="#{index+1}" style="float:left;" />
 									</p:column>
