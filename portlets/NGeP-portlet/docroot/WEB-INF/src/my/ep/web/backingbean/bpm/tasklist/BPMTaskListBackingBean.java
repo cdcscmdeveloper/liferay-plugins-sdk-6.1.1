@@ -267,6 +267,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
+					+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			
 			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_BUDGET,
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
