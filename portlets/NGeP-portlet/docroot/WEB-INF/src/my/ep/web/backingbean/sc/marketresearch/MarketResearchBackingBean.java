@@ -424,10 +424,14 @@ public class MarketResearchBackingBean extends
 			}
 		}
 		context.put("scLoa", scLoa);
-		
+		boolean isZonal=false;
 		List<ScLoiLoaItem> productItems = new ArrayList<ScLoiLoaItem>();
 		List<ScLoiLoaItem> serviceItems = new ArrayList<ScLoiLoaItem>();
 		for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+			//zonal
+			if(scLoiLoaItem.getTplSpecZoneDtl() != null){
+				isZonal=Boolean.TRUE;
+			}
 			if(scLoiLoaItem.getScRequestItem() != null && 
 					scLoiLoaItem.getScRequestItem().getItemType() != null){
 				if(scLoiLoaItem.getScRequestItem().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
@@ -437,6 +441,7 @@ public class MarketResearchBackingBean extends
 				}
 			}
 		}
+		context.put("isZonal", isZonal);
 		context.put("productItems", productItems);
 		context.put("serviceItems", serviceItems);
 
