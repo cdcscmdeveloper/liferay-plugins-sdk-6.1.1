@@ -45,12 +45,12 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -68,8 +68,6 @@ import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -79,6 +77,7 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtActor;
@@ -102,7 +101,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -889,18 +887,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
 				    	getManagedBean().setDisableMeetingDetails(true);
 				    	ctBackingBean.getManagedBean().setViewContract(true);
-				    }
-				    //Initiate the secretary
-				    if (getManagedBean().getSecretaryId() == null && getManagedBean().getCommitteeType() != null
-				    		&& !ctBackingBean.getManagedBean().isDisableAmendDetails()) {
-				    	
-				    	SelectItem[] secretaryList = getSecretaryDropdownList(); 
-				    	// Default the secretary if selection list only have one secretary
-				    	if (secretaryList != null && secretaryList.length == 2) {
-				    		if (secretaryList != null && secretaryList.length == 2) {
-					    		getManagedBean().setSecretaryId((Long)secretaryList[1].getValue());
-					    	}
-				    	}
 				    }
 			  	} finally {
 			  		contractAmendmentSO = null;
@@ -3657,53 +3643,47 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the selection list of secretary
 	 */
 	public SelectItem[]  getSecretaryDropdownList() {
-		SelectItem[] items = null;     
-		IUserSO userSO = null;
-		IOrgProfileSO orgProfileSO = null;
-		
-		try {
-					int i = 1;
-					orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-					List<Long> orgProfileIds = new ArrayList<Long>();
-				   	OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				   	orgProfileReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				  
-				   	OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(orgProfileReqDTO);
-				   	for (PmProfileGroup profileGroup : orgProfileResDTO.getProfileGroups()) {
-				   		orgProfileIds.add(profileGroup.getMainOrgProfile().getOrgProfileId());
-				   	}
-		   	
-		       	  UserReqDTO reqDTO = new UserReqDTO();
-		   	      if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
-		   			    || getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-				             reqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
-			      } else {
-				         reqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
-			      }
-			
-		   	      orgProfileIds.add(orgProfileReqDTO.getOrgProfileId());
-			      // TODO: Removed after all procurement level set in PTJ??? TBC
-			      PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-	   	  	      if (ministryOrgProfile != null) {
-	   	  		       orgProfileIds.add(ministryOrgProfile.getOrgProfileId());
-	   	        }
-		  
-	   	  	      reqDTO.setOrgProfileIds(orgProfileIds);		
-		    	  userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		      	  UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-		   	
-			      items = new SelectItem[resDTO.getUserList().size() + 1];
-			      items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					   ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			
-			      for (PmUser user : resDTO.getUserList()) {
-		                    items[i++] = new SelectItem(user.getUserId(), user.getUserName());
-			      }
-		   } catch (Exception e) {
-			     e.printStackTrace();
-			     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-	  	   }
-		return items;
+		if (getManagedBean().getSecretaryList() == null ) {
+			SelectItem[] items = null;
+			ICommitteSO committeSO = null;
+			ISearchResultBean<PmUser> userResultList = null;
+			try {
+				
+				int i = 1;
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+				committeReqDTO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+				
+				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+				} else {
+					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
+				}
+				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
+				
+				if (userResultList != null && userResultList.getResultList() != null) {
+					items = new SelectItem[userResultList.getResultList().size() + 1];
+					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					
+					for (PmUser user : userResultList.getResultList()) {
+						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+					}
+					// Default the secretary if selection list only have one secretary
+			    	if (items != null && items.length == 2) {
+			    		getManagedBean().setSecretaryId((Long)items[1].getValue());
+			    	}
+					getManagedBean().setSecretaryList(items);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			}
+		}
+		return getManagedBean().getSecretaryList();
 	}	
 	
 	/**
