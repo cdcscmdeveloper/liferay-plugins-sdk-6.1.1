@@ -1,6 +1,12 @@
 package my.ep.web.vo;
 
-public class SmAuthorizedPersonnelCountVO {
+import java.io.Serializable;
+
+public class SmAuthorizedPersonnelCountVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean justificationRequired;
 	private boolean reachAuthorizedPersonnelLimit;
 	private boolean reachSupplierUserAuthorizedLimit;
