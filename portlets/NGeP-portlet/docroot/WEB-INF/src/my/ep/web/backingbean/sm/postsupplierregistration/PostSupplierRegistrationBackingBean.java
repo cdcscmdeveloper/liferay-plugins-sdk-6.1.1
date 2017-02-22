@@ -140,7 +140,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			}else{
 				
 				//Self Request Supplier Admin
-				if(supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+				if(supplier.getRecordStatusFlg()==SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
 					path = basicAccountFlow(supplier);
 				}else{
 					//MOF APPL
