@@ -124,6 +124,7 @@
 			</c:choose>
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelSiteVisitAction('svcDialog')}"
+				oncomplete="svcDialog.hide();"
 				partialSubmit="true" process="@this" />
 		</div>
 	</p:outputPanel>
