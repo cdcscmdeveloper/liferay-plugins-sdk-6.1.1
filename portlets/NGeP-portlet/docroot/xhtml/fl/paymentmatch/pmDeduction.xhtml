@@ -57,6 +57,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="payment" 
 						value="#{paymentMatchBackingBean.getFinancingTypeDropdownValues()}"/>
+						 <p:ajax event="change" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width:15%;">
