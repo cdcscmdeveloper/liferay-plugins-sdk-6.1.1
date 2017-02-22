@@ -2,6 +2,8 @@ package my.ep.web.backingbean.ct.customer.service;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -33,7 +35,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -101,7 +103,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		getManagedBean().getCustomerServiceDataModel().resetData();
 	}
 	
-	public String gotoViewPage(CtContractVer contractVer, int status, int contractStatus){
+	public String gotoViewPage(VCtContract ctContract, int status, int contractStatus){
 		
 			getManagedBean().setCotractStatus(contractStatus);
 			getManagedBean().setStatus(status);
@@ -109,8 +111,8 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			getManagedBean().setMinistryName(retrieveMinistryByOrgProfileId(getManagedBean().getSearchPtjProfile().getOrgProfileId()));
 		 
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractVerId(contractVer.getContractVerId());
-			reqDTO.setDocType(contractVer.getDocType());
+			reqDTO.setContractVerId(ctContract.getCtContractVer().getContractVerId());
+			reqDTO.setDocType(ctContract.getCtContractVer().getDocType());
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractAgency(reqDTO);	
 			getManagedBean().setCtContractVer(resDTO.getCtContractVer());
@@ -121,17 +123,29 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			 BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			 bpmReqDTO.setUserId(sysUserId);
 			 bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			 if(contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && 
+			 if(ctContract.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && 
 					   ContractStatusConst.FD_PENDING_CONTRACT_CREATION.intValue() == getManagedBean().getCtContractVer().getCtWorkflowStatus().getPmStatus().getStatusId().intValue()){
 				    	bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getLoa().getLoaNo());
-			 }else{
-				    bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getContractNo());
-	    		 }
+			 } else if(ctContract.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && ctContract.getAgStatus() == 2){
+				     bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getLoa().getLoaNo());
+			 }
+			
 			 bpmReqDTO.setCtxToken(ctxToken);
 			 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			 
+			 List<WorklistItemVO>  worklistItemVo = new ArrayList<WorklistItemVO>();
 			 if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
-				 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					   for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
+			        worklistItemVo.addAll(bpmResDTO.getWorklistVO().getWorklistItem());
+			 }
+			 bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getContractNo());
+			 BpmResponseDTO bpmResDTO1 = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			 
+			 if(bpmResDTO1.getWorklistVO().getWorklistItem()!=null && bpmResDTO1.getWorklistVO().getWorklistItem().size() > 0) {
+			        worklistItemVo.addAll(bpmResDTO1.getWorklistVO().getWorklistItem());
+			 }
+			 
+     		 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					   for(WorklistItemVO worklistItemVO : worklistItemVo){
 					    	 		CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
 					    	 		
 					    	 		/*Retrieve status for document*/
@@ -160,7 +174,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 									custServiceEntity.setDocumentStatusDesc(getPmStatusDesc(bpmResDTO.getDocStatus()));
 									getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 					    	 }	
-				}
+				
 		  return SERVICE_VIEW_PAGE;
 	}
 	
