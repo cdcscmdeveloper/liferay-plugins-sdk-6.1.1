@@ -13,8 +13,8 @@
 			rowIndexVar="index" rowStyleClass="selectable"
 			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
 			<ac:paginator for="deductionDataTable" />
-			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
-			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}" style="width:15%">
+			<p:column selectionMode="multiple" style="text-align:center;width:33px"/>
+			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}" style="width:227px">
 				<p:selectOneMenu id="deductionList" value="#{deduction.ctDeduction.deductionId}" disabled="#{paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="ctDeduction"
@@ -23,12 +23,12 @@
 						 listener="#{paymentMatchBackingBean.checkDeductionList(deduction)}"/>
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}" style="width:166px">
 				<p:inputText id="descId" value="#{deduction.deductionDesc}" disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}">
 				<p:ajax process="@this" />
 				</p:inputText>
 			</p:column>
-			<p:column style="white-space:normal;text-align:center;width:8%;">
+			<p:column style="white-space:normal;text-align:center;width:57px">
 			<f:facet name="header" >
 					<h:outputText value="#{lbl['lbl.fl.payment.match.clauses.reference']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.clauses']}"/>
@@ -38,13 +38,13 @@
 					update=":form:clauseDialog"></p:commandLink>
 				<h:outputText style="text-align:right" />
 			</p:column>
-			<p:column style="width:16%;">
-				<f:facet name="header" style="width:16%;">
+			<p:column style="width:135px">
+				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.payment.match.amanah']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.deduction.amanah']}"/>
 				</f:facet>
 				<p:outputPanel id="danaPnl">
-					<p:inputText id="dana" value="#{deduction.pmVotFund.votFundCode}"  disabled="true"></p:inputText>
+					<p:inputText id="dana" value="#{deduction.pmVotFund.votFundCode}"  disabled="true" size="10"/>
 					<p:commandLink id="votfundLink" disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
 						onclick="deductionPopup.show();" >
 						<f:setPropertyActionListener value="#{deduction}" target="#{paymentMatchBackingBean.managedBean.selectedDeduction}"/>
@@ -52,16 +52,17 @@
 					</p:commandLink>
 				</p:outputPanel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.cp']}" style="width:8%;">
-				<p:selectOneMenu id="paymentMethod" value="#{deduction.financingType}" disabled="#{deduction.enableCp}">
+			<p:column headerText="#{lbl['lbl.fl.cp']}" style="width:94px">
+				<p:selectOneMenu id="paymentMethod" value="#{deduction.financingType}" disabled="#{deduction.enableCp}"
+					style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="payment" 
 						value="#{paymentMatchBackingBean.getFinancingTypeDropdownValues()}"/>
 						 <p:ajax event="change" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width:15%;">
-			<f:facet name="header" style="width:15%;">
+			<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width:135px">
+			<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.gosodo']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/>
 				</f:facet>
@@ -76,7 +77,7 @@
 					</ac:lov>
 				</p:outputPanel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center;width:7%">
+			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center;width:167px">
 				<p:outputPanel id="deductionAmtPnl">
 					<h:outputText styleClass="colFloatRight"
 						value="#{deduction.deductionAmt}"
