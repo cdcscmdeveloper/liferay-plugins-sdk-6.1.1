@@ -9256,8 +9256,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		String hostName = fs.getRequest().getServerName();
 		int portNo = fs.getRequest().getServerPort();
 
-		String softCertPath = "supptemp-request-soft-cert";
-		String url = SmCommonUtil.getBasePortalUrl();
+		String softCertPath = "/web/epapp/supptemp-request-soft-cert";
+		String url = SmCommonUtil.getBasePortalUrl() + softCertPath;
 
 		log.info("*******Str Url**********" + url);
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
