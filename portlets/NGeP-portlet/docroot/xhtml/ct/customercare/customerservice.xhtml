@@ -91,7 +91,7 @@
 					   </p:column>
 					 	<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:10%;">
 					 	<p:commandLink process="@this" partialSubmit="true" 
-					 	     action="#{customerServiceBackingBean.gotoViewPage(data.ctContractVer,data.status, data.contractStatus)}">
+					 	     action="#{customerServiceBackingBean.gotoViewPage(data,data.status, data.contractStatus)}">
 							<p:graphicImage 
 								value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
 						</p:commandLink>
