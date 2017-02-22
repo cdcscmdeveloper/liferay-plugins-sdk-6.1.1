@@ -6821,6 +6821,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		int markIndex = getLastIndexToClone(this.getManagedBean().getSelectedMaintainItem()
 				.getCmTierPricings(), this.getManagedBean().getSelectedMaintainItem()
 				.getCmTierPricings().get(index).getStand_group_id());
+		
+		
+		CmTierPricing oldTier = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
+		oldTier.setTierDisable(false);
 
 		if(this.getManagedBean().getSelectedMaintainItem()
 				.getCmTierPricings().get(markIndex).getToQty() != null){
@@ -6857,6 +6861,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		int markIndex = getLastIndexToClone(this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalTierPricings(), this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalTierPricings().get(index).getStand_group_id());
+		
+		
+		CmZonalTierPricing oldTier = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index);
+		System.out.println("oldTier****"+oldTier.isZonalTierDisable());
+		oldTier.setZonalTierDisable(false);
+		System.out.println("oldTier****after"+oldTier.isZonalTierDisable());
 
 		if(this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalTierPricings().get(markIndex).getToQty() != null){

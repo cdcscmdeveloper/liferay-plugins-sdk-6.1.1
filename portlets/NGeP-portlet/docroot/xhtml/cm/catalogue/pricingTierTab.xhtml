@@ -129,7 +129,7 @@
 				</p:commandLink>
 				<p:commandLink id="promoLink"
 					title="#{lbl['lbl.cm.add.to.promotion']}"
-					disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}"
+					disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or price.tierDisable}"
 					rendered="#{price.showFlag}"
 					action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
 					update="@form, deleteLink, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID">
