@@ -7408,7 +7408,6 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		resetAssignSiteVisitPopup();
 		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}
 
 	private void resetAssignSiteVisitPopup() {
