@@ -305,6 +305,7 @@
 					style="text-align: center">
 					<p:menuButton value="#{lbl['lbl.btn.option']}">
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isViewAction()}"
 							        	icon="ui-icon-view"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
@@ -317,18 +318,22 @@
 										icon="ui-icon-print" 
 										action="#{flDocumentBackingBean.generateCoGSTRReport(flDocument.docNo, flDocument.coGSTRNo)}" />
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isUpdateAction()}"
 							        	icon="ui-icon-update"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmUpdate}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.cancel']}" 
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isCancelAction()}"
 							        	icon="ui-icon-fl-cancel"
 										onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancel}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.stop.fulfilment']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isStopFulfilmentAction()}"
 							        	icon="ui-icon-stop"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmStopFulfilment}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.factory.comp.removal']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isRemoveFactoringAction()}"
 							        	icon="ui-icon-termination"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmRemoveFactoring}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
