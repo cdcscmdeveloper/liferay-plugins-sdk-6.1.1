@@ -280,7 +280,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 								new FacesMessage(
 										FacesMessage.SEVERITY_INFO,
 										"",
-										delListSize
+										delListSize + " " 
 												+ SmCommonUtil
 														.getMessage(
 																"lbl.sm.category.categorySucessfullyDel",
