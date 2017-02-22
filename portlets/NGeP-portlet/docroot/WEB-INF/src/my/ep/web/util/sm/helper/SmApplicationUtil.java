@@ -4023,8 +4023,7 @@ public class SmApplicationUtil {
 		if (resDTO != null && resDTO.getPmZone() != null) {
 			return resDTO.getPmZone();
 		} else {
-			throw new EpException(
-					"Cannot Submit Application : The State or Zone for supplier base office is empty or invalid.Please select valid address");
+			throw new EpException(MessageConst.ERROR_722568);
 		}
 	}
 
