@@ -25,6 +25,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -109,6 +110,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		 
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractVerId(contractVer.getContractVerId());
+			reqDTO.setDocType(contractVer.getDocType());
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractAgency(reqDTO);	
 			getManagedBean().setCtContractVer(resDTO.getCtContractVer());
@@ -117,9 +119,14 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 			 Object ctxToken = bpmSO.authenticate(sysUserId);
 			 getManagedBean().getCustomerServiceEntity().clear();
 			 BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			 bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getContractNo());
 			 bpmReqDTO.setUserId(sysUserId);
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			 bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			 if(contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && 
+					   ContractStatusConst.FD_PENDING_CONTRACT_CREATION.intValue() == getManagedBean().getCtContractVer().getCtWorkflowStatus().getPmStatus().getStatusId().intValue()){
+				    	bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getLoa().getLoaNo());
+			 }else{
+				    bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getContractNo());
+	    		 }
 			 bpmReqDTO.setCtxToken(ctxToken);
 			 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 			 if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
@@ -137,7 +144,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 									  /*Retrieve assign user name*/
 									UserReqDTO reqUserDTO = new UserReqDTO();
 									StringBuilder concat =  new StringBuilder();
-									if(bpmResDTO.isGroupTask() && bpmResDTO.isClaimed()){
+									if(bpmResDTO.isGroupTask() && bpmResDTO.isClaimed() && bpmResDTO.getUserList() != null){
 											for(String userlist : bpmResDTO.getUserList()){
 													reqUserDTO.setLoginId(userlist);
 													concat.append(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName()+",");
@@ -211,7 +218,16 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 	 * @return complete or incomplete
      */
 	public String chkContractStatusType(int status) {
-		if (status == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+		if (status == ContractConst.STATUS_COMPLETE) {
+			return ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (status == ContractConst.STATUS_INCOMPLETE) {
+			return ResourceBundleUtils.getMessage("lbl.ct.incomplete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return ResourceBundleUtils.getMessage("lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		}
+		
+		
+		/*if (status == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
 			    return ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else if(status == ContractConst.CONTRACT_STATUS_INACTIVE){
 			return ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -220,7 +236,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		} else if(status == ContractConst.CONTRACT_STATUS_TERMINATED){
 			return ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
-		return null;
+		return null;*/
 	}
 	
 	/**
