@@ -120,8 +120,8 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		String navgPage="/xhtml/fl/customerservice/customerServiceViewResult.xhtml";
-		getManagedBean().setSearchDocType(docType);
-		getManagedBean().setStatusDescId(statusId);
+		getManagedBean().setDocType(docType);
+		getManagedBean().setStatusId(statusId);
 		getManagedBean().setViewDocNo(docNo);
 		getManagedBean().setViewOrdrNo(ordrNo);
 		getManagedBean().setViewKumpulanPTJ(retrieveJabatanByOrgProfileId(getManagedBean().getPtj().getOrgProfileId()));
@@ -139,38 +139,36 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 		 if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
 			 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	    	 	UserReqDTO reqUserDTO = new UserReqDTO();
-	    	 	CustomerServiceEntity custServiceEntity = null;
-	    	 		for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
-	    	 			custServiceEntity = new CustomerServiceEntity();
-	    	 			if(worklistItemVO.getAcquiredBy() != null){
-	    	 				custServiceEntity.setOfficerName(worklistItemVO.getAcquiredBy());
-	    	 				reqUserDTO.setLoginId(worklistItemVO.getAcquiredBy());
-					 		UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
-					 		if(null!=userResDTO && null!=userResDTO.getPmUser()){
-						 		custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
-						 		getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
-					 		}
-				 		}else{
-				 			if(worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()){
-				 				for(String assignee : worklistItemVO.getAssignees()){
-				 					custServiceEntity = new CustomerServiceEntity();
-				 					reqUserDTO.setLoginId(assignee);
-							 		UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
-							 		if(null!=userResDTO && null!=userResDTO.getPmUser()){
-								 		custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
-								 		getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
-								 	}
-					 			}
-				 			}
-				 		}
-					    	 	bpmReqDTO = new BpmRequestDTO();
-								bpmReqDTO.setCtxToken(ctxToken);
-								bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
-								bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
-								
-				    	 }	
-			}
+			 UserReqDTO reqUserDTO = new UserReqDTO();
+			 CustomerServiceEntity custServiceEntity = null;
+			 for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
+				 custServiceEntity = new CustomerServiceEntity();
+				 if(worklistItemVO.getAcquiredBy() != null){
+					 custServiceEntity.setOfficerName(worklistItemVO.getAcquiredBy());
+					 reqUserDTO.setLoginId(worklistItemVO.getAcquiredBy());
+					 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
+					 if(null!=userResDTO && null!=userResDTO.getPmUser()){
+						 custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+						 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+					 }
+				 }else if(worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()){
+					 for(String assignee : worklistItemVO.getAssignees()){
+						 custServiceEntity = new CustomerServiceEntity();
+						 reqUserDTO.setLoginId(assignee);
+						 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
+						 if(null!=userResDTO && null!=userResDTO.getPmUser()){
+							 custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+							 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+						 }
+					 }
+				 }
+				 bpmReqDTO = new BpmRequestDTO();
+				 bpmReqDTO.setCtxToken(ctxToken);
+				 bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
+				 bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
+
+			 }	
+		 }
 		
 		return navgPage;
 	}
