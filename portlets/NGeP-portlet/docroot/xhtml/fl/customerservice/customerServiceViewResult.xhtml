@@ -90,7 +90,8 @@
 									<p:dataTable id="officerInfoName" var="officerInfo"
 										widgetVar="tableOfficerWidget"
 										value="#{flCustomerServiceBackingBean.managedBean.customerServiceEntity}"
-										rowIndexVar="index">
+										rowIndexVar="index" rows="10">
+										<ac:paginator for="officerInfoName" />
 										<p:column style="width:2%" headerText="No.">
 											<h:outputText value="#{index+1}" style="float:left;" />
 										</p:column>
