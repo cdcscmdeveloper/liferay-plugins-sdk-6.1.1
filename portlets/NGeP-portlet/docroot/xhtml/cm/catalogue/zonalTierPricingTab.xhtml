@@ -77,7 +77,7 @@
 				</f:facet>
 				<p:inputText id="zTierPriceId" value="#{tier.price}" size="8" maxlength="18"
 					disabled="#{tier.standardDisabled}" style="text-align:right">
-					<p:ajax event="keyup"
+					<p:ajax event="blur"
 						listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}"
 						update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink, zTierPriceId" />
 						<f:converter converterId="bigDecimalConverter" />
