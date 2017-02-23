@@ -86,9 +86,10 @@
 						<p:graphicImage value="/css/images/design/upload.png" style="margin-right:2px;" />
 					</p:commandLink>
 			</p:column>
+			<ui:param name="gstDocUrl" value="#{gstDoc.filePath}#{gstDoc.fileName}"></ui:param>
 			<p:column headerText="#{lbl['lbl.sm.gst.document.name']}">
 				<p:commandLink ajax="false" value="#{gstDoc.fileName}" rendered="#{not empty gstDoc.fileName}">
-						<p:fileDownload value="#{registrationBackingBean.commonDownload(gstDoc.filePath,gstDoc.fileName,gstDoc.fileName)}" />
+						<p:fileDownload value="#{registrationBackingBean.downloadFile(gstDocUrl)}" />
 				</p:commandLink>
 				<p:commandLink  rendered="#{not empty gstDoc.fileName}"  onclick="confirmDeleteHqDialog.show();"
 					disabled="#{!registrationBackingBean.managedBean.gstFlag}" action="#{registrationBackingBean.setSelectedGstDoc(gstDoc)}">
