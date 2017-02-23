@@ -2243,11 +2243,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			String fileName = String.valueOf((new Date()).getTime()) + "_"
 					+ event.getFile().getFileName();
+			fileName = StringUtils.replace(fileName, " ", "-");
 			doc.setFileName(fileName);
 			doc.setFilePath(filePath);
 
 			setGstDocToMainList(mainDocList, doc);
-
+			
 			SmCommonUtil.processUpload(filePath, event, fileName);
 		}
 	}
