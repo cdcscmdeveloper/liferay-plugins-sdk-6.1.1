@@ -569,7 +569,9 @@ public class RuleCatalogueBackingBean extends
 					.getLanguage();
 			reqRDTO.setLanguageCode(languageCode);
 			ISearchBean<PmConfigRuleDesc> searchBean = new SearchBean<PmConfigRuleDesc>();
-
+			//TODO - data restriction on next round (16/2/2017)
+//			ISearchBean<PmConfigRuleDesc> searchBean = super.createSearchBean(PmConfigRuleDesc.class,
+//					"ruleTypeTableID");
 			// Filter By - status
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("ruleType.recordStatus",
@@ -793,9 +795,9 @@ public class RuleCatalogueBackingBean extends
 		Date currentDate = new Date();
 		CtContract contract = this.getManagedBean()
 				.getFeeExemptionsForContract().get(index).getContractId();
-		Date defaultEffDate = contract.getLatestContractVer()
+		Date defaultEffDate = contract.getCurrentContractVer()
 				.getCtContractValue().getEffDate();
-		Date defaultExpDate = contract.getLatestContractVer()
+		Date defaultExpDate = contract.getCurrentContractVer()
 				.getCtContractValue().getExpDate();
 		if (defaultEffDate.getTime() < currentDate.getTime()) {
 			defaultEffDate = currentDate;
