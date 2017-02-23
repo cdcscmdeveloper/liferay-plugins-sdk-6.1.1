@@ -282,38 +282,36 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	@Override
 	public ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
-		UserReqDTO userReqDTO = null;
-		UserResDTO resDto = null;
-		IUserSO userSO  = null;
+		CommitteReqDTO committeReqDTO = null;
+		ICommitteSO committeSO = null;
 		try {
-				userReqDTO = new UserReqDTO();
-				if (getManagedBean().getCommitteeName() != null && !"".equalsIgnoreCase(getManagedBean().getCommitteeName())) {
-					SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCommitteeName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}
-				if (getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getIdentificationType()));
-				}
-				if (getManagedBean().getIdentificationNo() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())){
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getIdentificationNo()));
-				}
-				// Sort by user name
-				searchBean.getSortColumns().add(new SearchOrderBean("userName"));
-				
-				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				userReqDTO.setUserSearchBean(searchBean);
-				resDto = userSO.searchUserProfile(userReqDTO);
-				if (resDto.isSuccessful()) {
-					return resDto.getUserResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				userReqDTO = null;
-				resDto = null;
-				userSO = null;
+			committeReqDTO = new CommitteReqDTO();
+			if (getManagedBean().getCommitteeName() != null && !"".equalsIgnoreCase(getManagedBean().getCommitteeName())) {
+				SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCommitteeName());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
 			}
+			if (getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getIdentificationType()));
+			}
+			if (getManagedBean().getIdentificationNo() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getIdentificationNo()));
+			}
+			// Sort by user name
+			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+				
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			committeReqDTO.setUserSearchBean(searchBean);
+
+			return committeSO.retrieveUserListByCommType(committeReqDTO)
+					.getUserResultBean();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			committeReqDTO = null;
+			committeSO = null;
+		}
 			return null;
 		}
 	}
@@ -549,6 +547,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		this.getManagedBean().setSecretaryList(null);
 		return CONTRACT_MAINT_PAGE;
 	}
 	
@@ -3823,15 +3822,52 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return the selection list of role type
 	 */
-	public SelectItem[] getRoleTypeDropdown(boolean pnp) {
+	public SelectItem[] getRoleTypeDropdown(CtCommitteeMember committeeMember) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> committeRole = new ArrayList<String>();
-		if (pnp) {
+		if (committeeMember.isPnp() && allowChairpersonRole(committeeMember)) {
 			committeRole.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 		}
 		committeRole.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), committeRole));
 		return getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+	}
+	
+	/**
+	 * The method used for identifying whether the committee user
+	 * is allow to be chairperson
+	 * 
+	 * @return the flag to allow chairperson role
+	 */
+	private boolean allowChairpersonRole(CtCommitteeMember committeeMember) {
+		boolean allowChairpersonRole = false;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);		
+		PmOrgProfile orgProfile = null;
+		
+		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			
+			// QCA/QCB, need to be same PTJ
+			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
+					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				if (orgProfile.getOrgProfileId() == ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()) {
+					allowChairpersonRole = true;
+				}
+			} else {	// Others same Ministry
+				PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
+						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+				if (contractMinistry != null && committeeMinistry != null
+						&& contractMinistry.getOrgProfileId() == committeeMinistry.getOrgProfileId()) {
+					allowChairpersonRole = true;
+				}
+			}
+		}
+		return allowChairpersonRole;
 	}
 	
 	/**
