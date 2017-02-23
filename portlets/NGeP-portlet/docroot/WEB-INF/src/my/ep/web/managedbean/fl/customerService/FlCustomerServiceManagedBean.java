@@ -83,6 +83,8 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	private String viewKumpulanPTJ;
 	private String viewPtjName;
 	private String viewPtjCode;
+	private String docType;
+	private Long statusId;
 	
 	
 	/**
@@ -596,6 +598,22 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 
 	public void setViewPtjCode(String viewPtjCode) {
 		this.viewPtjCode = viewPtjCode;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
 	}
 
 }
