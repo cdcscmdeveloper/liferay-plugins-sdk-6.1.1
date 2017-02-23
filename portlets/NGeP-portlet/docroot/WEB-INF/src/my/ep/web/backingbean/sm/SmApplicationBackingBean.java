@@ -4141,18 +4141,18 @@ public class SmApplicationBackingBean extends
 							.getCategoryL1Code()
 							.equalsIgnoreCase(
 									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
-				if (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
-						.getCategoryL2Code() != null && getManagedBean()
-						.getSelectedCategory()
-						.getPmCategoryL2()
-						.getCategoryL2Code()
-						.equalsIgnoreCase(
-								SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
+//				if (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
+//						.getCategoryL2Code() != null && getManagedBean()
+//						.getSelectedCategory()
+//						.getPmCategoryL2()
+//						.getCategoryL2Code()
+//						.equalsIgnoreCase(
+//								SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
 					validCat = SmApplicationUtil.validateIctCatCode(
 							getManagedBean().getBusinessTypeVal(),
 							getManagedBean().getSmAppl(), getManagedBean()
 									.getSelectedCategory());
-				}
+//				}
 			}
 		}
 		boolean overLapCategory = false;
