@@ -72,7 +72,7 @@
 						<p:selectOneMenu id="appaction" disabled="#{amendmentBackingBean.managedBean.confirmMeeting or amendmentBackingBean.managedBean.disableMeetingDetails}"
 						    value="#{ctCommitteeVar.memberRole.parameterId}" 
 						     style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
-							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctCommitteeVar.pnp)}" />
+							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctCommitteeVar)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"  
 							   update=":form:panelHeaderException, committeRepresentId"
 							   listener="#{amendmentBackingBean.validateDuplicateChairperson(ctCommitteeVar.memberRole.parameterId, index)}"></p:ajax>
