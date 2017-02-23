@@ -1,8 +1,14 @@
 package my.ep.web.vo;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 
-public class SmSupplierBasicInfoVO {
+public class SmSupplierBasicInfoVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String mofNo;
 	private String startDate;
 	private String endDate;

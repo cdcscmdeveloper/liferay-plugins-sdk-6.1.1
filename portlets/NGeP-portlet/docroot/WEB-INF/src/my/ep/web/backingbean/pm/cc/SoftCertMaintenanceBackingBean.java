@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.cc;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -35,7 +36,11 @@ import com.liferay.portal.kernel.exception.SystemException;
  */
 @ManagedBean(name = "softCertMaintenanceBackingBean")
 @SessionScoped
-public class SoftCertMaintenanceBackingBean {
+public class SoftCertMaintenanceBackingBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
 
 	public SoftCertMaintenanceBackingBean() {}
