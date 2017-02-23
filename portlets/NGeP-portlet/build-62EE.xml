@@ -1,12 +1,26 @@
-<?xml version="1.0"?>
+<?xml version="1.0"?> 
 <!DOCTYPE project>
 
 <project name="6_1_to_6_2" default="copyTo62EE">
 
 	<property name="61PortletDir" location="." />
-	<property name="62PortletDir" location="D:/liferay-plugins-sdk-6.2/portlets/NGeP-portlet" />
+	<property name="62PortletDir" location="../../../liferay-plugins-sdk-6.2/portlets/NGeP-portlet" />
 	
-	<target name="build-NGeP-portlet-war" depends="copyTo62EE, NGeP-portlet-deployment-assembly, war-62, delete-ngep-jar-after-war-62">
+	
+	
+	<target name="build-NGeP-portlet-war">
+		<antcall target="copyTo62EE" />
+		<antcall target="war-62" />
+		<rename src="../../../liferay-plugins-sdk-6.2/dist/NGeP-portlet-6.2.0.1.war" dest="../../../liferay-plugins-sdk-6.2/dist/NGeP-portlet.war"/>
+		<antcall target="war-deployment-assembly" />
+	</target>
+	
+	<target name="war-deployment-assembly">
+		<zip destfile="../../../liferay-plugins-sdk-6.2/dist/NGeP-portlet.war"
+		    basedir="../../../Deployment-assembly/NGeP-portlet"			
+		   	update="true"/> 
+		
+		<delete dir="../../../Deployment-assembly/NGeP-portlet/" />
 	</target>
 	
 	<target name="clean">
@@ -20,8 +34,7 @@
 		<delete dir="${62PortletDir}/docroot/js" />
 		<delete dir="${62PortletDir}/docroot/META-INF" />
 		<delete dir="${62PortletDir}/docroot/resources" />
-		<delete dir="${62PortletDir}/docroot/wsdl" />
-		<delete dir="${62PortletDir}/docroot/xhtml" />
+		<delete dir="${62PortletDir}/docroot/wsdl" /> 
 		
 		<delete dir="${62PortletDir}/docroot/WEB-INF/config" />
 		<delete dir="${62PortletDir}/docroot/WEB-INF/facelets" />
@@ -36,6 +49,8 @@
 		<delete file="${62PortletDir}/docroot/WEB-INF/jboss-deployment-structure.xml" />
 		<!--<delete file="${62PortletDir}/docroot/WEB-INF/liferay-plugin-package.properties" />-->
 		<delete file="${62PortletDir}/docroot/WEB-INF/web.xml" />
+		
+		<delete dir="${62PortletDir}/docroot/xhtml" />
 		
 	</target>
 	
@@ -52,13 +67,16 @@
 		<copydir dest="${62PortletDir}/docroot/resources" 	src="${61PortletDir}/docroot/resources" />
 		<copydir dest="${62PortletDir}/docroot/wsdl" 		src="${61PortletDir}/docroot/wsdl" />
 		<copydir dest="${62PortletDir}/docroot/xhtml" 		src="${61PortletDir}/docroot/xhtml" />
+		<copydir dest="${62PortletDir}/docroot/encryptionKeys" 		src="${61PortletDir}/docroot/encryptionKeys" />
 		
 		<copydir dest="${62PortletDir}/docroot/WEB-INF/config" src="${61PortletDir}/docroot/WEB-INF/config" />
+		<copydir dest="${62PortletDir}/docroot/WEB-INF/config/soft-certificate" src="${61PortletDir}/docroot/WEB-INF/config/soft-certificate" forceoverwrite="true"/>
 		<copydir dest="${62PortletDir}/docroot/WEB-INF/facelets" src="${61PortletDir}/docroot/WEB-INF/facelets" />
-		<copydir dest="${62PortletDir}/docroot/WEB-INF/src" src="${61PortletDir}/docroot/WEB-INF/src" />
+		<copydir dest="${62PortletDir}/docroot/WEB-INF/src" src="${61PortletDir}/docroot/WEB-INF/src" forceoverwrite="true" />
 		<copydir dest="${62PortletDir}/docroot/WEB-INF/templates" src="${61PortletDir}/docroot/WEB-INF/templates" />
 		
 		<move file="${62PortletDir}/docroot/WEB-INF/config/messageprovider-config" todir="${62PortletDir}/docroot/WEB-INF/src" />
+		<move file="${62PortletDir}/docroot/WEB-INF/templates" todir="${62PortletDir}/docroot/WEB-INF/src" />
 		
 		<copydir dest="${62PortletDir}/docroot/WEB-INF/lib" src="${61PortletDir}/docroot/WEB-INF/lib" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/jboss-el-2.0.0.GA.jar" />
@@ -68,7 +86,7 @@
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-bridge-impl-3.1.1-ga2.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-portal-3.1.1-ga2.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-util-3.1.1-ga2.jar" />
-		<delete file="${62PortletDir}/docroot/WEB-INF/lib/primefaces-3.5.jar" />
+		<!-- <delete file="${62PortletDir}/docroot/WEB-INF/lib/primefaces-3.5.jar" /> -->
 		
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/portlet.xml" 			todir="${62PortletDir}/docroot/WEB-INF" />
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-display.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
@@ -118,7 +136,7 @@
   	</target>
   	
   	<target name="NGeP-portlet-deployment-assembly" 
-  		depends="NGeP-bizBaseClient, NGeP-bizRemoteClient, NGeP-bpmBaseClient, NGeP-bpmRemoteClient, NGeP-bpm-schema" />
+  		depends="NGeP-bizBaseClient, NGeP-bizRemoteClient, NGeP-bpmBaseClient, NGeP-bpmRemoteClient, NGeP-bpm-schema" /> 
   		
 	<target name="delete-ngep-jar-after-war-62">
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizBaseClient.jar" />
