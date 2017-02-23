@@ -17,6 +17,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.event.FileUploadEvent;
@@ -765,7 +766,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			String subFolder = dateFormat.format(date);
 			String filePath = SmCommonUtil.getUploadFilePath(DisciplinaryActionConst.COMPLAINT_DOC_PATH) + subFolder + "/";
 			String fileName = String.valueOf((new Date()).getTime()) + "_" + event.getFile().getFileName();
-			
+			fileName = StringUtils.replace(fileName, " ", "-");
 			
 			SmAttachment attachment = new SmAttachment();
 			attachment.setFileName(fileName);
