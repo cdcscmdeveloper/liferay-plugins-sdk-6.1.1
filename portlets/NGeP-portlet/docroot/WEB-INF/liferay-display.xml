@@ -275,6 +275,7 @@
 		<portlet id="reportstesting"></portlet>
 		<portlet id="reportpopup"></portlet>
 		<portlet id="reportrequest"></portlet>
+		<portlet id="rpt"></portlet>
 	</category>
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>

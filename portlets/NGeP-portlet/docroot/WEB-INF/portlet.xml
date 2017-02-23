@@ -6493,7 +6493,40 @@
 			<security-role-ref>
 				<role-name>user</role-name>
 			</security-role-ref>
-		</portlet>	
+		</portlet>
+		
+	<portlet>
+		<portlet-name>rpt</portlet-name>
+		<display-name>Generate Report(new)</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/rpt/rptmain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Generate Report(new)</title>
+			<short-title>Generate Report</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>	
+		
 	<portlet>
 		<portlet-name>pmRace</portlet-name>
 		<display-name>Race</display-name>
