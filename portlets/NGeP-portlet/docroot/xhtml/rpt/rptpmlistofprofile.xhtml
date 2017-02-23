@@ -1,0 +1,180 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+  <p:outputPanel id="opDefinedSearch">
+	<div class="columnPmTableLOPClass">
+
+		<table style="width: 100%;">
+			<tr>
+				<td><h:panelGrid id="pmReportCriteriaForLOP" columns="4" columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width"
+						style="width:100%;">
+						<c:if
+							test="#{rptBackingBeanpmMandatoryOrgTypeForLOPView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.org.type']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.org.type']}"
+												id="orgaType"
+												value="#{rptBackingBean.selectedOrgType.parameterId}"
+												style="width:300px;">
+												<f:selectItems value="#{rptBackingBean.itemsList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true"
+													listener="#{rptBackingBean.changeOrgTypeValuesForList}"
+													update="@form" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptOrgTypeMsg" for="orgaType"
+												display="icon" showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+						<c:if
+							test="#{rptBackingBeanpmMandatoryOrgNameForLOPView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td class="pmColumn3Width"><p:outputLabel value="#{lbl['lbl.rpt.orgName']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 100%"><p:outputPanel id="opFfcOrgCode"
+												rendered="#{ParameterConst.orgTypeFactoring eq rptBackingBean.selectedOrgType.parameterCode}">
+												<ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="43"
+													update="@form" readonly="true"
+													disabled="#{rptBackingBean.selectedOrgType.parameterId==null}"
+													headerText="#{rptBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, rptBackingBean.selectedOrgType.parameterCode)}"
+													value="#{rptBackingBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
+													postUpdateListener="rptBackingBean.updateSearchCriteriaForOrgName"
+													saveObject="rptBackingBean.selectedOrgProfile"
+													conditionField="#{rptBackingBean.constructConditionFields()}" />
+												<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
+											</p:outputPanel> <p:outputPanel id="opSupOrgCode"
+												rendered="#{ParameterConst.orgTypeSupplier eq rptBackingBean.selectedOrgType.parameterCode}">
+												<ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
+													size="43" update="@form" readonly="true"
+													disabled="#{rptBackingBean.selectedOrgType.parameterId==null}"
+													headerText="#{rptBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, rptBackingBean.selectedOrgType.parameterCode)}"
+													value="#{rptBackingBean.selectedOrgProfile.smSupplier.companyName}"
+													postUpdateListener="rptBackingBean.updateSearchCriteriaForOrgName"
+													saveObject="rptBackingBean.selectedOrgProfile"
+													conditionField="#{rptBackingBean.constructConditionFields()}" />
+												<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
+											</p:outputPanel> <p:outputPanel id="opPtjOrgCode"
+												rendered="#{ParameterConst.orgTypePegawaiPengawal eq rptBackingBean.selectedOrgType.parameterCode or 
+				                                	ParameterConst.orgTypePtj eq rptBackingBean.selectedOrgType.parameterCode or 
+				                                	ParameterConst.orgTypePtjGroup eq rptBackingBean.selectedOrgType.parameterCode}">
+												<p:inputText size="43" id="itSelectedPtj"
+													value="#{rptBackingBean.selectedOrgProfile.pmOrgValidity.orgName}"
+													readonly="true" />	&#160;	
+					                           <p:commandLink id="ptjSearchCL"
+													partialSubmit="true"
+													disabled="#{rptBackingBean.selectedOrgType.parameterId==null}"
+													process="@this" update=":form:orgProfileCcId:ptjPopup"
+													action="#{organisationSearchBackingBean.initPtjPopup}"
+													oncomplete="ptjPopup.show();">
+													<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+												</p:commandLink>
+											</p:outputPanel> <p:outputPanel id="opOrgCode"
+												rendered="#{ParameterConst.orgTypeFactoring ne rptBackingBean.selectedOrgType.parameterCode 
+						                     	and ParameterConst.orgTypeSupplier ne rptBackingBean.selectedOrgType.parameterCode
+						                     	and ParameterConst.orgTypePegawaiPengawal ne rptBackingBean.selectedOrgType.parameterCode
+						                     	and ParameterConst.orgTypePtj ne rptBackingBean.selectedOrgType.parameterCode
+						                     	and ParameterConst.orgTypePtjGroup ne rptBackingBean.selectedOrgType.parameterCode}">
+												<ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="43"
+													disabled="#{rptBackingBean.selectedOrgType.parameterId==null}" update="@form" readonly="true"
+													headerText="#{rptBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, rptBackingBean.selectedOrgType.parameterCode)}"
+													value="#{rptBackingBean.selectedOrgProfile.pmOrgValidity.orgName}"
+													saveObject="rptBackingBean.selectedOrgProfile"
+													postUpdateListener="rptBackingBean.updateSearchCriteriaForOrgName"
+													conditionField="#{rptBackingBean.constructConditionFields()}" />
+												<p:message id="lovMinistryMsg" for="lovMinistry1"
+													display="icon" />
+											</p:outputPanel></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+
+						<c:if
+							test="#{rptBackingBeanpmIdentificationNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.identificationNo']}" />
+								<ac:lov id="pmIdentificationNo" style="width:265px;"
+									lovId="PM_USER_ID_REPORT" size="40" update="@form"
+									disabled="#{!rptBackingBean.disabledOrgFields}"
+									headerText="#{lbl['lbl.rpt.identificationNo']}" readonly="true"
+									value="#{rptBackingBean.selectedPmUser.identificationNo}"
+									postUpdateListener="#{rptBackingBean.onChangePmListOfProfileFields()}"
+									conditionField="#{rptBackingBean.constructConditionForIdentification()}"
+									saveObject="rptBackingBean.selectedPmUser" />
+							</c:if>
+						<c:if
+							test="#{rptBackingBeanpmUserNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.username']}" />
+							<p:inputText maxlength="100" readonly="true"
+								value="#{rptBackingBean.pmUserName}" style="width:290px;">
+								<p:ajax process="@this" partialSubmit="true" update="@form" />
+							</p:inputText>
+						</c:if>
+
+						<c:if
+							test="#{rptBackingBeanpmRoleCodeView}">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.search.role']}" />
+							<p:inputText size="43" id="itSelectedRoleDesc" 
+									value="#{not empty(rptBackingBean.selectedRoleDesc) ? rptBackingBean.selectedRoleDesc.roleName :''}"
+									readonly="true" /><p:commandLink id="roleSearchCL"
+									partialSubmit="true" process="@this"
+									update="roleSearchPanel,roleResultPanel"
+									action="#{rptBackingBean.resetRoleSearchAction}"
+									disabled="#{rptBackingBean.selectedOrgType eq null or 
+		            	            rptBackingBean.selectedOrgType.parameterId eq null or ParameterConst.orgTypePegawaiPengawal eq rptBackingBean.selectedOrgType.parameterCode}"
+									oncomplete="reportRoleSearchPopUp.show();">
+									<p:graphicImage style="margin-left:-53px;"  value="/css/images/design/search.png"></p:graphicImage>
+								</p:commandLink>&#160;
+						</c:if>
+
+						<c:if
+							test="#{rptBackingBeanpmListOfOrgStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.status']}" />
+							<p:selectOneMenu value="#{rptBackingBean.pmStatus}"
+								style="width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}"
+									itemValue="#{1}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}"
+									itemValue="#{0}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									listener="#{rptBackingBean.checkPmStatusValue()}"
+									update="@form" />
+							</p:selectOneMenu>
+						</c:if>
+
+						<ac:lovPopup />
+						<ac:ptjPopup id="orgProfileCcId"
+							orgTypeParamCode="#{rptBackingBean.selectedOrgType.parameterCode}"
+							okAction="rptBackingBean.selectPtjAction" update="@form"
+							includePegawaiPengawal="true" />
+						<ui:include
+							src="/xhtml/reports/reportRoleSearchPopUp.xhtml" />						
+					</h:panelGrid></td>
+			</tr>
+		</table>
+	</div></p:outputPanel>
+</ui:composition>

@@ -50,1861 +50,1861 @@ public class ReportsGenerateBean implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	protected static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
+	protected static final Logger log = EpLogger
 			.getLogger(ReportsGenerateBean.class);
 
 	/** The state lst. */
-	private List<SelectItem> stateLst = new ArrayList<SelectItem>();
+	protected List<SelectItem> stateLst = new ArrayList<SelectItem>();
 
 	/** The district lst. */
-	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
+	protected List<SelectItem> districtLst = new ArrayList<SelectItem>();
 
 	/** The lev one cat lst. */
-	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();
+	protected List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();
 
 	/** The lev two cat lst. */
-	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
+	protected List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
 
 	/** The lev three cat lst. */
-	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
+	protected List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
 
 	/** The sts lst. */
-	private List<String> stsLst = new ArrayList<String>();
+	protected List<String> stsLst = new ArrayList<String>();
 
 	/** The year list. */
-	private List<String> yearList = new ArrayList<String>();
+	protected List<String> yearList = new ArrayList<String>();
 
 	/** The month list. */
-	private List<SelectItem> monthList = new ArrayList<SelectItem>();
+	protected List<SelectItem> monthList = new ArrayList<SelectItem>();
 
 	/** The month map. */
-	private HashMap<String, String> monthMap = new HashMap<String, String>();
+	protected HashMap<String, String> monthMap = new HashMap<String, String>();
 
 	/** The month map my. */
-	// private HashMap<SelectItem, SelectItem> monthMapMy = new
+	// protected HashMap<SelectItem, SelectItem> monthMapMy = new
 	// HashMap<SelectItem, SelectItem>();
 
 	/** The status lst. */
-	private Object[] statusLst;
+	protected Object[] statusLst;
 
 	/** The from date view. */
-	private boolean fromDateView = false;
+	protected boolean fromDateView = false;
 
 	/** The to date view. */
-	private boolean toDateView = false;
+	protected boolean toDateView = false;
 
 	/** The condition generate button. */
-	private boolean conditionGenerateButton = false;
+	protected boolean conditionGenerateButton = false;
 
 	/** The generate button. */
-	private boolean generateButton = false;
+	protected boolean generateButton = false;
 
 	/** The tool tip for cc. */
-	private boolean toolTipForCC = false;
+	protected boolean toolTipForCC = false;
 
 	/** The tool tip for po. */
-	private boolean toolTipForPO = false;
+	protected boolean toolTipForPO = false;
 
 	/** The tool tip for pa. */
-	private boolean toolTipForPA = false;
+	protected boolean toolTipForPA = false;
 
 	/** The approved date view. */
-	private boolean approvedDateView = false;
+	protected boolean approvedDateView = false;
 
 	/** The report category. */
-	private String reportCategory=new String();
+	protected String reportCategory=new String();
 
 	/** The lng user id. */
-	private long lngUserId;
+	protected long lngUserId;
 
 	/** The Str language. */
-	private String strLanguage = "";
+	protected String strLanguage = "";
 
 	/** The lev one cat lst1. */
-	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
+	protected List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
 
 	/** The madatory indicator view. */
-	private boolean madatoryIndicatorView = false;
+	protected boolean madatoryIndicatorView = false;
 
 	/** The instruction info view. */
-	private boolean instructionInfoView = false;
+	protected boolean instructionInfoView = false;
 	
 	/** The dp instruction info view. */
-	private boolean dpInstructionInfoView = false;
+	protected boolean dpInstructionInfoView = false;
 
 	/** The cm madatory indicator view. */
-	private boolean cmMadatoryIndicatorView = false;
+	protected boolean cmMadatoryIndicatorView = false;
 
 	/** The enable criteria menu view. */
-	private boolean enableCriteriaMenuView = false;
+	protected boolean enableCriteriaMenuView = false;
 
 	/** The report category view. */
-	private boolean reportCategoryView = false;
+	protected boolean reportCategoryView = false;
 
 	/** The collector gov registration chk view. */
-	private boolean collectorGovRegistrationChkView = false;
+	protected boolean collectorGovRegistrationChkView = false;
 
 	/** The collector cdc registration chk view. */
-	private boolean collectorCDCRegistrationChkView = false;
+	protected boolean collectorCDCRegistrationChkView = false;
 
 	/** The sm application approved view. */
-	private boolean smApplicationApprovedView = false;
+	protected boolean smApplicationApprovedView = false;
 
 	/** The sm application rejected view. */
-	private boolean smApplicationRejectedView = false;
+	protected boolean smApplicationRejectedView = false;
 
 	/** The sm application verification performance view. */
-	private boolean smApplicationVerificationPerformanceView = false;
+	protected boolean smApplicationVerificationPerformanceView = false;
 
 	/** The sm application verification view. */
-	private boolean smApplicationVerificationView = false;
+	protected boolean smApplicationVerificationView = false;
 
 	/** The sm agency statistical status view. */
-	private boolean smAgencyStatisticalStatusView = false;
+	protected boolean smAgencyStatisticalStatusView = false;
 
 	/** The sm category statistic view. */
-	private boolean smCategoryStatisticView = false;
+	protected boolean smCategoryStatisticView = false;
 
 	/** The sm category over lapping view. */
-	private boolean smCategoryOverLappingView = false;
+	protected boolean smCategoryOverLappingView = false;
 
 	/** The sm category statistic by state view. */
-	private boolean smCategoryStatisticByStateView = false;
+	protected boolean smCategoryStatisticByStateView = false;
 
 	/** The sm category statistic by year view. */
-	private boolean smCategoryStatisticByYearView = false;
+	protected boolean smCategoryStatisticByYearView = false;
 
 	/** The sm company address list view. */
-	private boolean smCompanyAddressListView = false;
+	protected boolean smCompanyAddressListView = false;
 
 	/** The sm daily receipts es view. */
-	private boolean smDailyReceiptsESView = false;
+	protected boolean smDailyReceiptsESView = false;
 
 	/** The sm delete pending application view. */
-	private boolean smDeletePendingApplicationView = false;
+	protected boolean smDeletePendingApplicationView = false;
 
 	/** The sm laporan terimaan harian view. */
-	private boolean smLaporanTerimaanHarianView = false;
+	protected boolean smLaporanTerimaanHarianView = false;
 
 	/** The sm list of application view. */
-	private boolean smListOfApplicationView = false;
+	protected boolean smListOfApplicationView = false;
 
 	/** The sm list of application pending for sv view. */
-	private boolean smListOfApplicationPendingForSVView = false;
+	protected boolean smListOfApplicationPendingForSVView = false;
 
 	/** The sm list of application status view. */
-	private boolean smListOfApplicationStatusView = false;
+	protected boolean smListOfApplicationStatusView = false;
 
 	/** The sm list of companies sort alphabet view. */
-	private boolean smListOfCompaniesSortAlphabetView = false;
+	protected boolean smListOfCompaniesSortAlphabetView = false;
 
 	/** The sm list of companies srsc view. */
-	private boolean smListOfCompaniesSRSCView = false;
+	protected boolean smListOfCompaniesSRSCView = false;
 
 	/** The sm list of companies with dohe view. */
-	private boolean smListOfCompaniesWithDOHEView = false;
+	protected boolean smListOfCompaniesWithDOHEView = false;
 
 	/** The sm list of daily application basic and mof view. */
-	private boolean smListOfDailyApplicationBasicAndMOFView = false;
+	protected boolean smListOfDailyApplicationBasicAndMOFView = false;
 
 	/** The sm list of daily registered application view. */
-	private boolean smListOfDailyRegisteredApplicationView = false;
+	protected boolean smListOfDailyRegisteredApplicationView = false;
 
 	/** The sm list of dohe view. */
-	private boolean smListOfDOHEView = false;
+	protected boolean smListOfDOHEView = false;
 
 	/** The sm list of gst reg supplier view. */
-	private boolean smListOfGSTRegSupplierView = false;
+	protected boolean smListOfGSTRegSupplierView = false;
 
 	/** The sm list delete mof account view. */
-	private boolean smListDeleteMOFAccountView = false;
+	protected boolean smListDeleteMOFAccountView = false;
 
 	/** The sm list of offline sdps view. */
-	private boolean smListOfOfflineSDPSView = false;
+	protected boolean smListOfOfflineSDPSView = false;
 
 	/** The sm list ps more view. */
-	private boolean smListPSMoreView = false;
+	protected boolean smListPSMoreView = false;
 
 	/** The sm list of expired company view. */
-	private boolean smListOfExpiredCompanyView = false;
+	protected boolean smListOfExpiredCompanyView = false;
 
 	/** The sm list of svosvl view. */
-	private boolean smListOfSVOSVLView = false;
+	protected boolean smListOfSVOSVLView = false;
 
 	/** The sm list of soa view. */
-	private boolean smListOfSOAView = false;
+	protected boolean smListOfSOAView = false;
 
 	/** The sm list of soppsv view. */
-	private boolean smListOfSOPPSVView = false;
+	protected boolean smListOfSOPPSVView = false;
 
 	/** The sm list of socpba view. */
-	private boolean smListOfSOCPBAView = false;
+	protected boolean smListOfSOCPBAView = false;
 
 	/** The sm list of users scr view. */
-	private boolean smListOfUsersSCRView = false;
+	protected boolean smListOfUsersSCRView = false;
 
 	/** The sm list of pprf view. */
-	private boolean smListOfPPRFView = false;
+	protected boolean smListOfPPRFView = false;
 
 	/** The sm monthly report view. */
-	private boolean smMonthlyReportView = false;
+	protected boolean smMonthlyReportView = false;
 
 	/** The sm profile reg company view. */
-	private boolean smProfileRegCompanyView = false;
+	protected boolean smProfileRegCompanyView = false;
 
 	/** The sm qrs view. */
-	private boolean smQRSView = false;
+	protected boolean smQRSView = false;
 
 	/** The sm statistic list cbc view. */
-	private boolean smStatisticListCBCView = false;
+	protected boolean smStatisticListCBCView = false;
 
 	/** The sm supplier performance view. */
-	private boolean smSupplierPerformanceView = false;
+	protected boolean smSupplierPerformanceView = false;
 
 	/** The sm supplier statistic view. */
-	private boolean smSupplierStatisticView = false;
+	protected boolean smSupplierStatisticView = false;
 
 	/** The sm supplier statistic by category view. */
-	private boolean smSupplierStatisticByCategoryView = false;
+	protected boolean smSupplierStatisticByCategoryView = false;
 
 	/** The sm threshold or supplier transaction view. */
-	private boolean smThresholdOrSupplierTransactionView = false;
+	protected boolean smThresholdOrSupplierTransactionView = false;
 
 	/** The sm threshold year view. */
-	private boolean smThresholdYearView = false;
+	protected boolean smThresholdYearView = false;
 
 	/** The sm total no of daily ar view. */
-	private boolean smTotalNoOfDailyARView = false;
+	protected boolean smTotalNoOfDailyARView = false;
 
 	/** The sm total no of yearly ar view. */
-	private boolean smTotalNoOfYearlyARView = false;
+	protected boolean smTotalNoOfYearlyARView = false;
 
 	/** The sm virtual certificate relased list view. */
-	private boolean smVirtualCertificateRelasedListView = false;
+	protected boolean smVirtualCertificateRelasedListView = false;
 
 	/** The sm collection receipt transation view. */
-	private boolean smCollectionReceiptTransationView = false;
+	protected boolean smCollectionReceiptTransationView = false;
 
 	/** The sm collection report payment method view. */
-	private boolean smCollectionReportPaymentMethodView = false;
+	protected boolean smCollectionReportPaymentMethodView = false;
 
 	/** The sm collection report clasification code view. */
-	private boolean smCollectionReportClasificationCodeView = false;
+	protected boolean smCollectionReportClasificationCodeView = false;
 
 	/** The sm revenue collection report view. */
-	private boolean smRevenueCollectionReportView = false;
+	protected boolean smRevenueCollectionReportView = false;
 
 	/** The sm list of daily receipt view. */
-	private boolean smListOfDailyReceiptView = false;
+	protected boolean smListOfDailyReceiptView = false;
 
 	/** The generate button view. */
-	private boolean generateButtonView = false;
+	protected boolean generateButtonView = false;
 	// sc module
 	/** The extra two column view. */
-	private boolean extraTwoColumnView = false;
+	protected boolean extraTwoColumnView = false;
 
 	/** The sc quotation no view. */
-	private boolean scQuotationNoView = false;
+	protected boolean scQuotationNoView = false;
 	
-	private boolean scCommitteQuotationNoView = false;
+	protected boolean scCommitteQuotationNoView = false;
 
 	/** The sc created from view. */
-	private boolean scCreatedFromView = false;
+	protected boolean scCreatedFromView = false;
 
 	/** The sc status view. */
-	private boolean scStatusView = false;
+	protected boolean scStatusView = false;
 
 	/** The sc ptj view. */
-	private boolean scPtjView = false;
+	protected boolean scPtjView = false;
 
 	/** The sc desk officer view. */
-	private boolean scDeskOfficerView = false;
+	protected boolean scDeskOfficerView = false;
 
 	/** The sc rstrctd chk view. */
-	private boolean scRstrctdChkView = false;
+	protected boolean scRstrctdChkView = false;
 
 	/** The sc tender chk view. */
-	private boolean scTenderChkView = false;
+	protected boolean scTenderChkView = false;
 
 	/** The sc quotation chk view. */
-	private boolean scQuotationChkView = false;
+	protected boolean scQuotationChkView = false;
 
 	/** The sc procure all chk view. */
-	private boolean scProcureAllChkView = false;
+	protected boolean scProcureAllChkView = false;
 
 	/** The sc publish date view. */
-	private boolean scPublishDateView = false;
+	protected boolean scPublishDateView = false;
 
 	/** The sc procure all edit view. */
-	private boolean scProcureAllEditView = false;
+	protected boolean scProcureAllEditView = false;
 
 	/** The sc procure quote edit view. */
-	private boolean scProcureQuoteEditView = false;
+	protected boolean scProcureQuoteEditView = false;
 
 	/** The sc procure tender edit view. */
-	private boolean scProcureTenderEditView = false;
+	protected boolean scProcureTenderEditView = false;
 
 	/** The sc procure restrctd edit view. */
-	private boolean scProcureRestrctdEditView = false;
+	protected boolean scProcureRestrctdEditView = false;
 
 	/** The sc sone crtd from date view. */
-	private boolean scSoneCrtdFromDateView = false;
+	protected boolean scSoneCrtdFromDateView = false;
 
 	/** The sc requisener id view. */
-	private boolean scRequisenerIdView = false;
+	protected boolean scRequisenerIdView = false;
 
 	/** The sc supplier view. */
-	private boolean scSupplierView = false;
+	protected boolean scSupplierView = false;
 
 	/** The sc p ino view. */
-	private boolean scPInoView = false;
+	protected boolean scPInoView = false;
 
 	/** The sc sone status view. */
-	private boolean scSoneStatusView = false;
+	protected boolean scSoneStatusView = false;
 
 	/** The sc prc rpt group view. */
-	private boolean scPrcRptGroupView = false;
+	protected boolean scPrcRptGroupView = false;
 
 	/** The sc pi dtls prc rpt group view. */
-	private boolean scPIDtlsPrcRptGroupView = false;
+	protected boolean scPIDtlsPrcRptGroupView = false;
 
 	/** The sc procurement type view. */
-	private boolean scProcurementTypeView = false;
+	protected boolean scProcurementTypeView = false;
 
 	/** The sc process rpt quotation no view. */
-	private boolean scProcessRptQuotationNoView = false;
+	protected boolean scProcessRptQuotationNoView = false;
 
 	/** The sc mandatory process rpt quotation no view. */
-	private boolean scMandatoryProcessRptQuotationNoView = false;
+	protected boolean scMandatoryProcessRptQuotationNoView = false;
 
 	/** The sc common status view. */
-	private boolean scCommonStatusView = false;
+	protected boolean scCommonStatusView = false;
 
 	/** The sc laprnpurchdefault group view. */
-	private boolean scLAPRNPURCHDEFAULTGroupView = false;
+	protected boolean scLAPRNPURCHDEFAULTGroupView = false;
 
 	/** The sc requestnotesummary group view. */
-	private boolean scREQUESTNOTESUMMARYGroupView = false;
+	protected boolean scREQUESTNOTESUMMARYGroupView = false;
 
 	/** The sc pid no view. */
-	private boolean scPIDNoView = false;
+	protected boolean scPIDNoView = false;
 
 	/** The sc contract or pkp type view. */
-	private boolean scContractOrPKPTypeView = false;
+	protected boolean scContractOrPKPTypeView = false;
 
 	/** The sc contract or pkp no view. */
-	private boolean scContractOrPKPNoView = false;
+	protected boolean scContractOrPKPNoView = false;
 
 	/** The sc contract or pkp name view. */
-	private boolean scContractOrPKPNameView = false;
+	protected boolean scContractOrPKPNameView = false;
 
 	/** The sc request quote no view. */
-	private boolean scRequestQuoteNoView = false;
+	protected boolean scRequestQuoteNoView = false;
 
 	/** The sc request note status view. */
-	private boolean scRequestNoteStatusView = false;
+	protected boolean scRequestNoteStatusView = false;
 
 	/** The sc simple quote status view. */
-	private boolean scSimpleQuoteStatusView = false;
+	protected boolean scSimpleQuoteStatusView = false;
 
 	/** The sc simple quote dtl group view. */
-	private boolean scSimpleQuoteDtlGroupView = false;
+	protected boolean scSimpleQuoteDtlGroupView = false;
 
 	/** The sc purchase in default status view. */
-	private boolean scPurchaseInDefaultStatusView = false;
+	protected boolean scPurchaseInDefaultStatusView = false;
 
 	/** The sc simple quote dtl without requi group view. */
-	private boolean scSimpleQuoteDtlWithoutRequiGroupView = false;
+	protected boolean scSimpleQuoteDtlWithoutRequiGroupView = false;
 
 	/** The sc soa status view. */
-	private boolean scSOAStatusView = false;
+	protected boolean scSOAStatusView = false;
 
 	/** The sc simple quote type view. */
-	private boolean scSimpleQuoteTypeView = false;
+	protected boolean scSimpleQuoteTypeView = false;
 
 	/** The sc loa no view. */
-	private boolean scLOANoView = false;
+	protected boolean scLOANoView = false;
 
 	/** The sc loa content view. */
-	private boolean scLOAContentView = false;
+	protected boolean scLOAContentView = false;
 	// cm module
 
 	/** The cm from date view. */
-	private boolean cmFromDateView = false;
+	protected boolean cmFromDateView = false;
 	/** The cm item type view. */
-	private boolean cmItemTypeView = false;
+	protected boolean cmItemTypeView = false;
 
 	/** The cm item type view only. */
-	private boolean cmItemTypeViewOnly = false;
+	protected boolean cmItemTypeViewOnly = false;
 
 	/** The cm role supp item type view. */
-	private boolean cmRoleSuppItemTypeView = false;
+	protected boolean cmRoleSuppItemTypeView = false;
 
 	/** The cm role supp group one view. */
-	private boolean cmRoleSuppGroupOneView = false;
+	protected boolean cmRoleSuppGroupOneView = false;
 
 	/** The cm item status view. */
-	private boolean cmItemStatusView = false;
+	protected boolean cmItemStatusView = false;
 
 	/** The cm unspsc code view. */
-	private boolean cmUnspscCodeView = false;
+	protected boolean cmUnspscCodeView = false;
 
 	/** The cm unspsc title view. */
-	private boolean cmUnspscTitleView = false;
+	protected boolean cmUnspscTitleView = false;
 
 	/** The cm company name view. */
-	private boolean cmCompanyNameView = false;
+	protected boolean cmCompanyNameView = false;
 
 	/** The cm registration type view. */
-	private boolean cmRegistrationTypeView = false;
+	protected boolean cmRegistrationTypeView = false;
 
 	/** The cm item category view. */
-	private boolean cmItemCategoryView = false;
+	protected boolean cmItemCategoryView = false;
 
 	/** The cm item name view. */
-	private boolean cmItemNameView = false;
+	protected boolean cmItemNameView = false;
 
 	/** The cm ep number view. */
-	private boolean cmEpNumberView = false;
+	protected boolean cmEpNumberView = false;
 
 	/** The cm business reg no view. */
-	private boolean cmBusinessRegNoView = false;
+	protected boolean cmBusinessRegNoView = false;
 
 	/** The cm ic number view. */
-	private boolean cmIcNumberView = false;
+	protected boolean cmIcNumberView = false;
 
 	/** The cm mof number view. */
-	private boolean cmMofNumberView = false;
+	protected boolean cmMofNumberView = false;
 
 	/** The cm extention code view. */
-	private boolean cmExtentionCodeView = false;
+	protected boolean cmExtentionCodeView = false;
 
 	/** The cm extention type view. */
-	private boolean cmExtentionTypeView = false;
+	protected boolean cmExtentionTypeView = false;
 
 	/** The cm extention brand view. */
-	private boolean cmExtentionBrandView = false;
+	protected boolean cmExtentionBrandView = false;
 
 	/** The cm extention measurment view. */
-	private boolean cmExtentionMeasurmentView = false;
+	protected boolean cmExtentionMeasurmentView = false;
 
 	/** The cm extention colour view. */
-	private boolean cmExtentionColourView = false;
+	protected boolean cmExtentionColourView = false;
 
 	/** The cm proof identity view. */
-	private boolean cmProofIdentityView = false;
+	protected boolean cmProofIdentityView = false;
 
 	/** The cm basic reg view. */
-	private boolean cmBasicRegView = false;
+	protected boolean cmBasicRegView = false;
 
 	/** The cm mof reg view. */
-	private boolean cmMofRegView = false;
+	protected boolean cmMofRegView = false;
 
 	/** The cm suppl or admin view. */
-	private boolean cmSupplOrAdminView = false;
+	protected boolean cmSupplOrAdminView = false;
 
 	/** The cm extention view. */
-	private boolean cmExtentionView = false;
+	protected boolean cmExtentionView = false;
 
 	/** The cm group one view. */
-	private boolean cmGroupOneView = false;
+	protected boolean cmGroupOneView = false;
 
 	/** The cm published date view. */
-	private boolean cmPublishedDateView = false;
+	protected boolean cmPublishedDateView = false;
 
 	/** The cm catelog date view. */
-	private boolean cmCatelogDateView = false;
+	protected boolean cmCatelogDateView = false;
 
 	/** The cm approved date view. */
-	private boolean cmApprovedDateView = false;
+	protected boolean cmApprovedDateView = false;
 
 	/** The cm submitted date view. */
-	private boolean cmSubmittedDateView = false;
+	protected boolean cmSubmittedDateView = false;
 
 	/** The cm expired date view. */
-	private boolean cmExpiredDateView = false;
+	protected boolean cmExpiredDateView = false;
 
 	/** The cm item validity date view. */
-	private boolean cmItemValidityDateView = false;
+	protected boolean cmItemValidityDateView = false;
 
 	/** The cm request number view. */
-	private boolean cmRequestNumberView = false;
+	protected boolean cmRequestNumberView = false;
 
 	// SM module
 	/** The sm company name view. */
-	private boolean smCompanyNameView = false;
+	protected boolean smCompanyNameView = false;
 
 	/** The sm der sm receipt no view. */
-	private boolean smDERSmReceiptNoView = false;
+	protected boolean smDERSmReceiptNoView = false;
 
 	/** The sm ec mandatory supplier type view. */
-	private boolean smECMandatorySupplierTypeView = false;
+	protected boolean smECMandatorySupplierTypeView = false;
 
 	/** The sm lp company name view. */
-	private boolean smLPCompanyNameView = false;
+	protected boolean smLPCompanyNameView = false;
 
 	/** The sm ar mof reg no view. */
-	private boolean smARMofRegNoView = false;
+	protected boolean smARMofRegNoView = false;
 
 	/** The sm pp company name view. */
-	private boolean smPPCompanyNameView = false;
+	protected boolean smPPCompanyNameView = false;
 
 	/** The sm doh company name view. */
-	private boolean smDOHCompanyNameView = false;
+	protected boolean smDOHCompanyNameView = false;
 
 	/** The sm application no view. */
-	private boolean smApplicationNoView = false;
+	protected boolean smApplicationNoView = false;
 
 	/** The sm zone view. */
-	private boolean smZoneView = false;
+	protected boolean smZoneView = false;
 
 	/** The sm zone label view. */
-	private boolean smZoneLabelView = false;
+	protected boolean smZoneLabelView = false;
 
 	/** The sm supplier type view. */
-	private boolean smSupplierTypeView = false;
+	protected boolean smSupplierTypeView = false;
 
 	/** The sm la application no view. */
-	private boolean smLAApplicationNoView = false;
+	protected boolean smLAApplicationNoView = false;
 
 	/** The sm la registration no view. */
-	private boolean smLARegistrationNoView = false;
+	protected boolean smLARegistrationNoView = false;
 
 	/** The sm pr mandatory supplier type view. */
-	private boolean smPRMandatorySupplierTypeView = false;
+	protected boolean smPRMandatorySupplierTypeView = false;
 
 	/** The sm mandatory doc supplier type view. */
-	private boolean smMandatoryDOCSupplierTypeView = false;
+	protected boolean smMandatoryDOCSupplierTypeView = false;
 
 	/** The sm mandatory for code view. */
-	private boolean smMandatoryForCodeView = false;
+	protected boolean smMandatoryForCodeView = false;
 
 	/** The sm mof reg no view. */
-	private boolean smMofRegNoView = false;
+	protected boolean smMofRegNoView = false;
 
 	/** The sm pr mandatory mof reg no view. */
-	private boolean smPRMandatoryMofRegNoView = false;
+	protected boolean smPRMandatoryMofRegNoView = false;
 
 	/** The sm ep mof reg no view. */
-	private boolean smEpMofRegNoView = false;
+	protected boolean smEpMofRegNoView = false;
 
 	/** The sm category view. */
-	private boolean smCategoryView = false;
+	protected boolean smCategoryView = false;
 
 	/** The sm no of category view. */
-	private boolean smNoOfCategoryView = false;
+	protected boolean smNoOfCategoryView = false;
 
 	/** The sm main category view. */
-	private boolean smMainCategoryView = false;
+	protected boolean smMainCategoryView = false;
 
 	/** The sm gen company name view. */
-	private boolean smGenCompanyNameView = false;
+	protected boolean smGenCompanyNameView = false;
 	
-	private boolean smCPCompanyNameView=false;
+	protected boolean smCPCompanyNameView=false;
 
 	/** The sm supp company name view. */
-	private boolean smSuppCompanyNameView = false;
+	protected boolean smSuppCompanyNameView = false;
 
 	/** The sm lc bus company registration status view. */
-	private boolean smLCBusCompanyRegistrationStatusView = false;
+	protected boolean smLCBusCompanyRegistrationStatusView = false;
 
 	/** The sm lc mandatory supplier type view. */
-	private boolean smLCMandatorySupplierTypeView = false;
+	protected boolean smLCMandatorySupplierTypeView = false;
 	/** The sm mandatory gen supplier type view. */
-	private boolean smMandatoryGenSupplierTypeView;
+	protected boolean smMandatoryGenSupplierTypeView;
 
 	/** The sm sub category view. */
-	private boolean smSubCategoryView = false;
+	protected boolean smSubCategoryView = false;
 
 	/** The sm supplier name view. */
-	private boolean smSupplierNameView = false;
+	protected boolean smSupplierNameView = false;
 
 	/** The sm supplier name. */
-	private boolean smSupplierName = false;
+	protected boolean smSupplierName = false;
 
 	/** The sm sub category division view. */
-	private boolean smSubCategoryDivisionView = false;
+	protected boolean smSubCategoryDivisionView = false;
 
 	/** The sm registration status view. */
-	private boolean smRegistrationStatusView = false;
+	protected boolean smRegistrationStatusView = false;
 
 	/** The sm consultant registration status view. */
-	private boolean smConsultantRegistrationStatusView = false;
+	protected boolean smConsultantRegistrationStatusView = false;
 
 	/** The sm payment type view. */
-	private boolean smPaymentTypeView = false;
+	protected boolean smPaymentTypeView = false;
 
 	/** The sm payment type two view. */
-	private boolean smPaymentTypeTwoView = false;
+	protected boolean smPaymentTypeTwoView = false;
 
 	/** The sm mandatory payment type view. */
-	private boolean smMandatoryPaymentTypeView = false;
+	protected boolean smMandatoryPaymentTypeView = false;
 
 	/** The sm application type view. */
-	private boolean smApplicationTypeView = false;
+	protected boolean smApplicationTypeView = false;
 
 	/** The sm state view. */
-	private boolean smStateView = false;
+	protected boolean smStateView = false;
 
 	/** The sm sup state view. */
-	private boolean smSupStateView = false;
+	protected boolean smSupStateView = false;
 
 	/** The sm district view. */
-	private boolean smDistrictView = false;
+	protected boolean smDistrictView = false;
 
 	/** The sm report type view. */
-	private boolean smReportTypeView = false;
+	protected boolean smReportTypeView = false;
 	
 	/** The sm mandatory report type qr view. */
-	private boolean smMandatoryReportTypeQRView=false;
+	protected boolean smMandatoryReportTypeQRView=false;
 
 	/** The sm qr all supplier type view. */
-	private boolean smQRAllSupplierTypeView = false;
+	protected boolean smQRAllSupplierTypeView = false;
 
 	/** The sm sl bus company type view. */
-	private boolean smSLBusCompanyTypeView = false;
+	protected boolean smSLBusCompanyTypeView = false;
 
 	/** The sm mandatory recipt transaction report type view. */
-	private boolean smMandatoryReciptTransactionReportTypeView = false;
+	protected boolean smMandatoryReciptTransactionReportTypeView = false;
 
 	/** The sm non mandatory recipt transaction report type view. */
-	private boolean smNonMandatoryReciptTransactionReportTypeView = false;
+	protected boolean smNonMandatoryReciptTransactionReportTypeView = false;
 
 	/** The sm mandatory payment method view. */
-	private boolean smMandatoryPaymentMethodView = false;
+	protected boolean smMandatoryPaymentMethodView = false;
 
 	/** The sm application status view. */
-	private boolean smApplicationStatusView = false;
+	protected boolean smApplicationStatusView = false;
 
 	/** The Sm gen application status view. */
-	private boolean SmGenApplicationStatusView = false;
+	protected boolean SmGenApplicationStatusView = false;
 
 	/** The sm mandatory doh supplier type view. */
-	private boolean smMandatoryDOHSupplierTypeView = false;
+	protected boolean smMandatoryDOHSupplierTypeView = false;
 
 	/** The sm gen identification number view. */
-	private boolean smGenIdentificationNumberView = false;
+	protected boolean smGenIdentificationNumberView = false;
 
 	/** The sm ps identification number view. */
-	private boolean smPSIdentificationNumberView = false;
+	protected boolean smPSIdentificationNumberView = false;
 
 	/** The sm gen district view. */
-	private boolean smGenDistrictView = false;
+	protected boolean smGenDistrictView = false;
 	
 	/** The sm site visit status view. */
-	private boolean smSiteVisitStatusView = false;
+	protected boolean smSiteVisitStatusView = false;
 
 	/** The sm sa application no view. */
-	private boolean smSAApplicationNoView = false;
+	protected boolean smSAApplicationNoView = false;
 
 	/** The sm extra two column view. */
-	private boolean smExtraTwoColumnView = false;
+	protected boolean smExtraTwoColumnView = false;
 
 	/** The sm extra two column two view. */
-	private boolean smExtraTwoColumnTwoView = false;
+	protected boolean smExtraTwoColumnTwoView = false;
 
 	/** The sm registration type view. */
-	private boolean smRegistrationTypeView = false;
+	protected boolean smRegistrationTypeView = false;
 
 	/** The sm mof reg view. */
-	private boolean smMofRegView = false;
+	protected boolean smMofRegView = false;
 
 	/** The sm mandatory supplier type view. */
-	private boolean smMandatorySupplierTypeView = false;
+	protected boolean smMandatorySupplierTypeView = false;
 
 	/** The sm com supplier type view. */
-	private boolean smComSupplierTypeView = false;
+	protected boolean smComSupplierTypeView = false;
 
 	/** The sm scp supplier type view. */
-	private boolean smSCPSupplierTypeView = false;
+	protected boolean smSCPSupplierTypeView = false;
 
 	/** The sm th mandatory supplier type view. */
-	private boolean smTHMandatorySupplierTypeView = false;
+	protected boolean smTHMandatorySupplierTypeView = false;
 
 	/** The sm gst supplier type view. */
-	private boolean smGSTSupplierTypeView = false;
+	protected boolean smGSTSupplierTypeView = false;
 
 	/** The sm doh mandatory supplier type view. */
-	private boolean smDOHMandatorySupplierTypeView = false;
+	protected boolean smDOHMandatorySupplierTypeView = false;
 
 	/** The sm do company name view. */
-	private boolean smDOCompanyNameView = false;
+	protected boolean smDOCompanyNameView = false;
 
 	/** The sm bus company registration status view. */
-	private boolean smBusCompanyRegistrationStatusView = false;
+	protected boolean smBusCompanyRegistrationStatusView = false;
 
 	/** The sm mandatory all supplier type view. */
-	private boolean smMandatoryAllSupplierTypeView = false;
+	protected boolean smMandatoryAllSupplierTypeView = false;
 
 	/** The sm del application no view. */
-	private boolean smDelApplicationNoView = false;
+	protected boolean smDelApplicationNoView = false;
 
 	/** The sm mof mandatory supplier type view. */
-	private boolean smMOFMandatorySupplierTypeView = false;
+	protected boolean smMOFMandatorySupplierTypeView = false;
 
 	/** The sm sv mandatory application no view. */
-	private boolean smSVMandatoryApplicationNoView = false;
+	protected boolean smSVMandatoryApplicationNoView = false;
 
 	/** The sm mandatory application date view. */
-	private boolean smMandatoryApplicationDateView = false;
+	protected boolean smMandatoryApplicationDateView = false;
 
 	/** The sm mandatory application status view. */
-	private boolean smMandatoryApplicationStatusView = false;
+	protected boolean smMandatoryApplicationStatusView = false;
 
 	/** The sm mandatory application status two view. */
-	private boolean smMandatoryApplicationStatusTwoView = false;
+	protected boolean smMandatoryApplicationStatusTwoView = false;
 
 	/** The sm mandatory application status three view. */
-	private boolean smMandatoryApplicationStatusThreeView = false;
+	protected boolean smMandatoryApplicationStatusThreeView = false;
 
 	/** The sm application status three view. */
-	private boolean smApplicationStatusThreeView = false;
+	protected boolean smApplicationStatusThreeView = false;
 
 	/** The sm mandatory mof reg no view. */
-	private boolean smMandatoryMofRegNoView = false;
+	protected boolean smMandatoryMofRegNoView = false;
 
 	/** The sm bus company type view. */
-	private boolean smBusCompanyTypeView = false;
+	protected boolean smBusCompanyTypeView = false;
 
 	/** The sm mandatory expiry date view. */
-	private boolean smMandatoryExpiryDateView = false;
+	protected boolean smMandatoryExpiryDateView = false;
 
 	/** The sm mandatory printed date view. */
-	private boolean smMandatoryPrintedDateView = false;
+	protected boolean smMandatoryPrintedDateView = false;
 
 	/** The sm mandatory category view. */
-	private boolean smMandatoryCategoryView = false;
+	protected boolean smMandatoryCategoryView = false;
 
 	/** The sm non mandatory category view. */
-	private boolean smNonMandatoryCategoryView = false;
+	protected boolean smNonMandatoryCategoryView = false;
 
 	/** The sm main cat mandatory category view. */
-	private boolean smMainCatMandatoryCategoryView = false;
+	protected boolean smMainCatMandatoryCategoryView = false;
 
 	/** The sm category by supplier type view. */
-	private boolean smCategoryBySupplierTypeView = false;
+	protected boolean smCategoryBySupplierTypeView = false;
 
 	/** The sm daily receipt no view. */
-	private boolean smDailyReceiptNoView = false;
+	protected boolean smDailyReceiptNoView = false;
 
 	/** The sm mandatory from date view. */
-	private boolean smMandatoryFromDateView = false;
+	protected boolean smMandatoryFromDateView = false;
 
 	/** The sm tn mandatory report type view. */
-	private boolean smTNMandatoryReportTypeView = false;
+	protected boolean smTNMandatoryReportTypeView = false;
 
 	/** The sm tn application date view. */
-	private boolean smTNApplicationDateView = false;
+	protected boolean smTNApplicationDateView = false;
 
 	/** The sm virtual cert date view. */
-	private boolean smVirtualCertDateView = false;
+	protected boolean smVirtualCertDateView = false;
 
 	/** The sm mandatory state view. */
-	private boolean smMandatoryStateView = false;
+	protected boolean smMandatoryStateView = false;
 
 	/** The sm sv mandatory state view. */
-	private boolean smSVMandatoryStateView = false;
+	protected boolean smSVMandatoryStateView = false;
 
 	/** The sm mandatory district view. */
-	private boolean smMandatoryDistrictView = false;
+	protected boolean smMandatoryDistrictView = false;
 
 	/** The sm mandatory registration status view. */
-	private boolean smMandatoryRegistrationStatusView = false;
+	protected boolean smMandatoryRegistrationStatusView = false;
 
 	/** The sm mandatory created from year view. */
-	private boolean smMandatoryCreatedFromYearView = false;
+	protected boolean smMandatoryCreatedFromYearView = false;
 
 	/** The sm from date view. */
-	private boolean smFromDateView = false;
+	protected boolean smFromDateView = false;
 
 	/** The sm mandatory year from report type view. */
-	private boolean smMandatoryYearFromReportTypeView = false;
+	protected boolean smMandatoryYearFromReportTypeView = false;
 
 	/** The sm mandatory year from report type view for my. */
-	private boolean smMandatoryYearFromReportTypeViewForMY = false;
+	protected boolean smMandatoryYearFromReportTypeViewForMY = false;
 
 	/** The sm mandatory company name view. */
-	private boolean smMandatoryCompanyNameView = false;
+	protected boolean smMandatoryCompanyNameView = false;
 	
 	/** The sm non mandatory company name view. */
-	private boolean smNonMandatoryCompanyNameView=false;
+	protected boolean smNonMandatoryCompanyNameView=false;
 	
 	/** The sm non mandatory state view. */
-	private boolean smNonMandatoryStateView=false;
+	protected boolean smNonMandatoryStateView=false;
 	
 	/** The sm sv non mandatory district view. */
-	private boolean smSVNonMandatoryDistrictView=false;
+	protected boolean smSVNonMandatoryDistrictView=false;
 	
 	/** The sm svo non mandatory user view. */
-	private boolean smSVONonMandatoryUserView=false;
+	protected boolean smSVONonMandatoryUserView=false;
 	
 	/** The sm non mandatory application no view. */
-	private boolean smNonMandatoryApplicationNoView=false;
+	protected boolean smNonMandatoryApplicationNoView=false;
 
 	/** The sm mandatory registration type view. */
-	private boolean smMandatoryRegistrationTypeView = false;
+	protected boolean smMandatoryRegistrationTypeView = false;
 
 	/** The sm mandatory monthly rpt by year view. */
-	private boolean smMandatoryMonthlyRptByYearView = false;
+	protected boolean smMandatoryMonthlyRptByYearView = false;
 
 	/** The sm mandatory static by state view. */
-	private boolean smMandatoryStaticByStateView = false;
+	protected boolean smMandatoryStaticByStateView = false;
 
 	/** The sm static state view. */
-	private boolean smStaticStateView = false;
+	protected boolean smStaticStateView = false;
 
 	/** The sm da registration type view. */
-	private boolean smDARegistrationTypeView = false;
+	protected boolean smDARegistrationTypeView = false;
 
 	/** The sm mandatory application no view. */
-	private boolean smMandatoryApplicationNoView = false;
+	protected boolean smMandatoryApplicationNoView = false;
 
 	/** The sm sv mandatory district view. */
-	private boolean smSVMandatoryDistrictView = false;
+	protected boolean smSVMandatoryDistrictView = false;
 
 	/** The sm svo user view. */
-	private boolean smSVOUserView = false;
+	protected boolean smSVOUserView = false;
 
 	/** The sm mandatory report type view. */
-	private boolean smMandatoryReportTypeView = false;
+	protected boolean smMandatoryReportTypeView = false;
 
 	/** The sm mandatory recieved report type view. */
-	private boolean smMandatoryRecievedReportTypeView = false;
+	protected boolean smMandatoryRecievedReportTypeView = false;
 
 	/** The sm mandatory approved report type view. */
-	private boolean smMandatoryApprovedReportTypeView = false;
+	protected boolean smMandatoryApprovedReportTypeView = false;
 
 	/** The sm mandatory rejected report type view. */
-	private boolean smMandatoryRejectedReportTypeView = false;
+	protected boolean smMandatoryRejectedReportTypeView = false;
 
 	/** The sm mandatory registered report type date view. */
-	private boolean smMandatoryRegisteredReportTypeDateView = false;
+	protected boolean smMandatoryRegisteredReportTypeDateView = false;
 
 	/** The sm mandatory registered report type date view for my. */
-	private boolean smMandatoryRegisteredReportTypeDateViewForMY = false;
+	protected boolean smMandatoryRegisteredReportTypeDateViewForMY = false;
 
 	/** The sm mandatory zone view. */
-	private boolean smMandatoryZoneView = false;
+	protected boolean smMandatoryZoneView = false;
 	
 	/** The sm mandatory zone for svosvl view. */
-	private boolean smMandatoryZoneForSVOSVLView=false;
+	protected boolean smMandatoryZoneForSVOSVLView=false;
 
 	/** The sm mandatory ep admin ptj admin zone view. */
-	private boolean smMandatoryEPAdminPTJAdminZoneView = false;
+	protected boolean smMandatoryEPAdminPTJAdminZoneView = false;
 
 	/** The sm ep admin ptj admin zone view. */
-	private boolean smEPAdminPTJAdminZoneView = false;
+	protected boolean smEPAdminPTJAdminZoneView = false;
 
 	/** The sm common zone view. */
-	private boolean smCommonZoneView = false;
+	protected boolean smCommonZoneView = false;
 
 	/** The sm basic reg view. */
-	private boolean smBasicRegView = false;
+	protected boolean smBasicRegView = false;
 
 	/** The sm mandatory both supplier type view. */
-	private boolean smMandatoryBothSupplierTypeView = false;
+	protected boolean smMandatoryBothSupplierTypeView = false;
 
 	/** The sm year text view. */
-	private boolean smYearTextView = false;
+	protected boolean smYearTextView = false;
 
 	/** The sm mandatory received from date view. */
-	private boolean smMandatoryReceivedFromDateView = false;
+	protected boolean smMandatoryReceivedFromDateView = false;
 
 	/** The sm mandatory created from date view. */
-	private boolean smMandatoryCreatedFromDateView = false;
+	protected boolean smMandatoryCreatedFromDateView = false;
 
 	/** The sm rejected date view. */
-	private boolean smRejectedDateView = false;
+	protected boolean smRejectedDateView = false;
 
 	/** The sm registered date view. */
-	private boolean smRegisteredDateView = false;
+	protected boolean smRegisteredDateView = false;
 
 	/** The sm schedule site visit date view. */
-	private boolean smScheduleSiteVisitDateView = false;
+	protected boolean smScheduleSiteVisitDateView = false;
 
 	/** The sm soft cert req date view. */
-	private boolean smSoftCertReqDateView = false;
+	protected boolean smSoftCertReqDateView = false;
 
 	/** The sm soft cert exp date view. */
-	private boolean smSoftCertExpDateView = false;
+	protected boolean smSoftCertExpDateView = false;
 
 	/** The sm soft cert renewal date view. */
-	private boolean smSoftCertRenewalDateView = false;
+	protected boolean smSoftCertRenewalDateView = false;
 	
 	/** The sm activation date view. */
-	private boolean smActivationDateView = false;
+	protected boolean smActivationDateView = false;
 
 	/** The sm submission date view. */
-	private boolean smSubmissionDateView = false;
+	protected boolean smSubmissionDateView = false;
 
 	/** The sm pending submission date view. */
-	private boolean smPendingSubmissionDateView = false;
+	protected boolean smPendingSubmissionDateView = false;
 
 	/** The sm expiry date view. */
-	private boolean smExpiryDateView = false;
+	protected boolean smExpiryDateView = false;
 
 	/** The sm created date view. */
-	private boolean smCreatedDateView = false;
+	protected boolean smCreatedDateView = false;
 
 	/** The sm application date view. */
-	private boolean smApplicationDateView = false;
+	protected boolean smApplicationDateView = false;
 
 	/** The sm application type two view. */
-	private boolean smApplicationTypeTwoView = false;
+	protected boolean smApplicationTypeTwoView = false;
 
 	/** The sm mandatory date view. */
-	private boolean smMandatoryDateView = false;
+	protected boolean smMandatoryDateView = false;
 
 	/** The sm non mandatory date view. */
-	private boolean smNonMandatoryDateView = false;
+	protected boolean smNonMandatoryDateView = false;
 
 	/** The sm mof account end date view. */
-	private boolean smMOFAccountEndDateView = false;
+	protected boolean smMOFAccountEndDateView = false;
 
 	/** The sm application received date view. */
-	private boolean smApplicationReceivedDateView = false;
+	protected boolean smApplicationReceivedDateView = false;
 
 	/** The sm mandatory rt date view. */
-	private boolean smMandatoryRTDateView = false;
+	protected boolean smMandatoryRTDateView = false;
 
 	/** The sm non mandatory rt date view. */
-	private boolean smNonMandatoryRTDateView = false;
+	protected boolean smNonMandatoryRTDateView = false;
 
 	/** The sm mandatory for date view. */
-	private boolean smMandatoryForDateView = false;
+	protected boolean smMandatoryForDateView = false;
 
 	/** The sm mandatory receipt date view. */
-	private boolean smMandatoryReceiptDateView = false;
+	protected boolean smMandatoryReceiptDateView = false;
 
 	/** The sm non mandatory receipt date view. */
-	private boolean smNonMandatoryReceiptDateView = false;
+	protected boolean smNonMandatoryReceiptDateView = false;
 
 	/** The sm mandatory transact date view. */
-	private boolean smMandatoryTransactionDateView = false;
+	protected boolean smMandatoryTransactionDateView = false;
 
 	/** The sm non mandatory transaction date view. */
-	private boolean smNonMandatoryTransactionDateView = false;
+	protected boolean smNonMandatoryTransactionDateView = false;
 
 	/** The sm cp supplier name view. */
-	private boolean smCPSupplierNameView = false;
+	protected boolean smCPSupplierNameView = false;
 
 	/** The sm payment date view. */
-	private boolean smPaymentDateView = false;
+	protected boolean smPaymentDateView = false;
 
 	/** The sm payment pr date view. */
-	private boolean smPaymentPRDateView = false;
+	protected boolean smPaymentPRDateView = false;
 
 	/** The sm role view. */
-	private boolean smRoleView = false;
+	protected boolean smRoleView = false;
 
 	/** The sm ep no view. */
-	private boolean smEpNoView = false;
+	protected boolean smEpNoView = false;
 	
 	/** The sm ep number view. */
-	private boolean smEpNumberView=false;
+	protected boolean smEpNumberView=false;
 
 	/** The sm of application no view. */
-	private boolean smOFApplicationNoView = false;
+	protected boolean smOFApplicationNoView = false;
 
 	/** The sm registration no view. */
-	private boolean smRegistrationNoView = false;
+	protected boolean smRegistrationNoView = false;
 
 	/** The sm la mof reg no view. */
-	private boolean smLAMofRegNoView = false;
+	protected boolean smLAMofRegNoView = false;
 
 	/** The sm supporting document mode view. */
-	private boolean smSupportingDocumentModeView = false;
+	protected boolean smSupportingDocumentModeView = false;
 
 	/** The sm mandatory supporting document mode view. */
-	private boolean smMandatorySupportingDocumentModeView = false;
+	protected boolean smMandatorySupportingDocumentModeView = false;
 
 	/** The sm mandatory supporting document mode view my. */
-	private boolean smMandatorySupportingDocumentModeViewMY = false;
+	protected boolean smMandatorySupportingDocumentModeViewMY = false;
 
 	/** The sm cd mandatory all supplier type view. */
-	private boolean smCDMandatoryAllSupplierTypeView = false;
+	protected boolean smCDMandatoryAllSupplierTypeView = false;
 
 	/** The sm de mandatory all supplier type view. */
-	private boolean smDEMandatoryAllSupplierTypeView = false;
+	protected boolean smDEMandatoryAllSupplierTypeView = false;
 
 	/** The sm cd company name view. */
-	private boolean smCDCompanyNameView = false;
+	protected boolean smCDCompanyNameView = false;
 
 	/** The sm application type five view. */
-	private boolean smApplicationTypeFiveView = false;
+	protected boolean smApplicationTypeFiveView = false;
 
 	/** The sm application type six view. */
-	private boolean smApplicationTypeSixView = false;
+	protected boolean smApplicationTypeSixView = false;
 
 	/** The sm supporting document status view. */
-	private boolean smSupportingDocumentStatusView = false;
+	protected boolean smSupportingDocumentStatusView = false;
 
 	/** The sm mof reg no from view. */
-	private boolean smMofRegNoFromView = false;
+	protected boolean smMofRegNoFromView = false;
 
 	/** The sm mof reg no to view. */
-	private boolean smMofRegNoToView = false;
+	protected boolean smMofRegNoToView = false;
 
 	/** The sm lc mof reg no from view. */
-	private boolean smLCMofRegNoFromView = false;
+	protected boolean smLCMofRegNoFromView = false;
 
 	/** The sm lcmof registered date view. */
-	private boolean smLCMOFRegisteredDateView = false;
+	protected boolean smLCMOFRegisteredDateView = false;
 
 	/** The sm bus company paid up accumlated share view. */
-	private boolean smBusCompanyPaidUpAccumlatedShareView = false;
+	protected boolean smBusCompanyPaidUpAccumlatedShareView = false;
 
 	/** The sm paid up cptl sel view. */
-	private boolean smPaidUpCptlSelView = false;
+	protected boolean smPaidUpCptlSelView = false;
 
 	/** The sm accmltd cptl sel view. */
-	private boolean smAccmltdCptlSelView = false;
+	protected boolean smAccmltdCptlSelView = false;
 
 	/** The sm accmltd share sel view. */
-	private boolean smAccmltdShareSelView = false;
+	protected boolean smAccmltdShareSelView = false;
 
 	/** The sm paid accmltd share cptl sel view. */
-	private boolean smPaidAccmltdShareCptlSelView = false;
+	protected boolean smPaidAccmltdShareCptlSelView = false;
 
 	/** The sm paid up capital frm view. */
-	private boolean smPaidUpCapitalFrmView = false;
+	protected boolean smPaidUpCapitalFrmView = false;
 
 	/** The sm paid up cptl date view. */
-	private boolean smPaidUpCptlDateView = false;
+	protected boolean smPaidUpCptlDateView = false;
 
 	/** The sm accmltd cptl date view. */
-	private boolean smAccmltdCptlDateView = false;
+	protected boolean smAccmltdCptlDateView = false;
 
 	/** The sm paid up capital to view. */
-	private boolean smPaidUpCapitalToView = false;
+	protected boolean smPaidUpCapitalToView = false;
 
 	/** The sm paid up capital naccum view. */
-	private boolean smPaidUpCapitalNaccumView = false;
+	protected boolean smPaidUpCapitalNaccumView = false;
 
 	/** The sm mandatory mof reg no from view. */
-	private boolean smMandatoryMofRegNoFromView = false;
+	protected boolean smMandatoryMofRegNoFromView = false;
 
 	/** The sm mandatory mof reg no to view. */
-	private boolean smMandatoryMofRegNoToView = false;
+	protected boolean smMandatoryMofRegNoToView = false;
 
 	/** The sm personnel role view. */
-	private boolean smPersonnelRoleView = false;
+	protected boolean smPersonnelRoleView = false;
 
 	/** The sm personnel staff role view. */
-	private boolean smPersonnelStaffRoleView = false;
+	protected boolean smPersonnelStaffRoleView = false;
 
 	/** The sm identfication type view. */
-	private boolean smIdentficationTypeView = false;
+	protected boolean smIdentficationTypeView = false;
 
 	/** The sm identification number view. */
-	private boolean smIdentificationNumberView = false;
+	protected boolean smIdentificationNumberView = false;
 
 	/** The sm cancellation by view. */
-	private boolean smCancellationByView = false;
+	protected boolean smCancellationByView = false;
 
 	/** The sm can application date view. */
-	private boolean smCanApplicationDateView = false;
+	protected boolean smCanApplicationDateView = false;
 
 	/** The sm mof reg no two view. */
-	private boolean smMofRegNoTwoView = false;
+	protected boolean smMofRegNoTwoView = false;
 
 	/** The sm registration type two view. */
-	private boolean smRegistrationTypeTwoView = false;
+	protected boolean smRegistrationTypeTwoView = false;
 
 	/** The sm dr mof reg no two view. */
-	private boolean smDRMofRegNoTwoView = false;
+	protected boolean smDRMofRegNoTwoView = false;
 
 	/** The sm active submissive from date view. */
-	private boolean smActiveSubmissiveFromDateView = false;
+	protected boolean smActiveSubmissiveFromDateView = false;
 
 	/** The sm act submis all date view. */
-	private boolean smActSubmisAllDateView = false;
+	protected boolean smActSubmisAllDateView = false;
 
 	/** The sm processing officer name view. */
-	private boolean smProcessingOfficerNameView = false;
+	protected boolean smProcessingOfficerNameView = false;
 
 	/** The sm report type two view. */
-	private boolean smReportTypeTwoView = false;
+	protected boolean smReportTypeTwoView = false;
 
 	/** The sm both supplier type view. */
-	private boolean smBothSupplierTypeView = false;
+	protected boolean smBothSupplierTypeView = false;
 
 	/** The sm both mandatory supplier type view. */
-	private boolean smBothMandatorySupplierTypeView = false;
+	protected boolean smBothMandatorySupplierTypeView = false;
 
 	/** The sm receipt no view. */
-	private boolean smReceiptNoView = false;
+	protected boolean smReceiptNoView = false;
 
 	/** The sm processing type view. */
-	private boolean smProcessingTypeView = false;
+	protected boolean smProcessingTypeView = false;
 
 	/** The sm payment method view. */
-	private boolean smPaymentMethodView = false;
+	protected boolean smPaymentMethodView = false;
 
 	/** The sm from month view. */
-	private boolean smFromMonthView = false;
+	protected boolean smFromMonthView = false;
 
 	/** The sm to month view. */
-	private boolean smToMonthView = false;
+	protected boolean smToMonthView = false;
 
 	/** The sm supplier view. */
-	private boolean smSupplierView = false;
+	protected boolean smSupplierView = false;
 
 	/** The sm th registration type view. */
-	private boolean smTHRegistrationTypeView = false;
+	protected boolean smTHRegistrationTypeView = false;
 
 	/** The sm company name dropdown view. */
-	private boolean smCompanyNameDropdownView = false;
+	protected boolean smCompanyNameDropdownView = false;
 
 	/** The sm from and to year view. */
-	private boolean smFromAndToYearView = false;
+	protected boolean smFromAndToYearView = false;
 
 	/** The sm threshold val year from view. */
-	private boolean smThresholdValYearFromView = false;
+	protected boolean smThresholdValYearFromView = false;
 
 	/** The sm user name view. */
-	private boolean smUserNameView = false;
+	protected boolean smUserNameView = false;
 
 	/** The sm request expiry renewal date view. */
-	private boolean smRequestExpiryRenewalDateView = false;
+	protected boolean smRequestExpiryRenewalDateView = false;
 
 	/** The sm year from view. */
-	private boolean smYearFromView = false;
+	protected boolean smYearFromView = false;
 
 	/** The sm threshold year from view. */
-	private boolean smThresholdYearFromView = false;
+	protected boolean smThresholdYearFromView = false;
 
 	/** The sm approval date view. */
-	private boolean smApprovalDateView = false;
+	protected boolean smApprovalDateView = false;
 
 	/** The sm mof registered date view. */
-	private boolean smMOFRegisteredDateView = false;
+	protected boolean smMOFRegisteredDateView = false;
 
 	/** The sm basic registered date view. */
-	private boolean smBasicRegisteredDateView = false;
+	protected boolean smBasicRegisteredDateView = false;
 
 	/** The sm all registered date view. */
-	private boolean smAllRegisteredDateView = false;
+	protected boolean smAllRegisteredDateView = false;
 
 	/** The sm all supplier type view. */
-	private boolean smAllSupplierTypeView = false;
+	protected boolean smAllSupplierTypeView = false;
 
 	/** The sm ps supplier type view. */
-	private boolean smPSSupplierTypeView = false;
+	protected boolean smPSSupplierTypeView = false;
 
 	/** The sm profile status view. */
-	private boolean smProfileStatusView = false;
+	protected boolean smProfileStatusView = false;
 
 	/** The sm mandatory expected site visit date view. */
-	private boolean smMandatoryExpectedSiteVisitDateView = false;
+	protected boolean smMandatoryExpectedSiteVisitDateView = false;
 
 	/** The sm mandatory expected site visi rptt date view. */
-	private boolean smMandatoryExpectedSiteVisiRpttDateView = false;
+	protected boolean smMandatoryExpectedSiteVisiRpttDateView = false;
 	
 	/** The sm non mandatory expected site visi rptt date view. */
-	private boolean smNonMandatoryExpectedSiteVisiRpttDateView=false;
+	protected boolean smNonMandatoryExpectedSiteVisiRpttDateView=false;
 
 	/** The sm mandatory actual site visit date view. */
-	private boolean smMandatoryActualSiteVisitDateView = false;
+	protected boolean smMandatoryActualSiteVisitDateView = false;
 
 	/** The sm gst effective date view. */
-	private boolean smGSTEffectiveDateView = false;
+	protected boolean smGSTEffectiveDateView = false;
 
 	/** The sm gst registration no view. */
-	private boolean smGSTRegistrationNoView = false;
+	protected boolean smGSTRegistrationNoView = false;
 
 	/** The sm gst registration type view. */
-	private boolean smGSTRegistrationTypeView = false;
+	protected boolean smGSTRegistrationTypeView = false;
 
 	/** The sm can mandatory supplier type view. */
-	private boolean smCanMandatorySupplierTypeView = false;
+	protected boolean smCanMandatorySupplierTypeView = false;
 
 	/** The sm gs registration no view. */
-	private boolean smGSRegistrationNoView = false;
+	protected boolean smGSRegistrationNoView = false;
 
 	/** The sm gst registered status view. */
-	private boolean smGSTRegisteredStatusView = false;
+	protected boolean smGSTRegisteredStatusView = false;
 
 	/** The sm mandatory gst registered status view. */
-	private boolean smMandatoryGSTRegisteredStatusView = false;
+	protected boolean smMandatoryGSTRegisteredStatusView = false;
 
 	/** The sm payment type three view. */
-	private boolean smPaymentTypeThreeView = false;
+	protected boolean smPaymentTypeThreeView = false;
 
 	/** The sm payment to view. */
-	private boolean smPaymentToView = false;
+	protected boolean smPaymentToView = false;
 	// FL module
 	/** The fl ptj view. */
-	private boolean flPtjView = false;
+	protected boolean flPtjView = false;
 
 	/** The fl pega wai pengawal view. */
-	private boolean flPegaWaiPengawalView = false;
+	protected boolean flPegaWaiPengawalView = false;
 
 	/** The fl kumpulan ptj view. */
-	private boolean flKumpulanPTJView = false;
+	protected boolean flKumpulanPTJView = false;
 
 	/** The ptj list for authorizer. */
-	private List<SelectItem> ptjListForAuthorizer = new ArrayList<SelectItem>();
+	protected List<SelectItem> ptjListForAuthorizer = new ArrayList<SelectItem>();
 
 	/** The fl contract no view. */
-	private boolean flContractNoView = false;
+	protected boolean flContractNoView = false;
 
 	/** The fl contract system view. */
-	private boolean flContractSystemView = false;
+	protected boolean flContractSystemView = false;
 
 	/** The fl physical contract no view. */
-	private boolean flPhysicalContractNoView = false;
+	protected boolean flPhysicalContractNoView = false;
 
 	/** The fl loa physical no view. */
-	private boolean flLoaPhysicalNoView = false;
+	protected boolean flLoaPhysicalNoView = false;
 
 	/** The fl contract req view. */
-	private boolean flContractReqView = false;
+	protected boolean flContractReqView = false;
 
 	/** The fl sst view. */
-	private boolean flSstView = false;
+	protected boolean flSstView = false;
 
 	/** The fl jabatan view. */
-	private boolean flJabatanView = false;
+	protected boolean flJabatanView = false;
 
 	/** The fl ministry view. */
-	private boolean flMinistryView = false;
+	protected boolean flMinistryView = false;
 
 	/** The fl lov based roles. */
-	private boolean commonLOVBasedRoles = false;
+	protected boolean commonLOVBasedRoles = false;
 
 	/** The ct lov based roles. */
-	private boolean ctLOVBasedRoles = false;
+	protected boolean ctLOVBasedRoles = false;
 
 	/** The pp lov based roles. */
-	private boolean ppLOVBasedRoles = false;
+	protected boolean ppLOVBasedRoles = false;
 
 	/** The fl text box based roles. */
-	private boolean textBoxBasedRoles = false;
+	protected boolean textBoxBasedRoles = false;
 
 	/** The fl supplier view. */
-	private boolean flSupplierView = false;
+	protected boolean flSupplierView = false;
 
 	/** The fl status view. */
-	private boolean flStatusView = false;
+	protected boolean flStatusView = false;
 
 	/** The fl duration view. */
-	private boolean flDurationView = false;
+	protected boolean flDurationView = false;
 
 	/** The fl recieving officer view. */
-	private boolean flRecievingOfficerView = false;
+	protected boolean flRecievingOfficerView = false;
 
 	/** The fl delivery address view. */
-	private boolean flDeliveryAddressView = false;
+	protected boolean flDeliveryAddressView = false;
 
 	/** The fl rec note no view. */
-	private boolean flRecNoteNoView = false;
+	protected boolean flRecNoteNoView = false;
 
 	/** The fl contract type view. */
-	private boolean flContractTypeView = false;
+	protected boolean flContractTypeView = false;
 
 	/** The fl requisitioner view. */
-	private boolean flRequisitionerView = false;
+	protected boolean flRequisitionerView = false;
 
 	/** The fl acknowledge officer view. */
-	private boolean flAcknowledgeOfficerView = false;
+	protected boolean flAcknowledgeOfficerView = false;
 
 	/** The fl pay officer view. */
-	private boolean flPayOfficerView = false;
+	protected boolean flPayOfficerView = false;
 
 	/** The fl mto contract view. */
-	private boolean flMtoContractView = false;
+	protected boolean flMtoContractView = false;
 
 	/** The fl invoice no view. */
-	private boolean flInvoiceNoView = false;
+	protected boolean flInvoiceNoView = false;
 
 	/** The fl deduction type view. */
-	private boolean flDeductionTypeView = false;
+	protected boolean flDeductionTypeView = false;
 
 	/** The fl cr no view. */
-	private boolean flCrNoView = false;
+	protected boolean flCrNoView = false;
 
 	/** The fl approver name view. */
-	private boolean flApproverNameView = false;
+	protected boolean flApproverNameView = false;
 
 	/** The fl document type view. */
-	private boolean flDocumentTypeView = false;
+	protected boolean flDocumentTypeView = false;
 
 	/** The fl criteria view. */
-	private boolean flCriteriaView = false;
+	protected boolean flCriteriaView = false;
 
 	/** The fl scoring view. */
-	private boolean flScoringView = false;
+	protected boolean flScoringView = false;
 
 	/** The fl pkp no view. */
-	private boolean flPkpNoView = false;
+	protected boolean flPkpNoView = false;
 
 	/** The fl delivery order no view. */
-	private boolean flDeliveryOrderNoView = false;
+	protected boolean flDeliveryOrderNoView = false;
 
 	/** The fl item code view. */
-	private boolean flItemCodeView = false;
+	protected boolean flItemCodeView = false;
 
 	/** The fl po amount view. */
-	private boolean flPoAmountView = false;
+	protected boolean flPoAmountView = false;
 
 	/** The fl pr no view. */
-	private boolean flPrNoView = false;
+	protected boolean flPrNoView = false;
 
 	/** The fl pmo view. */
-	private boolean flPmoView = false;
+	protected boolean flPmoView = false;
 
 	/** The fl item name view. */
-	private boolean flItemNameView = false;
+	protected boolean flItemNameView = false;
 
 	/** The fl item type view. */
-	private boolean flItemTypeView = false;
+	protected boolean flItemTypeView = false;
 
 	/** The fl contract order view. */
-	private boolean flContractOrderView = false;
+	protected boolean flContractOrderView = false;
 
 	/** The fl contract request view. */
-	private boolean flContractRequestView = false;
+	protected boolean flContractRequestView = false;
 
 	/** The fl purchase order no view. */
-	private boolean flPurchaseOrderNoView = false;
+	protected boolean flPurchaseOrderNoView = false;
 
 	/** The fl group one view. */
-	private boolean flGroupOneView = false;
+	protected boolean flGroupOneView = false;
 	
 	/** The fl group one additional view. */
-	private boolean flGroupOneAdditionalView=false;
+	protected boolean flGroupOneAdditionalView=false;
 
 	/** The fl group one with suppl view. */
-	private boolean flGroupOneWithSupplView = false;
+	protected boolean flGroupOneWithSupplView = false;
 
 	/** The fl group one without suppl view. */
-	private boolean flGroupOneWithoutSupplView = false;
+	protected boolean flGroupOneWithoutSupplView = false;
 
 	/** The fl group two view. */
-	private boolean flGroupTwoView = false;
+	protected boolean flGroupTwoView = false;
 	
 	/** The fl group two contract order view. */
-	private boolean flGroupTwoContractOrderView =false;
+	protected boolean flGroupTwoContractOrderView =false;
 	
 	/** The fl group two extra view. */
-	private boolean flGroupTwoExtraView = false;
+	protected boolean flGroupTwoExtraView = false;
 
 	/** The fl group two additional view. */
-	private boolean flGroupTwoAdditionalView = false;
+	protected boolean flGroupTwoAdditionalView = false;
 
 	/** The fl group two with suppl all view. */
-	private boolean flGroupTwoWithSupplAllView = false;
+	protected boolean flGroupTwoWithSupplAllView = false;
 
 	/** The fl group two without suppl view. */
-	private boolean flGroupTwoWithoutSupplView = false;
+	protected boolean flGroupTwoWithoutSupplView = false;
 
 	/** The fl group two with suppl view. */
-	private boolean flGroupTwoWithSupplView = false;
+	protected boolean flGroupTwoWithSupplView = false;
 
 	/** The fl group three view. */
-	private boolean flGroupThreeView = false;
+	protected boolean flGroupThreeView = false;
 	
 	/** The fl group three payment match view. */
-	private boolean flGroupThreePaymentMatchView = false;
+	protected boolean flGroupThreePaymentMatchView = false;
 	
 	/** The fl group three contract order view. */
-	private boolean flGroupThreeContractOrderView = false;
+	protected boolean flGroupThreeContractOrderView = false;
 	
 	/** The fl group three new view. */
-	private boolean flGroupThreeNewView = false;
+	protected boolean flGroupThreeNewView = false;
 	
 	/** The fl group three payment view. */
-	private boolean flGroupThreePaymentView=false;
+	protected boolean flGroupThreePaymentView=false;
 	
 	/** The fl group three payment cc view. */
-	private boolean flGroupThreePaymentCCView=false;
+	protected boolean flGroupThreePaymentCCView=false;
 
 	/** The fl group three extra view. */
-	private boolean flGroupThreeExtraView = false;
+	protected boolean flGroupThreeExtraView = false;
 
 	/** The fl group three additional view. */
-	private boolean flGroupThreeAdditionalView = false;
+	protected boolean flGroupThreeAdditionalView = false;
 
 	/** The fl group three without suppl view. */
-	private boolean flGroupThreeWithoutSupplView = false;
+	protected boolean flGroupThreeWithoutSupplView = false;
 
 	/** The fl group three all rolecodes without suppl view. */
-	private boolean flGroupThreeAllRolecodesWithoutSupplView = false;
+	protected boolean flGroupThreeAllRolecodesWithoutSupplView = false;
 
 	/** The fl group three with suppl view. */
-	private boolean flGroupThreeWithSupplView = false;
+	protected boolean flGroupThreeWithSupplView = false;
 
 	/** The fl group four view. */
-	private boolean flGroupFourView = false;
+	protected boolean flGroupFourView = false;
 
 	/** The fl group four without suppl view. */
-	private boolean flGroupFourWithoutSupplView = false;
+	protected boolean flGroupFourWithoutSupplView = false;
 
 	/** The fl group four with suppl view. */
-	private boolean flGroupFourWithSupplView = false;
+	protected boolean flGroupFourWithSupplView = false;
 
 	/** The fl group five view. */
-	private boolean flGroupFiveView = false;
+	protected boolean flGroupFiveView = false;
 
 	/** The fl group five without suppl view. */
-	private boolean flGroupFiveWithoutSupplView = false;
+	protected boolean flGroupFiveWithoutSupplView = false;
 
 	/** The fl group five with suppl view. */
-	private boolean flGroupFiveWithSupplView = false;
+	protected boolean flGroupFiveWithSupplView = false;
 
 	/** The fl group six view. */
-	private boolean flGroupSixView = false;
+	protected boolean flGroupSixView = false;
 	
 	/** The fl group six extra view. */
-	private boolean flGroupSixExtraView = false;
+	protected boolean flGroupSixExtraView = false;
 
 	/** The fl group six additional view. */
-	private boolean flGroupSixAdditionalView = false;
+	protected boolean flGroupSixAdditionalView = false;
 
 	/** The fl group six without suppl view. */
-	private boolean flGroupSixWithoutSupplView = false;
+	protected boolean flGroupSixWithoutSupplView = false;
 
 	/** The fl group six with suppl view. */
-	private boolean flGroupSixWithSupplView = false;
+	protected boolean flGroupSixWithSupplView = false;
 
 	/** The fl group seven view. */
-	private boolean flGroupSevenView = false;
+	protected boolean flGroupSevenView = false;
 
 	/** The fl group seven additional view. */
-	private boolean flGroupSevenAdditionalView = false;
+	protected boolean flGroupSevenAdditionalView = false;
 
 	/** The fl group seven without suppl view. */
-	private boolean flGroupSevenWithoutSupplView = false;
+	protected boolean flGroupSevenWithoutSupplView = false;
 
 	/** The fl group seven with suppl view. */
-	private boolean flGroupSevenWithSupplView = false;
+	protected boolean flGroupSevenWithSupplView = false;
 
 	/** The fl group eight view. */
-	private boolean flGroupEightView = false;
+	protected boolean flGroupEightView = false;
 
 	/** The fl group eight without suppl view. */
-	private boolean flGroupEightWithoutSupplView = false;
+	protected boolean flGroupEightWithoutSupplView = false;
 
 	/** The fl group eight with suppl view. */
-	private boolean flGroupEightWithSupplView = false;
+	protected boolean flGroupEightWithSupplView = false;
 
 	/** The fl group nine view. */
-	private boolean flGroupNineView = false;
+	protected boolean flGroupNineView = false;
 
 	/** The fl group nine without suppl view. */
-	private boolean flGroupNineWithoutSupplView = false;
+	protected boolean flGroupNineWithoutSupplView = false;
 
 	/** The fl group nine with suppl view. */
-	private boolean flGroupNineWithSupplView = false;
+	protected boolean flGroupNineWithSupplView = false;
 
 	/** The fl group ten view. */
-	private boolean flGroupTenView = false;
+	protected boolean flGroupTenView = false;
 
 	/** The fl group ten additional view. */
-	private boolean flGroupTenAdditionalView = false;
+	protected boolean flGroupTenAdditionalView = false;
 
 	/** The fl group ten with suppl req app view. */
-	private boolean flGroupTenWithSupplReqAppView = false;
+	protected boolean flGroupTenWithSupplReqAppView = false;
 
 	/** The fl group ten without suppl view. */
-	private boolean flGroupTenWithoutSupplView = false;
+	protected boolean flGroupTenWithoutSupplView = false;
 
 	/** The fl group ten with suppl view. */
-	private boolean flGroupTenWithSupplView = false;
+	protected boolean flGroupTenWithSupplView = false;
 
 	/** The fl group eleven view. */
-	private boolean flGroupElevenView = false;
+	protected boolean flGroupElevenView = false;
 
 	/** The fl group eleven without suppl view. */
-	private boolean flGroupElevenWithoutSupplView = false;
+	protected boolean flGroupElevenWithoutSupplView = false;
 
 	/** The fl group eleven with suppl view. */
-	private boolean flGroupElevenWithSupplView = false;
+	protected boolean flGroupElevenWithSupplView = false;
 
 	/** The fl group twelve view. */
-	private boolean flGroupTwelveView = false;
+	protected boolean flGroupTwelveView = false;
 
 	/** The fl group twelve additional view. */
-	private boolean flGroupTwelveAdditionalView = false;
+	protected boolean flGroupTwelveAdditionalView = false;
 
 	/** The fl group twelve without suppl view. */
-	private boolean flGroupTwelveWithoutSupplView = false;
+	protected boolean flGroupTwelveWithoutSupplView = false;
 
 	/** The fl group twelve with suppl view. */
-	private boolean flGroupTwelveWithSupplView = false;
+	protected boolean flGroupTwelveWithSupplView = false;
 
 	/** The fl group thirteen view. */
-	private boolean flGroupThirteenView = false;
+	protected boolean flGroupThirteenView = false;
 
 	/** The fl group thirteen additional view. */
-	private boolean flGroupThirteenAdditionalView = false;
+	protected boolean flGroupThirteenAdditionalView = false;
 
 	/** The fl group thirteen ack rec view. */
-	private boolean flGroupThirteenAckRecView = false;
+	protected boolean flGroupThirteenAckRecView = false;
 
 	/** The fl group thirteen without suppl view. */
-	private boolean flGroupThirteenWithoutSupplView = false;
+	protected boolean flGroupThirteenWithoutSupplView = false;
 
 	/** The fl group thirteen with suppl view. */
-	private boolean flGroupThirteenWithSupplView = false;
+	protected boolean flGroupThirteenWithSupplView = false;
 
 	/** The fl group thirteen with suppl ack rec view. */
-	private boolean flGroupThirteenWithSupplAckRecView = false;
+	protected boolean flGroupThirteenWithSupplAckRecView = false;
 
 	/** The fl group fourteen view. */
-	private boolean flGroupFourteenView = false;
+	protected boolean flGroupFourteenView = false;
 	
 	/** The fl group fourteen extra view. */
-	private boolean flGroupFourteenExtraView = false;
+	protected boolean flGroupFourteenExtraView = false;
 
 	/** The fl group fourteen additional view. */
-	private boolean flGroupFourteenAdditionalView = false;
+	protected boolean flGroupFourteenAdditionalView = false;
 
 	/** The fl group fourteen all rolecodes with pp suppl view. */
-	private boolean flGroupFourteenAllRolecodesWithPPSupplView = false;
+	protected boolean flGroupFourteenAllRolecodesWithPPSupplView = false;
 
 	/** The fl group fourteen without suppl view. */
-	private boolean flGroupFourteenWithoutSupplView = false;
+	protected boolean flGroupFourteenWithoutSupplView = false;
 
 	/** The fl group fourteen with suppl view. */
-	private boolean flGroupFourteenWithSupplView = false;
+	protected boolean flGroupFourteenWithSupplView = false;
 
 	/** The fl group fourteen all rolecodes without suppl view. */
-	private boolean flGroupFourteenAllRolecodesWithoutSupplView = false;
+	protected boolean flGroupFourteenAllRolecodesWithoutSupplView = false;
 
 	/** The fl group fourteen with suppl payment off view. */
-	private boolean flGroupFourteenWithSupplPaymentOffView = false;
+	protected boolean flGroupFourteenWithSupplPaymentOffView = false;
 
 	/** The fl group fifteen view. */
-	private boolean flGroupFifteenView = false;
+	protected boolean flGroupFifteenView = false;
 
 	/** The fl group fifteen without suppl view. */
-	private boolean flGroupFifteenWithoutSupplView = false;
+	protected boolean flGroupFifteenWithoutSupplView = false;
 
 	/** The fl group fifteen with suppl view. */
-	private boolean flGroupFifteenWithSupplView = false;
+	protected boolean flGroupFifteenWithSupplView = false;
 
 	/** The fl group sixteen view. */
-	private boolean flGroupSixteenView = false;
+	protected boolean flGroupSixteenView = false;
 
 	/** The fl group sixteen without suppl view. */
-	private boolean flGroupSixteenWithoutSupplView = false;
+	protected boolean flGroupSixteenWithoutSupplView = false;
 
 	/** The fl group sixteen with suppl view. */
-	private boolean flGroupSixteenWithSupplView = false;
+	protected boolean flGroupSixteenWithSupplView = false;
 
 	/** The fl supplier text view. */
-	private boolean flSupplierTextView = false;
+	protected boolean flSupplierTextView = false;
 
 	/** The fl supplier dropdown view. */
-	private boolean flSupplierDropdownView = false;
+	protected boolean flSupplierDropdownView = false;
 
 	/** The fl group seventeen view. */
-	private boolean flGroupSeventeenView = false;
+	protected boolean flGroupSeventeenView = false;
 
 	/** The fl group seventeen without suppl view. */
-	private boolean flGroupSeventeenWithoutSupplView = false;
+	protected boolean flGroupSeventeenWithoutSupplView = false;
 
 	/** The fl group seventeen with suppl view. */
-	private boolean flGroupSeventeenWithSupplView = false;
+	protected boolean flGroupSeventeenWithSupplView = false;
 
 	/** The fl mandatory ministry view. */
-	private boolean flMandatoryMinistryView = false;
+	protected boolean flMandatoryMinistryView = false;
 
 	/** The fl mandatory ptj view. */
-	private boolean flMandatoryPtjView = false;
+	protected boolean flMandatoryPtjView = false;
 
 	/** The fl stop instruction no view. */
-	private boolean flStopInstructionNoView = false;
+	protected boolean flStopInstructionNoView = false;
 
 	/** The fl group eighteen view. */
-	private boolean flGroupEighteenView = false;
+	protected boolean flGroupEighteenView = false;
 
 	/** The fl group eighteen additional view. */
-	private boolean flGroupEighteenAdditionalView = false;
+	protected boolean flGroupEighteenAdditionalView = false;
 
 	/** The fl group eighteen without suppl view. */
-	private boolean flGroupEighteenWithoutSupplView = false;
+	protected boolean flGroupEighteenWithoutSupplView = false;
 
 	/** The fl group eighteen with suppl view. */
-	private boolean flGroupEighteenWithSupplView = false;
+	protected boolean flGroupEighteenWithSupplView = false;
 
 	/** The fl group eighteen with suppl approver view. */
-	private boolean flGroupEighteenWithSupplApproverView = false;
+	protected boolean flGroupEighteenWithSupplApproverView = false;
 
 	/** The fl group nineteen view. */
-	private boolean flGroupNineteenView = false;
+	protected boolean flGroupNineteenView = false;
 
 	/** The fl group nineteen without suppl view. */
-	private boolean flGroupNineteenWithoutSupplView = false;
+	protected boolean flGroupNineteenWithoutSupplView = false;
 
 	/** The fl group nineteen with suppl view. */
-	private boolean flGroupNineteenWithSupplView = false;
+	protected boolean flGroupNineteenWithSupplView = false;
 
 	/** The fl group twenty view. */
-	private boolean flGroupTwentyView = false;
+	protected boolean flGroupTwentyView = false;
 
 	/** The fl group twenty without suppl view. */
-	private boolean flGroupTwentyWithoutSupplView = false;
+	protected boolean flGroupTwentyWithoutSupplView = false;
 
 	/** The fl group twenty with suppl view. */
-	private boolean flGroupTwentyWithSupplView = false;
+	protected boolean flGroupTwentyWithSupplView = false;
 
 	/** The fl group twenty one view. */
-	private boolean flGroupTwentyOneView = false;
+	protected boolean flGroupTwentyOneView = false;
 
 	/** The fl group three with contract order suppl view. */
-	private boolean flGroupThreeWithContractOrderSupplView = false;
+	protected boolean flGroupThreeWithContractOrderSupplView = false;
 
 	/** The fl group twenty five with all contract ord suppl view. */
-	private boolean flGroupTwentyFiveWithAllContractOrdSupplView = false;
+	protected boolean flGroupTwentyFiveWithAllContractOrdSupplView = false;
 
 	/** The fl group two with suppl contract view. */
-	private boolean flGroupTwoWithSupplContractView = false;
+	protected boolean flGroupTwoWithSupplContractView = false;
 
 	/** The fl group twenty two with all suppl view. */
-	private boolean flGroupTwentyTwoWithAllSupplView = false;
+	protected boolean flGroupTwentyTwoWithAllSupplView = false;
 
 	/** The fl group nineteen with all suppl view. */
-	private boolean flGroupNineteenWithAllSupplView = false;
+	protected boolean flGroupNineteenWithAllSupplView = false;
 
 	/** The fl group twenty with all suppl view. */
-	private boolean flGroupTwentyWithAllSupplView = false;
+	protected boolean flGroupTwentyWithAllSupplView = false;
 
 	/** The fl group twenty one with all suppl view. */
-	private boolean flGroupTwentyOneWithAllSupplView = false;
+	protected boolean flGroupTwentyOneWithAllSupplView = false;
 
 	/** The fl group twenty one without suppl view. */
-	private boolean flGroupTwentyOneWithoutSupplView = false;
+	protected boolean flGroupTwentyOneWithoutSupplView = false;
 
 	/** The fl group twenty one with suppl view. */
-	private boolean flGroupTwentyOneWithSupplView = false;
+	protected boolean flGroupTwentyOneWithSupplView = false;
 
 	/** The fl group twenty two view. */
-	private boolean flGroupTwentyTwoView = false;
+	protected boolean flGroupTwentyTwoView = false;
 
 	/** The fl group twenty two without suppl view. */
-	private boolean flGroupTwentyTwoWithoutSupplView = false;
+	protected boolean flGroupTwentyTwoWithoutSupplView = false;
 
 	/** The fl group twenty two with suppl view. */
-	private boolean flGroupTwentyTwoWithSupplView = false;
+	protected boolean flGroupTwentyTwoWithSupplView = false;
 
 	/** The fl supplier invoice no view. */
-	private boolean flSupplierInvoiceNoView = false;
+	protected boolean flSupplierInvoiceNoView = false;
 
 	/** The fl supplier delivery order no view. */
-	private boolean flSupplierDeliveryOrderNoView = false;
+	protected boolean flSupplierDeliveryOrderNoView = false;
 
 	/** The fl payment advice no view. */
-	private boolean flPaymentAdviceNoView = false;
+	protected boolean flPaymentAdviceNoView = false;
 
 	/** The fl group twenty three view. */
-	private boolean flGroupTwentyThreeView = false;
+	protected boolean flGroupTwentyThreeView = false;
 
 	/** The fl group twenty three without suppl view. */
-	private boolean flGroupTwentyThreeWithoutSupplView = false;
+	protected boolean flGroupTwentyThreeWithoutSupplView = false;
 
 	/** The fl group twenty three with suppl view. */
-	private boolean flGroupTwentyThreeWithSupplView = false;
+	protected boolean flGroupTwentyThreeWithSupplView = false;
 
 	/** The fl group twenty three with suppl cancel view. */
-	private boolean flGroupTwentyThreeWithSupplCancelView = false;
+	protected boolean flGroupTwentyThreeWithSupplCancelView = false;
 
 	/** The fl group twenty four view. */
-	private boolean flGroupTwentyFourView = false;
+	protected boolean flGroupTwentyFourView = false;
 
 	/** The fl group twenty four without suppl view. */
-	private boolean flGroupTwentyFourWithoutSupplView = false;
+	protected boolean flGroupTwentyFourWithoutSupplView = false;
 
 	/** The fl group twenty four with suppl view. */
-	private boolean flGroupTwentyFourWithSupplView = false;
+	protected boolean flGroupTwentyFourWithSupplView = false;
 
 	/** The fl from date view. */
-	private boolean flFromDateView = false;
+	protected boolean flFromDateView = false;
 
 	/** The fl from date range vie. */
-	private boolean flFromDateRangeView = false;
+	protected boolean flFromDateRangeView = false;
 
 	/** The fl contract request created date view. */
-	private boolean flContractRequestCreatedDateView = false;
+	protected boolean flContractRequestCreatedDateView = false;
 
 	/** The fl contract order date view. */
-	private boolean flContractOrderDateView = false;
+	protected boolean flContractOrderDateView = false;
 
 	/** The fl delivery order created date view. */
-	private boolean flDeliveryOrderCreatedDateView = false;
+	protected boolean flDeliveryOrderCreatedDateView = false;
 
 	/** The fl frn created date view. */
-	private boolean flFRNCreatedDateView = false;
+	protected boolean flFRNCreatedDateView = false;
 
 	/** The fl stop instruction created date view. */
-	private boolean flStopInstructionCreatedDateView = false;
+	protected boolean flStopInstructionCreatedDateView = false;
 
 	/** The fl invoice created date view. */
-	private boolean flInvoiceCreatedDateView = false;
+	protected boolean flInvoiceCreatedDateView = false;
 
 	/** The fl contract order created date view. */
-	private boolean flContractOrderCreatedDateView = false;
+	protected boolean flContractOrderCreatedDateView = false;
 
 	/** The fl contract request rejection date view. */
-	private boolean flContractRequestRejectionDateView = false;
+	protected boolean flContractRequestRejectionDateView = false;
 
 	/** The fl group twenty five view. */
-	private boolean flGroupTwentyFiveView = false;
+	protected boolean flGroupTwentyFiveView = false;
 
 	/** The fl group twenty five additional view. */
-	private boolean flGroupTwentyFiveAdditionalView = false;
+	protected boolean flGroupTwentyFiveAdditionalView = false;
 
 	/** The fl group twenty five without suppl view. */
-	private boolean flGroupTwentyFiveWithoutSupplView = false;
+	protected boolean flGroupTwentyFiveWithoutSupplView = false;
 
 	/** The fl group twenty five with suppl view. */
-	private boolean flGroupTwentyFiveWithSupplView = false;
+	protected boolean flGroupTwentyFiveWithSupplView = false;
 
 	/** The fl contract order cancellation date view. */
-	private boolean flContractOrderCancellationDateView = false;
+	protected boolean flContractOrderCancellationDateView = false;
 
 	/** The fl delivery order cancellation date view. */
-	private boolean flDeliveryOrderCancellationDateView = false;
+	protected boolean flDeliveryOrderCancellationDateView = false;
 
 	/** The fl group twenty six view. */
-	private boolean flGroupTwentySixView = false;
+	protected boolean flGroupTwentySixView = false;
 
 	/** The fl group twenty six additional view. */
-	private boolean flGroupTwentySixAdditionalView = false;
+	protected boolean flGroupTwentySixAdditionalView = false;
 
 	/** The fl group twenty six without suppl view. */
-	private boolean flGroupTwentySixWithoutSupplView = false;
+	protected boolean flGroupTwentySixWithoutSupplView = false;
 
 	/** The fl group twenty six with suppl view. */
-	private boolean flGroupTwentySixWithSupplView = false;
+	protected boolean flGroupTwentySixWithSupplView = false;
 
 	/** The fl frn cancellation date view. */
-	private boolean flFRNCancellationDateView = false;
+	protected boolean flFRNCancellationDateView = false;
 
 	/** The fl invoice cancellation date view. */
-	private boolean flInvoiceCancellationDateView = false;
+	protected boolean flInvoiceCancellationDateView = false;
 
 	/** The fl group twenty seven view. */
-	private boolean flGroupTwentySevenView = false;
+	protected boolean flGroupTwentySevenView = false;
 	
 	/** The fl group twenty seven extra view. */
-	private boolean flGroupTwentySevenExtraView = false;
+	protected boolean flGroupTwentySevenExtraView = false;
 
 	/** The fl group twenty seven additional view. */
-	private boolean flGroupTwentySevenAdditionalView = false;
+	protected boolean flGroupTwentySevenAdditionalView = false;
 
 	/** The fl group three with suppl plr view. */
-	private boolean flGroupThreeWithSupplPLRView = false;
+	protected boolean flGroupThreeWithSupplPLRView = false;
 
 	/** The fl group seven with all suppl view. */
-	private boolean flGroupSevenWithAllSupplView = false;
+	protected boolean flGroupSevenWithAllSupplView = false;
 
 	/** The fl group three with suppl all view. */
-	private boolean flGroupThreeWithSupplAllView = false;
+	protected boolean flGroupThreeWithSupplAllView = false;
 
 	/** The fl group twenty seven with all pprf suppl view. */
-	private boolean flGroupTwentySevenWithAllPPRFSupplView = false;
+	protected boolean flGroupTwentySevenWithAllPPRFSupplView = false;
 
 	/** The fl group three all rolecodes without ppct suppl view. */
-	private boolean flGroupThreeAllRolecodesWithoutPPCTSupplView = false;
+	protected boolean flGroupThreeAllRolecodesWithoutPPCTSupplView = false;
 
 	/** The fl group three with pppt suppl all view. */
-	private boolean flGroupThreeWithPPPTSupplAllView = false;
+	protected boolean flGroupThreeWithPPPTSupplAllView = false;
 
 	/** The fl group six with suppl pra view. */
-	private boolean flGroupSixWithSupplPRAView = false;
+	protected boolean flGroupSixWithSupplPRAView = false;
 
 	/** The fl group twenty seven with all suppl view. */
-	private boolean flGroupTwentySevenWithAllSupplView = false;
+	protected boolean flGroupTwentySevenWithAllSupplView = false;
 
 	/** The fl group twenty seven with all ppra suppl view. */
-	private boolean flGroupTwentySevenWithAllPPRASupplView = false;
+	protected boolean flGroupTwentySevenWithAllPPRASupplView = false;
 
 	/** The fl group one with all suppl view. */
-	private boolean flGroupOneWithAllSupplView = false;
+	protected boolean flGroupOneWithAllSupplView = false;
 
 	/** The fl group two with suppl ppr view. */
-	private boolean flGroupTwoWithSupplPPRView = false;
+	protected boolean flGroupTwoWithSupplPPRView = false;
 
 	/** The fl group twenty four with all suppl view. */
-	private boolean flGroupTwentyFourWithAllSupplView = false;
+	protected boolean flGroupTwentyFourWithAllSupplView = false;
 
 	/** The fl group four with all suppl view. */
-	private boolean flGroupFourWithAllSupplView = false;
+	protected boolean flGroupFourWithAllSupplView = false;
 
 	/** The fl group fourteen all rolecodes without pp suppl view. */
-	private boolean flGroupFourteenAllRolecodesWithoutPPSupplView = false;
+	protected boolean flGroupFourteenAllRolecodesWithoutPPSupplView = false;
 
 	/** The fl group three with ppp suppl all view. */
-	private boolean flGroupThreeWithPPPSupplAllView = false;
+	protected boolean flGroupThreeWithPPPSupplAllView = false;
 
 	/** The fl group twenty five with all suppl view. */
-	private boolean flGroupTwentyFiveWithAllSupplView = false;
+	protected boolean flGroupTwentyFiveWithAllSupplView = false;
 
 	/** The fl group twenty six with all suppl view. */
-	private boolean flGroupTwentySixWithAllSupplView = false;
+	protected boolean flGroupTwentySixWithAllSupplView = false;
 
 	/** The fl group twenty six with all ppra suppl view. */
-	private boolean flGroupTwentySixWithAllPPRASupplView = false;
+	protected boolean flGroupTwentySixWithAllPPRASupplView = false;
 
 	/** The fl group one with all ppt suppl view. */
-	private boolean flGroupOneWithAllPPTSupplView = false;
+	protected boolean flGroupOneWithAllPPTSupplView = false;
 
 	/** The fl group twenty seven without suppl view. */
-	private boolean flGroupTwentySevenWithoutSupplView = false;
+	protected boolean flGroupTwentySevenWithoutSupplView = false;
 
 	/** The fl group twenty seven with suppl view. */
-	private boolean flGroupTwentySevenWithSupplView = false;
+	protected boolean flGroupTwentySevenWithSupplView = false;
 
 	/** The ct contract from date view. */
-	private boolean ctContractFromDateView = false;
+	protected boolean ctContractFromDateView = false;
 
 	/** The ct termination type view. */
-	private boolean ctTerminationTypeView = false;
+	protected boolean ctTerminationTypeView = false;
 
 	/** The ct circular no view. */
-	private boolean ctCircularNoView = false;
+	protected boolean ctCircularNoView = false;
 
 	/** The ct circular name view. */
-	private boolean ctCircularNameView = false;
+	protected boolean ctCircularNameView = false;
 
 	/** The ct circular type view. */
-	private boolean ctCircularTypeView = false;
+	protected boolean ctCircularTypeView = false;
 
 	/** The ct contract effective from date label view. */
-	private boolean ctContractEffectiveFromDateLabelView = false;
+	protected boolean ctContractEffectiveFromDateLabelView = false;
 
 	/** The ct contract order from date label view. */
-	private boolean ctContractOrderFromDateLabelView = false;
+	protected boolean ctContractOrderFromDateLabelView = false;
 
 	/** The ct supplier name view. */
-	private boolean ctSupplierNameView = false;
+	protected boolean ctSupplierNameView = false;
 
 	/** The ct supplier default view. */
-	private boolean ctSupplierDefaultView = false;
+	protected boolean ctSupplierDefaultView = false;
 
 	/** The ct supplier text view. */
-	private boolean ctSupplierTextView = false;
+	protected boolean ctSupplierTextView = false;
 
 	/** The fl purchase order created date view. */
-	private boolean flPurchaseOrderCreatedDateView = false;
+	protected boolean flPurchaseOrderCreatedDateView = false;
 
 	/** The fl purchase order rejected date view. */
-	private boolean flPurchaseOrderRejectedDateView = false;
+	protected boolean flPurchaseOrderRejectedDateView = false;
 
 	/** The fl delivery order date view. */
-	private boolean flDeliveryOrderDateView = false;
+	protected boolean flDeliveryOrderDateView = false;
 
 	/** The fl purchase request rejection date view. */
-	private boolean flPurchaseRequestRejectionDateView = false;
+	protected boolean flPurchaseRequestRejectionDateView = false;
 
 	/** The fl purchase order cancellation date view. */
-	private boolean flPurchaseOrderCancellationDateView = false;
+	protected boolean flPurchaseOrderCancellationDateView = false;
 
 	/**
 	 * Checks if is fl purchase order cancellation date view.
@@ -3827,1007 +3827,1007 @@ public class ReportsGenerateBean implements Serializable {
 
 	// CT
 	/** The ct contract no view. */
-	private boolean ctContractNoView = false;
+	protected boolean ctContractNoView = false;
 	
 	/** The ct contract no cp view. */
-	private boolean ctContractNoCPView = false;
+	protected boolean ctContractNoCPView = false;
 
 	/** The ct physical contract no cp view. */
-	private boolean ctPhysicalContractNoCPView = false;
+	protected boolean ctPhysicalContractNoCPView = false;
 
 	/** The ct loan no cp view. */
-	private boolean ctLoanNoCPView = false;
+	protected boolean ctLoanNoCPView = false;
 
 	/** The ct status three cp view. */
-	private boolean ctStatusThreeCPView = false;	
+	protected boolean ctStatusThreeCPView = false;	
 
     /** The ct supplier default cp view. */
-    private boolean ctSupplierDefaultCPView= false;
+    protected boolean ctSupplierDefaultCPView= false;
 
     /** The ct supplier text cp view. */
-    private boolean ctSupplierTextCPView = false;
+    protected boolean ctSupplierTextCPView = false;
 
     /** The ct supplier name cp view. */
-    private boolean ctSupplierNameCPView= false;
+    protected boolean ctSupplierNameCPView= false;
 
 	/** The ct procurement mode cp view. */
-	private boolean ctProcurementModeCPView = false;
+	protected boolean ctProcurementModeCPView = false;
 
 	/** The ct loa physical no cp view. */
-	private boolean ctLOAPhysicalNoCPView=false;
+	protected boolean ctLOAPhysicalNoCPView=false;
 
 	/** The ct agreement view. */
-	private boolean ctAgreementView = false;
+	protected boolean ctAgreementView = false;
 	
 	/** The ct agreement extra view. */
-	private boolean ctAgreementExtraView=false;	
+	protected boolean ctAgreementExtraView=false;	
 
 	/** The ct status view. */
-	private boolean ctStatusView = false;
+	protected boolean ctStatusView = false;
 
 	/** The ct contr montr status view. */
-	private boolean ctContrMontrStatusView = false;
+	protected boolean ctContrMontrStatusView = false;
 
 	/** The ct complete view. */
-	private boolean ctCompleteView = false;
+	protected boolean ctCompleteView = false;
 
 	/** The ct group one view. */
-	private boolean ctGroupOneView = false;
+	protected boolean ctGroupOneView = false;
 
 	/** The ct group two view. */
-	private boolean ctGroupTwoView = false;
+	protected boolean ctGroupTwoView = false;
 
 	/** The ct product service view. */
-	private boolean ctProductServiceView = false;
+	protected boolean ctProductServiceView = false;
 
 	/** The ct loan no view. */
-	private boolean ctLoanNoView = false;
+	protected boolean ctLoanNoView = false;
 
 	/** The ct ministry view. */
-	private boolean ctMinistryView = false;
+	protected boolean ctMinistryView = false;
 
 	/** The ct pega wai pengawal view. */
-	private boolean ctPegaWaiPengawalView = false;
+	protected boolean ctPegaWaiPengawalView = false;
 
 	/** The ct kumpulan ptj view. */
-	private boolean ctKumpulanPTJView = false;
+	protected boolean ctKumpulanPTJView = false;
 
 	/** The ct ptj view. */
-	private boolean ctPtjView = false;
+	protected boolean ctPtjView = false;
 
 	/** The ct procurement mode view. */
-	private boolean ctProcurementModeView = false;
+	protected boolean ctProcurementModeView = false;
 
 	/** The ct physical contract no view. */
-	private boolean ctPhysicalContractNoView = false;
+	protected boolean ctPhysicalContractNoView = false;
 
 	/** The ct group three view. */
-	private boolean ctGroupThreeView = false;	
+	protected boolean ctGroupThreeView = false;	
 	
 	/** The ct group three extra view. */
-	private boolean ctGroupThreeExtraView=false;
+	protected boolean ctGroupThreeExtraView=false;
 
 	/** The ct status two view. */
-	private boolean ctStatusTwoView = false;
+	protected boolean ctStatusTwoView = false;
 
 	/** The ct loa physical no view. */
-	private boolean ctLOAPhysicalNoView = false;
+	protected boolean ctLOAPhysicalNoView = false;
 
 	/** The ct user type view. */
-	private boolean ctUserTypeView = false;
+	protected boolean ctUserTypeView = false;
 
 	/** The ct sub type view. */
-	private boolean ctSubTypeView = false;
+	protected boolean ctSubTypeView = false;
 
 	/** The ct group four view. */
-	private boolean ctGroupFourView = false;
+	protected boolean ctGroupFourView = false;
 
 	/** The ct group five view. */
-	private boolean ctGroupFiveView = false;
+	protected boolean ctGroupFiveView = false;
 
 	/** The ct status three view. */
-	private boolean ctStatusThreeView = false;
+	protected boolean ctStatusThreeView = false;
 
 	/** The ct sub type only view. */
-	private boolean ctSubTypeOnlyView = false;
+	protected boolean ctSubTypeOnlyView = false;
 
 	/** The ct sub type mca view. */
-	private boolean ctSubTypeMCAView = false;
+	protected boolean ctSubTypeMCAView = false;
 
 	/** The ct sub type approver view. */
-	private boolean ctSubTypeApproverView = false;
+	protected boolean ctSubTypeApproverView = false;
 
 	/** The ct circular effective from date view. */
-	private boolean ctCircularEffectiveFromDateView = false;
+	protected boolean ctCircularEffectiveFromDateView = false;
 
 	/** The ct circular effective to date view. */
-	private boolean ctCircularEffectiveToDateView = false;
+	protected boolean ctCircularEffectiveToDateView = false;
 
 	/** The ct group five without suppl view. */
-	private boolean ctGroupFiveWithoutSupplView = false;
+	protected boolean ctGroupFiveWithoutSupplView = false;
 
 	/** The ct group five with suppl view. */
-	private boolean ctGroupFiveWithSupplView = false;
+	protected boolean ctGroupFiveWithSupplView = false;
 	// PP
 	/** The pp year view. */
-	private boolean ppYearView = false;
+	protected boolean ppYearView = false;
 
 	/** The pp ministry view. */
-	private boolean ppMinistryView = false;
+	protected boolean ppMinistryView = false;
 
 	/** The pp mandatory view. */
-	private boolean ppMandatoryView = false;
+	protected boolean ppMandatoryView = false;
 
 	/** The pp non mandatory view. */
-	private boolean ppNonMandatoryView = false;
+	protected boolean ppNonMandatoryView = false;
 
 	/** The pp ptj view. */
-	private boolean ppPTJView = false;
+	protected boolean ppPTJView = false;
 
 	/** The dummy value. */
-	private boolean dummyValue = false;
+	protected boolean dummyValue = false;
 
 	/** The pp pega wai pengawal view. */
-	private boolean ppPegaWaiPengawalView = false;
+	protected boolean ppPegaWaiPengawalView = false;
 
 	/** The pp kumpulan ptj view. */
-	private boolean ppKumpulanPTJView = false;
+	protected boolean ppKumpulanPTJView = false;
 
 	// PM
 	/** The pm service type view. */
-	private boolean pmServiceTypeView = false;
+	protected boolean pmServiceTypeView = false;
 
 	/** The pm status view. */
-	private boolean pmStatusView = false;
+	protected boolean pmStatusView = false;
 	
 	/** The pm list of org status view. */
-	private boolean pmListOfOrgStatusView=false;
+	protected boolean pmListOfOrgStatusView=false;
 
 	/** The pm financial org name view. */
-	private boolean pmFinancialOrgNameView = false;
+	protected boolean pmFinancialOrgNameView = false;
 
 	/** The pm business reg no view. */
-	private boolean pmBusinessRegNoView = false;
+	protected boolean pmBusinessRegNoView = false;
 
 	/** The pm exempted company name view. */
-	private boolean pmExemptedCompanyNameView = false;
+	protected boolean pmExemptedCompanyNameView = false;
 
 	/** The pm exempted business reg no view. */
-	private boolean pmExemptedBusinessRegNoView = false;
+	protected boolean pmExemptedBusinessRegNoView = false;
 
 	/** The pm exempted ep no view. */
-	private boolean pmExemptedEpNoView = false;
+	protected boolean pmExemptedEpNoView = false;
 
 	/** The pm exempted item name view. */
-	private boolean pmExemptedItemNameView = false;
+	protected boolean pmExemptedItemNameView = false;
 
 	/** The pm exempted itme code view. */
-	private boolean pmExemptedItemCodeView = false;
+	protected boolean pmExemptedItemCodeView = false;
 
 	// URL variables start
 	/** The quotation id tot var. */
-	private String quotationIdTotVar = ReportConst.EMPTY_VAL;
+	protected String quotationIdTotVar = ReportConst.EMPTY_VAL;
 	
-	private String estimatedAmntTotVar = ReportConst.EMPTY_VAL;
+	protected String estimatedAmntTotVar = ReportConst.EMPTY_VAL;
 
 	/** The item type tot var. */
-	private String itemTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String itemTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The item status tot var. */
-	private String itemStatusTotVar = ReportConst.EMPTY_VAL;
+	protected String itemStatusTotVar = ReportConst.EMPTY_VAL;
 
 	/** The unspsc code tot var. */
-	private String unspscCodeTotVar = ReportConst.EMPTY_VAL;
+	protected String unspscCodeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The unspsc title tot var. */
-	private String unspscTitleTotVar = ReportConst.EMPTY_VAL;
+	protected String unspscTitleTotVar = ReportConst.EMPTY_VAL;
 
 	/** The extention code tot var. */
-	private String extentionCodeTotVar = ReportConst.EMPTY_VAL;
+	protected String extentionCodeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The extention type tot var. */
-	private String extentionTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String extentionTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The extention brand tot var. */
-	private String extentionBrandTotVar = ReportConst.EMPTY_VAL;
+	protected String extentionBrandTotVar = ReportConst.EMPTY_VAL;
 
 	/** The extention measurment tot var. */
-	private String extentionMeasurmentTotVar = ReportConst.EMPTY_VAL;
+	protected String extentionMeasurmentTotVar = ReportConst.EMPTY_VAL;
 
 	/** The extention colour tot var. */
-	private String extentionColourTotVar = ReportConst.EMPTY_VAL;
+	protected String extentionColourTotVar = ReportConst.EMPTY_VAL;
 
 	/** The company name tot var. */
-	private String companyNameTotVar = ReportConst.EMPTY_VAL;
+	protected String companyNameTotVar = ReportConst.EMPTY_VAL;
 
 	/** The registration type tot var. */
-	private String registrationTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String registrationTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The item category tot var. */
-	private String itemCategoryTotVar = ReportConst.EMPTY_VAL;
+	protected String itemCategoryTotVar = ReportConst.EMPTY_VAL;
 
 	/** The item name tot var. */
-	private String itemNameTotVar = ReportConst.EMPTY_VAL;
+	protected String itemNameTotVar = ReportConst.EMPTY_VAL;
 
 	/** The proof identity tot var. */
-	private String proofIdentityTotVar = ReportConst.EMPTY_VAL;
+	protected String proofIdentityTotVar = ReportConst.EMPTY_VAL;
 
 	/** The ep number tot var. */
-	private String epNumberTotVar = ReportConst.EMPTY_VAL;
+	protected String epNumberTotVar = ReportConst.EMPTY_VAL;
 
 	/** The business reg no tot var. */
-	private String businessRegNoTotVar = ReportConst.EMPTY_VAL;
+	protected String businessRegNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The ic number tot var. */
-	private String icNumberTotVar = ReportConst.EMPTY_VAL;
+	protected String icNumberTotVar = ReportConst.EMPTY_VAL;
 
 	/** The mof number tot var. */
-	private String mofNumberTotVar = ReportConst.EMPTY_VAL;
+	protected String mofNumberTotVar = ReportConst.EMPTY_VAL;
 
 	/** The ptj tot var. */
-	private String ptjTotVar = ReportConst.EMPTY_VAL;
+	protected String ptjTotVar = ReportConst.EMPTY_VAL;
 
 	/** The contract no tot var. */
-	private String contractNoTotVar = ReportConst.EMPTY_VAL;
+	protected String contractNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The contract system tot var. */
-	private String contractSystemTotVar = ReportConst.EMPTY_VAL;
+	protected String contractSystemTotVar = ReportConst.EMPTY_VAL;
 
 	/** The sst tot var. */
-	private String sstTotVar = ReportConst.EMPTY_VAL;
+	protected String sstTotVar = ReportConst.EMPTY_VAL;
 
 	/** The jabatan tot var. */
-	private String jabatanTotVar = ReportConst.EMPTY_VAL;
+	protected String jabatanTotVar = ReportConst.EMPTY_VAL;
 
 	/** The ministry tot var. */
-	private String ministryTotVar = ReportConst.EMPTY_VAL;
+	protected String ministryTotVar = ReportConst.EMPTY_VAL;
 
 	/** The pegwai pengawai tot var. */
-	private String pegwaiPengawaiTotVar = ReportConst.EMPTY_VAL;
+	protected String pegwaiPengawaiTotVar = ReportConst.EMPTY_VAL;
 
 	/** The kumpulan ptj tot var. */
-	private String kumpulanPTJTotVar = ReportConst.EMPTY_VAL;
+	protected String kumpulanPTJTotVar = ReportConst.EMPTY_VAL;
 
 	/** The supplier tot var. */
-	private String supplierTotVar = ReportConst.EMPTY_VAL;
+	protected String supplierTotVar = ReportConst.EMPTY_VAL;
 
 	/** The status tot var. */
-	private String statusTotVar = ReportConst.EMPTY_VAL;
+	protected String statusTotVar = ReportConst.EMPTY_VAL;
 
 	/** The duration tot var. */
-	private String durationTotVar = ReportConst.EMPTY_VAL;
+	protected String durationTotVar = ReportConst.EMPTY_VAL;
 
 	/** The recieving officer tot var. */
-	private String recievingOfficerTotVar = ReportConst.EMPTY_VAL;
+	protected String recievingOfficerTotVar = ReportConst.EMPTY_VAL;
 
 	/** The delivery address tot var. */
-	private String deliveryAddressTotVar = ReportConst.EMPTY_VAL;
+	protected String deliveryAddressTotVar = ReportConst.EMPTY_VAL;
 
 	/** The fl rec note no tot var. */
-	private String flRecNoteNoTotVar = ReportConst.EMPTY_VAL;
+	protected String flRecNoteNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The contract type tot var. */
-	private String contractTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String contractTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The requisitioner tot var. */
-	private String requisitionerTotVar = ReportConst.EMPTY_VAL;
+	protected String requisitionerTotVar = ReportConst.EMPTY_VAL;
 	
 	/** The physical contract tot var. */
-	private String physicalContractTotVar = ReportConst.EMPTY_VAL;
+	protected String physicalContractTotVar = ReportConst.EMPTY_VAL;
 	
 	/** The physical loa tot var. */
-	private String physicalLOATotVar = ReportConst.EMPTY_VAL;
+	protected String physicalLOATotVar = ReportConst.EMPTY_VAL;
 	
 	/** The contract req tot var. */
-	private String contractReqTotVar = ReportConst.EMPTY_VAL;
+	protected String contractReqTotVar = ReportConst.EMPTY_VAL;
 
 	/** The acknowledge officer tot var. */
-	private String acknowledgeOfficerTotVar = ReportConst.EMPTY_VAL;
+	protected String acknowledgeOfficerTotVar = ReportConst.EMPTY_VAL;
 
 	/** The payment officer tot var. */
-	private String paymentOfficerTotVar = ReportConst.EMPTY_VAL;
+	protected String paymentOfficerTotVar = ReportConst.EMPTY_VAL;
 
 	/** The mto contract tot var. */
-	private String mtoContractTotVar = ReportConst.EMPTY_VAL;
+	protected String mtoContractTotVar = ReportConst.EMPTY_VAL;
 
 	/** The invoice no tot var. */
-	private String invoiceNoTotVar = ReportConst.EMPTY_VAL;
+	protected String invoiceNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The deduction type tot var. */
-	private String deductionTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String deductionTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The cr no tot var. */
-	private String crNoTotVar = ReportConst.EMPTY_VAL;
+	protected String crNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The approver name tot var. */
-	private String approverNameTotVar = ReportConst.EMPTY_VAL;
+	protected String approverNameTotVar = ReportConst.EMPTY_VAL;
 
 	/** The document type tot var. */
-	private String documentTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String documentTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The criteria tot var. */
-	private String criteriaTotVar = ReportConst.EMPTY_VAL;
+	protected String criteriaTotVar = ReportConst.EMPTY_VAL;
 
 	/** The scoring tot var. */
-	private String scoringTotVar = ReportConst.EMPTY_VAL;
+	protected String scoringTotVar = ReportConst.EMPTY_VAL;
 
 	/** The pkp no tot var. */
-	private String pkpNoTotVar = ReportConst.EMPTY_VAL;
+	protected String pkpNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The delivery order no tot var. */
-	private String deliveryOrderNoTotVar = ReportConst.EMPTY_VAL;
+	protected String deliveryOrderNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The fl supplier delivery order no var. */
-	private String flSupplierDeliveryOrderNoVar = ReportConst.EMPTY_VAL;
+	protected String flSupplierDeliveryOrderNoVar = ReportConst.EMPTY_VAL;
 
 	/** The item code tot var. */
-	private String itemCodeTotVar = ReportConst.EMPTY_VAL;
+	protected String itemCodeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The po amount tot var. */
-	private String poAmountTotVar = ReportConst.EMPTY_VAL;
+	protected String poAmountTotVar = ReportConst.EMPTY_VAL;
 
 	/** The pr no tot var. */
-	private String prNoTotVar = ReportConst.EMPTY_VAL;
+	protected String prNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The pmo tot var. */
-	private String pmoTotVar = ReportConst.EMPTY_VAL;
+	protected String pmoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The from date var. */
-	private String fromDateVar = ReportConst.EMPTY_VAL;
+	protected String fromDateVar = ReportConst.EMPTY_VAL;
 
 	/** The to date var. */
-	private String toDateVar = ReportConst.EMPTY_VAL;
+	protected String toDateVar = ReportConst.EMPTY_VAL;
 
 	/** The mof account end date from date var. */
-	private String mofAccountEndDateFromDateVar = ReportConst.EMPTY_VAL;
+	protected String mofAccountEndDateFromDateVar = ReportConst.EMPTY_VAL;
 
 	/** The mof account end date to date var. */
-	private String mofAccountEndDateToDateVar = ReportConst.EMPTY_VAL;
+	protected String mofAccountEndDateToDateVar = ReportConst.EMPTY_VAL;
 	// cm
 	/** The cm suppl or admin var. */
-	private String cmSupplOrAdminVar = ReportConst.EMPTY_VAL;
+	protected String cmSupplOrAdminVar = ReportConst.EMPTY_VAL;
 
 	/** The cm extention code var. */
-	private String cmExtentionCodeVar = ReportConst.EMPTY_VAL;
+	protected String cmExtentionCodeVar = ReportConst.EMPTY_VAL;
 
 	/** The cm extention var. */
-	private String cmExtentionVar = ReportConst.EMPTY_VAL;
+	protected String cmExtentionVar = ReportConst.EMPTY_VAL;
 
 	/** The cm group one var. */
-	private String cmGroupOneVar = ReportConst.EMPTY_VAL;
+	protected String cmGroupOneVar = ReportConst.EMPTY_VAL;
 
 	/** The cm extention brand var. */
-	private String cmExtentionBrandVar = ReportConst.EMPTY_VAL;
+	protected String cmExtentionBrandVar = ReportConst.EMPTY_VAL;
 
 	/** The cm extention type var. */
-	private String cmExtentionTypeVar = ReportConst.EMPTY_VAL;
+	protected String cmExtentionTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The cm extention measurment var. */
-	private String cmExtentionMeasurmentVar = ReportConst.EMPTY_VAL;
+	protected String cmExtentionMeasurmentVar = ReportConst.EMPTY_VAL;
 
 	/** The cm extention colour var. */
-	private String cmExtentionColourVar = ReportConst.EMPTY_VAL;
+	protected String cmExtentionColourVar = ReportConst.EMPTY_VAL;
 
 	/** The cm request number var. */
-	private String cmRequestNumberVar = ReportConst.EMPTY_VAL;
+	protected String cmRequestNumberVar = ReportConst.EMPTY_VAL;
 	// sm
 	/** The payment type tot var. */
-	private String paymentTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String paymentTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The report type tot var. */
-	private String reportTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String reportTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The application type tot var. */
-	private String applicationTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String applicationTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The state tot var. */
-	private String stateTotVar = ReportConst.EMPTY_VAL;
+	protected String stateTotVar = ReportConst.EMPTY_VAL;
 
 	/** The district tot var. */
-	private String districtTotVar = ReportConst.EMPTY_VAL;
+	protected String districtTotVar = ReportConst.EMPTY_VAL;
 	
 	/** The site visit status tot var. */
-	private String siteVisitStatusTotVar = ReportConst.EMPTY_VAL;	
+	protected String siteVisitStatusTotVar = ReportConst.EMPTY_VAL;	
 
 	/** The application no tot var. */
-	private String applicationNoTotVar = ReportConst.EMPTY_VAL;
+	protected String applicationNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The zone tot var. */
-	private String zoneTotVar = ReportConst.EMPTY_VAL;
+	protected String zoneTotVar = ReportConst.EMPTY_VAL;
 
 	/** The supplier type tot var. */
-	private String supplierTypeTotVar = ReportConst.EMPTY_VAL;
+	protected String supplierTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The mof reg no tot var. */
-	private String mofRegNoTotVar = ReportConst.EMPTY_VAL;
+	protected String mofRegNoTotVar = ReportConst.EMPTY_VAL;
 
 	/** The registration status tot var. */
-	private String registrationStatusTotVar = ReportConst.EMPTY_VAL;
+	protected String registrationStatusTotVar = ReportConst.EMPTY_VAL;
 
 	/** The main category tot var. */
-	private String mainCategoryTotVar = ReportConst.EMPTY_VAL;
+	protected String mainCategoryTotVar = ReportConst.EMPTY_VAL;
 
 	/** The sub category tot var. */
-	private String subCategoryTotVar = ReportConst.EMPTY_VAL;
+	protected String subCategoryTotVar = ReportConst.EMPTY_VAL;
 
 	/** The sub category division tot var. */
-	private String subCategoryDivisionTotVar = ReportConst.EMPTY_VAL;
+	protected String subCategoryDivisionTotVar = ReportConst.EMPTY_VAL;
 
 	/** The application status tot var. */
-	private String applicationStatusTotVar = ReportConst.EMPTY_VAL;
+	protected String applicationStatusTotVar = ReportConst.EMPTY_VAL;
 
 	/** The sm created from year var. */
-	private String smCreatedFromYearVar = ReportConst.EMPTY_VAL;
+	protected String smCreatedFromYearVar = ReportConst.EMPTY_VAL;
 
 	/** The sm created to year var. */
-	private String smCreatedToYearVar = ReportConst.EMPTY_VAL;
+	protected String smCreatedToYearVar = ReportConst.EMPTY_VAL;
 
 	/** The sm monthly rpt by year var. */
-	private String smMonthlyRptByYearVar = ReportConst.EMPTY_VAL;
+	protected String smMonthlyRptByYearVar = ReportConst.EMPTY_VAL;
 
 	/** The sm mandatory created from year var. */
-	private String smMandatoryCreatedFromYearVar = ReportConst.EMPTY_VAL;
+	protected String smMandatoryCreatedFromYearVar = ReportConst.EMPTY_VAL;
 
 	/** The sm mandatory created to year var. */
-	private String smMandatoryCreatedToYearVar = ReportConst.EMPTY_VAL;
+	protected String smMandatoryCreatedToYearVar = ReportConst.EMPTY_VAL;
 
 	/** The sm svo user var. */
-	private String smSVOUserVar = ReportConst.EMPTY_VAL;
+	protected String smSVOUserVar = ReportConst.EMPTY_VAL;
 
 	/** The sm year text var. */
-	private String smYearTextVar = ReportConst.EMPTY_VAL;
+	protected String smYearTextVar = ReportConst.EMPTY_VAL;
 
 	/** The sm role var. */
-	private String smRoleVar = ReportConst.EMPTY_VAL;
+	protected String smRoleVar = ReportConst.EMPTY_VAL;
 
 	/** The sm ep no var. */
-	private String smEpNoVar = ReportConst.EMPTY_VAL;
+	protected String smEpNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sm registration no var. */
-	private String smRegistrationNoVar = ReportConst.EMPTY_VAL;
+	protected String smRegistrationNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sm supporting document mode var. */
-	private String smSupportingDocumentModeVar = ReportConst.EMPTY_VAL;
+	protected String smSupportingDocumentModeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm supporting document status var. */
-	private String smSupportingDocumentStatusVar = ReportConst.EMPTY_VAL;
+	protected String smSupportingDocumentStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sm mof reg no from var. */
-	private String smMofRegNoFromVar = ReportConst.EMPTY_VAL;
+	protected String smMofRegNoFromVar = ReportConst.EMPTY_VAL;
 
 	/** The sm mof reg no to var. */
-	private String smMofRegNoToVar = ReportConst.EMPTY_VAL;
+	protected String smMofRegNoToVar = ReportConst.EMPTY_VAL;
 
 	/** The sm paid up capital frm var. */
-	private String smPaidUpCapitalFrmVar = ReportConst.EMPTY_VAL;
+	protected String smPaidUpCapitalFrmVar = ReportConst.EMPTY_VAL;
 
 	/** The sm paid up capital to var. */
-	private String smPaidUpCapitalToVar = ReportConst.EMPTY_VAL;
+	protected String smPaidUpCapitalToVar = ReportConst.EMPTY_VAL;
 
 	/** The sm paid up capital naccum var. */
-	private String smPaidUpCapitalNaccumVar = ReportConst.EMPTY_VAL;
+	protected String smPaidUpCapitalNaccumVar = ReportConst.EMPTY_VAL;
 
 	/** The sm personnel role var. */
-	private String smPersonnelRoleVar = ReportConst.EMPTY_VAL;
+	protected String smPersonnelRoleVar = ReportConst.EMPTY_VAL;
 
 	/** The sm supplier name var. */
-	private String smSupplierNameVar = ReportConst.EMPTY_VAL;
+	protected String smSupplierNameVar = ReportConst.EMPTY_VAL;
 
 	/** The sm mof registration fee var var. */
-	private String smMofRegistrationFeeVar = ReportConst.EMPTY_VAL;
+	protected String smMofRegistrationFeeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm processing fee var. */
-	private String smProcessingFeeVar = ReportConst.EMPTY_VAL;
+	protected String smProcessingFeeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm soft certificate fee var. */
-	private String smSoftCertificateFeeVar = ReportConst.EMPTY_VAL;
+	protected String smSoftCertificateFeeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm identification type var. */
-	private String smIdentificationTypeVar = ReportConst.EMPTY_VAL;
+	protected String smIdentificationTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm identification number var. */
-	private String smIdentificationNumberVar = ReportConst.EMPTY_VAL;
+	protected String smIdentificationNumberVar = ReportConst.EMPTY_VAL;
 
 	/** The sm cancellation by var. */
-	private String smCancellationByVar = ReportConst.EMPTY_VAL;
+	protected String smCancellationByVar = ReportConst.EMPTY_VAL;
 
 	/** The sm bus comp type registration status by var. */
-	private String smBusCompTypeRegistrationStatusByVar = ReportConst.EMPTY_VAL;
+	protected String smBusCompTypeRegistrationStatusByVar = ReportConst.EMPTY_VAL;
 
 	/** The sm bus company type by var. */
-	private String smBusCompanyTypeByVar = ReportConst.EMPTY_VAL;
+	protected String smBusCompanyTypeByVar = ReportConst.EMPTY_VAL;
 
 	/** The sm bus paid up capital frm by var. */
-	private String smBusPaidUpCapitalFrmByVar = ReportConst.EMPTY_VAL;
+	protected String smBusPaidUpCapitalFrmByVar = ReportConst.EMPTY_VAL;
 
 	/** The sm bus paid up capital to by var. */
-	private String smBusPaidUpCapitalToByVar = ReportConst.EMPTY_VAL;
+	protected String smBusPaidUpCapitalToByVar = ReportConst.EMPTY_VAL;
 
 	/** The sm processing officer name var. */
-	private String smProcessingOfficerNameVar = ReportConst.EMPTY_VAL;
+	protected String smProcessingOfficerNameVar = ReportConst.EMPTY_VAL;
 
 	/** The sm report type var. */
-	private String smReportTypeVar = ReportConst.EMPTY_VAL;
+	protected String smReportTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm receipt no var. */
-	private String smReceiptNoVar = ReportConst.EMPTY_VAL;
+	protected String smReceiptNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sm processing type var. */
-	private String smProcessingTypeVar = ReportConst.EMPTY_VAL;
+	protected String smProcessingTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm payment method var. */
-	private String smPaymentMethodVar = ReportConst.EMPTY_VAL;
+	protected String smPaymentMethodVar = ReportConst.EMPTY_VAL;
 
 	/** The Sm code var. */
-	private String SmCodeVar = ReportConst.EMPTY_VAL;
+	protected String SmCodeVar = ReportConst.EMPTY_VAL;
 
 	/** The sm from month var. */
-	private String smFromMonthVar = ReportConst.EMPTY_VAL;
+	protected String smFromMonthVar = ReportConst.EMPTY_VAL;
 
 	/** The sm to month var. */
-	private String smToMonthVar = ReportConst.EMPTY_VAL;
+	protected String smToMonthVar = ReportConst.EMPTY_VAL;
 
 	/** The sm rt report type var. */
-	private String smRTReportTypeVar = ReportConst.EMPTY_VAL;
+	protected String smRTReportTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The Sm threshold from year var. */
-	private String SmThresholdFromYearVar = ReportConst.EMPTY_VAL;
+	protected String SmThresholdFromYearVar = ReportConst.EMPTY_VAL;
 
 	/** The Sm threshold to year var. */
-	private String SmThresholdToYearVar = ReportConst.EMPTY_VAL;
+	protected String SmThresholdToYearVar = ReportConst.EMPTY_VAL;
 
 	/** The sm user name var. */
-	private String smUserNameVar = ReportConst.EMPTY_VAL;
+	protected String smUserNameVar = ReportConst.EMPTY_VAL;
 
 	/** The sm request expiry renewal date var. */
-	private String smRequestExpiryRenewalDateVar = ReportConst.EMPTY_VAL;
+	protected String smRequestExpiryRenewalDateVar = ReportConst.EMPTY_VAL;
 
 	/** The sm profile status var. */
-	private String smProfileStatusVar = ReportConst.EMPTY_VAL;
+	protected String smProfileStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sm gst registration no var. */
-	private String smGSTRegistrationNoVar = ReportConst.EMPTY_VAL;
+	protected String smGSTRegistrationNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sm gst registered status var. */
-	private String smGSTRegisteredStatusVar = ReportConst.EMPTY_VAL;
+	protected String smGSTRegisteredStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sm payment to var. */
-	private String smPaymentToVar = ReportConst.EMPTY_VAL;
+	protected String smPaymentToVar = ReportConst.EMPTY_VAL;
 
 	/** The report value id var. */
-	private String reportValueIdVar = ReportConst.EMPTY_VAL;
+	protected String reportValueIdVar = ReportConst.EMPTY_VAL;
 
 	/** The user id var. */
-	private String userIdVar = ReportConst.EMPTY_VAL;
+	protected String userIdVar = ReportConst.EMPTY_VAL;
 	// sc
 	/** The sc created from dt var. */
-	private String scCreatedFromDtVar = ReportConst.EMPTY_VAL;
+	protected String scCreatedFromDtVar = ReportConst.EMPTY_VAL;
 
 	/** The sc created to dt var. */
-	private String scCreatedToDtVar = ReportConst.EMPTY_VAL;
+	protected String scCreatedToDtVar = ReportConst.EMPTY_VAL;
 
 	/** The sc status var. */
-	private String scStatusVar = ReportConst.EMPTY_VAL;
+	protected String scStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc ptj var. */
-	private String scPtjVar = ReportConst.EMPTY_VAL;
+	protected String scPtjVar = ReportConst.EMPTY_VAL;
 
 	/** The sc desk officer var. */
-	private String scDeskOfficerVar = ReportConst.EMPTY_VAL;
+	protected String scDeskOfficerVar = ReportConst.EMPTY_VAL;
 
 	/** The sc procure method chk var. */
-	private String scProcureMethodChkVar = ReportConst.EMPTY_VAL;
+	protected String scProcureMethodChkVar = ReportConst.EMPTY_VAL;
 
 	/** The sc publish from date var. */
-	private String scPublishFromDateVar = ReportConst.EMPTY_VAL;
+	protected String scPublishFromDateVar = ReportConst.EMPTY_VAL;
 
 	/** The sc publish to date var. */
-	private String scPublishToDateVar = ReportConst.EMPTY_VAL;
+	protected String scPublishToDateVar = ReportConst.EMPTY_VAL;
 
 	/** The sc user access role var. */
-	private String scUserAccessRoleVar = ReportConst.EMPTY_VAL;
+	protected String scUserAccessRoleVar = ReportConst.EMPTY_VAL;
 
 	/** The sc sone crtd from date var. */
-	private String scSoneCrtdFromDateVar = ReportConst.EMPTY_VAL;
+	protected String scSoneCrtdFromDateVar = ReportConst.EMPTY_VAL;
 
 	/** The sc sone crtd to date var. */
-	private String scSoneCrtdToDateVar = ReportConst.EMPTY_VAL;
+	protected String scSoneCrtdToDateVar = ReportConst.EMPTY_VAL;
 
 	/** The sc requisener id var. */
-	private String scRequisenerIdVar = ReportConst.EMPTY_VAL;
+	protected String scRequisenerIdVar = ReportConst.EMPTY_VAL;
 
 	/** The sc supplier var. */
-	private String scSupplierVar = ReportConst.EMPTY_VAL;
+	protected String scSupplierVar = ReportConst.EMPTY_VAL;
 
 	/** The sc p ino var. */
-	private String scPInoVar = ReportConst.EMPTY_VAL;
+	protected String scPInoVar = ReportConst.EMPTY_VAL;
 
 	/** The sc sone status var. */
-	private String scSoneStatusVar = ReportConst.EMPTY_VAL;
+	protected String scSoneStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc prc rpt group var. */
-	private String scPrcRptGroupVar = ReportConst.EMPTY_VAL;
+	protected String scPrcRptGroupVar = ReportConst.EMPTY_VAL;
 
 	/** The sc pi dtls prc rpt group var. */
-	private String scPIDtlsPrcRptGroupVar = ReportConst.EMPTY_VAL;
+	protected String scPIDtlsPrcRptGroupVar = ReportConst.EMPTY_VAL;
 
 	/** The sc procurement type var. */
-	private String scProcurementTypeVar = ReportConst.EMPTY_VAL;
+	protected String scProcurementTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The sc process rpt quotation no var. */
-	private String scProcessRptQuotationNoVar = ReportConst.EMPTY_VAL;
+	protected String scProcessRptQuotationNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sc common status var. */
-	private String scCommonStatusVar = ReportConst.EMPTY_VAL;
+	protected String scCommonStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc laprnpurchdefault group var. */
-	private String scLAPRNPURCHDEFAULTGroupVar = ReportConst.EMPTY_VAL;
+	protected String scLAPRNPURCHDEFAULTGroupVar = ReportConst.EMPTY_VAL;
 
 	/** The sc requestnotesummary group var. */
-	private String scREQUESTNOTESUMMARYGroupVar = ReportConst.EMPTY_VAL;
+	protected String scREQUESTNOTESUMMARYGroupVar = ReportConst.EMPTY_VAL;
 
 	/** The sc pid no var. */
-	private String scPIDNoVar = ReportConst.EMPTY_VAL;
+	protected String scPIDNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sc contract or pkp type var. */
-	private String scContractOrPKPTypeVar = ReportConst.EMPTY_VAL;
+	protected String scContractOrPKPTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The sc contract or pkp no var. */
-	private String scContractOrPKPNoVar = ReportConst.EMPTY_VAL;
+	protected String scContractOrPKPNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sc contract or pkp name var. */
-	private String scContractOrPKPNameVar = ReportConst.EMPTY_VAL;
+	protected String scContractOrPKPNameVar = ReportConst.EMPTY_VAL;
 
 	/** The sc request quote no var. */
-	private String scRequestQuoteNoVar = ReportConst.EMPTY_VAL;
+	protected String scRequestQuoteNoVar = ReportConst.EMPTY_VAL;
 
 	/** The sc request note status var. */
-	private String scRequestNoteStatusVar = ReportConst.EMPTY_VAL;
+	protected String scRequestNoteStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc simple quote status var. */
-	private String scSimpleQuoteStatusVar = ReportConst.EMPTY_VAL;
+	protected String scSimpleQuoteStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc simple quote dtl group var. */
-	private String scSimpleQuoteDtlGroupVar = ReportConst.EMPTY_VAL;
+	protected String scSimpleQuoteDtlGroupVar = ReportConst.EMPTY_VAL;
 
 	/** The sc purchase in default status var. */
-	private String scPurchaseInDefaultStatusVar = ReportConst.EMPTY_VAL;
+	protected String scPurchaseInDefaultStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc soa status var. */
-	private String scSOAStatusVar = ReportConst.EMPTY_VAL;
+	protected String scSOAStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The sc simple quote type var. */
-	private String scSimpleQuoteTypeVar = ReportConst.EMPTY_VAL;
+	protected String scSimpleQuoteTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The sc loa no var. */
-	private String scLOANoVar = ReportConst.EMPTY_VAL;
+	protected String scLOANoVar = ReportConst.EMPTY_VAL;
 	// CT
 	/** The ct contract no var. */
-	private String ctContractNoVar = ReportConst.EMPTY_VAL;
+	protected String ctContractNoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct agreement var. */
-	private String ctAgreementVar = ReportConst.EMPTY_VAL;
+	protected String ctAgreementVar = ReportConst.EMPTY_VAL;
 
 	/** The ct status var. */
-	private String ctStatusVar = ReportConst.EMPTY_VAL;
+	protected String ctStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The ct contr montr status var. */
-	private String ctContrMontrStatusVar = ReportConst.EMPTY_VAL;
+	protected String ctContrMontrStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The ct hidden param group var. */
-	private String ctHiddenParamGroupVar = ReportConst.EMPTY_VAL;
+	protected String ctHiddenParamGroupVar = ReportConst.EMPTY_VAL;
 
 	/** The ct complete var. */
-	private String ctCompleteVar = ReportConst.EMPTY_VAL;
+	protected String ctCompleteVar = ReportConst.EMPTY_VAL;
 
 	/** The ct group one var. */
-	private String ctGroupOneVar = ReportConst.EMPTY_VAL;
+	protected String ctGroupOneVar = ReportConst.EMPTY_VAL;
 
 	/** The ct group two var. */
-	private String ctGroupTwoVar = ReportConst.EMPTY_VAL;
+	protected String ctGroupTwoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct product service var. */
-	private String ctProductServiceVar = ReportConst.EMPTY_VAL;
+	protected String ctProductServiceVar = ReportConst.EMPTY_VAL;
 
 	/** The ct loan no var. */
-	private String ctLoanNoVar = ReportConst.EMPTY_VAL;
+	protected String ctLoanNoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct ministry var. */
-	private String ctMinistryVar = ReportConst.EMPTY_VAL;
+	protected String ctMinistryVar = ReportConst.EMPTY_VAL;
 
 	/** The ct pegai pengawai var. */
-	private String ctPegaiPengawaiVar = ReportConst.EMPTY_VAL;
+	protected String ctPegaiPengawaiVar = ReportConst.EMPTY_VAL;
 
 	/** The ct kumpulan var. */
-	private String ctKumpulanVar = ReportConst.EMPTY_VAL;
+	protected String ctKumpulanVar = ReportConst.EMPTY_VAL;
 
 	/** The ct ptj var. */
-	private String ctPtjVar = ReportConst.EMPTY_VAL;
+	protected String ctPtjVar = ReportConst.EMPTY_VAL;
 
 	/** The ct procurement mode var. */
-	private String ctProcurementModeVar = ReportConst.EMPTY_VAL;
+	protected String ctProcurementModeVar = ReportConst.EMPTY_VAL;
 
 	/** The ct physical contract no var. */
-	private String ctPhysicalContractNoVar = ReportConst.EMPTY_VAL;
+	protected String ctPhysicalContractNoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct group three var. */
-	private String ctGroupThreeVar = ReportConst.EMPTY_VAL;
+	protected String ctGroupThreeVar = ReportConst.EMPTY_VAL;
 
 	/** The ct status two var. */
-	private String ctStatusTwoVar = ReportConst.EMPTY_VAL;
+	protected String ctStatusTwoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct loa physical no var. */
-	private String ctLOAPhysicalNoVar = ReportConst.EMPTY_VAL;
+	protected String ctLOAPhysicalNoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct user type var. */
-	private String ctUserTypeVar = ReportConst.EMPTY_VAL;
+	protected String ctUserTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The ct sub type var. */
-	private String ctSubTypeVar = ReportConst.EMPTY_VAL;
+	protected String ctSubTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The ct circular no var. */
-	private String ctCircularNoVar = ReportConst.EMPTY_VAL;
+	protected String ctCircularNoVar = ReportConst.EMPTY_VAL;
 
 	/** The ct circular name var. */
-	private String ctCircularNameVar = ReportConst.EMPTY_VAL;
+	protected String ctCircularNameVar = ReportConst.EMPTY_VAL;
 
 	/** The ct circular type var. */
-	private String ctCircularTypeVar = ReportConst.EMPTY_VAL;
+	protected String ctCircularTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The ct circular effective from date var. */
-	private String ctCircularEffectiveFromDateVar = ReportConst.EMPTY_VAL;
+	protected String ctCircularEffectiveFromDateVar = ReportConst.EMPTY_VAL;
 
 	/** The ct circular effective to date var. */
-	private String ctCircularEffectiveToDateVar = ReportConst.EMPTY_VAL;
+	protected String ctCircularEffectiveToDateVar = ReportConst.EMPTY_VAL;
 
 	/** The ct supplier name var. */
-	private String ctSupplierNameVar = ReportConst.EMPTY_VAL;
+	protected String ctSupplierNameVar = ReportConst.EMPTY_VAL;
 	// ct
 	/** The fl contract order var. */
-	private String flContractOrderVar = ReportConst.EMPTY_VAL;
+	protected String flContractOrderVar = ReportConst.EMPTY_VAL;
 
 	/** The fl contract request var. */
-	private String flContractRequestVar = ReportConst.EMPTY_VAL;
+	protected String flContractRequestVar = ReportConst.EMPTY_VAL;
 
 	/** The fl purchase order no var. */
-	private String flPurchaseOrderNoVar = ReportConst.EMPTY_VAL;
+	protected String flPurchaseOrderNoVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group one var. */
-	private String flGroupOneVar = ReportConst.EMPTY_VAL;
+	protected String flGroupOneVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group two var. */
-	private String flGroupTwoVar = ReportConst.EMPTY_VAL;
+	protected String flGroupTwoVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group three var. */
-	private String flGroupThreeVar = ReportConst.EMPTY_VAL;
+	protected String flGroupThreeVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group four var. */
-	private String flGroupFourVar = ReportConst.EMPTY_VAL;
+	protected String flGroupFourVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group five var. */
-	private String flGroupFiveVar = ReportConst.EMPTY_VAL;
+	protected String flGroupFiveVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group six var. */
-	private String flGroupSixVar = ReportConst.EMPTY_VAL;
+	protected String flGroupSixVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group seven var. */
-	private String flGroupSevenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupSevenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group eight var. */
-	private String flGroupEightVar = ReportConst.EMPTY_VAL;
+	protected String flGroupEightVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group nine var. */
-	private String flGroupNineVar = ReportConst.EMPTY_VAL;
+	protected String flGroupNineVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group ten var. */
-	private String flGroupTenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupTenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group eleven var. */
-	private String flGroupElevenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupElevenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group twelve var. */
-	private String flGroupTwelveVar = ReportConst.EMPTY_VAL;
+	protected String flGroupTwelveVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group thirteen var. */
-	private String flGroupThirteenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupThirteenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group fourteen var. */
-	private String flGroupFourteenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupFourteenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group fifteen var. */
-	private String flGroupFifteenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupFifteenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group sixteen var. */
-	private String flGroupSixteenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupSixteenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl group seventeen var. */
-	private String flGroupSeventeenVar = ReportConst.EMPTY_VAL;
+	protected String flGroupSeventeenVar = ReportConst.EMPTY_VAL;
 
 	/** The fl stop instruction no var. */
-	private String flStopInstructionNoVar = ReportConst.EMPTY_VAL;
+	protected String flStopInstructionNoVar = ReportConst.EMPTY_VAL;
 
 	/** The fl supplier invoice no var. */
-	private String flSupplierInvoiceNoVar = ReportConst.EMPTY_VAL;
+	protected String flSupplierInvoiceNoVar = ReportConst.EMPTY_VAL;
 
 	/** The fl payment advice no var. */
-	private String flPaymentAdviceNoVar = ReportConst.EMPTY_VAL;
+	protected String flPaymentAdviceNoVar = ReportConst.EMPTY_VAL;
 	// PP
 	/** The pp year var. */
-	private String ppYearVar = ReportConst.EMPTY_VAL;
+	protected String ppYearVar = ReportConst.EMPTY_VAL;
 
 	/** The pp ministry var. */
-	private String ppMinistryVar = ReportConst.EMPTY_VAL;
+	protected String ppMinistryVar = ReportConst.EMPTY_VAL;
 
 	/** The pp pegai pengawai var. */
-	private String ppPegaiPengawaiVar = ReportConst.EMPTY_VAL;
+	protected String ppPegaiPengawaiVar = ReportConst.EMPTY_VAL;
 
 	/** The pp kumpulan var. */
-	private String ppKumpulanVar = ReportConst.EMPTY_VAL;
+	protected String ppKumpulanVar = ReportConst.EMPTY_VAL;
 
 	/** The pp ptj var. */
-	private String ppPTJVar = ReportConst.EMPTY_VAL;
+	protected String ppPTJVar = ReportConst.EMPTY_VAL;
 	// PM
 	/** The pm service type var. */
-	private String pmServiceTypeVar = ReportConst.EMPTY_VAL;
+	protected String pmServiceTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The pm status var. */
-	private String pmStatusVar = ReportConst.EMPTY_VAL;
+	protected String pmStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The pm financial org name var. */
-	private String pmFinancialOrgNameVar = ReportConst.EMPTY_VAL;
+	protected String pmFinancialOrgNameVar = ReportConst.EMPTY_VAL;
 
 	/** The pm business reg no var. */
-	private String pmBusinessRegNoVar = ReportConst.EMPTY_VAL;
+	protected String pmBusinessRegNoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm ep no var. */
-	private String pmEpNoVar = ReportConst.EMPTY_VAL;
+	protected String pmEpNoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm org category var. */
-	private String pmOrgCategoryVar = ReportConst.EMPTY_VAL;
+	protected String pmOrgCategoryVar = ReportConst.EMPTY_VAL;
 
 	/** The pm org type var. */
-	private String pmOrgTypeVar = ReportConst.EMPTY_VAL;
+	protected String pmOrgTypeVar = ReportConst.EMPTY_VAL;
 
 	/** The pm org name var. */
-	private String pmOrgNameVar = ReportConst.EMPTY_VAL;
+	protected String pmOrgNameVar = ReportConst.EMPTY_VAL;
 
 	/** The pm org code var. */
-	private String pmOrgCodeVar = ReportConst.EMPTY_VAL;
+	protected String pmOrgCodeVar = ReportConst.EMPTY_VAL;
 
 	/** The pm item name var. */
-	private String pmItemNameVar = ReportConst.EMPTY_VAL;
+	protected String pmItemNameVar = ReportConst.EMPTY_VAL;
 
 	/** The pm item code var. */
-	private String pmItemCodeVar = ReportConst.EMPTY_VAL;
+	protected String pmItemCodeVar = ReportConst.EMPTY_VAL;
 
 	/** The pm company name var. */
-	private String pmCompanyNameVar = ReportConst.EMPTY_VAL;
+	protected String pmCompanyNameVar = ReportConst.EMPTY_VAL;
 
 	/** The pm identification no var. */
-	private String pmIdentificationNoVar = ReportConst.EMPTY_VAL;
+	protected String pmIdentificationNoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm user name var. */
-	private String pmUserNameVar = ReportConst.EMPTY_VAL;
+	protected String pmUserNameVar = ReportConst.EMPTY_VAL;
 
 	/** The pm role code var. */
-	private String pmRoleCodeVar = ReportConst.EMPTY_VAL;
+	protected String pmRoleCodeVar = ReportConst.EMPTY_VAL;
 
 	/** The pm contract no var. */
-	private String pmContractNoVar = ReportConst.EMPTY_VAL;
+	protected String pmContractNoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm physical contract no var. */
-	private String pmPhysicalContractNoVar = ReportConst.EMPTY_VAL;
+	protected String pmPhysicalContractNoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm loa no var. */
-	private String pmLOANoVar = ReportConst.EMPTY_VAL;
+	protected String pmLOANoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm physical loa no var. */
-	private String pmPhysicalLOANoVar = ReportConst.EMPTY_VAL;
+	protected String pmPhysicalLOANoVar = ReportConst.EMPTY_VAL;
 
 	/** The pm zone var. */
-	private String pmZoneVar = ReportConst.EMPTY_VAL;
+	protected String pmZoneVar = ReportConst.EMPTY_VAL;
 
 	/** The pm profile status var. */
-	private String pmProfileStatusVar = ReportConst.EMPTY_VAL;
+	protected String pmProfileStatusVar = ReportConst.EMPTY_VAL;
 
 	/** The Pm mandatory org category type view. */
-	private boolean pmMandatoryOrgCategoryTypeView = false;
+	protected boolean pmMandatoryOrgCategoryTypeView = false;
 
 	/** The Pm mandatory org type view. */
-	private boolean pmMandatoryOrgTypeView = false;
+	protected boolean pmMandatoryOrgTypeView = false;
 	
 	/** The pm mandatory org type for lop view. */
-	private boolean pmMandatoryOrgTypeForLOPView=false;
+	protected boolean pmMandatoryOrgTypeForLOPView=false;
 	
 	/** The pm mandatory org name for lop view. */
-	private boolean pmMandatoryOrgNameForLOPView=false;
+	protected boolean pmMandatoryOrgNameForLOPView=false;
 	
 	/** The pm non mandatory org type view. */
-	private boolean pmNonMandatoryOrgTypeView = false;
+	protected boolean pmNonMandatoryOrgTypeView = false;
 	
 	/** The pm non mandatory org name for profile view. */
-	private boolean pmNonMandatoryOrgNameForProfileView = false;		
+	protected boolean pmNonMandatoryOrgNameForProfileView = false;		
 
 	/** The Pm org name view. */
-	private boolean pmOrgNameView = false;
+	protected boolean pmOrgNameView = false;
 
 	/** The Pm org code view. */
-	private boolean pmOrgCodeView = false;
+	protected boolean pmOrgCodeView = false;
 
 	/** The Pm mandatory org name view. */
-	private boolean pmMandatoryOrgNameView = false;
+	protected boolean pmMandatoryOrgNameView = false;
 
 	/** The Pm identification no view. */
-	private boolean pmIdentificationNoView = false;
+	protected boolean pmIdentificationNoView = false;
 
 	/** The Pm user name view. */
-	private boolean pmUserNameView = false;
+	protected boolean pmUserNameView = false;
 
 	/** The Pm role code view. */
-	private boolean pmRoleCodeView = false;
+	protected boolean pmRoleCodeView = false;
 
 	/** The Pm non mandatory org name view. */
-	private boolean pmNonMandatoryOrgNameView = false;
+	protected boolean pmNonMandatoryOrgNameView = false;
 
 	/** The Pm non mandatroy org code view. */
-	private boolean pmNonMandatroyOrgCodeView = false;
+	protected boolean pmNonMandatroyOrgCodeView = false;
 
 	/** The pm exempted item view. */
-	private boolean pmExemptedItemView = false;
+	protected boolean pmExemptedItemView = false;
 
 	/** The pm exempted contracted item view. */
-	private boolean pmExemptedContractedItemView = false;
+	protected boolean pmExemptedContractedItemView = false;
 
 	/** The Pm company name view. */
-	private boolean pmCompanyNameView = false;
+	protected boolean pmCompanyNameView = false;
 
 	/** The Pm ep no view. */
-	private boolean pmEpNoView = false;
+	protected boolean pmEpNoView = false;
 
 	/** The Pm itme name view. */
-	private boolean pmItemNameView = false;
+	protected boolean pmItemNameView = false;
 
 	/** The Pm itme code view. */
-	private boolean pmItemCodeView = false;
+	protected boolean pmItemCodeView = false;
 	
 	/** The pm contract item code view. */
-	private boolean pmContractItemCodeView=false;
+	protected boolean pmContractItemCodeView=false;
 	
 	/** The pm contract item name view. */
-	private boolean pmContractItemNameView=false;
+	protected boolean pmContractItemNameView=false;
 
 	/** The Pm from date view. */
-	private boolean pmFromDateView = false;
+	protected boolean pmFromDateView = false;
 
 	/** The pm non mandatory date view. */
-	private boolean pmNonMandatoryDateView = false;
+	protected boolean pmNonMandatoryDateView = false;
 
 	/** The pm non mandatory sup date view. */
-	private boolean pmNonMandatorySupDateView = false;
+	protected boolean pmNonMandatorySupDateView = false;
 
 	/** The Pm contract no view. */
-	private boolean pmContractNoView = false;
+	protected boolean pmContractNoView = false;
 
 	/** The pm physical contract no view. */
-	private boolean pmPhysicalContractNoView = false;
+	protected boolean pmPhysicalContractNoView = false;
 
 	/** The pm loa no view. */
-	private boolean pmLOANoView = false;
+	protected boolean pmLOANoView = false;
 
 	/** The pm physical loa no view. */
-	private boolean pmPhysicalLOANoView = false;
+	protected boolean pmPhysicalLOANoView = false;
 
 	/** The pm mandatory zone view. */
-	private boolean pmMandatoryZoneView = false;
+	protected boolean pmMandatoryZoneView = false;
 
 	/** The pm mandatory zone view bpk. */
-	private boolean pmMandatoryZoneViewBPK = false;
+	protected boolean pmMandatoryZoneViewBPK = false;
 
 	/** The pm profile status vie view. */
-	private boolean pmProfileStatusView = false;
+	protected boolean pmProfileStatusView = false;
 
 	/** The ct termination type var. */
-	private String ctTerminationTypeVar = ReportConst.EMPTY_VAL;
+	protected String ctTerminationTypeVar = ReportConst.EMPTY_VAL;
 
 	/**
 	 * Checks if is sc soa status view.
@@ -14275,7 +14275,7 @@ public class ReportsGenerateBean implements Serializable {
 	}
 
 	/** The url report jsp name. */
-	private String urlReportJSPName = ReportConst.EMPTY_VAL;
+	protected String urlReportJSPName = ReportConst.EMPTY_VAL;
 
 	// URL variables end
 
