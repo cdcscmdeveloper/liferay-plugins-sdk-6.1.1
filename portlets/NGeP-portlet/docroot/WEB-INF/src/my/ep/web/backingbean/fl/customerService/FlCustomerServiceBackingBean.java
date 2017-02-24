@@ -14,17 +14,21 @@ import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -141,33 +145,77 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 			 IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			 UserReqDTO reqUserDTO = new UserReqDTO();
 			 CustomerServiceEntity custServiceEntity = null;
-			 for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
-				 custServiceEntity = new CustomerServiceEntity();
-				 if(worklistItemVO.getAcquiredBy() != null){
-					 custServiceEntity.setOfficerName(worklistItemVO.getAcquiredBy());
-					 reqUserDTO.setLoginId(worklistItemVO.getAcquiredBy());
-					 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
-					 if(null!=userResDTO && null!=userResDTO.getPmUser()){
-						 custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+			 if(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT.longValue() == statusId 
+					 || FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT.longValue() == statusId 
+					 ||FulfilmentStatusConst.CO_PENDING_INVOICE.longValue() == statusId
+					 ||FulfilmentStatusConst.PO_PENDING_INVOICE.longValue() == statusId){
+				 ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				 SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+				 SupplierSearchResDTO supplierSearchResDTO = null; 
+				 for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
+					 custServiceEntity = new CustomerServiceEntity();
+					 if(worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()){
+						 for(String loginId : worklistItemVO.getAssignees()){
+							 reqUserDTO.setLoginId(loginId);
+							 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
+							 if(null!=userResDTO && null!=userResDTO.getPmUser()){
+								 supplierSearchReqDTO.setUserId(userResDTO.getPmUser().getUserId());
+								 supplierSearchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+								 if(supplierSearchResDTO.getResultBean() != null){
+									 custServiceEntity.setOfficerName(supplierSearchResDTO.getResultBean().getResultList().get(0).getCompanyName());
+									 break;
+								 }
+							 }
+						 }
 						 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 					 }
-				 }else if(worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()){
-					 for(String assignee : worklistItemVO.getAssignees()){
-						 custServiceEntity = new CustomerServiceEntity();
-						 reqUserDTO.setLoginId(assignee);
+					 bpmReqDTO = new BpmRequestDTO();
+					 bpmReqDTO.setCtxToken(ctxToken);
+					 bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
+					 bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
+				 }
+			 }else{
+				 for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
+					 custServiceEntity = new CustomerServiceEntity();
+					 if(worklistItemVO.getAcquiredBy() != null){
+						 custServiceEntity.setOfficerName(worklistItemVO.getAcquiredBy());
+						 reqUserDTO.setLoginId(worklistItemVO.getAcquiredBy());
 						 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
 						 if(null!=userResDTO && null!=userResDTO.getPmUser()){
 							 custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
 							 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 						 }
+					 }else if(worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()){
+						 for(String assignee : worklistItemVO.getAssignees()){
+							 custServiceEntity = new CustomerServiceEntity();
+							 reqUserDTO.setLoginId(assignee);
+							 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
+							 if(null!=userResDTO && null!=userResDTO.getPmUser()){
+								 custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+								 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+							 }
+						 }
 					 }
-				 }
-				 bpmReqDTO = new BpmRequestDTO();
-				 bpmReqDTO.setCtxToken(ctxToken);
-				 bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
-				 bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
+					 bpmReqDTO = new BpmRequestDTO();
+					 bpmReqDTO.setCtxToken(ctxToken);
+					 bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
+					 bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
 
-			 }	
+				 }	
+			 }
+		 }
+		 if(FulfilmentStatusConst.CO_AWAITING_1GFMAS.longValue() == statusId 
+				 || FulfilmentStatusConst.CR_AWAITING_1GFMAS.longValue() == statusId 
+				 ||FulfilmentStatusConst.DN_AWAITING_1GFMAS.longValue() == statusId
+				 ||FulfilmentStatusConst.FN_AWAITING_1GFMAS.longValue() == statusId
+				 ||FulfilmentStatusConst.IN_AWAITING_1GFMAS.longValue() == statusId
+				 ||FulfilmentStatusConst.PA_AWAITING_1GFMAS.longValue() == statusId
+				 ||FulfilmentStatusConst.PO_AWAITING_1GFMAS.longValue() == statusId
+				 ||FulfilmentStatusConst.PR_AWAITING_1GFMAS.longValue() == statusId
+				 ||FulfilmentStatusConst.SD_AWAITING_1GFMAS_RESPONSE.longValue() == statusId){
+				 CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
+				 custServiceEntity.setOfficerName("GFMAS");
+				 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 		 }
 		
 		return navgPage;
@@ -218,7 +266,7 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	 */
 	private void resetSearchCriteria() {
 		getManagedBean().setSearchDocNo(null);
-		getManagedBean().setStatusDescId(null);
+		getManagedBean().setStatusId(null);
 		getManagedBean().setSearchSuppName(null);
 		getManagedBean().setSearchOrderNo(null);
 	}
