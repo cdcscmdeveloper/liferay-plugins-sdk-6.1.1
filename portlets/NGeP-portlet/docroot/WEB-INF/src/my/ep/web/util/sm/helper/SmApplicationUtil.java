@@ -10909,6 +10909,66 @@ public class SmApplicationUtil {
 		return count;
 	}
 
+	public static List<SmSupplierCategory> getToRemoveConsultantCategoriesByChangeCategorType(
+			SmAppl smAppl, List<SmSupplierCategory> activeCategoryList,
+			String physicalConsulting) {
+		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+		if (!StringUtils.isBlank(smAppl.getSupplierType())
+				&& smAppl.getSupplierType().equals("J")) {
+
+			// Remove from active list
+			if (physicalConsulting
+					.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
+				for (SmSupplierCategory cat : activeCategoryList) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+
+				}
+			} else {
+				for (SmSupplierCategory cat : activeCategoryList) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+
+				}
+			}
+			// Remove from main list
+			if (physicalConsulting
+					.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
+				for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+
+				}
+			} else {
+				for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+				}
+			}
+		}
+		return catList;
+	}
+
 	/**
 	 * Validation for saving address for role staff
 	 */

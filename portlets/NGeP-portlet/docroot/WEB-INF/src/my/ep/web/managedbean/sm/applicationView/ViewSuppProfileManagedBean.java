@@ -30,6 +30,7 @@ public class ViewSuppProfileManagedBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -9029253736925390560L;
+	private String physicalConsulting;
 	private PmUser applApprover;
 	private String approvedDate;
 	private SmSupplier selectedSupplier;
@@ -246,6 +247,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setHasActiveTransaction(boolean hasActiveTransaction) {
 		this.hasActiveTransaction = hasActiveTransaction;
+	}
+
+	public String getPhysicalConsulting() {
+		return physicalConsulting;
+	}
+
+	public void setPhysicalConsulting(String physicalConsulting) {
+		this.physicalConsulting = physicalConsulting;
 	}
 
 }
