@@ -72,7 +72,9 @@
 							<td style="text-align: left;"><p:inputText
 									label="#{lbl['lbl.txt.remarks']}" size="60" 
 									required="#{!empty param['disableValidation']}"
-									value="#{taskReassignmentBackingBean.managedBean.remarks}" /></td>
+									value="#{taskReassignmentBackingBean.managedBean.remarks}" >
+										<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+									</p:inputText></td>
 						</tr>
 					</c:if>
 
@@ -82,7 +84,7 @@
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
 								action="#{taskReassignmentBackingBean.confirmReassignTask()}"
 								update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole"
-								immediate="true" >
+								process=":form:pTaskReassignResultPnl" >
 									 <f:param name="disableValidation" value="true" />
 							</p:commandButton>
 							 <p:commandButton id="cbCancel"

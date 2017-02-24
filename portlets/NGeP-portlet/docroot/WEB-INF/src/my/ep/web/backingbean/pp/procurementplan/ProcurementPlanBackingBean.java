@@ -4071,4 +4071,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return orgProfile != null && orgProfile.getOrgProfileId() != null ? orgProfile.getOrgProfileId() : null;
 		
 	}
+	
+	public boolean isApprovedMode(PpPlan plan){
+		Long statusId = plan.getStatus().getStatusId();
+		if(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
+				|| ProcurementPlanConst.PPE_APPROVED.equals(statusId)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
