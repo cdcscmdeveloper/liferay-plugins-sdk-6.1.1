@@ -330,6 +330,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 			String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah ditolak oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(bb.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
+			reqDTO.setPmUser(pmUser);
 			catalogueSO.updateSupplierItem(reqDTO);
 			bb.getManagedBean().setRejectReason(null);
 		} catch (Exception e) {
