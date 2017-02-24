@@ -356,7 +356,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
 	this.getManagedBean().setMaintanceFlow(true);
 	 FacesContext fc = FacesContext.getCurrentInstance();
      boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
-    specCommitteeSecreatry=true;
+    //specCommitteeSecreatry=true;
     this.getManagedBean().setAssignedState(Boolean.FALSE);
     ScWorkFlowStatus workFlowStatus=retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
     this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
