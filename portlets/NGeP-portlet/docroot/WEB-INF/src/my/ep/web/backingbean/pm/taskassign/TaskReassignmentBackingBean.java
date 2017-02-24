@@ -1520,6 +1520,14 @@ public class TaskReassignmentBackingBean extends
 		if (task == null) {
 			throw new EpException(MessageConst.ERROR_770097);
 		}
+		
+		if(getManagedBean().isRemarkRequired() && StringUtils.isBlank(getManagedBean().getRemarks())){
+			throw new EpException(MessageConst.ERROR_100022,new String[]{
+					ResourceBundleUtils.getMessage(
+					"lbl.txt.remarks",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale())});
+		}
 		List<String> assigneeUsers = new ArrayList<String>();
 //		if (!assigneeUsers.isEmpty()) {
 ////			if (pmUser != null && assigneeUsers.contains(pmUser.getLoginId())) {
@@ -1820,29 +1828,18 @@ public class TaskReassignmentBackingBean extends
 		case ProfileManagementConst.REASSIGN_TYPE_S2:
 			// 2: S2/CT Committee Task
 			
-			//TODO ignore S2 Endorsement and Sign Off (Waiting Confirmation)
-			boolean valid = true;
-			if(vo.getStatus() != null && ModuleCodeConst.SUPPLIER_SELECTION.equalsIgnoreCase(vo.getStatus().getModuleCode())){
-				PmStatusDesc desc = retrieveStatusDesc(vo.getStatus().getStatusId());
-				if(desc != null && (desc.getStatusName().toLowerCase().contains("sign off") 
-						|| desc.getStatusName().toLowerCase().contains("endorsement") )){
-					valid = false;
-				}
-			} 
-			if(valid){
-				// not current selected user and not current login user
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("userId",
-								SearchOperator.OPERATOR_NOT_IN.value(),
-									new ArrayList<Long>(Arrays.asList(userId,
-										getFacesScopes().getUserSessionBean()
-											.getUserId()))));			
-				// Order by user name
-				searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+			// not current selected user and not current login user
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("userId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+								new ArrayList<Long>(Arrays.asList(userId,
+									getFacesScopes().getUserSessionBean()
+										.getUserId()))));			
+			// Order by user name
+			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 				
-				resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
-				getManagedBean().setModulePostUpdate(true);			}
-			
+			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
+			getManagedBean().setModulePostUpdate(true);		
 					
 			isSearched = true;
 			break;
