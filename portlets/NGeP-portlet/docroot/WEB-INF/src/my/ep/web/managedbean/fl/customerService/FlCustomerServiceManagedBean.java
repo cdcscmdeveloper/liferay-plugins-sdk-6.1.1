@@ -9,6 +9,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
+import org.primefaces.model.DualListModel;
+// TODO: Auto-generated Javadoc
+//BackingBEan
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
@@ -30,11 +35,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
-// TODO: Auto-generated Javadoc
-//BackingBEan
 
 /**
  * Managed Bean for Customer Service.
@@ -140,8 +140,8 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 					if(getSearchDocNo()!=null && getSearchDocNo()!="") {
 						reqDTO.setDocNo(getSearchDocNo());
 					}
-					if(getStatusDescId()!=null) {
-						reqDTO.setStatusId(getStatusDescId());
+					if(getStatusId()!=null) {
+						reqDTO.setStatusId(getStatusId());
 					}
 				
 					reqDTO.setUserRoleList(getUserRoles());
