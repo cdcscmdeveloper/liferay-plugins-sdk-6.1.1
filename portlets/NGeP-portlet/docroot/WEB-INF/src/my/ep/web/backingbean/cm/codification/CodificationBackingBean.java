@@ -2787,11 +2787,14 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public boolean isProduct(PmParameter item) {
 		String itemType = this.getParameterDesc(item);
 		log.info("...........itemType=" + itemType);
+		if(StringUtils.isNotBlank(itemType)){
 		if (itemType.equalsIgnoreCase("Product")) {
 			return true; // means less than
 		} else {
 			return false; // means greater than
 		}
+		}
+		return false; 
 	}
 
 	public int productOrServiceOperator() {
