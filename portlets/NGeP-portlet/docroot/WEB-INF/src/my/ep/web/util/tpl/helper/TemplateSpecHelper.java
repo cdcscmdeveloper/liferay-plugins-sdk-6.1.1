@@ -221,6 +221,8 @@ public class TemplateSpecHelper {
 									} else {
 										newSpecQuestion.setParentSpecQuestion(null);
 									}
+								} else if (!isTechnicalSpec) {
+									newSpecQuestion.setParentSpecQuestion(specQuestion);
 								} else {
 									newSpecQuestion.setParentSpecQuestion(null);
 								}
@@ -882,7 +884,10 @@ public class TemplateSpecHelper {
 			List<TplSpecQuestion> oldSpecQuestions = new ArrayList<TplSpecQuestion>(oldSpecMaster.getTplSpecQuestions());
 			for (TplSpecQuestion newSpecQuestion : newSpecMaster.getTplSpecQuestions()) {
 				for (TplSpecQuestion oldSpecQuestion : oldSpecQuestions) {
-					if (newSpecQuestion.getClItem() != null && newSpecQuestion.getClItem().equals(oldSpecQuestion.getClItem())) {
+					if (oldSpecQuestion.getParentSpecQuestion() != null
+							&& oldSpecQuestion.getParentSpecQuestion()
+									.getSpecQuestionId().equals(newSpecQuestion.getParentSpecQuestion()
+											.getSpecQuestionId())) {
 						copySpecQuestionDetails(newSpecQuestion, oldSpecQuestion);
 						oldSpecQuestions.remove(oldSpecQuestion);
 						break;
