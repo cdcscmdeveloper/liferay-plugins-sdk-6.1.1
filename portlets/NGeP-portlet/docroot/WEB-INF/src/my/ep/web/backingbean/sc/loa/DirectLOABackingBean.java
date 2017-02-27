@@ -1370,6 +1370,9 @@ public class DirectLOABackingBean extends
 		if (!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))) {
 			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 		}
+		
+		// copy item origin 
+		serviceSpecMaster.setItemOriginCode(producSpecMaster.getItemOriginCode());
 
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getScQt()
