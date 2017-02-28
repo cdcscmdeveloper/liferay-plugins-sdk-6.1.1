@@ -333,4 +333,11 @@ public class ReasonHelper implements Serializable{
 			.append(languageCode)
 			.toString();
 	}
+	
+	public void clearReasonMap(){
+		if(reasonMap == null){
+			reasonMap = new HashMap<String, PmReasonDesc>();
+		}
+		reasonMap.clear();
+	}
 }
