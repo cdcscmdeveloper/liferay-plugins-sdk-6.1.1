@@ -270,14 +270,14 @@ private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
 							SearchOperator.OPERATOR_EQUALS.value(), true));
 		}*/
 		
-		List<Long> statuses=new ArrayList<Long>();
+	/*	List<Long> statuses=new ArrayList<Long>();
 		statuses.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
 		statuses.add(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL);
 		statuses.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		statuses.add(QTStatusConst.QT_PENDING_PUBLICATION);
+		statuses.add(QTStatusConst.QT_PENDING_PUBLICATION);*/
 		searchFilterBean.add(new SearchFilterBean(
 				"scQtStatus.pmStatus.statusId",
-				SearchOperator.OPERATOR_IN.value(), statuses));
+				SearchOperator.OPERATOR_GREATER_EQUAL.value(), QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT));
                  searchFilterBean.add(
 		new SearchFilterBean("scQtStatus.current",
 				SearchOperator.OPERATOR_EQUALS.value(), true));
@@ -358,21 +358,35 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
      boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
      //specCommitteeSecreatry=true;
     this.getManagedBean().setAssignedState(Boolean.FALSE);
-    ScWorkFlowStatus workFlowStatus=retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
-    this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
+   
+ /* boolean isStatusPublish=  isQTStatusPublished(scQt
+			.getQtStatus().getStatusId());*/
+     log.info("status Publish");
 	if(specCommitteeSecreatry){
-	log.info("workFlowStatus"+workFlowStatus);
+	//log.info("workFlowStatus"+workFlowStatus);
+	boolean checkStatus=	checkStatus(scQt
+				.getQtStatus().getStatusId());
+	log.info("checkStatus"+checkStatus)	;
+	if(checkStatus){
+		  log.info("staus true");
+		 ScWorkFlowStatus workFlowStatus=retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+		    this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);	
 	if(null==workFlowStatus || QTStatusConst.SE_PENDING_SUBMISSION.equals(workFlowStatus.getPmStatus().getStatusId()) || QTStatusConst.SE_COMPLETED.equals(workFlowStatus.getPmStatus().getStatusId())){
-		log.info("secretary Inner value workFlowStatus"+workFlowStatus);
+		//log.info("secretary Inner value workFlowStatus"+workFlowStatus);
 		this.getManagedBean().setReadOnly(Boolean.FALSE);
 		this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
 	}else{
-		log.info("secretary else value workFlowStatus"+workFlowStatus);
+		//log.info("secretary else value workFlowStatus"+workFlowStatus);
 		this.getManagedBean().setReadOnly(Boolean.TRUE);
 		this.getManagedBean().setSpecMaintenance(Boolean.FALSE);	
 	}
 	}else{
-		log.info("otherthan secretary else value workFlowStatus"+workFlowStatus);
+		 log.info("status not true");
+		this.getManagedBean().setReadOnly(Boolean.TRUE);
+		this.getManagedBean().setSpecMaintenance(Boolean.FALSE);	
+	}
+	}else{
+		log.info("otherthan secretary else value workFlowStatus");
 		this.getManagedBean().setReadOnly(Boolean.TRUE);
 	}
 
@@ -491,5 +505,22 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 }
 
+private boolean checkStatus(Long statusId){
+	if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+		 return true;	
+	}
+	else if(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(statusId)){
+		 return true;	
+	}
+ else if(QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){
+	 return true;	
+	}
+/* else if(QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)){
+	 return true;
+}*/else{
+	return false;
+}
+	
+}
 
 }
