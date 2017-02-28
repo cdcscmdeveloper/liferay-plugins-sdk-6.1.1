@@ -2385,7 +2385,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Validate before save.
+	 * Validate for each time navigate from one section to another section.
 	 * 
 	 * @param applType
 	 *            - the appl type
@@ -2400,26 +2400,6 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
 			validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 					validSave, getManagedBean(), currentTab);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
-			validSave = SmApplicationUtil.validateEquityOwnerCount(
-					getManagedBean(), currentTab, currentPageType);
-			if (validSave) {
-				validSave = SmApplicationUtil.validateEquityOwnerAmount(
-						getManagedBean(), currentTab, ruleHelper);
-			} else if (validSave) {
-				validSave = SmApplicationUtil.validateEquityCompanyAmount(
-						getManagedBean(), currentTab);
-			} else if (validSave
-					&& getManagedBean()
-							.getSmAppl()
-							.getSupplierType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.STYPE_CONSULTANT)) {
-				validSave = SmApplicationUtil.validatePersonnelAcademics(
-						validSave, getManagedBean(), currentTab);
-			}
-			validatePaidCaptialAmt(true);
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
@@ -2459,6 +2439,44 @@ public class SmApplicationBackingBean extends
 		default:
 			log.info("****** Not a defined page ***********");
 
+		}
+		return validSave;
+	}
+
+	/**
+	 * Final validation before declare or save draft application
+	 * 
+	 * @param String
+	 *            applType
+	 * @param String
+	 *            currentPageType
+	 * @return Boolean
+	 */
+	private Boolean validateFinal(String applType, String currentPageType) {
+		boolean validSave = validateBeforeSave(applType, currentPageType);
+
+		if (validSave && !StringUtils.isBlank(currentPageType)) {
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+				validSave = SmApplicationUtil.validateEquityOwnerCount(
+						getManagedBean(), currentTab, currentPageType);
+				if (validSave) {
+					validSave = SmApplicationUtil.validateEquityOwnerAmount(
+							getManagedBean(), currentTab, ruleHelper);
+				} else if (validSave) {
+					validSave = SmApplicationUtil.validateEquityCompanyAmount(
+							getManagedBean(), currentTab);
+				} else if (validSave
+						&& getManagedBean()
+								.getSmAppl()
+								.getSupplierType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.STYPE_CONSULTANT)) {
+					validSave = SmApplicationUtil.validatePersonnelAcademics(
+							validSave, getManagedBean(), currentTab);
+				}
+				validatePaidCaptialAmt(true);
+			}
 		}
 		return validSave;
 	}
@@ -2913,72 +2931,15 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void assignApplnConsultantCategoryType() {
-		if (!StringUtils
-				.isBlank(getManagedBean().getSmAppl().getSupplierType())
-				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
-			List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
-			// Remove from active list
-			if (getManagedBean()
-					.getPhysicalConsulting()
-					.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
-				for (SmSupplierCategory cat : getManagedBean()
-						.getActiveCategoryList()) {
-					if (cat.getPmCategoryL1()
-							.getCategoryL1Code()
-							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)
-							&& cat.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						catList.add(cat);
-					}
-
-				}
-				getManagedBean().getActiveCategoryList().removeAll(catList);
-			} else {
-				for (SmSupplierCategory cat : getManagedBean()
-						.getActiveCategoryList()) {
-					if (cat.getPmCategoryL1()
-							.getCategoryL1Code()
-							.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)
-							&& cat.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						catList.add(cat);
-					}
-
-				}
-				getManagedBean().getActiveCategoryList().removeAll(catList);
-			}
-			// Remove from main list
-			if (getManagedBean()
-					.getPhysicalConsulting()
-					.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
-				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-						.getSmSupplierCategories()) {
-					if (cat.getPmCategoryL1()
-							.getCategoryL1Code()
-							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)
-							&& cat.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						catList.add(cat);
-					}
-
-				}
-				getManagedBean().getSmAppl().getSmSupplierCategories()
-						.removeAll(catList);
-			} else {
-				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-						.getSmSupplierCategories()) {
-					if (cat.getPmCategoryL1()
-							.getCategoryL1Code()
-							.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)
-							&& cat.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						catList.add(cat);
-					}
-				}
-				getManagedBean().getSmAppl().getSmSupplierCategories()
-						.removeAll(catList);
-			}
-		}
+		List<SmSupplierCategory> toRemoveCategoryList = SmApplicationUtil
+				.getToRemoveConsultantCategoriesByChangeCategorType(
+						getManagedBean().getSmAppl(), getManagedBean()
+								.getActiveCategoryList(), getManagedBean()
+								.getPhysicalConsulting());
+		getManagedBean().getActiveCategoryList()
+				.removeAll(toRemoveCategoryList);
+		getManagedBean().getSmAppl().getSmSupplierCategories()
+				.removeAll(toRemoveCategoryList);
 	}
 
 	/**
@@ -3013,6 +2974,17 @@ public class SmApplicationBackingBean extends
 	 *            branch
 	 */
 	public void copyHqGstToBranch(SmSupplierBranch branch) {
+		// check for application that is not NEW MOF or RENEW MOF, automatically
+		// branch gst same as hq for new branch
+		if (getManagedBean().getCompanyBasicGst() != null
+				&& (!branch.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) || !branch
+						.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
+			if (getManagedBean().getCompanyBasicGst() != null) {
+				branch.setSameAsHq(true);
+			}
+		}
 		if (branch.getGst() == null) {
 			branch.setGst(new SmGstSupplier());
 			SmApplicationUtil.initGstSuppDocs(branch.getGst());
@@ -4141,18 +4113,19 @@ public class SmApplicationBackingBean extends
 							.getCategoryL1Code()
 							.equalsIgnoreCase(
 									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
-//				if (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
-//						.getCategoryL2Code() != null && getManagedBean()
-//						.getSelectedCategory()
-//						.getPmCategoryL2()
-//						.getCategoryL2Code()
-//						.equalsIgnoreCase(
-//								SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
-					validCat = SmApplicationUtil.validateIctCatCode(
-							getManagedBean().getBusinessTypeVal(),
-							getManagedBean().getSmAppl(), getManagedBean()
-									.getSelectedCategory());
-//				}
+				// if
+				// (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
+				// .getCategoryL2Code() != null && getManagedBean()
+				// .getSelectedCategory()
+				// .getPmCategoryL2()
+				// .getCategoryL2Code()
+				// .equalsIgnoreCase(
+				// SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
+				validCat = SmApplicationUtil.validateIctCatCode(
+						getManagedBean().getBusinessTypeVal(), getManagedBean()
+								.getSmAppl(), getManagedBean()
+								.getSelectedCategory());
+				// }
 			}
 		}
 		boolean overLapCategory = false;
@@ -6868,7 +6841,7 @@ public class SmApplicationBackingBean extends
 				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
 						getManagedBean(), currentTab);
 			} else {
-				valid = validateBeforeSave(getManagedBean().getSmAppl()
+				valid = validateFinal(getManagedBean().getSmAppl()
 						.getApplType(), getManagedBean().getCurrentPageType());
 			}
 
@@ -6929,8 +6902,8 @@ public class SmApplicationBackingBean extends
 			valid = SmApplicationUtil.validateCategoryOtherDesc(true,
 					getManagedBean(), currentTab);
 		} else {
-			valid = validateBeforeSave(getManagedBean().getSmAppl()
-					.getApplType(), getManagedBean().getCurrentPageType());
+			valid = validateFinal(getManagedBean().getSmAppl().getApplType(),
+					getManagedBean().getCurrentPageType());
 		}
 
 		if (valid) {
@@ -6990,7 +6963,7 @@ public class SmApplicationBackingBean extends
 				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
 						getManagedBean(), currentTab);
 			} else {
-				valid = validateBeforeSave(applType, currentPageType);
+				valid = validateFinal(applType, currentPageType);
 			}
 
 			if (valid) {
