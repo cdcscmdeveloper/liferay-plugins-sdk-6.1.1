@@ -7177,7 +7177,11 @@ public class SmApplicationUtil {
 			gst = gstByApplNo;
 		} else {
 			if (gstCurrent != null) {
-				if (gstCurrent.getApplNo().equals(appl.getApplNo())) {
+				if (gstCurrent.getApplNo().equals(appl.getApplNo())
+						|| (!appl.getApplType().equals(
+								ParameterConst.NEW_SM_APPLN_FOR_MOF) && !appl
+								.getApplType().equals(
+										ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
 					gst = gstCurrent;
 				} else {
 					gst = new SmGstSupplier();
@@ -7199,10 +7203,20 @@ public class SmApplicationUtil {
 					}
 				}
 			} else {
-				gst = new SmGstSupplier();
+				if ((appl.getApplType().equals(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF) && appl
+						.getApplType().equals(
+								ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
+					gst = new SmGstSupplier();
+				}
 			}
 		}
-		initGstSuppDocs(gst);
+		if ((appl.getApplType().equals(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF) && appl
+				.getApplType().equals(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
+			initGstSuppDocs(gst);
+		}
 		return gst;
 	}
 
