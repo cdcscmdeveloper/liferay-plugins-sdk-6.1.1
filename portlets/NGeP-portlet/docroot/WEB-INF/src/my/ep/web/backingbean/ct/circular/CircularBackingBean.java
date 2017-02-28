@@ -48,7 +48,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean
 @ViewScoped
 public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
-	
+
 	/**
 	 * The method used for searching the circular list.
 	 * A warning message will display on screen when searching
