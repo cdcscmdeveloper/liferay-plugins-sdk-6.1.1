@@ -51,7 +51,7 @@
 					
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@all"
 							style="float:right;" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" rendered="#{(!specificationBackingBean.managedBean.readOnly and workflowStatus ==null) or (!specificationBackingBean.managedBean.readOnly and workflowStatus !=null and workflowStatus.pmStatus.statusId == QTStatusConst.SE_PENDING_SUBMISSION )}"
+							oncomplete="blockWidget.hide();" rendered="#{(!specificationBackingBean.managedBean.readOnly and workflowStatus ==null) or (!specificationBackingBean.managedBean.readOnly and workflowStatus !=null and (workflowStatus.pmStatus.statusId == QTStatusConst.SE_PENDING_SUBMISSION or workflowStatus.pmStatus.statusId == QTStatusConst.SE_COMPLETED))}"
 							action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}">
 							</p:commandButton>
 							

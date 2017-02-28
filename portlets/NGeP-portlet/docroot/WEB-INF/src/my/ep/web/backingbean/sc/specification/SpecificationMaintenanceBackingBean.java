@@ -356,13 +356,13 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
 	this.getManagedBean().setMaintanceFlow(true);
 	 FacesContext fc = FacesContext.getCurrentInstance();
      boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
-    //specCommitteeSecreatry=true;
+     //specCommitteeSecreatry=true;
     this.getManagedBean().setAssignedState(Boolean.FALSE);
     ScWorkFlowStatus workFlowStatus=retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
     this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
 	if(specCommitteeSecreatry){
 	log.info("workFlowStatus"+workFlowStatus);
-	if(null==workFlowStatus || QTStatusConst.SE_PENDING_SUBMISSION.equals(workFlowStatus.getPmStatus().getStatusId())){
+	if(null==workFlowStatus || QTStatusConst.SE_PENDING_SUBMISSION.equals(workFlowStatus.getPmStatus().getStatusId()) || QTStatusConst.SE_COMPLETED.equals(workFlowStatus.getPmStatus().getStatusId())){
 		log.info("secretary Inner value workFlowStatus"+workFlowStatus);
 		this.getManagedBean().setReadOnly(Boolean.FALSE);
 		this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
