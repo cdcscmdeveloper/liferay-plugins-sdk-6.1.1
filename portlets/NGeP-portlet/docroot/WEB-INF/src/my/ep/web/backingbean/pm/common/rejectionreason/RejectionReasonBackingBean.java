@@ -58,6 +58,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.ReasonHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -713,7 +714,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}else{
 			returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 		}
-		
+		ReasonHelper.getInstance().clearReasonMap();
 		log.info("saveRejectReason - End");
 		return returnPage;
 //		if(isSuccess){
