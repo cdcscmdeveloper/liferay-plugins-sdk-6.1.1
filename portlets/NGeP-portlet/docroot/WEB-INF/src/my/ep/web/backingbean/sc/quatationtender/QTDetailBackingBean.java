@@ -5573,6 +5573,10 @@ public class QTDetailBackingBean extends
 	public SelectItem[] getDocTypeQtLOADropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtLoaDoctypes = new ArrayList<String>();
+		if(isSpecificationSecretary()){
+		 qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
+		}
+		else{
 		qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
 		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
@@ -5581,7 +5585,7 @@ public class QTDetailBackingBean extends
 		if (isMofSupplier()) {
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
 		}
-		
+		}
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(), qtLoaDoctypes));
@@ -5729,4 +5733,9 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
+	
+	private boolean isSpecificationSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
 }
