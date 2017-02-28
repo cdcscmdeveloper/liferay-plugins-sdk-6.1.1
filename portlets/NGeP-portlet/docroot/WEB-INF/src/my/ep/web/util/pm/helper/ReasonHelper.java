@@ -334,10 +334,5 @@ public class ReasonHelper implements Serializable{
 			.toString();
 	}
 	
-	public void clearReasonMap(){
-		if(reasonMap == null){
-			reasonMap = new HashMap<String, PmReasonDesc>();
-		}
-		reasonMap.clear();
-	}
+
 }

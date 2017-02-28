@@ -714,7 +714,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}else{
 			returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 		}
-		ReasonHelper.getInstance().clearReasonMap();
 		log.info("saveRejectReason - End");
 		return returnPage;
 //		if(isSuccess){
