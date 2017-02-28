@@ -2760,4 +2760,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return isPtjAddressTypePresent;
 	}
+	
+	/**
+	 * Enable drop down for ProcumentMethod if true
+	 * 
+	 * @param scQt
+	 * @return isProcumentMethodDropdownReq
+	 */
+	protected boolean checkForProcumentMethodDropdown(ScQt scQt) {
+
+		boolean isProcumentMethodDropdownReq = false;
+		BigDecimal amount = scQt.getEstimatedAmount() != null ? scQt
+				.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
+		if (amount != null
+				&& !scQt.isPanel()
+				&& !isQuotationThresHold(amount)
+				&& amount.intValue() < scQt.getPtjSpecialApproval()
+						.getProcureAmt().intValue()) {
+			isProcumentMethodDropdownReq = true;
+		}
+		return isProcumentMethodDropdownReq;
+	}
 }
