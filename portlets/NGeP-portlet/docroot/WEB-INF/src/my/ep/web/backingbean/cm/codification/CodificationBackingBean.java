@@ -23,6 +23,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
@@ -2785,10 +2786,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public boolean isProduct(PmParameter item) {
-		String itemType = this.getParameterDesc(item);
+		String itemType = item.getParameterCode();
 		log.info("...........itemType=" + itemType);
 		if(StringUtils.isNotBlank(itemType)){
-		if (itemType.equalsIgnoreCase("Product")) {
+		if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 			return true; // means less than
 		} else {
 			return false; // means greater than
