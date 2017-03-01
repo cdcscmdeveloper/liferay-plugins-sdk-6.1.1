@@ -19,6 +19,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -41,6 +42,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -64,6 +66,10 @@ import org.primefaces.event.FileUploadEvent;
 public class GovtSellerRegistrationBackingBean extends
 		BaseBackingBean<GovtSellerRegistrationManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6832474515383643924L;
 	public static RegistrationBackingBean instance;
 	private static Map<Long, Object> identityType;
 
@@ -87,6 +93,7 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setShowGst(true);
 		getManagedBean().setShowBranchPointOfContact(false);
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
+		getManagedBean().setApplType(SupplierManagementConst.ACC_GOVT_SELLER);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml", "",
 				null);
@@ -128,6 +135,7 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		getManagedBean().setShowBranchPointOfContact(true);
+		initBankBranches();
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/govtSellerRegistration/govtSellerMaintenanceBasePage.xhtml",
@@ -262,6 +270,7 @@ public class GovtSellerRegistrationBackingBean extends
 
 		initSupplier(orgProfile);
 		initGst();
+		initBankBranches();
 		navigateToPage(SupplierManagementConst.GOVT_SELLER_ACCOUNT_INFO_PAGE);
 
 	}
@@ -322,7 +331,9 @@ public class GovtSellerRegistrationBackingBean extends
 		smSuppBank.setPmFinancialOrg(new PmFinancialOrg());
 		smSuppBank.setSmAppl(this.getManagedBean().getSmAppl());
 		smSuppBank.setAccountPurpose("P");
+		smSuppBank.setBankCode(new Long(getMaxTmpBankCode() + 1));
 		this.getManagedBean().getSmAppl().getSmSupplierBanks().add(smSuppBank);
+		initBankBranches();
 	}
 
 	/**
@@ -438,6 +449,7 @@ public class GovtSellerRegistrationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Company Branch" });
 		}
+		initBankBranches();
 	}
 
 	/**
@@ -493,6 +505,7 @@ public class GovtSellerRegistrationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierBranches()
 					.add(getManagedBean().getSelectedBranch());
 		}
+		initBankBranches();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 	}
@@ -751,6 +764,7 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Proceed to user registration
 	 */
 	public void proceedToFirstUserRegistration() {
+		validateHqBranchBank();
 		PmParameter icNoType = getParameterByTypeAndCode(
 				ParameterTypeConst.IDENTIFICATION_TYPES, "I");
 		SmAddress defaultAddr = SmApplicationUtil.setDefaultAddr(null);
@@ -839,6 +853,7 @@ public class GovtSellerRegistrationBackingBean extends
 						getManagedBean().getSmAppl().getSmSupplier()
 								.getSmAppl().getSmCompanyBasic()
 								.getCompanyName());
+		setBranchBankBeforeSubmit();
 		reqDTO.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
 		try {
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
@@ -958,6 +973,27 @@ public class GovtSellerRegistrationBackingBean extends
 				if (br.getBranchCode() != null
 						&& Integer.parseInt(br.getBranchCode().toString()) > tmpNo) {
 					tmpNo = Integer.parseInt(br.getBranchCode().toString());
+				}
+			}
+		}
+		return tmpNo;
+	}
+
+	/**
+	 * Get maximum temporary bank code
+	 * 
+	 * @return int
+	 */
+	private int getMaxTmpBankCode() {
+		int tmpNo = 0;
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmSupplierBanks())) {
+
+			for (SmSupplierBank bk : getManagedBean().getSmAppl()
+					.getSmSupplierBanks()) {
+				if (bk.getBankCode() != null
+						&& Integer.parseInt(bk.getBankCode().toString()) > tmpNo) {
+					tmpNo = Integer.parseInt(bk.getBankCode().toString());
 				}
 			}
 		}
@@ -1263,6 +1299,7 @@ public class GovtSellerRegistrationBackingBean extends
 				br.setSmPersonnel(null);
 			}
 		}
+		setBranchBankBeforeSubmit();
 	}
 
 	/**
@@ -1320,6 +1357,41 @@ public class GovtSellerRegistrationBackingBean extends
 				.add(getManagedBean().getSmAppl());
 	}
 
+	private void setBranchBankBeforeSubmit() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmSupplierBanks())) {
+			SmSupplierBranchBank brBank = null;
+			SmSupplierBranch br = null;
+			for (SmSupplierBank bk : getManagedBean().getSmAppl()
+					.getSmSupplierBanks()) {
+
+				// set supplierBranchBanks
+				bk.setSmSupplierBranchBanks(new ArrayList<SmSupplierBranchBank>());
+				if (!EntityHelper.isCollectionEmpty(bk.getBranches())) {
+					for (SmSupplierBranch brTmp : bk.getBranches()) {
+						if (brTmp.isSelected()) {
+							br = (SmSupplierBranch) EntityHelper
+									.getEntityBySinglePropertyFromList(brTmp
+											.getBranchCode(), getManagedBean()
+											.getSmAppl()
+											.getSmSupplierBranches(),
+											"branchCode");
+							brBank = new SmSupplierBranchBank();
+							brBank.setSmSupplierBranch(br);
+							brBank.setSmSupplierBank(bk);
+							bk.getSmSupplierBranchBanks().add(brBank);
+						}
+					}
+				}
+
+				// set hq
+				if (bk.isSelected()) {
+					bk.setForHqFlg(1);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Set RegistrationReqDTO values
 	 * 
@@ -1340,6 +1412,120 @@ public class GovtSellerRegistrationBackingBean extends
 						.getSmAppl().getApplId(), getManagedBean().getSmAppl()
 						.getApplNo(), RoleCode.SUPPLIER_TEMP.value()));
 		return reqDTO;
+	}
+
+	/**
+	 * Initialized bank branches transient object
+	 */
+	private void initBankBranches() {
+		if (getManagedBean().getBankBranches() == null) {
+			getManagedBean().setBankBranches(
+					new ArrayList<SmSupplierBranchBank>());
+		}
+		if (getManagedBean().getSmAppl() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmSupplierBanks())) {
+			SmSupplierBranch brTmp = null;
+			for (SmSupplierBank bk : getManagedBean().getSmAppl()
+					.getSmSupplierBanks()) {
+
+				if (bk.getForHqFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					bk.setSelected(true);
+				}
+
+				// add supplierBranchBank to branches
+				if (bk.getBranches() == null) {
+					bk.setBranches(new ArrayList<SmSupplierBranch>());
+				}
+				if (!EntityHelper.isCollectionEmpty(bk
+						.getSmSupplierBranchBanks())) {
+					for (SmSupplierBranchBank brBnk : bk
+							.getSmSupplierBranchBanks()) {
+						brTmp = (SmSupplierBranch) EntityHelper
+								.getEntityBySinglePropertyFromList(brBnk
+										.getSmSupplierBranch().getBranchCode(),
+										bk.getBranches(), "branchCode");
+						if (brTmp == null) {
+							brBnk.getSmSupplierBranch().setSelected(true);
+							bk.getBranches().add(brBnk.getSmSupplierBranch());
+						}
+						brTmp = null;
+					}
+				}
+
+				// add supplierBranch from appl to branches
+				if (!EntityHelper.isCollectionEmpty(getManagedBean()
+						.getSmAppl().getSmSupplierBranches())) {
+					for (SmSupplierBranch brMain : getManagedBean().getSmAppl()
+							.getSmSupplierBranches()) {
+						brTmp = (SmSupplierBranch) EntityHelper
+								.getEntityBySinglePropertyFromList(
+										brMain.getBranchCode(),
+										bk.getBranches(), "branchCode");
+						if (brTmp == null) {
+							brMain.setSelected(false);
+							bk.getBranches().add(
+									(SmSupplierBranch) SerializationUtils
+											.clone(brMain));
+						}
+						brTmp = null;
+					}
+				}
+
+				// remove from branches if not exist in supplierBranch from appl
+				Iterator<SmSupplierBranch> it = bk.getBranches().iterator();
+				while (it.hasNext()) {
+					SmSupplierBranch itTmp = it.next();
+					brTmp = (SmSupplierBranch) EntityHelper
+							.getEntityBySinglePropertyFromList(itTmp
+									.getBranchCode(), getManagedBean()
+									.getSmAppl().getSmSupplierBranches(),
+									"branchCode");
+					if (brTmp == null) {
+						it.remove();
+					}
+				}
+			}
+
+		}
+	}
+
+	private void validateHqBranchBank() {
+		boolean isHqHasBank = false;
+		boolean isBranchHasBank = false;
+		// validate branch must have at least one payment bank
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmSupplierBranches())) {
+			SmSupplierBranch brTmp = null;
+			for (SmSupplierBranch br : getManagedBean().getSmAppl()
+					.getSmSupplierBranches()) {
+				for (SmSupplierBank bk : getManagedBean().getSmAppl()
+						.getSmSupplierBanks()) {
+					if (bk.isSelected()) {
+						isHqHasBank = true;
+					}
+
+					brTmp = (SmSupplierBranch) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									br.getBranchCode(), bk.getBranches(),
+									"branchCode");
+					if (brTmp != null && brTmp.isSelected()) {
+						isBranchHasBank = true;
+					}
+				}
+
+				if (!isBranchHasBank) {
+					throw new EpException(MessageConst.ERROR_722649);
+				} else {
+					isBranchHasBank = false;
+				}
+			}
+		}
+
+		// validate HQ must have at least one payment bank
+		if (!isHqHasBank) {
+			throw new EpException(MessageConst.ERROR_722649);
+		}
 	}
 
 	public static RegistrationBackingBean getInstance() {

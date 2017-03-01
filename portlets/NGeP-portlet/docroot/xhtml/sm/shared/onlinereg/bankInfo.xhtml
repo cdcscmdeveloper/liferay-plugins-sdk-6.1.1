@@ -21,7 +21,7 @@
 			<p:column selectionMode="multiple" style="width:2%"  
 			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"  />
 
-			<p:column style="width : 50% !important;">
+			<p:column>
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.bankname']}
@@ -37,7 +37,7 @@
 						itemLabel="#{finOrg.finOrgName}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column style="width : 50% !important;">
+			<p:column>
 			
 				<f:facet name="header">
 					#{lbl['lbl.sm.bankaccnumber']}
@@ -51,6 +51,39 @@
 				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode}">
 				</p:inputText>
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
+			</p:column>
+			<p:column rendered="#{registrationBackingBean.managedBean.applType eq 'G'}" style="width : 30% !important;">
+			
+				<f:facet name="header">
+					#{lbl['lbl.sm.bankpayment.for']}
+				</f:facet>
+			
+				<table>
+					<tr>
+						<td style="width: 2% !important;">
+							<p:selectBooleanCheckbox value="#{bankInfo.selected}">
+								<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
+							</p:selectBooleanCheckbox>
+						</td>
+						<td>
+							<h:outputText value="#{lbl['lbl.sm.bankDtls.hq']}" />
+						</td>
+					</tr>
+					<p:outputPanel rendered="#{not empty bankInfo.branches}">
+						<ui:repeat var="var" value="#{bankInfo.branches}" >
+							<tr>
+								<td style="width: 2% !important;">
+									<p:selectBooleanCheckbox value="#{var.selected}">
+										<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
+									</p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText value="#{var.branchName}" />
+								</td>
+							</tr>
+						</ui:repeat>
+					</p:outputPanel>
+				</table>
 			</p:column>
 		</p:dataTable>
 		
