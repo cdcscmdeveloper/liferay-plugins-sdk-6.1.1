@@ -799,9 +799,10 @@ public class QTDetailBackingBean extends
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean()
 					.getCurrentStatusId())) {
 				this.getManagedBean().setCreateQt(true);
-				if(selectedScQt.getTmpExpectedIntendedPrice() != null){
-					new CreateQtBackingBean().setProcurementMode(selectedScQt,
-							selectedScQt.getTmpExpectedIntendedPrice());
+				if (scQt.getObtainSpecialApproval() != null
+						&& scQt.getObtainSpecialApproval()) {
+					this.getManagedBean().setProcMethodDropdownPresent(
+							checkForProcumentMethodDropdown(scQt));
 				}
 				
 			}
