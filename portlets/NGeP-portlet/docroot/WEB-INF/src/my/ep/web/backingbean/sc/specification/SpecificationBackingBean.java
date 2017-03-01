@@ -9038,7 +9038,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		if (!this.getManagedBean().isReadOnly()) {
 			if(scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval()){
-				checkForProcumentMethodDropdown(scQt);
+				this.getManagedBean().setProcMethodDropdownPresent(checkForProcumentMethodDropdown(scQt));
 			}
 		}
 		
@@ -13714,9 +13714,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
 		}
 		if (!this.getManagedBean().isReadOnly()) {
-			if(scQt.getTmpExpectedIntendedPrice() != null){
-				new CreateQtBackingBean().setProcurementMode(scQt,
-						scQt.getTmpExpectedIntendedPrice());
+			if(scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval()){
+				this.getManagedBean().setProcMethodDropdownPresent(checkForProcumentMethodDropdown(scQt));
 			}
 		}
 		this.getManagedBean().setSpecMaintenanceScreen(getSpecMaintenance());
@@ -13998,12 +13997,4 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 	
-	private void checkForProcumentMethodDropdown(ScQt scQt) {
-
-		if (scQt.getTmpExpectedIntendedPrice().intValue() < 
-				scQt.getPtjSpecialApproval().getProcureAmt()
-				.intValue()) {
-					this.getManagedBean().setProcMethodDropdownPresent(true);
-		}
-	}
 }
