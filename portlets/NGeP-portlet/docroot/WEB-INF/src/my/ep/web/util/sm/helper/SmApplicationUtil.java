@@ -8589,8 +8589,9 @@ public class SmApplicationUtil {
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
 			FacesScopes fs = new FacesScopes();
-			context.put("hostUrl", fs.getRequest().getServerName() + ":"
-					+ fs.getRequest().getServerPort());
+//			context.put("hostUrl", fs.getRequest().getServerName() + ":"
+//					+ fs.getRequest().getServerPort());
+			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
 			context.put("applNo", smAppl.getApplNo());
 			context.put(
 					"applType",
