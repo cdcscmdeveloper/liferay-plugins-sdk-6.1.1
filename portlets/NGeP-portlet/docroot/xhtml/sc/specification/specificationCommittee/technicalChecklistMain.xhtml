@@ -257,7 +257,7 @@
 					</p:selectBooleanCheckbox>
 
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I'))}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalSpecificationStatus,technicalChecklistEditActionView"
