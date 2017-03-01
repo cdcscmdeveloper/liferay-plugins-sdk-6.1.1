@@ -356,6 +356,52 @@ public class ReasonHelper implements Serializable {
 			reasonDescMap = resDTO.getReasonDescMap();
 			reasonListMap =resDTO.getReasonListMap();
 			
+			log.info("reasonMap : "+reasonMap.toString());
+			if(reasonMap != null){
+				log.info("reasonMap size : "+reasonMap.size());
+				log.info("reasonMap values <<<<<<<< : ");
+				
+				for (Map.Entry<String, PmReasonDesc> entry : reasonMap.entrySet()) {
+				    String key = entry.getKey().toString();
+				    PmReasonDesc value = entry.getValue();
+				    log.info("key, " + key + " value " + value.getReasonDesc());
+				    
+				}
+			}else{
+				log.info("reasonMap null");
+			}
+			
+			log.info("reasonDescMap : "+reasonDescMap.toString());
+			if(reasonDescMap != null){
+				log.info("reasonDescMap size : "+reasonDescMap.size());
+				log.info("reasonDescMap values <<<<<<<< : ");
+				
+				for (Map.Entry<String, PmReasonDesc> entry : reasonDescMap.entrySet()) {
+				    String key = entry.getKey().toString();
+				    PmReasonDesc value = entry.getValue();
+				    log.info("key, " + key + " value " + value.getReasonDesc());
+				    
+				}
+			}else{
+				log.info("reasonDescMap null");
+			}
+			
+			log.info("reasonListMap : "+reasonListMap.toString());
+			if(reasonListMap != null){
+				log.info("reasonListMap size : "+reasonListMap.size());
+				log.info("reasonListMap values <<<<<<<< : ");
+				
+				for (Map.Entry<String, List<PmReasonDesc>> entry : reasonListMap.entrySet()) {
+				    String key = entry.getKey().toString();
+				    List<PmReasonDesc> value = entry.getValue();
+				    for(PmReasonDesc v: value){
+				    	  log.info("key, " + key + " value " + v.getReasonDesc());
+				    }
+				}
+			}else{
+				log.info("reasonListMap null");
+			}
+			
 			if(reasonMap == null){
 				reasonMap = new HashMap<String, PmReasonDesc>();
 			}
