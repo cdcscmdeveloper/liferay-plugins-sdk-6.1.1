@@ -203,7 +203,7 @@
 				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialChecklistSpecificationStatus,actionView"
@@ -221,14 +221,14 @@
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification') and !fn:contains(stageTwofunctional.title,'Pengesahan') and !fn:contains(stageTwofunctional.title,'Kunci')}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialChecklistSpecificationStatus,actionView"
 							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="actionView,financialChecklistSpecificationStatus"
