@@ -28,6 +28,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -99,12 +100,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(false);
+		initPhysicalConsultingCatcode();
 		getManagedBean().setExistingRegStatus(
 				getManagedBean().getSmAppl().getPmRegStatus());
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
+		}
+		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
+			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
 		getManagedBean().setDeleteApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
@@ -275,19 +280,16 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
-		getManagedBean().getSmAppl().setCurrentActiveTab(
-				getManagedBean().getTabActiveIndex());
-		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
-			SmApplicationUtil.assignMaxReviewCount(getManagedBean().getSmAppl()
-					.getApplType(), getManagedBean().getSmAppl()
-					.getApplCategoryType(), getManagedBean().getSmAppl()
-					.getSupplierType(), getManagedBean().getBusinessTypeVal(),
-					getManagedBean().isReviewSiteVisit());
-		}
 
-		// added to custom confirm dialog title and msg
-		// based on category type Special or Normal
-		setRegCatCodeConfirmDialog();
+		if (getManagedBean().getSmAppl().getSupplierType().equals("J")) {
+			// added to custom confirm dialog title and msg
+			// based on category type Physical or Non Physical
+			setRegCatCodeConsConfirmDialog();
+		} else {
+			// added to custom confirm dialog title and msg
+			// based on category type Special or Normal
+			setRegCatCodeContConfirmDialog();
+		}
 	}
 
 	/**
@@ -362,6 +364,9 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			}
 		}
+
+		assignApplnConsultantCategoryType();
+
 		StringBuilder sb = new StringBuilder();
 		String desc = null;
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
@@ -373,6 +378,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		sb.append(desc);
 		getManagedBean().setCatTypeConfirm(sb.toString());
+	}
+
+	private void assignApplnConsultantCategoryType() {
+		List<SmSupplierCategory> toRemoveCategoryList = SmApplicationUtil
+				.getToRemoveConsultantCategoriesByChangeCategorType(
+						getManagedBean().getSmAppl(), getManagedBean()
+								.getActiveCategoryList(), getManagedBean()
+								.getPhysicalConsulting());
+		getManagedBean().getActiveCategoryList()
+				.removeAll(toRemoveCategoryList);
 	}
 
 	/**
@@ -589,6 +604,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& !getManagedBean().getApprovedCategoryList().isEmpty()) {
 			getManagedBean().getApprovedCategoryList().clear();
 		}
+		SmApplicationUtil.sortSupplierCategory(apprvList);
 		getManagedBean().setApprovedCategoryList(apprvList);
 		getManagedBean().setActiveCategoryList(catList);
 	}
@@ -627,12 +643,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
-	 * Sets the registered category code confirm dialog text.
+	 * Sets the registered category code confirm dialog text for Contractor.
 	 * 
-	 * @param managedBean
-	 *            - SmApplicationManagedBean object
 	 */
-	private void setRegCatCodeConfirmDialog() {
+	private void setRegCatCodeContConfirmDialog() {
 		getManagedBean().setRegCatCodeConfirmHeader(
 				SmCommonUtil.getMessage(
 						"lbl.sm.regCatCode.confirm.header.normal", null));
@@ -651,6 +665,35 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setRegCatCodeConfirmMsg(
 						SmCommonUtil.getMessage(
 								"lbl.sm.regCatCode.confirm.msg.special", null));
+			}
+		}
+	}
+
+	/**
+	 * Sets the registered category code confirm dialog text for Consultant.
+	 * 
+	 */
+	private void setRegCatCodeConsConfirmDialog() {
+		getManagedBean().setRegCatCodeConfirmHeader(
+				SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.header.physical", null));
+		getManagedBean().setRegCatCodeConfirmMsg(
+				SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.msg.physical", null));
+		if (getManagedBean().getSmAppl() != null) {
+			if (StringUtils
+					.isNotBlank(getManagedBean().getPhysicalConsulting())
+					&& getManagedBean()
+							.getPhysicalConsulting()
+							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)) {
+				getManagedBean().setRegCatCodeConfirmHeader(
+						SmCommonUtil.getMessage(
+								"lbl.sm.regCatCode.confirm.header.nonphysical",
+								null));
+				getManagedBean().setRegCatCodeConfirmMsg(
+						SmCommonUtil.getMessage(
+								"lbl.sm.regCatCode.confirm.msg.nonphysical",
+								null));
 			}
 		}
 	}
@@ -957,6 +1000,23 @@ public class SupplierDataMaintenanceBackingBean extends
 										.getSmDiscplinaryAction().getEndDate()) > 0) {
 					throw new EpException(MessageConst.ERROR_722538);
 				}
+			}
+		}
+	}
+
+	private void initPhysicalConsultingCatcode() {
+		if (!StringUtils
+				.isBlank(getManagedBean().getSmAppl().getSupplierType())
+				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
+			if (SmCommonUtil.isApplPhysicalConsultant(getManagedBean()
+					.getSmAppl())) {
+				getManagedBean()
+						.setPhysicalConsulting(
+								my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+			} else {
+				getManagedBean()
+						.setPhysicalConsulting(
+								my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE);
 			}
 		}
 	}
