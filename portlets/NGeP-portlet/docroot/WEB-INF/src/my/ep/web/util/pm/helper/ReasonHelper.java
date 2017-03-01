@@ -356,8 +356,8 @@ public class ReasonHelper implements Serializable {
 			reasonDescMap = resDTO.getReasonDescMap();
 			reasonListMap =resDTO.getReasonListMap();
 			
-			log.info("reasonMap : "+reasonMap.toString());
 			if(reasonMap != null){
+				log.info("reasonMap : "+reasonMap.toString());
 				log.info("reasonMap size : "+reasonMap.size());
 				log.info("reasonMap values <<<<<<<< : ");
 				
@@ -371,8 +371,9 @@ public class ReasonHelper implements Serializable {
 				log.info("reasonMap null");
 			}
 			
-			log.info("reasonDescMap : "+reasonDescMap.toString());
+		
 			if(reasonDescMap != null){
+				log.info("reasonDescMap : "+reasonDescMap.toString());
 				log.info("reasonDescMap size : "+reasonDescMap.size());
 				log.info("reasonDescMap values <<<<<<<< : ");
 				
@@ -386,8 +387,9 @@ public class ReasonHelper implements Serializable {
 				log.info("reasonDescMap null");
 			}
 			
-			log.info("reasonListMap : "+reasonListMap.toString());
+			
 			if(reasonListMap != null){
+				log.info("reasonListMap : "+reasonListMap.toString());
 				log.info("reasonListMap size : "+reasonListMap.size());
 				log.info("reasonListMap values <<<<<<<< : ");
 				
