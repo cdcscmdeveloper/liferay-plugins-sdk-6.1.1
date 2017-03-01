@@ -10,12 +10,12 @@
 		id="suppInfoPanelId">
 		<p:outputPanel id="suppInfoOutId" layout="block">
 			<table style="width: 50%;table-layout:fixed">
-				<p:outputPanel rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smAppl.pmStatus}">
+				<p:outputPanel rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus}">
 					<tr><td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" styleClass="outputLabel-view-label"/> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 	
 					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-							id="regStatusId" required="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmStatus.statusId}"
+							id="regStatusId" required="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId}"
 							disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}"
 							style="width: 270px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />

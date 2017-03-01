@@ -141,13 +141,15 @@
 			</p:commandButton>
 
 			<ac:lookupCategoryCode okAction="supplierDataMaintenanceBackingBean.addNewCategoryAction"
+				catcodeL1 ="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}"
 				update="@form"
 				supplierType="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}"
 				facilityType="#{supplierDataMaintenanceBackingBean.managedBean.basicCompanyFacility.facilityType}"
 				paidUpCapital="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
 				categoryType="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType}"
 				bumiPercentage="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage}"
-				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}" />
+				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}"
+				special="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}" />
 			
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
 				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
