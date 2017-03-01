@@ -97,7 +97,7 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				partialSubmit="true" process="pnlBranchInfo"
-				action="#{bb.deleteSelectedBranches}" update=":form:dt" 
+				action="#{bb.deleteSelectedBranches}" update=":form:dt,:#{p:component('pnlBankInfo')}" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 		</div>

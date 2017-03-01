@@ -12,6 +12,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -39,6 +40,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	public List<SelectItem> branchCompanyCities;
 	public List<SelectItem> salutationItems;
 	public List<SmSupplierBranch> selectedBranches;
+	public List<SmSupplierBranchBank> bankBranches;
 	public SmSupplierBranch selectedBranch;
 	private boolean showParentMsg;
 	private boolean valueReqd;
@@ -214,6 +216,14 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setSalutationItems(List<SelectItem> salutationItems) {
 		this.salutationItems = salutationItems;
+	}
+
+	public List<SmSupplierBranchBank> getBankBranches() {
+		return bankBranches;
+	}
+
+	public void setBankBranches(List<SmSupplierBranchBank> bankBranches) {
+		this.bankBranches = bankBranches;
 	}
 
 }
