@@ -5374,8 +5374,6 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
-		// SmApplicationUtil.getInstance().setApplAddressTransientValue(
-		// getManagedBean().getSmAppl(), true);
 		updateMandatoryAndNonMandatorySuppDocToApplDoc();
 		updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 				.getSmPersonnels(), getManagedBean().getSmSupplier());

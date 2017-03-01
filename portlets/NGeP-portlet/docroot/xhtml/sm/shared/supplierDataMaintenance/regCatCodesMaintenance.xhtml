@@ -36,22 +36,46 @@
 				</script>
 				
 			</c:if>
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
-					<td><p:selectOneRadio
-							value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
-								itemValue="N" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-								itemValue="S"
-								itemDisabled="#{supplierDataMaintenanceBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
-							<p:ajax event="change" oncomplete="typeConfirmation.show()"
-								listener="#{supplierDataMaintenanceBackingBean.applicationCategorySelected}"
-								update="@([id$=typeConfirmationId])" />
-						</p:selectOneRadio></td>
-				</tr>
+			
+			<table style="width: 100%">
+				<c:choose>
+					<c:when test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.applCatType']}" /></td>
+							<td>
+								<td>
+									<p:selectOneRadio value="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}">
+										<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
+											itemValue="33" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
+											itemValue="34" />
+										<p:ajax event="change" oncomplete="typeConfirmation.show()"
+											listener="#{supplierDataMaintenanceBackingBean.applicationCategorySelected}"
+											update="@([id$=typeConfirmationId])" process="@this"/>
+									</p:selectOneRadio>
+								</td>
+							</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
+							<td><p:selectOneRadio
+									value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType}">
+									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
+										itemValue="N" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
+										itemValue="S"
+										itemDisabled="#{supplierDataMaintenanceBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
+									<p:ajax event="change" oncomplete="typeConfirmation.show()"
+										listener="#{supplierDataMaintenanceBackingBean.applicationCategorySelected}"
+										update="@([id$=typeConfirmationId])" />
+								</p:selectOneRadio></td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 			</table>
+			
 			<table>
 				<tr>
 					<td align="left" colspan="2"><h:outputText
