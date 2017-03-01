@@ -18,8 +18,8 @@ body {margin-top: 0px;margin-left: 0px;}
 #page_1 #id_1 {border:none;margin: 0px 0px 0px 0px;padding: 0px;border:none;width: 800px;overflow: hidden;}
 #page_1 #id_2 {border:none;margin: 24px 0px 0px 40px;padding: 0px;width: 700px;overflow: hidden;}
 
-#page_1 #dimg1 {position:absolute;top:122px;left:69px;z-index:-1;width:687px;height:864px;}
-#page_1 #dimg1 #img1 {width:687px;height:864px;}
+#page_1 #dimg1 {position:absolute;top:122px;left:69px;z-index:-1;width:687px;height:900px;}
+#page_1 #dimg1 #img1 {width:687px;height:900px;}
 
 
 
