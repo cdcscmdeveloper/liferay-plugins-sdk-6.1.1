@@ -144,7 +144,7 @@ public class CreateQtBackingBean extends
 			.getLogger(CreateQtBackingBean.class);
 	
 	private static final String PTJ_ADDRESS_TYPE_ERROR_MSG_KEY = "lbl.sc.qt.ptj.address.not.found";
-	private static final String PTJ_ERROR_MSG_KEY = "lbl.sc.qt.ptj.not.found";
+	
 
 	/**
 	 * Instantiates a new QT detail backing bean.
@@ -311,13 +311,14 @@ public class CreateQtBackingBean extends
 					scQt.setObtainSpecialApproval(false);
 				}
 			}else{
-				fc.addMessage(null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,null,
-								ResourceBundleUtils.getMessage(
-												PTJ_ERROR_MSG_KEY,
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale())));
+				String msgCode = MessageConst.ERROR_760447;
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										msgCode, null,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())+" ("+msgCode+")"));
 				this.getManagedBean().setPtjPresent(false);
 			}
 			
