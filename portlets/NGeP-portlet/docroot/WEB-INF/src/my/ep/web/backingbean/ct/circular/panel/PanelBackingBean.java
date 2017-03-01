@@ -246,14 +246,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	   try {
 		     circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 		     resDTO= circularSO.retrieveCircularVerById(reqDTO);
-		     for(CtPanelItem panelItem: resDTO.getCircularVer().getCtPanelItems()){
-		    	 if(panelItem.getItemType() == null){
-		    		 panelItem.setItemType(new PmParameter());
-		    	 }
-		    	 if(panelItem.getPmUom() == null){
-		    		 panelItem.setPmUom(new PmUom());
-		    	 }
-		     }
 		     getManagedBean().setCircularVer(resDTO.getCircularVer());
 		     getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 	
@@ -1149,7 +1141,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					// Panel Supplier
 					CtPanelSupplier panelSupplier = new CtPanelSupplier();
 					panelSupplier.setSupplier(smSupplier);
-					panelSupplier.setCtPanelItem( this.getManagedBean().getSelectedPanelItems());
+					panelSupplier.setCtPanelItem(this.getManagedBean().getSelectedPanelItems());
 					panelSupplier.setCtPanelZone(this.getManagedBean().getSelectedPanelZone());
 					panelSupplier.setSupplierCompanyName(smSupplier.getCompanyName());
 					panelSupplier.setSupplierMofNo(retrieveMofNo(smSupplier));
