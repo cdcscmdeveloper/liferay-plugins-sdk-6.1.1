@@ -1,6 +1,7 @@
 package my.ep.web.scheduler.job.sc;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -44,6 +45,7 @@ public class BidSchedulesPoolingJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
+		log.info("!@#$% BidSchedulesPoolingJob is run @"+DateUtils.getCurrentDate());
 
 		IBiddingSO biddingSO = null;
 		try {
