@@ -2117,16 +2117,17 @@ public class QTDetailBackingBean extends
 				qtId = quationDataType.getQtId().longValue();
 				// retrieveFinalizationSecratryDtl(qtId);
 				retrieveQuationTenderDetails(new Long(qtId));
+				ScQt scQt = this.getManagedBean().getQt();
+				if (scQt.getObtainSpecialApproval() != null
+						&& scQt.getObtainSpecialApproval()) {
+					this.getManagedBean().setProcMethodDropdownPresent(
+							checkForProcumentMethodDropdown(scQt));
+				}
 			}
-
-			ScQt scQt = this.getManagedBean().getQt();
+			
 			if (null == this.getManagedBean().getQt().getProcurementMode()) {
 				this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 			} 
-			if (scQt.getTmpExpectedIntendedPrice() != null) {
-				new CreateQtBackingBean().setProcurementMode(scQt,
-						scQt.getTmpExpectedIntendedPrice());
-			}
 
 			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())) {
