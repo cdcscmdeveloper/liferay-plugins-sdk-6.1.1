@@ -95,7 +95,9 @@
 						autoResize="false"
 						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"/>
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
+						<p:ajax update="@this"></p:ajax>
+						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.fl.pr.tooltip.title']}"/></td>
 						<td><p:message for="title" display="icon" /></td>
 				<td style="width: 134px;"><p:outputLabel
