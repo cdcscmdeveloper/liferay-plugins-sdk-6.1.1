@@ -59,14 +59,10 @@ public class SmCustomerServiceManagedBean extends
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
 
 			try {
-				if (!isSupplierUser()) {
-					if (!isSearchCriteriaEmpty()) {
-						return getApplicationHistoryResultBean(reqDTO);
-					} else {
-						return new SearchResultBean();
-					}
-				} else {
+				if (!isSearchCriteriaEmpty()) {
 					return getApplicationHistoryResultBean(reqDTO);
+				} else {
+					return new SearchResultBean();
 				}
 			} catch (Exception ex) {
 				return new SearchResultBean();
