@@ -293,11 +293,14 @@ public class SimpleQuoteBackingBean extends
 					}
 				}	
 				if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
+					getManagedBean().setByLocality(Boolean.TRUE);
 					if(getManagedBean().getLocationTrees() == null || getManagedBean().getLocationTrees().isEmpty()){
 						getManagedBean().getLocationTrees().add(
 								LocationSingleton.getInstance().buildLocationTree(null, states,
 										districts, divisions, null,TplSpecZoneLoc.class));
 					}
+				} else{
+					getManagedBean().setByLocality(Boolean.FALSE);
 				}
 
 				if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
