@@ -17,7 +17,7 @@
 		<p:commandButton value="#{lbl['lbl.cm.upload']}"
 			onclick="excelDialog.show(); clearInvalidFileMsg();" />
 
-		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			update=":form" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
@@ -31,7 +31,7 @@
 		</ui:remove>
 
 
-		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"  rendered="#{!unspscCodeBackingBean.supplierTemp}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
