@@ -271,6 +271,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	    Long prInqId = getManagedBean().getPrInquiryId();
 	    Long pidId = getManagedBean().getPurchaseInDefaultId();
+	    Long statusId = getManagedBean().getCurrentStatusId();
 	    if(getManagedBean().getPrInquiryId() != null){
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
@@ -289,6 +290,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	 renewSesionObject();
 	    	 getManagedBean().setPrInquiryId(prInqId);
 	    	 getManagedBean().setPurchaseInDefaultId(pidId);
+	    	 getManagedBean().setCurrentStatusId(statusId);
 	     }
 	    
 	    if (requestNoteResDTO.isSuccessful()) {
@@ -330,6 +332,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setAutoUpdate(true);
 		if(requestNote.getCurrentStatus() != null ){
 			getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
+		} else {
+			// For status 
+			Long docStatusId = getManagedBean().getCurrentStatusId();
+			if(docStatusId != null){
+				Long statusId = null;
+				if (DPStatusConstants.PRI_PENDING_RN_CREATION.equals(docStatusId) || 
+						DPStatusConstants.PID_PENDING_RN_CREATION.equals(docStatusId) ||
+						DPStatusConstants.SQ_PENDING_RN_CREATION.equals(docStatusId)){
+					statusId = DPStatusConstants.RN_PENDING_SUBMISSION;
+				} else {
+					statusId = docStatusId;
+				}
+				getCurrentStatus(getPmStatusByStatusId(statusId));
+			} 
 		}
 		
 		getManagedBean().setTitleChecker(true);
