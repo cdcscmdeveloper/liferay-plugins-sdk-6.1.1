@@ -2781,4 +2781,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return isProcumentMethodDropdownReq;
 	}
+	
+	/**
+	 * Get list of statuses which are not recommended for Spec Maintenance
+	 * 
+	 * @return nonRecommendedStatuses
+	 */
+	protected List<Long> nonRecommendedStatusesForSpecMaint(){
+		
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+						  orderedStatuses.indexOf(QTStatusConst.QT_PENDING_QT_SUBMISSION),
+						  orderedStatuses
+								.indexOf(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) + 1);
+		List<Long> nonRecommendedStatuses = new ArrayList<Long>(orderedStatuses.size());
+		nonRecommendedStatuses.addAll(orderedStatuses);
+		
+		return nonRecommendedStatuses;
+	}
 }
