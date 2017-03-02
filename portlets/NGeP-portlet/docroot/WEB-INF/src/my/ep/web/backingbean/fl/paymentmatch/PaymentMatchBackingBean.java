@@ -630,6 +630,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}
 		if(gstTotalAmount.doubleValue()>0) {
+			if(getManagedBean().getPaymentAdvice().getFlRequest().getGstRate() == null){
+				getManagedBean().getPaymentAdvice().getFlRequest().setGstRate(BigDecimal.ZERO);
+			}
 			BigDecimal divideRate = getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().add(BigDecimal.valueOf(100));
 			BigDecimal gstAmount = getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().multiply(gstTotalAmount).divide(divideRate, CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP);
 			getManagedBean().setGstAmount(gstAmount);
@@ -676,6 +679,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 
 					if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){//item not exempted
 						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+							if(getManagedBean().getPaymentAdvice().getFlRequest().getGstRate() == null){
+								getManagedBean().getPaymentAdvice().getFlRequest().setGstRate(BigDecimal.ZERO);
+							}
 							Double recalculateServiceFee = 100 + getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().doubleValue();
 							BigDecimal serviceGstAmount = (new BigDecimal((invItem.getInvAmt().doubleValue() * getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().doubleValue()) / recalculateServiceFee));
 							nonExemptedItemList.add(invItem.getInvAmt().subtract(serviceGstAmount));
@@ -781,6 +787,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
 						taxInvVO.setAmountWithoutGst(invItem.getInvAmt().toString());
 						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+							if(getManagedBean().getPaymentAdvice().getFlRequest().getGstRate() == null){
+								getManagedBean().getPaymentAdvice().getFlRequest().setGstRate(BigDecimal.ZERO);
+							}
 							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 							taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
 						}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
@@ -798,6 +807,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
 					taxInvVO.setAmountWithoutGst(invItem.getInvAmt().toString());
 					if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+						if(getManagedBean().getPaymentAdvice().getFlRequest().getGstRate() == null){
+							getManagedBean().getPaymentAdvice().getFlRequest().setGstRate(BigDecimal.ZERO);
+						}
 						taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
 						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 					}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
@@ -822,6 +834,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
 			taxInvoice.setAmountWithoutGst("0.00");
 			taxInvoice.setGstAmount("0.00");
+			if(getManagedBean().getPaymentAdvice().getFlRequest().getGstRate() == null){
+				getManagedBean().getPaymentAdvice().getFlRequest().setGstRate(BigDecimal.ZERO);
+			}
 			taxInvoice.setGstFlag(GSFType.STANDARD.value()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}
