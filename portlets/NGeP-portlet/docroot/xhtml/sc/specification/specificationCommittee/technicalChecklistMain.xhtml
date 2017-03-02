@@ -324,25 +324,26 @@
 			</p:column>
 		</p:dataTable>
 
-
+		<ui:param name="isReadOnlyOrSpecMain"
+			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 		<div align="right">
 			<p:commandButton styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+				rendered="#{!isReadOnlyOrSpecMain}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="@([id$=specCommitteeTechnicalChecklist])" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				rendered="#{!specificationBackingBean.managedBean.qt.panel}"
+				rendered="#{!specificationBackingBean.managedBean.qt.panel and 
+				!((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
 				process="@this" styleClass="BtnSpacing"
 				update="@([id$=commiteeCreationSpec])"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
-				disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+				rendered="#{!isReadOnlyOrSpecMain}"
 				process="@this,stageTwotechProposal"
 				action="#{specificationBackingBean.addTechnicalCheckList}"
 				update="@all,stageTwotechProposal" />
@@ -351,7 +352,8 @@
 				disabled="#{specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				process="@this" partialSubmit="true"
 				oncomplete="technicalCheckListDeletePopUp.show();"
-				update="@([id$=#{technicalCheckListDeleteId}])">
+				update="@([id$=#{technicalCheckListDeleteId}])"
+				rendered="#{!isReadOnlyOrSpecMain}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.techStandaraChecklist}"
 					value="#{true}" />
@@ -361,8 +363,7 @@
 			</p:commandButton>
 
 			<p:commandButton styleClass="BtnSpacing" 
-				rendered="#{specificationBackingBean.managedBean.qt.panel}"
-				disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+				rendered="#{specificationBackingBean.managedBean.qt.panel and !((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
 				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
 				actionListener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.qt.circularVer)}"
 				oncomplete="addPanelItem.show();" update="@([id$=circularpanelItemsSelectionPopUp])" />

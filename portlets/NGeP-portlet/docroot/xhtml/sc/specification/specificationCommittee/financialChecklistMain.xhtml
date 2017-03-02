@@ -297,18 +297,19 @@
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
-		
+		<ui:param name="isReadOnlyOrSpecMain"
+			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 
 		<div align="right">
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+				rendered="#{!isReadOnlyOrSpecMain}"
 				process="@this" partialSubmit="true"
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
 				update="@([id$=financialChecklistPopup])" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+				rendered="#{!isReadOnlyOrSpecMain}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.addFinancialCheckList}"
 				update="@all,financeProposaltwo" />
@@ -318,7 +319,8 @@
 				disabled="#{specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
 				process="@this" partialSubmit="true"
 				oncomplete="financialCheckListDeletePopUp.show();"
-				update="@([id$=#{financialCheckListDeleteId}])">
+				update="@([id$=#{financialCheckListDeleteId}])"
+				rendered="#{!isReadOnlyOrSpecMain}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.finStandaraChecklist}"
 					value="#{true}" />
