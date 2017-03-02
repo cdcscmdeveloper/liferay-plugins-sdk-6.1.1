@@ -1185,7 +1185,7 @@ public class FinancialOrgBackingBean extends
 				if(DbValueConst.RECORD_STATUS_ACTIVE == finSev.getRecordStatusFlg()){
 					serviceTypeSet.add(pmParameter.getParameterCode());	
 				}
-							
+				
 				if(pmParameter.getParameterId().equals(typeParameter.getParameterId())){
 					isExist = true;
 					selectedFinSvc = finSev;					
@@ -1214,6 +1214,10 @@ public class FinancialOrgBackingBean extends
 						}
 					}
 				}
+				//render for factoring company
+				if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(typeParameter.getParameterCode())){					
+					getManagedBean().setShowFactoringBank(true);
+				}
 			}else{
 				serviceTypeSet.remove(typeParameter.getParameterCode());
 				if(isExist){
@@ -1228,6 +1232,18 @@ public class FinancialOrgBackingBean extends
 					}else{
 						getManagedBean().getFinancialOrg().getPmFinancialSvcs().remove(selectedFinSvc);
 					}
+				}
+				//remove new fin accs only
+				if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(typeParameter.getParameterCode()) &&
+						getManagedBean().getFinancialOrg().getPmFinancialAccs() != null){
+					List<PmFinancialAcc> accRemoveList = new ArrayList<PmFinancialAcc>();
+					for(PmFinancialAcc acc : getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+						if(acc.isBrandNew()){
+							accRemoveList.add(acc);
+						}
+					}
+					getManagedBean().getFinancialOrg().getPmFinancialAccs().removeAll(accRemoveList);
+					
 				}
 			}
 			getManagedBean().getServiceTypes().addAll(serviceTypeSet);	
@@ -1424,6 +1440,12 @@ public class FinancialOrgBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getServiceType()));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmFinancialSvcs.recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
 		}	
 		
 		if(fSearchBean.getOrgStatus() != null && fSearchBean.getOrgStatus().trim().length() > 0){
