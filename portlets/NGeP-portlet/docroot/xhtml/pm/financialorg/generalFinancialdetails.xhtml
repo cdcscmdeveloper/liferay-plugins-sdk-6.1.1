@@ -86,6 +86,18 @@
 				<td><p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
 
 			</tr>
+			<tr>
+				<td>
+					<p:selectBooleanCheckbox 
+						label="#{lbl['lbl.pn.finorg.is.ep']}" 
+						value="#{financialOrgBackingBean.managedBean.financialOrg.forEp}"
+						id="isforEp"/>
+						
+				</td>
+				<td><h:outputLabel value="#{lbl['lbl.pn.finorg.is.ep']}" /></td>
+				<td></td>
+
+			</tr>
 		</table>
 		<p:outputPanel id="opGeneralTopMenu">
 				<p:tabView id="tvGeneralFinance"  widgetVar="tvGeneralFinance" dynamic="false" cache="false" orientation="top"
