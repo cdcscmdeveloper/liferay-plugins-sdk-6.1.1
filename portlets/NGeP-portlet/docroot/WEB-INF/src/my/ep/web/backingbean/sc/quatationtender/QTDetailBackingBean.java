@@ -127,6 +127,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -5730,6 +5731,24 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
-	
+	public SelectItem[] getQTStatusDropdownValues(String moduleCode,
+			String docType, String screenName) {
+
+		SelectItem[] statusList = null;
+		if (QTConstants.SPEC_MAINTENANCE.equalsIgnoreCase(screenName)) {
+			
+			SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmStatus.statusId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							nonRecommendedStatusesForSpecMaint()));
+
+			statusList = getStatusDropdownValuesBySearchBean(moduleCode,
+					docType, searchBean);
+		} else {
+			statusList = getStatusDropdownValues(moduleCode, docType);
+		}
+		return statusList;
+	}
 	
 }
