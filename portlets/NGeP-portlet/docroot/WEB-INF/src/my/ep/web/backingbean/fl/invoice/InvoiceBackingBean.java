@@ -1170,7 +1170,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 			}
 		}else{
-			getManagedBean().getInvoice().setPaymentBankAddress(new FlAddress());
+			getManagedBean().getInvoice().setPaymentBankAddress(null);
 			
 		}
 		
