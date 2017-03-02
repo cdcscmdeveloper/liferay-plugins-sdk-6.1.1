@@ -276,9 +276,24 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 
-		// old admin not exist
+		// selected old admin not exist
 		if (getManagedBean().getOldAdmin() == null) {
 			throw new EpException(MessageConst.ERROR_722594);
+		}
+
+		// selected old admin does not hold role as supplier admin
+		if (getManagedBean().getOldAdmin() != null) {
+			if (StringUtils.isBlank(getManagedBean().getOldAdmin().getEpRole())
+					|| (getManagedBean().getOldAdmin().getEpRole()
+							.equals(RoleCode.BASIC_SUPPLIER_USER.value())
+							|| getManagedBean().getOldAdmin().getEpRole()
+									.equals(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean()
+							.getOldAdmin().getEpRole()
+							.equals(RoleCode.G2G_SUPPLIER_USER.value()))) {
+				throw new EpException(MessageConst.ERROR_722651,
+						new String[] { getManagedBean().getOldAdmin()
+								.getIdentificationNo() });
+			}
 		}
 
 		// existing new admin
