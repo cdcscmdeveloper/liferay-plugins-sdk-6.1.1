@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.lang.StringUtils;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -18,20 +23,19 @@ import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.managedbean.sm.customerservice.SmCustomerServiceManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-
-import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "smCustomerServiceBackingBean")
 @RequestScoped
@@ -141,6 +145,16 @@ public class SmCustomerServiceBackingBean extends
 	 * Perform search supplier application history
 	 */
 	public void search() {
+		if(getManagedBean().isSearchCriteriaEmpty()){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_722650,
+									new String[] {},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return;
+		}
 		getManagedBean().getSmSupplierDataModel().reloadData();
 	}
 
