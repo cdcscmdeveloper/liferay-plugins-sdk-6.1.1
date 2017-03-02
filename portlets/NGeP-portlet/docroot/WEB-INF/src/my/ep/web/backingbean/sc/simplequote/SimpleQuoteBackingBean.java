@@ -3195,13 +3195,11 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void selectLocationTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-
-		List<TreeNode> childNodes = event.getTreeNode().getChildren();
+		//List<TreeNode> childNodes = event.getTreeNode().getChildren();
 		//if(null!=childNodes && childNodes.size()>0){
 			
 		/*for (int i = 0; i < childNodes.size(); i++) {
 			childNodes.get(i).setSelected(true);
-			
 		}
 		}else{*/
 			
