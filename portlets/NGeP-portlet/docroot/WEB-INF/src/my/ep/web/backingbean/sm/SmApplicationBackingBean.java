@@ -6115,6 +6115,26 @@ public class SmApplicationBackingBean extends
 
 			assignValReqdToFalse();
 			saveOrUpdateAppl();
+
+			// reload cheque signatory table if needed
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getSelectedSignatoryBankAccts())) {
+				List<SmSupplierBank> suppBanks = new ArrayList<SmSupplierBank>();
+				SmSupplierBank bankTmp = null;
+				for (SmSupplierBank bank : getManagedBean()
+						.getSelectedSignatoryBankAccts()) {
+					bankTmp = (SmSupplierBank) EntityHelper
+							.getEntityBySinglePropertyFromList(bank
+									.getAccountNo(), getManagedBean()
+									.getSmAppl().getSmSupplierBanks(),
+									"accountNo");
+					if (bankTmp != null) {
+						suppBanks.add(bankTmp);
+					}
+				}
+				getManagedBean().setSelectedSignatoryBankAccts(suppBanks);
+			}
+
 			RequestContext.getCurrentInstance().execute("bankDialog.hide()");
 		}
 	}
