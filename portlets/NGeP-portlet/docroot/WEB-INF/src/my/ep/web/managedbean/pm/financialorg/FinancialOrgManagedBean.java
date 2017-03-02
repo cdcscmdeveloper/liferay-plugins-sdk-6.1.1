@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.financialorg;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmFinancialSvc;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 /**
@@ -56,6 +58,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private PmFinancialAcc selectedDeleteFactoringBank;
 	
 	private boolean addressAndContactPersonMandatory;
+	private List<PmParameterDesc> bankServicesList;
 
 	public FinancialOrgManagedBean(){}
 
@@ -282,6 +285,23 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	 */
 	public void setAddressType(PmAddressType addressType) {
 		this.addressType = addressType;
+	}
+
+	/**
+	 * @return the bankServicesList
+	 */
+	public List<PmParameterDesc> getBankServicesList() {
+		if(bankServicesList == null){
+			bankServicesList = new ArrayList<PmParameterDesc>();
+		}
+		return bankServicesList;
+	}
+
+	/**
+	 * @param bankServicesList the bankServicesList to set
+	 */
+	public void setBankServicesList(List<PmParameterDesc> bankServicesList) {
+		this.bankServicesList = bankServicesList;
 	}
 
 
