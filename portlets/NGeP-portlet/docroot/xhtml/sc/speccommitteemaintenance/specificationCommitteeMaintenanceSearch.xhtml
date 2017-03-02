@@ -13,7 +13,7 @@
 			closable="true" showSummary="false" severity="error, info" />
 		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="specMaintenanceQtSearch">	
-       <ui:param name="status" value="SC"></ui:param>
+       <ui:param name="screenName" value="SM"></ui:param>
 		<ui:include
 			src="/xhtml/sc/quatationtender/searchQuotationTenderDetails.xhtml"></ui:include>
          <div class="ppRightBtn">
@@ -77,19 +77,19 @@
 						<h:outputText
 							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>
-
+					<ui:param name="statusId" value="#{scQt.qtStatus.statusId}"/>
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:6%;text-align: center;">
-						<p:commandLink id="editQTIcon" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,false,'SM')}" style="margin-right:20px;"
-							partialSubmit="true" process="@this">
+						<p:commandLink id="editSMIcon" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,true)}" style="margin-right:20px;"
+							partialSubmit="true" process="@this" rendered="#{specMaintenanceBB.renderIcon(statusId)}">
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 						</p:commandLink>
 
-						<p:commandLink id="viewQTIcon" style="margin-right:20px;" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,true,'SM')}"
-							partialSubmit="true" process="@this">
+						<p:commandLink id="viewSMIcon" style="margin-right:20px;" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,false)}"
+							partialSubmit="true" process="@this" rendered="#{!specMaintenanceBB.renderIcon(statusId)}">
 							<p:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 								styleClass="tasklist_title1"
