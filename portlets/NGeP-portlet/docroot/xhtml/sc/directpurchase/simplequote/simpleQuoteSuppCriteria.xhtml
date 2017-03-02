@@ -64,9 +64,9 @@
 							<p:column headerText="#{lbl['lbl.sc.location.name']}">
 								<p:tree value="#{locationTree}" var="location"
 									selectionMode="checkbox">
-									<p:ajax event="select" update="@([id$=simpleQuoteSupplierCriteriaLocationsDeleteBtnId])"
+									<p:ajax event="select" update="@([id$=locDeleteBtnId])"
 										listener="#{simpleQuoteBackingBean.selectLocationTreeNode}" />
-									<p:ajax event="unselect" update="@([id$=simpleQuoteSupplierCriteriaLocationsDeleteBtnId])"
+									<p:ajax event="unselect" update="@([id$=locDeleteBtnId])"
 										listener="#{simpleQuoteBackingBean.unSelectLocationTreeNode}" />
 
 									<p:treeNode type="state">
@@ -102,7 +102,7 @@
 									oncomplete="locationPopup.show();"
 									actionListener="#{simpleQuoteBackingBean.showLocationPopup}" />
 
-								<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSupplierCriteriaLocationsDeleteBtnId"
+								<p:commandButton value="#{lbl['lbl.btn.delete']}" id="locDeleteBtnId"
 								    styleClass="BtnSpacing" disabled="#{simpleQuoteBackingBean.checkLocationDeleteButtonDisable()}"
 									process="@this, locationDataTable" partialSubmit="true"
 									oncomplete="supplierLocationDeletePopUp.show();"
