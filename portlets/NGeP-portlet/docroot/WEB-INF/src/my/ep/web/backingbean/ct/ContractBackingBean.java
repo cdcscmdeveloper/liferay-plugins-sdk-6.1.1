@@ -2193,9 +2193,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
 		 if (resDTO.isBondReq()) {				 
 			 getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
-		 } else {
-			 getManagedBean().getCtContractAmount().setTotalBondAmt(null);
-		 }
+		 }// else {
+//			 getManagedBean().getCtContractAmount().setTotalBondAmt(null);
+//		 }
 	 }
 		 
 	 /**
@@ -3411,12 +3411,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return boolean value
 	 * */
 	public boolean isPerformanceBond(){
-		if(getManagedBean().getCtContractAmount().isBondReq() && !getManagedBean().isDirectPurchase()
-				&& !getManagedBean().getCtContractAmount().isBondExempted()
-				&&(!getManagedBean().isCommonView() || 
-						getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
-						equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) )){
-			     return  true;
+		if((getManagedBean().getCtContractAmount().isBondReq()
+				|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
+			&& !getManagedBean().isDirectPurchase()
+			&& !getManagedBean().getCtContractAmount().isBondExempted()
+			&& (!getManagedBean().isCommonView()
+				|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
+					equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) )){
+			return  true;
 		}
 		return false;
 	}
