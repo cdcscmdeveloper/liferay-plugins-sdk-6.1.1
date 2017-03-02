@@ -5234,8 +5234,12 @@ public class SmApplicationBackingBean extends
 						.getSelectedShareHolder().getSmStaffAcademics()
 						.isEmpty())) {
 
-			validShrHldr = false;
-			throw new EpException(MessageConst.ERROR_722575);
+			if (getManagedBean().getSelectedShareHolder().isProf()
+					|| getManagedBean().getSelectedShareHolder().isSemiProf()
+					|| getManagedBean().getSelectedShareHolder().isClerical()) {
+				validShrHldr = false;
+				throw new EpException(MessageConst.ERROR_722575);
+			}
 		}
 		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
