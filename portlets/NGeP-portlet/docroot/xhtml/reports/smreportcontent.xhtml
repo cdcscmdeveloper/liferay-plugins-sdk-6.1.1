@@ -1558,9 +1558,9 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}"
-													itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
+													itemValue="#{lbl['lbl.rpt.approved.val']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}"
-													itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
+													itemValue="#{lbl['lbl.rpt.rejected.val']}"></f:selectItem>
 												<p:ajax event="change"
 													listener="#{reportBackingBean.applicationStatusChange}"
 													update="@form" />
@@ -1579,9 +1579,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}"
-									itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.approved.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}"
-									itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.rejected.val']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -2165,7 +2165,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}"
-									itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.active.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}"
 									itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
@@ -2196,7 +2196,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}"
-													itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+													itemValue="#{lbl['lbl.rpt.active.val']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}"
 													itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>
 												<p:ajax event="change"
@@ -2233,9 +2233,9 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.online']}"
-													itemValue="#{lbl['lbl.rpt.online']}"></f:selectItem>
+													itemValue="#{lbl['lbl.rpt.online.val']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.offline']}"
-													itemValue="#{lbl['lbl.rpt.offline']}"></f:selectItem>
+													itemValue="#{lbl['lbl.rpt.offline.val']}"></f:selectItem>
 												<p:ajax event="change" partialSubmit="true"
 													update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
@@ -2257,9 +2257,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.online']}"
-									itemValue="#{lbl['lbl.rpt.online']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.online.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.offline']}"
-									itemValue="#{lbl['lbl.rpt.offline']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.offline.val']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -2273,9 +2273,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.complete']}"
-									itemValue="#{lbl['lbl.rpt.complete']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.complete.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.inncomplete']}"
-									itemValue="#{lbl['lbl.rpt.inncomplete']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.incomplete.val']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -2312,9 +2312,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.director']}"
-									itemValue="#{lbl['lbl.rpt.director']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.director.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.owner']}"
-									itemValue="#{lbl['lbl.rpt.owner']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.owner.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.highermanagemnt']}"
 									itemValue="#{lbl['lbl.rpt.ceo']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
@@ -2420,9 +2420,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.suppler']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.suppler']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.suppler.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.system']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.system']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.drpdown.system.val']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -2797,7 +2797,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}"
-									itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.active.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}"
 									itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"

@@ -279,7 +279,7 @@
 									itemValue="#{lbl['lbl.rpt.PendingVerification']}"></f:selectItem>
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}"
-									itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.rejected.val']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangePurchaseInDefaultStatus()}"
 									update="@form" />
 							</p:selectOneMenu>
@@ -409,7 +409,7 @@
 									itemValue="#{lbl['lbl.rpt.cancelled']}"></f:selectItem>
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.approvedLabel']}"
-									itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.approved.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.acknowledge']}"
 									itemValue="#{lbl['lbl.rpt.acknowledge']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
@@ -579,7 +579,7 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.contractpkpno']}"
-									itemValue="#{lbl['lbl.rpt.contractpkpno']}"></f:selectItem>
+									itemValue="#{lbl['lbl.rpt.contractpkpno.val']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractType']}"
 									itemValue="#{lbl['lbl.rpt.capscontracttype']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.approverscreen']}"
