@@ -260,7 +260,7 @@ private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
 			searchFilterBean.add(bean);
 		}
 		
-		/*String status = qtnTenderSearchBean.getQtStatus();
+		String status = qtnTenderSearchBean.getQtStatus();
 		if (!StringUtils.isBlank(status)) {
 			searchFilterBean.add(new SearchFilterBean(
 							"scQtStatus.pmStatus.statusId",
@@ -268,16 +268,13 @@ private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
 			searchFilterBean.add(
 					new SearchFilterBean("scQtStatus.current",
 							SearchOperator.OPERATOR_EQUALS.value(), true));
-		}*/
-		
-	/*	List<Long> statuses=new ArrayList<Long>();
-		statuses.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-		statuses.add(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL);
-		statuses.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		statuses.add(QTStatusConst.QT_PENDING_PUBLICATION);*/
-		searchFilterBean.add(new SearchFilterBean(
-				"scQtStatus.pmStatus.statusId",
-				SearchOperator.OPERATOR_GREATER_EQUAL.value(), QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT));
+		} else {
+			searchFilterBean.add(new SearchFilterBean(
+					"scQtStatus.pmStatus.statusId",
+					SearchOperator.OPERATOR_NOT_IN.value(),nonRecommendedStatusesForSpecMaint()));
+		}
+			
+
                  searchFilterBean.add(
 		new SearchFilterBean("scQtStatus.current",
 				SearchOperator.OPERATOR_EQUALS.value(), true));
@@ -346,7 +343,8 @@ public void specCommitteeMaintenancereset() {
  * @param ScQt scQt.
  * @param Boolean true/false.
  */
-public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,String SpecMaintenanceScreen){
+public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
+	
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
 	renewSesionObject();
@@ -362,58 +360,55 @@ public void editSpecificationMaintenance(ScQt scQt,boolean specMaintenance,Strin
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
      log.info("status Publish");
-	if(specCommitteeSecreatry){
-	//log.info("workFlowStatus"+workFlowStatus);
-	boolean checkStatus=	checkStatus(scQt
-				.getQtStatus().getStatusId());
-	log.info("checkStatus"+checkStatus)	;
-	if(checkStatus){
-		  log.info("staus true");
-		 ScWorkFlowStatus workFlowStatus=retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
-		    this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);	
-	if(null==workFlowStatus || QTStatusConst.SE_PENDING_SUBMISSION.equals(workFlowStatus.getPmStatus().getStatusId()) || QTStatusConst.SE_COMPLETED.equals(workFlowStatus.getPmStatus().getStatusId())){
-		//log.info("secretary Inner value workFlowStatus"+workFlowStatus);
-		this.getManagedBean().setReadOnly(Boolean.FALSE);
-		this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
-	}else{
-		//log.info("secretary else value workFlowStatus"+workFlowStatus);
-		this.getManagedBean().setReadOnly(Boolean.TRUE);
-		this.getManagedBean().setSpecMaintenance(Boolean.FALSE);	
-	}
-	}else{
-		 log.info("status not true");
-		this.getManagedBean().setReadOnly(Boolean.TRUE);
-		this.getManagedBean().setSpecMaintenance(Boolean.FALSE);	
-	}
-	}else{
-		log.info("otherthan secretary else value workFlowStatus");
-		this.getManagedBean().setReadOnly(Boolean.TRUE);
-	}
+		if (specCommitteeSecreatry) {
+			if (isEditable) {
+				
+				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
+				if (null == workFlowStatus
+						|| QTStatusConst.SE_PENDING_SUBMISSION
+								.equals(workFlowStatus.getPmStatus().getStatusId())
+						|| QTStatusConst.SE_COMPLETED.equals(workFlowStatus.getPmStatus().getStatusId())) {
+					this.getManagedBean().setReadOnly(Boolean.FALSE);
+					this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
+				} else {
+					this.getManagedBean().setReadOnly(Boolean.TRUE);
+					this.getManagedBean().setSpecMaintenance(Boolean.FALSE);
+				}
+			} else {
+				log.info("status not true");
+				this.getManagedBean().setReadOnly(Boolean.TRUE);
+				this.getManagedBean().setSpecMaintenance(Boolean.FALSE);
+			}
+		} else {
+			log.info("otherthan secretary else value workFlowStatus");
+			this.getManagedBean().setReadOnly(Boolean.TRUE);
+		}
+	
+		SpecificationBackingBean specBB = new SpecificationBackingBean();
+		specBB.retriveSpecdetails(scQt.getQtId().longValue());
+		ScQt scQt_ = this.getManagedBean().getQt();
+		if (null == scQt_.getContractType()) {
+			scQt_.setContractType(new PmParameter());
+		}
 
-	
-	SpecificationBackingBean specBB=new SpecificationBackingBean();
-	specBB.retriveSpecdetails(scQt.getQtId().longValue());
-	if (null == this.getManagedBean().getQt().getContractType()) {
-		this.getManagedBean().getQt().setContractType(new PmParameter());
-	}
-	
-	if (null != this.getManagedBean().getQt().getFulfilmentType()) {
-		this.getManagedBean().setFulfilmentType(
-				this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
-	}
-	
-	this.getManagedBean().setCurrentStatusId(scQt
-			.getQtStatus().getStatusId());
-	this.getManagedBean().setSpecMaintenanceScreen(SpecMaintenanceScreen);
-	this.getManagedBean().setLoginRoleType("SC");
-	if(null!=this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
-		log.info("Workflow status not null"+this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
-		this.getManagedBean().setCurrentStatusId(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
-	}
-	fc.getApplication()
-			.getNavigationHandler()
-			.handleNavigation(fc, null,
-					QTConstants.SPECIFICICATON_COMM_PREPARATION);
+		if (null != scQt_.getFulfilmentType()) {
+			this.getManagedBean().setFulfilmentType(scQt_.getFulfilmentType()
+							.getParameterCode());
+		}
+		this.getManagedBean().setCurrentStatusId(scQt.getQtStatus().getStatusId());
+		this.getManagedBean().setSpecMaintenanceScreen(QTConstants.SPEC_MAINTENANCE);
+		this.getManagedBean().setLoginRoleType("SC");
+		ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
+		if (null != specMainworkflow) {
+			log.info("Workflow status not null"+ specMainworkflow.getPmStatus().getStatusId());
+			this.getManagedBean().setCurrentStatusId(specMainworkflow.getPmStatus().getStatusId());
+		}
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+		
 	log.info("end editSpecificationMaintenance");
 }
 
@@ -505,22 +500,21 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 }
 
-private boolean checkStatus(Long statusId){
-	if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
-		 return true;	
+public boolean renderIcon(Long currentStatusId) {
+
+	boolean isRenderIcon = false;
+	if (currentStatusId != null) {
+		isRenderIcon = checkStatus(currentStatusId);
 	}
-	else if(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(statusId)){
-		 return true;	
-	}
- else if(QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){
-	 return true;	
-	}
-/* else if(QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)){
-	 return true;
-}*/else{
-	return false;
-}
-	
+	return isRenderIcon;
 }
 
+private boolean checkStatus(Long statusId){
+	
+	return isQTStatusInBetween(statusId,
+			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+	
+}
+	
 }
