@@ -11,101 +11,23 @@
 	</style>
 	<p:outputPanel id="pFacFinancialService">	
 		<p:dataTable id="financialsrvid" var="financialsrv"
-			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
+			value="#{financialOrgBackingBean.managedBean.bankServicesList}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialsrv" />
-
+			<p:column width="10%">
+				<p:selectBooleanCheckbox id="cbSelected" 
+					disabled="#{ParameterConst.bankServicesPaymentBank eq financialsrv.pmParameter.parameterCode}"
+					value="#{financialsrv.selected}" >
+					<p:ajax update="@form" 
+						onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
+						listener="#{financialOrgBackingBean.changeFinancialSvc(financialsrv)}" />
+					</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column width="65%">
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
-				</f:facet>
-				<ui:fragment
-					rendered="#{!financialsrv.brandNew}">
-					<h:outputText value="#{lbl['lbl.bankservice.paymentbank']}"
-					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'PB'}" />
-				<h:outputText value="#{lbl['lbl.bankservice.performancebond']}"
-					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'PD'}" />
-				<h:outputText value="#{lbl['lbl.bankservice.factoringcompany']}"
-					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'FC'}" />
-				<h:outputText value="#{lbl['lbl.bankservice.registration']}"
-					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'RG'}" />
-
-					
-				</ui:fragment>
-				
-                 <ui:fragment
-					rendered="#{financialsrv.brandNew}">
-				 <p:selectOneMenu id="svcType" 
-					value="#{financialsrv.serviceTypeCode.parameterId}"
-					disabled="#{!financialsrv.brandNew || financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}"
-					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="false"
-					styleClass="ppDropDownWidthS">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
-					<f:selectItems var="serviceType"
-						itemLabel="#{serviceType.codeName}"
-						itemValue="#{serviceType.pmParameter.parameterId}"
-						value="#{financialOrgBackingBean.getServiceTypeList()}" />
-					<p:ajax event="change" process="@this" 
-				 		update="@form" 
-				 		onstart="blockWidget.show()" 
-						oncomplete="blockWidget.hide()" 
-						listener="#{financialOrgBackingBean.updateService}"  />
-				</p:selectOneMenu>
-				<p:message for="svcType" id="svcTypeMsg" display="icon" /> 
-				</ui:fragment>
-			</p:column>
-			<!-- <p:column width="45%" headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
-				<ui:fragment
-					rendered="#{financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}">
-
-					<p:inputText value="#{financialsrv.bankCode}" disabled="true"
-						styleClass="ppDisplayTextM" size="30" maxlength="20" />
-				</ui:fragment>
-			</p:column> -->
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="25%">
-				<p:selectOneMenu style="width: 110px !important;" id="finServiceStatusId"
-					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
-					value="#{financialsrv.recordStatusFlg}" required="true"	>
-					<f:selectItems
-						value="#{financialOrgBackingBean.getStatusOptions()}" />
-					<p:ajax event="change" process="@this" 
-				 		update="@form" 
-				 		onstart="blockWidget.show()" 
-						oncomplete="blockWidget.hide()" 
-						listener="#{financialOrgBackingBean.updateServicesRecordStatus()}"  />
-				</p:selectOneMenu>
-
-			</p:column>
-			
-			<p:column width="10%" headerText="#{lbl['lbl.pm.financialorg.action']}">
-	             <p:commandLink partialSubmit="true" 
-	             	disabled="#{!financialsrv.brandNew}"
-					process="@this" 
-					oncomplete="financialSvcDeletePopUp.show();"
-					update="@([id$=#{financialSvcDeleteId}])" >
-					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					<f:setPropertyActionListener target="#{financialOrgBackingBean.managedBean.selectedDeleteSvc}" 
-								value="#{financialsrv}" />
-				</p:commandLink>
+				#{financialsrv.codeName}
 			</p:column>
 		</p:dataTable>
-	
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this,financialsrvid" 
-				action="#{financialOrgBackingBean.addFinancialService}"
-				update="financialsrvid" />
-		</div>
-		<ac:confirmationPopup id="financialSvcDeleteId"
-			widget="financialSvcDeletePopUp"
-			okAction="financialOrgBackingBean.deleteFinancialService()"
-			width="400" height="100"
-			title="#{lbl['lbl.msg.confirm.delete.header']}"
-			content="#{lbl['lbl.msg.confirm.delete']}" 
-			update=":form:opGeneralTopMenu" />
-
 
 	</p:outputPanel>
 </ui:composition>
