@@ -3197,17 +3197,17 @@ public class SimpleQuoteBackingBean extends
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		List<TreeNode> childNodes = event.getTreeNode().getChildren();
-		if(null!=childNodes && childNodes.size()>0){
+		//if(null!=childNodes && childNodes.size()>0){
 			
-		for (int i = 0; i < childNodes.size(); i++) {
+		/*for (int i = 0; i < childNodes.size(); i++) {
 			childNodes.get(i).setSelected(true);
 			
 		}
-		}else{
+		}else{*/
 			
 		selectedTreeNode.setSelected(true);
 		
-		}
+		//}
 	}
 
 	/**
@@ -3485,7 +3485,7 @@ public class SimpleQuoteBackingBean extends
 				TreeNode rootTree = rootTrees.get(row);
 
 				for (TreeNode zoneTree : rootTree.getChildren()) {
-					if (zoneTree.isSelected()) {
+					if (zoneTree.isSelected() || checkLocChilds(zoneTree)) {
 						rootTrees.remove(row--);
 					} else {
 						deleteChildTreeNodes(zoneTree.getChildren());
@@ -3497,6 +3497,19 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+	}
+	
+	private boolean checkLocChilds(TreeNode zoneTree){
+		boolean isChildsSelected = false;
+		for (TreeNode child : zoneTree.getChildren()) {
+			if (child.isSelected()) {
+				isChildsSelected =  true;
+			} else {
+				return false;	
+			}
+		}	
+
+		return isChildsSelected;	
 	}
 
 	/**
@@ -6550,6 +6563,10 @@ public class SimpleQuoteBackingBean extends
 		if (null != list) {
 			for (TreeNode node : list) {
 				for (TreeNode childNode : node.getChildren()) {
+					if(childNode.isSelected()){
+						return false;
+					}
+					
 					if (childNode.getChildCount() > 0) {
 						for (TreeNode state : childNode.getChildren()) {
 							if(state.isSelected()){
