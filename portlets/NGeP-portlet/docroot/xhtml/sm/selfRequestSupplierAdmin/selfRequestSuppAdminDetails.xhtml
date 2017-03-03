@@ -22,6 +22,8 @@
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.suppadmin.info']}" toggleable="true" id="suppAdminInfoPanelId">
+	
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
 		
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.selfrequest.field.mark.with']} ("/>
 		<h:outputText styleClass="mandatory" value="*"/>
@@ -142,7 +144,7 @@
 				<td></td>
 				<td>
 					<p:inputText id="suppAdminAddr2" size="35"
-						label="#{lbl['lbl.sm.person.permAddr']}" required="true" maxlength="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="35"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address2}">
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>
@@ -180,7 +182,7 @@
 				<td></td>
 				<td>
 					<p:inputText id="suppAdminAddr3" size="35"
-						label="#{lbl['lbl.sm.person.permAddr']}" required="true" maxlength="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="35"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address3}">
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>
