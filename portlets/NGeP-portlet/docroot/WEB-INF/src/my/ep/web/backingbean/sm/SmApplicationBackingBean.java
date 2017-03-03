@@ -1113,13 +1113,17 @@ public class SmApplicationBackingBean extends
 						ParameterConst.CATEGORY_TYPE_TRAVEL));
 		SmApplicationUtil.initializeTravellingSoftwareTicked(getManagedBean());
 
-		// set registration status list exclude current registration status
+		// set registration status list exclude current registration status only
+		// if registration list size more than one
 		getManagedBean().setRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
 		if (getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
 				.getPmRegStatus() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean()
+						.getRegStatusDescList())
+				&& getManagedBean().getRegStatusDescList().size() > 1
 				&& getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
 						.getPmRegStatus().getPmStatus() != null) {
 			PmStatusDesc regStatusToExclude = (PmStatusDesc) EntityHelper
