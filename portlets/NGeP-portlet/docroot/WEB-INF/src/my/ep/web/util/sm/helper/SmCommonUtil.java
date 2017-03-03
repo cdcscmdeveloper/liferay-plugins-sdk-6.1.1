@@ -4601,8 +4601,10 @@ public class SmCommonUtil {
 			String filePathName) {
 		SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 		reqDTO.setDeSerFileName(filePathName);
-		SmApplRevisionResDTO resDTO = SmServiceLookup.getSmApplRevisionSO()
-				.readApplicationHist(reqDTO);
+		SmApplRevisionResDTO resDTO = null;
+		if (!StringUtils.isBlank(filePathName)) {
+			SmServiceLookup.getSmApplRevisionSO().readApplicationHist(reqDTO);
+		}
 		return resDTO;
 	}
 
