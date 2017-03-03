@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,14 +22,18 @@ import my.ep.biz.bean.search.ISearchBean;
 
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
+import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IReportTempInfoSO;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -40,6 +46,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -53,6 +61,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -61,6 +70,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 
 import my.ep.type.pm.RoleCode;
+import my.ep.type.report.EnumReportType;
 
 import my.ep.util.ResourceBundleUtils;
 
@@ -75,9 +85,10 @@ import my.ep.web.backingbean.rpt.model.SCRptViewModel;
 import my.ep.web.backingbean.rpt.model.SMRptViewModel;
 
 import my.ep.web.bean.pm.UserProfilesSearchBean;
-import my.ep.web.bean.report.ReportsGenerateBean;
 
+import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.report.RptConst;
 
 import my.ep.web.util.FacesScopes;
 
@@ -98,8 +109,6 @@ public class RptBackingBean extends RptVariables{
 				ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
 		
-		 rptGenBean = new ReportsGenerateBean();
-		 
 		 moduleValue = "";
 		 reportValue = "";
 		 reportCategory = "";
@@ -196,15 +205,11 @@ public class RptBackingBean extends RptVariables{
 	}
 	
 	public List<String> generateYearList() {
-		scYearList = rptGenBean.generateCommonYearList();
+		scYearList = this.generateCommonYearList();
 		return scYearList;
 	}
 	
 	public void criteriaVariablesByReport() {
-		
-		// Validate reportValue;	
-		
-		ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 		
 		if(isModuleValueFLOrCT()){
 			reportCategoryView = true;
@@ -298,23 +303,23 @@ public class RptBackingBean extends RptVariables{
 	
 		if(isModuleValueCM()){
 			
-			CMRptViewModel model = new CMRptViewModel(rptGenBean, reportValue);
-			model.criteriaVariablesByReportByCM(authoriztionList, paramList);
+//			CMRptViewModel model = new CMRptViewModel(this, reportValue);
+//			model.criteriaVariablesByReportByCM(authoriztionList, paramList);
 			
 		} else if(isModuleValueSSOrDP()){
 			
 			generateMonthList();
 			
-			SCRptViewModel model = new SCRptViewModel(rptGenBean, reportValue);
-			model.enableCriteriaVariablesByReportBySC(authoriztionList, approverNayakTarafList);
+//			SCRptViewModel model = new SCRptViewModel(this, reportValue);
+//			model.enableCriteriaVariablesByReportBySC(authoriztionList, approverNayakTarafList);
 
 		} else if(isModuleValueOF()){
 		
 			getDocTypeStatusDropDown();
 			
-			FLRptViewModel model = new FLRptViewModel(rptGenBean, reportValue);
-			model.enableCriteriaVariablesByReportByFL(authoriztionList);
-	
+//			FLRptViewModel model = new FLRptViewModel(this, reportValue);
+//			model.enableCriteriaVariablesByReportByFL(authoriztionList);
+//	
 		} else if(isModuleValueSM()){
 	
 			assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
@@ -326,27 +331,27 @@ public class RptBackingBean extends RptVariables{
 			retrievePaymentTypeList();
 			retrievePaymentMethod();
 			
-			SMRptViewModel model = new SMRptViewModel(rptGenBean, reportValue);
-			model.enableCriteriaVariablesByReportBySM(authoriztionList);
+			SMRptViewModel model = new SMRptViewModel(this, reportValue);
+			model.enableCriteriaVariablesByReportBySM(authoriztionList, this);
 	
 		} else if(isModuleValueCT()){
 			
-			CTRptViewModel model = new CTRptViewModel(rptGenBean, reportValue);
-			
-			model.enableCriteriaVariables();
+//			CTRptViewModel model = new CTRptViewModel(this, reportValue);
+//			
+//			model.enableCriteriaVariables();
 			
 		} else if(isModuleValuePP()){
 			
-			PpRptViewModel model = new PpRptViewModel(rptGenBean, reportValue);
-			
-			model.enableCriteriaVariablesByReportByPP(authoriztionList);
-			
+//			PpRptViewModel model = new PpRptViewModel(this, reportValue);
+//			
+//			model.enableCriteriaVariablesByReportByPP(authoriztionList);
+//			
 		} else if(isModuleValuePM()){
 		
-			PMRptViewModel model = new PMRptViewModel(rptGenBean, reportValue);
-			
-			model.enableCriteriaVariablesByReportByPM(authoriztionList);
-			
+//			PMRptViewModel model = new PMRptViewModel(this, reportValue);
+//			
+//			model.enableCriteriaVariablesByReportByPM(authoriztionList);
+//			
 		}
 		
 		resetReportForm();
@@ -370,7 +375,6 @@ public class RptBackingBean extends RptVariables{
 		madatoryIndicator();
 		retrieveAllMinistry();
 		
-		//TODO
 		enableSupplierCompNameTextOrDropdown();
 		
 		retrieveParameterCodeType();
@@ -587,11 +591,11 @@ public class RptBackingBean extends RptVariables{
 			
 //			if ((this.getSupplCompanyList().size() > 0)
 //						&& (FlSupplierView())) {
-//					getManagedBean().getRptGenBean().setFlSupplierDropdownView(
+//					getManagedBean().getthis().setFlSupplierDropdownView(
 //							true);
 //		} else if ((this.getSupplCompanyList().size() == 0)
 //						&& (FlSupplierView())) {
-//					getManagedBean().getRptGenBean()
+//					getManagedBean().getthis()
 //							.setFlSupplierTextView(true);
 //	
 //			} else {
@@ -829,24 +833,24 @@ public class RptBackingBean extends RptVariables{
 //				if ((this.getSupplCompanyList().size() > 0)
 //						&& (SmSupplierView())) {
 //			
-//					getManagedBean().getRptGenBean()
+//					getManagedBean().getthis()
 //							.setSmCompanyNameDropdownView(true);
-//                                        getManagedBean().getRptGenBean().setSmCommonZoneView(false);
-//					getManagedBean().getRptGenBean().setSmMandatoryEPAdminPTJAdminZoneView(false);					
-//					getManagedBean().getRptGenBean().setSmSCPSupplierTypeView(false);
-//					getManagedBean().getRptGenBean().setSmRegistrationNoView(false);
+//                                        getManagedBean().getthis().setSmCommonZoneView(false);
+//					getManagedBean().getthis().setSmMandatoryEPAdminPTJAdminZoneView(false);					
+//					getManagedBean().getthis().setSmSCPSupplierTypeView(false);
+//					getManagedBean().getthis().setSmRegistrationNoView(false);
 //				
 //				} else if ((this.getSupplCompanyList().size() == 0)
 //						&& (SmSupplierView())) {
-//					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
+//					getManagedBean().getthis().setSmCompanyNameView(true);
 //				}
 //				
-//				getManagedBean().getRptGenBean().setSmExtraTwoColumnView(true);
-//				getManagedBean().getRptGenBean().setSmRegistrationTypeView(
+//				getManagedBean().getthis().setSmExtraTwoColumnView(true);
+//				getManagedBean().getthis().setSmRegistrationTypeView(
 //						false);
-//				getManagedBean().getRptGenBean().setSmNonMandatoryDateView(
+//				getManagedBean().getthis().setSmNonMandatoryDateView(
 //						false);
-//				getManagedBean().getRptGenBean().setSmMOFRegisteredDateView(
+//				getManagedBean().getthis().setSmMOFRegisteredDateView(
 //						false);
 //		
 //			} else if (StringUtils.isNotEmpty(parameterCodeType)
@@ -855,7 +859,7 @@ public class RptBackingBean extends RptVariables{
 //				if ((this.getSupplCompanyList().size() > 0)
 //						&& (SmSupplierView())) {
 //					
-//					getManagedBean().getRptGenBean()
+//					getManagedBean().getthis()
 //							.setSmCompanyNameDropdownView(true);
 //				
 //				} else if ((this.getSupplCompanyList().size() == 0)
@@ -1964,7 +1968,7 @@ public void roleCodeUsersSetupOnload() {
 			smMofRegNo = null;
 			smRegistrationStatus = null;
 			//smBuscompTypeRegistrationStatus = null;
-			//this.registrationStatusListOfBuscompType = new ArrayList<SelectItem>();
+			//egistrationStatusListOfBuscompType = new ArrayList<SelectItem>();
 			//this.smBuscompanyTypeList = new ArrayList<SelectItem>();
 			smBusPaidUpCapitalFrm = null;
 			smBusPaidUpCapitalTo = null;
@@ -2323,25 +2327,11 @@ public void roleCodeUsersSetupOnload() {
 	}
 	
 	public List<SelectItem> retrieveRegStatusList() {
-		log.info("ReportBackingBean-retrieveRegStatusList");
-		registrationStatusList = new ArrayList<SelectItem>();
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
-
-			List<Object[]> regStatusList = reportSO
-					.retrieveRegStatusList(ReportConst.ENG_LANGUAGE_CODE);
-			if (CollectionUtils.isNotEmpty(regStatusList)) {
-				for (Object[] object : regStatusList) {
-					SelectItem selectItem = new SelectItem();
-					selectItem.setValue(object[1].toString());
-					selectItem.setLabel(object[0].toString());
-					registrationStatusList.add(selectItem);
-				}
-			}
-		}
-		return registrationStatusList;
+		
+		IPMReportSO reportSO = getPMReportSO();
+		List<Object[]> list = reportSO.retrieveRegStatusList(ReportConst.ENG_LANGUAGE_CODE);
+		
+		return registrationStatusList = assignListToSelectItemValueLabel(list);
 	}
 	
 	public List<SelectItem> retrievePaymentTypeList() {
@@ -2511,17 +2501,6 @@ public void roleCodeUsersSetupOnload() {
 		List<Object[]> retrieveAllList = reportSO.getAllBusCompanyData(strLanguage);
 		
 		return assignListToSelectItemValueLabel(retrieveAllList);
-	}
-		
-	public List<SelectItem> retrieveRegStatusListForContract() {
-		
-		smBusCompTypeRegistrationStatus = null;
-	
-		IPMReportSO reportSO = getPMReportSO();
-		List<Object[]> list = reportSO
-					.retrieveRegStatusListForContract(strLanguage);
-		
-		return assignListToSelectItemValueLabel(list);
 	}
 	
 	public List<PmCategoryL1> retrievCategoryListBySupplierType(
@@ -3485,6 +3464,1139 @@ public void roleCodeUsersSetupOnload() {
 				flGroupTwentySevenWithSupplView = true;
 				
 			}
+		}
+	}
+	
+	
+	public void changeSupplierTypeAndGetRegStatus() {
+	
+		if (reportValue.equals(
+				ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
+
+			if (StringUtils.isNotEmpty(this.getSmSupplierType())) {
+				if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONSULT_TYPE)) {
+					// retrieveRegStatusListForConsultant();
+					retrieveRegStatusListForContract();
+					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
+							.getSmSupplierType()));
+				} else if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONTRACT_TYPE)) {
+					retrieveRegStatusListForContract();
+					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
+							.getSmSupplierType()));
+				}
+			} else if (!reportValue.equals(
+					ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL)) {
+				// retrieveRegStatusListForAll();
+				retrieveRegStatusListForContract();
+				for (SmSupplierCategory cat : this.getSelectedCatList()) {
+					cat.setPmCategoryL1(new PmCategoryL1());
+					cat.setPmCategoryL2(new PmCategoryL2());
+					cat.setPmCategoryL3(new PmCategoryL3());
+				}
+				this.setSupplierParentCatList(retrieveParentCategoryListForExperiencePage());
+			}
+		}
+	}
+	
+	
+	
+	private List<String> addingStateList = new ArrayList<String>();
+	
+	public List<String> getAddingStateList() {
+		return addingStateList;
+	}
+
+	public void setAddingStateList(List<String> addingStateList) {
+		this.addingStateList = addingStateList;
+	}
+	
+	public void retrieveDistrict() {
+
+		districtLst = new ArrayList<SelectItem>();
+		addingStateList = new ArrayList<String>();
+		
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						IDistrictSO.class);
+		
+		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+		
+		if (StringUtils.isNotEmpty(this.getSmState())) {
+			districtReqDTO.setStateId(Long.parseLong(this.getSmState()));
+			DistrictResDTO districtResDTO = districtSO
+					.retriveDistrictListByStateID(districtReqDTO);
+			if (CollectionUtils.isNotEmpty(districtResDTO.getDistrictList())) {
+				for (PmDistrict pmDistrict : districtResDTO.getDistrictList()) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(pmDistrict.getDistrictName());
+					selectItem.setValue(pmDistrict.getDistrictId());
+					districtLst.add(selectItem);
+				}
+			}
+			if (this.reportValue
+					.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
+				this.setMainCatValueReqd(true);
+				this.setSubCatValueReqd(true);
+				this.setSubCatDivisionValueReqd(true);
+			}
+		} else {
+			this.setMainCatValueReqd(true);
+			this.setSubCatValueReqd(false);
+			this.setSubCatDivisionValueReqd(false);
+		}
+		for (SmSupplierCategory cat : this.getSelectedCatList()) {
+			cat.setPmCategoryL1(new PmCategoryL1());
+			cat.setPmCategoryL2(new PmCategoryL2());
+			cat.setPmCategoryL3(new PmCategoryL3());
+		}
+	}
+	
+	public void changeRegPaymentTypeAndReceiptDate() {
+	
+		if(isEmpty(smMofRegistrationFeeList) 
+		|| isEmpty(smProcessingFeeList)
+		|| isEmpty(smSoftCertificateFeeList)
+		&& (this.getFromDate() != null
+		&& this.getToDate() != null)){
+			this.valuesEmpty = false;
+		} else {
+			this.valuesEmpty = true;
+		}
+		
+	}
+	
+	public void checkDuplicateCategoryForProject(SmSupplierCategory newCat) {
+		
+		for (SmSupplierCategory cat : selectedCatList) {
+		
+			if ((cat.getPmCategoryL1().getCategoryL1Id() != null)
+					&& (newCat.getPmCategoryL1().getCategoryL1Id() != null)
+					&& (cat.getPmCategoryL2().getCategoryL2Id() != null)
+					&& (newCat.getPmCategoryL2().getCategoryL2Id() != null)
+					&& (cat.getPmCategoryL3().getCategoryL3Id() != null)
+					&& (newCat.getPmCategoryL3().getCategoryL3Id() != null)) {
+				
+				if (newCat.equals(cat)) {
+				
+				} else if (cat.getPmCategoryL1().getCategoryL1Id()
+						.equals(newCat.getPmCategoryL1().getCategoryL1Id())
+						&& (cat.getPmCategoryL2().getCategoryL2Id()
+								.equals(newCat.getPmCategoryL2()
+										.getCategoryL2Id()))
+						&& (cat.getPmCategoryL3().getCategoryL3Id()
+								.equals(newCat.getPmCategoryL3()
+										.getCategoryL3Id()))) {
+				
+					newCat.getPmCategoryL3().setCategoryL3Id(null);
+					throw new EpException(MessageConst.ERROR_722533);
+				}
+			}
+		}
+	}
+
+	public void deleteSelectedCodes() {
+
+		for (SmSupplierCategory cat : this.getSelectCatDeletionList()) {
+			selectedCatList.remove(cat);
+		}
+		
+		if (selectedCatList.size() > 9) {
+			enableValue = true;
+		} else {
+			enableValue = false;
+		}
+	}
+	
+	public void assignCategoryForCompExperience() {
+		
+		SmSupplierCategory cat = new SmSupplierCategory();
+	
+		if (selectedCatList.size() > 8) {
+			enableValue = true;
+		} else {
+			enableValue = false;
+		}
+		
+		cat.setPmCategoryL1(new PmCategoryL1());
+		
+		PmCategoryL2 catL2 = new PmCategoryL2();
+		catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
+		cat.setPmCategoryL2(catL2);
+		
+		PmCategoryL3 catL3 = new PmCategoryL3();
+		catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+		cat.setPmCategoryL3(catL3);
+		
+		supplierParentCatList = retrieveParentCategoryListForExperiencePage();
+		
+		resetChildCatList();
+		assignValReqdToTrue();
+		
+		selectedCatList.add(cat);
+	}
+	
+	public void populateExperienceSubChildCategoryByChild(long childId,
+			PmCategoryL3 catL3) {
+	
+		try {
+			List<PmCategoryL3> categoryL3s = retrieveExperienceSubChildCategoryList(childId);
+			catL3.setPmCategoryL3s(categoryL3s);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
+			long categoryL2Id) {
+	
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						ICategoryCodeSO.class);
+		
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+		
+		return resDTO.getCategoryL3List();
+	}
+	
+	public void populateExperienceChildCategoryByParent(long parentId,
+			PmCategoryL2 catL2, PmCategoryL3 catL3) {
+
+		if (this.getReportValue().equalsIgnoreCase(
+				ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL)) {
+			
+			String CategoryL1Id = Long.toString(parentId);
+			
+			if (StringUtils.isNotEmpty(CategoryL1Id)) {
+				this.setValuesEmpty(false);
+			} else {
+				this.setValuesEmpty(true);
+			}
+		}
+		
+		try {
+		
+			List<PmCategoryL2> categoryL2s = retrieveExperienceChildCategoryList(parentId);
+			catL2.setPmCategoryL2s(categoryL2s);
+			catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
+			long categoryL1Id) {
+	
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						ICategoryCodeSO.class);
+		
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
+		
+		return resDTO.getCategoryL2List();
+	}
+	
+	public List<SelectItem> getPaymentTypeMethodList() {
+		
+		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
+		SelectItem item = new SelectItem();
+		item.setValue(ReportConst.SM_REPORT_CREDIT);
+		item.setLabel(ResourceBundleUtils.getMessage(
+					"lbl.rpt.credit",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		paymentTypeMethodList.add(item);
+		item = new SelectItem();
+		String fpx = ResourceBundleUtils.getMessage(
+					"lbl.rpt.fpx",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale());
+		item.setValue(fpx);
+		item.setLabel(fpx);
+		paymentTypeMethodList.add(item);
+
+		return paymentTypeMethodList;
+	}
+
+	public void changeSupplierTypeSelection() {
+	
+		if (reportValue.equals(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)) {
+		
+			if (!isEmpty(smSupplierType)) {
+				
+				if (smSupplierType.equals(ReportConst.SUPPL_CONSULT_TYPE)) {
+					retrieveConsultantBusCompanyData();
+				} else if (smSupplierType.equals(ReportConst.SUPPL_CONTRACT_TYPE)) {
+					retrieveContractBusCompanyData();
+				}
+				
+			} else {
+				retrieveAllBusCompanyData();
+			}
+		}
+	}
+	
+	public void changeBusCompanyType() {
+		
+		smBusCompanyPaidUpAccumlatedShareView = false;
+		smAccmltdCptlSelView = false;
+		smPaidUpCptlSelView = false;
+		smAccmltdShareSelView = false;
+		smPaidAccmltdShareCptlSelView = false;
+
+		if (StringUtils.isNotEmpty(this.smBusCompanyType)) {
+
+			if (this.smBusCompanyType.equals("C")
+					|| this.smBusCompanyType.equals("D")
+					|| this.smBusCompanyType.equals("E")
+					|| this.smBusCompanyType.equals("F")
+					|| this.smBusCompanyType.equals("G")
+					|| this.smBusCompanyType.equals("H")) {
+				
+				smBusCompanyPaidUpAccumlatedShareView = true;
+				smAccmltdCptlSelView = true;
+				
+			} else if (smBusCompanyType.equals("I")
+					|| smBusCompanyType.equals("J")
+					|| smBusCompanyType.equals("B")) {
+				
+				smBusCompanyPaidUpAccumlatedShareView = true;
+				smPaidUpCptlSelView = true;
+				
+			} else if (smBusCompanyType.equals("K")) {
+				
+				smBusCompanyPaidUpAccumlatedShareView = true;
+				smAccmltdShareSelView = true;
+			}
+			
+		} else {
+			
+			smBusCompanyPaidUpAccumlatedShareView = true;
+			smPaidAccmltdShareCptlSelView = true;
+		}
+	}
+	
+	public void changeDateBasedOnRegType() {
+		
+		smActiveSubmissiveFromDateView = false;
+		smActivationDateView = false;
+		smSubmissionDateView = false;
+		smActSubmisAllDateView = false;
+		smMofRegNoTwoView = false;
+		smMofRegNoView = false;
+
+		if (!isEmpty(smRegistrationType)) {
+			
+			if (smRegistrationType.equals(ReportConst.RPT_REG_BASIC)) {
+				
+				if (reportValue.equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)) {
+					
+					smMofRegNoTwoView = true;
+					smActiveSubmissiveFromDateView = true;
+					smActSubmisAllDateView = true;
+					
+				} else if (reportValue.equals(ReportConst.SM_SUPPLIER_PERFORMANCE)) {
+				
+					smActiveSubmissiveFromDateView = true;
+					smActivationDateView = true;
+				}
+				
+			} else if (smRegistrationType.equals(ReportConst.RPT_REG_MOF)
+					|| smRegistrationType.equals(ReportConst.RPT_REG_BASIC_TO_MOF)) {
+			
+				if (reportValue.equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)) {
+			
+					smMofRegNoView = true;
+					smActiveSubmissiveFromDateView = true;
+					smSubmissionDateView = true;
+
+				} else if (reportValue.equals(ReportConst.SM_SUPPLIER_PERFORMANCE)) {
+					
+					smActiveSubmissiveFromDateView = true;
+					smSubmissionDateView = true;
+				}
+				
+			} else if (smRegistrationType.equals(ReportConst.RPT_REG_ALL)) {
+			
+				if (reportValue.equals(ReportConst.SM_SUPPLIER_PERFORMANCE)) {
+					
+					smActiveSubmissiveFromDateView = true;
+					smActSubmisAllDateView = true;
+				}
+			}
+		}
+	}
+	
+	public void onCompanyNameChangeForLOV() {
+		
+		if (selectedOrgProfile != null && selectedOrgProfile.getSmSupplier() != null) {
+		
+			cmCompanyName = selectedOrgProfile.getSmSupplier().getCompanyName();
+			pmCompanyName = selectedOrgProfile.getSmSupplier().getCompanyName();
+			smCompanyName = selectedOrgProfile.getSmSupplier().getCompanyName();
+			smSupplierName = selectedOrgProfile.getSmSupplier().getCompanyName();
+		}
+	}
+	
+	public void changeReportType() {
+
+		if (reportValue.equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL)) {
+			
+			smMandatoryCreatedFromYearView = false;
+			smMandatoryRegisteredReportTypeDateView = false;
+			smMandatoryRecievedReportTypeView = false;
+			smMandatoryApprovedReportTypeView = false;
+			smMandatoryRejectedReportTypeView = false;
+			
+			if (smReportType.equals(ReportConst.SM_REPORT_TYPE_RECEIVED)) {
+			
+				smMandatoryCreatedFromYearView = true;
+				smMandatoryRecievedReportTypeView = true;
+			
+			} else if (smReportType.equals(ReportConst.SM_REPORT_TYPE_APPROVED)) {
+				
+				smMandatoryCreatedFromYearView = true;
+				smMandatoryApprovedReportTypeView = true;
+			
+			} else if (smReportType.equals(ReportConst.SM_REPORT_TYPE_REJECTED)) {
+			
+				smMandatoryCreatedFromYearView = true;
+				smMandatoryRejectedReportTypeView = true;
+			}
+
+		}
+	}
+	
+	public void changeRTReportType() {
+
+	smMandatoryReceiptDateView = false;
+	smMandatoryTransactionDateView = false;
+	smMandatoryRTDateView = false;
+
+	if (smRTReportType.equals(ReportConst.SM_REPORT_RESIT)) {
+		
+			smMandatoryRTDateView = true;
+			smMandatoryReceiptDateView = true;
+
+		} else if (smRTReportType.equals(ReportConst.SM_REPORT_TRANSACTION)) {
+			
+			smMandatoryRTDateView = true;
+			smMandatoryTransactionDateView = true;
+		}
+	}
+
+	public void changeRTReportTypeForPayment() {
+	
+		smNonMandatoryReceiptDateView = false;
+		smNonMandatoryTransactionDateView = false;
+
+		if (smRTReportType.equals(ReportConst.SM_REPORT_RESIT)) {
+
+			smNonMandatoryReceiptDateView = true;
+
+		} else if (smRTReportType.equals(ReportConst.SM_REPORT_TRANSACTION)) {
+			
+			smNonMandatoryTransactionDateView = true;
+		}
+		
+//		this.getManagedBean().getRptGenBean()
+//				.setSmNonMandatoryTransactionDateView(true);
+	}
+	
+	public void getRgegistartionTypeDates() {
+
+		smNonMandatoryDateView = false;
+		smBasicRegisteredDateView = false;
+		smMOFRegisteredDateView = false;
+		smAllRegisteredDateView = false;
+		
+		smNonMandatoryDateView = true;
+		
+		if (smRegistrationType.endsWith(ReportConst.RPT_REG_BASIC)) {
+				
+			smBasicRegisteredDateView = true;
+				
+			} else if (smRegistrationType.equals(ReportConst.RPT_REG_MOF)) {
+			
+				smMOFRegisteredDateView = true;
+			}
+		} 
+	
+//		else {
+//			
+//			smNonMandatoryDateView = true;
+//			smAllRegisteredDateView = true;
+//		}
+//	}
+
+	public void changeGSTRegisterStatus() {
+	
+		if (StringUtils.isNotEmpty(smGSTRegisteredStatus)
+				&& (fromDate != null && toDate != null)) {
+			
+			valuesEmpty = false;
+		
+		} else {
+		
+			valuesEmpty = true;
+			
+		}
+	}
+	
+	public void onChangeScContractOrPKPType() {
+		getIisDPReportsStatus();
+	}
+	
+	public void onChangeScPidNo() {
+		getIisDPReportsStatus();
+	}
+	
+	private void getIisDPReportsStatus() {
+		if (StringUtils.isNotEmpty(this.getModuleValue())
+				&& (this.getModuleValue()
+						.equalsIgnoreCase(ModuleCodeConst.DIRECT_PURCHASE))) {
+
+			if (StringUtils.isNotEmpty(this.getReportValue())) {
+
+				switch (EnumReportType.valueOf(this.getReportValue())) {
+
+				case SC_050:
+				case SC_051:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this.getScPIno())
+								|| StringUtils.isNotEmpty(this
+										.getScCommonStatus())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this.getScPIno())
+							|| StringUtils.isNotEmpty(this.getScCommonStatus())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_055:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this
+								.getScPurchaseInDefaultStatus())
+								|| StringUtils.isNotEmpty(this.getScPIDNo())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPType())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPName())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPNo())
+								&& StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this
+							.getScPurchaseInDefaultStatus())
+							|| StringUtils.isNotEmpty(this.getScPIDNo())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPType())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPName())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_067:
+
+					if ((approverNayakTarafList.size() > 0)
+
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this
+								.getScPurchaseInDefaultStatus())
+								|| StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this.getScPIDNo())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPType())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPName())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPNo())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this
+							.getScPurchaseInDefaultStatus())
+							|| StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this.getScPIDNo())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPType())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPName())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_058:
+
+				case SC_056:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this
+										.getScRequestNoteStatus())
+								|| StringUtils.isNotEmpty(this
+										.getScProcurementType())
+								|| StringUtils.isNotEmpty(this
+										.getScRequestQuoteNo())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this
+									.getScRequestNoteStatus())
+							|| StringUtils.isNotEmpty(this
+									.getScProcurementType())
+							|| StringUtils.isNotEmpty(this
+									.getScRequestQuoteNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_060:
+
+				case SC_062:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this
+										.getScProcurementType())
+								|| StringUtils.isNotEmpty(this
+										.getScProcessRptQuotationNo())
+								|| StringUtils.isNotEmpty(this
+										.getScSimpleQuoteStatus())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this
+									.getScProcurementType())
+							|| StringUtils.isNotEmpty(this
+									.getScProcessRptQuotationNo())
+							|| StringUtils.isNotEmpty(this
+									.getScSimpleQuoteStatus())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_068:
+					if (StringUtils.isNotEmpty(this
+							.getScProcessRptQuotationNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_069:
+					if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this
+									.getScSimpleQuoteType())
+							|| StringUtils.isNotEmpty(this.getScSOAStatus())
+							|| StringUtils.isNotEmpty(this
+									.getScProcessRptQuotationNo())
+							|| StringUtils.isNotEmpty(this.getScLOANo())
+							|| StringUtils.isNotEmpty(this.getScRequisenerId())
+							|| StringUtils.isNotEmpty(this.getScPtj())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				default: {
+					System.out
+							.println("In getIisDPReportsStatus unknown report value" + this.getReportValue());
+					log.info("In getIisDPReportsStatus unknown report value \t" + this.getReportValue());
+				}
+				}
+
+			}
+		}
+
+	}
+	
+	public List<SelectItem> retrieveRegStatusListForAll() {
+
+		smBusCompTypeRegistrationStatus = null;
+		
+		IPMReportSO reportSO = getPMReportSO();
+		List<Object[]> list = reportSO.retrieveRegStatusListForAll(strLanguage);
+		
+		return registrationStatusListOfBusCompType = assignListToSelectItemValueLabel(list);
+	}
+	
+	public List<SelectItem> retrieveRegStatusListForConsultant() {
+	
+		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		smBusCompTypeRegistrationStatus = null;
+		
+		IPMReportSO reportSO = getPMReportSO();
+		List<Object[]> list = reportSO.retrieveRegStatusListForConsultant(strLanguage);
+	
+		return registrationStatusListOfBusCompType = assignListToSelectItemValueLabel(list);
+	}
+	
+	public List<SelectItem> retrieveRegStatusListForContract() {
+		
+		smBusCompTypeRegistrationStatus = null;
+	
+		IPMReportSO reportSO = getPMReportSO();
+		List<Object[]> list = reportSO.retrieveRegStatusListForContract(strLanguage);
+	
+		return registrationStatusListOfBusCompType = assignListToSelectItemValueLabel(list);
+		
+	}
+	
+	
+	
+	public void onChangeScRequestQuoteNo() {
+		getIisDPReportsStatus();
+	}
+
+	public void onChangeScPiNo() {
+		getIisDPReportsStatus();
+	}
+	
+	public void onChangeScRequestNoteStatus() {
+		getIisDPReportsStatus();
+	}
+	
+	public void onChangeScSimpleQuoteStatus() {
+		getIisDPReportsStatus();
+	}
+	
+	public void onChangeScCommonStatus() {
+		getIisDPReportsStatus();
+	}
+	
+	public void mofRegNoNumericValidation() {
+	
+		if(reportValue.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)){
+			
+			if(!isEmpty(smMofRegNoFrom) || !isEmpty(smMofRegNoTo)){
+				throw new EpException(MessageConst.ERROR_REPORT_780035);
+			}
+		}
+		
+		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
+		Pattern pattern1 = Pattern.compile(ptString1);
+		
+		if (!isEmpty(smMofRegNoFrom)) {
+			
+			String mofRegNoFrom = null;
+		
+			if (smMofRegNoFrom.contains(ReportConst.PARAM_IFON)) {
+				
+				mofRegNoFrom = smMofRegNoFrom.replace(
+						ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+				
+				if (mofRegNoFrom.contains(ReportConst.PARAM_SPACE)) {
+					
+					mofRegNoFrom = mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);
+					
+				}
+				
+			} else {
+				
+				mofRegNoFrom = smMofRegNoFrom;
+				
+			}
+
+			Matcher match1 = pattern1.matcher(mofRegNoFrom);
+			
+			if (!match1.matches()) {
+			
+				smMofRegNoFrom = null;
+				smMofRegNoTo = null;
+				
+				throw new EpException(MessageConst.ERROR_REPORT_780018);
+				
+			}
+		}
+		
+		String ptString2 = ReportConst.NUMERIC_PATTERN_ONLY;
+		Pattern pattern2 = Pattern.compile(ptString2);
+		
+		if (!isEmpty(smMofRegNoTo)) {
+			
+			String mofRegNoTo = null;
+			
+			if (smMofRegNoTo.contains(ReportConst.PARAM_IFON)) {
+				
+				mofRegNoTo = smMofRegNoTo.replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+				
+				if (mofRegNoTo.contains(ReportConst.PARAM_SPACE)) {
+					
+					mofRegNoTo = mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);
+				}
+				
+			} else {
+				
+				mofRegNoTo = smMofRegNoTo;
+				
+			}
+
+			Matcher match2 = pattern2.matcher(mofRegNoTo);
+			
+			if (!match2.matches()) {
+			
+				smMofRegNoFrom = null;
+				smMofRegNoTo = null;
+				
+				throw new EpException(MessageConst.ERROR_REPORT_780018);
+				
+			}
+		}
+
+		if (reportValue.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)) {
+			
+			if (!isEmpty(smMofRegNoFrom) && !isEmpty(smMofRegNoTo)) {
+				
+				valuesEmpty = false;
+				
+			} else {
+				
+				valuesEmpty = true;
+				
+			}
+			
+		}
+	}	
+	
+	public boolean isFromDateOrToDateEmpty(){
+		return fromDate == null || toDate == null;	
+	}
+	
+	public void checkOneYearDifference(Date fromDate, Date toDate) {
+	
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+		
+		if (yearToInt == yearFromInt + 1) {
+		
+			if (monthToInt == monthFromInt) {
+			
+				if (dayToInt > dayFromInt) {
+					throw new EpException(MessageConst.ERROR_REPORT_780011);
+				}
+				
+			} else if (monthToInt > monthFromInt) {
+				throw new EpException(MessageConst.ERROR_REPORT_780011);
+			}
+			
+		} else if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780011);
+		}
+	}
+	
+	public void checkTwoYearsFieldDifference(String yearFrom, String yearTo) {
+		
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		
+		if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780017);
+		}
+	}
+	
+	public void generateReport() {
+
+		String reportArr1[] = {RptConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL,
+							  RptConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL,
+							  RptConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL,
+							  RptConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL};
+							  
+		if(isMatch(reportValue, reportArr1)){
+			mofRegNoNumericValidation();
+		}
+		
+		String reportArr2[] = {	RptConst.KPPP1_PEMATUHAN_OC_RPT_VAL,
+								RptConst.KPP1_PEMATUHAN_EC_RPT_VAL,
+								RptConst.PDW_EC_RPT_VAL };
+		
+		if(!isMatch(reportValue, reportArr2)){
+			throw new EpException(MessageConst.ERROR_REPORT_780004);
+		};
+		
+		if (fromDate.after(toDate)) {
+			throw new EpException(MessageConst.ERROR_REPORT_780008);
+		}
+	
+		if (toDate.after(fromDate)) {
+			checkOneYearDifference(fromDate, toDate);
+		}
+		
+		if (ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
+			throw new EpException(MessageConst.ERROR_REPORT_780008);
+		}
+		
+		if (ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
+			checkOneYearDifference(ctCircularEffectiveFromDate, ctCircularEffectiveToDate);
+		}
+
+		if (scSoneCrtdFromDate.after(scSoneCrtdToDate)) {
+			throw new EpException(MessageConst.ERROR_REPORT_780008);
+		}
+
+		if (this.scSoneCrtdToDate.after(scSoneCrtdFromDate)) {
+			checkOneYearDifference(scSoneCrtdFromDate, scSoneCrtdToDate);
+		}
+		
+//		if (StringUtils.isNotEmpty(this.getManagedBean().getReportValue())) {
+//				rptGenBean.setReportValueIdVar(RptConst.FL_AMP_REPORT_ID_EQ
+//						+ getManagedBean().getReportValue());
+//			}
+
+//				rptGenBean.setUserIdVar(RptConst.FL_AMP_USER_ID_EQ
+//						+ new FacesScopes().getUserSessionBean().getUserId()
+//								.toString());
+//			}
+	
+	
+	String[] reportArr3 = {
+			RptConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL,
+			RptConst.SM_REVENUE_COLLECTION_RPT_VAL};	
+	
+	if(isMatch(reportValue, reportArr3)){
+		
+		if(isEmpty(smMofRegistrationFeeList) || 
+		   isEmpty(smProcessingFeeList)||
+		   isEmpty(smSoftCertificateFeeList)){
+		
+			throw new EpException(MessageConst.ERROR_REPORT_780027);
+		}
+	}
+		
+	if(reportValue.equals(RptConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL)){
+
+		if (isFromDateOrToDateEmpty()) {
+			throw new EpException(MessageConst.ERROR_REPORT_780034);
+		}
+	}
+	
+	if(reportValue.equals(RptConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL)){
+		throw new EpException(MessageConst.ERROR_REPORT_780036);
+	}
+	
+	if(reportValue.equals(RptConst.SM_LIST_OF_PRE_EXPIRY_COMPANY_RPT_VAL)){
+		
+		if (isFromDateOrToDateEmpty()) {
+			throw new EpException(MessageConst.ERROR_REPORT_780037);
+		}
+	}
+	
+	if(reportValue.equals(RptConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER)){
+		
+		if (isEmpty(smGSTRegisteredStatus)) {
+			throw new EpException(MessageConst.ERROR_REPORT_780038);
+		}
+		
+		if (isFromDateOrToDateEmpty()) {
+			throw new EpException(MessageConst.ERROR_REPORT_780039);
+		}
+	}
+
+	if(reportValue.equals(RptConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL)){
+		
+		if (isFromDateOrToDateEmpty()) {
+			throw new EpException(MessageConst.ERROR_REPORT_780040);
+		}
+	}
+	
+	if (smThresholdFromYear == null || smThresholdToYear == null) {
+		throw new EpException(MessageConst.ERROR_REPORT_780016);
+	}
+	
+	checkOnlyYearFieldDifference(smThresholdFromYear, smThresholdToYear);
+	checkOnlyYearFieldDifference(smCreatedFromYear, smCreatedToYear);
+	
+	String[] reportArr4 = {RptConst.SM_SUPPLIER_PERFORMANCE,
+			RptConst.SM_THRESHOLD};
+	
+	if(isMatch(reportValue, reportArr4)){
+		checkTwoYearsFieldDifference(smThresholdFromYear, smThresholdToYear);
+	}
+	
+	if(reportValue.equals(RptConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL)){
+		checkTwoYearsFieldDifference(smCreatedFromYear, smCreatedToYear);
+	}
+
+	if(reportValue.equals(RptConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)){
+		
+		if(isEmpty(smMofRegNo)){
+			throw new EpException(MessageConst.ERROR_REPORT_780029);
+		}
+		
+		checkTwoYearsFieldDifference(smCreatedFromYear, smCreatedToYear);
+	}
+	
+	if(isModuleValuePP()){
+
+		if (isEmpty(ppYear)) {
+			throw new EpException(MessageConst.ERROR_REPORT_780030);
+		}
+	}
+
+	if(isModuleValuePM()){
+
+		String[] reportArr = {  RptConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL,
+					 			RptConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL,
+					 			RptConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL};
+		
+		switch(EnumReportType.valueOf(reportCode)){
+		
+			case PM_001:
+	
+				if (isEmpty(pmServiceType) && 
+					isEmpty(pmFinancialOrgName) &&
+					isEmpty(pmBusinessRegNo) &&
+					isEmpty(pmStatus)) {
+					
+					throw new EpException(
+							MessageConst.ERROR_REPORT_780003);
+				}
+				
+				break;
+
+			case PM_002:
+	
+				if (isEmpty(pmOrgCategory)) {
+					throw new EpException(MessageConst.ERROR_REPORT_780031);
+				}
+				
+				if (isEmpty(pmOrgType)) {
+					throw new EpException(MessageConst.ERROR_REPORT_780032);
+				}
+				
+				break;
+			
+			case PM_003:
+				
+				if (isEmpty(pmOrgType)) {
+					throw new EpException(MessageConst.ERROR_REPORT_780032);
+				}
+				
+				if (isEmpty(pmOrgName)) {
+					throw new EpException(MessageConst.ERROR_REPORT_780033);
+				}								
+	
+				break;
+		
+			case PM_004:
+	
+				if (isEmpty(pmOrgCode) && 
+					isEmpty(pmOrgName) && 
+					isEmpty(pmStatus)) {
+					
+					throw new EpException(MessageConst.ERROR_REPORT_780003);
+					
+				}
+				
+				break;
+			
+			}
+		}
+	}
+
+	private int deleteDecryptedDataAfterReportGeneration(Long createdBy,String reportCode) {
+		
+		log.info("deleteDecryptedDataAfterReportGeneration");
+		 IReportTempInfoSO reportTempInfoSO =null;
+		 
+		 reportTempInfoSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ReportConst.RPT_MODULE_SER_OBJ,
+							IReportTempInfoSO.class);
+
+			ReportTempInfoReqDTO reqDTO = new ReportTempInfoReqDTO();
+			reqDTO.setCreatedBy(createdBy);
+			reqDTO.setReportCode(reportCode);
+
+			ReportTempInfoResDTO resDTO = reportTempInfoSO
+					.deleteDecryptedDataByReportCodeAndCreateedBy(reqDTO);
+	
+		return resDTO.getCount();
+	}	
+	
+	public void checkOnlyYearFieldDifference(String yearFrom, String yearTo) {
+		log.info("ReportBackingBean-checkOnlyYearFieldDefference");
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		if (yearFromInt > yearToInt) {
+			throw new EpException(MessageConst.ERROR_REPORT_780015);
 		}
 	}
 }
