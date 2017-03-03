@@ -4,8 +4,6 @@
 package my.ep.web.backingbean.rpt.model;
 import java.util.ArrayList;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -14,11 +12,10 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.bean.report.ReportsGenerateBean;
+import my.ep.web.backingbean.report.ReportBackingBean;
+import my.ep.web.backingbean.rpt.RptBackingBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 public class SMRptViewModel{
@@ -26,16 +23,16 @@ public class SMRptViewModel{
 	private static final Logger log = EpLogger
 			.getLogger(SMRptViewModel.class);
 	
-	protected ReportsGenerateBean rptGenBean;
+	protected RptBackingBean rptBackingBean;
 	protected String reportValue;
 	
-	public SMRptViewModel(ReportsGenerateBean rptGenBean, String reportValue){
-		this.rptGenBean = rptGenBean;
+	public SMRptViewModel(RptBackingBean rptBackingBean, String reportValue){
+		this.rptBackingBean = rptBackingBean;
 		this.reportValue = reportValue;
 	}
 	
-	public ReportsGenerateBean getRptGenBean(){
-		return rptGenBean;
+	public RptBackingBean getBackingBean(){
+		return rptBackingBean;
 	}
 	
 	public String getReportValue(){
@@ -90,696 +87,701 @@ public class SMRptViewModel{
 	 * enableCriteriaVariablesByReportBySM - Enable criteria variables of report
 	 * by SUPPLIER MANAGEMENT.
 	 * 
-	 * @param rptGenBean
+	 * @param rptBackingBean
 	 *            the rpt gen bean
 	 * @param authoriztionList
 	 *            the authoriztion list
 	 */
-	public void enableCriteriaVariablesByReportBySM(List<String> authoriztionList) {
+	public RptBackingBean enableCriteriaVariablesByReportBySM(List<String> authoriztionList, RptBackingBean rptBackingBean) {
+		
 		log.info("SMReportBackingBean-enableCriteriaVariablesByReportBySM");
-		    rptGenBean.setGenerateButton(true);		
-		switch (reportValue) {
+		    rptBackingBean.setGenerateButton(true);		
+		switch (reportValue) { 
+		
 
 		case ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL:			
-			rptGenBean.setSmProfileRegCompanyView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmPRMandatorySupplierTypeView(true);
-			rptGenBean.setSmPRMandatoryMofRegNoView(true);
+			rptBackingBean.setSmProfileRegCompanyView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmPRMandatorySupplierTypeView(true);
+			rptBackingBean.setSmPRMandatoryMofRegNoView(true);
 			break;
 		case ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL:			
-			// rptGenBean.retrieveState();
-			rptGenBean.setSmCategoryStatisticView(true);
-			rptGenBean.setSmPSSupplierTypeView(true);
-			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
-			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmCategoryBySupplierTypeView(true);
-			rptGenBean.setSmStateView(true);
-			rptGenBean.setSmDistrictView(true);
-			/*rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmRegisteredDateView(true);*/
-			rptGenBean.setSmExtraTwoColumnView(true);
+			// rptBackingBean.retrieveState();
+			rptBackingBean.setSmCategoryStatisticView(true);
+			rptBackingBean.setSmPSSupplierTypeView(true);
+			rptBackingBean.setSmBusCompanyRegistrationStatusView(true);
+			rptBackingBean.retrieveCategoryLevOne1();
+			rptBackingBean.setSmCategoryBySupplierTypeView(true);
+			rptBackingBean.setSmStateView(true);
+			rptBackingBean.setSmDistrictView(true);
+			/*rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmRegisteredDateView(true);*/
+			rptBackingBean.setSmExtraTwoColumnView(true);
 
 			break;
 		case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:
-			rptGenBean.generateCommonYearList();
-			rptGenBean.setSmMandatoryCreatedFromYearView(true);
-			//rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
-			if(rptGenBean.getStrLanguage().equalsIgnoreCase("en")){
-				rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
+			rptBackingBean.generateCommonYearList();
+			rptBackingBean.setSmMandatoryCreatedFromYearView(true);
+			//rptBackingBean.setSmMandatoryRegisteredReportTypeDateView(true);
+			if(rptBackingBean.getStrLanguage().equalsIgnoreCase("en")){
+				rptBackingBean.setSmMandatoryRegisteredReportTypeDateView(true);
 			}else{
-				rptGenBean.setSmMandatoryRegisteredReportTypeDateViewForMY(true);
+				rptBackingBean.setSmMandatoryRegisteredReportTypeDateViewForMY(true);
 			}
 			break;
 		case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
-			rptGenBean.retrieveCategoryLevOne1();		
-			rptGenBean.setSmCategoryStatisticByStateView(true);
-			rptGenBean.setSmMainCatMandatoryCategoryView(true);
-			rptGenBean.setSmStateView(true);
-			rptGenBean.setSmDistrictView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.retrieveCategoryLevOne1();		
+			rptBackingBean.setSmCategoryStatisticByStateView(true);
+			rptBackingBean.setSmMainCatMandatoryCategoryView(true);
+			rptBackingBean.setSmStateView(true);
+			rptBackingBean.setSmDistrictView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmApplicationReceivedDateView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmApplicationReceivedDateView(true);
 			break;
 		case ReportConst.SM_APPLICATION_APPROVED_RPT_VAL:
-			rptGenBean.setSmApplicationApprovedView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmCDCompanyNameView(true);
-			rptGenBean.setSmARMofRegNoView(true);
-			rptGenBean.setApprovedDateView(true);
+			rptBackingBean.setSmApplicationApprovedView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmCDCompanyNameView(true);
+			rptBackingBean.setSmARMofRegNoView(true);
+			rptBackingBean.setApprovedDateView(true);
 
 			break;
 		case ReportConst.SM_APPLICATION_REJECTED_RPT_VAL:
-			rptGenBean.setSmApplicationRejectedView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmApplicationTypeSixView(true);			
-			rptGenBean.setSmCDCompanyNameView(true);
-			rptGenBean.setSmARMofRegNoView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmRejectedDateView(true);
+			rptBackingBean.setSmApplicationRejectedView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmApplicationTypeSixView(true);			
+			rptBackingBean.setSmCDCompanyNameView(true);
+			rptBackingBean.setSmARMofRegNoView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmRejectedDateView(true);
 
 			break;
 		case ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL:
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmScheduleSiteVisitDateView(true);
-			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmNonMandatoryCategoryView(true);
-			rptGenBean.setSmPPCompanyNameView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmScheduleSiteVisitDateView(true);
+			rptBackingBean.retrieveCategoryLevOne1();
+			rptBackingBean.setSmNonMandatoryCategoryView(true);
+			rptBackingBean.setSmPPCompanyNameView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:			
-			rptGenBean.setSmTotalNoOfYearlyARView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.generateCommonMonthList(rptGenBean.getStrLanguage());
-			//rptGenBean.generateCommonMonthList(rptGenBean.getStrLanguage());
-			rptGenBean.generateCommonYearList();
-			//getManagedBean().setMonthMap(rptGenBean.getMonthMap());
-			rptGenBean.setSmExtraTwoColumnView(true);
-			// rptGenBean.setSmMandatoryReportTypeView(true);
-			rptGenBean.setSmFromMonthView(true);
-			rptGenBean.setSmMandatoryCreatedFromYearView(true);
-			//rptGenBean.setSmMandatoryYearFromReportTypeView(true);
-			if(rptGenBean.getStrLanguage().equalsIgnoreCase("en")){
-				rptGenBean.setSmMandatoryYearFromReportTypeView(true);
+			rptBackingBean.setSmTotalNoOfYearlyARView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.generateCommonMonthList(rptBackingBean.getStrLanguage());
+			//rptBackingBean.generateCommonMonthList(rptBackingBean.getStrLanguage());
+			rptBackingBean.generateCommonYearList();
+			//getManagedBean().setMonthMap(rptBackingBean.getMonthMap());
+			rptBackingBean.setSmExtraTwoColumnView(true);
+			// rptBackingBean.setSmMandatoryReportTypeView(true);
+			rptBackingBean.setSmFromMonthView(true);
+			rptBackingBean.setSmMandatoryCreatedFromYearView(true);
+			//rptBackingBean.setSmMandatoryYearFromReportTypeView(true);
+			if(rptBackingBean.getStrLanguage().equalsIgnoreCase("en")){
+				rptBackingBean.setSmMandatoryYearFromReportTypeView(true);
 			}else{
-				rptGenBean.setSmMandatoryYearFromReportTypeViewForMY(true);
+				rptBackingBean.setSmMandatoryYearFromReportTypeViewForMY(true);
 			}
 			
-			// rptGenBean.setSmMandatoryFromDateView(true);
-			// rptGenBean.setSmMandatoryDateView(true);
-			// rptGenBean.setSmMandatoryCreatedFromYearView(true);
+			// rptBackingBean.setSmMandatoryFromDateView(true);
+			// rptBackingBean.setSmMandatoryDateView(true);
+			// rptBackingBean.setSmMandatoryCreatedFromYearView(true);
 			break;
 		case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:			
-			rptGenBean.setSmMonthlyReportView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmMandatoryMonthlyRptByYearView(true);
-			rptGenBean.setSmExtraTwoColumnTwoView(true);
+			rptBackingBean.setSmMonthlyReportView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmMandatoryMonthlyRptByYearView(true);
+			rptBackingBean.setSmExtraTwoColumnTwoView(true);
 			break;
 		case ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL:
-			rptGenBean.setSmExtraTwoColumnView(true);
-			rptGenBean.setSmMandatoryAllSupplierTypeView(true);
-			rptGenBean.setSmMandatoryReceivedFromDateView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmMandatoryAllSupplierTypeView(true);
+			rptBackingBean.setSmMandatoryReceivedFromDateView(true);
 			break;
 		case ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL:
-			rptGenBean.setSmListOfDailyRegisteredApplicationView(true);
-			rptGenBean.setSmCDCompanyNameView(true);
-			rptGenBean.setSmMofRegNoTwoView(true);
-			rptGenBean.setSmRegistrationTypeTwoView(true);
-			rptGenBean.setSmActiveSubmissiveFromDateView(true);
-			rptGenBean.setSmActSubmisAllDateView(true);
+			rptBackingBean.setSmListOfDailyRegisteredApplicationView(true);
+			rptBackingBean.setSmCDCompanyNameView(true);
+			rptBackingBean.setSmMofRegNoTwoView(true);
+			rptBackingBean.setSmRegistrationTypeTwoView(true);
+			rptBackingBean.setSmActiveSubmissiveFromDateView(true);
+			rptBackingBean.setSmActSubmisAllDateView(true);
 			break;
 		case ReportConst.SM_SUPPL_STAT_BY_CATEGORY_RPT_VAL:			
-			rptGenBean.setSmSupplierStatisticByCategoryView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmLCMOFRegisteredDateView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmSupplierStatisticByCategoryView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmLCMOFRegisteredDateView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
 			break;
 		case ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL:	
-			rptGenBean.setSmTotalNoOfDailyARView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
-			//rptGenBean.setSmTNMandatoryReportTypeView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmTNApplicationDateView(true);
+			rptBackingBean.setSmTotalNoOfDailyARView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
+			//rptBackingBean.setSmTNMandatoryReportTypeView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmTNApplicationDateView(true);
 			break;
 		case ReportConst.SM_SUPPL_STAT_RPT_VAL:
 			/*
-			 * rptGenBean.setSmMandatoryFromDateView(true);
-			 * rptGenBean.setSmMandatoryDateView(true);
+			 * rptBackingBean.setSmMandatoryFromDateView(true);
+			 * rptBackingBean.setSmMandatoryDateView(true);
 			 */
-			 rptGenBean.setSmSupplierStatisticView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmMOFRegisteredDateView(true);
-			rptGenBean.setSmSupStateView(true);
-			rptGenBean.setSmGenDistrictView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			 rptBackingBean.setSmSupplierStatisticView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmMOFRegisteredDateView(true);
+			rptBackingBean.setSmSupStateView(true);
+			rptBackingBean.setSmGenDistrictView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_QUESTIONAIRE_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatoryBothSupplierTypeView(true);
-			rptGenBean.setSmReportTypeView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmMandatoryDateView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatoryBothSupplierTypeView(true);
+			rptBackingBean.setSmReportTypeView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmMandatoryDateView(true);
 			break;
 		case ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL:
-			rptGenBean.setSmMandatoryPaymentTypeView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmPaymentDateView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmMandatoryPaymentTypeView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmPaymentDateView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_LIST_OF_PRE_EXPIRY_COMPANY_RPT_VAL:	
-			rptGenBean.setSmListOfExpiredCompanyView(true);
-			rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.setSmLPCompanyNameView(true);
-			rptGenBean.setSmECMandatorySupplierTypeView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmExpiryDateView(true);
+			rptBackingBean.setSmListOfExpiredCompanyView(true);
+			rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);
+			rptBackingBean.setSmLPCompanyNameView(true);
+			rptBackingBean.setSmECMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmExpiryDateView(true);
 			break;
 		case ReportConst.SM_REG_COMPANY_IN_MOF_DET_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatorySupplierTypeView(true);
-			rptGenBean.setSmMandatoryMofRegNoView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMandatoryMofRegNoView(true);
 			break;
 		case ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatorySupplierTypeView(true);
-			rptGenBean.setSmMandatoryMofRegNoView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMandatoryMofRegNoView(true);
 			break;
 		case ReportConst.SM_REG_COMPANY_IN_MOF_CONT_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatorySupplierTypeView(true);
-			rptGenBean.setSmMandatoryMofRegNoView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMandatoryMofRegNoView(true);
 			break;
 		case ReportConst.SM_REG_COMPANY_IN_MOF_DET_CONT_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatorySupplierTypeView(true);
-			rptGenBean.setSmMandatoryMofRegNoView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMandatoryMofRegNoView(true);
 			break;
 		case ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_CONT_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatorySupplierTypeView(true);
-			rptGenBean.setSmMandatoryMofRegNoView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMandatoryMofRegNoView(true);
 			break;
 		case ReportConst.SM_QUESTIONNAIRE_RESPONSE_RPT_VAL:
-			rptGenBean.setSmQRSView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmQRAllSupplierTypeView(true);
-			// rptGenBean.setSmReportTypeView(true);
-                        rptGenBean.setSmMandatoryReportTypeQRView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmCreatedDateView(true);
+			rptBackingBean.setSmQRSView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmQRAllSupplierTypeView(true);
+			// rptBackingBean.setSmReportTypeView(true);
+                        rptBackingBean.setSmMandatoryReportTypeQRView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmCreatedDateView(true);
 			break;
 		case ReportConst.SM_PAY_REGIS_FEE_RPT_VAL:			
-			rptGenBean.setSmListOfPPRFView(true);
-			rptGenBean.setSmGenCompanyNameView(true);			
-			rptGenBean.setSmApplicationTypeView(true);
-			rptGenBean.setSmPaymentTypeView(true);
+			rptBackingBean.setSmListOfPPRFView(true);
+			rptBackingBean.setSmGenCompanyNameView(true);			
+			rptBackingBean.setSmApplicationTypeView(true);
+			rptBackingBean.setSmPaymentTypeView(true);
 			/*
-			 * rptGenBean.setFromDateView(true); rptGenBean.setToDateView(true);
+			 * rptBackingBean.setFromDateView(true); rptBackingBean.setToDateView(true);
 			 */
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmPaymentPRDateView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmPaymentPRDateView(true);
 			break;
 		case ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL:
-			rptGenBean.retrieveCategoryLevOne1();
-			/*rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);*/
-			rptGenBean.setSmListOfSOAView(true);
-			//rptGenBean.setSmMainCatMandatoryCategoryView(true);
-			rptGenBean.setSmNonMandatoryCategoryView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			rptGenBean.setSmCompanyNameView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmFromDateView(true);
-			rptGenBean.setSmSupStateView(true);
-			rptGenBean.setSmGenDistrictView(true);
-			rptGenBean.setSmSiteVisitStatusView(true);
-			rptGenBean.setSmSAApplicationNoView(true);
+			rptBackingBean.retrieveCategoryLevOne1();
+			/*rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);*/
+			rptBackingBean.setSmListOfSOAView(true);
+			//rptBackingBean.setSmMainCatMandatoryCategoryView(true);
+			rptBackingBean.setSmNonMandatoryCategoryView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			rptBackingBean.setSmCompanyNameView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmFromDateView(true);
+			rptBackingBean.setSmSupStateView(true);
+			rptBackingBean.setSmGenDistrictView(true);
+			rptBackingBean.setSmSiteVisitStatusView(true);
+			rptBackingBean.setSmSAApplicationNoView(true);
 			break;
 		case ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL:
-			rptGenBean.setSmListOfSVOSVLView(true);
-			/*rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);*/
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			//rptGenBean.setSmMandatoryCompanyNameView(true);
-			rptGenBean.setSmNonMandatoryCompanyNameView(true);
-			rptGenBean.setSmNonMandatoryStateView(true);
-			rptGenBean.setSmSVNonMandatoryDistrictView(true);
-			rptGenBean.setSmSVONonMandatoryUserView(true);
-			rptGenBean.setSmNonMandatoryApplicationNoView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmNonMandatoryExpectedSiteVisiRpttDateView(true);
-			/*rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmMandatoryExpectedSiteVisiRpttDateView(true);*/
-			/*rptGenBean.setSmMandatoryStateView(true);
-			rptGenBean.setSmSVMandatoryDistrictView(true);
-			rptGenBean.setSmSVOUserView(true);
-			rptGenBean.setSmMandatoryApplicationNoView(true);*/
+			rptBackingBean.setSmListOfSVOSVLView(true);
+			/*rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);*/
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			//rptBackingBean.setSmMandatoryCompanyNameView(true);
+			rptBackingBean.setSmNonMandatoryCompanyNameView(true);
+			rptBackingBean.setSmNonMandatoryStateView(true);
+			rptBackingBean.setSmSVNonMandatoryDistrictView(true);
+			rptBackingBean.setSmSVONonMandatoryUserView(true);
+			rptBackingBean.setSmNonMandatoryApplicationNoView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmNonMandatoryExpectedSiteVisiRpttDateView(true);
+			/*rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmMandatoryExpectedSiteVisiRpttDateView(true);*/
+			/*rptBackingBean.setSmMandatoryStateView(true);
+			rptBackingBean.setSmSVMandatoryDistrictView(true);
+			rptBackingBean.setSmSVOUserView(true);
+			rptBackingBean.setSmMandatoryApplicationNoView(true);*/
 			break;
 		case ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL:
-			rptGenBean.setSmListOfSOPPSVView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			// rptGenBean.setSmMandatoryFromDateView(true);
-			// rptGenBean.setSmMandatoryDateView(true);
-			rptGenBean.setSmSVMandatoryStateView(true);
-			rptGenBean.setSmMandatoryDistrictView(true);
-			// rptGenBean.setSmSVOUserView(true);
-			rptGenBean.setSmSVMandatoryApplicationNoView(true);
-			rptGenBean.setSmMandatoryApplicationStatusView(true);
+			rptBackingBean.setSmListOfSOPPSVView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			// rptBackingBean.setSmMandatoryFromDateView(true);
+			// rptBackingBean.setSmMandatoryDateView(true);
+			rptBackingBean.setSmSVMandatoryStateView(true);
+			rptBackingBean.setSmMandatoryDistrictView(true);
+			// rptBackingBean.setSmSVOUserView(true);
+			rptBackingBean.setSmSVMandatoryApplicationNoView(true);
+			rptBackingBean.setSmMandatoryApplicationStatusView(true);
 			break;
 		case ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL:
-			// rptGenBean.retrieveState();			
-			rptGenBean.setSmListOfApplicationView(true);
-			rptGenBean.setSmSupplierTypeView(true);
-			rptGenBean.setSmLAApplicationNoView(true);
-			rptGenBean.setSmApplicationStatusView(true);
-			rptGenBean.setSmEpNoView(true);
-			rptGenBean.setSmLARegistrationNoView(true);
-			rptGenBean.setSmSupportingDocumentModeView(true);
-			rptGenBean.setSmSupportingDocumentStatusView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmApplicationDateView(true);
+			// rptBackingBean.retrieveState();			
+			rptBackingBean.setSmListOfApplicationView(true);
+			rptBackingBean.setSmSupplierTypeView(true);
+			rptBackingBean.setSmLAApplicationNoView(true);
+			rptBackingBean.setSmApplicationStatusView(true);
+			rptBackingBean.setSmEpNoView(true);
+			rptBackingBean.setSmLARegistrationNoView(true);
+			rptBackingBean.setSmSupportingDocumentModeView(true);
+			rptBackingBean.setSmSupportingDocumentStatusView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmApplicationDateView(true);
 			break;
 		case ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL:			
-			rptGenBean.setSmListOfOfflineSDPSView(true);
-			rptGenBean.setSmOFApplicationNoView(true);
-			rptGenBean.setSmEpNoView(true);
-			rptGenBean.setSmRegistrationNoView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmActiveSubmissiveFromDateView(true);
-			rptGenBean.setSmPendingSubmissionDateView(true);
+			rptBackingBean.setSmListOfOfflineSDPSView(true);
+			rptBackingBean.setSmOFApplicationNoView(true);
+			rptBackingBean.setSmEpNoView(true);
+			rptBackingBean.setSmRegistrationNoView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmActiveSubmissiveFromDateView(true);
+			rptBackingBean.setSmPendingSubmissionDateView(true);
 			break;
 		case ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL:			
-			rptGenBean.setSmVirtualCertificateRelasedListView(true);
-			rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmLPCompanyNameView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmVirtualCertDateView(true);
+			rptBackingBean.setSmVirtualCertificateRelasedListView(true);
+			rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmLPCompanyNameView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmVirtualCertDateView(true);
 
 			break;
 		case ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL:			
-			rptGenBean.setSmListOfCompaniesSRSCView(true);
-			rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmNonMandatoryCategoryView(true);
-			rptGenBean.setSmSuppCompanyNameView(true);
-			rptGenBean.setSmLCBusCompanyRegistrationStatusView(true);
-			//rptGenBean.setSmRegistrationTypeView(true);
-			rptGenBean.setSmLCMandatorySupplierTypeView(true);
-			rptGenBean.setSmBusCompanyTypeView(true);			
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatoryMofRegNoFromView(true);
-			rptGenBean.setSmMandatoryMofRegNoToView(true);			
-			rptGenBean.setSmBusCompanyPaidUpAccumlatedShareView(true);
-			rptGenBean.setSmPaidAccmltdShareCptlSelView(true);
+			rptBackingBean.setSmListOfCompaniesSRSCView(true);
+			rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);
+			rptBackingBean.retrieveCategoryLevOne1();
+			rptBackingBean.setSmNonMandatoryCategoryView(true);
+			rptBackingBean.setSmSuppCompanyNameView(true);
+			rptBackingBean.setSmLCBusCompanyRegistrationStatusView(true);
+			//rptBackingBean.setSmRegistrationTypeView(true);
+			rptBackingBean.setSmLCMandatorySupplierTypeView(true);
+			rptBackingBean.setSmBusCompanyTypeView(true);			
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatoryMofRegNoFromView(true);
+			rptBackingBean.setSmMandatoryMofRegNoToView(true);			
+			rptBackingBean.setSmBusCompanyPaidUpAccumlatedShareView(true);
+			rptBackingBean.setSmPaidAccmltdShareCptlSelView(true);
 			/*
-			 * rptGenBean.setSmPaidUpCapitalFrmView(true);
-			 * rptGenBean.setSmPaidUpCapitalToView(true);
+			 * rptBackingBean.setSmPaidUpCapitalFrmView(true);
+			 * rptBackingBean.setSmPaidUpCapitalToView(true);
 			 */
-			//rptGenBean.setSmPaidUpCapitalNaccumView(true);
+			//rptBackingBean.setSmPaidUpCapitalNaccumView(true);
 
 			break;
 		case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL:
-			rptGenBean.setSmListOfCompaniesWithDOHEView(true);
-			rptGenBean.setSmGenCompanyNameView(true);
-			rptGenBean.setSmMandatoryDOCSupplierTypeView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			rptGenBean.setSmMofRegNoFromView(true);
-			rptGenBean.setSmMofRegNoToView(true);
-			rptGenBean.setSmPersonnelRoleView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmMOFRegisteredDateView(true);
+			rptBackingBean.setSmListOfCompaniesWithDOHEView(true);
+			rptBackingBean.setSmGenCompanyNameView(true);
+			rptBackingBean.setSmMandatoryDOCSupplierTypeView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			rptBackingBean.setSmMofRegNoFromView(true);
+			rptBackingBean.setSmMofRegNoToView(true);
+			rptBackingBean.setSmPersonnelRoleView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmMOFRegisteredDateView(true);
 			break;
 		case ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL:			
-			rptGenBean.setSmListOfDOHEView(true);
-			rptGenBean.setSmDOCompanyNameView(true);
-			rptGenBean.setSmDOHMandatorySupplierTypeView(true);
-			rptGenBean.setSmMofRegNoFromView(true);
-			rptGenBean.setSmMofRegNoToView(true);
-			rptGenBean.setSmGenIdentificationNumberView(true);
+			rptBackingBean.setSmListOfDOHEView(true);
+			rptBackingBean.setSmDOCompanyNameView(true);
+			rptBackingBean.setSmDOHMandatorySupplierTypeView(true);
+			rptBackingBean.setSmMofRegNoFromView(true);
+			rptBackingBean.setSmMofRegNoToView(true);
+			rptBackingBean.setSmGenIdentificationNumberView(true);
 			break;
 		case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL:
-			//rptGenBean.setSmDOHCompanyNameView(true);
-			rptGenBean.setSmListOfCompaniesSortAlphabetView(true);
-			rptGenBean.setSmComSupplierTypeView(true);
-			rptGenBean.setSmLCMofRegNoFromView(true);
-			rptGenBean.setSmMofRegNoToView(true);
-			rptGenBean.setSmGenCompanyNameView(true);
+			//rptBackingBean.setSmDOHCompanyNameView(true);
+			rptBackingBean.setSmListOfCompaniesSortAlphabetView(true);
+			rptBackingBean.setSmComSupplierTypeView(true);
+			rptBackingBean.setSmLCMofRegNoFromView(true);
+			rptBackingBean.setSmMofRegNoToView(true);
+			rptBackingBean.setSmGenCompanyNameView(true);
 			
 			/*
-			 * rptGenBean.setSmMandatoryMofRegNoFromView(true);
-			 * rptGenBean.setSmMandatoryMofRegNoToView(true);
+			 * rptBackingBean.setSmMandatoryMofRegNoFromView(true);
+			 * rptBackingBean.setSmMandatoryMofRegNoToView(true);
 			 */
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			rptGenBean.setSmExtraTwoColumnTwoView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmLCMOFRegisteredDateView(true);
-			rptGenBean.setSmMOFAccountEndDateView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			rptBackingBean.setSmExtraTwoColumnTwoView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmLCMOFRegisteredDateView(true);
+			rptBackingBean.setSmMOFAccountEndDateView(true);
 			break;
 		case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:			
-			rptGenBean.setSmStatisticListCBCView(true);
-			rptGenBean.setSmQRAllSupplierTypeView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
+			rptBackingBean.setSmStatisticListCBCView(true);
+			rptBackingBean.setSmQRAllSupplierTypeView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
 			/*
-			 * rptGenBean.setFromDateView(true); rptGenBean.setToDateView(true);
+			 * rptBackingBean.setFromDateView(true); rptBackingBean.setToDateView(true);
 			 */
-			rptGenBean.setSmSLBusCompanyTypeView(true);	
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmMOFRegisteredDateView(true);
+			rptBackingBean.setSmSLBusCompanyTypeView(true);	
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmMOFRegisteredDateView(true);
 			break;
 		case ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL:
-			// rptGenBean.setSmIdentficationTypeView(true);			
-			rptGenBean.setSmListPSMoreView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
-			rptGenBean.setSmPSSupplierTypeView(true);
-			rptGenBean.setSmCompanyNameView(true);
-			rptGenBean.setSmMofRegNoFromView(true);
-			rptGenBean.setSmMofRegNoToView(true);
-			rptGenBean.setSmPSIdentificationNumberView(true);
-			rptGenBean.setSmPersonnelStaffRoleView(true);
+			// rptBackingBean.setSmIdentficationTypeView(true);			
+			rptBackingBean.setSmListPSMoreView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmPSSupplierTypeView(true);
+			rptBackingBean.setSmCompanyNameView(true);
+			rptBackingBean.setSmMofRegNoFromView(true);
+			rptBackingBean.setSmMofRegNoToView(true);
+			rptBackingBean.setSmPSIdentificationNumberView(true);
+			rptBackingBean.setSmPersonnelStaffRoleView(true);
 
 			/*
-			 * rptGenBean.setSmCompanyNameView(true);
-			 * rptGenBean.setSmMandatorySupplierTypeView(true);
-			 * rptGenBean.setSmMofRegNoFromView(true);
-			 * rptGenBean.setSmMofRegNoToView(true);
-			 * rptGenBean.setSmIdentificationNumberView(true);
+			 * rptBackingBean.setSmCompanyNameView(true);
+			 * rptBackingBean.setSmMandatorySupplierTypeView(true);
+			 * rptBackingBean.setSmMofRegNoFromView(true);
+			 * rptBackingBean.setSmMofRegNoToView(true);
+			 * rptBackingBean.setSmIdentificationNumberView(true);
 			 */
 
 			/*
-			 * rptGenBean.setFromDateView(true); rptGenBean.setToDateView(true);
+			 * rptBackingBean.setFromDateView(true); rptBackingBean.setToDateView(true);
 			 */
 			/*
-			 * rptGenBean.setSmNonMandatoryDateView(true);
-			 * rptGenBean.setSmMOFRegisteredDateView(true);
+			 * rptBackingBean.setSmNonMandatoryDateView(true);
+			 * rptBackingBean.setSmMOFRegisteredDateView(true);
 			 */
 			break;
 		case ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL:
-			rptGenBean.setSmListDeleteMOFAccountView(true);
-			rptGenBean.setSmCanMandatorySupplierTypeView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmMandatoryApplicationStatusTwoView(true);
-			rptGenBean.setSmCancellationByView(true);
+			rptBackingBean.setSmListDeleteMOFAccountView(true);
+			rptBackingBean.setSmCanMandatorySupplierTypeView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmMandatoryApplicationStatusTwoView(true);
+			rptBackingBean.setSmCancellationByView(true);
 			/*
-			 * rptGenBean.setSmMandatoryFromDateView(true);
-			 * rptGenBean.setSmMandatoryDateView(true);
+			 * rptBackingBean.setSmMandatoryFromDateView(true);
+			 * rptBackingBean.setSmMandatoryDateView(true);
 			 */
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmCanApplicationDateView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmCanApplicationDateView(true);
 			break;
 		case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL:			
-			rptGenBean.setSmCompanyAddressListView(true);
-			rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.setSmCDMandatoryAllSupplierTypeView(true);
-			rptGenBean.setSmApplicationTypeFiveView(true);
-			rptGenBean.setSmMandatoryApplicationStatusThreeView(true);
-			rptGenBean.setSmMandatorySupportingDocumentModeView(true);
-			rptGenBean.setSmCDCompanyNameView(true);
+			rptBackingBean.setSmCompanyAddressListView(true);
+			rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);
+			rptBackingBean.setSmCDMandatoryAllSupplierTypeView(true);
+			rptBackingBean.setSmApplicationTypeFiveView(true);
+			rptBackingBean.setSmMandatoryApplicationStatusThreeView(true);
+			rptBackingBean.setSmMandatorySupportingDocumentModeView(true);
+			rptBackingBean.setSmCDCompanyNameView(true);
 			/*
-			 * rptGenBean.setSmMandatoryFromDateView(true);
-			 * rptGenBean.setSmMandatoryDateView(true);
+			 * rptBackingBean.setSmMandatoryFromDateView(true);
+			 * rptBackingBean.setSmMandatoryDateView(true);
 			 */
 			break;
 			//This Report Moved to PM_008
 		case ReportConst.SM_BPK_USER_PROFILE_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 			//This Report Moved to PM_009
 		case ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL:
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmProfileStatusView(true);
-			// rptGenBean.setSmMandatoryZoneView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmProfileStatusView(true);
+			// rptBackingBean.setSmMandatoryZoneView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_DAILY_EARNING_RECEIPT:			
-			rptGenBean.setSmDailyReceiptsESView(true);
-			rptGenBean.setSmFromDateView(true);
-			rptGenBean.setSmPaymentMethodView(true);
-			// rptGenBean.setSmProcessingTypeView(true);
-			rptGenBean.setSmDERSmReceiptNoView(true);
-			rptGenBean.setSmCompanyNameView(true);
-			rptGenBean.setSmPaymentTypeThreeView(true);
-			rptGenBean.setSmPaymentToView(true);
+			rptBackingBean.setSmDailyReceiptsESView(true);
+			rptBackingBean.setSmFromDateView(true);
+			rptBackingBean.setSmPaymentMethodView(true);
+			// rptBackingBean.setSmProcessingTypeView(true);
+			rptBackingBean.setSmDERSmReceiptNoView(true);
+			rptBackingBean.setSmCompanyNameView(true);
+			rptBackingBean.setSmPaymentTypeThreeView(true);
+			rptBackingBean.setSmPaymentToView(true);
 			break;
 		case ReportConst.SM_DELETE_PENDING_APPL:
-			rptGenBean.setSmDeletePendingApplicationView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmFromDateView(true);
-			rptGenBean.setSmGenCompanyNameView(true);
-			// rptGenBean.setSmBothMandatorySupplierTypeView(true);
-			rptGenBean.setSmDEMandatoryAllSupplierTypeView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			rptGenBean.setSmDelApplicationNoView(true);
-			rptGenBean.setSmReportTypeTwoView(true);
-			rptGenBean.setSmProcessingOfficerNameView(true);
+			rptBackingBean.setSmDeletePendingApplicationView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmFromDateView(true);
+			rptBackingBean.setSmGenCompanyNameView(true);
+			// rptBackingBean.setSmBothMandatorySupplierTypeView(true);
+			rptBackingBean.setSmDEMandatoryAllSupplierTypeView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			rptBackingBean.setSmDelApplicationNoView(true);
+			rptBackingBean.setSmReportTypeTwoView(true);
+			rptBackingBean.setSmProcessingOfficerNameView(true);
 			break;
 		case ReportConst.SM_SUPPLIER_PERFORMANCE:			
-			rptGenBean.setSmSupplierPerformanceView(true);
-			rptGenBean.setSmRegistrationTypeView(true);
-			rptGenBean.setSmSupplierView(true);
-			rptGenBean.setSmEpNumberView(true);
-			rptGenBean.setSmLAMofRegNoView(true);
-			rptGenBean.setSmFromAndToYearView(true);
-			rptGenBean.setSmYearFromView(true);
+			rptBackingBean.setSmSupplierPerformanceView(true);
+			rptBackingBean.setSmRegistrationTypeView(true);
+			rptBackingBean.setSmSupplierView(true);
+			rptBackingBean.setSmEpNumberView(true);
+			rptBackingBean.setSmLAMofRegNoView(true);
+			rptBackingBean.setSmFromAndToYearView(true);
+			rptBackingBean.setSmYearFromView(true);
 			/*
-			 * rptGenBean.setSmCompanyNameView(true);
-			 * rptGenBean.setSmMofRegNoTwoView(true);
-			 * rptGenBean.setSmRegistrationTypeTwoView(true);
-			 * rptGenBean.setSmActiveSubmissiveFromDateView(true);
-			 * rptGenBean.setSmActSubmisAllDateView(true);
+			 * rptBackingBean.setSmCompanyNameView(true);
+			 * rptBackingBean.setSmMofRegNoTwoView(true);
+			 * rptBackingBean.setSmRegistrationTypeTwoView(true);
+			 * rptBackingBean.setSmActiveSubmissiveFromDateView(true);
+			 * rptBackingBean.setSmActSubmisAllDateView(true);
 			 */
 			break;
 		case ReportConst.SM_PERSON_BRANCH_BANK:			
-			rptGenBean.setSmListOfSOCPBAView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			// rptGenBean.setSmMandatorySupplierTypeView(true);
-			rptGenBean.setSmSCPSupplierTypeView(true);
-			rptGenBean.setSmSupplierView(true);
-			rptGenBean.setSmRegistrationNoView(true);
-			// rptGenBean.setSmMofRegNoView(true);
-			rptGenBean.setSmRegistrationTypeView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);			
-			rptGenBean.setSmAllRegisteredDateView(true);
+			rptBackingBean.setSmListOfSOCPBAView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			// rptBackingBean.setSmMandatorySupplierTypeView(true);
+			rptBackingBean.setSmSCPSupplierTypeView(true);
+			rptBackingBean.setSmSupplierView(true);
+			rptBackingBean.setSmRegistrationNoView(true);
+			// rptBackingBean.setSmMofRegNoView(true);
+			rptBackingBean.setSmRegistrationTypeView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);			
+			rptBackingBean.setSmAllRegisteredDateView(true);
 			break;
 		case ReportConst.SM_THRESHOLD:			
-			rptGenBean.setSmThresholdOrSupplierTransactionView(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			// rptGenBean.setSmZoneView(true);
-			rptGenBean.setSmTHMandatorySupplierTypeView(true);
-			rptGenBean.setSmSupplierView(true);
-			rptGenBean.setSmTHRegistrationTypeView(true);
-			rptGenBean.setSmLARegistrationNoView(true);
-			rptGenBean.setSmEpMofRegNoView(true);
-			rptGenBean.setSmFromAndToYearView(true);
-			rptGenBean.setSmThresholdYearFromView(true);
+			rptBackingBean.setSmThresholdOrSupplierTransactionView(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			// rptBackingBean.setSmZoneView(true);
+			rptBackingBean.setSmTHMandatorySupplierTypeView(true);
+			rptBackingBean.setSmSupplierView(true);
+			rptBackingBean.setSmTHRegistrationTypeView(true);
+			rptBackingBean.setSmLARegistrationNoView(true);
+			rptBackingBean.setSmEpMofRegNoView(true);
+			rptBackingBean.setSmFromAndToYearView(true);
+			rptBackingBean.setSmThresholdYearFromView(true);
 			break;
 		case ReportConst.SM_LIST_OF_USERS:
-			rptGenBean.setSmListOfUsersSCRView(true);
-			rptGenBean.setSmRequestExpiryRenewalDateView(true);
-			rptGenBean.setSmUserNameView(true);
-			rptGenBean.setSmIdentificationNumberView(true);
-			rptGenBean.setSmSupplierView(true);
-			//rptGenBean.setSmSuppCompanyNameView(true);
-			rptGenBean.setSmRegistrationNoView(true);
-			rptGenBean.setSmMofRegNoView(true);
-			checkAuthorizationForSuppliers(rptGenBean, authoriztionList);
+			rptBackingBean.setSmListOfUsersSCRView(true);
+			rptBackingBean.setSmRequestExpiryRenewalDateView(true);
+			rptBackingBean.setSmUserNameView(true);
+			rptBackingBean.setSmIdentificationNumberView(true);
+			rptBackingBean.setSmSupplierView(true);
+			//rptBackingBean.setSmSuppCompanyNameView(true);
+			rptBackingBean.setSmRegistrationNoView(true);
+			rptBackingBean.setSmMofRegNoView(true);
+			checkAuthorizationForSuppliers(rptBackingBean, authoriztionList);
 			break;
 		case ReportConst.SM_DAILY_APP_SUBMITTED:
-			// rptGenBean.retrieveState();
-			rptGenBean.setSmListOfDailyApplicationBasicAndMOFView(true);
-			rptGenBean.setSmDARegistrationTypeView(true);
-			rptGenBean.setSmStaticStateView(true);
-			rptGenBean.setSmApplicationStatusView(true);
-			rptGenBean.setSmActiveSubmissiveFromDateView(true);
-			rptGenBean.setSmSubmissionDateView(true);
+			// rptBackingBean.retrieveState();
+			rptBackingBean.setSmListOfDailyApplicationBasicAndMOFView(true);
+			rptBackingBean.setSmDARegistrationTypeView(true);
+			rptBackingBean.setSmStaticStateView(true);
+			rptBackingBean.setSmApplicationStatusView(true);
+			rptBackingBean.setSmActiveSubmissiveFromDateView(true);
+			rptBackingBean.setSmSubmissionDateView(true);
 			break;
 		case ReportConst.SM_THRESHOLD_VALUE:
 			/*
-			 * rptGenBean.setSmSupplierView(true);
-			 * rptGenBean.setSmRegistrationNoView(true);
-			 * rptGenBean.setSmMofRegNoView(true);
+			 * rptBackingBean.setSmSupplierView(true);
+			 * rptBackingBean.setSmRegistrationNoView(true);
+			 * rptBackingBean.setSmMofRegNoView(true);
 			 */
 			
-			rptGenBean.setSmListOfOfflineSDPSView(true);
-			rptGenBean.setSmFromAndToYearView(true);
-			rptGenBean.setSmThresholdValYearFromView(true);
+			rptBackingBean.setSmListOfOfflineSDPSView(true);
+			rptBackingBean.setSmFromAndToYearView(true);
+			rptBackingBean.setSmThresholdValYearFromView(true);
 			break;
 		case ReportConst.SM_LIST_OF_APPL_STATUS:			
-			rptGenBean.setSmListOfApplicationStatusView(true);
-			rptGenBean.setSmLAApplicationNoView(true);
-			rptGenBean.setSmApplicationTypeTwoView(true);
-			//rptGenBean.setSmSupplierView(true);
-			rptGenBean.setSmRegistrationNoView(true);
-			//rptGenBean.setSmLAMofRegNoView(true);
-			rptGenBean.setSmMofRegNoView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmApplicationDateView(true);
-			checkAuthorizationForSuppliers(rptGenBean, authoriztionList);
+			rptBackingBean.setSmListOfApplicationStatusView(true);
+			rptBackingBean.setSmLAApplicationNoView(true);
+			rptBackingBean.setSmApplicationTypeTwoView(true);
+			//rptBackingBean.setSmSupplierView(true);
+			rptBackingBean.setSmRegistrationNoView(true);
+			//rptBackingBean.setSmLAMofRegNoView(true);
+			rptBackingBean.setSmMofRegNoView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmApplicationDateView(true);
+			checkAuthorizationForSuppliers(rptBackingBean, authoriztionList);
 			break;
 		case ReportConst.SM_AGENCY_STATISTICAL:
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmApprovalDateView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmApprovalDateView(true);
 			break;
 		case ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER:
-			rptGenBean.setSmListOfGSTRegSupplierView(true);
-			rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.setSmCommonZoneView(true);
-			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
-			rptGenBean.setSmGSTSupplierTypeView(true);
-			rptGenBean.setSmGSTRegistrationTypeView(true);
-			rptGenBean.setSmCompanyNameView(true);
-			rptGenBean.setSmGSRegistrationNoView(true);
-			rptGenBean.setSmGSTRegistrationNoView(true);
-			rptGenBean.setSmMandatoryGSTRegisteredStatusView(true);
-			rptGenBean.setSmMandatoryFromDateView(true);
-			rptGenBean.setSmGSTEffectiveDateView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmListOfGSTRegSupplierView(true);
+			rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);
+			rptBackingBean.setSmCommonZoneView(true);
+			rptBackingBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptBackingBean.setSmGSTSupplierTypeView(true);
+			rptBackingBean.setSmGSTRegistrationTypeView(true);
+			rptBackingBean.setSmCompanyNameView(true);
+			rptBackingBean.setSmGSRegistrationNoView(true);
+			rptBackingBean.setSmGSTRegistrationNoView(true);
+			rptBackingBean.setSmMandatoryGSTRegisteredStatusView(true);
+			rptBackingBean.setSmMandatoryFromDateView(true);
+			rptBackingBean.setSmGSTEffectiveDateView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL:		
-			rptGenBean.setGenerateButton(false);
-			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.setSmCollectionReceiptTransationView(true);
-			rptGenBean.setSmMandatoryReciptTransactionReportTypeView(true);
-			rptGenBean.setSmMandatoryRTDateView(true);
-			rptGenBean.setSmMandatoryReceiptDateView(true);
-			rptGenBean.setSmDOHCompanyNameView(true);
-			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
+			rptBackingBean.setGenerateButton(false);
+			rptBackingBean.setConditionGenerateButton(true);
+			rptBackingBean.setSmCollectionReceiptTransationView(true);
+			rptBackingBean.setSmMandatoryReciptTransactionReportTypeView(true);
+			rptBackingBean.setSmMandatoryRTDateView(true);
+			rptBackingBean.setSmMandatoryReceiptDateView(true);
+			rptBackingBean.setSmDOHCompanyNameView(true);
+			checkAuthorizationByRoleCode(rptBackingBean, authoriztionList);
 			break;
 		case ReportConst.SM_COLLECTION_PAYMENT_METHODS_RPT_VAL:			
-			rptGenBean.setSmCollectionReportPaymentMethodView(true);
-			rptGenBean.setSmMandatoryPaymentMethodView(true);
-			rptGenBean.setSmNonMandatoryReciptTransactionReportTypeView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmNonMandatoryTransactionDateView(true);
-			rptGenBean.setSmCPSupplierNameView(true);
-			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
+			rptBackingBean.setSmCollectionReportPaymentMethodView(true);
+			rptBackingBean.setSmMandatoryPaymentMethodView(true);
+			rptBackingBean.setSmNonMandatoryReciptTransactionReportTypeView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmNonMandatoryTransactionDateView(true);
+			rptBackingBean.setSmCPSupplierNameView(true);
+			checkAuthorizationByRoleCode(rptBackingBean, authoriztionList);
 			break;
 		case ReportConst.SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL:			
-			rptGenBean.setSmCollectionReportClasificationCodeView(true);
-			rptGenBean.setSmMandatoryForCodeView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmNonMandatoryTransactionDateView(true);
+			rptBackingBean.setSmCollectionReportClasificationCodeView(true);
+			rptBackingBean.setSmMandatoryForCodeView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmNonMandatoryTransactionDateView(true);
 			break;
 		case ReportConst.SM_REVENUE_COLLECTION_RPT_VAL:
-			rptGenBean.setSmRevenueCollectionReportView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmNonMandatoryTransactionDateView(true);
-			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
+			rptBackingBean.setSmRevenueCollectionReportView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmNonMandatoryTransactionDateView(true);
+			checkAuthorizationByRoleCode(rptBackingBean, authoriztionList);
 			break;
 		case ReportConst.SM_LIST_DAILY_RECIPT_RPT_VAL:
-			rptGenBean.setSmListOfDailyReceiptView(true);
-			rptGenBean.setSmMandatoryRTDateView(true);
-			rptGenBean.setSmMandatoryTransactionDateView(true);
-			rptGenBean.setSmDailyReceiptNoView(true);
-			rptGenBean.setSmApplicationNoView(true);
+			rptBackingBean.setSmListOfDailyReceiptView(true);
+			rptBackingBean.setSmMandatoryRTDateView(true);
+			rptBackingBean.setSmMandatoryTransactionDateView(true);
+			rptBackingBean.setSmDailyReceiptNoView(true);
+			rptBackingBean.setSmApplicationNoView(true);
 			break;
 		case ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL:		
-			rptGenBean.setSmCategoryOverLappingView(true);
-			rptGenBean.setSmPSSupplierTypeView(true);
-			rptGenBean.setSmCategoryBySupplierTypeView(true);
-			rptGenBean.setSmExtraTwoColumnView(true);
+			rptBackingBean.setSmCategoryOverLappingView(true);
+			rptBackingBean.setSmPSSupplierTypeView(true);
+			rptBackingBean.setSmCategoryBySupplierTypeView(true);
+			rptBackingBean.setSmExtraTwoColumnView(true);
 			break;			
 		case ReportConst.SM_CDCSS_DEPOSIT_ADJUSTMENT_RPT_VAL:
-			rptGenBean.setSmCPCompanyNameView(true);	
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmFromDateView(true);	
+			rptBackingBean.setSmCPCompanyNameView(true);	
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmFromDateView(true);	
 			break;
 		case ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL:
-			rptGenBean.setSmCPCompanyNameView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmFromDateView(true);
+			rptBackingBean.setSmCPCompanyNameView(true);
+			rptBackingBean.setSmNonMandatoryDateView(true);
+			rptBackingBean.setSmFromDateView(true);
 			break;	
 		case ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL:
-			rptGenBean.setSmCPCompanyNameView(true);			
-			rptGenBean.setSmMandatoryForDateView(true);
-			rptGenBean.setSmFromDateView(true);
+			rptBackingBean.setSmCPCompanyNameView(true);			
+			rptBackingBean.setSmMandatoryForDateView(true);
+			rptBackingBean.setSmFromDateView(true);
 			break;	
 		default:
 			throw new EpException(
 					CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 			// break;
 		}
+		
 		log.info("End Of SMReportBackingBean-enableCriteriaVariablesByReportBySM");
+		
+		return rptBackingBean;
 	}
 
-	private void checkAuthorizationByRoleCode(ReportsGenerateBean rptGenBean,
+	private void checkAuthorizationByRoleCode(RptBackingBean rptBackingBean,
 			List<String> authoriztionList) {
 		log.info("SMReportBackingBean-checkAuthorizationByRoleCode");
 		if (authoriztionList != null) {
 			if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_CDC)) {
-				rptGenBean.setCollectorCDCRegistrationChkView(true);
+				rptBackingBean.setCollectorCDCRegistrationChkView(true);
 
 			} else {
-				rptGenBean.setCollectorGovRegistrationChkView(true);
+				rptBackingBean.setCollectorGovRegistrationChkView(true);
 			}
 		}
 	}
 
-	private void checkAuthorizationForSuppliers(ReportsGenerateBean rptGenBean,
+	private void checkAuthorizationForSuppliers(RptBackingBean rptBackingBean,
 			List<String> authoriztionList) {
 		log.info("SMReportBackingBean-checkAuthorizationForSuppliers");
 		if (authoriztionList != null) {
@@ -792,8 +794,8 @@ public class SMRptViewModel{
 					|| authoriztionList
 							.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN)) {
 
-				rptGenBean.setSmRegistrationNoView(false);
-				rptGenBean.setSmMofRegNoView(false);
+				rptBackingBean.setSmRegistrationNoView(false);
+				rptBackingBean.setSmMofRegNoView(false);
 			}
 		}
 	}

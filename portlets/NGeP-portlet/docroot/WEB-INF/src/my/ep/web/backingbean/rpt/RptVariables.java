@@ -77,8 +77,6 @@ public class RptVariables extends RptGenerateBean{
 	protected Long userId;
 	protected String strLanguage;
 	
-	protected ReportsGenerateBean rptGenBean;
-	
 	protected String reportValue;
 	protected String moduleValue;
 	protected String reportName;
@@ -784,14 +782,6 @@ public class RptVariables extends RptGenerateBean{
 
 	public void setStrLanguage(String strLanguage) {
 		this.strLanguage = strLanguage;
-	}
-
-	public ReportsGenerateBean getRptGenBean() {
-		return rptGenBean;
-	}
-
-	public void setRptGenBean(ReportsGenerateBean rptGenBean) {
-		this.rptGenBean = rptGenBean;
 	}
 
 	public String getReportValue() {
@@ -3518,5 +3508,17 @@ public class RptVariables extends RptGenerateBean{
 
 	protected boolean isEmpty(Object obj){
 		return obj == null;
+	}
+	
+
+
+	protected boolean enableValue;
+
+	public boolean isEnableValue() {
+		return enableValue;
+	}
+
+	public void setEnableValue(boolean enableValue) {
+		this.enableValue = enableValue;
 	}
 }
