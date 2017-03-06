@@ -402,8 +402,12 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 		this.getManagedBean().setLoginRoleType("SC");
 		ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
 		if (null != specMainworkflow) {
-			log.info("Workflow status not null"+ specMainworkflow.getPmStatus().getStatusId());
-			this.getManagedBean().setCurrentStatusId(specMainworkflow.getPmStatus().getStatusId());
+			Long currentSpecStatusId = specMainworkflow.getPmStatus().getStatusId();
+			log.info("Workflow status not null == "+ currentSpecStatusId);
+			if(QTStatusConst.SE_COMPLETED.equals(currentSpecStatusId)){
+				currentSpecStatusId = scQt_.getQtStatus().getStatusId();
+			} 
+			this.getManagedBean().setCurrentStatusId(currentSpecStatusId);
 		}
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null,
