@@ -35,6 +35,7 @@
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
 						var="finOrg" itemValue="#{finOrg.financialOrgId}"
 						itemLabel="#{finOrg.finOrgName}" />
+					<p:ajax event="change" process="@this" update="@this" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column>
@@ -49,6 +50,7 @@
 				</f:facet>
 			
 				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode}">
+					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
 			</p:column>

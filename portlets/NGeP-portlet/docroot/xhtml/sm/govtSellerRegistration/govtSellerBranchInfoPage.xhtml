@@ -313,7 +313,7 @@
 					action="#{bb.addOrUpdateBranchToSmAppl}"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
 					partialSubmit="true" process="banchDialog"
-					update=":form:dt,@([id$=Msg])" />
+					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{bb.assignCancelBranchBean}" />

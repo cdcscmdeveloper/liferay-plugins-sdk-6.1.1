@@ -1491,7 +1491,6 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 
 	private void validateHqBranchBank() {
-		boolean isHqHasBank = false;
 		boolean isBranchHasBank = false;
 		// validate branch must have at least one payment bank
 		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
@@ -1501,10 +1500,6 @@ public class GovtSellerRegistrationBackingBean extends
 					.getSmSupplierBranches()) {
 				for (SmSupplierBank bk : getManagedBean().getSmAppl()
 						.getSmSupplierBanks()) {
-					if (bk.isSelected()) {
-						isHqHasBank = true;
-					}
-
 					brTmp = (SmSupplierBranch) EntityHelper
 							.getEntityBySinglePropertyFromList(
 									br.getBranchCode(), bk.getBranches(),
@@ -1523,8 +1518,11 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 
 		// validate HQ must have at least one payment bank
-		if (!isHqHasBank) {
-			throw new EpException(MessageConst.ERROR_722649);
+		SmSupplierBank hqBank = (SmSupplierBank) EntityHelper
+				.getEntityBySinglePropertyFromList(true, getManagedBean()
+						.getSmAppl().getSmSupplierBanks(), "selected");
+		if (hqBank == null) {
+			throw new EpException(MessageConst.ERROR_722652);
 		}
 	}
 
