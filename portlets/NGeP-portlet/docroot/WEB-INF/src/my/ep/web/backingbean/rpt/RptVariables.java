@@ -3502,16 +3502,18 @@ public class RptVariables extends RptGenerateBean{
 		return list == null || list.isEmpty();
 	}
 	
+	protected boolean isEmpty(HashMap map){
+		return map == null || map.isEmpty();
+	}
+	
 	protected boolean isEmpty(String str){
 		return str == null || str.isEmpty();
 	}
-
+	
 	protected boolean isEmpty(Object obj){
 		return obj == null;
 	}
 	
-
-
 	protected boolean enableValue;
 
 	public boolean isEnableValue() {

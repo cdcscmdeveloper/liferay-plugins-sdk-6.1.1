@@ -126,6 +126,7 @@ public class RptBackingBean extends RptVariables{
 		 reportValue = "";
 		 reportCategory = "";
 		 
+		 userProfileSearchBean = new UserProfilesSearchBean();
 	}
 	
 	/**
@@ -153,6 +154,8 @@ public class RptBackingBean extends RptVariables{
 		reportName = null;
 		roleCode = null;
 		reportList = new ArrayList<SelectItem>();
+		
+		resetReportForm();
 		
 		List<Object[]> reportModList = new ArrayList<Object[]>();
 		
@@ -2197,7 +2200,7 @@ public void roleCodeUsersSetupOnload() {
 		showParentMsg = false;
 		valueReqd = true;
 		
-		if(reportValue.equals(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
+		if(!isEmpty(reportValue) && reportValue.equals(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
 			getCatDropdownStatusList();
 		} else {
 			mainCatValueReqd = true;
@@ -2224,15 +2227,15 @@ public void roleCodeUsersSetupOnload() {
 	}
 	
 	public boolean isEmpty(String str){
-		return StringUtils.isNotEmpty(str);
-	}
+		return str == null || str.equals("") || str == new String();
+	} 
 	
 	public void applicationStatusDateChange() {
 		
 		smMandatoryExpectedSiteVisitDateView = false;
 		smMandatoryActualSiteVisitDateView = false;
 
-		if(reportValue.equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL)) {
+		if(!isEmpty(reportValue) && reportValue.equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL)) {
 			
 			if(smApplicationStatus.equals(ReportConst.PEND_PRPR_SITE_VISIT)) {
 				
@@ -4398,43 +4401,41 @@ public void roleCodeUsersSetupOnload() {
 								RptConst.PDW_EC_RPT_VAL };
 		
 		if(!isMatch(reportValue, reportArr2)){
-			throw new EpException(MessageConst.ERROR_REPORT_780004);
+			
+			if( isEmpty(fromDate) && !isEmpty(toDate)||
+				!isEmpty(fromDate) && isEmpty(toDate)||	
+				isEmpty(scCreatedToMonth) && !isEmpty(scCreatedToMonth) ||	
+				!isEmpty(scCreatedToMonth) && isEmpty(scCreatedToMonth)){
+				throw new EpException(MessageConst.ERROR_REPORT_780004);
+			}
 		};
 		
-		if (fromDate.after(toDate)) {
+		boolean fromDateToDateIsNotEmpty = !isEmpty(fromDate) && !isEmpty(toDate);
+		
+		if (fromDateToDateIsNotEmpty && fromDate.after(toDate)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780008);
 		}
 	
-		if (toDate.after(fromDate)) {
+		if (fromDateToDateIsNotEmpty && toDate.after(fromDate)) {
 			checkOneYearDifference(fromDate, toDate);
 		}
 		
-		if (ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
+		if (!isEmpty(ctCircularEffectiveFromDate) && ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780008);
 		}
 		
-		if (ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
+		if (!isEmpty(ctCircularEffectiveFromDate) && ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
 			checkOneYearDifference(ctCircularEffectiveFromDate, ctCircularEffectiveToDate);
 		}
 
-		if (scSoneCrtdFromDate.after(scSoneCrtdToDate)) {
+		if (!isEmpty(scSoneCrtdFromDate) && scSoneCrtdFromDate.after(scSoneCrtdToDate)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780008);
 		}
 
-		if (this.scSoneCrtdToDate.after(scSoneCrtdFromDate)) {
+		if (!isEmpty(scSoneCrtdToDate) && this.scSoneCrtdToDate.after(scSoneCrtdFromDate)) {
 			checkOneYearDifference(scSoneCrtdFromDate, scSoneCrtdToDate);
 		}
 		
-//		if (StringUtils.isNotEmpty(this.getManagedBean().getReportValue())) {
-//				rptGenBean.setReportValueIdVar(RptConst.FL_AMP_REPORT_ID_EQ
-//						+ getManagedBean().getReportValue());
-//			}
-
-//				rptGenBean.setUserIdVar(RptConst.FL_AMP_USER_ID_EQ
-//						+ new FacesScopes().getUserSessionBean().getUserId()
-//								.toString());
-//			}
-	
 	
 	String[] reportArr3 = {
 			RptConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL,
@@ -4486,7 +4487,8 @@ public void roleCodeUsersSetupOnload() {
 		}
 	}
 	
-	if (smThresholdFromYear == null || smThresholdToYear == null) {
+	if ((smThresholdFromYear != null && smThresholdToYear == null) ||
+		(smThresholdFromYear == null && smThresholdToYear != null)){
 		throw new EpException(MessageConst.ERROR_REPORT_780016);
 	}
 	
@@ -4929,4 +4931,86 @@ public void roleCodeUsersSetupOnload() {
 			
 		}
 	}
+	
+	public String constructPegwaiPengawalConditionFields() {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.PENGAWAI_PENGAWAL.value());
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(
+				OrganizationType.PENGAWAI_PENGAWAL.value(),
+				OrganizationType.MINISTRY.value()));
+		sb.append("^");
+	
+		if (selectedMinistry != null) {
+			sb.append(selectedMinistry.getOrgProfileId());
+		}
+
+		return sb.toString();
+	}
+	
+	public String constructKumpulanPTJConditionFields() {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DEPARTMENT.value());
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(
+				OrganizationType.DEPARTMENT.value(),
+				OrganizationType.PENGAWAI_PENGAWAL.value()));
+		sb.append("^");
+		
+		if (selectedPegwaiPengawal != null) {
+			selectedPegwaiPengawal.getOrgProfileId();
+		}
+
+		return sb.toString();
+	}
+
+	
+	public String constructPTJConditionFields() {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DIVISION.value());
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil
+				.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+		sb.append("^");
+
+		if (selectedKumpulanPTJ != null) {
+			sb.append(selectedKumpulanPTJ.getOrgProfileId());
+		}
+		
+		return sb.toString();
+	}
+
+	public void changeTerminate() {
+
+		ctTerminationType = null;
+		ctTerminationTypeView = false;
+		
+		if (!isEmpty(ctStatusTwo)) {
+			
+			if (ctStatusTwo.equals(ReportConst.CT_TERMINATION_TYPE)) {
+				
+				ctTerminationTypeView = true;
+			
+			} else {
+				ctTerminationTypeView = false;
+			}
+			
+		} else {
+			
+			ctTerminationTypeView = false;
+		}
+	}
+
 }
