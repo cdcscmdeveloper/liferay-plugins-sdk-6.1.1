@@ -1123,18 +1123,20 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 
+		// set user info
 		for (ScQuoteDoc quoteDoc : quoteDocs) {
 			if (ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc
 					.getSpecMaster().getItemTypeCode().getParameterCode())) {
 				TemplateSpecBean serviceTemplateSpecBean = getManagedBean()
 						.getServiceTemplateSpecBean();
 				TplSpecMaster serviceTpl = null;
-
+				setUserDetails(quoteDoc);
 				if (serviceTemplateSpecBean.getSpecMaster() == null) {
 					serviceTpl = quoteDoc.getSpecMaster();
 				} else {
 					serviceTpl = serviceTemplateSpecBean.getSpecMaster();
 				}
+				setUserDetails(serviceTpl);
 
 				List<TplSpecQuestion> tplSpecQuestions = serviceTpl
 						.getTplSpecQuestions();
@@ -1153,6 +1155,7 @@ public class SimpleQuoteBackingBean extends
 						specQuestion.setCmItem(cmItem);
 						specQuestion.setCtPanelItem(ctPanelItem);
 						specQuestion.setClItem(ItemName);
+						setUserDetails(specQuestion);
 						addSpecficationQuestions(ctPanelItem, serviceTpl, tplSpecQuestions);
 					}
 				} else{
@@ -1175,6 +1178,7 @@ public class SimpleQuoteBackingBean extends
 				} else {
 					prodTpl = productTemplateSpecBean.getSpecMaster();
 				}
+				setUserDetails(prodTpl);
 
 				List<TplSpecQuestion> productQuestions = prodTpl
 						.getTplSpecQuestions();
