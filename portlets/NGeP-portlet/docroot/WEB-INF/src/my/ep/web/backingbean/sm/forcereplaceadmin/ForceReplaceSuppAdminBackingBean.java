@@ -47,6 +47,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		BaseBackingBean<ForceReplaceSuppAdminManagedBean> {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 650929814581089830L;
+
+	/**
 	 * Pre - render and redirect to Force Replace Supplier Admin page
 	 */
 	public void preRenderForceReplaceAdmin() {
