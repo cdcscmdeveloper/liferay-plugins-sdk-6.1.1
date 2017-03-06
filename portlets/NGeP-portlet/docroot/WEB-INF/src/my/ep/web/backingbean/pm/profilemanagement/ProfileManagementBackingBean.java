@@ -3570,29 +3570,39 @@ public class ProfileManagementBackingBean extends
 																		// designation
 																		// was
 																		// modified
+			logger.info("oldDesignation : " + oldDesignation);
+			logger.info("newDesignation : " + newDesignation);
 			isProfileDetailsChanged = true;
 
 		}
 		String oldEmail = user.getEmail();
 		String newEmail = userOrg.getEmail();
 		if (oldEmail != null && !oldEmail.equalsIgnoreCase(newEmail)) {
+			logger.info("oldEmail : " + oldEmail);
+			logger.info("newEmail : " + newEmail);
 			isProfileDetailsChanged = true;
 		}
 		String oldGrade = user.getGrade();
 		String newGrade = userOrg.getGrade();
 		if (oldGrade != null && !oldGrade.equalsIgnoreCase(newGrade)) {
+			logger.info("oldGrade : " + oldGrade);
+			logger.info("newGrade : " + newGrade);
 			isProfileDetailsChanged = true;
 		}
 		boolean oldPMP = user.isPMP();
 		boolean newPMP = userOrg.isPMP();
 		if (oldPMP != newPMP) {
+			logger.info("oldPMP : " + oldPMP);
+			logger.info("newPMP : " + newPMP);
 			isProfileDetailsChanged = true;
 		}
 		String oldUsername = this.getManagedBean().getPmUserOriginal()
 				.getUserName();
-		logger.info("oldUsername=" + oldUsername);
+		
 		String newUsername = user.getUserName();
 		if (!oldUsername.equalsIgnoreCase(newUsername)) {
+			logger.info("oldUsername=" + oldUsername);
+			logger.info("newUsername=" + newUsername);
 			isProfileDetailsChanged = true;	
 		}
 		if(isProfileDetailsChanged){
