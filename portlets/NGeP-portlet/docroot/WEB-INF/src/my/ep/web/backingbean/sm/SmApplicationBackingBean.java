@@ -1236,12 +1236,13 @@ public class SmApplicationBackingBean extends
 
 		// show po remarks and rejection reason for resubmit application
 		if (getManagedBean().isSupplierUser()
-				&& getManagedBean().getSmAppl().isResubmit()) {
+				&& getManagedBean().getSmAppl().isResubmit()
+				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
 			applSectionRevExist();
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
 							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getSmAppl()));
+									.getSmAppl().getOriginalAppl()));
 		}
 
 		// set payment details section only for supplier and application type is
