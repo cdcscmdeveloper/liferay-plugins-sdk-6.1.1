@@ -1694,10 +1694,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDisabledActivateAndDeactivate(false);
 		if (getManagedBean().getBasicSmPersonnel() != null
 				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null) {
-			if (getManagedBean().getBasicSmPersonnel().getEpRole()
-					.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-					|| getManagedBean().getBasicSmPersonnel().getEpRole()
-							.equals(RoleCode.G2G_SUPPLIER_ADMIN.value())
+			if (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+					.contains(getManagedBean().getBasicSmPersonnel()
+							.getEpRole())
 					|| getManagedBean().isUpgradeMofDraftAppl()) {
 				getManagedBean().setDisabledActivateAndDeactivate(true);
 			}
