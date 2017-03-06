@@ -1,4 +1,5 @@
 
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -589,33 +590,55 @@ width:32.5%;
 						</tr>
 
 						<tr>
-							<td width="100%"><c:if
-									test="#{rptBackingBean.enableCriteriaMenuView}">
+							
+							<td width="100%">
+							
+								<c:if test="#{rptBackingBean.enableCriteriaMenuView}">
+								
 									<p:panel style="width: 100%;"
 										header="#{rptBackingBean.reportName}" id="rptNameId"
 										toggleable="true">
+								
 										<table style="width: 100%; margin-top: 4px;">
-											<c:if
-												test="#{rptBackingBean.madatoryIndicatorView}">
+								
+											<c:if test="#{rptBackingBean.madatoryIndicatorView}">
+												
 												<tr>
-													<td width="100%"><h:outputText
+												
+													<td width="100%">
+															
+															<h:outputText
 															styleClass="instruction"
 															style="float:left;margin-left:20px;"
-															value="#{lbl['lbl.instruction.mandatory']}" /></td>
+															value="#{lbl['lbl.instruction.mandatory']}" />
+													
+													</td>
+												
 												</tr>
-											</c:if>											
-											<c:if
-												test="#{rptBackingBean.instructionInfoView}">
-												<tr>
-													<td width="100%"><h:outputText
-															styleClass="instruction"
-															style="float:left;margin-left:20px;"
-															value="#{lbl['lbl.rpt.instructioninfo']}" /></td>
-												</tr>
+												
 											</c:if>
-											<c:if
-												test="#{rptBackingBean.dpInstructionInfoView}">
+																						
+											<c:if test="#{rptBackingBean.instructionInfoView}">
+												
 												<tr>
+												
+													<td width="100%">
+													
+														<h:outputText
+															styleClass="instruction"
+															style="float:left;margin-left:20px;"
+															value="#{lbl['lbl.rpt.instructioninfo']}" />
+															
+													</td>
+												
+												</tr>
+												
+											</c:if>
+											
+											<c:if test="#{rptBackingBean.dpInstructionInfoView}">
+												
+												<tr>
+												
 													<td width="100%"><h:outputText
 															styleClass="instruction"
 															style="float:left;margin-left:20px;"
@@ -634,17 +657,20 @@ width:32.5%;
 											</c:if>
 											<tr>
 												<td>
-													<ui:include src="rptcontentsm.xhtml"></ui:include>
-													<ui:include src="rptcontentsc.xhtml"></ui:include>
-													
+													<ui:include src="rptcontentct.xhtml"></ui:include>
+													<ui:include src="rptpmlistofprofile.xhtml"></ui:include>
 												</td>
 											</tr>
 										</table>
+
 										<div>
-											<c:if
-												test="#{rptBackingBean.fromDateView}">
+
+											<c:if test="#{rptBackingBean.fromDateView}">
+												
 												<TABLE style="width: 100%;">
+												
 													<TR>
+												
 														<TD class="columnGenClass"><p:outputLabel
 																value="#{lbl['lbl.rpt.dtRangeFrm']}"
 																style="width:183px;" /></TD>
@@ -668,18 +694,22 @@ width:32.5%;
 												</TABLE>
 											</c:if>
 										</div>
+										
 										<h:panelGroup id="rptbtnGroup" style="margin-top:10px;">
+										
 											<div align="right" style="margin-bottom:-3%;"> 
-												<c:if
-													test="#{rptBackingBean.conditionGenerateButton}">
+										
+												<c:if test="#{rptBackingBean.conditionGenerateButton}">
+													
 													<p:commandButton onstart="blkReportContent.show();"
 														oncomplete="blkReportContent.hide();"
 														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                
 														rendered="#{rptBackingBean.valuesEmpty}"
 														disabled="#{rptBackingBean.generateButtonView or rptBackingBean.scLOAContentView}"
 														ajax="true" update="@form" >
-														<p:fileDownload
-															value="#{rptBackingBean.generateReport()}" />
+													
+														<p:fileDownload value="#{rptBackingBean.generateReport()}" />
+													
 													</p:commandButton>
 													
 													<p:commandButton onstart="blkReportContent.show();"
@@ -693,16 +723,19 @@ width:32.5%;
 													</p:commandButton>
 													
 												</c:if>
-												<c:if
-													test="#{rptBackingBean.generateButton}">
+					
+												<c:if test="#{rptBackingBean.generateButton}">
+													
 													<p:commandButton onstart="blkReportContent.show();"
 														id="falseGenerate" oncomplete="blkReportContent.hide();"                                                       
 														value="#{lbl['lbl.rpt.generate']}"
 														disabled="#{rptBackingBean.generateButtonView or rptBackingBean.scLOAContentView}"
 														ajax="false" update="@form" process="@this" >
-														<p:fileDownload
-															value="#{rptBackingBean.generateReport()}" />
+													
+														<p:fileDownload value="#{rptBackingBean.generateReport()}" />
+													
 													</p:commandButton>
+												
 												</c:if>
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{rptBackingBean.resetReportForm}"
@@ -712,17 +745,25 @@ width:32.5%;
 									</p:panel>
 								</c:if></td>
 						</tr>
+					
 					</table>
 					
 					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" width="376" 
 						draggable="false" closable="true"  header="#{lbl['lbl.rpt.reportstatus']}"
-						resizable="false">	
+						resizable="false">
+							
 						<h:outputText  value="#{lbl['lbl.rpt.warninformation']}" />					
+		
 						<p:graphicImage value="/css/images/ajax-loader.gif" />						
+		
 					</p:dialog>
 					
-				</p:panel></td>
+				</p:panel>
+		
+			</td>
+	
 		</tr>
+		
 	</table>
 
 </ui:composition>

@@ -14,7 +14,7 @@
 				<td><h:panelGrid id="pmReportCriteriaForLOP" columns="4" columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width"
 						style="width:100%;">
 						<c:if
-							test="#{rptBackingBeanpmMandatoryOrgTypeForLOPView}">
+							test="#{rptBackingBean.pmMandatoryOrgTypeForLOPView}">
 							<p:column>
 								<table style="width: 100%;">
 									<tr>
@@ -42,7 +42,7 @@
 							</p:column>
 						</c:if>
 						<c:if
-							test="#{rptBackingBeanpmMandatoryOrgNameForLOPView}">
+							test="#{rptBackingBean.pmMandatoryOrgNameForLOPView}">
 							<p:column>
 								<table style="width: 100%;">
 									<tr>
@@ -64,7 +64,9 @@
 													postUpdateListener="rptBackingBean.updateSearchCriteriaForOrgName"
 													saveObject="rptBackingBean.selectedOrgProfile"
 													conditionField="#{rptBackingBean.constructConditionFields()}" />
+										
 												<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
+										
 											</p:outputPanel> <p:outputPanel id="opSupOrgCode"
 												rendered="#{ParameterConst.orgTypeSupplier eq rptBackingBean.selectedOrgType.parameterCode}">
 												<ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
@@ -172,7 +174,7 @@
 							okAction="rptBackingBean.selectPtjAction" update="@form"
 							includePegawaiPengawal="true" />
 						<ui:include
-							src="/xhtml/reports/reportRoleSearchPopUp.xhtml" />						
+							src="rptRoleSearchPopUp.xhtml" />						
 					</h:panelGrid></td>
 			</tr>
 		</table>
