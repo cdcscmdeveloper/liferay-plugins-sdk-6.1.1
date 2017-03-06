@@ -550,7 +550,7 @@
 									itemLabel="#{lbl['lbl.rpt.drpdown.terminateLabel']}"
 									itemValue="#{lbl['lbl.rpt.capsterminate']}"></f:selectItem>
 								<p:ajax event="change"
-									listener="#{rptBackingBean.changeTerminate}" process="@this"
+									listener="#{rptBackingBean.changeTerminate()}" process="@this"
 									partialSubmit="true" update="@all" />
 							</p:selectOneMenu>
 						</c:if>
