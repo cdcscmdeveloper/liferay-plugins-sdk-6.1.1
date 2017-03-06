@@ -109,6 +109,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -701,8 +702,9 @@ public class SpecificationBackingBean extends
 			break;
 		case 1:
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
-			specSo.validateSupplierQulificationInfo(specReqDTO);
-
+			if(!this.getManagedBean().isMaintanceFlow()){
+				specSo.validateSupplierQulificationInfo(specReqDTO);
+			}
 			break;
 
 		case 2:
@@ -10704,7 +10706,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								.get(i);
 						if (this.getManagedBean().getCheckListTitle()
 								.equalsIgnoreCase(localCheckList.getTitle())) {
-							localCheckList.setDeleted(true);
+							//localCheckList.setDeleted(true);
+							localCheckList.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 							toBeRemoveList.add(localCheckList);
 							finanicalCheckList.remove(localCheckList);
 							break;
@@ -10717,8 +10720,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		updatedCheckLists.add(scQtCheckList);
 
 		reqDTO.setCheckLists(updatedCheckLists);
-		reqDTO.setTobeRemoveList(toBeRemoveList);
-
+		reqDTO.setTobeStatusChangeList(toBeRemoveList);
+		resetCommitteeActivity(reqDTO);
 		SpecificationResDTO resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
 
 		// Need to redirect particualr page..
@@ -11259,6 +11262,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		reqDTO.setCheckLists(updatedCheckLists);
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		resetCommitteeActivity(reqDTO);
 		// code if alredy checklist exist need to remove existing finalcialspec
 
 		/*
@@ -13547,10 +13551,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
-	
-		List<ScQtCommitteeActivity> committeActivities = this
-				.getManagedBean().getCommitteeActivities();
-		spReqDTO.setCommitteActivities(committeActivities);
+		
+		signoffCommitteeActivity(spReqDTO, action);
+		
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
@@ -13908,9 +13911,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
 	
-		List<ScQtCommitteeActivity> committeActivities = this
-				.getManagedBean().getCommitteeActivities();
-		spReqDTO.setCommitteActivities(committeActivities);
+		signoffCommitteeActivity(spReqDTO,action);
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
@@ -13995,6 +13996,99 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		return null;
 
+	}
+	
+	private void resetCommitteeActivity(SpecificationReqDTO spReqDTO) {
+		
+		ScWorkFlowStatus workFlowStatus = this.getManagedBean()
+				.getSpecMaintenanceWorkFlowStatus();
+		if (null != workFlowStatus
+				&& QTStatusConst.SE_PENDING_SUBMISSION.equals(workFlowStatus.getPmStatus().getStatusId())) {
+						
+			List<ScQtCommitteeActivity> committeActivities = this.getManagedBean().getCommitteeActivities();
+			if (committeActivities == null) {
+				retriveCommitteeEndorsment();
+				committeActivities = this.getManagedBean().getCommitteeActivities();
+			}
+			boolean isModified = false;
+			for (ScQtCommitteeActivity activity : committeActivities) {
+				if(activity.isSignedOff()){
+					activity.setSignedOff(false);
+					isModified = true;
+				}
+			}
+			if(isModified){// to prevent optimistic lock
+				spReqDTO.setCommitteActivities(committeActivities);
+			}
+			this.getManagedBean().setCommitteeActivities(committeActivities);
+		}
+	}
+	
+	private void signoffCommitteeActivity(SpecificationReqDTO spReqDTO,String action){
+		
+		List<ScQtCommitteeActivity> committeActivities = this.getManagedBean().getCommitteeActivities();
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			if (null != committeActivities) {
+
+				for (ScQtCommitteeActivity committeActivity:committeActivities) {
+					if (ParameterConst.COMMITTEE_ROLE_SECRETARY
+							.equalsIgnoreCase(committeActivity
+									.getScCommitteeMember().getMemberRole().getParameterCode())) {
+						committeActivity.setSignedOff(true);
+					} else {
+						committeActivity.setSignedOff(false);
+					}
+
+				}
+				List<ScQtSpecificationRemark> remarks = super.finalizeRemarks(getManagedBean().getSpecificationRemarks());
+				if (null != remarks) {
+					ScQt localScQt = spReqDTO.getScQt();
+					if (null != remarks) {
+						for (int i = 0; i < remarks.size(); i++) {
+							String userRemark = remarks.get(i).getRemark();
+							if (null == userRemark || "".equals(userRemark)) {
+								remarks.remove(i);
+							}
+						}
+					}
+					localScQt.setScQtSpecificationRemarks(remarks);
+					spReqDTO.setScQt(localScQt);
+				}
+			}
+			spReqDTO.setCommitteActivities(committeActivities);
+
+		} else {
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				List<ScQtSpecificationRemark> remarks = super.finalizeRemarks(getManagedBean().getSpecificationRemarks());
+						
+				if (null != remarks) {
+					ScQt localScQt = spReqDTO.getScQt();
+					if (null != remarks) {
+						for (int i = 0; i < remarks.size(); i++) {
+							String userRemark = remarks.get(i).getRemark();
+							if (null == userRemark || "".equals(userRemark)) {
+								remarks.remove(i);
+							}
+						}
+					}
+					localScQt.setScQtSpecificationRemarks(remarks);
+					spReqDTO.setScQt(localScQt);
+				}
+
+			} else {
+				if (null != committeActivities) {
+					PmUser pmUser = new FacesScopes().getUserSessionBean();
+					for (ScQtCommitteeActivity committeActivity:committeActivities) {
+						if (pmUser.getIdentificationNo().equals(
+								committeActivity.getScCommitteeMember().getPmUser().getIdentificationNo())) {
+							committeActivity.setSignedOff(true);
+							break;
+						}
+					}
+				}
+				spReqDTO.setCommitteActivities(committeActivities);
+			}
+		}
 	}
 	
 }
