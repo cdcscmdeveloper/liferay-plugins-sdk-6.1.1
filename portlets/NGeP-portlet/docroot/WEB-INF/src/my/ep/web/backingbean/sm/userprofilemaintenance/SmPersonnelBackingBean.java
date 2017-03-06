@@ -67,6 +67,10 @@ import org.primefaces.context.RequestContext;
 public class SmPersonnelBackingBean extends
 		BaseBackingBean<SmPersonnelManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8285824019929910081L;
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
 
 	/**
@@ -1692,6 +1696,8 @@ public class SmPersonnelBackingBean extends
 				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null) {
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
 					.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+					|| getManagedBean().getBasicSmPersonnel().getEpRole()
+							.equals(RoleCode.G2G_SUPPLIER_ADMIN.value())
 					|| getManagedBean().isUpgradeMofDraftAppl()) {
 				getManagedBean().setDisabledActivateAndDeactivate(true);
 			}
