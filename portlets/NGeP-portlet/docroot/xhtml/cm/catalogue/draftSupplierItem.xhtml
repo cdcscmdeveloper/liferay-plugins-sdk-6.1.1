@@ -14,7 +14,7 @@
 	</script>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.upload']}"
+		<p:commandButton value="#{lbl['lbl.cm.upload']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 			onclick="excelDialog.show(); clearInvalidFileMsg();" />
 
 		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
@@ -31,7 +31,7 @@
 		</ui:remove>
 
 
-		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"  rendered="#{!unspscCodeBackingBean.supplierTemp}"
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
