@@ -1272,7 +1272,8 @@ public class SimpleQuoteBackingBean extends
 		String taskId = getManagedBean().getTaskId();
 		Long defaultCountryId = getManagedBean().getDefaultCountryId();
 		boolean autoUpdate = getManagedBean().isAutoUpdate();
-		Date pidExpDate = getManagedBean().getPidExpiryDate();
+		Calendar pidExpDate = getManagedBean().getTaskExpiryDate();
+		String pidApprovers = getManagedBean().getPidApprovers();
 		Long doUserId = getManagedBean().getDoUserId();
 		try {
 			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
@@ -1529,8 +1530,8 @@ public class SimpleQuoteBackingBean extends
 					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
-			reqDTO.setPidApprovers(getManagedBean().getPidApprovers());
+			reqDTO.setTaskExpiredDate(pidExpDate);
+			reqDTO.setPidApprovers(pidApprovers);
 			reqDTO.setDoUserId(doUserId);
 
 			// ReQuote
@@ -1561,7 +1562,8 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setTaskId(taskId);
 					getManagedBean().setDefaultCountryId(defaultCountryId);
 					getManagedBean().setAutoUpdate(autoUpdate);
-					getManagedBean().setPidExpiryDate(pidExpDate);
+					getManagedBean().setTaskExpiryDate(pidExpDate);
+					getManagedBean().setPidApprovers(pidApprovers);
 					reloadSimpleQuote(scQuote);
 					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, 
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo(), Boolean.FALSE);

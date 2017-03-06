@@ -272,6 +272,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    Long prInqId = getManagedBean().getPrInquiryId();
 	    Long pidId = getManagedBean().getPurchaseInDefaultId();
 	    Long statusId = getManagedBean().getCurrentStatusId();
+	    Calendar pidExpiryDate = getManagedBean().getTaskExpiryDate();
+	    String pidApprovers = getManagedBean().getPidApprovers();
+	    String pidNo = getManagedBean().getPidNo();
 	    if(getManagedBean().getPrInquiryId() != null){
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
@@ -291,6 +294,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	 getManagedBean().setPrInquiryId(prInqId);
 	    	 getManagedBean().setPurchaseInDefaultId(pidId);
 	    	 getManagedBean().setCurrentStatusId(statusId);
+	    	 getManagedBean().setTaskExpiryDate(pidExpiryDate);
+	    	 getManagedBean().setPidApprovers(pidApprovers);
+	    	 getManagedBean().setPidNo(pidNo);
 	     }
 	    
 	    if (requestNoteResDTO.isSuccessful()) {
