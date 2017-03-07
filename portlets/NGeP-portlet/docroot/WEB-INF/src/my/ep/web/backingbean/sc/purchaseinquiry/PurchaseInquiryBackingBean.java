@@ -1166,8 +1166,11 @@ public class PurchaseInquiryBackingBean extends
 
 					reqNoteBackingBean.initializeApproverGroup();
 //					reqNoteBackingBean.initialInformation(requestNote);
+					
+					Long rnStatusId = DPStatusConstants.RN_PENDING_SUBMISSION;
+					reqNoteBackingBean.getManagedBean().setCurrentStatusId(rnStatusId);
 
-					reqNoteBackingBean.getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION));
+					reqNoteBackingBean.getCurrentStatus(getPmStatusByStatusId(rnStatusId));
 					
 					requestNote.setRemarks(initializeRemarks(requestNote,
 							requestNote.getCurrentStatus(),
