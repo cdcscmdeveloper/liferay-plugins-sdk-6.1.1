@@ -2163,7 +2163,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		// this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getCloneCmSupplierItem());
 
-		return "catalogMaintenanceFile";
+		return naviToMaintenancePage(false);
 	}
 
 	/**
@@ -2175,7 +2175,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		log.info("*********cancelBackToMaintenanceFile*************");
 
-		return "catalogMaintenanceFile?faces-redirect=true";
+		return naviToMaintenancePage(true);
 	}
 
 	/**
@@ -2192,7 +2192,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("price.getPrice()" + price.getPrice());
 		}
 
-		return "catalogMaintenanceFile?faces-redirect=true";
+		return naviToMaintenancePage(true);
 		// return "catalogMaintenanceFile";
 	}
 
@@ -3306,7 +3306,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		log.info("Exit saveCatalogItem");
 
-		return "catalogMaintenanceFile";
+		return naviToMaintenancePage(false);
 		//return "preRenderCatalogueMaintenanceFile";
 	}
 
@@ -4468,8 +4468,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 		log.info("Exit saveCatalogItem");
-
-		return "catalogMaintenanceFile";
+		return naviToMaintenancePage(false);
 		//return "preRenderCatalogueMaintenanceFile";
 	}
 
@@ -4538,7 +4537,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									new FacesScopes().getUserLocale())));
 					// facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//price 
@@ -4549,7 +4548,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715017,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//end date before start date
@@ -4560,7 +4559,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715011,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//end date already passed
@@ -4571,7 +4570,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715021,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//promotion date is outside normal date
@@ -4586,7 +4585,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageUtils.getMessage(MessageConst.ERROR_715018,
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
-						return "catalogMaintenanceFile";
+						return naviToMaintenancePage(false);
 					}
 				}
 
@@ -4614,7 +4613,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											MessageUtils.getMessage(MessageConst.ERROR_715020,
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes().getUserLocale())));
-							return "catalogMaintenanceFile";
+							return naviToMaintenancePage(false);
 						}
 					groupPrevious = tierPricing.getStand_group_id();
 				}
@@ -4643,7 +4642,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715029,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 				//end check at least 2 tier pricing
 
@@ -4669,7 +4668,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											MessageUtils.getMessage(MessageConst.ERROR_715020,
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes().getUserLocale())));
-							return "catalogMaintenanceFile";
+							return naviToMaintenancePage(false);
 						}
 					groupPrevious = tierPromotionPricing.getStand_group_id();
 				}
@@ -4685,7 +4684,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageUtils.getMessage(MessageConst.ERROR_715020,
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
-						return "catalogMaintenanceFile";
+						return naviToMaintenancePage(false);
 					}
 				}
 				//Zonal Promotion Pricing
@@ -4700,7 +4699,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageUtils.getMessage(MessageConst.ERROR_715020,
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
-						return "catalogMaintenanceFile";
+						return naviToMaintenancePage(false);
 					}
 				}
 
@@ -4726,7 +4725,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											MessageUtils.getMessage(MessageConst.ERROR_715020,
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes().getUserLocale())));
-							return "catalogMaintenanceFile";
+							return naviToMaintenancePage(false);
 						}
 					groupPrevious = zonalTier.getStand_group_id();
 				}
@@ -4754,7 +4753,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715029,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 				//end check at least 2 zonal tier pricing
 
@@ -4780,7 +4779,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											MessageUtils.getMessage(MessageConst.ERROR_715020,
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes().getUserLocale())));
-							return "catalogMaintenanceFile";
+							return naviToMaintenancePage(false);
 						}
 					groupPrevious = zonalPromotionTier.getStand_group_id();
 				}
@@ -4800,7 +4799,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715051,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//promotion price is more than standard price
@@ -4810,7 +4809,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715031, 
 										new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-						return "catalogMaintenanceFile";
+						return naviToMaintenancePage(false);
 					}
 				}
 
@@ -4826,7 +4825,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715012,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//same item with existed one cannot overlap the date
@@ -4848,7 +4847,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715019,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//Past Start Date should change to current date
@@ -4944,7 +4943,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 
-		return "catalogMaintenanceFile";
+		return naviToMaintenancePage(false);
 	}
 
 	/**
@@ -5164,9 +5163,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("before return to page");
 
 		if(status.equalsIgnoreCase("Draft")){
-			return "catalogMaintenanceFile?faces-redirect=true";
+			return naviToMaintenancePage(true);
 		}else{
-			return "catalogMaintenanceFile";
+			return naviToMaintenancePage(false);
 		}
 	}
 	/*
@@ -5327,7 +5326,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return supplierTempUploadedMsg();
 			}
 		}
-		return "catalogMaintenanceFile";
+		return naviToMaintenancePage(false);
 	}
 
 	/**
@@ -5370,7 +5369,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715028,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				//same item with existed one cannot overlap the date
@@ -5392,7 +5391,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.getMessage(MessageConst.ERROR_715019,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-					return "catalogMaintenanceFile";
+					return naviToMaintenancePage(false);
 				}
 
 				reqDTO.getSaveSupplierItems().add(catalog);
@@ -5451,7 +5450,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 
-		return "catalogMaintenanceFile";
+		return naviToMaintenancePage(false);
 	}
 
 	/**
@@ -5774,10 +5773,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			}
 			
-			String nextNavigation = "catalogMaintenanceFile";
-			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
-				nextNavigation = "catalogMaintenanceFile_suptemp";
-			}
+			String nextNavigation = naviToMaintenancePage(false);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -9979,4 +9975,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		System.out.println("isDupplicatedInd:"+this.getManagedBean().isDupplicatedInd());
 	}
 
+
+	private String naviToMaintenancePage(boolean redirect){
+		StringBuilder page = new StringBuilder();
+		
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			page.append("catalogMaintenanceFile_suptemp");
+		}else{
+			page.append("catalogMaintenanceFile");
+		}
+		
+		if(redirect){
+			page.append("?faces-redirect=true");
+		}
+		
+		return page.toString();
+	}
 }
