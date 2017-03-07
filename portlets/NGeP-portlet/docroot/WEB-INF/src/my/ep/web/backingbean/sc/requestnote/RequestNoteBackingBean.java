@@ -3737,15 +3737,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public BigDecimal calculatePricePerItem(ScRequestNoteDtl requestNoteDtl) {
 		ScRequestItem requestItem = requestNoteDtl.getRequestItem();
 		String fulfilmentType = null;
+		String priceType = null;
 		if(requestNoteDtl.getFulfilmentType() != null) {
 			fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+		}
+		if(requestNoteDtl.getPriceType() != null) {
+			priceType = requestNoteDtl.getPriceType().getParameterCode();
 		}
 		
 		ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 		BigDecimal orderQuantity = requestItem.getQuantity();
 		BigDecimal subTotalAmount = BigDecimal.ZERO;
 
-		if (orderQuantity != null && requestSupplierItem != null) {
+		if (orderQuantity != null && requestSupplierItem != null && priceType != null) {
 			if(!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				BigDecimal zonalSubTotalAmount = orderQuantity;
 				TplSpecQuestion specQuestion = requestItem.getTplSpecQuestion();
@@ -3783,7 +3787,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				ScSupplierItemPrice itemPrice = getTopZonalTierPrice(requestSupplierItem.getSupplierItemPrices(),
 						orderQuantity,
-						requestNoteDtl.getPriceType().getParameterCode(),
+						priceType,
 						requestItem.getItemName());
 				
 				if(itemPrice != null) {
