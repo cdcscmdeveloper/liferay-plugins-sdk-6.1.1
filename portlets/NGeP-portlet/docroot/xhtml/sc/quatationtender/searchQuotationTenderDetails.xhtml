@@ -51,7 +51,7 @@
 							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
-							conditionField="#{qTDetailBB.getPTJCondition()}" />
+							conditionField="recordStatus^1" />
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" 
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
