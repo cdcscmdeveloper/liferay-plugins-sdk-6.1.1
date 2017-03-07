@@ -7,7 +7,7 @@
 	
 	<p:panel header="#{lbl['lbl.sm.complaint.accusation.letter']}" toggleable="true" id="pnlAccusationLetter">
 		<p:dataTable value="#{complaintBackingBean.managedBean.accusationLetters}" var="acLetter">
-			<p:column headerText="Document Name">
+			<p:column headerText="#{lbl['lbl.sm.complainant.document.name']}">
 				#{acLetter.fileName}
 			</p:column>
 			
