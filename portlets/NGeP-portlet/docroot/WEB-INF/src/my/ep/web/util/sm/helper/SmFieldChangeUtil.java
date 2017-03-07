@@ -637,8 +637,8 @@ public class SmFieldChangeUtil {
 		} else {
 			for (SmStaffAcademic currAcad : currPersonnel.getSmStaffAcademics()) {
 				if (!isCurrExistInLatest(currAcad,
-						latestPersonnel.getSmStaffAcademics(), null,
-						new String[] { "pmEduField", "pmEduLevel" })) {
+						latestPersonnel.getSmStaffAcademics(), null, new String[] {
+								"pmEduField", "qualificationId" })) {
 					if (StringUtils.isBlank(currPersonnel
 							.getChangedFieldStatus())) {
 						currPersonnel.setChangedFieldStatus("U");
@@ -648,14 +648,15 @@ public class SmFieldChangeUtil {
 					SmStaffAcademic latestAcad = (SmStaffAcademic) EntityHelper
 							.getEntityByMultiplePropertiesFromList(currAcad,
 									latestPersonnel.getSmStaffAcademics(),
-									null, new String[] { "pmEduField",
-											"pmEduLevel" }, null);
+									null,
+									new String[] { "qualificationId",
+											"pmEduField" }, null);
 					if (latestAcad != null
 							&& latestAcad.getStaffAcademicId() != null) {
 						if (SmCommonUtil.isHasDifferences(latestAcad, currAcad,
 								new String[] { "staffAcademicId",
-										"smPersonnel", "pmEduField",
-										"pmEduLevel" })) {
+										"smPersonnel", "pmEduLevel",
+										"qualificationLevelId" })) {
 							if (StringUtils.isBlank(currPersonnel
 									.getChangedFieldStatus())) {
 								currPersonnel.setChangedFieldStatus("U");

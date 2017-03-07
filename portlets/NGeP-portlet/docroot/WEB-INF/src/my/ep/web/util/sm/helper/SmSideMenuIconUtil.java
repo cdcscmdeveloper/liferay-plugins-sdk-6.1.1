@@ -817,8 +817,9 @@ public class SmSideMenuIconUtil {
 
 					// smStaffAcademics
 					if (isSupplier) {
-						nonPrimitive = new String[] { "pmEduField",
-								"pmEduLevel" };
+						nonPrimitive = new String[] { "qualificationId",
+								"pmEduField" };
+						primitive = new String[] { "year", "instituteName" };
 					} else {
 						primitive = new String[] { "staffAcademicId" };
 					}

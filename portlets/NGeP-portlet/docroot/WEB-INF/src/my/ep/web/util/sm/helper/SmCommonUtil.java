@@ -202,9 +202,6 @@ public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
 	private static final BigDecimal percent = new BigDecimal(100);
-	private static final String SER_FILE_TYPE = ".ser";
-	private static final String FOLDER_NAME_SM = "SM";
-	private static final String FOLDER_NAME_REVISION = "Revision";
 
 	/**
 	 * Hash string.
@@ -3645,76 +3642,6 @@ public class SmCommonUtil {
 		return machineItems;
 	}
 
-	public static boolean isSmObjectPropsDifference(Object latest,
-			Object current, String[] excludeProps) {
-		boolean retVal = false;
-		if (latest != null
-				&& current != null
-				&& (current.getClass().getName().equals(latest.getClass()
-						.getName()))) {
-			Class<?> object = latest.getClass();
-			List<String> excludeList = new ArrayList<String>();
-			excludeList.add("serialVersionUID");
-			excludeList.add("changedFieldStatus");
-			excludeList.add("createdDate");
-			excludeList.add("createdBy");
-			excludeList.add("changedDate");
-			excludeList.add("changedBy");
-			excludeList.add("revNo");
-			excludeList.add("smAppl");
-			excludeList.add("smAddress");
-			if (excludeProps != null && excludeProps.length > 0) {
-				excludeList.addAll(Arrays.asList(excludeProps));
-			}
-			Field[] attributes = object.getDeclaredFields();
-			Object latestVal = null;
-			Object currVal = null;
-			for (Field field : attributes) {
-				if (!excludeList.contains(field.getName())) {
-					if (field.getGenericType() instanceof ParameterizedType == false) {
-						try {
-							latestVal = PropertyUtils.getProperty(latest,
-									field.getName());
-							currVal = PropertyUtils.getProperty(current,
-									field.getName());
-							if (BigDecimal.class.equals(field.getType())) {
-								if (currVal != null) {
-									currVal = new BigDecimal(currVal.toString())
-											.setScale(2, BigDecimal.ROUND_UP);
-								}
-								if (latestVal != null) {
-									latestVal = new BigDecimal(
-											latestVal.toString()).setScale(2,
-											BigDecimal.ROUND_UP);
-								}
-							}
-							if (latestVal == null
-									|| StringUtils
-											.isBlank(latestVal.toString())) {
-								if (currVal != null
-										&& StringUtils.isNotBlank(currVal
-												.toString())) {
-									retVal = true;
-									break;
-								}
-							} else {
-								if (!latestVal.equals(currVal)) {
-									retVal = true;
-									break;
-								}
-							}
-						} catch (IllegalAccessException
-								| InvocationTargetException
-								| NoSuchMethodException e) {
-							log.info(e.getMessage());
-						}
-					}
-				}
-			}
-		}
-		return retVal;
-	}
-
 	/**
 	 * Get the instance of smCommonUtil
 	 * 
@@ -4447,7 +4374,7 @@ public class SmCommonUtil {
 	 */
 	public static boolean isHasDifferences(Object latest, Object current,
 			String[] excludeProps) {
-		return isSmObjectPropsDifference(latest, current, excludeProps);
+		return EntityHelper.isObjectDifference(latest, current, excludeProps);
 	}
 
 	/**
