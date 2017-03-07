@@ -44,12 +44,14 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.deduction.amanah']}"/>
 				</f:facet>
 				<p:outputPanel id="danaPnl">
+				<div style="width:135px;">
 					<p:inputText id="dana" value="#{deduction.pmVotFund.votFundCode}"  disabled="true" size="10"/>
 					<p:commandLink id="votfundLink" disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
 						onclick="deductionPopup.show();" >
 						<f:setPropertyActionListener value="#{deduction}" target="#{paymentMatchBackingBean.managedBean.selectedDeduction}"/>
 						<p:graphicImage value="/css/images/design/search.png"/>
 					</p:commandLink>
+				</div>
 				</p:outputPanel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.cp']}" style="width:94px">
@@ -67,6 +69,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/>
 				</f:facet>
 				<p:outputPanel id="gosodoPnl">
+				<div style="width:135px;">
 					<ac:lov id="gosodo" update=":form:deductionDataTable"
 						disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
 						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.gosodo']}"
@@ -75,6 +78,7 @@
 						readonly="true" size="9"
 						value="#{deduction.pmGlAccount.glAccCode}">
 					</ac:lov>
+				</div>
 				</p:outputPanel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center;width:167px">
