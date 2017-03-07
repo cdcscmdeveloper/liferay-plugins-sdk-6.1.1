@@ -459,7 +459,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setItemSearchBackBtn(itemSearchBackBtn);
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
 		getManagedBean().setRequestNoteDtl(requestNoteDtls.get(0));
-
+		// created by 
+		if(requestNote.getCreatedBy() != null) {
+			getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
+		}
 		// remarks
 		requestNote.setRemarks(initializeRemarks(
 				requestNote,
@@ -3445,7 +3448,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			        	 paramMap.put(ReportConst.PARAM_SUPP_ITEM_ID, searchValue);	
 			         }	
 			         paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
-			         paramMap.put(ReportConst.PARAM_QUANTITY, requestNoteDtl.getRequestItem().getQuantity().toString());	
+			         BigDecimal quantity = BigDecimal.ZERO;
+			         if(requestNoteDtl.getRequestItem().getQuantity() != null) {
+			        	 quantity = requestNoteDtl.getRequestItem().getQuantity();
+			         }
+			         paramMap.put(ReportConst.PARAM_QUANTITY, quantity.toString());	
 			         paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
 			         System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
 			    }
