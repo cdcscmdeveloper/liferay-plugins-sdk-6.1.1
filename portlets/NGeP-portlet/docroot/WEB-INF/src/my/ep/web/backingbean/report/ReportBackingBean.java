@@ -6719,6 +6719,7 @@ public class ReportBackingBean extends
 	 */
 	public void setConstructedparamConstrString(String constructedparamConstrString) {
 		this.constructedparamConstrString = constructedparamConstrString;
+		System.out.println(constructedparamConstrString);
 	}
 
 	/**
@@ -19957,8 +19958,7 @@ public class ReportBackingBean extends
 					ModuleCodeConst.CONTRACT_MANAGEMENT) || this
 					.getModuleValue().equalsIgnoreCase(
 							ModuleCodeConst.ORDER_FULFILLMENT))) {
-				if (((this.getFromDate() != null) && (this.getFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				if (((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
 						|| ((this.getToDate() != null) && (this.getToDate()
 								.toString() != ReportConst.EMPTY_VAL))) {
 					if (this.isValuesEmpty()) {
