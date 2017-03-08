@@ -759,6 +759,11 @@ public class SupplierDataMaintenanceBackingBean extends
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				if (getManagedBean().isApproverUser()) {
+					cat.setApprovedByAp(true);
+				} else if (getManagedBean().isPoUser()) {
+					cat.setApprovedByPo(true);
+				}
 			}
 		}
 	}
