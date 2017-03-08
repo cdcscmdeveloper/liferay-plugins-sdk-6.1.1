@@ -640,7 +640,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
-			recNoteBB.getManagedBean().setBackToPrevious(null);
+			recNoteBB.getManagedBean().setBackToPrevious("flDocSearch");
 			for(FlFulfilmentNoteItem noteItem : recNoteBB.getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
 				if(noteItem.getFulfilmentNoteItemId() != null){
 					reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
