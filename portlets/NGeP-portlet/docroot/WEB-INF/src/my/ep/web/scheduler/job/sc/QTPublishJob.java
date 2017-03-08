@@ -74,16 +74,18 @@ public class QTPublishJob implements Job {
 			proposalReqDTO.setQtId(qtId);
 			ProposalResDTO proposalResDTO = proposalSO
 					.updateProposalWorkFlowStatus(proposalReqDTO);
-			if (proposalResDTO.isSuccessful()) {
-				log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
-				insertSuppliersAndSendNotification(qtId);
-			} else {
-				log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
-				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
-						proposalResDTO.getErrorMessage());
+			
+			if (!proposalResDTO.isSpecChanged()) {// skip  publish QT call if QT is waiting to sign off pending spec changes. 
+				if (proposalResDTO.isSuccessful()) {
+					log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
+					insertSuppliersAndSendNotification(qtId);
+				} else {
+					log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
+					updateQtAsDisrupted(qtId,
+							QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
+							proposalResDTO.getErrorMessage());
+				}
 			}
-
 		} catch (Exception e) {
 			log.info("$$$$$ qt Work Flow status updated failed for Publish");
 			log.error(e.getLocalizedMessage());
