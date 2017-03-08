@@ -862,7 +862,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							getManagedBean().getInvoice().getFlRequest().setGstRate(BigDecimal.ZERO);
 						}
 						Double serviceFee = 100 + getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue();
-						BigDecimal serviceGstAmount = (new BigDecimal((invItem.getDeliveryAmt().doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / serviceFee));
+						BigDecimal serviceGstAmount = (new BigDecimal((invoiceTotalAmount.doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / serviceFee));
 						gstTotalAmount = gstTotalAmount.add(serviceGstAmount);
 					}else{
 						gstAmount = (new BigDecimal(invItem.getGstAmount().doubleValue() * (invItem.getReceivedQty().doubleValue())));
