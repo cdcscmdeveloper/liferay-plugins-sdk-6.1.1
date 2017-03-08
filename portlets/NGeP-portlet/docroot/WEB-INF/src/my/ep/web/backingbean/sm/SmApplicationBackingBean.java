@@ -10191,6 +10191,8 @@ public class SmApplicationBackingBean extends
 			categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
 			categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2()
 					.getPmCategoryL1());
+
+			// direct set approved by po if the category is added by PO
 			if (getManagedBean().isPoUser()) {
 				categ.setApprovedByPo(true);
 			}
