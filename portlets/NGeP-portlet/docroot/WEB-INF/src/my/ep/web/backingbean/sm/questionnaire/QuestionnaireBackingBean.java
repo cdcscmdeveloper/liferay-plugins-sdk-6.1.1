@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
@@ -31,33 +30,19 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class QuestionnaireBackingBean extends
 		BaseBackingBean<QuestionnaireManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1346494311859740969L;
 	public static Logger log = Logger.getLogger(QuestionnaireBackingBean.class);
 
 	public QuestionnaireBackingBean() {
 		SmCommonUtil.setMDCUserId();
-		// if (MDC.get(LogKey.USER_ID) == null) {
-		// MDC.put(LogKey.USER_ID, 1L);
-		// }
 	}
-
-	/*
-	 * public void retrieveSupplierInfo() {
-	 * log.info("***********retrieveSupplierInfo**************");
-	 * RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-	 * reqDTO.setSupplierId(27); IRegistrationSO reqSO = (IRegistrationSO)
-	 * BusinessDelegate .getInstance().getServiceObject("sm",
-	 * IRegistrationSO.class); RegistrationResDTO resDTO =
-	 * reqSO.retrieveSuppOnlineAcc(reqDTO);
-	 * log.info("***********retrieveSupplierInfo**************" +
-	 * resDTO.getSmSupp().getRegNo());
-	 * this.getManagedBean().setSmSupp(resDTO.getSmSupp());
-	 * resDTO.getSmSupp().getSmAppl().getApplType(); }
-	 */
 
 	public void retrieveQuestionnaire() {
 		// this.test();
 		log.info("***********retrieveQuestionnaire**************");
-		// QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
 		QuestionnaireResDTO resDTO = reqSO.retrieveActiveQuestion();
@@ -65,7 +50,6 @@ public class QuestionnaireBackingBean extends
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		for (SmQuestion smQues : resDTO.getSmQuestionList()) {
 			SmSupplierAnswer smSuppAns = new SmSupplierAnswer();
-			smSuppAns.setSmAppl(this.getManagedBean().getSmAppl());
 			smSuppAns.setSmQuestion(smQues);
 			smSuppAns.setSmAnswer(getApplicationTypeAnswer(smQues));
 			smSuppAns.setSmAnswer(getApplicationStatus(smQues,
@@ -91,10 +75,6 @@ public class QuestionnaireBackingBean extends
 				+ this.getManagedBean().getSmSupp().getSupplierId());
 
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
-
-		this.getManagedBean()
-				.getSmAppl()
-				.setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
 		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		reqDTO.setOriResubmitSmAppl(this.getManagedBean().getRejectedAppl());
@@ -114,6 +94,7 @@ public class QuestionnaireBackingBean extends
 		List<String> useList = new ArrayList<String>();
 		PmUser loginUser = fs.getUserSessionBean();
 		useList.add(loginUser.getLoginId());
+		reqDTO.setAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 		reqDTO.setResetLatestResubmitAppl(getManagedBean()
