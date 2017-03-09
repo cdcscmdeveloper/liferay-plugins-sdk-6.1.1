@@ -63,7 +63,7 @@
 							var="locationTree" rowIndexVar="index">
 							<p:column headerText="#{lbl['lbl.sc.location.name']}">
 								<p:tree value="#{locationTree}" var="location"
-									selectionMode="checkbox">
+									selectionMode="#{isEditable ? 'checkbox' : 'null'}">
 									<p:ajax event="select" update="@([id$=locDeleteBtnId])"
 										listener="#{simpleQuoteBackingBean.selectLocationTreeNode}" />
 									<p:ajax event="unselect" update="@([id$=locDeleteBtnId])"
