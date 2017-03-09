@@ -1422,6 +1422,14 @@
 		<css-class-wrapper>online-help-display-portlet-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>forgotLoginId</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>forgot-login-id-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
 		<portlet-name>pmProfileManagement</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
