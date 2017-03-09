@@ -2557,6 +2557,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		calculatePricePerItem(requestNoteDtl);
 	}
 	/**
 	 * After save post listener.
@@ -2583,6 +2584,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 		}
+		calculatePricePerItem(requestNoteDtl);
 	}
 
  /**
