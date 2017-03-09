@@ -188,6 +188,7 @@
 	
 	<ac:scRemarkAndAttachment
 		remarkList="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
-		showAttachment="false" />
+		showAttachment="false"
+		readonly="#{!simpleQuoteBackingBean.managedBean.submitButtonFlg}"/>
 
 </ui:composition>
