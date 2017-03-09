@@ -40,7 +40,7 @@ public class SmApplicationNotificationUtil {
 						ParameterConst.NEW_SM_APPLN_FOR_RENEW)
 				|| smAppl.getApplType().equalsIgnoreCase(
 						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-			reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
+			reqDTO.setPaymentMethods("FPX dan kad kredit");
 			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
 					smAppl, isPoUser));
 		} else if (smAppl.getApplType().equalsIgnoreCase(
@@ -64,7 +64,7 @@ public class SmApplicationNotificationUtil {
 						"lbl.sm.notifAddr.semunanjung", null));
 			}
 		}
-		reqDTO.setNotifLink("<a href=\"https://www.google.com.my\"> di sini </a>");
+		reqDTO.setNotifLink("");
 
 	}
 
