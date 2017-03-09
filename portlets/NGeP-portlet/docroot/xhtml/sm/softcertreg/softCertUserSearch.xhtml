@@ -22,9 +22,9 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
 			<h:outputText styleClass="instruction" value="&lt;br/&gt;#{lbl['lbl.sm.softcert.revoke']}" escape="false" 
 			rendered="#{softCertBackingBean.managedBean.renderRevokeButton}" />
-			<h:commandLink action="#{softCertBackingBean.revoke}" value="#{lbl['lbl.sm.softcert.revoke.here']}" rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"
-				disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}" target="_blank" styleClass="instruction"
-				process="@this" partialSubmit="true" update=":form" >
+			<h:commandLink action="#{softCertBackingBean.revoke}" rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"
+				disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}" target="_blank" process="@this" partialSubmit="true" update=":form" >
+				<h:outputText value="#{lbl['lbl.sm.softcert.revoke.here']}" escape="false" styleClass="instruction"/>
 			</h:commandLink>
 			
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}" 
