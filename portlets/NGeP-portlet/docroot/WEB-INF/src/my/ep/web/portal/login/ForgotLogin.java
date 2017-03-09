@@ -120,7 +120,7 @@ public class ForgotLogin {
 		sendNotif(templateId, emailLst, contentParaLst);
 	}
 	
-	public void sendNotif(String templateId,
+	private void sendNotif(String templateId,
 			List<String> receiverList, List<String> contentParams) {
 		
 		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -133,10 +133,8 @@ public class ForgotLogin {
 		reqDTO.setCntParaArr(contentParams.toArray(new String[contentParams.size()]));
 
 		try {
-			NtfResponseDTO resDTO = ntfClientSO
-					.processAndPublishViaEmail(reqDTO);
-			if (!NotificationTextConst.STATUS_CODE_SUCCESS
-					.equals(resDTO.getStatusCode())) {
+			NtfResponseDTO resDTO = ntfClientSO.processAndPublishViaEmail(reqDTO);
+			if (!NotificationTextConst.STATUS_CODE_SUCCESS.equals(resDTO.getStatusCode())) {
 				throw new EpException(resDTO.getStatusDesc());
 			}
 		} catch (Exception e) {
