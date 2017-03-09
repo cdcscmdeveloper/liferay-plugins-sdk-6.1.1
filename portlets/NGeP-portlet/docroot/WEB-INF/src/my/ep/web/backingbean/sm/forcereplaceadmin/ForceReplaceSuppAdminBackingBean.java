@@ -103,6 +103,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with new personnel and redirect to success page
 	 */
 	public void replaceWithNewUser() {
+		getManagedBean().getNewAdmin().setSoftcertFlg(
+				SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
