@@ -43,7 +43,7 @@
 					<p:column headerText="#{lbl['lbl.sc.location.name']}">
 
 						<p:tree value="#{zoneTree}" var="location" id="treeid"
-							selectionMode="checkbox">
+							selectionMode="#{isEditable ? 'checkbox' : 'null'}">
 
 							<p:ajax event="select" update="@([id$=simpleQuoteZoneDeliveryLocDeleteBtnId])"
 								listener="#{simpleQuoteBackingBean.selectZoneTreeNode}" />
