@@ -34,6 +34,11 @@
             <value>#{param.helpcount}</value>
         </managed-property>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ForgotLogin</managed-bean-name>
+        <managed-bean-class>my.ep.web.portal.login.ForgotLogin</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 	<navigation-rule>
    		<from-view-id>/xhtml/wp/onlinehelpdisplay/displayOnlineHelp.xhtml</from-view-id>
    		<navigation-case>

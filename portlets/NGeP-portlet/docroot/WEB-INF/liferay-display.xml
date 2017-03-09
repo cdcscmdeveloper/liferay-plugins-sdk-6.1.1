@@ -349,7 +349,9 @@
 		<category name="category.ep.oh">
 			<portlet id="onlinehelpdisplayportlet"></portlet>
 		</category>
-		
+		<category name="category.ep.lg">
+			<portlet id="forgotLoginId"></portlet>
+		</category>
 		<!-- SOA - START -->
 		<category name="category.ep.soa">
 			<portlet id="soaServiceRetry"></portlet>
