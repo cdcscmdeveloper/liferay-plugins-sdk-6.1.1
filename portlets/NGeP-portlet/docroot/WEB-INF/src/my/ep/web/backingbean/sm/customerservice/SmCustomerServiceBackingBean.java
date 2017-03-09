@@ -180,6 +180,12 @@ public class SmCustomerServiceBackingBean extends
 	 */
 	private void retrieveSupplierCatalogueStatusCountBySupplierId(
 			Long supplierId) {
+		
+		getManagedBean().setNoOfCatApproved(0);
+		getManagedBean().setNoOfCatRejected(0);
+		getManagedBean().setNoOfCatExpired(0);
+		getManagedBean().setNoOfCatPublished(0);
+		
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		reqDTO.setSupplierId(supplierId);
 
