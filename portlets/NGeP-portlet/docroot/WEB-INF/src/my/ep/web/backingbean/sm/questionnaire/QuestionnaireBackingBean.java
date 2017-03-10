@@ -6,8 +6,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
@@ -21,8 +19,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 
@@ -41,11 +39,8 @@ public class QuestionnaireBackingBean extends
 	}
 
 	public void retrieveQuestionnaire() {
-		// this.test();
-		log.info("***********retrieveQuestionnaire**************");
-		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
-		QuestionnaireResDTO resDTO = reqSO.retrieveActiveQuestion();
+		QuestionnaireResDTO resDTO = SmServiceLookup.getQuestionnaireSO()
+				.retrieveActiveQuestion();
 
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		for (SmQuestion smQues : resDTO.getSmQuestionList()) {
@@ -61,7 +56,6 @@ public class QuestionnaireBackingBean extends
 						smQues.getSmAnswerCategory().getSmAnswers().get(0)
 								.getAnswerId());
 			}
-			// /smSuppAns.setSupplierAnswerId(supplierAnswerId)
 		}
 		this.getManagedBean().setSmSuppAnswerLs(smSuppAnswerLs);
 
@@ -70,16 +64,10 @@ public class QuestionnaireBackingBean extends
 	}
 
 	public void submitQuestionnaire() {
-		log.info("***********submitQuestionnaire Start**************");
-		log.info("***********SM SUPPLIER ID******"
-				+ this.getManagedBean().getSmSupp().getSupplierId());
-
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
 		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		reqDTO.setOriResubmitSmAppl(this.getManagedBean().getRejectedAppl());
-		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
 
 		for (SmSupplierAnswer suppAns : this.getManagedBean()
 				.getSmSuppAnswerLs()) {
@@ -100,7 +88,7 @@ public class QuestionnaireBackingBean extends
 		reqDTO.setResetLatestResubmitAppl(getManagedBean()
 				.isResetLatestResubmitAppl());
 
-		reqSO.questionnaireSubmission(reqDTO);
+		SmServiceLookup.getQuestionnaireSO().questionnaireSubmission(reqDTO);
 
 		// for resubmit application directly inject to task list
 		if (this.getManagedBean().getRejectedAppl() != null) {
@@ -121,13 +109,10 @@ public class QuestionnaireBackingBean extends
 
 	public void retrievMOFInfo() {
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-
-		IMofAccountSO mofSO = (IMofAccountSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", IMofAccountSO.class);
 		reqDTO.setSupplierId(this.getManagedBean().getSmSupp().getSupplierId());
 		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
 				.getSupplierType());
-		MofAccountResDTO resDTO = mofSO
+		MofAccountResDTO resDTO = SmServiceLookup.getMofAccountSO()
 				.retriveMOFAccountBySupplierIdAndType(reqDTO);
 
 		if (resDTO.getMofAccount() != null) {
