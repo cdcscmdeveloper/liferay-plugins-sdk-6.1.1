@@ -4147,7 +4147,7 @@ public class ProfileManagementBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
-				clearCache();
+				PmCommonUtil.clearLiferayCache();
 
 			}
 
@@ -4205,7 +4205,7 @@ public class ProfileManagementBackingBean extends
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
-					clearCache();
+					PmCommonUtil.clearLiferayCache();
 
 				}
 
@@ -5345,32 +5345,5 @@ public class ProfileManagementBackingBean extends
 	 */
 	public int getOthers() {
 		return OTHERS;
-	}
-	
-	
-	public void clearCache(){
-		logger.info("clearCache start");
-		try{
-			logger.info("clearCache CacheRegistryUtil");
-			CacheRegistryUtil.clear();
-		}catch (Exception e){
-			logger.info("CacheRegistryUtil Error" + e.getMessage() );
-		}
-			 
-		try{
-			logger.info("clearCache MultiVMPoolUtil");
-			MultiVMPoolUtil.clear();		
-		}catch (Exception e){
-			logger.info("MultiVMPoolUtil Error" + e.getMessage() );
-		}
-
-		try{
-			logger.info("clearCache WebCachePoolUtil");
-			WebCachePoolUtil.clear();
-		}catch (Exception e){
-			logger.info("WebCachePoolUtil Error" + e.getMessage() );
-		}
-		logger.info("clearCache end");
-		
 	}
 }

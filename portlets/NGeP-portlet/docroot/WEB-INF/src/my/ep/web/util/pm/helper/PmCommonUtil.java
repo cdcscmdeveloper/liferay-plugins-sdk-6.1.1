@@ -139,7 +139,10 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.cache.CacheRegistryUtil;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
 /**
@@ -2531,6 +2534,46 @@ public class PmCommonUtil implements Serializable{
 			reqDTO = null;
 		}
 		return userActiveUserGroups;
+	}
+	
+	public static void clearLiferayCache(){
+		log.info("clearCache start");
+		try{
+			log.info("clearCache CacheRegistryUtil");
+			CacheRegistryUtil.clear();
+		}catch (Exception e){
+			log.info("CacheRegistryUtil Error" + e.getMessage() );
+		}
+			 
+		try{
+			log.info("clearCache MultiVMPoolUtil");
+			MultiVMPoolUtil.clear();		
+		}catch (Exception e){
+			log.info("MultiVMPoolUtil Error" + e.getMessage() );
+		}
+
+		try{
+			log.info("clearCache WebCachePoolUtil");
+			WebCachePoolUtil.clear();
+		}catch (Exception e){
+			log.info("WebCachePoolUtil Error" + e.getMessage() );
+		}
+		log.info("clearCache end");
+		
+	}
+	
+	public static PmOrgProfile retrieveOrgProfileDtlById(Long id){
+		log.info("retrieveOrgProfileDtlById");
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(id);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO
+				.retrieveOrgDetailsByOrgId(reqDTO);
+		return orgResDTO.getPmOrgProfile();
+		
 	}
 
 }
