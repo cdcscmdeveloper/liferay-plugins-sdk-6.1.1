@@ -1781,7 +1781,7 @@ public class LOADetailBackingBean extends
 
 		String govtSignDate	 = "";
 		if (scLoa.getGovtSignDate() != null) {
-			govtSignDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
+			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
 		}
 		context.put("govtSignDate", govtSignDate);
 
