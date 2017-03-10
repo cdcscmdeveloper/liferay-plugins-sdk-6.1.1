@@ -113,6 +113,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The request note dtl. */
     private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
     
+    /** The original request note dtl before selected */
+    private ScRequestNoteDtl oriSequestNoteDtl = new ScRequestNoteDtl();
+    
     /** The prepared bys. */
     private List<PmUser> preparedBys = new ArrayList<PmUser>();
     
@@ -569,6 +572,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.requestNoteDtl = requestNoteDtl;
 	}
 	
+	/**
+	 * @return the oriSequestNoteDtl
+	 */
+	public ScRequestNoteDtl getOriSequestNoteDtl() {
+		return oriSequestNoteDtl;
+	}
+
+	/**
+	 * @param oriSequestNoteDtl the oriSequestNoteDtl to set
+	 */
+	public void setOriSequestNoteDtl(ScRequestNoteDtl oriSequestNoteDtl) {
+		this.oriSequestNoteDtl = oriSequestNoteDtl;
+	}
+
 	/**
 	 * Checks if is just type option.
 	 *
