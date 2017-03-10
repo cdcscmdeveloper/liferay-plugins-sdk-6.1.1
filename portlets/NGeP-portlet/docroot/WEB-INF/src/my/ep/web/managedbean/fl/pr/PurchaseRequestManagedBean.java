@@ -270,6 +270,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String itemDesc;
 	private GlAccountSearchBean glAccountSearchBean;
 	private boolean isLazy;	
+	private boolean espkb;
 	
 /**
  * Gets the charge line item root.
@@ -3173,6 +3174,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	public boolean isEspkb() {
+		return espkb;
+	}
+
+	public void setEspkb(boolean espkb) {
+		this.espkb = espkb;
 	}
 
 }
