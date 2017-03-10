@@ -72,10 +72,14 @@
 	         		</h:panelGrid>
 				
 					 <p:outputLabel value="#{lbl['lbl.ct.pid']}"  />
-			           <p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
-			                   value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
-			                       <p:ajax event="change"  update=":form:groupPidId" process="@this"></p:ajax>
-			           </p:selectBooleanCheckbox>
+					 <h:panelGrid columns="3">
+			   			<p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
+			       			value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+			         		<p:ajax event="change"  update=":form:groupPidId" process="@this"></p:ajax>
+			           	</p:selectBooleanCheckbox>
+			           	<p:spacer width="5"/>
+				       	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.pid']}" />
+					 </h:panelGrid>
 			  	  
 			  	  <f:verbatim/>	  <f:verbatim/>
 				 
