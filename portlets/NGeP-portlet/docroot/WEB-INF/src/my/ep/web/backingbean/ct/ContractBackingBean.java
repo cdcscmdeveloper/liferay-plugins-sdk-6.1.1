@@ -1905,6 +1905,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        		  ctAgency.setOrgProfile(pmOrgProfiles);
 			        		  ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
 			        		  ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
+			        		  
+			        		  StringBuilder str =  new StringBuilder();
+							  int len = (getManagedBean().getContractVer().getCtContract().getContractId()+pmOrgProfiles.getOrgProfileId().toString()).length();
+							  for(int i=len; i<16; i++){
+									str = str.append("0");
+								}
+								 str.append(getManagedBean().getContractVer().getCtContract().getContractId());
+								 str.append(ctAgency.getOrgProfile().getOrgProfileId());
+								ctAgency.setCommitmentNo("K"+str.toString());
 			        		  if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
 			        			  ctAgency.setAp178(true);
 			        		  }		  	
