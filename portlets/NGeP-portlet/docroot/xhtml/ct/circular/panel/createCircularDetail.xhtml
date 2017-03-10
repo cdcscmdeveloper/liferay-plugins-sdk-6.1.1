@@ -116,14 +116,15 @@
 			               <p:spacer width="2" />	
 			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
 			  	      </h:panelGrid>    
-			  	       <p:outputLabel value="#{lbl['lbl.ct.pid']}" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}"  />
-			              <h:panelGrid columns="3" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
-			                  <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
-			                       value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
-			                       <p:ajax event="change"  update=":form:groupPaneId" process="@this"></p:ajax>
-			                   </p:selectBooleanCheckbox>
-			                   <p:spacer width="2" />	
-			  	               </h:panelGrid>
+			  	 	  <p:outputLabel value="#{lbl['lbl.ct.pid']}" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}"  />
+			   		  <h:panelGrid columns="3" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
+		    			<p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
+		      				value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+		               		<p:ajax event="change"  update=":form:groupPaneId" process="@this"></p:ajax>
+		          		</p:selectBooleanCheckbox>
+		            	<p:spacer width="5"/>
+			  			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.pid']}" />
+			  		  </h:panelGrid>
 		</h:panelGrid>
 	</h:panelGrid>
 	 <p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg"  resizable="false"
