@@ -296,6 +296,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			PurchaseRequestBackingBean PrBB=new PurchaseRequestBackingBean();
+			PrBB.initializePRBeans();
 			PrBB.getManagedBean().setSubmitButtonStatus(false);
 			PrBB.getManagedBean().setDocProcess(docType);
 			PrBB.getManagedBean().setButtonVal(buttonVal);
@@ -328,6 +329,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			crBB.renewSesionObject();
 			crBB = new ContractRequestBackingBean();
+			crBB.initializeCRBeans();
 			crBB.getManagedBean().setSelectedTabIndex(0);
 			crBB.getManagedBean().setDocProcess(docType);
 			crBB.getManagedBean().setFlDocId(flDocId);
