@@ -221,12 +221,27 @@ public class OrganisationBackingBean extends
 				.setPmAddress(PmCommonUtil.getNewPmAddress());
 		getManagedBean().setNotFirstRun(true);
 		if (id != null && id > 0) {
-			maintainOrganisation(id);
-
+			PmOrgProfile orgProfile = PmCommonUtil.retrieveOrgProfileDtlById(id);
+			if(orgProfile != null){
+				maintainOrganisation(orgProfile);
+			}
 		} else {
 			initialOrganisation();
 
 		}
+		getManagedBean().setShowParentMsg(true);
+		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+		return NAV_TO_MAINTAIN;
+	}
+	
+	private String refreshOrganisation(PmOrgProfile orgProfile) throws Exception {
+		log.info("..............refreshOrganisation.......)");
+		resetInitialOrg();
+		retrieveFinancialOrgList();
+		this.getManagedBean().getDeliveryAddress()
+				.setPmAddress(PmCommonUtil.getNewPmAddress());
+		getManagedBean().setNotFirstRun(true);
+		maintainOrganisation(orgProfile);
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
@@ -499,7 +514,7 @@ public class OrganisationBackingBean extends
 	 *            id - organisation Id (mandatory)
 	 * @return the navigate URL
 	 **/
-	public String maintainOrganisation(Long id) {
+	public String maintainOrganisation(PmOrgProfile orgProfile) {
 		log.info(".......maintainOrganisation......");
 		// clear list's previous value
 		this.getManagedBean().setSmSupplierBanks(
@@ -507,28 +522,16 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());
 		this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
-		retrieveSupplierUserList(id);
+		retrieveSupplierUserList(orgProfile.getOrgProfileId());
 		getManagedBean().setGstSupplier(new SmGstSupplier());
-
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(id);
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-
-		OrgProfileResDTO orgResDTO = orgProfileSO
-				.retrieveOrgDetailsByOrgId(reqDTO);
-		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
 		getManagedBean().setOrgType(
 				orgProfile.getOrgTypeCode().getParameterCode());
-
 		getManagedBean().setOrgTypeId(
 				orgProfile.getOrgTypeCode().getParameterId());
 		log.info("orgProfile.getOrgTypeCode().getParameterCode()="
 				+ orgProfile.getOrgTypeCode().getParameterCode());
 	
-		// Kumpulan PTJ
+		// Pegawai Pengawal
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.PENGAWAI_PENGAWAL.value())) {
 			retrieveMinistryList();
@@ -560,22 +563,12 @@ public class OrganisationBackingBean extends
 			getManagedBean().getOrgProfile().setPmZone(
 					orgProfile.getPmZone() == null ? new PmZone() : orgProfile
 							.getPmZone());
-
 		}
-		
 	
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
 			//retrieveMinistryList();
-
-//			if (orgProfile.getParentOrgProfile() == null) {
-//				orgProfile.setParentOrgProfile(new PmOrgProfile());
-//				getManagedBean().setEmptyMinistry(true);
-//			} else {
-//				getManagedBean().setEmptyMinistry(false);
-//			}
-			
 			List<PmAddressType> deliveryAddressList = new ArrayList<PmAddressType>();
 			if (getManagedBean().getOrgProfile().getPmAddressTypes() != null
 					&& !getManagedBean().getOrgProfile().getPmAddressTypes()
@@ -595,14 +588,6 @@ public class OrganisationBackingBean extends
 						// this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));
 					}
 				}
-				
-//				if(getManagedBean().getAddressTypesList() != null && !getManagedBean().getAddressTypesList().isEmpty()){
-//					RequestContext requestContext = RequestContext.getCurrentInstance();
-//					requestContext.update("deliveryAddressId");
-//					requestContext.execute(
-//							"deliveryAddres.clearFilters();");
-//				}
-		
 			}
 			
 			if(!deliveryAddressList.isEmpty()){
@@ -631,7 +616,6 @@ public class OrganisationBackingBean extends
 			}
 		}
 		// PTJ, GLC, LAT, STG and STB
-
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
@@ -801,7 +785,6 @@ public class OrganisationBackingBean extends
 	public String saveOrganization(String outcome) throws Exception {
 
 		IOrgProfileSO orgProfileSO = null;
-		IParameterSO parameterSO = null;
 		String redirectUrl = null;
 
 		try {
@@ -826,24 +809,14 @@ public class OrganisationBackingBean extends
 			orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
-
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IParameterSO.class);
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO
-					.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
-			parameterReqDTO.setParameterCode(getManagedBean().getOrgType());
-			ParameterResDTO parameterResDTO = parameterSO
-					.retrieveParameterByTypeAndCode(parameterReqDTO);			
+			PmParameter parameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES, getManagedBean().getOrgType());
 			PmOrgValidity orgValidity = orgProfile.getPmOrgValidity();
-			
 			List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
 			if (orgProfile.isBrandNew()) {
 				// check BPK
-				checkBpkOrgStatus(parameterResDTO.getPmParameter()
+				checkBpkOrgStatus(parameter
 						.getParameterCode());
-				orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
+				orgProfile.setOrgTypeCode(parameter);
 				orgValidity.setEffDate(new Date());
 				PmAddressType addressType = this.getManagedBean()
 						.getPmAddressType();
@@ -865,8 +838,7 @@ public class OrganisationBackingBean extends
 				orgProfile.setPmOrgValidity(orgValidity);
 			}
 			
-			if (parameterResDTO
-					.getPmParameter()
+			if (parameter
 					.getParameterCode()
 					.equalsIgnoreCase(
 							OrganizationType.BPK_PENDAFTARAN_HQ.value())
@@ -913,7 +885,7 @@ public class OrganisationBackingBean extends
 			}			
 			
 			// PTJ
-			if (parameterResDTO.getPmParameter().getParameterCode()
+			if (parameter.getParameterCode()
 					.equalsIgnoreCase(OrganizationType.DIVISION.value())) {			
 				// Validate the Delivery Address
 				for (PmAddressType deliveryAddress : getManagedBean()
@@ -998,27 +970,26 @@ public class OrganisationBackingBean extends
 			 * getManagedBean().setOrgProfile(resDTO1.getPmOrgProfile()); }
 			 */
 
-			String message = "";
-			if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
-				message = ResourceBundleUtils
-						.getMessage("lbl.pm.org.created.successfully",
-								new String[] {
-										getManagedBean().getOrgProfile()
-												.getOrgName() },
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale());
-				redirectUrl = "organisationMain.xhtml";
-			} else if (BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(outcome)) {
-				message = ResourceBundleUtils
-						.getMessage("lbl.pm.org.updated.successfully",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale());
-				redirectToOrganisation(getManagedBean().getOrgProfile()
-						.getOrgProfileId());
-			}
-
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
+				String message = "";
+				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
+					message = ResourceBundleUtils
+							.getMessage("lbl.pm.org.created.successfully",
+									new String[] {
+											getManagedBean().getOrgProfile()
+													.getOrgName() },
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
+					redirectUrl = "organisationMain.xhtml";
+				} else if (BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(outcome)) {
+					message = ResourceBundleUtils
+							.getMessage("lbl.pm.org.updated.successfully",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
+					refreshOrganisation(resDTO.getPmOrgProfile());
+				}
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -1026,7 +997,6 @@ public class OrganisationBackingBean extends
 			}
 		} finally {
 			orgProfileSO = null;
-			parameterSO = null;
 		}
 
 		return redirectUrl;
