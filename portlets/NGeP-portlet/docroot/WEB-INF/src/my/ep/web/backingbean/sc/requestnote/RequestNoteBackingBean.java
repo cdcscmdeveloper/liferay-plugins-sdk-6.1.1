@@ -1952,7 +1952,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());	
 			}
 			
+			ScRequestNoteDtl oriRequestNoteDtl = new ScRequestNoteDtl();
+			ScRequestItem oriRequestItem = new ScRequestItem();
+			oriRequestItem.setQuantity(scRequestNoteDtl.getRequestItem().getQuantity());
+			oriRequestNoteDtl.setRequestItem(oriRequestItem);
+			oriRequestNoteDtl.setPriceType(scRequestNoteDtl.getPriceType());
+			
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+			getManagedBean().setOriSequestNoteDtl(oriRequestNoteDtl);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 		}
 	}
@@ -2829,6 +2836,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void cancelItemDetailPopup() {
 		debugLogger("cancelItemDetailPopup");
+		ScRequestNoteDtl oriRequestNoteDtl = getManagedBean().getOriSequestNoteDtl();
+		ScRequestNoteDtl selectedRequestNoteDtl = getManagedBean().getRequestNoteDtl();
+		
+		selectedRequestNoteDtl.getRequestItem().setQuantity(
+				oriRequestNoteDtl.getRequestItem().getQuantity());
+		selectedRequestNoteDtl.setPriceType(oriRequestNoteDtl.getPriceType());
+		calculatePricePerItem(selectedRequestNoteDtl);
+		
 		RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
 		getManagedBean().setAutoUpdate(true);
 	}
