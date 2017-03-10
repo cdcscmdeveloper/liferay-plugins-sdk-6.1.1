@@ -8,6 +8,7 @@ import java.util.Set;
 
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.web.scheduler.listener.EpSchedulerListener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.impl.matchers.KeyMatcher;
 
 /**
  * Helper class for manipulating quartz scheduler
@@ -55,7 +57,7 @@ public class EpSchedulerHelper {
 			String cronExpression) {
 		scheduleJob(jobKey, jobClass, jobDetailDesc, cronExpression, null);
 	}
-	
+
 	/**
 	 * Schedule new job or update existing scheduled job
 	 * 
@@ -73,7 +75,8 @@ public class EpSchedulerHelper {
 	public static void scheduleJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression, JobDataMap jobDataMap) {
-		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression, jobDataMap);
+		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression,
+				jobDataMap);
 		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
 	}
 
@@ -213,7 +216,8 @@ public class EpSchedulerHelper {
 							.withIdentity(jobKey)
 							.withDescription(jobDetailDesc);
 					if (jobDataMap != null) {
-						jobBuilder = jobBuilder.storeDurably().usingJobData(jobDataMap);
+						jobBuilder = jobBuilder.storeDurably().usingJobData(
+								jobDataMap);
 					}
 					final JobDetail job = jobBuilder.build();
 
@@ -229,6 +233,13 @@ public class EpSchedulerHelper {
 							+ "   MISFIRE POLICY:"
 							+ cronTrigger.getMisfireInstruction()
 							+ "<<<<<<<<<<<<<<<");
+
+					// Listener attached to jobKey
+					EpSchedulerHelper
+							.getScheduler()
+							.getListenerManager()
+							.addJobListener(new EpSchedulerListener(),
+									KeyMatcher.keyEquals(jobKey));
 
 					// schedule new job
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
@@ -487,21 +498,23 @@ public class EpSchedulerHelper {
 	 * To update job data in the JobDetail
 	 * 
 	 * @param jobName
-	 * 		the job name
+	 *            the job name
 	 * @param jobGroup
-	 * 		the job group
+	 *            the job group
 	 * @param jobDataKey
-	 * 		the job data key
+	 *            the job data key
 	 * @param jobDataValue
-	 * 		the job data value
+	 *            the job data value
 	 */
-	public static void updateJobDetailData(String jobName, String jobGroup, String jobDataKey, Object jobDataValue) {
+	public static void updateJobDetailData(String jobName, String jobGroup,
+			String jobDataKey, Object jobDataValue) {
 		try {
 			JobDetail jobDetail = EpSchedulerHelper.getScheduler()
 					.getJobDetail(getJobKey(jobName, jobGroup));
-			Map<String, Object> jobDataMap = jobDetail.getJobDataMap().getWrappedMap();
+			Map<String, Object> jobDataMap = jobDetail.getJobDataMap()
+					.getWrappedMap();
 			jobDataMap.put(jobDataKey, jobDataValue);
-			
+
 			EpSchedulerHelper.getScheduler().addJob(jobDetail, true);
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());

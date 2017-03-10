@@ -1,10 +1,7 @@
 package my.ep.web.scheduler.listener;
 
-import java.util.Date;
-
 import my.ep.factory.EpLogger;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.util.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,9 +27,7 @@ public class EpSchedulerListener implements JobListener {
 	@Override
 	public void jobToBeExecuted(JobExecutionContext context) {
 		String jobName = context.getJobDetail().getKey().toString();
-		log.info("Job to be executed [" + jobName + "] started at "
-				+ DateUtils.dateToString("dd/MM/yyyy HH:mm", new Date())
-				+ "....");
+		log.info("Job to be executed [" + jobName + "] started at....");
 
 	}
 
@@ -46,13 +41,12 @@ public class EpSchedulerListener implements JobListener {
 	public void jobWasExecuted(JobExecutionContext context,
 			JobExecutionException jobException) {
 		String jobName = context.getJobDetail().getKey().toString();
-		log.info("Job [" + jobName + "] finish executed at "
-				+ DateUtils.dateToString("dd/MM/yyyy HH:mm", new Date()));
+		log.info("Job [" + jobName + "] finish executed....");
 
 		if (jobException != null
 				&& !StringUtils.isBlank(jobException.getMessage())) {
-			log.info("Exception thrown by job: " + jobName
-					+ " with message: " + jobException.getMessage());
+			log.info("Exception thrown by job: " + jobName + " with message: "
+					+ jobException.getMessage());
 		}
 
 	}
