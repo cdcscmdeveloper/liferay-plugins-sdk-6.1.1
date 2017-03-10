@@ -24,7 +24,7 @@
         			    <p:ajax event="rowSelect" onstart="blockWidget.show();"
         			          oncomplete="blockWidget.hide();" update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
 						
-							<p:column style="width:10px;"   rendered="#{!ctBackingBean.managedBean.viewContract}">
+							<p:column style="width:5px;"   rendered="#{!ctBackingBean.managedBean.viewContract}">
 
                                   <f:facet name="header">
 							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
@@ -39,19 +39,24 @@
 			  		              		 onstart="blockWidget.show();" oncomplete="blockWidget.hide();" ></p:ajax>
 		       	                   </p:selectBooleanCheckbox>
 	      	                 </p:column>
+	      	                 
+	      	                  <p:column headerText="Commitment No" 
+							        styleClass="column-align-center" style="width:20%;white-space:normal;" > 
+				                       <p:inputText value="#{agencyData.commitmentNo}" style="width:115px;" disabled="true"></p:inputText>
+							 </p:column>
 							
 							 <p:column headerText="#{lbl['lbl.ct.ministry']}" 
-							    styleClass="column-align-center" style="width:25%;white-space:normal;" > 
+							    styleClass="column-align-center" style="width:20%;white-space:normal;" > 
 				                       <h:outputText value="#{agencyData.ministryName}" style="float:left;text-align:left;"/>
 							 </p:column>
 							 
 							  <p:column  headerText="#{lbl['lbl.ct.jabatan']}" 
-							        style="width:25%;white-space:normal;" styleClass="column-align-center"> 
+							        style="width:20%;white-space:normal;" styleClass="column-align-center"> 
 							         <h:outputText value="#{agencyData.kumpulanPtjName}"  style="float:left;text-align:left;"/>
 							   </p:column>
 							   
 							   <p:column headerText="#{lbl['lbl.ct.ptj']}"
-							         style="width:25%;white-space:normal;" styleClass="column-align-center"> 	
+							         style="width:20%;white-space:normal;" styleClass="column-align-center"> 	
 							          <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;"/>
 							   </p:column>
 							   
