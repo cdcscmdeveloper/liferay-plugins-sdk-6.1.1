@@ -323,6 +323,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Double minOrderQuantity;
 	private GlAccountSearchBean glAccountSearchBean;
 	private boolean isLazy;	
+	private boolean espkb;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
@@ -3048,6 +3049,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	public boolean isEspkb() {
+		return espkb;
+	}
+
+	public void setEspkb(boolean espkb) {
+		this.espkb = espkb;
 	}
 
 }
