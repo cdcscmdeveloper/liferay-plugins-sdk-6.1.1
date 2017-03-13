@@ -3489,6 +3489,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 		if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
 			getManagedBean().setServiceItem(true);
+			reqDTO.setFetchMaxQty(true);
+			contractItemSO.getMaxQuantity(reqDTO);
 			if(flItemAddr.getScRequestItem().getTplSpecQuestion()!=null) {
 				getManagedBean().setUomFrequency(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
 				getManagedBean().setUomPerYear(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerYear());
