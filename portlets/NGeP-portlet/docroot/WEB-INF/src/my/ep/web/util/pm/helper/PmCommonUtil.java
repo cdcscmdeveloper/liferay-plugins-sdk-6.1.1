@@ -1831,7 +1831,11 @@ public class PmCommonUtil implements Serializable{
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
 			return RoleCode.EP_ADMIN.value();
-		} else if (sc.hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+		} else if (sc.hasRoleUser(RoleCode.EP_ADMIN_1.value())) {
+			return RoleCode.EP_ADMIN_1.value();
+		}else if (sc.hasRoleUser(RoleCode.EP_ADMIN_2.value())) {
+			return RoleCode.EP_ADMIN_2.value();
+		}else if (sc.hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
 			return RoleCode.MINISTRY_ADMIN.value();
 		} else if (sc.hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
 			return RoleCode.PTJ_ADMIN.value();
