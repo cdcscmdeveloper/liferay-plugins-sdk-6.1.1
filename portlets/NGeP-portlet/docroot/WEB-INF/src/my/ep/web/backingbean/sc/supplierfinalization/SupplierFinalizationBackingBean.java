@@ -6305,13 +6305,12 @@ public class SupplierFinalizationBackingBean extends
 				Long itemId = scQtRecommend.getRequestItem().getRequestNoteItemId();
 				
 				List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
+				cachedSuppliers = getCachedSuppliersFromMap(specZoneId, itemId);
 				if (CollectionUtils.isEmpty(cachedSuppliers)) {
 					SuppFinalizationResDTO resDTO = retrieveQualifiedSuppliers(true, true, 
 																		specZoneId, itemId);	
 					qualifiedSuppliers = resDTO.getQualifiedSuppliersByEvalStage().getResultList();
 				}
-				cachedSuppliers = getCachedSuppliersFromMap(specZoneId, itemId);
-				
 				if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 					for (ScQtEvaluationResultDtl evalResDtl 
 									   : qualifiedSuppliers) {
