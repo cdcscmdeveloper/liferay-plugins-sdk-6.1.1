@@ -20,6 +20,11 @@ public class ViewSuppProfileBackingBean extends
 		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 377766773512626830L;
+
+	/**
 	 * Pre - render for View Supplier Profile
 	 */
 	public void preRenderViewSupplierProfile() {
