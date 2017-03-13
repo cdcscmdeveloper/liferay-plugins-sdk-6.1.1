@@ -561,7 +561,7 @@
 						</p:inputText></td>
 			</tr>
 			<tr>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.qty']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td ><p:outputLabel value="#{lbl['lbl.fl.qty']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem and contractRequestBackingBean.managedBean.standardPrice}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
 						value="#{contractRequestBackingBean.managedBean.minOrderQuantity}"
 						size="35" >
@@ -664,6 +664,12 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.to.qty']}" style="text-align:right" rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
 						<h:outputText value="#{reqItemInfoList.supplierItemPrice.toQty}" styleClass="colFloatRight" rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />	
+						</h:outputText>			
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.qty']}" style="text-align:right" rendered="#{contractRequestBackingBean.managedBean.serviceItem and contractRequestBackingBean.managedBean.zonalPrice}">
+						<h:outputText value="#{reqItemInfoList.supplierItemPrice.maxQuantity}" styleClass="colFloatRight" rendered="#{contractRequestBackingBean.managedBean.serviceItem and contractRequestBackingBean.managedBean.zonalPrice}">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>			
