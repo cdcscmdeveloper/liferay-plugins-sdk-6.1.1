@@ -4073,12 +4073,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 	public boolean isApprovedMode(PpPlan plan){
-		Long statusId = plan.getStatus().getStatusId();
-		if(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
-				|| ProcurementPlanConst.PPE_APPROVED.equals(statusId)){
-			return true;
-		}else{
-			return false;
+		boolean isApproved = false;
+		if(plan != null && plan.getStatus()!=null && (ProcurementPlanConst.PPP_APPROVED.equals(plan.getStatus().getStatusId()) 
+				|| ProcurementPlanConst.PPE_APPROVED.equals(plan.getStatus().getStatusId()))){
+			isApproved = true;
 		}
+		return isApproved;
 	}
 }
