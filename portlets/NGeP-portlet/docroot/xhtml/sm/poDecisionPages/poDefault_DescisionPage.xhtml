@@ -52,7 +52,6 @@
 								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
 								value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 								partialSubmit="true" process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 								action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 						</c:when>
 						<c:when
@@ -102,7 +101,6 @@
 									rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
-									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
 								
@@ -142,7 +140,6 @@
 									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
-									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
