@@ -20,6 +20,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
+import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
@@ -36,7 +37,7 @@ import org.quartz.impl.matchers.KeyMatcher;
  * @author Syazwan
  * 
  */
-public class EpSchedulerHelper {
+public class EpSchedulerHelper extends QuartzAdapter{
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
 	private static Scheduler instance;
 
