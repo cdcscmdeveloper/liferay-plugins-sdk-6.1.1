@@ -305,9 +305,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					null,
 					requestNote.getRemarks(),
 					ScRequestNoteRemark.class));
+			String message = e.getMessage();
+			Locale userLocale = new FacesScopes().getUserLocale();
+			message = MessageUtils.getMessage(e.getMessage(),
+					e.getParameters(),
+					MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							message));
 		}
 	    
-	    if (requestNoteResDTO.isSuccessful()) {
+	    if (requestNoteResDTO != null && requestNoteResDTO.isSuccessful()) {
 	    	ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 	    	if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 	    		requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
@@ -535,9 +545,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						null,
 						requestNote.getRemarks(),
 						ScRequestNoteRemark.class));
+				String message = e.getMessage();
+				Locale userLocale = new FacesScopes().getUserLocale();
+				message = MessageUtils.getMessage(e.getMessage(),
+						e.getParameters(),
+						MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								message));
 			}
 
-			if (requestNoteResDTO.isSuccessful()) {
+			if (requestNoteResDTO != null && requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
@@ -1059,9 +1079,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						null,
 						requestNote.getRemarks(),
 						ScRequestNoteRemark.class));
+				String message = e.getMessage();
+				Locale userLocale = new FacesScopes().getUserLocale();
+				message = MessageUtils.getMessage(e.getMessage(),
+						e.getParameters(),
+						MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								message));
 			}
 			
-			if (requestNoteResDTO.isSuccessful()) {
+			if (requestNoteResDTO != null && requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
