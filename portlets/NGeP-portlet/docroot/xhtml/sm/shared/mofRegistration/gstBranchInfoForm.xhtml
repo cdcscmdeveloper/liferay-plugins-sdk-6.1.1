@@ -15,9 +15,7 @@
 					<tr>
 						<td style="border-style: none !important;float: right !important;">
 							<c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedBranch.sameAsHq}">
 										<p:ajax update="branchGstInfoPanelId" event="change"
 											process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
