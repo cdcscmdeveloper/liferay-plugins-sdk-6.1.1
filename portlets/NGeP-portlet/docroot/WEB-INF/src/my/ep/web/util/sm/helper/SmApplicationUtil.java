@@ -2864,6 +2864,7 @@ public class SmApplicationUtil {
 				managedBean.getApprovedCategoryList().clear();
 			}
 			sortSupplierCategory(apprvList);
+			sortSupplierCategory(catList);
 			managedBean.setActiveCategoryList(catList);
 			managedBean.setApprovedCategoryList(apprvList);
 		}
@@ -2910,6 +2911,7 @@ public class SmApplicationUtil {
 			managedBean.getApprovedCategoryList().clear();
 		}
 		sortSupplierCategory(existingList);
+		sortSupplierCategory(addtnlList);
 		managedBean.setActiveCategoryList(addtnlList);
 		managedBean.setApprovedCategoryList(existingList);
 	}
@@ -7211,10 +7213,8 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		if ((appl.getApplType().equals(
-				ParameterConst.NEW_SM_APPLN_FOR_MOF) && appl
-				.getApplType().equals(
-						ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
+		if ((appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) && appl
+				.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
 			initGstSuppDocs(gst);
 		}
 		return gst;
@@ -8589,8 +8589,8 @@ public class SmApplicationUtil {
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
 			FacesScopes fs = new FacesScopes();
-//			context.put("hostUrl", fs.getRequest().getServerName() + ":"
-//					+ fs.getRequest().getServerPort());
+			// context.put("hostUrl", fs.getRequest().getServerName() + ":"
+			// + fs.getRequest().getServerPort());
 			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
 			context.put("applNo", smAppl.getApplNo());
 			context.put(
