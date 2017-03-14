@@ -53,6 +53,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
@@ -1273,8 +1274,10 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 * @return the createdBy
 	 */
 	public String getCreatedBy() {
-		FacesScopes facesScopes = new FacesScopes();
-		this.createdBy = facesScopes.getUserSessionBean().getUserName();
+		if(StringUtils.isEmpty(createdBy)) {
+			FacesScopes facesScopes = new FacesScopes();
+			this.createdBy = facesScopes.getUserSessionBean().getUserName();
+		}
 		return createdBy;
 	}
 
