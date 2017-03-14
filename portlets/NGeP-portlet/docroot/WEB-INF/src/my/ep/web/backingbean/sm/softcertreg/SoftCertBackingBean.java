@@ -61,6 +61,10 @@ import my.ep.web.vo.SoftcertUploadSuppDocVO;
 @RequestScoped
 public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -621778849657233073L;
 	public static Logger log = Logger.getLogger(SoftCertBackingBean.class);
 	private String SELECT_PERSONNELS_PAGE = "1";
 	private String UPLOAD_DOC_PAGE = "2";
