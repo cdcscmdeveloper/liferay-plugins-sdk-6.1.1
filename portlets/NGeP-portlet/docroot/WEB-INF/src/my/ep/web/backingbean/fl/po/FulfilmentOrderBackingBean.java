@@ -27,6 +27,8 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -822,7 +824,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		 *
 		 * @return the string
 		 */
-		public String backToPervious() {
+		public String backToPervious() throws PortalException, SystemException, IOException {
 			if(getManagedBean().getBackToPrevious() !=null){
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -830,7 +832,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				return getManagedBean().getBackToPrevious();
 			}
 			else{
-				return "flDocSearch";
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+				return null;
 			}
 		}
 		
@@ -1111,7 +1115,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				getManagedBean().setHyperLinkPage(true);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setTaskId(null);//for the purpose of hide the back button.
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -1388,7 +1392,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setRemoveFactoring(false);
 			flOrderBB.getManagedBean().setDocMaintainRemarks(true);
-			flOrderBB.getManagedBean().setBackToPrevious(null);
+			flOrderBB.getManagedBean().setBackToPrevious("flDocSearch");
 			if(resDTO.getFlOrder().isFactored()) {
 				flOrderBB.getManagedBean().setFactoringCheck("true");
 				flOrderBB.getFactoringCompanyDtl();
@@ -1407,7 +1411,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			flOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			flOrderBB.getManagedBean().setBackToPrevious(null);
+			flOrderBB.getManagedBean().setBackToPrevious("flDocSearch");
 			
 			flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
 			flBB.getManagedBean().setHideRemarks(true);
