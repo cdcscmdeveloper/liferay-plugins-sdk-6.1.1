@@ -26,23 +26,13 @@
     </tr>
     
 	<tr>
-		<td>
-				Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini dengan no. rujukan ialah  $agencyRefNo bertarikh $govSignDate.
+		<td>Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan surat ini dengan no. rujukan $agencyRefNo bertarikh $govSignDate.
 	     <br/> <br/>
 		</td>
 	</tr>	
 
 	
-	<tr>
-		<td>
-			<table border="0" cellpadding="0" cellspacing="0" width="40%">
-			<tr>
-				<td style="font-weight:bold;" align="center">Pembekal
-				<br/>  <br/></td>
-			</tr>
-		</table>
-	</td>
-	</tr>
+	<tr></tr>
 	<tr>
 		<td>
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -65,7 +55,18 @@
 					: 
 				</td>
 				<td>
-					$supplierID
+					$supplierIcNo
+				</td>
+			</tr>
+			<tr  valign="top" >
+				<td>
+					Nama Pembekal
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$companyName
 				</td>
 			</tr>
 			<tr  valign="top">

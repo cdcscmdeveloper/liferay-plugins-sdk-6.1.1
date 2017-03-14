@@ -490,16 +490,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					        CommonUtils commonUtils = new CommonUtils();
 					        SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 					        VelocityContext context = new VelocityContext();
-							String vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_BM;
+							String vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
 							String content = null;
 							getManagedBean().setEditorValue("");
 							FacesScopes fs = new FacesScopes();
 							String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();		 	
 							context = new VelocityContext();	
 							context.put("hostUrl", hostUrl);
-						    context.put("supplierName",  ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-							context.put("supplierID", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-							context.put("supplierAckDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
+						   if (getManagedBean().getTaskName() != null 
+									&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+								context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+								context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+								context.put("supplierAckDate", dateSDF.format(new Date()));
+							} else {
+								context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+								context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
+								context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
+							}
+							context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 							String supplierAddress = "";
 							if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
 										supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
@@ -512,7 +520,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									} else {
 										context.put("govSignDate", "");
 									}
-									context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+									context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
 								    context.put("supplier",true);
 									
 							if (vmFile != null && context != null) {
@@ -4785,10 +4793,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 		} else if (ContractConst.DOC_DEF_KEY_LOA_RECIEPT.equals(docDefinitionKey)) {
 			context = new VelocityContext();	
-			vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_BM;
-			context.put("supplierName",  ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			context.put("supplierID", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-			context.put("supplierAckDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
+			vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+				context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+				context.put("supplierAckDate", dateSDF.format(new Date()));
+			} else {
+				context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+				context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
+				context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
+			}
+			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			String supplierAddress = "";
 			
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
@@ -4802,7 +4818,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				context.put("govSignDate", "");
 			}
-			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
 		}
 		
 		if (vmFile != null && context != null) {
