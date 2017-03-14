@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -18782,6 +18783,11 @@ public class ReportBackingBean extends
 					
 					RequestContext.getCurrentInstance().execute("ex.show();");
 					
+					
+					if(isReportTest()){
+						this.getManagedBean().setReportUrl(reportUrl.toString());
+					}
+					
 				}  else {
 		
 		HttpURLConnection urlConnection = null;
@@ -20393,9 +20399,48 @@ public class ReportBackingBean extends
 	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 	    externalContext.redirect(reportsRequested);
 	}
+	
+	public static boolean isReportTest(){
+		
+		try{
+		
+			String ip = Inet4Address.getLocalHost().getHostAddress();
+			System.out.println("Jimmy ntf ip = " + ip);
+			
+			if(ip != null){
+				
+				if(ip.equals("192.168.12.120")){
+					return true;
+				}
+				else
+				if(ip.equals("192.168.120.15")){
+					return true;
+				} 
+				else
+				if(ip.equals("192.168.120.19")){
+					return false;
+				} 
+				else
+				if(ip.equals("192.168.62.15")){
+					return false;
+				}
+				else
+				if(ip.equals("192.168.62.18")){
+					return false;
+				}
+				else
+				if(ip.equals("192.168.63.17")){
+					return false;
+				} else {
+					return false;
+				}
+			}
+			
+		} catch (Exception ex){
+			System.err.println(ex.toString());
+		}
+		
+		return false;
+	}
 
 }
-	    
-	    
-	  
-	 
