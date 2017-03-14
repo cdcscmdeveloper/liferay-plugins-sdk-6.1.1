@@ -161,7 +161,8 @@
 						<p:ajax event="dateSelect"
 							listener="#{contractRequestBackingBean.updateDeliveryDate}"
 							update="delEndDate" />
-					</p:calendar></td>
+					</p:calendar>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/></td>
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
 					<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
 					</p:inputText>

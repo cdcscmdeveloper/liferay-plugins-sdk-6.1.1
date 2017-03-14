@@ -165,7 +165,8 @@
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryDate}"
 							update="delEndDate" />
-					</p:calendar></td>
+					</p:calendar>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
