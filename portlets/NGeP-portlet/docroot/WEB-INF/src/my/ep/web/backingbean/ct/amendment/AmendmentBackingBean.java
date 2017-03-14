@@ -485,7 +485,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					              this.getManagedBean().setMemberSignOff(true);
 						          this.getManagedBean().setPbConfirmMeeting(true);
 						         this.getManagedBean().setSignUpdateDecision(false);
-				    /* } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 					        this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
 					        CommonUtils commonUtils = new CommonUtils();
 					        SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
@@ -519,7 +519,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 							}
 							getManagedBean().setEditorValue(content);
-							changeAccountActionListener();*/
+							changeAccountActionListener();
 					
 				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) 
 							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
