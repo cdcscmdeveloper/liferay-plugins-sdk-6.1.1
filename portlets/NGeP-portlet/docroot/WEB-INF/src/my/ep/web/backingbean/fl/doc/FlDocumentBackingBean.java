@@ -452,7 +452,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			String[] outcome = new String[1];
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
-			flOrderBB.getManagedBean().setBackToPrevious(null);
+			flOrderBB.getManagedBean().setBackToPrevious("flDocSearch");
 			flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			navgPage=NAV_TO_REMOVE_FACTORING_COMPANY;
 		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
@@ -476,7 +476,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setRemoveFactoring(false);
 			flOrderBB.getManagedBean().setDocMaintainRemarks(true);
-			flOrderBB.getManagedBean().setBackToPrevious(null);
+			flOrderBB.getManagedBean().setBackToPrevious("flDocSearch");
 			if(resDTO.getFlOrder().isFactored()) {
 				flOrderBB.getManagedBean().setFactoringCheck("true");
 				flOrderBB.getFactoringCompanyDtl();
@@ -509,7 +509,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			flOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			flOrderBB.getManagedBean().setBackToPrevious(null);
+			flOrderBB.getManagedBean().setBackToPrevious("flDocSearch");
 			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
