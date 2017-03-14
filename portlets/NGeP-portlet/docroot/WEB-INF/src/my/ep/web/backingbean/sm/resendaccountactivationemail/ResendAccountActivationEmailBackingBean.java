@@ -127,6 +127,7 @@ public class ResendAccountActivationEmailBackingBean extends
 								.contains(per.getEpRole())
 						&& per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 					retVal = per;
+					break;
 				}
 			}
 		}
