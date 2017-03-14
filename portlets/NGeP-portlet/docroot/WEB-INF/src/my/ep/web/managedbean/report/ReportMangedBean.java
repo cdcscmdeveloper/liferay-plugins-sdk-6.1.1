@@ -186,6 +186,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	
 	private String jobId;
 	
+	private String reportUrl;
+	
 
 	/**
 	 * Gets the report jsp.
@@ -1075,5 +1077,19 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	/**
+	 * @return the reportUrl
+	 */
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	/**
+	 * @param reportUrl the reportUrl to set
+	 */
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 }

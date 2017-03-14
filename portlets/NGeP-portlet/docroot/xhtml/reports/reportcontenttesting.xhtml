@@ -434,6 +434,9 @@ width:32.5%;
 		<tr>
 			<td><p:panel style="width: 100%;"
 					header="#{lbl['lbl.rpt.rptcriteria']}" id="rptModuleId">
+					
+					<p:outputLabel id="reportUrl" value="#{reportBackingBean.managedBean.reportUrl}"></p:outputLabel>
+				
 					<table style="margin-top: 10px; width: 100%;">
 						<tr>
 							<td width="100%"><h:panelGrid id="rptModule" columns="4"
