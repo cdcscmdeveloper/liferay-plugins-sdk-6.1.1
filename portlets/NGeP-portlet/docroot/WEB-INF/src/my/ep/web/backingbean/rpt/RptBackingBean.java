@@ -1,10 +1,15 @@
+
 package my.ep.web.backingbean.rpt;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -37,6 +43,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -58,6 +65,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 
 import my.ep.exception.EpException;
 
@@ -74,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
+import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 
@@ -192,6 +201,37 @@ public class RptBackingBean extends RptVariables{
 		
 	}	
 	
+	public List<String> retriveUserrloeByUserId(String moduleName) {
+		
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	
+		UserReqDTO reqDTO = new UserReqDTO();
+		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+		
+			reqDTO.setUserId(lngUserId);
+			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+			
+			UserResDTO userResDTO = userSO
+					.retrieveUserRoleDescListByUserId(reqDTO);
+			
+			List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+			
+			if (CollectionUtils.isNotEmpty(roleDesc)) {
+				for (PmRoleDesc pmRoleDesc : roleDesc) {
+					pmRoleDesc.getPmRole().getRoleCode();
+					if (!authoriztionList.contains(pmRoleDesc.getPmRole()
+							.getRoleCode())) {
+						authoriztionList.add(pmRoleDesc.getPmRole()
+								.getRoleCode());
+					}
+				}
+			}
+		}
+		return authoriztionList;
+	}
+	
 	public List<SelectItem> retrieveReportListBySubModule() {
 		
 		if(isModuleValueOFOrCT()){
@@ -224,6 +264,8 @@ public class RptBackingBean extends RptVariables{
 	
 	public void criteriaVariablesByReport() {
 		
+		parameterCodeType = new String();
+		
 		if(isModuleValueFLOrCT()){
 			reportCategoryView = true;
 		}
@@ -231,7 +273,9 @@ public class RptBackingBean extends RptVariables{
 		checkToolTipsConditonForFLSubmodule();
 
 		subModule = null;
+		moduleNameValue = moduleValue;
 		reportName = ReportConst.EMPTY_VAL;
+		
 		stateLst = new ArrayList<SelectItem>();
 		districtLst = new ArrayList<SelectItem>();
 		levOneCatLst = new ArrayList<SelectItem>();
@@ -240,79 +284,70 @@ public class RptBackingBean extends RptVariables{
 		smMofRegistrationFeeList = new ArrayList<SelectItem>();
 		smProcessingFeeList = new ArrayList<SelectItem>();
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
-		
-		IPMReportSO reportSO = getPMReportSO();
-		
-		PMReportReqDTO reqDTO = new PMReportReqDTO();
-		reqDTO.setReportCode(reportValue);
-		
-		PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
-		
-		PMReport pmReport = rptResDTO.getPmReportDtls();
-		
-		if(pmReport != null){
-			subModule = pmReport.getSubModule();
-		}
-		
-		if(isEnglish()){
-			reportName = pmReport.getReportTitle();
-			reportTitle = pmReport.getReportTitle();
-		}
-		
-		if(isMalay()){
-			reportName = pmReport.getReportTitleMalay();
-			reportTitle = pmReport.getReportTitleMalay();
+			
+		if(isEmpty(moduleValue) && isEmpty(reportValue)){
+						
+			IPMReportSO reportSO = getPMReportSO();
+			PMReportReqDTO reqDTO = new PMReportReqDTO();
+			
+			//reqDTO.setReportCode(reportValue);
+			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
+			
+			PMReport pmReport = rptResDTO.getPmReportDtls();
+			
+			reportUrlValue = pmReport.getIsTempAccess().toString();
+			
+			if (pmReport != null) {
+
+				String label = ReportConst.EMPTY_VAL;
+				
+				if(pmReport != null){
+					subModule = pmReport.getSubModule();
+				}
+				
+				if(isEnglish()){
+					reportName = pmReport.getReportTitle();
+					reportTitle = pmReport.getReportTitle();
+				}
+				
+				if(isMalay()){
+					reportName = pmReport.getReportTitleMalay();
+					reportTitle = pmReport.getReportTitleMalay();
+				}
+				
+				reportFileNameJSP = pmReport.getReportFilename();
+				//reportCode = pmReport.getReportCode();
+				reportJsp = pmReport.getReportFilename();
+				
+			}
+
 		}
 	
-		reportFileNameJSP = pmReport.getReportFilename();
-		reportCode = pmReport.getReportCode();
-		reportJsp = pmReport.getReportFilename();
-		
 		highRoleCodeList = retrieveHighRoleCodeByUser();
 		allRoleCodesList = retrieveAllRoleCodesByUser();
 		zoneList = retrieveZoneByUser();
 		
 		isByZonelist = isByZoneListByReportCode(reportValue);
 		
-		//Set to authoriztionList
-		setUserRoleDescListByUserId(moduleValue);
-		
-		paramList = retrieveParamCodeByUser();
-	
-		
-		/**
-			Update the following variables.
-			
-			rolecodeRquisitionerList 
-			rolecodeRecievingOfficerList 
-			rolecodeApproverList
-			rolecodeAcknowledgeOfficerList 
-			rolecodePayOfficerList
-		**/
-		
+		retriveUserrloeByUserId(this.getModuleValue());
+		retrieveParamCodeByUser();
 		roleCodeUsersSetup();
-
+		
 		if (isModuleValueDP()){
-			
-			// ZoneList
 			retrieveApprovarNaikTarafDPS1();
-			
-			//scPtjList
 			retrievePTJS1();
 		}
 
 		if (isModuleValueSS()) {
-			
-			//approverNayakTarafList
 			retrieveApprovarNaikTarafSCS2();
-			
-			//scPtjList
 			retrievePTJS2();
 		}
 
 		retrieveRequisitioner();
 		retrieveDescOfficer();
 		generateYearList();
+		
+		roleCodeUsersSetup();
 	
 		if(isModuleValueCM()){
 			
@@ -347,6 +382,11 @@ public class RptBackingBean extends RptVariables{
 			SMRptViewModel model = new SMRptViewModel(this, reportValue);
 			model.enableCriteriaVariablesByReportBySM(authoriztionList, this);
 	
+		} else if(isModuleValueCM()){
+			
+			//CTRptViewModel model = new CTRptViewModel(this, reportValue);
+			//model.enableCriteriaVariables();
+			
 		} else if(isModuleValueCT()){
 			
 			CTRptViewModel model = new CTRptViewModel(this, reportValue);
@@ -354,18 +394,22 @@ public class RptBackingBean extends RptVariables{
 			
 		} else if(isModuleValuePP()){
 			
-//			PpRptViewModel model = new PpRptViewModel(this, reportValue);
-//			
-//			model.enableCriteriaVariablesByReportByPP(authoriztionList);
-//			
+			PpRptViewModel model = new PpRptViewModel(this, reportValue);
+			
+			model.enableCriteriaVariablesByReportByPP(authoriztionList);
+			
 		} else if(isModuleValuePM()){
 		
-//			PMRptViewModel model = new PMRptViewModel(this, reportValue);
-//			
-//			model.enableCriteriaVariablesByReportByPM(authoriztionList);
-//			
+			PMRptViewModel model = new PMRptViewModel(this, reportValue);
+			
+			model.enableCriteriaVariablesByReportByPM(authoriztionList);
+			
 		}
 		
+		setUserRoleDescListByUserId(moduleValue);
+		
+		paramList = retrieveParamCodeByUser();
+	
 		resetReportForm();
 		
 		if (reportValue.equals(ReportConst.SM_LIST_OF_USERS)) {
@@ -378,47 +422,17 @@ public class RptBackingBean extends RptVariables{
 		
 		getGenBusCompanyData();
 		getOrgTypeDropdownValues();
-	
-		if (pmReport != null) {
-			getDefaultValuesFromAndToDate(pmReport.getReportCode()); 
-		}
-
 		retrieveDates();
 		madatoryIndicator();
 		retrieveAllMinistry();
-		
 		enableSupplierCompNameTextOrDropdown();
+		enableCriteriaMenu();
 		
-		retrieveParameterCodeType();
-		
-		enableCriteriaMenuView = true;
 		generateButtonView = false;
 		
-		// Update
-		// smZoneLabelView
-		// smZoneView
-		// smMandatoryZoneView
-		// smMandatoryZoneForSVOSVLView
-		// smMandatorySupplierTypeView
-		// smSupplierTypeView
-		// smZone
-					
 		zoneByRolecode();
-		
-		// Update
-		// processingOfficerList
-		
 		retrieveProcessingOfficerList();
-		
-		// Update
-		// serviceTypeList
-		
 		retrievePMServiceType();
-		
-		// Update
-		// scSimpleQuoteDtlWithoutRequiGroupView
-		// scSimpleQuoteDtlGroupView
-		
 		directPurchaseWithRequisitioner();
 	}
 	
@@ -2671,9 +2685,10 @@ public void roleCodeUsersSetupOnload() {
 
 		return items;
 	}
-	public FacesScopes getFacesScopes(){
-		//return facesScopes;
-		return null;
+	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 		
 	public boolean hasUserId(){
@@ -2686,6 +2701,8 @@ public void roleCodeUsersSetupOnload() {
 	}
 	
 	public boolean hasRole(String roleValue){
+		
+		
 		return getFacesScopes().hasRoleUser(roleValue);	
 	}
 	
@@ -4385,6 +4402,83 @@ public void roleCodeUsersSetupOnload() {
 		}
 	}
 	
+	private void reloadLovsValues() {
+	
+		if (isModuleValueCM() || isModuleValuePP() || isModuleValueOF()){
+			
+			if (commonLOVBasedRoles) {
+
+				if (selectedMinistry != null) {
+					
+					if (selectedMinistry.getOrgProfileId() != null) {
+					
+						commonMinistry = selectedMinistry.getOrgProfileId().toString();
+					}
+					
+				} else {
+					
+					selectedMinistry = new PmOrgProfile();
+					
+					if (selectedMinistry.getPmOrgValidity() == null) {
+						
+						selectedMinistry.setPmOrgValidity(new PmOrgValidity());
+					}
+				}
+
+				if (selectedPegwaiPengawal != null) {
+					
+					if (selectedPegwaiPengawal.getOrgProfileId() != null) {
+					
+						commonPegaWaiPengawal = selectedPegwaiPengawal.getOrgProfileId().toString();
+					}
+					
+				} else {
+
+					selectedPegwaiPengawal = new PmOrgProfile();
+					
+					if (selectedPegwaiPengawal.getPmOrgValidity() == null) {
+						
+						selectedPegwaiPengawal.setPmOrgValidity(new PmOrgValidity());
+					}
+				}
+
+				if (selectedKumpulanPTJ != null) {
+					
+					if (selectedKumpulanPTJ.getOrgProfileId() != null) {
+					
+						commonKumpulanPTJ = selectedKumpulanPTJ.getOrgProfileId().toString();
+					}
+					
+				} else {
+		
+					selectedKumpulanPTJ = new PmOrgProfile();
+					
+					if (selectedKumpulanPTJ.getPmOrgValidity() == null) {
+						
+						selectedKumpulanPTJ.setPmOrgValidity(new PmOrgValidity());
+					}
+
+				}
+				
+				if (selectedPTJ != null) {
+					
+					if (selectedPTJ.getOrgProfileId() != null) {
+					
+						commonPtj = selectedPTJ.getOrgProfileId().toString();
+					}
+					
+				} else {
+					
+					selectedPTJ = new PmOrgProfile();
+					
+					if (selectedPTJ.getPmOrgValidity() == null) {
+						selectedPTJ.setPmOrgValidity(new PmOrgValidity());
+					}
+				}
+			}
+		}
+	}
+	
 	public void generateReport() {
 
 		String reportArr1[] = {RptConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL,
@@ -4410,29 +4504,33 @@ public void roleCodeUsersSetupOnload() {
 			}
 		};
 		
-		boolean fromDateToDateIsNotEmpty = !isEmpty(fromDate) && !isEmpty(toDate);
+		boolean isFromOrToDateEmpty = isEmpty(fromDate) || isEmpty(toDate);
 		
-		if (fromDateToDateIsNotEmpty && fromDate.after(toDate)) {
+		if (!isFromOrToDateEmpty && fromDate.after(toDate)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780008);
 		}
 	
-		if (fromDateToDateIsNotEmpty && toDate.after(fromDate)) {
+		if (!isFromOrToDateEmpty && toDate.after(fromDate)) {
 			checkOneYearDifference(fromDate, toDate);
 		}
 		
-		if (!isEmpty(ctCircularEffectiveFromDate) && ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
+		boolean isCtCircularEffectiveFromOrToDateEmpty = isEmpty(ctCircularEffectiveFromDate) || isEmpty(ctCircularEffectiveToDate); 
+		
+		if (!isCtCircularEffectiveFromOrToDateEmpty && ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780008);
 		}
 		
-		if (!isEmpty(ctCircularEffectiveFromDate) && ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
+		if (!isCtCircularEffectiveFromOrToDateEmpty && ctCircularEffectiveFromDate.after(ctCircularEffectiveToDate)) {
 			checkOneYearDifference(ctCircularEffectiveFromDate, ctCircularEffectiveToDate);
 		}
 
-		if (!isEmpty(scSoneCrtdFromDate) && scSoneCrtdFromDate.after(scSoneCrtdToDate)) {
+		boolean isScSoneCrtdFromOrToDateEmpty = isEmpty(scSoneCrtdFromDate) || isEmpty(scSoneCrtdToDate); 
+		
+		if (!isScSoneCrtdFromOrToDateEmpty && scSoneCrtdFromDate.after(scSoneCrtdToDate)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780008);
 		}
 
-		if (!isEmpty(scSoneCrtdToDate) && this.scSoneCrtdToDate.after(scSoneCrtdFromDate)) {
+		if (!isScSoneCrtdFromOrToDateEmpty && this.scSoneCrtdToDate.after(scSoneCrtdFromDate)) {
 			checkOneYearDifference(scSoneCrtdFromDate, scSoneCrtdToDate);
 		}
 		
@@ -4492,8 +4590,11 @@ public void roleCodeUsersSetupOnload() {
 		throw new EpException(MessageConst.ERROR_REPORT_780016);
 	}
 	
-	checkOnlyYearFieldDifference(smThresholdFromYear, smThresholdToYear);
-	checkOnlyYearFieldDifference(smCreatedFromYear, smCreatedToYear);
+	
+	if(!isEmpty(smThresholdFromYear) && !isEmpty(smCreatedToYear)){
+		checkOnlyYearFieldDifference(smThresholdFromYear, smThresholdToYear);
+		checkOnlyYearFieldDifference(smCreatedFromYear, smCreatedToYear);
+	}
 	
 	String[] reportArr4 = {RptConst.SM_SUPPLIER_PERFORMANCE,
 			RptConst.SM_THRESHOLD};
@@ -4581,8 +4682,384 @@ public void roleCodeUsersSetupOnload() {
 			
 			}
 		}
-	}
+	
+		if(isModuleValueCM()){
+			
+			if(reportValue.equals(ReportConst.LST_ITM_CODE_RPT_VAL)){
+				
+				fromDate = null;
+				toDate = null;
+				
+				if (isEmpty(cmUnspscCode) && isEmpty(cmUnspscTitle) && isEmpty(cmItemName)){
+					throw new EpException(MessageConst.ERROR_REPORT_780003);
+				}
+			}
+		}
 
+		reloadLovsValues();
+	
+		if (isModuleValueCT()){
+			generateScReport();
+		}
+	}
+	
+	private void getEstimatedAmtByQtID() {
+
+		BigDecimal quotationId = new BigDecimal(
+				this.scQuotationId != null ? this.scQuotationId.replaceAll(",",
+						"") : null);
+		
+		decryptionByQtId(quotationId, reportValue);
+
+	}
+	
+	
+	private void decryptionByQtId(BigDecimal qtId,
+			String reportCode) {
+		log.info("decryptionByQtId");
+		IQTDetailSO QtDetailsSO;	
+
+		try {
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+
+			tenderReqDTO.setQtId(qtId.longValue());
+			BigDecimal estimatedAmount = QtDetailsSO
+					.getdecryptedEstAmount(tenderReqDTO.getQtId());
+			
+			if (reportCode.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
+					|| reportCode.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
+				this.setScEstimatedAmount(estimatedAmount != null ? estimatedAmount
+						.toString() : "");
+			} else {
+				ReportTempInfoResDTO resDTO = toSaveDecryptedAmountWithQNoAndQId(
+						qtId, estimatedAmount);
+				if (resDTO.isSuccessful()) {
+					log.info("saved Record in DB " + resDTO.isSuccessful());
+				}
+			}
+			
+		} catch (Exception e) {
+			throw (e);
+		} finally {
+			QtDetailsSO = null;
+		}
+
+	}
+	
+	private ReportTempInfoResDTO toSaveDecryptedAmountWithQNoAndQId(
+			BigDecimal qtId, BigDecimal estimatedAmount) {
+		IReportTempInfoSO reportTempSO;
+		reportTempSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IReportTempInfoSO.class);
+
+		ReportTempInfo rptTmp = new ReportTempInfo();
+		rptTmp.setReportCode(this.getReportValue());		
+		rptTmp.setQtId(qtId.toString());
+		rptTmp.setEstimatedAmt(estimatedAmount != null ? estimatedAmount
+				.toString() : null);		
+
+		ReportTempInfoReqDTO reqDTO = new ReportTempInfoReqDTO();
+		reqDTO.setReportTempInfo(rptTmp);
+
+		ReportTempInfoResDTO resDTO = reportTempSO
+				.saveDecryptedAmountWithQuotationNoAndQuotationId(reqDTO);
+		reportTempSO=null;
+		return resDTO;
+	}
+	
+	private void getProcurementTypes(String procALL_A, String quotation_Q,
+			String tender_T, String restricted_R, String quotationTender_QT,
+			String quotationRestricted_QR, String tenderRestricted_TR,
+			PMReportReqDTO reqDTO) {
+
+		log.info("getProcurementTypes");
+
+		String creadtedFrom = null;
+
+		String creadtedTo = null;
+
+		if (this.getScProcureAllList() != null
+				&& this.getScProcureAllList().length > 0) {
+			if (this.scProcureAllList[0].equals("A")) {
+				procALL_A = this.scProcureAllList[0].toString();
+				reqDTO.setQuotationType(procALL_A);
+			}
+		}
+		
+		if (this.getScQuotationList() != null
+				&& this.getScQuotationList().length > 0) {
+			if (this.scQuotationList[0].equals("Q")) {
+				quotation_Q = this.scQuotationList[0].toString();
+				reqDTO.setQuotationType(quotation_Q);
+			}
+		}
+		if (this.getScTenderList() != null && this.getScTenderList().length > 0) {
+			if (this.scTenderList[0].equals("T")) {
+				tender_T = this.scTenderList[0].toString();
+				reqDTO.setQuotationType(tender_T);
+			}
+		}
+		if (this.getScRstrctdTndrList() != null
+				&& this.getScRstrctdTndrList().length > 0) {
+			if (this.scRstrctdTndrList[0].equals("R")) {
+				restricted_R = this.scRstrctdTndrList[0].toString();
+				reqDTO.setQuotationType(restricted_R);
+			}
+		}
+		if (this.getScQuotationList() != null
+				&& this.getScQuotationList().length > 0
+				&& this.getScTenderList() != null
+				&& this.getScTenderList().length > 0) {
+			if (quotation_Q != null && tender_T != null) {
+				quotationTender_QT = quotation_Q + tender_T;
+				reqDTO.setQuotationType(quotationTender_QT);
+			}
+		} else if (this.getScQuotationList() != null
+				&& this.getScQuotationList().length > 0
+				&& this.getScRstrctdTndrList() != null
+				&& this.getScRstrctdTndrList().length > 0) {
+			if (quotation_Q != null && restricted_R != null) {
+				quotationRestricted_QR = quotation_Q + restricted_R;
+				reqDTO.setQuotationType(quotationRestricted_QR);
+			}
+		} else if (this.getScTenderList() != null
+				&& this.getScTenderList().length > 0
+				&& this.getScRstrctdTndrList() != null
+				&& this.getScRstrctdTndrList().length > 0) {
+			if (tender_T != null && restricted_R != null) {
+				tenderRestricted_TR = tender_T + restricted_R;
+				reqDTO.setQuotationType(tenderRestricted_TR);
+			}
+		}
+		if (this.getScCreatedFromMonth() != null
+				|| this.getScCreatedToMonth() != null) {
+			creadtedFrom = this.getScCreatedFromMonth()
+					+ this.getScCreatedFromYear();
+			creadtedTo = this.getScCreatedToMonth() + this.getScCreatedToYear();
+		} else {
+			creadtedFrom = "01" + this.getScCreatedFromYear();
+			creadtedTo = "12" + this.getScCreatedToYear();
+		}
+		reqDTO.setFromDate(creadtedFrom);
+		reqDTO.setToDate(creadtedTo);
+
+		log.info("procALL_A=" + procALL_A + ", quotation_Q= " + quotation_Q
+				+ ", tender_T= " + tender_T + ", restricted_R= " + restricted_R
+				+ ", creadtedFrom= " + creadtedFrom + ", creadtedTo= "
+				+ creadtedTo);
+
+		log.info("quotationTender_QT=" + quotationTender_QT
+				+ ", quotationRestricted_QR= " + quotationRestricted_QR
+				+ ", tenderRestricted_TR= " + tenderRestricted_TR);
+	}
+	
+	private void getDecryptedDataByQtId(List<Object[]> encryptedData,String reportCode) {
+
+		log.info("getDecryptedDataByQtId");
+
+		if (CollectionUtils.isNotEmpty(encryptedData)) {
+			log.info("total records of encryption data==> "
+					+ encryptedData.size());
+			for (Object[] _objArr : encryptedData) {
+				decryptionByQtId(((BigDecimal) _objArr[1]),reportCode);
+			}
+		}
+	}
+	
+	private void getEncryptedDataByQTR() {
+
+		log.info("getEncryptedDataByQTR");
+
+		String procALL_A = null;
+		String quotation_Q = null;
+		String tender_T = null;
+		String restricted_R = null;
+		String quotationTender_QT = null;
+		String quotationRestricted_QR = null;
+		String tenderRestricted_TR = null;
+
+		PMReportReqDTO reqDTO = new PMReportReqDTO();
+
+		if (reportValue.equals(ReportConst.SC_QUOT_TENDER_OR_RPT_VAL)) {
+
+			getProcurementTypes(procALL_A, quotation_Q, tender_T, restricted_R,
+					quotationTender_QT, quotationRestricted_QR,
+					tenderRestricted_TR, reqDTO);
+			getDecryptedDataByQtId(retrieveQTREncryptedDataList(reqDTO), reportValue);
+
+		} else if (reportValue.equals(ReportConst.SC_SUMMRY_SRC_OR_RPT_VAL)) {
+
+			getProcurementTypes(procALL_A, quotation_Q, tender_T, restricted_R,
+					quotationTender_QT, quotationRestricted_QR,
+					tenderRestricted_TR, reqDTO);
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+
+			reqDTO.setQuotationNo(this.scQuotationNo);
+
+			reqDTO.setPublishDateFrom(dateFormat.format(this.scPublishFromDate)
+					.toString());
+			reqDTO.setPublishDateTo(dateFormat.format(this.scPublishToDate)
+					.toString());
+
+			getDecryptedDataByQtId(retrieveSummaryQTREncryptedDataList(reqDTO),
+					reportValue);
+		}
+	}
+	
+	private List<Object[]> retrieveSummaryQTREncryptedDataList(
+			PMReportReqDTO reqDto) {
+		
+		log.info("ReportBackingBean-retrieveSummaryQTREncryptedDataList");
+
+		List<Object[]> reqQTRList = null;
+
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			reqQTRList = reportSO.retrieveSummaryTenderRestrictedData(reqDto);
+		}
+		return reqQTRList;
+	}
+	
+	private List<Object[]> retrieveQTREncryptedDataList(PMReportReqDTO reqDto) {
+		log.info("ReportBackingBean-retrieveQTRDataList");
+
+		List<Object[]> reqQTRList = null;
+
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			reqQTRList = reportSO.retrieveQuotationTenderRestrictedData(reqDto);
+		}
+
+		return reqQTRList;
+	}
+	
+	public void generateScReport() {
+
+		boolean isEitherScCreatedFromOrToMonthEmpty = 
+				(isEmpty(scCreatedFromMonth) && !isEmpty(scCreatedToMonth))||
+				(!isEmpty(scCreatedFromMonth) && !isEmpty(scCreatedToMonth));		
+		
+		if (isEitherScCreatedFromOrToMonthEmpty) {
+			throw new EpException(MessageConst.ERROR_REPORT_780004);
+		}
+		
+		if (StringUtils.isNotEmpty(this.getScCreatedToYear())
+				&& StringUtils.isNotEmpty(this.getScCreatedFromYear())) {
+			if (Integer.parseInt(this.getScCreatedToYear()) < Integer
+					.parseInt(this.getScCreatedFromYear())) {
+				throw new EpException(MessageConst.ERROR_REPORT_780008);
+			} else if (Integer.parseInt(this.getScCreatedToYear()) == Integer
+					.parseInt(this.getScCreatedFromYear())) {
+				if (StringUtils.isNotEmpty(this.getScCreatedToMonth())
+						&& StringUtils.isNotEmpty(this
+								.getScCreatedFromMonth())) {
+					if (Integer.parseInt(this.getScCreatedToMonth()) < Integer
+							.parseInt(this.getScCreatedFromMonth())) {
+						throw new EpException(
+								MessageConst.ERROR_REPORT_780008);
+					}
+				}
+			}
+			
+			if (reportValue.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL) || 
+				reportValue.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL) ||
+				reportValue.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL) ||
+				reportValue.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
+
+				getEstimatedAmtByQtID();
+
+			} else if (!(reportValue.equals(ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL) ||
+					   reportValue.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL))){
+					
+				getEncryptedDataByQTR();
+
+			}
+		}
+		
+		String userRoleLogin = ReportConst.EMPTY_VAL;
+		if (approverNayakTarafList.size() > 0) {
+			userRoleLogin = ReportConst.APPROVERNT;
+		} else if ((authoriztionList.contains(ReportConst.BPK_APPROVER) || authoriztionList
+				.contains(ReportConst.RN_APPROVER))
+				&& (this.getModuleValue()
+						.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
+			userRoleLogin = ReportConst.APPROVER;
+		} else if ((authoriztionList.contains(ReportConst.BUDGET_APPROVER)
+				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
+				|| authoriztionList
+						.contains(ReportConst.COMMITTEE_APPROVER) || authoriztionList
+					.contains(ReportConst.PUBLICATION_APPROVER))
+				&& ((this.getModuleValue()
+						.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)))) {
+			userRoleLogin = ReportConst.APPROVER;
+		} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)
+				&& ((this.getModuleValue()
+						.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)))) {
+			userRoleLogin = ReportConst.DESKOFFR;
+		} else if (authoriztionList.contains(ReportConst.REQUISITIONER)
+				&& (this.getModuleValue()
+						.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
+			userRoleLogin = ReportConst.REQUISITIONER;
+		}
+		
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		
+		HashMap<String, String> h = new HashMap<String, String>();
+
+		h.put(ReportConst.CT_AMP_SUPPLIER_NAME_EQ, ctSupplierName);
+		h.put(ReportConst.CT_AMP_CIRCULAR_NAME_EQ, ctCircularName);
+		h.put(ReportConst.CT_AMP_TERMINATION_TYPE_EQ, ctTerminationType);
+		h.put(ReportConst.CT_AMP_STATUS_EQ, ctStatus);
+		h.put(ReportConst.CT_AMP_STATUS_EQ, ctStatusTwo);
+		h.put(ReportConst.CT_AMP_CONTRACT_NO_EQ, ctContractNo);
+		h.put(ReportConst.CT_AMP_PHYSICALCONTRACT_NO_EQ, ctPhysicalContractNo);
+		h.put(ReportConst.CT_AMP_AGREEMENT_EQ, ctAgreement);
+		h.put(ReportConst.CT_AMP_COMPLETE_EQ, ctComplete);
+		h.put(ReportConst.CT_AMP_STATUS_EQ, ctContrMontrStatus);
+		h.put(ReportConst.FL_AMP_FROM_DATE_EQ, outputDateFormat.format(fromDate));
+		h.put(ReportConst.FL_AMP_TO_DATE_EQ, outputDateFormat.format(toDate));
+		h.put(ReportConst.CT_AMP_CIRCULAR_FROM_DATE_EQ, outputDateFormat.format(ctCircularEffectiveFromDate));
+		h.put(ReportConst.CT_AMP_CIRCULAR_TO_DATE_EQ, outputDateFormat.format(ctCircularEffectiveToDate));
+		h.put(ReportConst.CT_AMP_PROCUREMENTMODE_EQ, ctProcurementMode);
+		h.put(ReportConst.CT_AMP_GROUP_EQ, ctGroupOne);
+		h.put(ReportConst.CT_AMP_GROUP_EQ, ctGroupTwo);
+		h.put(ReportConst.CT_AMP_GROUP_EQ, ctGroupThree);
+		h.put(ReportConst.CT_AMP_PPRODUCTSERVICE_EQ, ctProductService);
+		h.put(ReportConst.CT_AMP_PLOANO_EQ, ctLoanNo);
+		h.put(ReportConst.CT_AMP_PLOAPHYSICALNO_EQ, ctLOAPhysicalNo);
+		h.put(ReportConst.CT_AMP_PMINISTRY_EQ, commonMinistry);
+		h.put(ReportConst.CT_AMP_PPEGAIPENGAWAI_EQ, commonPegaWaiPengawal);
+		h.put(ReportConst.CT_AMP_PKUMPULAN_EQ, commonKumpulanPTJ);
+		h.put(ReportConst.CT_AMP_PPTJNAME_EQ, commonPtj);
+		h.put(ReportConst.CT_AMP_USERTYPE_EQ, ctUserType);
+		h.put(ReportConst.CT_AMP_SUBTYPE_EQ, ctSubType);
+	
+		for (Map.Entry<String, String> entries : h.entrySet()) {
+			 
+			 Entry<String, String> thisEntry =  entries;
+			 
+			 String key = thisEntry.getKey();
+			 String value = thisEntry.getValue();
+			 
+			 //reportWebUrl +=  key + "='" + value + "'";
+		}
+	}
+	
 	private int deleteDecryptedDataAfterReportGeneration(Long createdBy,String reportCode) {
 		
 		log.info("deleteDecryptedDataAfterReportGeneration");
@@ -5012,5 +5489,75 @@ public void roleCodeUsersSetupOnload() {
 			ctTerminationTypeView = false;
 		}
 	}
+	
+	public void onOrgCodeChangeForLOV() {
 
+		if(reportValue.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+			
+			getOrCodeAndOrgName();
+			
+		} else if (reportValue.equals(ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL)) {
+			
+			getOrCodeAndOrgNameWithStatus();
+			
+		}
+	}
+	
+	private void getOrCodeAndOrgName() {
+	
+		if (selectedOrgProfile != null && selectedOrgProfile.getPmOrgValidity() != null) {
+		
+			pmOrgCode = selectedOrgProfile.getPmOrgValidity().getOrgCode();
+			pmOrgName = selectedOrgProfile.getPmOrgValidity().getOrgName();
+		}
+	}
+	
+	private void getOrCodeAndOrgNameWithStatus() {
+	
+		if (selectedOrgProfile != null && selectedOrgProfile.getPmOrgValidity() != null) {
+			
+			pmOrgCode = selectedOrgProfile.getPmOrgValidity().getOrgCode();
+			pmOrgName = selectedOrgProfile.getPmOrgValidity().getOrgName();
+		}
+		
+		if (!isEmpty(pmOrgCode) || !isEmpty(pmOrgName) || !isEmpty(pmStatus)) {
+			
+			valuesEmpty = false;
+			
+		} else {
+			
+			valuesEmpty = true;
+			
+		}
+	}
+	
+	public void onItemCodeChangeForLOV() {
+	
+		if (selectedItem != null) {			
+			
+			cmItemName = selectedItem.getItemName();
+			pmItemCode = selectedItem.getExtensionCode();
+			pmItemName = selectedItem.getItemName();
+			
+		} else if (selectedUnspscItem != null) {
+			
+			pmItemCode = selectedUnspscItem.getUnspscCode();
+			pmItemName = selectedUnspscItem.getUnspscTitle();
+		}
+	}
+	
+	public void onFinaOrgNameChangeForLOV() {
+		
+		if (reportValue.equals(ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
+			
+			if (selectedOrgProfile != null && selectedOrgProfile.getPmFinancialOrg() != null) {
+				
+				pmFinancialOrgName = selectedOrgProfile.getPmFinancialOrg().getFinOrgName();
+				pmBusinessRegNo = selectedOrgProfile.getPmFinancialOrg().getBizRegNumber();
+
+				chkValuesForPmFinanceIns();
+
+			}
+		}
+	}
 }

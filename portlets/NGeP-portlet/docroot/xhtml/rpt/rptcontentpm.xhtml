@@ -7,677 +7,467 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-<style type="text/css">
-/*   
-  This is for space removal allignement for All Modules.
-  Note:  Please don't do the code refactor for the CSS
-         if we do we will get the compilation errors.
-*/
+	<div class="columnPmTableClass">
+		<table style="width: 100%;">
+			<tr>
+				<td><h:panelGrid id="pmReportCriteria" columns="4"
+						columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width"
+						style="width:100%;">
+						<c:if
+							test="#{rptBackingBean.pmServiceTypeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" />
+							<p:selectOneMenu value="#{rptBackingBean.pmServiceType}"
+								style="width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems value="#{rptBackingBean.serviceTypeList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true" listener="#{rptBackingBean.onChangServiceType()}"
+									update="@form" />
+							</p:selectOneMenu>
+						</c:if>						
+						<c:if
+							test="#{rptBackingBean.pmFinancialOrgNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.financialOrgNamescreen']}" />
+							<ac:lov id="pmFinOrgName" style="width:265px;"
+								lovId="PM_ORG_PROFILE_FFC_REPORT" size="40" update="@form"
+								headerText="#{lbl['lbl.rpt.orgCode']}" readonly="true"
+								value="#{rptBackingBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
+								postUpdateListener="#{rptBackingBean.onFinaOrgNameChangeForLOV()}"
+								saveObject="rptBackingBean.selectedOrgProfile" />
+						</c:if>
+                        <c:if
+							test="#{rptBackingBean.pmBusinessRegNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.businessregnoscreen']}" />
+							<p:inputText value="#{rptBackingBean.pmBusinessRegNo}" readonly="true"
+								style="width:290px;">
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmMandatoryOrgCategoryTypeView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.org.category']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td><p:selectOneMenu
+												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
+												value="#{rptBackingBean.pmOrgCategory}" 
+												style="width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
+													itemValue="1"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
+													itemValue="2"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true" update="@form"
+													listener="#{rptBackingBean.changeOrgCategoryType}" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptOrgCatgMsg" for="orgCatg"
+												display="icon" showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmMandatoryOrgTypeView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.org.type']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.org.type']}"
+												id="orgType" value="#{rptBackingBean.pmOrgType}"
+												style="width:300px;">
+												<f:selectItems value="#{rptBackingBean.itemsList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true" listener="#{rptBackingBean.changeOrgTypeValues}" update="@form" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptOrgTypeMsg" for="orgType"
+												display="icon" showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+                        <c:if
+							test="#{rptBackingBean.pmNonMandatoryOrgTypeView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.org.type']}" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.org.type']}"
+												id="orgType" value="#{rptBackingBean.pmOrgType}"
+												style="width:285px;">
+												<f:selectItems value="#{rptBackingBean.itemsList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true" listener="#{rptBackingBean.changeOrgTypeValues()}" update="@form" />
+											</p:selectOneMenu></td>										
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
 
-.columnReportValueWidth {
-	width: 478px;
-}
+						<c:if
+							test="#{rptBackingBean.pmNonMandatoryOrgNameForProfileView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td class="pmColumn3Width"><p:outputLabel
+												value="#{lbl['lbl.rpt.orgName']}" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 100%"><ac:lov id="pmOrgName"
+												style="width:265px;" lovId="PM_ORG_PROFILE_REPORT" size="40"
+												update="@form" headerText="#{lbl['lbl.rpt.orgName']}"
+												readonly="true" 
+												value="#{rptBackingBean.selectedOrgProfile.pmOrgValidity.orgName}"
+												postUpdateListener="#{rptBackingBean.onNonMandatoryOrgNameChangeForProfileLOV()}"
+												saveObject="rptBackingBean.selectedOrgProfile" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmOrgCodeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.orgCode']}" />
+							<ac:lov id="pmOrgCode" style="width:265px;"
+								lovId="PM_ORG_PROFILE_REPORT" size="40" update="@form"
+								headerText="#{lbl['lbl.rpt.orgCode']}" readonly="true"
+								value="#{rptBackingBean.selectedOrgProfile.pmOrgValidity.orgCode}"
+								postUpdateListener="#{rptBackingBean.onOrgCodeChangeForLOV()}"
+								saveObject="rptBackingBean.selectedOrgProfile" />
+						</c:if>						
+                        <c:if
+							test="#{rptBackingBean.pmNonMandatoryOrgNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.orgName']}" />
+							<p:inputText maxlength="120" readonly="true"
+								value="#{rptBackingBean.pmOrgName}" style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmContractNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}" />
+							<p:inputText maxlength="100"
+								value="#{rptBackingBean.pmContractNo}" style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmPhysicalContractNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.physicalContractNo']}" />
+							<p:inputText maxlength="100"
+								value="#{rptBackingBean.pmPhysicalContractNo}"
+								style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
 
-<c:if test="#{rptBackingBean.moduleNameValue eq 'CM'}">
-.columnCmTableClass {
-	margin-top: 1%;
-}
-.columnReportValueWidth {
-	width: 300px;
-}
-</c:if>
+						<c:if
+							test="#{rptBackingBean.pmLOANoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.loaNo']}" />
+							<p:inputText maxlength="100" value="#{rptBackingBean.pmLOANo}"
+								style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmPhysicalLOANoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.physicalLOANo']}" />
+							<p:inputText maxlength="100"
+								value="#{rptBackingBean.pmPhysicalLOANo}"
+								style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
 
-<c:if test="#{rptBackingBean.moduleNameValue eq 'SM'}"> 
- 
-.columnSmTableClass {
-	         margin-top: 0%;
-	         }
-.columnReportValueWidth {
-	width: 300px;
-}
-</c:if>
+						<c:if
+							test="#{rptBackingBean.pmItemCodeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" />
+							<ac:lov id="itemCode" style="width:265px;" lovId="CM_UNSPSC_REPORT"
+								readonly="true" size="40" update="@form"
+								headerText="#{lbl['lbl.rpt.itemCode']}"
+								value="#{rptBackingBean.selectedUnspscItem.unspscCode}"
+								postUpdateListener="#{rptBackingBean.onItemCodeChangeForLOV()}"
+								saveObject="rptBackingBean.selectedUnspscItem" />
+						</c:if>
 
-<c:if test="#{rptBackingBean.moduleNameValue eq 'PP'}">
-.columnPpTableClass {
-	margin-top: -1%;
-}
-.columnReportValueWidth {
-	width: 300px;
-}
-</c:if>
-<c:if test="#{rptBackingBean.moduleNameValue eq 'CT'}">
-.columnCtTableClass {
-	margin-top: -1%;
-}
-.columnReportValueWidth {
-	width: 300px;
-}
-<c:if test="#{rptBackingBean.ctSupplierNameView}"> 
-<c:if test="#{rptBackingBean.ctSupplierTextView || rptBackingBean.ctSupplierDefaultView}">
-.columnClassForSOR{
-	width:  19.7%;
-}
-.column10CheckClass {
-	width: 14.8%;
-}
-</c:if>
-</c:if>
-</c:if>
+						<c:if
+							test="#{rptBackingBean.pmItemNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemName']}" />
+							<p:inputText maxlength="100" readonly="true"
+								value="#{rptBackingBean.pmItemName}" style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
 
-<c:if test="#{rptBackingBean.moduleNameValue eq 'DP'}">
-.columnScTableClass {
-	margin-top: -1%;
-}
-.columnReportValueWidth {
-	width: 300px;
-}
-/* for 'Direct Purchase' Report of 'LOA Content Report' allignement */
-.columnDPMarginTopClass {
-	margin-top: 2%;
-}
+						<c:if
+							test="#{rptBackingBean.pmContractItemCodeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" />
+							<ac:lov id="contactItemCode" style="width:265px;" lovId="CM_ITEM_REPORT"
+								size="40" update="@form" headerText="#{lbl['lbl.rpt.itemCode']}"
+								readonly="true"
+								value="#{rptBackingBean.selectedItem.extensionCode}"
+								postUpdateListener="#{rptBackingBean.onItemCodeChangeForLOV()}"
+								saveObject="rptBackingBean.selectedItem" />
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.pmContractItemNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemName']}" />
+							<p:inputText maxlength="100" readonly="true"
+								value="#{rptBackingBean.pmItemName}" style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
 
-</c:if>
-<c:if test="#{rptBackingBean.moduleNameValue eq 'SC'}">
-.columnScTableClass {
-	margin-top: -1%;
-}
-.columnReportValueWidth {
-	width: 300px;
-}
-</c:if>
-<c:if test="#{rptBackingBean.moduleNameValue eq 'PM'}">
-.columnPmTableClass {
-	margin-top: -1%;
-}
-.columnPmTableLOPClass {
-	margin-top: 0%;
-}
-.columnReportValueWidth {
-	width: 300px;
-}
-</c:if>
-<c:if test="#{rptBackingBean.moduleNameValue eq 'FL'}">
-.columnFlTableClass {
-	margin-top: -1%;
-}
- .columnFLLeftWidth {
- 	width: 190px;
-}	
-.columnFLCenterWidth {
-	width: 0px;
-}
-.columnFLRightWidth {
-	width: 280px;
-}
-.columnReportValueWidth {
-	width: 300px;
-}	
+						<c:if
+							test="#{rptBackingBean.pmStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.status']}" />
+							<p:selectOneMenu value="#{rptBackingBean.pmStatus}"
+								style="width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}"
+									itemValue="#{1}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}"
+									itemValue="#{0}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true" listener="#{rptBackingBean.checkPmStatusValue()}"
+									update="@form" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
+							test="#{rptBackingBean.extraTwoColumnView}">
+							<p:outputLabel value="" style="margin-top:5px;width:162px;" />
+							<p:outputLabel value="" style="margin-top:5px;width:290px;" />
+						</c:if>
 
-</c:if>
-<c:if test="#{rptBackingBean.moduleNameValue eq 'SM'}">
-.column10CheckClass {
-	width: 20%;
-}
-</c:if>
+						<c:if
+							test="#{rptBackingBean.pmMandatoryZoneView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.zone']}" /> <p:outputLabel
+												value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.zone']}"
+												id="Zone" value="#{rptBackingBean.pmZone}"
+												style="width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
+													itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}"
+													itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
+													itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptZoneMsg" for="Zone" display="icon"
+												showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
 
-/* for Common allignement for all screens */
-
-.columnGenClass {
-	width: 15%;
-}
-.columnDateFromClass {
-	width: 13%;
-}
-
-.columnDateToClass {
-	width: 1%;
-}
-
-.columnDateRangeClass {
-	margin-top: -3%;
-}
-
-.columnDateFromWidthClass {
-	width: 46%;
-}
-.columnDateToWidthClass {
-	width: 6.4%;
-}
-
-/* 
-  for SM Screens Allignement
-*/
-
-<c:if test="#{rptBackingBean.smMandatoryFromDateView}">
-<c:if test="#{rptBackingBean.smApplicationReceivedDateView}">
-.columnGenClass {
-	width: 218px;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.collectorGovRegistrationChkView}">
-.column1CheckClass {
-	width: 14.9%;
-}</c:if>
-<c:if test="#{rptBackingBean.collectorCDCRegistrationChkView}">
-.column1CheckClass {
-	width: 1.8%;
-}</c:if>
-
-.column2CheckClass {
-	width: 12%;
-}
-.column3CheckClass {
-	width: 0%;
-}
-.column4CheckClass {
-	width: 62%;
-}
-
-<c:if test="#{rptBackingBean.smApplicationApprovedView
-              || rptBackingBean.smListOfCompaniesWithDOHEView
-              || rptBackingBean.smListOfDailyRegisteredApplicationView
-              || rptBackingBean.smListOfDOHEView
-              || rptBackingBean.smListDeleteMOFAccountView
-              || rptBackingBean.smListOfExpiredCompanyView
-              || rptBackingBean.smListOfSOAView
-              || rptBackingBean.smProfileRegCompanyView
-              || rptBackingBean.smVirtualCertificateRelasedListView
-              || rptBackingBean.smTotalNoOfYearlyARView
-              || rptBackingBean.smListOfOfflineSDPSView
-              || rptBackingBean.smListOfCompaniesSortAlphabetView}">
-<c:if test="#{rptBackingBean.smCDCompanyNameView
-               || rptBackingBean.smDOCompanyNameView
-               || rptBackingBean.smMandatoryDOCSupplierTypeView
-               || rptBackingBean.smCanMandatorySupplierTypeView
-               || rptBackingBean.smLPCompanyNameView
-               || rptBackingBean.smCompanyNameView
-               || rptBackingBean.smPRMandatorySupplierTypeView
-               || rptBackingBean.smFromMonthView
-               || rptBackingBean.smFromAndToYearView
-               || rptBackingBean.smComSupplierTypeView}">
-.column5CheckClass {
-	width: 27.5%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smApplicationRejectedView
-              ||rptBackingBean.smCompanyAddressListView
-              ||rptBackingBean.smListOfDailyApplicationBasicAndMOFView
-              ||rptBackingBean.smListOfSVOSVLView
-              ||rptBackingBean.smListOfSOPPSVView}">
-<c:if test="#{rptBackingBean.smCDCompanyNameView
-               ||rptBackingBean.smDARegistrationTypeView
-               ||rptBackingBean.smMandatoryCompanyNameView
-               ||rptBackingBean.smSVMandatoryApplicationNoView}">
-.column5CheckClass {
-	width: 26.5%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smCategoryStatisticView 
-             || rptBackingBean.smListOfCompaniesSRSCView }">
-<c:if test="#{rptBackingBean.smBusCompanyRegistrationStatusView
-             || rptBackingBean.smLCMandatorySupplierTypeView}">
-.column5CheckClass {
-	width: 24.8%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smCategoryStatisticByStateView}">
-<c:if test="#{rptBackingBean.smDistrictView }">
-.column5CheckClass {
-	width: 35.2%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smDailyReceiptsESView}">
-<c:if test="#{rptBackingBean.smPaymentToView}">
-.column5CheckClass {
-	width: 26.9%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smListPSMoreView}">
-<c:if test="#{rptBackingBean.smCompanyNameView}">
-.column5CheckClass {
-	width: 23%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smListOfDailyReceiptView}">
-<c:if test="#{rptBackingBean.smDailyReceiptNoView}">
-.column5CheckClass {
-	width: 31%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smListOfPPRFView
-             || rptBackingBean.smQRSView
-             || rptBackingBean.smStatisticListCBCView
-             || rptBackingBean.smSupplierPerformanceView
-             || rptBackingBean.smCollectionReceiptTransationView
-             || rptBackingBean.smCollectionReportPaymentMethodView}">
-<c:if test="#{rptBackingBean.smPaymentTypeView
-             || rptBackingBean.smListOfSOAView
-             || rptBackingBean.smQRAllSupplierTypeView
-             || rptBackingBean.smLAMofRegNoView
-             || rptBackingBean.smMandatoryReciptTransactionReportTypeView
-             || rptBackingBean.smCPSupplierNameView}">
-.column5CheckClass {
-	width: 27.3%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{rptBackingBean.smDeletePendingApplicationView
-              || rptBackingBean.smListOfApplicationView
-              || rptBackingBean.smListOfApplicationStatusView
-              || rptBackingBean.smListOfGSTRegSupplierView
-              || rptBackingBean.smListOfOfflineSDPSView
-              || rptBackingBean.smListOfSOCPBAView
-              || rptBackingBean.smListOfUsersSCRView
-              || rptBackingBean.smSupplierStatisticView
-              || rptBackingBean.smThresholdOrSupplierTransactionView}">
-<c:if test="#{rptBackingBean.smDEMandatoryAllSupplierTypeView
-              || rptBackingBean.smSupplierTypeView 
-              || rptBackingBean.smLAApplicationNoView
-              || rptBackingBean.smGSTSupplierTypeView             
-              || rptBackingBean.smOFApplicationNoView
-              || rptBackingBean.smSCPSupplierTypeView
-              || rptBackingBean.smUserNameView
-              || rptBackingBean.smSupStateView
-              || rptBackingBean.smTHMandatorySupplierTypeView}">
-.column5CheckClass {
-	width: 27.29%;
-}
-</c:if>
-</c:if>
-
-.column6CheckClass {
-	width: 0%;
-}
-
-.column7CheckClass {
-	width: 38%;
-}
-<c:if test="#{rptBackingBean.smMandatoryYearFromReportTypeViewForMY
-               || rptBackingBean.smMandatoryRegisteredReportTypeDateViewForMY}">
-.column7CheckClass {
-	width: 32%;
-}
-</c:if>
-.column8CheckClass {
-	width: 27.2%;
-}
-
-.column9CheckClass {
-	width: 27.3%;
-}
-
-.column11CheckClass {
-	width: 0%;
-}
-.column12CheckClass {
-	width: 43%;
-}
-
-/* 
-  for SC Screens allignement
-*/
-
-.columnWidthSc1{
-width:18%;
-}
-.columnWidthSc2{
-width:0%;
-}
-.columnWidthSc3{
-width:0%;
-}
-.columnWidthSc4{
-width:32.5%;
-}
-
-/* 
-  for PM Screens allignement
-*/
- .pmColumnWidthDateFrom {
-	     width: 13%;
-        }
-
-      .pmColumnWidthDateTo {
-	      width: 1%;
-         }
-	
-          .pmColumn1Width {
-	        width: 14.9%;
-            }
-        <c:if test="#{rptBackingBean.pmMandatoryOrgTypeView}">
-          .pmColumn2Width {
-        	width: 22.7%;
-          }
-           .pmColumn3Width {
-        	width: 18%;
-          }
-        </c:if>
-        <c:if test="#{rptBackingBean.pmMandatoryOrgNameForLOPView}">
-         .pmColumn2Width {
-        	width: 24.3%;
-          }
-        .pmColumn3Width {
-	     width:18.1%;
-         } 
-        </c:if>
-        <c:if test="#{rptBackingBean.pmBusinessRegNoView}">
-         .pmColumn2Width {
-      	width: 26%;
-         } 
-        </c:if>
-         <c:if test="#{rptBackingBean.pmNonMandatoryOrgNameView}">
-         .pmColumn2Width {
-      	width: 24.6%;
-         } 
-        </c:if>
-        
-        <c:if test="#{rptBackingBean.pmProfileStatusView}">
-        .pmColumn2Width {
-      	width: 26%;
-         } 
-         </c:if>
-          <c:if test="#{rptBackingBean.pmItemNameView}">
-        .pmColumn2Width {
-      	width: 32.1%;
-         } 
-         </c:if>
-         <c:if test="#{rptBackingBean.pmPhysicalContractNoView}">
-        .pmColumn2Width {
-      	width: 23.0%;
-         } 
-         </c:if>              
-          <c:if test="#{rptBackingBean.pmExemptedItemView}">         
-             <c:if test="#{rptBackingBean.pmFromDateView}">
-            .pmColumn2Width {
-           	 margin-top: 6px;
-         } 
-         </c:if>
-          </c:if>
-          
-          <c:if test="#{rptBackingBean.pmExemptedContractedItemView}">         
-             <c:if test="#{rptBackingBean.pmFromDateView}">
-            .pmColumn2Width {
-           	 margin-top: 4px; 
-         } 
-         </c:if>
-          </c:if>
-          
-          .pmColumn4Width {
-	        width: 32%;
-            }
-          
-
-</style>
+						<c:if
+							test="#{rptBackingBean.pmMandatoryZoneViewBPK}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.zone']}" /> <p:outputLabel
+												value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.zone']}"
+												id="Zone" value="#{rptBackingBean.pmZone}"
+												style="width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
+													itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}"
+													itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
+													itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptZoneMsg" for="Zone" display="icon"
+												showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
 
 
-	<p:messages id="rptmessagesMsg" showDetail="true" autoUpdate="true"
-		closable="true" showSummary="false" />
-	<table style="width: 100%">
-		<tr>
-			<td><p:panel style="width: 100%;"
-					header="#{lbl['lbl.rpt.rptcriteria']}" id="rptModuleId">
-					<table style="margin-top: 10px; width: 100%;">
-						<tr>
-							<td width="100%"><h:panelGrid id="rptModule" columns="4"
-									style="margin-bottom:5px;width:85%;">
-									<p:column>
-										<table style="width: 190px;">
-											<tr style="width: 100%;">
-												<td style="margin-top: 5px; width: 160px;"><p:outputLabel
-														value="#{lbl['lbl.rpt.module']}" /> <p:outputLabel
-														value="*" styleClass="mandatory" /></td>
+						<c:if
+							test="#{rptBackingBean.pmProfileStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}"
+								style="width:113px;" />
+							<p:selectOneMenu value="#{rptBackingBean.pmProfileStatus}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}"
+									itemValue="#{lbl['lbl.rpt.active.val']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}"
+									itemValue="#{lbl['lbl.rpt.inactive.val']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
 
-											</tr>
-										</table>
-									</p:column>
-									<p:column>
-										<table style="width: 100%">
-											<tr>
-												<td style="width: 84%"><p:selectOneMenu
-														label="#{lbl['lbl.rpt.module']}" id="moduleName"
-														value="#{rptBackingBean.moduleValue}" required="true"
-														style="margin-top:5px;width:300px;">
-														<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-															itemValue="#{null}"></f:selectItem>
-														<f:selectItems
-															value="#{rptBackingBean.getAllModuleList()}"></f:selectItems>
-														<p:ajax event="change"
-															listener="#{rptBackingBean.retrieveReportListByAuthorization}"
-															process="@this" partialSubmit="true" update="@all" />
-													</p:selectOneMenu></td>
-												<td><p:message id="moduleNameMsg" for="moduleName"
-														display="icon" /></td>
-											</tr>
-										</table>
-									</p:column>
+					</h:panelGrid></td>
+			</tr>
+		</table>
+	</div>
 
+	<div>
+		<TABLE style="width: 100%;">
+			<TR>
+				<c:if
+					test="#{rptBackingBean.pmExemptedCompanyNameView}">
+					<TD class="pmColumn1Width"><p:outputLabel
+							value="#{lbl['lbl.rpt.companyName']}" /></TD>
+					<TD><ac:lov id="pmCompanyName" readonly="true"
+							style="width:289px;" lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT"
+							size="44" update="@form"
+							headerText="#{lbl['lbl.rpt.companyName']}"
+							value="#{rptBackingBean.selectedOrgProfile.smSupplier.companyName}"
+							postUpdateListener="#{rptBackingBean.onCompanyNameChangeForLOV()}"
+							saveObject="rptBackingBean.selectedOrgProfile" />
+					</TD>
+				</c:if>
+			</TR>
 
-									<c:if
-										test="#{rptBackingBean.reportCategoryView}">
-										<p:column>
-											<table style="width: 190px;">
-												<tr style="width: 100%;">
-													<td style="margin-top: 5px; width: 160px;"><p:outputLabel
-															value="#{lbl['lbl.rpt.rptCategory']}" /> <p:outputLabel
-															value="*" styleClass="mandatory" /></td>
-												</tr>
-											</table>
-										</p:column>
-										<p:column>
-											<table style="width: 100%">
-												<tr>
-													<td style="width: 84%"><p:selectOneMenu
-															label="#{lbl['lbl.rpt.rptCategory']}" id="reportCategory"
-															value="#{rptBackingBean.reportCategory}"
-															required="true" style="margin-top:5px;width:300px;">
-															<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-																itemValue="#{null}"></f:selectItem>
-															<f:selectItems
-																value="#{rptBackingBean.getReportCategoryList()}"></f:selectItems>
-															<p:ajax event="change"
-																listener="#{rptBackingBean.retrieveReportListBySubModule}"
-																process="@this" partialSubmit="true" update="@all" />
-														</p:selectOneMenu></td>
-													<td><p:message id="reportCategoryMsg"
-															for="reportCategory" display="icon" /></td>
-												</tr>
-											</table>
-										</p:column>
-									</c:if>
+			<TR>
+				<c:if
+					test="#{rptBackingBean.pmExemptedBusinessRegNoView}">
+					<TD><p:outputLabel
+							value="#{lbl['lbl.rpt.businessregnoscreen']}" /></TD>
+					<TD class="pmColumn4Width"><p:inputText
+							value="#{rptBackingBean.pmBusinessRegNo}" style="width:290px;">
+						</p:inputText></TD>
+				</c:if>
+				<c:if
+					test="#{rptBackingBean.pmExemptedEpNoView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
+							style="width:43px;" /></TD>
+					<TD><p:inputText maxlength="100"
+							value="#{rptBackingBean.pmEpNo}" style="width:290px;">
+						</p:inputText></TD>
+				</c:if>
+			</TR>
 
-									<p:column>
-										<table style="width: 190px;">
-											<tr style="width: 100%;">
-												<td style="margin-top: 5px; width: 160px;"><p:outputLabel
-														value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
-														value="*" styleClass="mandatory" /></td>
+			<TR>
+				<c:if
+					test="#{rptBackingBean.pmExemptedItemCodeView}">
+					<TD class="pmColumn1Width"><p:outputLabel
+							value="#{lbl['lbl.rpt.itemCode']}" /></TD>
+					<TD><ac:lov id="itemCode" style="width:265px;"
+							lovId="CM_ITEM_REPORT" size="40" update="@form"
+							headerText="#{lbl['lbl.rpt.itemCode']}" readonly="true"
+							value="#{rptBackingBean.selectedItem.extensionCode}"
+							postUpdateListener="#{rptBackingBean.onItemCodeChangeForLOV()}"
+							saveObject="rptBackingBean.selectedItem" /></TD>
+				</c:if>
+				<c:if
+					test="#{rptBackingBean.pmExemptedItemNameView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.itemName']}" /></TD>
+					<TD><p:inputText maxlength="100" readonly="true"
+							value="#{rptBackingBean.pmItemName}" style="width:290px;">
+							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+						</p:inputText></TD>
+				</c:if>
+			</TR>
+		</TABLE>
+	</div>
 
-											</tr>
-										</table>
-									</p:column>
-									<p:column>
-										<table style="width: 100%">
-											<tr>
-												<td style="width: 84%"><p:selectOneMenu
-														label="#{lbl['lbl.rpt.rptName']}" id="reportName"
-														value="#{rptBackingBean.reportValue}" required="true" 
-														style="width:300px;">
-														<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-															itemValue="#{null}"></f:selectItem>
-														<f:selectItems value="#{rptBackingBean.reportList}"></f:selectItems>
-														<p:ajax event="change"
-															listener="#{rptBackingBean.criteriaVariablesByReport}"
-															process="@this" partialSubmit="true" update="@all" />
-													</p:selectOneMenu></td>
-												<td><p:message id="reportNameMsg" for="reportName"
-														display="icon" /></td>
-											</tr>
-										</table>
-									</p:column>
-								</h:panelGrid></td>
-						</tr>
+	<div>
+		<c:if
+			test="#{rptBackingBean.pmNonMandatoryDateView}">
+			<TABLE style="width: 100%;" class="pmColumn2Width">
+				<TR>
+					<c:if
+						test="#{rptBackingBean.pmFromDateView}">
+						<TD class="pmColumn1Width"><p:outputLabel
+								value="#{lbl['lbl.rpt.effDateFrom']}" /></TD>
+					</c:if>
+					<TD class="pmColumnWidthDateFrom"><p:calendar showOn="button"
+							navigator="true" display="inline" readonlyInput="true" size="9"
+							value="#{rptBackingBean.fromDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD class="pmColumnWidthDateTo"><p:outputLabel
+							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
+					<TD><p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{rptBackingBean.toDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
 
-						<tr>
-							<td width="100%"><c:if
-									test="#{rptBackingBean.enableCriteriaMenuView}">
-									<p:panel style="width: 100%;"
-										header="#{rptBackingBean.reportName}" id="rptNameId"
-										toggleable="true">
-										<table style="width: 100%; margin-top: 4px;">
-											<c:if
-												test="#{rptBackingBean.madatoryIndicatorView}">
-												<tr>
-													<td width="100%"><h:outputText
-															styleClass="instruction"
-															style="float:left;margin-left:20px;"
-															value="#{lbl['lbl.instruction.mandatory']}" /></td>
-												</tr>
-											</c:if>											
-											<c:if
-												test="#{rptBackingBean.instructionInfoView}">
-												<tr>
-													<td width="100%"><h:outputText
-															styleClass="instruction"
-															style="float:left;margin-left:20px;"
-															value="#{lbl['lbl.rpt.instructioninfo']}" /></td>
-												</tr>
-											</c:if>
-											<c:if
-												test="#{rptBackingBean.dpInstructionInfoView}">
-												<tr>
-													<td width="100%"><h:outputText
-															styleClass="instruction"
-															style="float:left;margin-left:20px;"
-															value="#{lbl['lbl.instruction.dpatleast']}" /></td>
-												</tr>
-											</c:if>
-											<c:if
-												test="#{rptBackingBean.cmMadatoryIndicatorView}">
-												<tr>
-													<td width="100%"><h:outputText
-															styleClass="instruction"
-															style="float:left;margin-left:20px;"
-															value="#{lbl['lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH']}" />
-													</td>
-												</tr>
-											</c:if>
-											<tr>
-												<td>
-													<ui:include src="rptcontentcm.xhtml"></ui:include>
-													<ui:include src="cmunspscdialog.xhtml"></ui:include> <ui:include
-														src="rptcontentsm.xhtml"></ui:include> <ui:include
-														src="rptcontentpp.xhtml"></ui:include> <ui:include
-														src="rptcontentct.xhtml"></ui:include> <ui:include
-														src="rptcontentsc.xhtml"></ui:include> <ui:include
-														src="loadocumentsc.xhtml"></ui:include> <ui:include
-														src="rptcontentpm.xhtml"></ui:include> <ui:include
-														src="listofprofilerptpm.xhtml"></ui:include> <ui:include
-														src="rptcontentfl.xhtml"></ui:include></td>
-													
-													
-												</td>
-											</tr>
-										</table>
-										<div>
-											<c:if
-												test="#{rptBackingBean.fromDateView}">
-												<TABLE style="width: 100%;">
-													<TR>
-														<TD class="columnGenClass"><p:outputLabel
-																value="#{lbl['lbl.rpt.dtRangeFrm']}"
-																style="width:183px;" /></TD>
-														<TD class="columnDateFromClass"><p:calendar
-																showOn="button" navigator="true" display="inline"
-																readonlyInput="true"
-																value="#{rptBackingBean.fromDate}" size="9"
-																pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-																partialSubmit="true" process="@form">
-															</p:calendar></TD>
-														<TD class="columnDateToClass"><p:outputLabel
-																value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
-														<TD><p:calendar showOn="button" navigator="true"
-																display="inline" readonlyInput="true" size="9"
-																value="#{rptBackingBean.toDate}"
-																pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-																partialSubmit="true" process="@form">
+						</p:calendar></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
 
-															</p:calendar></TD>
-													</TR>
-												</TABLE>
-											</c:if>
-										</div>
-										<h:panelGroup id="rptbtnGroup" style="margin-top:10px;">
-											<div align="right" style="margin-bottom:-3%;"> 
-												<c:if
-													test="#{rptBackingBean.conditionGenerateButton}">
-													<p:commandButton onstart="blkReportContent.show();"
-														oncomplete="blkReportContent.hide();"
-														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                
-														rendered="#{rptBackingBean.valuesEmpty}"
-														disabled="#{rptBackingBean.generateButtonView or rptBackingBean.scLOAContentView}"
-														ajax="true" update="@form" >
-														<p:fileDownload
-															value="#{rptBackingBean.generateReport()}" />
-													</p:commandButton>
-													
-													<p:commandButton onstart="blkReportContent.show();"
-														oncomplete="blkReportContent.hide();"
-														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                   														
-                                                        rendered="#{!rptBackingBean.valuesEmpty}"
-														disabled="#{rptBackingBean.generateButtonView or rptBackingBean.scLOAContentView}"
-														ajax="false" update="@form" >
-														<p:fileDownload
-															value="#{rptBackingBean.generateReport()}" />
-													</p:commandButton>
-													
-												</c:if>
-												<c:if
-													test="#{rptBackingBean.generateButton}">
-													<p:commandButton onstart="blkReportContent.show();"
-														id="falseGenerate" oncomplete="blkReportContent.hide();"                                                       
-														value="#{lbl['lbl.rpt.generate']}"
-														disabled="#{rptBackingBean.generateButtonView or rptBackingBean.scLOAContentView}"
-														ajax="false" update="@form" process="@this" >
-														<p:fileDownload
-															value="#{rptBackingBean.generateReport()}" />
-													</p:commandButton>
-												</c:if>
-												<p:commandButton value="#{lbl['lbl.btn.reset']}"
-													action="#{rptBackingBean.resetReportForm}"
-													update="@form" partialSubmit="true" process="@form" />
-											</div>
-										</h:panelGroup>
-									</p:panel>
-								</c:if></td>
-						</tr>
-					</table>
-					
-					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" width="376" 
-						draggable="false" closable="true"  header="#{lbl['lbl.rpt.reportstatus']}"
-						resizable="false">	
-						<h:outputText  value="#{lbl['lbl.rpt.warninformation']}" />					
-						<p:graphicImage value="/css/images/ajax-loader.gif" />						
-					</p:dialog>
-					
-				</p:panel></td>
-		</tr>
-	</table>
+	<div>
+		<c:if
+			test="#{rptBackingBean.pmNonMandatorySupDateView}">
+			<TABLE style="width: 100%;">
+				<TR>
+					<c:if
+						test="#{rptBackingBean.pmFromDateView}">
+						<TD class="pmColumn1Width"><p:outputLabel
+								value="#{lbl['lbl.rpt.effDateFrom']}" /></TD>
+					</c:if>
+					<TD class="pmColumnWidthDateFrom"><p:calendar showOn="button"
+							navigator="true" display="inline" readonlyInput="true"
+							value="#{rptBackingBean.fromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD class="pmColumnWidthDateTo"><p:outputLabel
+							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
+					<TD><p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{rptBackingBean.toDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+
+						</p:calendar></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
 
 </ui:composition>
