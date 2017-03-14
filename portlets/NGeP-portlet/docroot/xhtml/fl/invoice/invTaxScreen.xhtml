@@ -53,7 +53,7 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.totalReceivedQty}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
 					<f:converter converterId="dynamicNumberConverter" />
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
@@ -83,7 +83,7 @@
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" id="taxInvSumAmountTxt" rendered="#{chargeLineNode.level == 2}" style="float:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-				<p:inputText size="9" value="#{chargeLineNode.flInvoiceItem.invAmt}" maxlength="15" id="taxChargeInvAmt" label="#{lbl['lbl.fl.invoice.amount']}" 
+				<p:inputText size="9" value="#{chargeLineNode.flInvoiceItem.totalReceivedAmt}" maxlength="15" id="taxChargeInvAmt" label="#{lbl['lbl.fl.invoice.amount']}" 
 					required="true" style="float:right;color: red;text-align:right"  
 					rendered="#{chargeLineNode.level == 3}" disabled="true">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
