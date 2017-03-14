@@ -383,6 +383,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
+			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
 			
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
@@ -6761,6 +6762,26 @@ public class SimpleQuoteBackingBean extends
 		return counter;
 	}
 	
+	/**
+	 * Gets the user by user id.
+	 *
+	 * @param userId the user id
+	 * @return the user by id
+	 */
+	public PmUser  getUserById(Long userId) {
+		PmUser user = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		if(userId != null){
+			reqDTO.setUserId(userId);
+			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
+
+			if(resDTO.getPmUser() != null){
+				 user = resDTO.getPmUser();
+			}
+		}
+		return user;
+	}
+	
 	private PmConfigRuleValue getDurationRuleValue() {
 		IRuleSO ruleSO = null;
 		try {
@@ -6808,5 +6829,14 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Gets the user so.
+	 *
+	 * @return the user so
+	 */
+	private IUserSO getUserSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 }
