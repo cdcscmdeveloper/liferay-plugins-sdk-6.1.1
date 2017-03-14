@@ -83,8 +83,6 @@ public class ResendAccountActivationEmailBackingBean extends
 
 					if (selectedPersonnel.getIdentificationNo().equals(
 							suppAdminIdentificationNo)
-							&& selectedPersonnel.getEmail().equals(
-									suppAdminEmail)
 							&& selectedPersonnel.getRecordStatusFlg().equals(8)
 							&& expiredActivationDate.after(today)) {
 
@@ -93,6 +91,8 @@ public class ResendAccountActivationEmailBackingBean extends
 								.getBasePortalUrl());
 						personnelReqDTO
 								.setSmPersonnelList(new ArrayList<SmPersonnel>());
+						//reset back to new email
+						selectedPersonnel.setEmail(suppAdminEmail);
 						personnelReqDTO.getSmPersonnelList().add(
 								selectedPersonnel);
 
