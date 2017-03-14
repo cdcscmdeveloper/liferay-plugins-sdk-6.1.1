@@ -279,25 +279,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
 	    Object token = face.getBPMAuthenticationCtxToken();
-	    if(outcome.isEmpty()){
-	    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
-			requestNoteReqDTO.setToken(token);
-			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-		    requestNoteResDTO = getRequestNoteSO().submitRequestNote(requestNoteReqDTO);
-		    
-	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
-	    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-	    	 requestNoteReqDTO.setToken(token);
-	    	 requestNoteReqDTO.setOutcome("");
-	    	 requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
-	    	 renewSesionObject();
-	    	 getManagedBean().setPrInquiryId(prInqId);
-	    	 getManagedBean().setPurchaseInDefaultId(pidId);
-	    	 getManagedBean().setCurrentStatusId(statusId);
-	    	 getManagedBean().setTaskExpiryDate(pidExpiryDate);
-	    	 getManagedBean().setPidApprovers(pidApprovers);
-	    	 getManagedBean().setPidNo(pidNo);
-	     }
+	    try {
+	    	if(outcome.isEmpty()){
+		    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
+				requestNoteReqDTO.setToken(token);
+				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+			    requestNoteResDTO = getRequestNoteSO().submitRequestNote(requestNoteReqDTO);
+			    
+		     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+		    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+		    	 requestNoteReqDTO.setToken(token);
+		    	 requestNoteReqDTO.setOutcome("");
+		    	 requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
+		    	 renewSesionObject();
+		    	 getManagedBean().setPrInquiryId(prInqId);
+		    	 getManagedBean().setPurchaseInDefaultId(pidId);
+		    	 getManagedBean().setCurrentStatusId(statusId);
+		    	 getManagedBean().setTaskExpiryDate(pidExpiryDate);
+		    	 getManagedBean().setPidApprovers(pidApprovers);
+		    	 getManagedBean().setPidNo(pidNo);
+		     }
+	    } catch(EpException e) {
+			requestNote.setRemarks(initializeRemarks(
+					requestNote,
+					null,
+					requestNote.getRemarks(),
+					ScRequestNoteRemark.class));
+		}
 	    
 	    if (requestNoteResDTO.isSuccessful()) {
 	    	ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
@@ -509,16 +517,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			if(outcome.isEmpty()) {	
-				requestNoteReqDTO.setToken(ctxToken);
-				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-				requestNoteReqDTO.setSubmit(Boolean.TRUE);
-				requestNoteResDTO = getRequestNoteSO().submitRequestNote(requestNoteReqDTO);
-			} else {
-				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-				requestNoteReqDTO.setToken(ctxToken);
-				requestNoteReqDTO.setOutcome(outcome);
-				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
+			try {
+				if(outcome.isEmpty()) {	
+					requestNoteReqDTO.setToken(ctxToken);
+					requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+					requestNoteReqDTO.setSubmit(Boolean.TRUE);
+					requestNoteResDTO = getRequestNoteSO().submitRequestNote(requestNoteReqDTO);
+				} else {
+					requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+					requestNoteReqDTO.setToken(ctxToken);
+					requestNoteReqDTO.setOutcome(outcome);
+					requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
+				}
+			} catch(EpException e) {
+				requestNote.setRemarks(initializeRemarks(
+						requestNote,
+						null,
+						requestNote.getRemarks(),
+						ScRequestNoteRemark.class));
 			}
 
 			if (requestNoteResDTO.isSuccessful()) {
@@ -1035,7 +1051,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
+			try {
+				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
+			} catch(EpException e) {
+				requestNote.setRemarks(initializeRemarks(
+						requestNote,
+						null,
+						requestNote.getRemarks(),
+						ScRequestNoteRemark.class));
+			}
+			
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
