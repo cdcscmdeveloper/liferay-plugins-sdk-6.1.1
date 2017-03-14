@@ -2035,7 +2035,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		StringBuilder downloadPath = new StringBuilder();
 		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
 		
-		super.downloadFile(downloadPath.toString());
+//		super.downloadFile(downloadPath.toString());
+		super.commonDownload(filePath, filePath);
 	}
 	
 	/**
