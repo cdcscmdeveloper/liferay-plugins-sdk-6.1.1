@@ -2978,17 +2978,6 @@ public class SmApplicationBackingBean extends
 	 *            branch
 	 */
 	public void copyHqGstToBranch(SmSupplierBranch branch) {
-		// check for application that is not NEW MOF or RENEW MOF, automatically
-		// branch gst same as hq for new branch
-		if (getManagedBean().getCompanyBasicGst() != null
-				&& (!branch.getSmAppl().getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) || !branch
-						.getSmAppl().getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
-			if (getManagedBean().getCompanyBasicGst() != null) {
-				branch.setSameAsHq(true);
-			}
-		}
 		if (branch.getGst() == null) {
 			branch.setGst(new SmGstSupplier());
 			SmApplicationUtil.initGstSuppDocs(branch.getGst());
