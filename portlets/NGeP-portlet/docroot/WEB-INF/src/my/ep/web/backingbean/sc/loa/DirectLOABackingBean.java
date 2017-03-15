@@ -161,6 +161,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -3924,10 +3925,8 @@ public class DirectLOABackingBean extends
 							.getLoaNo());
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
-						filename.append(".docx");
+						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -6560,29 +6559,38 @@ public class DirectLOABackingBean extends
 
 		return isAgreementMandatory;
 	}
-	
+
 	private void RenameTempLoaNoRepoDirByLoaNo(ScLoa scLoa){
 		String tempFilePath = splitFilePath(getManagedBean().getTempFilePath());
 		String actualFilePath = getActualFilePathLoaNo(scLoa);
 		if(!StringUtils.isBlank(tempFilePath)){
-			// /docuRepo/dev/ngep/2016/SC/LB16000001565237 
-			//StringBuilder tFilePath = new StringBuilder("c:");
-			StringBuilder tFilePath = new StringBuilder();
-			tFilePath.append(tempFilePath);
-			//create source File object
-			File oldName = new File(tFilePath.toString());
+			try {
+				// /docuRepo/dev/ngep/2016/SC/LB16000001565237 
+				//StringBuilder tFilePath = new StringBuilder("c:");
+				StringBuilder tFilePath = new StringBuilder();
+				tFilePath.append(tempFilePath);
+				//create source File object
+				File oldName = new File(tFilePath.toString());
 
-			//create destination File object
-			//StringBuilder aFilePath = new StringBuilder("c:");
-			StringBuilder aFilePath = new StringBuilder();
-			aFilePath.append(actualFilePath);
-			File newName = new File(aFilePath.toString());
-			boolean isFileRenamed = oldName.renameTo(newName);
-			if(isFileRenamed)
-				log.info("Temporary Loa No folder has been renamed.");
-			else
-				log.info("Temporary Loa No folder has not been renamed.");
+				//create destination File object
+				//StringBuilder aFilePath = new StringBuilder("c:");
+				StringBuilder aFilePath = new StringBuilder();
+				aFilePath.append(actualFilePath);
+				File newName = new File(aFilePath.toString());
+				//boolean isFileRenamed = oldName.renameTo(newName);
 
+				FileUtils.copyDirectory(oldName, newName);
+
+				oldName.delete();
+
+				//if(isFileRenamed)
+				//log.info("Temporary Loa No folder has been renamed.");
+				//else 
+				//log.info("Temporary Loa No folder has not been renamed.");
+
+			} catch (IOException e) {
+				//e.printStackTrace();
+			}
 		}
 	}
 
