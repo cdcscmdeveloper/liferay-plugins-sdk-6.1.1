@@ -619,7 +619,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 								if(finOrgResDTO.getPmFinancialAcc()!=null) {
 									getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
 									getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
-									getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
+									getManagedBean().getInvoice().setPaymentBankName(getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 								}
 							}
 						} else {
@@ -1201,7 +1201,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(finOrgResDTO.getPmFinancialAcc()!=null) {
 				getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
 				getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
-				getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 				getManagedBean().getInvoice().setPaymentBankName(getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 			}
 		}
