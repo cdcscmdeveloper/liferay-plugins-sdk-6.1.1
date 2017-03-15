@@ -18,9 +18,9 @@
 			rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode != SupplierManagementConst.NEW_IC}" />
 		</td><td></td>
 		<td><p:outputLabel value="#{lbl['lbl.sm.complainant.mailing.address']}" style="text-decoration: underline;font-weight: bold;"></p:outputLabel></td>
-		<td><p:selectBooleanCheckbox value="#{complaintBackingBean.managedBean.sameAddress}" 
+		<td><p:selectBooleanCheckbox value="#{complaintBackingBean.managedBean.sameAddress}"
 			rendered="#{complaintBackingBean.managedBean.smComplainant.brandNew}">
-				<p:ajax event="change" process="@form" update="pnlComplainant" />
+				<p:ajax event="change" update="pnlComplainant" />
 			</p:selectBooleanCheckbox>
 			<h:outputText value="#{lbl['lbl.sm.complainant.same.as.ic.address']}" 
 				rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode == SupplierManagementConst.NEW_IC and 
