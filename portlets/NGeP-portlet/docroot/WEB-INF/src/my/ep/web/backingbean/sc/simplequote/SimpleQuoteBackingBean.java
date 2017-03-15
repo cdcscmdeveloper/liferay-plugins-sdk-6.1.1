@@ -3698,7 +3698,7 @@ public class SimpleQuoteBackingBean extends
 		calculateDuration(quote);
 		
 		// validate quote
-		validateQuote(quote);
+		validateQuote(quote, false);
 	}
 	
 	/**
@@ -3742,7 +3742,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		
 		// validate quote
-		validateQuote(quote);
+		validateQuote(quote, true);
 		
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
 			Date currentDate = new Date();
@@ -6676,7 +6676,7 @@ public class SimpleQuoteBackingBean extends
 	 *
 	 * @param quote the quote
 	 */
-	private void validateQuote(ScQuote quote){
+	private void validateQuote(ScQuote quote, boolean isSubmit){
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
 			Date startDate = quote.getStartDate();
 			Date endDate = quote.getEndDate();
@@ -6714,7 +6714,7 @@ public class SimpleQuoteBackingBean extends
 						new String[] {Integer.toString(maxDays)});
 			} 
 		} else
-			if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
+			if (isSubmit && (null == quote.getStartDate() ||  null == quote.getEndDate())) {
 				throw new EpException(MessageConst.ERROR_760388);
 			}
 	}
