@@ -205,9 +205,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		setSoftCertPaymentBpmTask();
 		setSoftcertApplyFor();
 		getManagedBean().setGstPercentageLabel(
-				SmCommonUtil.getMessage("lbl.sm.gst.percent",
-						new String[] { getManagedBean().getGstRate().toString() }));
-		
+				SmCommonUtil
+						.getMessage("lbl.sm.gst.percent",
+								new String[] { getManagedBean().getGstRate()
+										.toString() }));
+
 		getManagedBean().setTargetPage(PAYMENT_PAGE);
 	}
 
@@ -297,16 +299,20 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					personnel.setFreeSoftCert(true);
 				} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					if(personnel.getSoftcertRejectCode() != null){
-						if(personnel.getSoftcertRejectCode().equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD) || 
-								personnel.getSoftcertRejectCode().equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)){
+					if (personnel.getSoftcertRejectCode() != null) {
+						if (personnel
+								.getSoftcertRejectCode()
+								.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)
+								|| personnel
+										.getSoftcertRejectCode()
+										.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
 							personnel.setFreeSoftCert(false);
 							amountPerPersonnel = SmRuleHelper.getInstance()
 									.getSoftCertFee();
-						}else{
+						} else {
 							personnel.setFreeSoftCert(true);
 						}
-					}else{
+					} else {
 						personnel.setFreeSoftCert(true);
 					}
 				} else {
@@ -742,22 +748,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * Set whether this supplier already given free softcert
 	 */
 	private void setAlreadyHadFreeSoftcert() {
-		getManagedBean().setAlreadyHadFreeSoftcert(false);
-		if (getManagedBean().getLoginUserPersonnelInfo() != null
-				&& getManagedBean().getLoginUserPersonnelInfo().getSmAppl() != null
-				&& !EntityHelper.isCollectionEmpty(getManagedBean()
-						.getLoginUserPersonnelInfo().getSmAppl()
-						.getSmPersonnels())) {
-			for (SmPersonnel personnel : getManagedBean()
-					.getLoginUserPersonnelInfo().getSmAppl().getSmPersonnels()) {
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
-						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
-						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
-					getManagedBean().setAlreadyHadFreeSoftcert(true);
-				}
-			}
-		}
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
+				.getSmAppl().getSmSupplier().getSupplierId());
+		getManagedBean().setAlreadyHadFreeSoftcert(
+				SmServiceLookup.getPersonnelSO()
+						.isSupplierAlreadyHadFreeSoftcert(reqDTO));
+
 	}
 
 	/**
@@ -978,16 +975,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 		}
-		
+
 		if (softcertSuppDocList == null || softcertSuppDocList.isEmpty()) {
 			getManagedBean().setSuppDocMode("H");
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getSoftCertSelectList().get(0).getSoftcertRejectCode())){
-			String scertRejectCode = getManagedBean().getSoftCertSelectList().get(0).getSoftcertRejectCode();
-			if(scertRejectCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST) || 
-					scertRejectCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)){
-				getManagedBean().setSuppDocMode(SupplierManagementConst.SUPPORTING_DOC_OFFLINE);
+
+		if (StringUtils.isNotBlank(getManagedBean().getSoftCertSelectList()
+				.get(0).getSoftcertRejectCode())) {
+			String scertRejectCode = getManagedBean().getSoftCertSelectList()
+					.get(0).getSoftcertRejectCode();
+			if (scertRejectCode
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)
+					|| scertRejectCode
+							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)) {
+				getManagedBean().setSuppDocMode(
+						SupplierManagementConst.SUPPORTING_DOC_OFFLINE);
 			}
 		}
 		getManagedBean().setBasicAppl(basic);
