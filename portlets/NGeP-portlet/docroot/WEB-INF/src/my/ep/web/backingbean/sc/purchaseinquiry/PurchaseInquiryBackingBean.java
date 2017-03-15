@@ -64,6 +64,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
@@ -91,6 +92,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -1181,6 +1183,9 @@ public class PurchaseInquiryBackingBean extends
 					reqNoteBackingBean.getManagedBean().setItemSearchBackBtn(Boolean.TRUE);
 				}
 			}
+			
+			// add workflow status for RN
+			 updateWorkFlowAndRemarks(requestNote);
 			// redirect to RequestNote screen
 			return "requestNoteMain";
 
@@ -1796,4 +1801,31 @@ public class PurchaseInquiryBackingBean extends
 		//RequestContext.getCurrentInstance().update("@form");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
+	
+	/**
+	 * Update work flow and remarks.
+	 *
+	 * @param requestNote the request note
+	 */
+	private void updateWorkFlowAndRemarks(ScRequestNote requestNote){
+		// remarks and workflow status
+		ScRNWorkFlowStatus scWorkFlowStatus = null;
+		List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+		scWorkFlowStatus = new ScRNWorkFlowStatus();
+		PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+		getCurrentStatus(currentStatus);
+		scWorkFlowStatus.setCurrent(Boolean.TRUE);
+		scWorkFlowStatus.setPmStatus(currentStatus);
+		scWorkFlowStatus.setRequestNote(requestNote);
+		workFlowStatuses.add(scWorkFlowStatus);
+		requestNote.setWorkFlowStatuses(workFlowStatuses);
+		// To avoid workflow status reset to null when got error during direct submit without save.
+		List<ScRequestNoteRemark> remarks = requestNote.getRemarks();
+		if (CollectionUtils.isNotEmpty(remarks)) {
+			for (ScRequestNoteRemark remark : remarks) {
+				remark.setScWorkFlowStatus(scWorkFlowStatus);
+			}
+		}
+	}
+
 }
