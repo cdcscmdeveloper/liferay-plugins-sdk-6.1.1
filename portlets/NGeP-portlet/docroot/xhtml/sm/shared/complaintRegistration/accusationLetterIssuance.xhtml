@@ -40,8 +40,6 @@
 				<p:calendar showOn="button" required="#{!empty param['disableValidation']}"
 						readonlyInput="true" disabled="#{acLetterViewFlag}" label="#{lbl['lbl.sm.complaint.date.issuance']}"
 						value="#{complaintBackingBean.managedBean.secondReview.letterIssuedDate}"
-						mindate="#{complaintBackingBean.managedBean.secondReview.createdDate}"
-						maxdate="#{CommonConstants.CURRENT_DATE}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</td>
 
@@ -66,8 +64,7 @@
 						
 						<td class="tdContent">
 							<p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
-							mindate="#{complaintBackingBean.managedBean.smComplaint.changedDate}"
-							maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
+							readonlyInput="true"
 							disabled="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId ne DisciplinaryActionConst.updateAcReceiveDate}"
 							value="#{complaintBackingBean.managedBean.secondReview.smComplaintResponse.supplierReceivedDate}" />
 						</td>

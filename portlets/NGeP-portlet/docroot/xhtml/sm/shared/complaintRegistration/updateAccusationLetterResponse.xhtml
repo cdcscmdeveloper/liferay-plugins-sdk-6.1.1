@@ -12,8 +12,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
 					<p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
-					maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true" 
-					mindate="#{complaintBackingBean.managedBean.secondReview.changedDate}" 
+					readonlyInput="true" 
 					label="#{lbl['lbl.sm.complaint.response.received']}" required="#{!empty param['disableValidation']}"
 					value="#{complaintBackingBean.managedBean.secondReview.smComplaintResponse.supplierResponseDate}" 
 					disabled="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.waitingSuppAcResp}" />

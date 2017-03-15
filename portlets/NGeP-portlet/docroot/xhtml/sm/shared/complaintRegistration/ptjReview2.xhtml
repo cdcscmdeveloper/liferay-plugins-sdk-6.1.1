@@ -16,8 +16,8 @@
 						value="#{lbl['lbl.sm.complaint.actual.meeting.date']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:calendar showOn="button" id="secondMeetingDt2" required="#{!empty param['disableValidation']}"
-						mindate="#{complaintBackingBean.managedBean.smComplaint.changedDate}" label="#{lbl['lbl.sm.complaint.actual.meeting.date']}"
-						maxdate="#{CommonConstants.CURRENT_DATE}" disabled="#{secondPtpkViewFLag}"
+						label="#{lbl['lbl.sm.complaint.actual.meeting.date']}"
+						disabled="#{secondPtpkViewFLag}"
 						value="#{complaintBackingBean.managedBean.secondReview.actualConveneDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 				<td class="tdTitle"><p:outputLabel
