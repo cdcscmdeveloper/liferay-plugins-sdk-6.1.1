@@ -309,6 +309,13 @@ public class SmCommonUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterDescListByType(reqDTO);
 		if (!EntityHelper.isCollectionEmpty(resDTO.getParameterDescList())) {
 			retVal = resDTO.getParameterDescList().get(0);
+			for (PmParameterDesc pd : resDTO.getParameterDescList()) {
+				if (pd.getLanguageCode() != null
+						&& pd.getLanguageCode().equalsIgnoreCase(lang)) {
+					retVal = pd;
+					break;
+				}
+			}
 		}
 		return retVal;
 	}
