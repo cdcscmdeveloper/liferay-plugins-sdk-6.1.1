@@ -108,6 +108,8 @@
 			fileUploadListener="lOADetailBackingBean.handleFileUpload"
 			readonly="#{lOADetailBackingBean.managedBean.readOnly}"
 			update="@([id$=scDocUploadBtn])" 
+			fileType="#{lOADetailBackingBean.managedBean.fileTypePdf}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 			autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}"/>
 		
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"

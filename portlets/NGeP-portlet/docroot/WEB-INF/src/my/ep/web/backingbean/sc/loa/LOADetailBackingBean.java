@@ -1650,6 +1650,7 @@ public class LOADetailBackingBean extends
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		setSSMInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 
 		String qtNo = MALAY_NA;
@@ -5021,6 +5022,25 @@ public class LOADetailBackingBean extends
 		context.put("isBumi", isBumi);		
 		context.put("kodBidang", kodBidang);
 		context.put("mofNo", scLoiLoa.getMofNo());
+	}
+	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param myLocale
+	 */
+	private void setSSMInfoForAgreementLetter(VelocityContext context,
+			ScLoa scLoa, ScQt scQt, Locale myLocale) {
+
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+		
+		String regNo = MALAY_NA;
+		
+		if(StringUtils.isNotEmpty(smSupplier.getRegNo())) {
+			regNo = smSupplier.getRegNo();
+		}
+		context.put("regNo", regNo);
 	}
 	
 	/**
