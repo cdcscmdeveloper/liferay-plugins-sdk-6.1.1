@@ -55,11 +55,11 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sm.reason']}" />
+					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
 				<p:inputTextarea value="#{table.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="5" cols="20" required="true"
-					label="#{lbl['lbl.sm.reason']}" id="overlapCaReasonId">
+					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
 					<p:ajax process="@this" update="overlapCatSuppDocDtId" />
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
