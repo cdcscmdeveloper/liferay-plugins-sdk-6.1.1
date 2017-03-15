@@ -345,15 +345,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 					for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 						ctBB.checkAgencyStatus(ctAgency);
-					
-						StringBuilder str =  new StringBuilder();
-						int len = (ctBB.getManagedBean().getContractVer().getCtContract().getContractId() + ctAgency.getOrgProfile().getOrgProfileId().toString()).length();
-						for(int i=len; i<16; i++){
-							str = str.append("0");
-						}
-						 str.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
-						 str.append(ctAgency.getOrgProfile().getOrgProfileId());
-						ctAgency.setCommitmentNo("K"+str.toString());
 						if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 							ctAgency.setAp178(false);
 						} else {
