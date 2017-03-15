@@ -63,13 +63,13 @@
 				<td width="80%" valign="top"><h:panelGroup id="menuContent">
 						<c:if
 							test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
-							<ui:include src="loaDetailsSupplierMenu.xhtml" />
+							<ui:include src="/xhtml/sc/loa/supplierresponse/loaDetailsSupplierMenu.xhtml" />
 						</c:if>
 						
 						<c:if
 							test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
 							<ui:include
-								src="loaSupplierLetterOfAcceptance.xhtml" />
+								src="/xhtml/sc/loa/supplierresponse/loaSupplierLetterOfAcceptance.xhtml" />
 						</c:if>
 
 						<c:if
