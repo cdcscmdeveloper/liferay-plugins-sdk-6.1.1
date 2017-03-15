@@ -1467,22 +1467,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 			
-			double latestContractAmount = 0.0;
+			double overallContractAmount = 0.0;
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 	    		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 	    				&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-	    			latestContractAmount = contractAmt.getContractAmount().doubleValue();
-	    			latestContractAmount = Double.valueOf(df.format(latestContractAmount));
+	    			overallContractAmount = contractAmt.getContractAmount().doubleValue();
+	    			if (contractAmt.getGstAmount() != null) {
+						overallContractAmount += contractAmt.getGstAmount().doubleValue();
+					}
+	    			overallContractAmount = Double.valueOf(df.format(overallContractAmount));
 	    			break;
 	    		}
 	    	}
-			if (ceilingAmt > latestContractAmount) {
+			if (ceilingAmt > overallContractAmount) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
 				CommonUtils commonUtils = new CommonUtils();
 				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
 						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 				throw new EpException(MessageConst.ERROR_750007,
-						new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
     	}
     }
