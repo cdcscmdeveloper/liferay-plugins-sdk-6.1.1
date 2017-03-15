@@ -12,7 +12,7 @@
 
 
 	<p:outputPanel id="priceTierPageID">
-		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex"
+		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmTierPricings}"
 			width="100%" var="price">
 
