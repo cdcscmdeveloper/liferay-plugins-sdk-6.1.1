@@ -647,16 +647,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				  				ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 				  		for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
 				  			// If effective date is after current date, status is still display old status
-				  			
-				  			StringBuilder str =  new StringBuilder();
-							int len = (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId() + ctAgency.getOrgProfile().getOrgProfileId().toString()).length();
-							for(int i=len; i<16; i++){
-								str = str.append("0");
-							}
-							 str.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
-							 str.append(ctAgency.getOrgProfile().getOrgProfileId());
-							ctAgency.setCommitmentNo("K"+str.toString());
-				  		
 							ctBackingBean.checkAgencyStatus(ctAgency);
 				  			if (ctBackingBean.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 								ctAgency.setAp178(false);
