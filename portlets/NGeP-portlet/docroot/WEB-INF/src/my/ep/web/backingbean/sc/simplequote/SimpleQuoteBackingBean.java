@@ -4023,7 +4023,10 @@ public class SimpleQuoteBackingBean extends
 							.cloneTplSpecQuestions(prodSpecMaster,
 									cloneSpecMaster.getTplSpecQuestions());
 					if (cloneQuestions != null && cloneQuestions.size() > 0) {
-						questions.addAll(cloneQuestions);
+						for (TplSpecQuestion cloneQuestion:cloneQuestions){
+							cloneQuestion.setQuestionOrder(questions.size()+1);
+							questions.add(cloneQuestion);
+						}
 					}
 
 					prodSpecMaster.setTplSpecQuestions(questions);
@@ -4064,7 +4067,10 @@ public class SimpleQuoteBackingBean extends
 							.cloneTplSpecQuestions(serviceSpecMaster,
 									cloneSpecMaster.getTplSpecQuestions());
 					if (cloneQuestions != null && cloneQuestions.size() > 0) {
-						questions.addAll(cloneQuestions);
+						for (TplSpecQuestion cloneQuestion:cloneQuestions){
+							cloneQuestion.setQuestionOrder(questions.size()+1);
+							questions.add(cloneQuestion);
+						}
 					}
 					serviceSpecMaster.setTplSpecQuestions(questions);
 
