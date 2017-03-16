@@ -39,15 +39,26 @@
 					</p:commandLink>
 				</td>
 				<td>
-					<p:selectOneMenu id="suppAdminNameId"
-						label="#{lbl['lbl.sm.selfrequest.suppadmin.name']}"
-						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedPersonnelId}"
-						style="width: 207px;margin-bottom: 5px;" required="true">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.personnelItems}" />
-						<p:ajax event="change" process="@this" update="@this" partialSubmit="true" />
-					</p:selectOneMenu>
-					<p:messages for="suppAdminNameId" showDetail="true" closable="true" showSummary="false" escape="false"/>
+					<p:autoComplete id="suppAdminNameId" 
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin}" 
+						completeMethod="#{selfRequestSupplierAdminBackingBean.autoCompletePersonnels}" 
+						var="per" itemLabel="#{per.name}" itemValue="#{per}"
+						converter="personnelsSessionConverter" dropdown="true" >
+						<p:ajax event="itemSelect" process="@this" update="@this" partialSubmit="true" />
+                    </p:autoComplete>
+                    
+                    <ui:remove>
+	                    <p:selectOneMenu id="suppAdminNameId"
+							label="#{lbl['lbl.sm.selfrequest.suppadmin.name']}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedPersonnelId}"
+							style="width: 207px;margin-bottom: 5px;" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.personnelItems}" />
+							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" />
+						</p:selectOneMenu>
+					</ui:remove>
+					<p:messages for="suppAdminNameId" showDetail="true" closable="true" 
+						showSummary="false" escape="false"/>
 				</td>
 			</tr>
 			<tr>

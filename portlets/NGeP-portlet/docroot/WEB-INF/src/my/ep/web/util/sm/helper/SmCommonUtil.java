@@ -4313,6 +4313,60 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
+	/**
+	 * Filtered personnel by wildcard in external context session map
+	 * 
+	 * @param String
+	 *            query
+	 * @return List<SmPersonnel>
+	 */
+	public static List<SmPersonnel> getFilteredPersonnelsInSession(String query) {
+		@SuppressWarnings("unchecked")
+		List<SmPersonnel> personnels = (List<SmPersonnel>) getExternalContextSessionMapValue("personnelList");
+		List<SmPersonnel> filteredPersonnels = new ArrayList<SmPersonnel>();
+
+		if (!EntityHelper.isCollectionEmpty(personnels)) {
+			query = query.toUpperCase();
+			String name = StringUtils.EMPTY;
+			for (SmPersonnel personnel : personnels) {
+				name = personnel.getName().toUpperCase();
+				if (name.contains(query)) {
+					filteredPersonnels.add(personnel);
+				}
+			}
+		}
+		return filteredPersonnels;
+	}
+
+	/**
+	 * Set key pair value in external context session map
+	 * 
+	 * @param String
+	 *            key
+	 * @param Object
+	 *            value
+	 */
+	public static void setExternalContextSessionMap(String key, Object value) {
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		Map<String, Object> sessionMap = externalContext.getSessionMap();
+		sessionMap.put(key, value);
+	}
+
+	/**
+	 * Get object value from external context session map
+	 * 
+	 * @param String
+	 *            key
+	 * @return Object
+	 */
+	public static Object getExternalContextSessionMapValue(String key) {
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		Map<String, Object> sessionMap = externalContext.getSessionMap();
+		return sessionMap.get(key);
+	}
+
 	private static SelectItem getLhdnSelectItem() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setOrgCode(my.ep.constant.sm.SupplierManagementConst.LHDN_ORG_PROFILE_CODE);
