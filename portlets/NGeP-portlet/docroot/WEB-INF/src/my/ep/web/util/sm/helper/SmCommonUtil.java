@@ -4322,7 +4322,7 @@ public class SmCommonUtil {
 	 */
 	public static List<SmPersonnel> getFilteredPersonnelsInSession(String query) {
 		@SuppressWarnings("unchecked")
-		List<SmPersonnel> personnels = (List<SmPersonnel>) getExternalContextSessionMapValue("personnelList");
+		List<SmPersonnel> personnels = (List<SmPersonnel>) getExternalContextSessionMapValue(SupplierManagementConst.KEY_MAP_PERSONNEL_LIST);
 		List<SmPersonnel> filteredPersonnels = new ArrayList<SmPersonnel>();
 
 		if (!EntityHelper.isCollectionEmpty(personnels)) {

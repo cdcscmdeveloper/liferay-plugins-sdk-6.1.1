@@ -23,7 +23,6 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private String mofNo;
 	private String icNo;
 	private Long myCountryId;
-	private List<SelectItem> personnelItems;
 	private List<SelectItem> countryItems;
 	private List<SelectItem> stateItems;
 	private List<SelectItem> districtItems;
@@ -82,14 +81,6 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 
 	public void setIcNo(String icNo) {
 		this.icNo = icNo;
-	}
-
-	public List<SelectItem> getPersonnelItems() {
-		return personnelItems;
-	}
-
-	public void setPersonnelItems(List<SelectItem> personnelItems) {
-		this.personnelItems = personnelItems;
 	}
 
 	public List<SelectItem> getCountryItems() {
