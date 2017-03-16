@@ -546,7 +546,7 @@ p {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">1.1 No. Pendaftaran</span></td>
 					<td style="width: 5%">:</td>
-					<td style="width: 20%">_______________________________</td>
+					<td style="width: 20%">$!regNo</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
