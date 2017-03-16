@@ -12,8 +12,11 @@
 
 
 	<p:outputPanel id="pricePromotionTierPageID">
-
-		<p:dataTable id="pricingPromotionTierID" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.cm.pricing.instrcution']}" />
+		<br />
+		<p:dataTable id="pricingPromotionTierID" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionTierPricings}"
 			width="100%" var="price">
 			<ac:paginator for="pricingPromotionTierID"></ac:paginator>
@@ -21,35 +24,35 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
-				<p:inputText value="#{price.fromQty}" size="5" readonly="true" maxlength="6"
-					disabled="#{price.standardDisabled}"></p:inputText>
+				<p:inputText value="#{price.fromQty}" size="5" readonly="true"
+					maxlength="6" disabled="#{price.standardDisabled}"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
-				<p:inputText value="#{price.toQty}" size="5" readonly="true" maxlength="6"
-					disabled="#{price.standardDisabled}"></p:inputText>
+				<p:inputText value="#{price.toQty}" size="5" readonly="true"
+					maxlength="6" disabled="#{price.standardDisabled}"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText id="promotionTierId" value="#{price.price}" size="10" maxlength="18"
-					style="text-align:right">
+				<p:inputText id="promotionTierId" value="#{price.price}" size="10"
+					maxlength="18" style="text-align:right">
 					<p:ajax process="@this"
 						listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"
 						update="pTErrorLink, promotionTierId" />
-						<f:converter converterId="bigDecimalConverter" />
+					<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button" navigator="true"
-					mindate="#{price.parentPrice.startDate}"
+				<p:calendar value="#{price.startDate}" showOn="button"
+					navigator="true" mindate="#{price.parentPrice.startDate}"
 					maxdate="#{price.parentPrice.endDate}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect"
@@ -71,8 +74,8 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" navigator="true"
-					mindate="#{price.parentPrice.startDate}"
+				<p:calendar value="#{price.endDate}" showOn="button"
+					navigator="true" mindate="#{price.parentPrice.startDate}"
 					maxdate="#{price.parentPrice.endDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 					rendered="#{price.showFlag}">
@@ -99,11 +102,12 @@
 
 
 
-				<p:commandLink
-					title="#{lbl['lbl.btn.delete']}" rendered="#{price.showFlag}"
+				<p:commandLink title="#{lbl['lbl.btn.delete']}"
+					rendered="#{price.showFlag}"
 					action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
 					update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
-					<p:graphicImage style="padding-right:10px;" value="/css/images/design/trash.png"></p:graphicImage>
+					<p:graphicImage style="padding-right:10px;"
+						value="/css/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 
 				<h:panelGroup id="pTErrorLink">
