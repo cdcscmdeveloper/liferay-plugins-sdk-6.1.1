@@ -1207,19 +1207,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to validate deduction type
 	 * User can not selected same type of deduction again
 	 */	
-	public void validateDeductionType(Long parameteId)  {
+	public void validateDeductionType(CtDeduction deduction)  {
 		
 		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			    int count = 0;
 			    String parameterCode;
 		         for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
-					    if(deId.getDeductionType().getParameterId() != null && parameteId.intValue() == deId.getDeductionType().getParameterId().intValue()){
+					    if(deId.getDeductionType().getParameterId() != null && deduction.getDeductionType().getParameterId().intValue() == deId.getDeductionType().getParameterId().intValue()){
 						    count++;
 						    parameterCode =  getParameterCode(deId.getDeductionType());
 						    if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
 						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && count == 2)
 							     throw new EpException(MessageConst.ERROR_100046,
-							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(parameteId))});
+							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionId()))});
 				         }
 				    }
 			  }
