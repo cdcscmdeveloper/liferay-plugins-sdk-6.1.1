@@ -123,21 +123,20 @@
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
 						</h:panelGroup></td>
 					<td><h:panelGroup id="justValue">
-							<h:selectOneMenu style="margin-bottom: 5px; width: 225px;"
-							    panelStyle="width:650px"
+							<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
+							    panelStyle="overflow-y: scroll; width:400px; height:150px;"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 								id="justificationId" label="#{lbl['lbl.sc.reason']}"
 								required="#{requestNoteBackingBean.managedBean.justRequired}"
 								value="#{requestNoteBackingBean.managedBean.justificationType}">
 								<f:selectItems
 									value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-							</h:selectOneMenu>
+							</p:selectOneMenu>
 							<p:message id="justTypeMsg" for="justificationId" display="icon" />
 						</h:panelGroup></td>
 				</tr>
 				<tr>
-					<td
-						style="vertical-align: top; padding-right: 1px; text-align: right;">
+					<td style="vertical-align: top; padding-right: 1px; text-align: right;">
 						<h:panelGroup id="justRmksLabel">
 							<p:outputLabel value="#{lbl['lbl.sc.justification']}"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
