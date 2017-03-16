@@ -93,6 +93,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 					getManagedBean().getPersonnelItems().add(item);
 				}
 			}
+			SmCommonUtil.setExternalContextSessionMap("personnelList",
+					getManagedBean().getSupplier().getSmAppl()
+							.getSmPersonnels());
 			getManagedBean().setPage(SUPP_ADMIN_PERSONNEL_PAGE);
 		}
 	}
@@ -106,11 +109,6 @@ public class SelfRequestSupplierAdminBackingBean extends
 		String invalidMsg = getInValidIcErrMsg(getManagedBean().getIcNo());
 		if (StringUtils.isBlank(invalidMsg)) {
 			getManagedBean().setPage(SUPP_ADMIN_DETAILS_PAGE);
-			SmPersonnel suppAdmin = (SmPersonnel) EntityHelper
-					.getEntityBySinglePropertyFromList(getManagedBean()
-							.getIcNo(), getManagedBean().getSupplier()
-							.getSmAppl().getSmPersonnels(), "identificationNo");
-			getManagedBean().setSelectedAdmin(suppAdmin);
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			getManagedBean().setIdentificationTypeItems(
 					SmCommonUtil.getInstance().getPmIdTypeDropdownValues());
@@ -171,10 +169,17 @@ public class SelfRequestSupplierAdminBackingBean extends
 		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
 				reqDTO);
 
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.clear();
+
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(),
 				MessageConst.INFO_721227, new String[] { getManagedBean()
 						.getSupplier().getCompanyName() });
+	}
+
+	public List<SmPersonnel> autoCompletePersonnels(String query) {
+		return SmCommonUtil.getFilteredPersonnelsInSession(query);
 	}
 
 	public void onBlurMofNo(String mofNo) {
@@ -424,7 +429,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 						"lbl.sm.selfrequest.icno.invalid", null);
 			} else {
 				if (per.getPersonnelId().compareTo(
-						getManagedBean().getSelectedPersonnelId()) != 0) {
+						getManagedBean().getSelectedAdmin().getPersonnelId()) != 0) {
 					errMsg = SmCommonUtil.getMessage(
 							"lbl.sm.selfrequest.icno.invalid", null);
 				}
