@@ -12,6 +12,8 @@
 
 
 	<p:outputPanel id="zStanPriceId">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.cm.pricing.instrcution']}" />
+		<br />
 		<p:dataTable id="zStanPriceTableId"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.zStdPrices}"
