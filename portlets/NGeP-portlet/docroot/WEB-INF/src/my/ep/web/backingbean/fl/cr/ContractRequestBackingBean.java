@@ -1083,13 +1083,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(DateUtils.isDateGreaterOrEqual(DateUtils.getCurrentDateWithoutTime(), getManagedBean().getFlRequest().getCtContract().getCtFactoring().getEffDate()) && 
 					DateUtils.isDateGreaterOrEqual(getManagedBean().getFlRequest().getCtContract().getCtFactoring().getExpDate(), DateUtils.getCurrentDateWithoutTime()) ) {
 					if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrgAddress()){
+						getManagedBean().setFactored(true);
 						getSelectedFactoringCompDtl(getManagedBean().getFlRequest().getCtContract().getCtFactoring());
 					}
 				} else {
-					getManagedBean().getFlRequest().getCtContract().setFactored(false);
+					getManagedBean().setFactored(false);
 				}
 			}else{
-				getManagedBean().getFlRequest().getCtContract().setFactored(false);
+				getManagedBean().setFactored(false);
 			}
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
