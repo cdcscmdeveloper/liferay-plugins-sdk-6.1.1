@@ -39,13 +39,12 @@ import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.myidentity.DiMyidentityReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.DiMyidentity;
@@ -57,15 +56,14 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAttachment;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmComplainant;
 import my.ep.persistence.entity.sm.SmComplainantAddress;
 import my.ep.persistence.entity.sm.SmComplaint;
 import my.ep.persistence.entity.sm.SmComplaintOffense;
 import my.ep.persistence.entity.sm.SmComplaintResponse;
 import my.ep.persistence.entity.sm.SmComplaintReview;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -960,6 +958,24 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		externalContext.redirect(commonUrl + "/" + COMPLAINT_MANAGEMENT);
 
+	}
+	
+	/**
+	 * retrieve MOF Account Info
+	 * @param supplierId
+	 * @return String
+	 */
+	public String retrieveMOFAccountInfo(Long suppId){
+		if(suppId != null){
+			VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+			reqDTO.setSupplierId(suppId);
+			List<SmMofAccount> mofAccounts = SmServiceLookup.getVirtualCertSO().retrieveMOFAccountBySupplierId(reqDTO).getSmMofAccounts();
+		
+			if(mofAccounts.size() > 0){
+				return mofAccounts.get(0).getMofNo();
+			}
+		}
+		return null;
 	}
 	
 	private List<SmAttachment> getSmAttachmentsByDocTypeAndId(String docType, Long docId){
