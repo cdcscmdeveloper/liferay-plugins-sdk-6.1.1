@@ -29,7 +29,8 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.mofno']}" /></td>
-				<td class="tdContent"><p:inputText readonly="true" /></td>
+				<td class="tdContent"><p:inputText readonly="true" 
+				value="#{complaintBackingBean.retrieveMOFAccountInfo(complaintBackingBean.managedBean.smComplaint.smSupplier.supplierId)}"/></td>
 				
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.epno']}" /></td>
