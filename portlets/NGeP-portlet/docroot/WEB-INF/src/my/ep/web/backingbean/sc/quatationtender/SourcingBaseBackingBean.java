@@ -20,6 +20,7 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -190,6 +191,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
+	
+	private static final String UTF = "UTF-8";
 
 	/**
 	 * To upload the attachment.
@@ -806,7 +809,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
 			reportUrl.append(ReportConst.VALUE_SEPARATOR);
-			reportUrl.append(params.getValue());
+			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
 		}
 		reportUrl.append(excNextUrl);
 		log.info("reportUrl: " + reportUrl);
