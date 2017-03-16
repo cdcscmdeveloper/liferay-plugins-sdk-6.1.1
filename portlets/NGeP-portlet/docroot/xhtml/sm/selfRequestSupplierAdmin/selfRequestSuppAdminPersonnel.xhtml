@@ -43,6 +43,7 @@
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin}" 
 						completeMethod="#{selfRequestSupplierAdminBackingBean.autoCompletePersonnels}" 
 						var="per" itemLabel="#{per.name}" itemValue="#{per}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						converter="personnelsSessionConverter" dropdown="true" >
 						<p:ajax event="itemSelect" process="@this" update="@this" partialSubmit="true" />
                     </p:autoComplete>
