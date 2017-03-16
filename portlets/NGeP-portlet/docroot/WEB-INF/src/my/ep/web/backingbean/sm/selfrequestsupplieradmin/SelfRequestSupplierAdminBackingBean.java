@@ -76,8 +76,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 											"lbl.sm.selfrequest.mof.number",
 											null) })));
 		} else {
-			getManagedBean().setPersonnelItems(new ArrayList<SelectItem>());
-			SelectItem item = null;
+			List<SmPersonnel> filteredPersonnels = new ArrayList<SmPersonnel>();
 			for (SmPersonnel per : getManagedBean().getSupplier().getSmAppl()
 					.getSmPersonnels()) {
 				if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
@@ -87,15 +86,12 @@ public class SelfRequestSupplierAdminBackingBean extends
 						&& per.getIdentificationType() != null
 						&& per.getIdentificationType().getParameterCode()
 								.equals(SupplierManagementConst.NEW_IC)) {
-					item = new SelectItem();
-					item.setLabel(per.getName());
-					item.setValue(per.getPersonnelId());
-					getManagedBean().getPersonnelItems().add(item);
+					filteredPersonnels.add(per);
 				}
 			}
-			SmCommonUtil.setExternalContextSessionMap("personnelList",
-					getManagedBean().getSupplier().getSmAppl()
-							.getSmPersonnels());
+			SmCommonUtil.setExternalContextSessionMap(
+					SupplierManagementConst.KEY_MAP_PERSONNEL_LIST,
+					filteredPersonnels);
 			getManagedBean().setPage(SUPP_ADMIN_PERSONNEL_PAGE);
 		}
 	}
