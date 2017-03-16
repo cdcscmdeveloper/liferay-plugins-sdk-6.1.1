@@ -23,7 +23,6 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private String mofNo;
 	private String icNo;
 	private Long myCountryId;
-	private Long selectedPersonnelId;
 	private List<SelectItem> personnelItems;
 	private List<SelectItem> countryItems;
 	private List<SelectItem> stateItems;
@@ -93,14 +92,6 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 		this.personnelItems = personnelItems;
 	}
 
-	public Long getSelectedPersonnelId() {
-		return selectedPersonnelId;
-	}
-
-	public void setSelectedPersonnelId(Long selectedPersonnelId) {
-		this.selectedPersonnelId = selectedPersonnelId;
-	}
-
 	public List<SelectItem> getCountryItems() {
 		return countryItems;
 	}
@@ -121,7 +112,8 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 		return selectedAdminPermAddr;
 	}
 
-	public void setSelectedAdminPermAddr(SmPersonnelAddress selectedAdminPermAddr) {
+	public void setSelectedAdminPermAddr(
+			SmPersonnelAddress selectedAdminPermAddr) {
 		this.selectedAdminPermAddr = selectedAdminPermAddr;
 	}
 
