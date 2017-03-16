@@ -62,6 +62,8 @@ public class QTProposalCloseJob implements Job {
 
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
+		
+		log.info("#$#$#$#$ Proposal being closed for QT with id:: "+qtId);
 
 		try {
 			if (proposalSO == null) {
