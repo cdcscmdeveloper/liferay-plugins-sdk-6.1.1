@@ -914,7 +914,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 																ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 										}
 										
-										ctBB.validateDeductionType(deduction.getDeductionType().getParameterId());
+										ctBB.validateDeductionType(deduction);
 										if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 												for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 														if(ctDeductionClauses.getClauseDescription().isEmpty()){
