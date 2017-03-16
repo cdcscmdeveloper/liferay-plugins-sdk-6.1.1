@@ -12,6 +12,8 @@
 
 
 	<p:outputPanel id="cmZonalTierPricings">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.cm.pricing.instrcution']}" />
+		<br />
 		<p:dataTable id="cmZonalTierPricingsId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalTierPricings}"
 			var="tier" rowKey="#{tier}" rowIndexVar="rowIndex" width="100%">

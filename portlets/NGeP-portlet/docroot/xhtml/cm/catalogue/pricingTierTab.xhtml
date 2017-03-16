@@ -12,6 +12,9 @@
 
 
 	<p:outputPanel id="priceTierPageID">
+	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.cm.pricing.instrcution']}" />
+		<br />
 		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmTierPricings}"
