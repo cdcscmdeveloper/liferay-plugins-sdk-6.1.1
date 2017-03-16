@@ -45,8 +45,8 @@
 			      		     rendered="#{!ctBackingBean.managedBean.viewContract and 
 			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}">
 			                    <f:selectItems value="#{ctBackingBean.retrieveParameterDescListByType()}" />
-			                    <p:ajax event="change" update=":form:tableDeduction, :form:clauseDescp" process="@all"  partialSubmit="true"
-			                         listener="#{ctBackingBean.validateDeductionType(datas.deductionType.parameterId)}"></p:ajax>
+			                    <p:ajax event="change" update=":form:tableDeduction, :form:clauseDescp" process="@this"  partialSubmit="true"
+			                         listener="#{ctBackingBean.validateDeductionType(datas)}"></p:ajax>
 			              </p:selectOneMenu>
 			              
 			              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract and 
