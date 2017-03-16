@@ -3087,7 +3087,11 @@ public class LOADetailBackingBean extends
 							}
 						}
 					}
-				} finally {
+				} catch(EpException e) {
+					//
+					log.info("Org validity is null for supplier user");
+				}
+				finally {
 					userSO = null;
 				}
 			}			
