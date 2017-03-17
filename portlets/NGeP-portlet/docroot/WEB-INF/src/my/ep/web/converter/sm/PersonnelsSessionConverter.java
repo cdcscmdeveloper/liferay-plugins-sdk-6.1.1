@@ -9,6 +9,7 @@ import javax.faces.convert.FacesConverter;
 
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,7 +29,7 @@ public class PersonnelsSessionConverter implements Converter {
 				&& StringUtils.isNumeric(arg2)) {
 			@SuppressWarnings("unchecked")
 			List<SmPersonnel> personnels = (List<SmPersonnel>) SmCommonUtil
-					.getExternalContextSessionMapValue("personnelList");
+					.getExternalContextSessionMapValue(SupplierManagementConst.KEY_MAP_PERSONNEL_LIST);
 			SmPersonnel personnel = (SmPersonnel) EntityHelper
 					.getEntityBySinglePropertyFromList(Long.parseLong(arg2),
 							personnels, "personnelId");
@@ -43,9 +44,10 @@ public class PersonnelsSessionConverter implements Converter {
 		if (arg2 != null && arg2 instanceof SmPersonnel) {
 			SmPersonnel personnel = (SmPersonnel) arg2;
 			Long personnelId = personnel.getPersonnelId();
-			return personnelId != null ? String.valueOf(personnelId) : "";
+			return personnelId != null ? String.valueOf(personnelId)
+					: StringUtils.EMPTY;
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 }
