@@ -18768,7 +18768,7 @@ public class ReportBackingBean extends
 					StringBuffer reportUrl = new StringBuffer(paramConstrString);
 					
 					PmUser user = new FacesScopes().getUserSessionBean();
-					//new LogKey().setUserId(user.getUserId());
+					new LogKey().setUserId(user.getUserId());
 					
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
