@@ -34,6 +34,7 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private boolean agreeTC;
 	private String page;
 	private Date currDate;
+	private boolean disabledNextBtn;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -146,6 +147,14 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 
 	public void setMyCountryId(Long myCountryId) {
 		this.myCountryId = myCountryId;
+	}
+
+	public boolean isDisabledNextBtn() {
+		return disabledNextBtn;
+	}
+
+	public void setDisabledNextBtn(boolean disabledNextBtn) {
+		this.disabledNextBtn = disabledNextBtn;
 	}
 
 }

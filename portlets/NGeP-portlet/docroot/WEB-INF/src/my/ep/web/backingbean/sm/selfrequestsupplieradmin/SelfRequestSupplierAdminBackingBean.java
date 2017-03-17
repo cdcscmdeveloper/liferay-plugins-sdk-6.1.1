@@ -21,7 +21,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
@@ -132,11 +131,11 @@ public class SelfRequestSupplierAdminBackingBean extends
 		} else {
 			if (!StringUtils.isBlank(invalidIcMsg)) {
 				fc.addMessage("icNoId", new FacesMessage(
-						FacesMessage.SEVERITY_INFO, null, invalidIcMsg));
+						FacesMessage.SEVERITY_ERROR, null, invalidIcMsg));
 			}
 			if (!StringUtils.isBlank(invalidNameMsg)) {
 				fc.addMessage("suppAdminNameId", new FacesMessage(
-						FacesMessage.SEVERITY_INFO, null, invalidNameMsg));
+						FacesMessage.SEVERITY_ERROR, null, invalidNameMsg));
 			}
 		}
 	}
@@ -189,7 +188,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 	public void onBlurMofNo(String mofNo) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		StringBuilder fullMsg = new StringBuilder();
+		getManagedBean().setDisabledNextBtn(false);
 		if (StringUtils.isBlank(mofNo)) {
+			getManagedBean().setDisabledNextBtn(true);
 			fullMsg.append(SmCommonUtil.getMessage("lbl.sm.required.msg",
 					new String[] { SmCommonUtil.getMessage(
 							"lbl.sm.selfrequest.mof.number", null) }));
@@ -220,6 +221,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 			if (getManagedBean().getSupplier() == null
 					|| EntityHelper.isCollectionEmpty(getManagedBean()
 							.getSupplier().getSmMofAccounts())) {
+				getManagedBean().setDisabledNextBtn(true);
 				fullMsg.append(
 						SmCommonUtil.getMessage(
 								"lbl.sm.selfrequest.msg.mofstatus",
@@ -259,13 +261,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 					for (SmPersonnel per : personnels) {
 						if ((per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per
 								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-								&& (!StringUtils.isBlank(per.getEpRole()) && (per
-										.getEpRole().equals(
-												RoleCode.BASIC_SUPPLIER_ADMIN
-														.value()) || per
-										.getEpRole().equals(
-												RoleCode.MOF_SUPPLIER_ADMIN
-														.value())))) {
+								&& (!StringUtils.isBlank(per.getEpRole()) && (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+										.contains(per.getEpRole())))) {
 							suppAdminStatusMsg = "lbl.sm.selfrequest.msg.suppadmin.appointed";
 							suppAdminName = per.getName();
 						}
@@ -282,12 +279,12 @@ public class SelfRequestSupplierAdminBackingBean extends
 				// check if mof status is not valid
 				if (mofStatusMsg
 						.equals("lbl.sm.selfrequest.msg.mofstatus.notvalid.expired")) {
+					getManagedBean().setDisabledNextBtn(true);
 					fullMsg.append(SmCommonUtil.getMessage(
 							"lbl.sm.selfrequest.msg.click.newreg", null));
 				}
 				// if mof status is valid
 				else {
-
 					fullMsg.append(
 							SmCommonUtil.getMessage(
 									"lbl.sm.selfrequest.msg.suppadmin.status",
@@ -310,6 +307,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 					// if supp admin already assigned
 					else {
+						getManagedBean().setDisabledNextBtn(true);
 						fullMsg.append(SmCommonUtil.getMessage(
 								"lbl.sm.selfrequest.msg.click.login", null));
 					}
@@ -438,8 +436,10 @@ public class SelfRequestSupplierAdminBackingBean extends
 				errMsg = SmCommonUtil.getMessage(
 						"lbl.sm.selfrequest.icno.invalid", null);
 			} else {
-				if (per.getPersonnelId().compareTo(
-						getManagedBean().getSelectedAdmin().getPersonnelId()) != 0) {
+				if (getManagedBean().getSelectedAdmin() != null
+						&& per.getPersonnelId().compareTo(
+								getManagedBean().getSelectedAdmin()
+										.getPersonnelId()) != 0) {
 					errMsg = SmCommonUtil.getMessage(
 							"lbl.sm.selfrequest.icno.invalid", null);
 				}
@@ -455,13 +455,21 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 	private String getInValidAdminNameErrMsg() {
 		String retVal = StringUtils.EMPTY;
-		SmPersonnel personnel = (SmPersonnel) EntityHelper
-				.getEntityBySinglePropertyFromList(getManagedBean()
-						.getSelectedAdmin().getName(), getManagedBean()
-						.getSupplier().getSmAppl().getSmPersonnels(), "name");
-		if (personnel == null) {
-			retVal = SmCommonUtil.getMessage(
-					"lbl.sm.selfrequest.suppadmin.name.invalid", null);
+
+		if (getManagedBean().getSelectedAdmin() == null) {
+			retVal = SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.selfrequest.suppadmin.name", null) });
+		} else {
+			SmPersonnel personnel = (SmPersonnel) EntityHelper
+					.getEntityBySinglePropertyFromList(getManagedBean()
+							.getSelectedAdmin().getName(), getManagedBean()
+							.getSupplier().getSmAppl().getSmPersonnels(),
+							"name");
+			if (personnel == null) {
+				retVal = SmCommonUtil.getMessage(
+						"lbl.sm.selfrequest.suppadmin.name.invalid", null);
+			}
 		}
 		return retVal;
 	}
