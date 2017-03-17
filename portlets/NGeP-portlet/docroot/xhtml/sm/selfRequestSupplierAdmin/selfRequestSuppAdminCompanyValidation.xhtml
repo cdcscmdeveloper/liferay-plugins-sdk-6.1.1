@@ -45,6 +45,7 @@
 				update="@form" />
 			
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
+				disabled="#{selfRequestSupplierAdminBackingBean.managedBean.disabledNextBtn}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 				action="#{selfRequestSupplierAdminBackingBean.navigateToSuppAdmin}" />
 		</div>
