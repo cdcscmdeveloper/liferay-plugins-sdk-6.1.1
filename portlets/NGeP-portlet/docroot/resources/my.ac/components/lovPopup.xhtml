@@ -136,14 +136,17 @@
 					oncomplete="lovPopup.hide();"
 					process="resultPanel"
 					disabled="#{lovBackingBean.isSelectButtonDisable()}"
-					partialSubmit="true"  styleClass="BtnSpacing"/>	<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				partialSubmit="true" process="@this" update="@this"
-				oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
+					partialSubmit="true"  styleClass="BtnSpacing"/>	
+			   <p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				  partialSubmit="true" process="@this" update="@this"
+				  action="#{lovBackingBean.resetAll()}"
+				  oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
 			</TD>
 			</tr></table>
 			
 		</h:panelGroup>
 		</p:panel>
+		<p:ajax event="close" listener="#{lovBackingBean.resetAll()}"/>
 	</p:dialog>
 	
 	<p:defaultCommand target="lovSearchBtn" scope="searchPanel"></p:defaultCommand>
