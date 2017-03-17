@@ -1607,7 +1607,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					reqDTO.setSortBy("pmReason.reasonId");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.pmPIDReasonList.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR));
-					reqDTO.setReasonDescSearchBean(searchBean);
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			        reqDTO.setReasonDescSearchBean(searchBean);
 		        
 					reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
 					resDTO = reasonSO.retrieveReasonDescBySearchBean(reqDTO);
