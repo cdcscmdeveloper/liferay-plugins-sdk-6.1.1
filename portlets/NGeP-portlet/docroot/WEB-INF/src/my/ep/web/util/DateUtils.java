@@ -138,8 +138,19 @@ public class DateUtils {
 	    calendar2.setTime(date2);	    
 	    long milliseconds1 = calendar1.getTimeInMillis();
 	    long milliseconds2 = calendar2.getTimeInMillis();
-	    long diff = milliseconds2 - milliseconds1;	    	        
-	    return ((diff / (24 * 60 * 60 * 1000))+1);
+	    long diff = milliseconds2 - milliseconds1;	 
+	    long days = (diff / (24 * 60 * 60 * 1000));
+	    
+	    if(days > 0){
+	    	days += 1;
+	    } else if(days == 0){// days return 0 even if one day before or after of current date
+	    	if(date1.before(date2)){
+	    		days += 1;
+	    	} else if(date1.after(date2)){
+	    		days = -1;
+	    	}
+	    }
+	    return days;
 	}
 	
 	/**
@@ -532,5 +543,5 @@ public class DateUtils {
 		calendar.setTime(new Date());
 		return calendar.get(Calendar.HOUR_OF_DAY);
 	}
-
+	
 }
