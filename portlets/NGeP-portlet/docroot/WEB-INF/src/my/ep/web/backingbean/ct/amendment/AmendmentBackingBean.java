@@ -1260,7 +1260,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
-					ctBackingBean.validateDeductionType(deduction.getDeductionType().getParameterId());
+					ctBackingBean.validateDeductionType(deduction);
 					if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 						for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 							if(ctDeductionClauses.getClauseDescription().isEmpty()){
@@ -1686,14 +1686,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofMeetingDate() == null) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.date.of.meeting", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.approval.letter.date", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				if (ctBackingBean.getManagedBean().getContractVer().getMofDecisionLetterAttachment() == null
 						|| ctBackingBean.getManagedBean().getContractVer().getMofDecisionLetterAttachment().getFilePath() == null) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision.letter", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.approval.letter", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
