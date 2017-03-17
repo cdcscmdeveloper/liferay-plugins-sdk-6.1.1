@@ -345,6 +345,15 @@ public class LovBackingBean implements Serializable {
 //		this.setLovBean(new LovBean());
 	}
 	
+
+	/**
+	 * Reset all.
+	 */
+	public void resetAll() {
+		this.getSearchDataModel().resetData();
+		this.setLovSearchBean(new SearchBean());
+		this.setLovBean(new LovBean());
+	}
 	
 	//OR: columnName1^value1*columnName1^value2
 	private void constructSearchBean(String conditionField, boolean isThis) {
