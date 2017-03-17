@@ -33,12 +33,12 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<p:autoComplete id="suppAdminNameId" required="true"
+					<p:autoComplete id="suppAdminNameId"
 						label="#{lbl['lbl.sm.selfrequest.suppadmin.name']}"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin}" 
 						completeMethod="#{selfRequestSupplierAdminBackingBean.autoCompletePersonnels}" 
 						var="per" itemLabel="#{per.name}" itemValue="#{per}"
-						converter="personnelsSessionConverter" dropdown="true" >
+						converter="personnelsSessionConverter" dropdown="true" forceSelection="true">
 						<p:ajax event="itemSelect" process="@this" update="@this" partialSubmit="true" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
                     </p:autoComplete>
@@ -67,7 +67,7 @@
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.icNo}"
 						size="35" maxlength="15"
 						validatorMessage="#{lbl['lbl.sm.userprofile.idno']} - #{lbl['lbl.sm.invalidNo']}">
-						<p:ajax event="blur" process="@this" update="@form" partialSubmit="true" 
+						<p:ajax event="blur" process="suppAdminPanelId" update="@form" partialSubmit="true" 
 							listener="#{selfRequestSupplierAdminBackingBean.onBlurIcNo(selfRequestSupplierAdminBackingBean.managedBean.icNo)}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						<f:attribute name="labelName" value="#{lbl['lbl.sm.person.icNum']}" />
