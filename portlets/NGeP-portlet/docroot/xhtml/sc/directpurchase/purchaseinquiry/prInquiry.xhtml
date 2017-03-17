@@ -223,6 +223,7 @@
 											styleClass="mandatory" /></td>
 									<td><p:selectOneMenu
 											style="width: 235px; margin-bottom: 5px;"
+											panelStyle="overflow-y: scroll; width:400px; height:200px;"
 											id="justificationId" label="#{lbl['lbl.sc.reason']}"
 											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
 											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.reasonCode}">
