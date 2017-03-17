@@ -31,12 +31,6 @@
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.selfrequest.suppadmin.name']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:commandLink rendered="#{selfRequestSupplierAdminBackingBean.managedBean.personnelItems.size() gt 10}"
-						title="#{lbl['lbl.cm.search']}" id="searchIconId" update="@form"
-						action="#{selfRequestSupplierAdminBackingBean.searchSuppAdmin}">
-						<p:graphicImage value="/css/images/design/search.png"
-							style="20px;"></p:graphicImage>
-					</p:commandLink>
 				</td>
 				<td>
 					<p:autoComplete id="suppAdminNameId" required="true"
