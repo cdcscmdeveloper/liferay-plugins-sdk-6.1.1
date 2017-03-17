@@ -39,13 +39,14 @@
 					</p:commandLink>
 				</td>
 				<td>
-					<p:autoComplete id="suppAdminNameId" 
+					<p:autoComplete id="suppAdminNameId" required="true"
+						label="#{lbl['lbl.sm.selfrequest.suppadmin.name']}"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin}" 
 						completeMethod="#{selfRequestSupplierAdminBackingBean.autoCompletePersonnels}" 
 						var="per" itemLabel="#{per.name}" itemValue="#{per}"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						converter="personnelsSessionConverter" dropdown="true" >
-						<p:ajax event="itemSelect" process="@this" update="@this" partialSubmit="true" />
+						<p:ajax event="itemSelect" process="@this" update="@this" partialSubmit="true" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
                     </p:autoComplete>
                     
                     <ui:remove>
