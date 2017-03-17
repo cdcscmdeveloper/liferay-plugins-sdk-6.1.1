@@ -102,8 +102,10 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 	public void navigateToSuppAdminDetails() {
 		FacesContext fc = FacesContext.getCurrentInstance();
-		String invalidMsg = getInValidIcErrMsg(getManagedBean().getIcNo());
-		if (StringUtils.isBlank(invalidMsg)) {
+		String invalidIcMsg = getInValidIcErrMsg(getManagedBean().getIcNo());
+		String invalidNameMsg = getInValidAdminNameErrMsg();
+		if (StringUtils.isBlank(invalidIcMsg)
+				&& StringUtils.isBlank(invalidNameMsg)) {
 			getManagedBean().setPage(SUPP_ADMIN_DETAILS_PAGE);
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			getManagedBean().setIdentificationTypeItems(
@@ -128,8 +130,14 @@ public class SelfRequestSupplierAdminBackingBean extends
 			onChangeCity(getManagedBean().getSelectedAdminPermAddr()
 					.getSmAddress());
 		} else {
-			fc.addMessage("icNoId", new FacesMessage(
-					FacesMessage.SEVERITY_INFO, null, invalidMsg));
+			if (!StringUtils.isBlank(invalidIcMsg)) {
+				fc.addMessage("icNoId", new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null, invalidIcMsg));
+			}
+			if (!StringUtils.isBlank(invalidNameMsg)) {
+				fc.addMessage("suppAdminNameId", new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null, invalidNameMsg));
+			}
 		}
 	}
 
@@ -338,6 +346,12 @@ public class SelfRequestSupplierAdminBackingBean extends
 		if (!StringUtils.isBlank(errMsg)) {
 			fc.addMessage("icNoId", new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, null, errMsg));
+		} else {
+			errMsg = getInValidAdminNameErrMsg();
+			if (!StringUtils.isBlank(errMsg)) {
+				fc.addMessage("suppAdminNameId", new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, null, errMsg));
+			}
 		}
 
 	}
@@ -437,6 +451,19 @@ public class SelfRequestSupplierAdminBackingBean extends
 		}
 
 		return errMsg;
+	}
+
+	private String getInValidAdminNameErrMsg() {
+		String retVal = StringUtils.EMPTY;
+		SmPersonnel personnel = (SmPersonnel) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSelectedAdmin().getName(), getManagedBean()
+						.getSupplier().getSmAppl().getSmPersonnels(), "name");
+		if (personnel == null) {
+			retVal = SmCommonUtil.getMessage(
+					"lbl.sm.selfrequest.suppadmin.name.invalid", null);
+		}
+		return retVal;
 	}
 
 }
