@@ -18748,14 +18748,22 @@ public class ReportBackingBean extends
 				
 				if(testing){
 
+					log.info("1");
+					
 					boolean isTempAccess = false;
 					
+					log.info("2");
+					
 					int i = Integer.parseInt(this.getManagedBean().getReportUrlValue());
+					
+					log.info("3");
 					
 					if(i == 1){
 						isTempAccess = true;
 					}
 
+					log.info("4");
+					
 					paramConstrString = paramConstrString.replace("&", " ");
 					paramConstrString = paramConstrString.replaceAll("^\\s+", "");
 					paramConstrString = paramConstrString.replaceAll("\\s+$", "");
@@ -18765,16 +18773,21 @@ public class ReportBackingBean extends
 					
 					paramConstrString = paramConstrString.replaceAll("%20" , " ");
 
+					log.info("5");
+					
 					StringBuffer reportUrl = new StringBuffer(paramConstrString);
 					
-					PmUser user = new FacesScopes().getUserSessionBean();
-					new LogKey().setUserId(user.getUserId());
+					//PmUser user = new FacesScopes().getUserSessionBean();
+					
+					log.info("6");
 					
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IRPTRequestSO.class);
 					
 					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, lngUserId, isExcel, isTempAccess);
+					
+					log.info("6");
 					
 					System.out.println("jimmy reportbackingbean - " + reportTitle);
 					
