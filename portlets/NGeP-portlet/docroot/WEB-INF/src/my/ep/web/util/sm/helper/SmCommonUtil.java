@@ -2124,7 +2124,7 @@ public class SmCommonUtil {
 		if (severity == null) {
 			severity = FacesMessage.SEVERITY_INFO;
 		}
-		if (StringUtils.isNotBlank(msgKeyId)) {
+		if (!StringUtils.isBlank(msgKeyId)) {
 			if (params != null && params.length > 0) {
 				fc.addMessage(
 						null,

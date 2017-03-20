@@ -90,7 +90,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setSoftcertDocNo(
 				SmCommonUtil.getSoftcertDocNo(getManagedBean()
 						.getLoginUserPersonnelInfo().getSmAppl()));
-		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "", null);
+		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "", null, null);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getPersonnelByPmUser(usr);
 		setPersonnelSoftcertInformation(getManagedBean()
 				.getLoginUserPersonnelInfo());
-		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "", null);
+		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "", null, null);
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			paymentBB.getManagedBean().setDocNo(resDTO.getDocNumber());
 			paymentBB.retrieveBillInfo();
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/payment/portletViewMode.xhtml", "", null);
+					"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 		}
 	}
 
@@ -436,7 +436,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				renewSesionObject();
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(), msgKey,
-						params);
+						params, FacesMessage.SEVERITY_INFO);
 			} else {
 				throw new EpException(MessageConst.ERROR_721037);
 			}
