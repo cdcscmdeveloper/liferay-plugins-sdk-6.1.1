@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -324,11 +323,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			log.info("******Payment ID********"
 					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
-			
-			UserReqDTO usrReqDTO = new UserReqDTO();
-			usrReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			PmUser pmUser = SmServiceLookup.getUserSO().retrieveUserByUserId(usrReqDTO).getPmUser();
-			
+
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+
 			this.getManagedBean().setOrderId(
 					resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 			log.info("pmUser.getMobileFull()>>>>" + pmUser.getMobileFull());
