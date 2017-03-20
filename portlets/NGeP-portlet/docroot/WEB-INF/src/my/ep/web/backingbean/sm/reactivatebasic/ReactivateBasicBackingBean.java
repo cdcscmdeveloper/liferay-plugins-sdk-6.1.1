@@ -88,7 +88,7 @@ public class ReactivateBasicBackingBean extends
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031, null);
+					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		}
 	}
 
@@ -114,7 +114,8 @@ public class ReactivateBasicBackingBean extends
 				renewObject();
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/userProfileMaintenance/outputMsg",
-						MessageConst.INFO_721028, null);
+						MessageConst.INFO_721028, null,
+						FacesMessage.SEVERITY_INFO);
 			}
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
@@ -143,7 +144,8 @@ public class ReactivateBasicBackingBean extends
 				renewObject();
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721029, null);
+						MessageConst.INFO_721029, null,
+						FacesMessage.SEVERITY_INFO);
 			} catch (Exception ex) {
 				throw new EpException(ex.getMessage());
 			}
@@ -156,23 +158,23 @@ public class ReactivateBasicBackingBean extends
 				|| basicSupplierAdmin == null) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031, null);
+					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		} else if (createdTimeParam != null
 				&& StringUtils.isNotBlank(createdTimeParam)
 				&& new Long(createdTimeParam).compareTo(basicSupplier
 						.getChangedDate().getTime()) != 0) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031, null);
+					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		} else if (createdTimeParam == null
 				|| StringUtils.isBlank(createdTimeParam)) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031, null);
+					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		} else {
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
-					"", null);
+					"", null, FacesMessage.SEVERITY_INFO);
 		}
 
 	}
