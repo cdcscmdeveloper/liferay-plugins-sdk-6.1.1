@@ -18779,6 +18779,8 @@ public class ReportBackingBean extends
 					
 					//PmUser user = new FacesScopes().getUserSessionBean();
 					
+					
+					
 					log.info("6");
 					
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
