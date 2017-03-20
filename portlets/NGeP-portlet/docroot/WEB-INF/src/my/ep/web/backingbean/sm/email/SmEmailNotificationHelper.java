@@ -151,7 +151,7 @@ public class SmEmailNotificationHelper {
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
 		case "B":
-			s = "Bumputera Status";
+			s = "Bumiputera Status";
 			// PROCEED_BUMI_APPLN;
 			break;
 		case "U":

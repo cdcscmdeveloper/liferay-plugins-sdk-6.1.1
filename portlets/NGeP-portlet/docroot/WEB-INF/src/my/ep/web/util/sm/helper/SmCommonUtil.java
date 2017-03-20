@@ -2100,30 +2100,43 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
-	/**
-	 * Redirect to page with message as optional.
-	 * 
-	 * @param page
-	 *            - String
-	 * @param msgKeyId
-	 *            - String
-	 */
+	@Deprecated
 	public static void redirectToPage(String page, String msgKeyId,
 			String[] params) {
+		redirectToPage(page, msgKeyId, params, null);
+	}
+
+	/**
+	 * Redirect to page with message and severity level as an options
+	 * 
+	 * @param String
+	 *            page
+	 * @param String
+	 *            msgKeyId
+	 * @param String
+	 *            [] params
+	 * @param Severity
+	 *            severity
+	 */
+	public static void redirectToPage(String page, String msgKeyId,
+			String[] params, Severity severity) {
 		FacesContext fc = FacesContext.getCurrentInstance();
+		if (severity == null) {
+			severity = FacesMessage.SEVERITY_INFO;
+		}
 		if (StringUtils.isNotBlank(msgKeyId)) {
 			if (params != null && params.length > 0) {
 				fc.addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(msgKeyId, params,
+						new FacesMessage(severity, null, MessageUtils
+								.getMessage(msgKeyId, params,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			} else {
 				fc.addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(msgKeyId,
+						new FacesMessage(severity, null, MessageUtils
+								.getMessage(msgKeyId,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}

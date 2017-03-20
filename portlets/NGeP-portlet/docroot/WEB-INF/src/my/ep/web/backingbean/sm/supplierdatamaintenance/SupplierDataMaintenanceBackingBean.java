@@ -751,18 +751,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		assignApplActiveAndApprovedCategoryList();
 	}
 
-	/**
-	 * Set newly added categories record status to active
-	 */
 	private void setActiveStatusForNewAddedCategories() {
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				if (getManagedBean().isApproverUser()) {
-					cat.setApprovedByAp(true);
-				} else if (getManagedBean().isPoUser()) {
-					cat.setApprovedByPo(true);
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+				if (getManagedBean().isPoUser()) {
+					cat.setPoDecFlg(1);
+				} else {
+					cat.setApprvrDecFlg(1);
 				}
 			}
 		}
