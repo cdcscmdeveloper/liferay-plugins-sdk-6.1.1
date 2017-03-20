@@ -191,6 +191,7 @@
 							<f:selectItems value="#{stopInstrBB.populateReasonList}" var="reason"
 								itemLabel="#{reason.reasonDesc}"
 								itemValue="#{reason.pmReason.reasonCode}"/>
+								<p:ajax update="@this"></p:ajax>
 						</p:selectOneMenu> 
 					</td>
 					<td><p:message for="reasonId" display="icon" /></td>
