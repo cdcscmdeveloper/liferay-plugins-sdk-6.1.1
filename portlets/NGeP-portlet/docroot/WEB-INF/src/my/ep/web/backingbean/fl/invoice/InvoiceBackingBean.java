@@ -2067,6 +2067,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+				doBB.getManagedBean().getFulfilmentOrder().setStatus(orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 				return NAV_DELIVERYORDER_PAGE;
 		}
 		
