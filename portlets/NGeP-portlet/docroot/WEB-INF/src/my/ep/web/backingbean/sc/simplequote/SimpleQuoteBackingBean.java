@@ -5018,13 +5018,19 @@ public class SimpleQuoteBackingBean extends
 				.getSpecAnswerList();
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
-			 isProdContainPrice = getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+			.getTplSpecMaster();
+			specMaster.setSpecCreatedBySQ(true);
+			isProdContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+					, specAnswerList, locale);
 		}
 
 		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
-			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
+					specAnswerList.get(0).getTplSpecQuestion()
+							.getTplSpecMaster(), specAnswerList, locale);
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
