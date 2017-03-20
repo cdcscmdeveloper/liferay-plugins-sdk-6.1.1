@@ -15,45 +15,48 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:panel header="#{lbl['lbl.pm.po.jobtyperatio']}"
-			id="jobTypeRatioPnlId" toggleable="true" >
-				<p:dataTable id="dtPoJobTypeRatio"
-					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-					rowIndexVar="rowIndex" lazy="true" rows="10"
-					value="#{poJobTypeRatioBackingBean.managedBean.jobTypeRatioDataModel}"
-					var="jobTypeRatio">
-					<ac:paginator for="dtPoJobTypeRatio" />
+			id="jobTypeRatioPnlId" toggleable="true">
+			<p:dataTable id="dtPoJobTypeRatio"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				rowIndexVar="rowIndex" lazy="true" rows="10"
+				value="#{poJobTypeRatioBackingBean.managedBean.jobTypeRatioDataModel}"
+				var="jobTypeRatio">
+				<ac:paginator for="dtPoJobTypeRatio" />
 
-					<p:column headerText="#{lbl['lbl.pm.poworkload.supptype']}">			
+				<p:column headerText="#{lbl['lbl.pm.poworkload.supptype']}">			
 						#{jobTypeRatio.supplierType}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.pm.poworkload.appltype']}">			
+				<p:column headerText="#{lbl['lbl.pm.poworkload.appltype']}">			
 						#{jobTypeRatio.applType}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.pm.poworkload.catType']}">			
+				<p:column headerText="#{lbl['lbl.pm.poworkload.catType']}">			
 						#{not empty jobTypeRatio.categoryType ? jobTypeRatio.categoryType : lbl['lbl.txt.na']}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.pm.po.jobtyperatio.weightcat']}">	
+				<p:column headerText="#{lbl['lbl.pm.po.jobtyperatio.weightcat']}">	
 						#{poJobTypeRatioBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobTypeRatio.poJobWeight.weightType.parameterCode)}	
 					</p:column>
-					<p:column headerText="#{lbl['lbl.pm.po.jobweight.weightval']}">			
+				<p:column headerText="#{lbl['lbl.pm.po.jobweight.weightval']}">			
 						#{jobTypeRatio.poJobWeight.weightValue}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.pm.status']}">			
+				<p:column headerText="#{lbl['lbl.pm.status']}">			
 						#{(jobTypeRatio.recordStatusFlg ==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.pm.action']}"
-						style="width:5%;text-align:center;">
-						<p:commandLink id="editBtn"
-							action="#{poJobTypeRatioBackingBean.redirectToMaintainPoJobTypeRatio(jobTypeRatio.poJobTypeRatioId)}">
-							<p:graphicImage value="/css/images/design/edit.png" />
-						</p:commandLink>
-					</p:column>
 
-				</p:dataTable>
+				<p:column headerText="#{lbl['lbl.pm.action']}"
+					style="width:5%;text-align:center;">
+					<p:commandLink
+						action="#{poJobTypeRatioBackingBean.redirectToMaintainPoJobTypeRatio(jobTypeRatio.poJobTypeRatioId)}">
+						<p:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
 		</p:panel>
+		<p:tooltip id="tt" rendered="false">
+			<p:outputLabel escape="false" value="tt" />
+		</p:tooltip>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}" 
+			<p:commandButton value="#{lbl['lbl.btn.create']}"
 				action="#{poJobTypeRatioBackingBean.redirectToMaintainPoJobTypeRatio(null)}"
 				partialSubmit="true" process="@this" />
 		</div>

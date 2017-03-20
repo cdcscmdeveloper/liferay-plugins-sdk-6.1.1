@@ -54,6 +54,9 @@
 		<h:outputText value="#{lbl['lbl.pm.rule.type.value']}"
 			style="font-weight: bold;" />
 		<p:spacer height="20px" />
+		<br/>
+		<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.pm.ruleconfig.tooltip']}" />
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
 			rows="5"
 			value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.configRuleValues}"
