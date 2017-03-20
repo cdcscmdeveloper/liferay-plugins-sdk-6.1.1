@@ -83,6 +83,8 @@
            	<portlet id="pmRace"></portlet>
            	<portlet id="pmCustService"></portlet>
            	<portlet id="poWorkload"></portlet>
+           	<portlet id="pmPoJobWeight"></portlet>
+           	<portlet id="pmPoJobTypeRatio"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 

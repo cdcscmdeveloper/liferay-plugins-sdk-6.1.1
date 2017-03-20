@@ -6100,6 +6100,76 @@
 			</security-role-ref>
 		</portlet>
 		<portlet>
+			<portlet-name>pmPoJobWeight</portlet-name>
+			<display-name>Po Job Weight</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/pm/pojobweight/poJobWeightPreRender.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Po Job Weight</title>
+				<short-title>Po Job Weight</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<portlet>
+			<portlet-name>pmPoJobTypeRatio</portlet-name>
+			<display-name>Po Job Type Ratio</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/pm/pojobtyperatio/poJobTypeRatioPreRender.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Po Job Type Ratio</title>
+				<short-title>Po Job Type Ratio</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<portlet>
 			<portlet-name>pmDigiSign</portlet-name>
 			<display-name>DigiSign</display-name>
 			<portlet-class>

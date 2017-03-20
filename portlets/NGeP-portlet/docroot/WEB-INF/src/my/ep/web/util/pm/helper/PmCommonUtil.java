@@ -46,6 +46,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.pojobweight.IPoJobWeightSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -86,6 +87,8 @@ import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.pojobweight.PoJobWeightReqDTO;
+import my.ep.dto.pm.common.pojobweight.PoJobWeightResDTO;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -114,6 +117,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -129,6 +133,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -2578,6 +2583,29 @@ public class PmCommonUtil implements Serializable{
 				.retrieveOrgDetailsByOrgId(reqDTO);
 		return orgResDTO.getPmOrgProfile();
 		
+	}
+	
+	public static List<PmPoJobWeight> retrievePmPoJobWeightList(){
+		log.info("retrievePmPoJobWeightList");
+		IPoJobWeightSO jobWeightSO = null;
+		List<PmPoJobWeight> list = new ArrayList<PmPoJobWeight>();
+		try {
+			jobWeightSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IPoJobWeightSO.class);
+			PoJobWeightReqDTO reqDTO = new PoJobWeightReqDTO();
+			PoJobWeightResDTO resDTO = jobWeightSO
+					.retrieveJobWeightList(reqDTO);
+			if (resDTO.isSuccessful()
+					&& resDTO.getJobWeightResultBean() != null
+					&& resDTO.getJobWeightResultBean().getResultList() != null) {
+				list = resDTO.getJobWeightResultBean().getResultList();
+			}
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
+		} finally {
+			jobWeightSO = null;
+		}
+		return list;
 	}
 
 }
