@@ -307,7 +307,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="276"><p:selectOneMenu id="manCountry"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="Country"
+							label="#{lbl['lbl.fl.country']}"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.pmCountry.countryId}"
 							style="width: 276px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -324,7 +324,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="210"><p:selectOneMenu id="manState"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="State"
+							label="#{lbl['lbl.fl.state']}"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.pmState.stateId}"
 							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -375,7 +375,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manDistrict"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="District"
+							label="#{lbl['lbl.fl.district']}"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.pmDistrict.districtId}"
 							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -402,7 +402,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manCity"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="City"
+							label="#{lbl['lbl.fl.city']}"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.pmCity.cityId}"
 							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -427,7 +427,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="Post Code" maxlength="5"
+							label="#{lbl['lbl.fl.postcode']}" maxlength="5"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.postcode}"
 							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							size="10"
@@ -439,7 +439,7 @@
 							styleClass="mandatory" /></td>
 					<td><p:inputText id="email"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="Email" maxlength="80"
+							label="#{lbl['lbl.fl.email']}" maxlength="80"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactEmail}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							size="34" ><f:validateRegex disabled="#{contractRequestBackingBean.managedBean.emailValidate}"
