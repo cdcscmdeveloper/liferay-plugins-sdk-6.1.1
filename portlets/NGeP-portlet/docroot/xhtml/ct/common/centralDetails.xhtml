@@ -203,7 +203,7 @@
 				 disabled="#{ctBackingBean.managedBean.viewContract
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
-				 <p:ajax event="change" update="@all" process="@this"></p:ajax>
+				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true"></p:ajax>
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
