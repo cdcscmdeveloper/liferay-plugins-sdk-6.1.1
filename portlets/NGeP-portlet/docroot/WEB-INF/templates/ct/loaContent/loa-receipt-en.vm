@@ -8,12 +8,7 @@
          	@bottom-left { content: "$contractNo"; }
 		}
 		
-		li {text-align: justify;word-spacing: -10px;}
-				
-        @media print {
-         .break {page-break-after: always;}
-        }
-        
+		li {text-align: justify;word-spacing: -10px;}        
 		
 	</style>
 </head>
@@ -139,7 +134,6 @@
 			</tr>
 			
 			</table>
-			 <div class="break"></div>
 		</td>
 	</tr>		
 	</table>
