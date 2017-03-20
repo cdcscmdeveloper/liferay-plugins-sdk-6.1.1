@@ -133,7 +133,7 @@
 										itemValue="true" />
 									<f:selectItem itemLabel="#{lbl['lbl.txt.no']}"
 										itemValue="false" />
-									<p:ajax event="change" update="@all" process="@this"
+									<p:ajax event="change" update="@all" process="@all" partialSubmit="true"
 										listener="#{ctBackingBean.onChangeServiceTax()}"></p:ajax>
 								</p:selectOneRadio>
 								<p:message for="serviceTaxFlg" display="icon" />
