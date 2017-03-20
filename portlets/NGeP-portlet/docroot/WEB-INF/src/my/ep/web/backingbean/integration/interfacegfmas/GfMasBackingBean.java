@@ -875,15 +875,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+	
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -900,15 +897,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+		
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -925,17 +919,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
+		
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
+
+		return searchBean;
+	}
+	
+	public  List<Long> listOfProcessStatus(){
+		
 		List<Long> listOfProcessStatus = new ArrayList<Long>();
 		listOfProcessStatus.add(new Long(0));
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
-
-		searchBean
-				.getDataFilterBeans()
-				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
-
-		return searchBean;
+		listOfProcessStatus.add(new Long(3));
+		listOfProcessStatus.add(new Long(4));
+		
+		return listOfProcessStatus;
 	}
 
 	private ISearchBean<PmInterfaceKptj> getKptjSearchBeanData(
@@ -950,15 +952,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+	
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -975,15 +974,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+	
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -1000,15 +996,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+	
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -1025,15 +1018,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+	
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -1050,15 +1040,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+		
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -1075,15 +1062,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
+		
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
@@ -1100,15 +1084,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getLogId()));
 		}
 
-		List<Long> listOfProcessStatus = new ArrayList<Long>();
-		listOfProcessStatus.add(new Long(0));
-		listOfProcessStatus.add(new Long(1));
-		listOfProcessStatus.add(new Long(2));
 
 		searchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean("processStatus",
-						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus()));
 
 		return searchBean;
 	}
