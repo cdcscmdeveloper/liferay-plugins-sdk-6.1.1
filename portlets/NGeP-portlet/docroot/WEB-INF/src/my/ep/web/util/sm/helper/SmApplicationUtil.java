@@ -1819,7 +1819,9 @@ public class SmApplicationUtil {
 					&& managedBean.getEquiCompCapTotal().compareTo(
 							new BigDecimal(0)) == 0) {
 				validAmt = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722583);
 			} else if (managedBean.getSmAppl().getSmCompanyBasic()
 					.getCompaniesEquityTotal() != null
@@ -1827,7 +1829,9 @@ public class SmApplicationUtil {
 							.getCompaniesEquityTotal()
 							.compareTo(managedBean.getEquiCompCapTotal()) != 0) {
 				validAmt = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722584);
 			}
 
@@ -1975,7 +1979,9 @@ public class SmApplicationUtil {
 			}
 			if (!validPaidUp) {
 				validAmt = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722555, new String[] {
 						s, sb.toString(), supType });
 			}
@@ -2003,7 +2009,9 @@ public class SmApplicationUtil {
 			}
 			if (!validShrHldrsCap) {
 				validAmt = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722552,
 						new String[] { sb.toString() });
 			}
@@ -2026,8 +2034,9 @@ public class SmApplicationUtil {
 			// bumi +non bumi + non malaysian
 			if (perShrSum.compareTo(allPersCapSum) != 0) {
 				validAmt = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-				log.info("*** Value **** " + s);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722554);
 			}
 		}

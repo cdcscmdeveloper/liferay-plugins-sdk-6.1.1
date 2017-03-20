@@ -6546,9 +6546,21 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil
 					.validateMachineDetails(true, -1, getManagedBean());
 
-			// validate equity owner
+			// validate equity owner count
 			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+			
+			// validate equity owner amount
+			SmApplicationUtil.validateEquityOwnerAmount(
+					getManagedBean(), -1, ruleHelper);
+			
+			//validate equity company amount
+			SmApplicationUtil.validateEquityCompanyAmount(
+					getManagedBean(), -1);
+			
+			//validate paid up capital amount
+			SmApplicationUtil.validatePaidCaptialAmt(false,
+					getManagedBean(), currentTab);
 		}
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
