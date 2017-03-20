@@ -9,11 +9,6 @@
 			position: running(footer);
 		}
 		li {text-align: justify;word-spacing: -10px;}		
-        @media print {
-         .break {page-break-after: always;}
-        }
-        
-		
 	</style>
 </head>
 <body>
@@ -92,7 +87,6 @@
 				</td>
 			</tr>
 			</table>
-			 <div class="break"></div>
 		</td>
 	</tr>		
 	</table>
