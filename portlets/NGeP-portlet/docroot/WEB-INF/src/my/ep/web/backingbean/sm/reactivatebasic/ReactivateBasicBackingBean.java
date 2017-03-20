@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.reactivatebasic;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,10 @@ import org.apache.commons.lang3.StringUtils;
 public class ReactivateBasicBackingBean extends
 		BaseBackingBean<BaseManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5634641289404728683L;
 	private ReactivateSupplierVO reactivateBasic;
 	private SmSupplier basicSupplier;
 	private SmPersonnel basicSupplierAdmin;
@@ -42,8 +47,20 @@ public class ReactivateBasicBackingBean extends
 		renewObject();
 		reactivateBasic = new ReactivateSupplierVO();
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml", "",
-				null);
+				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml", null,
+				null, FacesMessage.SEVERITY_INFO);
+		// String url = SmCommonUtil.getBasePortalUrl();
+		// if (!StringUtils.isBlank(url) && !url.substring(0,
+		// 4).equals("https")) {
+		// SmCommonUtil.redirectToPage(
+		// SmApplicationUtil.getApplicationErrorPage(),
+		// MessageConst.ERROR_722653, null,
+		// FacesMessage.SEVERITY_ERROR);
+		// } else {
+		// SmCommonUtil.redirectToPage(
+		// "/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml",
+		// null, null, FacesMessage.SEVERITY_INFO);
+		// }
 	}
 
 	/**
