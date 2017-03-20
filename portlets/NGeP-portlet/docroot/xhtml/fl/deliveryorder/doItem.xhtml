@@ -352,7 +352,7 @@
 			<p:column headerText="#{lbl['lbl.txt.remarks']}"  style="white-space:normal;">
 				<h:outputText value="#{frnItem.rejectionRemarks.get(0).remark}" rendered="#{not empty frnItem.rejectionRemarks}"/>
 			</p:column>
-			<p:column headerText="Remarks By"  style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.remark.by']}"  style="white-space:normal;">
 				<h:outputText value="#{frnItem.rejectionRemarks.get(0).createdUsername}" rendered="#{not empty frnItem.rejectionRemarks}"/>
 			</p:column>
 			<p:column >
