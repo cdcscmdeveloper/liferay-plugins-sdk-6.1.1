@@ -17,9 +17,9 @@
 		<p:panel id="locationSearchPanel"
 			header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 			<p:outputPanel id="jobWeightOpId">
+				<table width="100%">
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.instruction.mandatory']}" />
-				<table width="100%">
 					<c:forEach
 						items="#{poJobWeightBackingBean.managedBean.jobWeightList}"
 						var="jobWeight">
@@ -31,11 +31,14 @@
 									label="#{poJobWeightBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobWeight.weightType.parameterCode)}"
 									size="5" value="#{jobWeight.weightValue}" maxlength="1"
 									required="#{!empty param['disableValidation']}">
-								</p:inputText></td>
+								</p:inputText>
+								</td>
 						</tr>
 					</c:forEach>
 				</table>
-
+				<p:tooltip id="tt" rendered="false">
+							<p:outputLabel escape="false" value="tt"  />
+				</p:tooltip>
 			</p:outputPanel>
 			<p:outputPanel id="buttonOpId">
 				<table width="100%">
@@ -63,5 +66,6 @@
 			</p:outputPanel>
 
 		</p:panel>
+			
 	</ui:define>
 </ui:composition>
