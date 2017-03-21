@@ -36,7 +36,7 @@
 			     </p:column>
 				 
 				 <p:column headerText="#{lbl['lbl.ct.amend.sample']}" styleClass="column-align-center" style="width:10%;">
-                     	 <h:commandLink  action="#{amendmentBackingBean.getDownloadLOAContent()}"  immediate="true'"
+                     	 <h:commandLink  action="#{amendmentBackingBean.downloadLOAContentFile(index)}"  immediate="true'"
                			          disabled="#{amendmentBackingBean.disableBtn(index)}">
 								 <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 					     </h:commandLink>
