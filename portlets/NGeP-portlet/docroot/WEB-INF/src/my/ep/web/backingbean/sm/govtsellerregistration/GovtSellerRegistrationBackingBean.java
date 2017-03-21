@@ -96,7 +96,7 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setApplType(SupplierManagementConst.ACC_GOVT_SELLER);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml", "",
-				null);
+				null, null);
 
 	}
 
@@ -125,6 +125,8 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().getSelectedBranch().setSmAddress(
 				(SmAddress) SerializationUtils.clone(SmApplicationUtil
 						.setDefaultAddr(null)));
+		getManagedBean().setApplType(
+				SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
 		initCompanyAddressSelectItems(getManagedBean().getSmAppl()
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 				.getSmAddress());
@@ -827,7 +829,7 @@ public class GovtSellerRegistrationBackingBean extends
 					MessageConst.INFO_721012, new String[] {
 							getManagedBean().getSmPersonnel().getEmail(),
 							SmRuleHelper.getInstance().getEmailActivationDays()
-									+ "" });
+									+ "" }, null);
 		} else {
 			throw new EpException(MessageConst.ERROR_721006);
 		}
@@ -837,6 +839,7 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Submit maintenance
 	 */
 	public void submitMaintenance() {
+		validateHqBranchBank();
 		// validate bank
 		if (getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1) {
 			throw new EpException(MessageConst.ERROR_721002);
@@ -861,7 +864,7 @@ public class GovtSellerRegistrationBackingBean extends
 			if (resDTO.isSuccessful()) {
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
-						MessageConst.INFO_721013, null);
+						MessageConst.INFO_721013, null, null);
 			} else {
 				throw new EpException(MessageConst.ERROR_721006);
 			}
@@ -1387,6 +1390,8 @@ public class GovtSellerRegistrationBackingBean extends
 				// set hq
 				if (bk.isSelected()) {
 					bk.setForHqFlg(1);
+				} else if (!bk.isSelected() && bk.getForHqFlg() == 1) {
+					bk.setForHqFlg(0);
 				}
 			}
 		}
