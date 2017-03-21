@@ -4212,12 +4212,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
     
-    public void getDownloadLOAContent() throws Exception{
+    public void downloadLOAContentFile(int index) throws Exception{
     	
     	AttachmentFormat attachmentFormat = null;
 		
 		try {
-	    	String fileName = "AmendmentSuratPengesahanSetujuTerima.docx";
+	    	String fileName = (index == 0) ? "AmendmentSuratPengesahanSetujuTerima.docx" : "LetterOfAcceptanceReciept .pdf";
 			String content = null;
 			String filePath = getManagedBean().getFileDirectory();
 			File file = new File(filePath);
@@ -4226,9 +4226,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			attachmentFormat = new AttachmentDateFormat();
 			filePath = filePath + attachmentFormat.format(fileName, null);
 			
-			content = getContent(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER);
+			content = getContent((index == 0)? ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER : ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
 			if (content != null) {
-				DocumentGenerator.getInstance().generateDoc(filePath, content);
+				if (index == 0)
+					DocumentGenerator.getInstance().generateDoc(filePath, content);
+				else
+					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 			}
 		}catch (UnsupportedEncodingException e) {
@@ -4238,25 +4241,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 			attachmentFormat = null;
 		}
-    	
-    	
-    	
-//		String fileName = "AmendmentSuratPengesahanSetujuTerima.docx";
-//		String content = null;
-//		String filePath = getManagedBean().getFileDirectory();
-//		File file = new File(filePath);
-//		file.mkdirs();
-//
-//		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-//		filePath = filePath + attachmentFormat.format(fileName, null);
-//		
-//		content = getContent(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER);
-//		if (content != null) {
-////			DocumentGenerator.getInstance().generatePdf(
-////					new FileOutputStream(filePath), content);
-//			DocumentGenerator.getInstance().generateDoc(filePath, content);
-//			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
-//		}
+    }
+    
+    public String getDownloadLOAContent() throws Exception{
+    	String filePath = getManagedBean().getFileDirectory();		      
+        File file = new File(filePath);
+        file.mkdirs();
+        
+        String fileName = "LetterOfAcceptanceReciept .pdf";
+		filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+		String content = null;	
+		content = getContent(ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
+		if (content != null) {
+			DocumentGenerator.getInstance().generatePdf(
+					new FileOutputStream(filePath), content);
+
+	/*		DocumentGenerator.getInstance().generateDoc(filePath, content);
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);*/
+		}
+		return filePath;
     }
     
     /**
