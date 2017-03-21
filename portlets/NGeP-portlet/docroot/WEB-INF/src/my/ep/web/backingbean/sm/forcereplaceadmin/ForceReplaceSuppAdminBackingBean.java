@@ -92,7 +92,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		// Company not exist
 		if (getManagedBean().getSmSupplier() == null
-				|| getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				|| (getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && getManagedBean()
+						.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			throw new EpException(MessageConst.ERROR_722593);
 		} else {
 			validate();
