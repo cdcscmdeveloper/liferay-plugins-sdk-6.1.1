@@ -124,8 +124,8 @@
 				<tr style="height: 30px;">
 					<td rowspan="10"><h:outputText styleClass="instruction"
 							value="#{lbl['lbl.cm.instruction.related.image']}"
-							rendered="#{unspscCodeBackingBean.allSupplierWithoutTemp}" /><br /> <h:panelGroup
-							id="refereshImageId">
+							rendered="#{unspscCodeBackingBean.allSupplierWithoutTemp}" /><br />
+						<h:panelGroup id="refereshImageId">
 
 							<h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
@@ -184,10 +184,9 @@
 
 
 							</h:panelGroup>
-						</h:panelGroup> 
-							
-						<p:commandLink style="margin-left: 200px;padding-right: 10px;"  action="#{catalogueBackingBean.indForImage}"
-							title="#{lbl['lbl.cm.upload']}" 
+						</h:panelGroup> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
+							action="#{catalogueBackingBean.indForImage}"
+							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							oncomplete="imageDialog.show();">
 							<p:graphicImage value="/css/images/design/upload.png"
@@ -274,6 +273,10 @@
 			width="700px" resizable="false" styleClass="pop_up_top"
 			onShow="uploadListener(importDevicesWidget)">
 
+			<h:outputText styleClass="instruction"
+				style="float:left;margin-left:5px;"
+				value="#{lbl['lbl.cm.image.instruction']}" />
+			<br />
 
 			<p:fileUpload widgetVar="importDevicesWidget"
 				fileUploadListener="#{catalogueBackingBean.imageUpload}"
@@ -496,14 +499,14 @@
 
 
 		</p:dialog>
-		
-		<p:dialog id="zoneDtlsId" widgetVar="zoneDtlspopUp" modal="true" 
-		header="#{lbl['lbl.cm.zm.details']}" width="500" height="400">
+
+		<p:dialog id="zoneDtlsId" widgetVar="zoneDtlspopUp" modal="true"
+			header="#{lbl['lbl.cm.zm.details']}" width="500" height="400">
 
 			<p:dataTable id="zoneDetailsDataTable"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{catalogueBackingBean.managedBean.zoneTrees}"
-				var="zoneTree" rowIndexVar="index">
+				value="#{catalogueBackingBean.managedBean.zoneTrees}" var="zoneTree"
+				rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.cm.zm.details']}">
 					<p:tree id="treeZoneDetails" value="#{zoneTree}" var="zN">
 						<p:treeNode type="cmSupplierZone">
@@ -520,10 +523,10 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				
+
 			</p:dataTable>
-	</p:dialog>
-		
+		</p:dialog>
+
 
 
 
