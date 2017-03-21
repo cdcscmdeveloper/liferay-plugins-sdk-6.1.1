@@ -1,0 +1,91 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+
+
+		<p:panel style="width: 100%;" header="#{lbl['lbl.rpt.rptcriteria']}"
+			toggleable="true" id="rptModuleId">
+
+
+			<table style="margin-top: 10px; width: 100%;">
+				<tr>
+					<td width="10%"><p:outputLabel
+							value="#{lbl['lbl.rpt.module']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td width="80%"><p:selectOneMenu
+							label="#{lbl['lbl.rpt.module']}" id="moduleName"
+							value="#{reportBackingBean.moduleValue}" required="true"
+							style="margin-top:5px;width:300px;">
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+								itemValue="#{null}"></f:selectItem>
+							<f:selectItems value="#{reportBackingBean.getAllModuleList()}"></f:selectItems>
+							<p:ajax event="change"
+								listener="#{reportBackingBean.retrieveReportListByAuthorization}"
+								process="@this" partialSubmit="true" update="@all" />
+						</p:selectOneMenu></td>
+				</tr>
+
+				<h:panelGroup rendered="#{reportBackingBean.moduleValue == 'FL' or reportBackingBean.moduleValue == 'CT'}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu label="#{lbl['lbl.rpt.rptCategory']}"
+								id="reportCategory" value="#{reportBackingBean.reportCategory}"
+								required="true" style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems
+									value="#{reportBackingBean.getReportCategoryList()}"></f:selectItems>
+								<p:ajax event="change"
+									listener="#{reportBackingBean.retrieveReportListBySubModule}"
+									process="@this" partialSubmit="true" update="@all" />
+							</p:selectOneMenu></td>
+					</tr>
+				</h:panelGroup>
+
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
+							id="reportName" value="#{reportBackingBean.reportValue}"
+							required="true" style="margin-top:5px;width:300px;">
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+								itemValue="#{null}"></f:selectItem>
+							<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
+							<p:ajax event="change"
+								listener="#{reportBackingBean.criteriaVariablesByReport}"
+								process="@this" partialSubmit="true" update="@all" />
+						</p:selectOneMenu></td>
+				</tr>
+
+
+			</table>
+
+
+		</p:panel>
+		
+		
+		<c:choose>
+		
+		
+		
+		</c:choose>
+		
+		
+		
+		
+
+
+
+	</ui:define>
+
+
+</ui:composition>
