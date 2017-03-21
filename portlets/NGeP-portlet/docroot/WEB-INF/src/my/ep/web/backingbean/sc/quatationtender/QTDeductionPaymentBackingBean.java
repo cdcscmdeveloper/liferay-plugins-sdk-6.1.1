@@ -159,6 +159,7 @@ public class QTDeductionPaymentBackingBean extends
 		}
 		ScQtDeduction scQtDeduction = new ScQtDeduction();
 		scQtDeduction.setDeductionType(new PmParameter());
+		setUserDetails(scQtDeduction);
 		//scQtDeduction.setScQt(this.getManagedBean().getQt());
 		//scQtDeductions.add(scQtDeduction);
 		this.getManagedBean().getScQtDeductionList().add(scQtDeduction);
@@ -207,6 +208,7 @@ public class QTDeductionPaymentBackingBean extends
 		ScQtDeductionClause scQtDeductionClause = new ScQtDeductionClause();
 		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
+		setUserDetails(scQtDeductionClause);
 		this.getManagedBean().getSelectedScQtDeduction()
 				.setScQtDeductionClauses(scQtDeductionClauses);
 	}
@@ -315,7 +317,7 @@ public class QTDeductionPaymentBackingBean extends
 			}
 		}
 	}
-
+	
 	/**
 	 * Get the flag.
 	 * @return the flag
