@@ -1,13 +1,109 @@
-<ui:composition
-template="/WEB-INF/facelets/templates/basic_template.xhtml"
-xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:p="http://primefaces.org/ui"
-xmlns:c="http://java.sun.com/jsp/jstl/core"
->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	
+	</ui:define>
+	
 	<ui:define name="contentSection">
-		<f:event listener="#{rptBackingBean.preRenderView}" type="preRenderView" />
- 	</ui:define>
+	
+	<p:messages id="rptmessagesMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+
+	<p:panel header="#{lbl['lbl.rpt.rptcriteria']}">
+									
+	<table style="margin-top: 10px; margin-bottom:5px; width:85%;">
+
+		<!-- module -->
+	
+			<tr>
+	
+				<td>
+					
+					<p:outputLabel value="#{lbl['lbl.rpt.module']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /> 
+					
+				</td>
+				
+				<td>
+										
+					<p:selectOneMenu
+						label="#{lbl['lbl.rpt.module']}" id="moduleName"
+						value="#{rptBackingBean.moduleValue}" required="true">
+							
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="D"/>
+										
+						<f:selectItems value="#{rptBackingBean.getAllModuleList()}"></f:selectItems>
+					
+						<p:ajax event="change" listener="#{rptBackingBean.getReportNameList()}" update="@all" />
+					
+					</p:selectOneMenu>
+										
+					<p:message id="moduleNameMsg" for="moduleName" display="icon" />
+			
+				</td>
+			
+				<td width="100px"/>
+			
+				<td>
+		
+					 
+					<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				
+				<td>				
+					<p:selectOneMenu
+						label="#{lbl['lbl.rpt.rptName']}" id="reportName"
+						value="#{rptBackingBean.reportValue}" required="true">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="D"></f:selectItem>
+							
+						<f:selectItems value="#{rptBackingBean.getReportList()}"/>
+
+						<p:ajax event="change" listener="#{rptBackingBean.getReportNameList()}" update="@all"/>
+							
+					</p:selectOneMenu>
+				
+					<p:message id="reportNameMsg" for="reportName" display="icon" />
+				
+				</td>
+						
+			</tr>
+			
+			<tr>
+				
+				<td colspan="2">
+				
+				</td>
+			
+			</tr>
+							
+		</table>
+	
+		<br/>
+	
+		</p:panel>
+	
+		<c:if test="#{rptBackingBean.reportValue eq 'PP_004'}">
+			
+			<ui:include src="expenditure_plan_detail_report.xhtml"/>
+			<ui:include src="scloadocument.xhtml"/>
+			<ui:include src="pmlistofprofilereport.xhtml"/>	
+		
+		</c:if>
+	
+		<p:blockUI widgetVar="blkReportContent"  block=":form"   >  
+	   		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
+		</p:blockUI>
+	
+	</ui:define>
+	
 </ui:composition>

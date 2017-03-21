@@ -48,4 +48,10 @@ import com.liferay.portal.util.PortalUtil;
 
 public class CtRptParam extends RptBackingBean{
 
+	public CtRptParam(String reportId, String reportName, boolean isExcel,
+			boolean isTempAccess) {
+		super(reportId, reportName, isExcel, isTempAccess);
+		// TODO Auto-generated constructor stub
+	}
+
 }
