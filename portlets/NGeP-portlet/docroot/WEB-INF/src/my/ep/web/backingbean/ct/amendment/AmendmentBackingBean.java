@@ -143,6 +143,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -4211,23 +4212,51 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
     
-    public String getDownloadLOAContent() throws Exception{
-    	String filePath = getManagedBean().getFileDirectory();		      
-        File file = new File(filePath);
-        file.mkdirs();
-        
-        String fileName = "LetterOfAcceptanceReciept .pdf";
-		filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
-		String content = null;	
-		content = getContent(ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
-		if (content != null) {
-			DocumentGenerator.getInstance().generatePdf(
-					new FileOutputStream(filePath), content);
+    public void getDownloadLOAContent() throws Exception{
+    	
+    	AttachmentFormat attachmentFormat = null;
+		
+		try {
+	    	String fileName = "AmendmentSuratPengesahanSetujuTerima.docx";
+			String content = null;
+			String filePath = getManagedBean().getFileDirectory();
+			File file = new File(filePath);
+			file.mkdirs();
 
-	/*		DocumentGenerator.getInstance().generateDoc(filePath, content);
-			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);*/
+			attachmentFormat = new AttachmentDateFormat();
+			filePath = filePath + attachmentFormat.format(fileName, null);
+			
+			content = getContent(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER);
+			if (content != null) {
+				DocumentGenerator.getInstance().generateDoc(filePath, content);
+				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+			}
+		}catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+	
+			attachmentFormat = null;
 		}
-		return filePath;
+    	
+    	
+    	
+//		String fileName = "AmendmentSuratPengesahanSetujuTerima.docx";
+//		String content = null;
+//		String filePath = getManagedBean().getFileDirectory();
+//		File file = new File(filePath);
+//		file.mkdirs();
+//
+//		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+//		filePath = filePath + attachmentFormat.format(fileName, null);
+//		
+//		content = getContent(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER);
+//		if (content != null) {
+////			DocumentGenerator.getInstance().generatePdf(
+////					new FileOutputStream(filePath), content);
+//			DocumentGenerator.getInstance().generateDoc(filePath, content);
+//			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+//		}
     }
     
     /**
@@ -4635,7 +4664,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (scLoa.getContractSigner() != null) {
 				context.put("contractSigner", scLoa.getContractSigner().getUserName());
 				String loaSignerDesig = scLoa.getLoaSignerDesig();
-				if (loaSignerDesig.length()>86){
+				if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
 					loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
 				}
 				context.put("contractSignerDesignation", loaSignerDesig);
