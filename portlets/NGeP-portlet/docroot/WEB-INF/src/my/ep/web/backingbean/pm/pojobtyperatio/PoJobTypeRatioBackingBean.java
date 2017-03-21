@@ -102,9 +102,10 @@ public class PoJobTypeRatioBackingBean extends
 		getManagedBean().setPoJobTypeRatio(initNewJobTypeRatio());
 		List<PmPoJobTypeRatio> jobTypeRatioList = retrievePoJobTypeRatios(poJobTypeRatioId,null);
 		if(jobTypeRatioList != null && !jobTypeRatioList.isEmpty()){
-			getManagedBean().setPoJobTypeRatio(jobTypeRatioList.get(0));
+			getManagedBean().setPoJobTypeRatio(jobTypeRatioList.get(0));			
 			getManagedBean().setApplDisabled(false);
 			getManagedBean().setCategoryDisabled(false);
+			disableCategoryType();
 		}else{
 			throw new EpException("not able to retrive po job type ratio");
 		}
@@ -122,6 +123,10 @@ public class PoJobTypeRatioBackingBean extends
 	public void changeAppType(){
 		getManagedBean().getPoJobTypeRatio().setCategoryType(null);
 		getManagedBean().getPoJobTypeRatio().getPoJobWeight().setPoJobWeightId(null);
+		disableCategoryType();
+	}
+	
+	private void disableCategoryType(){
 		if(StringUtils.isNotBlank(getManagedBean().getPoJobTypeRatio().getApplType())
 				&& ProfileManagementConst.CATEGORY_ENABLE_APPL_LIST.contains(getManagedBean().getPoJobTypeRatio().getApplType())){
 			getManagedBean().setCategoryDisabled(false);
