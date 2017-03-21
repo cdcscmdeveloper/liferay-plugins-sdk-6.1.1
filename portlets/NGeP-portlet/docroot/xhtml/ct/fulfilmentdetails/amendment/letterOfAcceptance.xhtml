@@ -7,8 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="loaContents" header="#{lbl['lbl.ct.panel.loa.contents']}" toggleable="true" toggleSpeed="500">
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.letter']}" escape="false"/><br/>
-	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/><br/>
-	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.upload.loa']}" escape="false"/><br/>
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" style="width:900px;" >
 		<h:panelGrid columns="3" style="width:500px;" >
@@ -38,10 +36,10 @@
 			     </p:column>
 				 
 				 <p:column headerText="#{lbl['lbl.ct.amend.sample']}" styleClass="column-align-center" style="width:10%;">
-                     	 <p:commandLink  action="#{amendmentBackingBean.getDownloadLOAContent()}"  
+                     	 <h:commandLink  action="#{amendmentBackingBean.getDownloadLOAContent()}"  immediate="true'"
                			          disabled="#{amendmentBackingBean.disableBtn(index)}">
 								 <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
-					     </p:commandLink>
+					     </h:commandLink>
 					  <p:outputPanel rendered="#{index == 0}">
 					    	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.ct.letter']}"  />
 					   </p:outputPanel>
