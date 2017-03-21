@@ -4749,4 +4749,37 @@ public class SmCommonUtil {
 
 		return items;
 	}
+
+	/**
+	 * Redirect to landing page for public page without login which might need
+	 * to filter HTTPS
+	 * 
+	 * @param String
+	 *            xhtml
+	 * @param String
+	 *            portletUrl
+	 */
+	public static void redirectToPageForPublicPage(String xhtml,
+			String portletUrl) {
+		if (isNotFilterHttps()) {
+			redirectToPage(xhtml, null, null, null);
+		} else {
+			String url = SmCommonUtil.getBasePortalUrl() + "/" + portletUrl;
+			if (!StringUtils.isBlank(url)
+					&& !url.substring(0, 4).equals("https")) {
+				redirectToPage("/xhtml/pm/shared/outputMsg.xhtml",
+						MessageConst.ERROR_722653,
+						new String[] { url.replace("http", "https") },
+						FacesMessage.SEVERITY_WARN);
+			} else {
+				redirectToPage(xhtml, null, null, null);
+			}
+		}
+	}
+
+	public static boolean isNotFilterHttps() {
+		String notFilterHttps = EpPropertiesUtils.getInstance().getProperty(
+				"sm.url.dont.filter.https");
+		return Boolean.valueOf(notFilterHttps);
+	}
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -70,7 +71,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initIdentificationTypes();
 		initCountries();
 		initStates();
-		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "", null);
+		SmCommonUtil.redirectToPageForPublicPage("forceReplaceAdmin.xhtml",
+				"replace-supplier-admin");
 	}
 
 	/**
@@ -352,7 +354,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			setShowOrHideEmail();
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/forcereplaceadmin/addExistingAdminInfo.xhtml",
-					"", null);
+					"", null, null);
 		}
 	}
 
@@ -362,7 +364,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void redirectToNonExistNewAdminPage() {
 		initDefaultNewAdmin();
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null);
+				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null,
+				null);
 	}
 
 	/**
@@ -576,7 +579,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 						MessageConst.INFO_721037, new String[] {
 								getManagedBean().getNewAdmin().getEmail(),
 								SmRuleHelper.getInstance()
-										.getEmailActivationDays() + "" });
+										.getEmailActivationDays() + "" }, null);
 			} else {
 				if (getManagedBean().getReactivateBasic().isShowEmailInput()) {
 					SmCommonUtil.redirectToPage(
@@ -584,11 +587,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 							MessageConst.INFO_721037, new String[] {
 									getManagedBean().getNewAdmin().getEmail(),
 									SmRuleHelper.getInstance()
-											.getEmailActivationDays() + "" });
+											.getEmailActivationDays() + "" },
+							null);
 				} else {
 					SmCommonUtil.redirectToPage(
 							SmApplicationUtil.getApplicationErrorPage(),
-							MessageConst.INFO_721036, null);
+							MessageConst.INFO_721036, null, null);
 				}
 			}
 		} else {
@@ -615,7 +619,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	public void viewTnc() {
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "", null);
+				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "", null, null);
 	}
 
 }
