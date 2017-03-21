@@ -67,7 +67,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
-						"", null);
+						"", null, null);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		initDataForSearchSupplier();
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
-				"", null);
+				"", null, null);
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/cancelRegWithMof/cancelMofRegistrationBySupplierPage.xhtml",
-						"", null);
+						"", null, null);
 	}
 
 	public void search() {
@@ -270,7 +270,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void backToSearchCancelMof() {
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
-				"", null);
+				"", null, null);
 	}
 
 	/**
