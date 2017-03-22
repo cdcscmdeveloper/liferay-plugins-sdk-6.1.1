@@ -45,6 +45,7 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private Map<Long, Date> idToCertSignMapForChangedRecs = new HashMap<Long, Date>();
 	private Date tomorrow = tomorrowDate();
 	private PmCertSignatory deleteSignatory;
+	private Date today = new Date();
 
 	public AuthorizedSignatoryManagedBean() {
 	}
@@ -230,6 +231,20 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	 */
 	public void setDeleteSignatory(PmCertSignatory deleteSignatory) {
 		this.deleteSignatory = deleteSignatory;
+	}
+
+	/**
+	 * @return the today
+	 */
+	public Date getToday() {
+		return today;
+	}
+
+	/**
+	 * @param today the today to set
+	 */
+	public void setToday(Date today) {
+		this.today = today;
 	}
 
 }
