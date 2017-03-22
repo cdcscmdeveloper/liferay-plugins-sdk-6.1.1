@@ -2844,7 +2844,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * chargeLine Panel enable if  checkboxes selected
 	 */
 	public void selectAllCheckboxes(){
-		onNodeUnSelect();
+		if(getManagedBean().getChargeLineItemRoot().getChildren().size() > 1){
+			onNodeUnSelect();
+		}
 		getManagedBean().setSelectChargeLineRow(false);
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
