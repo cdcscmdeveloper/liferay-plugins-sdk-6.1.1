@@ -37,6 +37,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.jabatan']}" />
            	<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="110" readonly="true"
 				disabled="#{contractDetailsBackingBean.isContractAdmin() 
+					or ctBackingBean.isApprover() 
 					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null}"
 				headerText="#{lbl['lbl.ct.jabatan']}"
 				value="#{contractDetailsBackingBean.managedBean.searchPtjGroupProfile.orgName}"
@@ -48,6 +49,7 @@
      		<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
            	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="110" readonly="true"
 				disabled="#{contractDetailsBackingBean.isContractAdmin() 
+					or ctBackingBean.isApprover() 
 					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null
 					or contractDetailsBackingBean.managedBean.searchPtjGroupProfile==null}"
 				headerText="#{lbl['lbl.ct.ptj']}"
