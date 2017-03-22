@@ -255,10 +255,22 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		}
 		
 		if (StringUtils.isNotBlank(getManagedBean().getDesc())) {
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("desc",
+//							SearchOperator.OPERATOR_LIKE.value(),
+//							getManagedBean().getDesc().toLowerCase(),true));
+			
+			SearchFilterBean subClassFilterBean = new SearchFilterBean("goCode",
+					SearchOperator.OPERATOR_LIKE.value(), 
+					getManagedBean().getDesc().toLowerCase(),
+					SearchCondition.CONDITION_OR.value());
+			subClassFilterBean.setCaseInsensitive(true);
+			
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("desc",
+					new SearchMultiFilterBean(new SearchFilterBean("desc",
 							SearchOperator.OPERATOR_LIKE.value(),
-							getManagedBean().getDesc().toLowerCase(),true));
+							getManagedBean().getDesc().toLowerCase(),true), 
+							subClassFilterBean));
 		}
 		
 		if (getManagedBean().getKptjId() != null) {

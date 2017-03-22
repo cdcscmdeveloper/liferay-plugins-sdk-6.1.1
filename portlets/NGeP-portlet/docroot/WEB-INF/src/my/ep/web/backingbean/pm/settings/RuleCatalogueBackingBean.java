@@ -1601,8 +1601,9 @@ public class RuleCatalogueBackingBean extends
 				if (ruleTypeValue.isBrandNew()) {
 
 					messageId = MessageConst.TD_80200;
-					if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-							.getParameterCode().equals("C")) {
+					if (ParameterConst.CONFIG_RULE_DATA_CATEGORY_CODE
+							.equals(ruleTypeDesc.getRuleType().getRuleDataTypeId()
+							.getParameterCode())) {
 						msgParam = new String[] {
 								ruleTypeValue.getCategoryDisplayValue(),
 								getRuleTypeDesc(ruleTypeDesc.getRuleType()
@@ -1622,8 +1623,9 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 
 						messageId = MessageConst.TD_80201;
-						if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-								.getParameterCode().equals("C")) {
+						if (ParameterConst.CONFIG_RULE_DATA_CATEGORY_CODE
+								.equals(ruleTypeDesc.getRuleType().getRuleDataTypeId()
+								.getParameterCode())) {
 							msgParam = new String[] {
 									ruleTypeValue.getCategoryDisplayValue(),
 									getRuleTypeDesc(
@@ -1640,6 +1642,17 @@ public class RuleCatalogueBackingBean extends
 											CommonConstants.LANGUAGE_CODE_MALAY) };
 
 						}
+					}else if(ruleTypeValue.isModified()){
+						messageId = MessageConst.TD_80216;
+						msgParam = new String[] {
+								getRuleTypeDesc(ruleTypeDesc.getRuleType()
+										.getRuleType(),
+										CommonConstants.LANGUAGE_CODE_MALAY),
+										ruleTypeValue.getEffDate() != null ? 
+												DateUtils.dateToString("dd/MM/yyyy",ruleTypeValue.getEffDate()) : "",
+										ruleTypeValue.getExpDate() != null ? 
+												DateUtils.dateToString("dd/MM/yyyy",ruleTypeValue.getExpDate()) : ""
+								};
 					}
 				}
 
@@ -3032,6 +3045,11 @@ public class RuleCatalogueBackingBean extends
 					value.setExpDate(expDate);
 				}
 			}
+			
+		}
+		
+		if(!ruleValue.isBrandNew()){
+			ruleValue.setModified(true);
 		}
 
 	}
