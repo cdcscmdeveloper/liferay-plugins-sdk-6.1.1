@@ -52,7 +52,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminTnc.xhtml",
-						"", null);
+						"", null, null);
 	}
 
 	public void navigateToCompanyValidation() {
@@ -61,7 +61,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminBasePage.xhtml",
-						null, null);
+						null, null, null);
 	}
 
 	public void navigateToSuppAdmin() {
@@ -178,7 +178,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(),
 				MessageConst.INFO_721227, new String[] { getManagedBean()
-						.getSupplier().getCompanyName() });
+						.getSupplier().getCompanyName() }, null);
 	}
 
 	public List<SmPersonnel> autoCompletePersonnels(String query) {
