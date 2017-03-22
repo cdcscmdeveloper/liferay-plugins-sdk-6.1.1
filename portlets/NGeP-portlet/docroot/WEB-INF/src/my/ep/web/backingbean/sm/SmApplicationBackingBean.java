@@ -2294,17 +2294,20 @@ public class SmApplicationBackingBean extends
 	 */
 	private boolean isDpaOthersSelected() {
 		boolean retVal = false;
-		for (Long reasonId : getManagedBean().getReasonId()) {
-			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setReasonId(reasonId);
-			PmReason reason = SmServiceLookup.getReasonSO()
-					.retrieveReasonById(reqDTO).getPmReason();
-			if (reason != null
-					&& !StringUtils.isBlank(reason.getReasonCode())
-					&& reason.getReasonCode().equals(
-							SupplierManagementConst.DPA_REASON_OTHERS)) {
-				retVal = true;
-				break;
+		if (getManagedBean().getReasonId() != null
+				&& getManagedBean().getReasonId().length > 0) {
+			for (Long reasonId : getManagedBean().getReasonId()) {
+				ReasonReqDTO reqDTO = new ReasonReqDTO();
+				reqDTO.setReasonId(reasonId);
+				PmReason reason = SmServiceLookup.getReasonSO()
+						.retrieveReasonById(reqDTO).getPmReason();
+				if (reason != null
+						&& !StringUtils.isBlank(reason.getReasonCode())
+						&& reason.getReasonCode().equals(
+								SupplierManagementConst.DPA_REASON_OTHERS)) {
+					retVal = true;
+					break;
+				}
 			}
 		}
 		return retVal;
@@ -3008,7 +3011,7 @@ public class SmApplicationBackingBean extends
 		// validate branch GST only for New Application
 		SmApplicationUtil.validateBranchGstInformation(true, -1,
 				getManagedBean());
-		
+
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -6549,18 +6552,17 @@ public class SmApplicationBackingBean extends
 			// validate equity owner count
 			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-			
+
 			// validate equity owner amount
-			SmApplicationUtil.validateEquityOwnerAmount(
-					getManagedBean(), -1, ruleHelper);
-			
-			//validate equity company amount
-			SmApplicationUtil.validateEquityCompanyAmount(
-					getManagedBean(), -1);
-			
-			//validate paid up capital amount
-			SmApplicationUtil.validatePaidCaptialAmt(false,
-					getManagedBean(), currentTab);
+			SmApplicationUtil.validateEquityOwnerAmount(getManagedBean(), -1,
+					ruleHelper);
+
+			// validate equity company amount
+			SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(), -1);
+
+			// validate paid up capital amount
+			SmApplicationUtil.validatePaidCaptialAmt(false, getManagedBean(),
+					currentTab);
 		}
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
