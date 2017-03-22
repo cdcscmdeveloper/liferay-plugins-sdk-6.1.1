@@ -29,6 +29,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 public class SmGstHistoryBackingBean extends
 		BaseReviewApplicationBackingBean<SmGstHistoryManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1561969887837829760L;
 	private static int SEARCH_BY_EPNO = 1;
 	private static int SEARCH_BY_MOFNO = 2;
 	private static int SEARCH_BY_COMP_NAME = 3;
@@ -47,11 +51,13 @@ public class SmGstHistoryBackingBean extends
 			setHqAndBranchGst(supplier);
 			getManagedBean().setRenderedBackButton(false);
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "", null);
+					"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "", null,
+					null);
 		} else {
 			getManagedBean().setRenderedBackButton(true);
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "", null);
+					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "", null,
+					null);
 		}
 	}
 
@@ -63,7 +69,7 @@ public class SmGstHistoryBackingBean extends
 	public void viewGst(SmSupplier supplier) {
 		setHqAndBranchGst(supplier);
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "", null);
+				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "", null, null);
 	}
 
 	/**
@@ -197,11 +203,12 @@ public class SmGstHistoryBackingBean extends
 	public void back() {
 		if (getManagedBean().isRenderedBackButton()) {
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "", null);
+					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "", null,
+					null);
 		} else {
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/updateGstInfo/preRenderGstAfterTnc.xhtml", "",
-					null);
+					null, null);
 		}
 	}
 
