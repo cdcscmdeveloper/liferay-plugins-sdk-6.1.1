@@ -341,7 +341,7 @@
 	<p:dialog id="accountCode" header="#{lbl['lbl.fl.charge.asset.gosodo']}" widgetVar="accountCode"
 		showEffect="fade" hideEffect="fade" modal="true" width="700" position="top"
 		resizable="false">
-		<p:panel id="glAccountPanel" header="#{lbl['lbl.pm.gl.account.search.location']}" toggleable="true" >
+		<p:panel id="glAccountPanel" header="#{lbl['lbl.pm.accounting.search.location']}" toggleable="true" >
 		<table style="width:100%">
 			<tr>
 				<td width="30%"><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.type']}"></p:outputLabel></td>
@@ -398,7 +398,7 @@
 			</tr>
 		
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']}"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']} / #{lbl['lbl.fl.gosodo']}"></p:outputLabel></td>
 				<td><p:inputText
 						value="#{contractRequestBackingBean.managedBean.glAccountSearchBean.accountName}"
 						size="50" /></td>
