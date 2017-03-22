@@ -135,9 +135,10 @@
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType eq 'J'}"></p:commandLink>
 			#{lbl['lbl.sm.download.categorycode']}
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				partialSubmit="true" process="@this" 
+				partialSubmit="true" process=":#{p:component('regStatusId')},@this" id="addCatcodeBtnId" 
+				actionListener="#{supplierDataMaintenanceBackingBean.onAddCategoryCode()}" update=":#{p:component('messages')}"
 				disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}"
-				oncomplete="catCodePopup.show();">
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 			</p:commandButton>
 
 			<ac:lookupCategoryCode okAction="supplierDataMaintenanceBackingBean.addNewCategoryAction"
