@@ -2265,7 +2265,7 @@ public class QTDocumentsBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if (resDTO.getAddressTypeList().size() > 0) {
 				pmAddressType = resDTO.getAddressTypeList().get(0);
