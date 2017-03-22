@@ -93,7 +93,7 @@
 					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="0:+99" showOn="button"
-					mindate="#{authorizedsignatoryBackingBean.managedBean.tomorrow}"
+					mindate="#{authorizedsignatoryBackingBean.managedBean.today}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<f:attribute name="certSignatory" value="#{certSignatory}" />
 					<p:ajax event="dateSelect" process="@this" />
