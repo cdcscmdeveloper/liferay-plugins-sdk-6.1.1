@@ -23,7 +23,8 @@
 								value="#{supplierDataMaintenanceBackingBean.managedBean.regStatusDescList}" var="reg"
 								itemLabel="#{reg.statusName}"
 								itemValue="#{reg.pmStatus.statusId}" />
-							<p:ajax event="change" partialSubmit="true" process="@this" update="@this"/>
+							<p:ajax event="change" partialSubmit="true" process="@this" 
+								update=":#{p:component('suppInfoPanelId')},:#{p:component('messages')}"/>
 						</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>

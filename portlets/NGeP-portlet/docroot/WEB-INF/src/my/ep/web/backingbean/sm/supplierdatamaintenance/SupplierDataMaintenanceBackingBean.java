@@ -723,6 +723,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
+	 * On click add category code
+	 */
+	public void onAddCategoryCode() {
+		RequestContext.getCurrentInstance().execute(
+				"catCodePopup.show();");
+	}
+
+	/**
 	 * Delete category codes.
 	 * 
 	 * @param categories
