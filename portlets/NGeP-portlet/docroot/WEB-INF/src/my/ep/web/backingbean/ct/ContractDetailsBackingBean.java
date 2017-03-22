@@ -1138,7 +1138,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 																		}
 																		if (retval < 0) {
 																			setTabValue("PB");
-																			throw new EpException(MessageConst.ERROR_750017);  
+																			throw new EpException(MessageConst.ERROR_750016);  
 																		}	
 																}
 														}
@@ -2374,7 +2374,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
    	 *         false, if login user is not central contract administrator/ministry administrator/internal auditor
 	 */
     public boolean disableMinistryLov() {
-    	return (isContractAdmin() || (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
+    	return (isContractAdmin()
+    				|| ctBB.isApprover() 
+    				|| (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
 				&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())));
     }
      
