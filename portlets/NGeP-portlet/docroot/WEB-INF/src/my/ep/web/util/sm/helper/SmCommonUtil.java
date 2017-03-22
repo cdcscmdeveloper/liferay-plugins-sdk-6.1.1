@@ -4766,7 +4766,7 @@ public class SmCommonUtil {
 		} else {
 			String url = SmCommonUtil.getBasePortalUrl() + "/" + portletUrl;
 			if (!StringUtils.isBlank(url)
-					&& !url.substring(0, 4).equals("https")) {
+					&& !url.contains("https")) {
 				redirectToPage("/xhtml/pm/shared/outputMsg.xhtml",
 						MessageConst.ERROR_722653,
 						new String[] { url.replace("http", "https") },
