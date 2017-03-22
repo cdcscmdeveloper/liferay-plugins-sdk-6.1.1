@@ -456,25 +456,23 @@ public class SPDetailBackingBean extends
 		reportName = ReportConst.SC_SUPPLIER_PROPOSAL_REPORT;
 		
 		Map<String, String> paramMap = new HashMap<String, String>();
-		String key = null;
 		try{
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQt(scQt);
-			key = getProposalSO().getGeneratedEncrpyptedKey(reqDTO);
-		}catch(Exception e){
+			paramMap.put("PKEY", SourcingConstants.ORACLE_ENCRYPTION_KEY);
+			paramMap.put("QT_ID", getManagedBean().getQt().getQtId().toString());
+			if(getManagedBean().getSmSupplier()== null){
+				retrievePaidUpCapitalNdDeclarationDtls();
+			}
+			paramMap.put("P_SUPP", getManagedBean().getSmSupplier().getSupplierId().toString());
 			
+			super.generatePdfFromOracle(reportName,
+				 paramMap, attachment,
+				true);
+			downloadFile(attachment);
+		}catch(Exception e){
+			log.error(e.getMessage());
 		}
-		paramMap.put("PKEY", key);
-		paramMap.put("QT_ID", getManagedBean().getQt().getQtId().toString());
-		if(getManagedBean().getSmSupplier()== null){
-			retrievePaidUpCapitalNdDeclarationDtls();
-		}
-		paramMap.put("P_SUPP", getManagedBean().getSmSupplier().getSupplierId().toString());
-		
-		super.generatePdfFromOracle(reportName,
-			 paramMap, attachment,
-			true);
-		downloadFile(attachment);
 	}
 
 	/**
