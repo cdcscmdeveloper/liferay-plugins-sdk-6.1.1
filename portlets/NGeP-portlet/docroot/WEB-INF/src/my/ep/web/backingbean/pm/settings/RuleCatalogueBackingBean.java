@@ -573,6 +573,12 @@ public class RuleCatalogueBackingBean extends
 //			ISearchBean<PmConfigRuleDesc> searchBean = super.createSearchBean(PmConfigRuleDesc.class,
 //					"ruleTypeTableID");
 			// Filter By - status
+//						searchBean.getDataFilterBeans().add(
+//								new SearchFilterBean("ruleType.ruleType",
+//										SearchOperator.OPERATOR_EQUALS.value(),
+//										"QT"));
+//			
+			// Filter By - status
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("ruleType.recordStatus",
 							SearchOperator.OPERATOR_EQUALS.value(),
@@ -1535,73 +1541,8 @@ public class RuleCatalogueBackingBean extends
 			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
-			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-			for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
-					.getConfigRuleDescList()) {
-
-				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
-						.getRuleType().getConfigRuleValues()) {
-					String messageId = null;
-					String[] msgParam = null;
-					if (ruleTypeValue.isBrandNew()) {
-
-						messageId = MessageConst.TD_80200;
-						if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-								.getParameterCode().equals("C")) {
-							msgParam = new String[] {
-									ruleTypeValue.getCategoryDisplayValue(),
-									getRuleTypeDesc(ruleTypeDesc.getRuleType()
-											.getRuleType(),
-											CommonConstants.LANGUAGE_CODE_MALAY) };
-
-						} else {
-							msgParam = new String[] {
-									ruleTypeValue.getRuleValue(),
-									getRuleTypeDesc(ruleTypeDesc.getRuleType()
-											.getRuleType(),
-											CommonConstants.LANGUAGE_CODE_MALAY) };
-
-						}
-					} else {
-						if (ruleTypeValue.isModified()
-								&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-
-							messageId = MessageConst.TD_80201;
-							if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-									.getParameterCode().equals("C")) {
-								msgParam = new String[] {
-										ruleTypeValue.getCategoryDisplayValue(),
-										getRuleTypeDesc(
-												ruleTypeDesc.getRuleType()
-														.getRuleType(),
-												CommonConstants.LANGUAGE_CODE_MALAY) };
-
-							} else {
-								msgParam = new String[] {
-										ruleTypeValue.getRuleValue(),
-										getRuleTypeDesc(
-												ruleTypeDesc.getRuleType()
-														.getRuleType(),
-												CommonConstants.LANGUAGE_CODE_MALAY) };
-
-							}
-						}
-					}
-
-					if (messageId != null & msgParam != null) {
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(
-								PmCommonUtil.assignTrackingDairyForRuleConfig(
-										ruleTypeDesc.getRuleType(),
-										getActionDesc(messageId, msgParam),
-										ruleTypeValue.getRecordStatusFlg()
-												.longValue()));
-					}
-
-				}
-
-			}
-			// /////////////////////
+			setupTrackingDiaryVal(reqDTO);
+			
 			List<PmConfigRule> ruleTypeList = new ArrayList<PmConfigRule>();
 			for (PmConfigRuleDesc desc : getManagedBean()
 					.getConfigRuleDescList()) {
@@ -1644,7 +1585,76 @@ public class RuleCatalogueBackingBean extends
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	
+	private void setupTrackingDiaryVal(RuleReqDTO reqDTO){
+		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
+				.getConfigRuleDescList()) {
+
+			for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
+					.getRuleType().getConfigRuleValues()) {
+				String messageId = null;
+				String[] msgParam = null;
+				if (ruleTypeValue.isBrandNew()) {
+
+					messageId = MessageConst.TD_80200;
+					if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
+							.getParameterCode().equals("C")) {
+						msgParam = new String[] {
+								ruleTypeValue.getCategoryDisplayValue(),
+								getRuleTypeDesc(ruleTypeDesc.getRuleType()
+										.getRuleType(),
+										CommonConstants.LANGUAGE_CODE_MALAY) };
+
+					} else {
+						msgParam = new String[] {
+								ruleTypeValue.getRuleValue(),
+								getRuleTypeDesc(ruleTypeDesc.getRuleType()
+										.getRuleType(),
+										CommonConstants.LANGUAGE_CODE_MALAY) };
+
+					}
+				} else {
+					if (ruleTypeValue.isModified()
+							&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+
+						messageId = MessageConst.TD_80201;
+						if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
+								.getParameterCode().equals("C")) {
+							msgParam = new String[] {
+									ruleTypeValue.getCategoryDisplayValue(),
+									getRuleTypeDesc(
+											ruleTypeDesc.getRuleType()
+													.getRuleType(),
+											CommonConstants.LANGUAGE_CODE_MALAY) };
+
+						} else {
+							msgParam = new String[] {
+									ruleTypeValue.getRuleValue(),
+									getRuleTypeDesc(
+											ruleTypeDesc.getRuleType()
+													.getRuleType(),
+											CommonConstants.LANGUAGE_CODE_MALAY) };
+
+						}
+					}
+				}
+
+				if (messageId != null & msgParam != null) {
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyForRuleConfig(
+									ruleTypeDesc.getRuleType(),
+									getActionDesc(messageId, msgParam),
+									ruleTypeValue.getRecordStatusFlg()
+											.longValue()));
+				}
+
+			}
+
 		}
 	}
 
@@ -1656,7 +1666,7 @@ public class RuleCatalogueBackingBean extends
 
 	private boolean ruleValueValidation(PmConfigRuleValue firstRuleValue,
 			PmConfigRuleValue secondRuleValue, PmConfigRule ruleType) {
-		log.info("........ruleValueValidation........");
+		log.info("........ruleValueValidation >> " + ruleType.getRuleType());
 		boolean validationResult = false;
 		boolean isValuesEqual = false;
 		if (ruleType.getValidationType() == '1'
