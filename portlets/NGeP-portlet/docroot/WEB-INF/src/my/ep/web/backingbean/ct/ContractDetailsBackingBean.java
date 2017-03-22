@@ -2387,7 +2387,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     			|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
     		this.getManagedBean().setSearchMinistryProfile(null);
     		this.getManagedBean().setSearchPtjGroupProfile(null);
     		this.getManagedBean().setSearchPtjProfile(null);
@@ -2407,7 +2409,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				this.getManagedBean().setSearchPtjGroupProfile(null);
 				this.getManagedBean().setSearchPtjProfile(null);
 			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
 				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
