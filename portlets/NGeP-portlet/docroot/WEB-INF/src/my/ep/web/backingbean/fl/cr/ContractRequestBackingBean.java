@@ -3352,7 +3352,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void selectAllCheckboxes(){
 		getManagedBean().setSelectChargeLineRow(false);
-		onNodeUnSelect();
+		if(getManagedBean().getChargeLineItemRoot().getChildren().size() > 1){
+			onNodeUnSelect();
+		}
+		
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
 		boolean checkValue=isSelectAllCheckbox();
