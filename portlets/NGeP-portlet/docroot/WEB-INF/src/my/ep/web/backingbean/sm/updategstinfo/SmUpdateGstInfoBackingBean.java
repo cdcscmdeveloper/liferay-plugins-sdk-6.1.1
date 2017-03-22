@@ -36,6 +36,11 @@ public class SmUpdateGstInfoBackingBean extends
 		BaseBackingBean<SmUpdateGstInfoManagedBean> {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3565176447310458045L;
+
+	/**
 	 * Declare constructor and initialized login user log key
 	 */
 	public SmUpdateGstInfoBackingBean() {
@@ -47,7 +52,7 @@ public class SmUpdateGstInfoBackingBean extends
 	 */
 	public void preRenderGstInfo() {
 		renewSesionObject();
-		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "", null);
+		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "", null, null);
 	}
 
 	/**
@@ -71,7 +76,7 @@ public class SmUpdateGstInfoBackingBean extends
 						.getSmSupplierBranchList());
 		initHqGstInfo();
 		initBranchGstInfo();
-		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "", null);
+		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "", null, null);
 	}
 
 	/**
@@ -247,7 +252,7 @@ public class SmUpdateGstInfoBackingBean extends
 		renewSesionObject();
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(),
-				MessageConst.INFO_721062, null);
+				MessageConst.INFO_721062, null, null);
 	}
 
 	/**
