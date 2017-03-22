@@ -278,7 +278,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& ctBB.getManagedBean().isServiceTaxAlertFlg()) {
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-									MessageUtils.getMessage(MessageConst.INFO_758004,
+									MessageUtils.getMessage(MessageConst.INFO_755004,
 											MessageUtils.BUNDLE_COMMON_MESSAGES, 
 											new FacesScopes().getUserLocale())));
 					ctBB.getManagedBean().setServiceTaxAlertFlg(false);				

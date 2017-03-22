@@ -792,7 +792,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				if (ctAgreementParty.getOfficerIc() != null 
 						&& checkedAgreementPartyMap.containsKey(ctAgreementParty.getOfficerIc())) {
 					getManagedBean().setSelectedTabIndex(1);
-					throw new EpException(MessageConst.ERROR_755003, new String[]{
+					throw new EpException(MessageConst.ERROR_750013, new String[]{
 							ctAgreementParty.getOfficerIc(),
 							getParameterDesc(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
 									checkedAgreementPartyMap.get(ctAgreementParty.getOfficerIc())),
@@ -1223,7 +1223,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		if(getManagedBean().getCtContract().getQuotationTender() == null 
 				|| getManagedBean().getCtContract().getQuotationTender().getQtId() == null) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_758001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					MessageUtils.getMessage(MessageConst.INFO_755001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			return;
 		}
 		
@@ -1237,7 +1237,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	        downloadFile(resDTO.getScQtDocReport().getScQtDocReportAttachment().getFilePath(),resDTO.getScQtDocReport().getScQtDocReportAttachment().getFileName());
 	    } else {
 	    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_758001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					MessageUtils.getMessage(MessageConst.INFO_755001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 	    }
 	 }
 	

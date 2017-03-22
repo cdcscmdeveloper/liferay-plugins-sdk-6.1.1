@@ -684,7 +684,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		        		for(CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()){
 			        	      for(CtCircularItem circularItem: circularContract.getCtCircularItems()){
 			        	    	  if(circularItem.getMinimumOrderQty() == null){
-			        	    		  throw new EpException(MessageConst.ERROR_755021, 
+			        	    		  throw new EpException(MessageConst.ERROR_750034, 
 										        new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			        	    	  }
 			        	      }
@@ -1555,7 +1555,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				 	//Remove if already exist, avoid duplicate
 				  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
 				  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-				  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
+				  			throw new EpException(MessageConst.INFO_755000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
 				  		}
 				  	}
 	  	
@@ -1679,7 +1679,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				    		 && ctCircularPidReasons.getPmReason().getReasonId().equals(resonId)){
 				    	 counter++;
 				    	 if(!PidPurchaseTypeOther(resonId) && counter == 2){
-				    		   throw new EpException(MessageConst.ERROR_755020);
+				    		   throw new EpException(MessageConst.ERROR_750020);
 				    	 }
 				     }
 			  }
