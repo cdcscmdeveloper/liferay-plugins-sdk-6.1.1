@@ -6073,12 +6073,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		String COMMA = ",";
 		StringBuilder address = new StringBuilder(scAddress.getAddress1());
 		
+		String NULL_VALUE = "null";
+		
 		if (StringUtils.isNotBlank(
-				scAddress.getAddress2())) {
+				scAddress.getAddress2()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress2()) ) {
 			address.append(COMMA).append(scAddress.getAddress2());
 		}
 		if (StringUtils.isNotBlank(
-				scAddress.getAddress3())) {
+				scAddress.getAddress3()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress3())) {
 			address.append(COMMA).append(scAddress.getAddress3());
 		}
 		/*if (StringUtils.isNotBlank(
