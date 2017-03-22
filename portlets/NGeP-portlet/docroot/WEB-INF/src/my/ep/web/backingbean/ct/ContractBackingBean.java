@@ -1892,7 +1892,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        		  //Remove if already exist, avoid duplicate
 			        		  for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
 			        			  if (agency.getOrgProfile().getOrgProfileId().equals(pmOrgProfiles.getOrgProfileId())) {
-			        				  throw new EpException(MessageConst.INFO_758000, new String[]{agency.getOrgProfile().getOrgName()}); 
+			        				  throw new EpException(MessageConst.INFO_755000, new String[]{agency.getOrgProfile().getOrgName()}); 
 			        			  }
 			        		  }
 					
@@ -1956,7 +1956,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    			orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
 		    			for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
 		    				if (agency.getOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-		    					throw new EpException(MessageConst.INFO_758000, new String[]{agency.getOrgProfile().getOrgName()}); 
+		    					throw new EpException(MessageConst.INFO_755000, new String[]{agency.getOrgProfile().getOrgName()}); 
 		    				}
 		    			}
 		
@@ -3164,7 +3164,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					    		 && pidReasons.getPmReason().getReasonId().equals(resonId)){
 					    	 counter++;
 					    	 if(!PidPurchaseTypeOther(resonId) && counter == 2){
-					    		   throw new EpException(MessageConst.ERROR_755020);
+					    		   throw new EpException(MessageConst.ERROR_750020);
 					    	 }
 					     }
 				  }

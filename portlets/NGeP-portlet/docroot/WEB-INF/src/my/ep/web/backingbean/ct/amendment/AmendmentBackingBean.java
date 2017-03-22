@@ -359,7 +359,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 						FacesContext.getCurrentInstance().addMessage(null,
 								new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-										MessageUtils.getMessage(MessageConst.INFO_758004,
+										MessageUtils.getMessage(MessageConst.INFO_755004,
 												MessageUtils.BUNDLE_COMMON_MESSAGES, 
 												new FacesScopes().getUserLocale())));
 						ctBackingBean.getManagedBean().setServiceTaxAlertFlg(false);				
@@ -1436,11 +1436,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-			// Validation for amendment title
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == null
-					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
-				throw new EpException(MessageConst.ERROR_750045);
-			}
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null
@@ -1451,7 +1446,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq() 
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq()) {
-				throw new EpException(MessageConst.ERROR_750045);
+				throw new EpException(MessageConst.ERROR_750038);
 			}
 			// Validation mandatory for secretary if pbqc authority is required
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()) {
@@ -2171,7 +2166,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 		String committeeType = contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer()); 
 		if(committeeType == null) {
-			 throw new EpException(MessageConst.ERROR_755018);
+			 throw new EpException(MessageConst.ERROR_750017);
 		 }
 	    return committeeType;
 	}
@@ -3279,7 +3274,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
 					counter++;
 					if (counter == 2) {
-						throw new EpException(MessageConst.ERROR_755016);
+						throw new EpException(MessageConst.ERROR_750008);
 					}
 				}
 			}
