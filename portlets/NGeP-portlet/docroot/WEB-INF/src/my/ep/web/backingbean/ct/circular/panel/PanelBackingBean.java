@@ -614,7 +614,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(!getManagedBean().getCircularVer().isDirectPurchase() 
 					&& getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
 				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_755019);
+				throw new EpException(MessageConst.ERROR_750019);
 			}
 		}
 
@@ -2006,7 +2006,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		getManagedBean().setButtonHideActiveDel(true);
 		if(getManagedBean().getZoneName() == null || getManagedBean().getZoneName() == ""){
-			throw new EpException(MessageConst.ERROR_755002);
+			throw new EpException(MessageConst.ERROR_750012);
 		}
 
 		List<CtPanelZoneDtl> allNodes = new ArrayList<CtPanelZoneDtl>();
@@ -2025,7 +2025,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if(!getManagedBean().getSelectedPanelItems().getCtPanelZones().get(getManagedBean().getIndex()).getName().equalsIgnoreCase(getManagedBean().getZoneName())){
 					for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
 						if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
-							throw new EpException(MessageConst.ERROR_755001);
+							throw new EpException(MessageConst.ERROR_750011);
 						}
 					}
 				}	
@@ -2038,7 +2038,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 				for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
 					if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
-						throw new EpException(MessageConst.ERROR_755001);
+						throw new EpException(MessageConst.ERROR_750011);
 					}
 				}
 
@@ -2563,7 +2563,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						&& ctCircularPidReasons.getPmReason().getReasonId().equals(resonId)){
 					counter++;
 					if(!PidPurchaseTypeOther(resonId) && counter == 2){
-						throw new EpException(MessageConst.ERROR_755020);
+						throw new EpException(MessageConst.ERROR_750020);
 					}
 				}
 			}
@@ -3138,7 +3138,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		PanelGroupItemResDTO resDTO = panelGroupItemSO.saveOrUpdatePanelGroupItemDtls(reqDTO);
 		if (resDTO.isSuccessful()) {			   		   
 			FacesContext.getCurrentInstance().addMessage("itemGroupMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_758002, new String[] { resDTO.getCtPanelItemGroup().getGroupName()},
+					MessageUtils.getMessage(MessageConst.INFO_755002, new String[] { resDTO.getCtPanelItemGroup().getGroupName()},
 							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 			return;
 		}

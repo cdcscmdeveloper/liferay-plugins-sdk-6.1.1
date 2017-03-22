@@ -118,11 +118,11 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	    if(resDTO.isSuccessful()){
 	    	if (panelGroup.isBrandNew()) {
 		           FacesContext.getCurrentInstance().addMessage("panelItemId", 	new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-		        		   MessageUtils.getMessage(MessageConst.INFO_758002, new String[] { resDTO.getCtPanelItemGroup().getGroupName()},
+		        		   MessageUtils.getMessage(MessageConst.INFO_755002, new String[] { resDTO.getCtPanelItemGroup().getGroupName()},
 		        				   MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 	    	}else{
 	    			FacesContext.getCurrentInstance().addMessage("groupIdMsg",new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_758003, new String[] {resDTO.getCtPanelItemGroup().getGroupName(), null},
+								MessageUtils.getMessage(MessageConst.INFO_755003, new String[] {resDTO.getCtPanelItemGroup().getGroupName(), null},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 	    	}
 	    }
