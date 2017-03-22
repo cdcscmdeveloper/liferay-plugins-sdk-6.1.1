@@ -78,6 +78,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -103,6 +104,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.template.MergeDocx;
 
@@ -466,83 +468,99 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 	     
-		if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
-			reqDTO.setAgreementType(ContractConst.SUPPLEMENTAL_AGREEMENT);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);   
-		} else {
-			reqDTO.setAgreementType(ContractConst.AGREEMENT);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
-		}
-	
-		getManagedBean().getCtAgreement().setCtContract(getManagedBean().getCtContract());
-		reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-		reqDTO.setOutcome(action);
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setTaskId(getManagedBean().getTaskId());
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-	
-		if(getManagedBean().getCtAgreement().getCtSignParties().size() > 0) {
-			getManagedBean().getCtAgreement().getCtSignParties().clear();
-		}
-		
-		getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtAgencySigner());
-		getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierSigner());
-		getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSignAgencyWitness());
-		getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierWitness());
-	
-		// Generate agreement File
-		if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
-				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			generateAgreementFile();
-			getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")));
-			getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
-		}
-		
-		Long statusId = getManagedBean().getCtAgreement().getStatus().getStatusId();
-		boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
-		reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
-		reqDTO.setAttachments(getManagedBean().getAttachmentList());
-		reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
-		reqDTO.setUserMap(getManagedBean().getUserMap());
-		reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-		reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-		reqDTO.setCtContractVer(getManagedBean().getAgreementContractVer());
-		reqDTO.setAgreement(getManagedBean().getCtAgreement());
-		if (this.getManagedBean().getPmDigiSign() != null) {
-	    	reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
-	    }
-		
-		ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
-		if (resDTO.isSuccessful()) {
-			log.info("Record saved successfully");
-			String messageId = MessageConst.INFO_700026;
-			String prefix = "";
-			if(statusId.longValue()==ContractStatusConst.AC_PENDING_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_APPROVAL.longValue() || 
-				statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION_APPROVAL.longValue() || 
-				statusId.longValue()==ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_APPROVAL.longValue() || 
-				statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL.longValue()) {
-				prefix = ResourceBundleUtils.getMessage("lbl.ct.draft", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
+				reqDTO.setAgreementType(ContractConst.SUPPLEMENTAL_AGREEMENT);
+				reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);   
+			} else {
+				reqDTO.setAgreementType(ContractConst.AGREEMENT);
+				reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 			}
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				messageId = MessageConst.INFO_700005;
-			} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-				messageId = MessageConst.INFO_700025;
-			} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-				messageId = MessageConst.INFO_700009;
-			} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				messageId = MessageConst.INFO_700007;
-			} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
-				messageId = MessageConst.INFO_700001;
+		
+			getManagedBean().getCtAgreement().setCtContract(getManagedBean().getCtContract());
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setOutcome(action);
+			reqDTO.setUserRole(getUserRole());
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		
+			if(getManagedBean().getCtAgreement().getCtSignParties().size() > 0) {
+				getManagedBean().getCtAgreement().getCtSignParties().clear();
 			}
 			
-			if (!isBrandNew) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(messageId,
-										new String[] {prefix+" "+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtAgencySigner());
+			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierSigner());
+			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSignAgencyWitness());
+			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierWitness());
+		
+			// Generate agreement File
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
+					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				generateAgreementFile();
+				getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")));
+				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
+			}
+			
+			Long statusId = getManagedBean().getCtAgreement().getStatus().getStatusId();
+			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
+			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
+			reqDTO.setUserMap(getManagedBean().getUserMap());
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			reqDTO.setCtContractVer(getManagedBean().getAgreementContractVer());
+			reqDTO.setAgreement(getManagedBean().getCtAgreement());
+			if (this.getManagedBean().getPmDigiSign() != null) {
+		    	reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+		    }
+			
+			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String messageId = MessageConst.INFO_700021;
+				String prefix = "";
+				String nextRole = null;
+				
+				if(statusId.longValue()==ContractStatusConst.AC_PENDING_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_APPROVAL.longValue() || 
+					statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION_APPROVAL.longValue() || 
+					statusId.longValue()==ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_APPROVAL.longValue() || 
+					statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL.longValue()) {
+					prefix = ResourceBundleUtils.getMessage("lbl.ct.draft", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				}
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						nextRole = RoleCode.CT_APPROVER.value();
+					} else { // Central Contract
+						nextRole = RoleCode.BPK_CC_APPROVER.value();
+					}
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					messageId = MessageConst.INFO_700009;
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700007;
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+					messageId = MessageConst.INFO_700001;
 				}
 				
+				if (!isBrandNew) {
+					if(StringUtils.isNotBlank(nextRole)){
+						PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+						FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(messageId, 
+										new String[]{prefix+" "+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo(),roleDesc.getRoleName()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(messageId,
+										new String[] {prefix+" "+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+				}
+					
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
 					renewSesionObject();
