@@ -11,7 +11,11 @@
 				<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,null)}" />	
 		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode)}" update="outPnlSiteVisitReport,tabIndex" 
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" />
+					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" 
+					rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" />
+		<p:menuitem value="#{lbl['lbl.sm.sv.templ.bumiputera']}" update="outPnlSiteVisitReport,tabIndex" 
+					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" 
+					rendered="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(4,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
@@ -65,7 +69,7 @@
 			</c:if>
 
 			<c:if
-				test="#{template == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
+				test="#{empty template}">
 				<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
 			</c:if>
 
