@@ -225,6 +225,8 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 								IAccessApplSO.class);
 				
 				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setLanguageCode(getFacesScopes().getUserLocale()
+						.getLanguage());
 				reqDTO.setAccessApplId(accessAppl.getAccessApplId());
 				AccessApplResDTO resDTO = accessApplSO.activateAccessAppl(reqDTO);
 				if(resDTO.isSuccessful()){
@@ -316,6 +318,11 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			isValid = false;
 		}
 		return isValid;
+	}
+	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 
 }
