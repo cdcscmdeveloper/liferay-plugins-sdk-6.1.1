@@ -2099,6 +2099,9 @@ public class DirectLOABackingBean extends
 					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
 			handleBranchDetailsChanged();
+		} else{
+			scLoa.setSupplierBranch(null);
+			scLoa.setScSupplierAddress(null);
 		}
 		// mof nor
 		scLoa.getScLoiLoa()
