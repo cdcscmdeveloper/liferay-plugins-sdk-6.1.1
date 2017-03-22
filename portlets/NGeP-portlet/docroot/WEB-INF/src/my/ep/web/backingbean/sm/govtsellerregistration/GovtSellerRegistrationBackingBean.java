@@ -141,7 +141,7 @@ public class GovtSellerRegistrationBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/govtSellerRegistration/govtSellerMaintenanceBasePage.xhtml",
-						"", null);
+						"", null, null);
 	}
 
 	/**
@@ -1365,24 +1365,34 @@ public class GovtSellerRegistrationBackingBean extends
 				.getSmSupplierBanks())) {
 			SmSupplierBranchBank brBank = null;
 			SmSupplierBranch br = null;
+			List<SmSupplierBranchBank> toRemoveBranchBankList = new ArrayList<SmSupplierBranchBank>();
 			for (SmSupplierBank bk : getManagedBean().getSmAppl()
 					.getSmSupplierBanks()) {
 
 				// set supplierBranchBanks
-				bk.setSmSupplierBranchBanks(new ArrayList<SmSupplierBranchBank>());
+				if (bk.getSmSupplierBranchBanks() == null) {
+					bk.setSmSupplierBranchBanks(new ArrayList<SmSupplierBranchBank>());
+				}
+
 				if (!EntityHelper.isCollectionEmpty(bk.getBranches())) {
 					for (SmSupplierBranch brTmp : bk.getBranches()) {
+						br = (SmSupplierBranch) EntityHelper
+								.getEntityBySinglePropertyFromList(brTmp
+										.getBranchCode(), getManagedBean()
+										.getSmAppl().getSmSupplierBranches(),
+										"branchCode");
+						brBank = getSupplierBranchBank(br,
+								bk.getSmSupplierBranchBanks());
 						if (brTmp.isSelected()) {
-							br = (SmSupplierBranch) EntityHelper
-									.getEntityBySinglePropertyFromList(brTmp
-											.getBranchCode(), getManagedBean()
-											.getSmAppl()
-											.getSmSupplierBranches(),
-											"branchCode");
-							brBank = new SmSupplierBranchBank();
 							brBank.setSmSupplierBranch(br);
 							brBank.setSmSupplierBank(bk);
-							bk.getSmSupplierBranchBanks().add(brBank);
+							if (brBank.isBrandNew()) {
+								bk.getSmSupplierBranchBanks().add(brBank);
+							}
+						} else {
+							if (!brBank.isBrandNew()) {
+								toRemoveBranchBankList.add(brBank);
+							}
 						}
 					}
 				}
@@ -1395,6 +1405,22 @@ public class GovtSellerRegistrationBackingBean extends
 				}
 			}
 		}
+	}
+
+	private SmSupplierBranchBank getSupplierBranchBank(SmSupplierBranch branch,
+			List<SmSupplierBranchBank> branchBnkList) {
+		SmSupplierBranchBank brBank = new SmSupplierBranchBank();
+		if (!EntityHelper.isCollectionEmpty(branchBnkList)) {
+			for (SmSupplierBranchBank brBk : branchBnkList) {
+				if (branch.getBranchCode() != null
+						&& brBk.getSmSupplierBranch() != null
+						&& brBk.getSmSupplierBranch().getBranchCode()
+								.compareTo(branch.getBranchCode()) == 0) {
+					brBank = brBk;
+				}
+			}
+		}
+		return brBank;
 	}
 
 	/**
@@ -1478,16 +1504,33 @@ public class GovtSellerRegistrationBackingBean extends
 				}
 
 				// remove from branches if not exist in supplierBranch from appl
-				Iterator<SmSupplierBranch> it = bk.getBranches().iterator();
-				while (it.hasNext()) {
-					SmSupplierBranch itTmp = it.next();
+				Iterator<SmSupplierBranch> brIt = bk.getBranches().iterator();
+				while (brIt.hasNext()) {
+					SmSupplierBranch itTmp = brIt.next();
 					brTmp = (SmSupplierBranch) EntityHelper
 							.getEntityBySinglePropertyFromList(itTmp
 									.getBranchCode(), getManagedBean()
 									.getSmAppl().getSmSupplierBranches(),
 									"branchCode");
 					if (brTmp == null) {
-						it.remove();
+						brIt.remove();
+					}
+				}
+
+				// remove SmSupplierBranchBank if not exist in supplierBranch
+				// from appl
+				Iterator<SmSupplierBranchBank> brBkIt = bk
+						.getSmSupplierBranchBanks().iterator();
+				while (brBkIt.hasNext()) {
+					SmSupplierBranchBank brBkTmp = brBkIt.next();
+					brTmp = (SmSupplierBranch) EntityHelper
+							.getEntityBySinglePropertyFromList(brBkTmp
+									.getSmSupplierBranch().getBranchCode(),
+									getManagedBean().getSmAppl()
+											.getSmSupplierBranches(),
+									"branchCode");
+					if (brTmp == null) {
+						brBkIt.remove();
 					}
 				}
 			}
