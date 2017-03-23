@@ -48,7 +48,7 @@
 		</script>
 		
 		<br />
-		<p:dataTable var="table" id="overlapCatSuppDocDtId" value="#{backingBean.managedBean.smAppl.smCategoryOverlapDocs}" 
+		<p:dataTable var="overlap" id="overlapCatSuppDocDtId" value="#{backingBean.managedBean.smAppl.smCategoryOverlapDocs}" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 			rowIndexVar="index">
 
@@ -63,7 +63,7 @@
 					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
-				<p:inputTextarea value="#{table.overlapReason}" maxlength="200" 
+				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="5" cols="20" required="true"
 					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
 					<p:ajax process="@this" update="overlapCatSuppDocDtId" />
@@ -73,7 +73,7 @@
 
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 				style="width : 35%;">
-				<h:outputText value="#{table.pmDocument.docName}"
+				<h:outputText value="#{overlap.pmDocument.docName}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 
@@ -84,21 +84,22 @@
 				</f:facet>
 				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"
 					update="@([id$=overlapCatUploadDialog])"
-					action="#{backingBean.assignSelectedOverlapDoc(table)}">
+					action="#{backingBean.assignSelectedOverlapDoc(overlap)}">
 					<p:graphicImage value="/css/images/design/upload.png"
+					
 						style="margin-right:2px;" />
 				</p:commandLink>
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"
 				style="width : 20% !important;">
-				<p:commandLink ajax="false" value="#{table.fileName}" rendered="#{not empty table.fileName}">
-					<p:fileDownload value="#{backingBean.commonDownload(table.filePath,table.fileName,table.fileName)}" />
+				<p:commandLink ajax="false" value="#{overlap.fileName}" rendered="#{not empty overlap.fileName}">
+					<p:fileDownload value="#{backingBean.commonDownload(overlap.filePath,overlap.fileName,overlap.fileName)}" />
 				</p:commandLink>
-				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty overlap.fileName}" />
 				<p:commandLink id="deleteOverlapCatAttId" style="white-space: normal !important;"
-					partialSubmit="true" rendered="#{not empty table.fileName}"
-					process="@this" action="#{backingBean.onDeleteOverlapCatAttachment(table)}"
+					partialSubmit="true" rendered="#{not empty overlap.fileName}"
+					process="@this" action="#{backingBean.onDeleteOverlapCatAttachment(overlap)}"
 					update="overlapCatSuppDocDtId" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()">
 					&#160;
