@@ -1,7 +1,10 @@
 package my.ep.web.bean.ct;
 
-public class CustomerServiceEntity {
+import java.io.Serializable;
+
+public class CustomerServiceEntity implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private String officerName;
 	private String documentStatusDesc;
 	public String getOfficerName() {
