@@ -42,7 +42,7 @@
 		<h:panelGroup>
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 16%;" class="sidemenutd" valign="top"><p:remoteCommand
+					<td style="width: 16%;" class="sidemenutd" valign="top"><p:remoteCommand id="zoneRemote"
 							name="specTabChange" update="@form" partialSubmit="true"
 							process="@this" action="#{evaluationBackingBean.specTabChange}" />
 
@@ -50,7 +50,7 @@
 							activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 							model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
 						</p:tabMenu></td>
-					<td style="width: 84%" valign="top"><h:panelGroup id="zoneSpecAnswers">
+					<td style="width: 84%" valign="top"><p:outputPanel id="zoneSpecAnswers">
 							<ui:param name="finSpecsupplierList"
 								value="#{evaluationBackingBean.managedBean.finSpecSupplierListDM}"></ui:param>
 							<ui:param name="finSpecofferPrice"
@@ -59,7 +59,7 @@
 
 
 							<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
-						</h:panelGroup></td>
+						</p:outputPanel></td>
 				</tr>
 			</table>
 		</h:panelGroup>
