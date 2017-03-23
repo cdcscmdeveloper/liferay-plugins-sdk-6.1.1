@@ -639,6 +639,18 @@
 		</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>scRequestNoteCodeAssignment</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scRequestNoteCodeAssignment-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>scPurchaseInDefault</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
