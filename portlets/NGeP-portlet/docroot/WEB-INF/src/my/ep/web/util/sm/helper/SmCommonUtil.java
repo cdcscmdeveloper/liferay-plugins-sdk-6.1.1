@@ -4766,7 +4766,7 @@ public class SmCommonUtil {
 			redirectToPage(xhtml, null, null, null);
 		} else {
 			String url = SmCommonUtil.getBasePortalUrl() + "/" + portletUrl;
-			log.info(">>>>>>>>>>>>>>>>>>>>REDIRECT URL:" + url);
+			log.info(">>>>>>>>>>>>>>>>>>>>FILTER URL:" + url);
 			if (!StringUtils.isBlank(url) && !url.contains("https")) {
 				redirectToPage("/xhtml/pm/shared/outputMsg.xhtml",
 						MessageConst.ERROR_722653,
