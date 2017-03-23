@@ -19,8 +19,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.web.managedbean.BaseManagedBean;
 
-
-@ManagedBean(name = "reportBaseManagedBean")
 @SessionScoped
 public class ReportBaseMangedBean extends BaseManagedBean {
 
