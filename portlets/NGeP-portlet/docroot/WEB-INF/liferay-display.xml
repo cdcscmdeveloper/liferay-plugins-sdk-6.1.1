@@ -280,7 +280,8 @@
 		<portlet id="reportrequest"></portlet>
 		<portlet id="rpt"></portlet>
 		<portlet id="CmReport"></portlet>
-		
+		<portlet id="pmReports"></portlet>
+	
 	</category>
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>
