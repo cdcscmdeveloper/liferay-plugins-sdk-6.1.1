@@ -16,7 +16,7 @@
 	<ui:include src="financialspecSupplierList.xhtml"></ui:include>
 
 
-	<p:panel id="evaluationStageSpecificationCommitteeBypackageofferPrice"
+	<p:panel id="evaluationStageSpecificationCommitteeBypackageofferPrice#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 		toggleable="true" header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}"
