@@ -26,6 +26,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -33,16 +34,18 @@ import org.apache.log4j.Logger;
 
 
 
-public abstract class ReportBaseBackingBean<T extends BaseManagedBean> extends BaseBackingBean<T> {
+public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> extends BaseBackingBean<T> {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = EpLogger.getLogger(ReportBaseBackingBean.class);
 	
 	
-	public List<SelectItem> retrieveReportListByAuthorization(String moduleCode) {
+	public void retrieveReportListByAuthorization(String moduleCode) {
 		log.info("retrieveReportListByAuthorization");
-		List<SelectItem> reportList = new ArrayList<SelectItem>();
+		
+		this.getManagedBean().setReportList(null);
+		
 		Long userId = getFacesScopes().getUserSessionBean().getUserId();
 		if (userId != null) {
 			IPMReportSO reportSO = null;
@@ -64,7 +67,7 @@ public abstract class ReportBaseBackingBean<T extends BaseManagedBean> extends B
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1].toString());
-						reportList.add(selectItem);
+						this.getManagedBean().getReportList().add(selectItem);
 
 					}
 				}
@@ -75,7 +78,6 @@ public abstract class ReportBaseBackingBean<T extends BaseManagedBean> extends B
 			}
 		}
 
-		return reportList;
 	}
 	
 	private FacesScopes getFacesScopes() {
