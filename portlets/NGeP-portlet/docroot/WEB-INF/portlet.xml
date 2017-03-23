@@ -9656,15 +9656,15 @@
 	
 	
 	<portlet>
-			<portlet-name>reportMain</portlet-name>
-			<display-name>reportMain</display-name>
+			<portlet-name>CmReport</portlet-name>
+			<display-name>CmReport</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/reports/new/reportMain.xhtml
+					/xhtml/reports/new/preRenderCmReport.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
@@ -9673,7 +9673,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Generate Report</title>
+				<title>CM Report</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>

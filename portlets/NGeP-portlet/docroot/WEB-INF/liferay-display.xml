@@ -279,7 +279,7 @@
 		<portlet id="reportpopup"></portlet>
 		<portlet id="reportrequest"></portlet>
 		<portlet id="rpt"></portlet>
-		<portlet id="reportMain"></portlet>
+		<portlet id="CmReport"></portlet>
 		
 	</category>
 	<category name="Supplier Management">
