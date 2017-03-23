@@ -42,6 +42,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -66,6 +67,8 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -157,6 +160,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
+	
+	/** The request note codification page. */
+	private String REQUEST_NOTE_CODIFICARION_PAGE = "/xhtml/sc/directpurchase/requestnote/codification/requestNoteCodificationMain.xhtml";
 	
 	/**
 	 * Instantiates a new request note backing bean.
@@ -561,6 +567,54 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return null;
 	}
 	
+	/**
+	 * submit request note details for codification task
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
+	 * @return the string
+	 * page navigate to acknowledge page.
+	 */	
+	public String requestNoteCodificationSubmit(String outcome) {
+		debugLogger("requestNoteCodificationSubmit");
+		RequestNoteResDTO requestNoteResDTO = null;
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
+			requestNoteReqDTO.setRoleCode(getUserRoleCode());
+			
+			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+			requestNoteReqDTO.setToken(ctxToken);
+			requestNoteReqDTO.setOutcome(outcome);
+			requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
+
+			if (requestNoteResDTO.isSuccessful()) {
+				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+
+				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
+					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+				}	
+				// clear data
+				super.renewSesionObject();
+			} else{
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		}    
+		finally {
+			//directPurchaseSO = null;
+		}
+		return null;
+	}
+	
+	
 
 	/**
 	 * submit Action. before submit / Approve request note, 
@@ -623,6 +677,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteSubmit(outcome);
 			}
 		}
+	}
+	
+	/**
+	 * submit codification task Action. 
+	 */
+	public void submitCodificationAction(String outcome) {
+		debugLogger("submitCodificationAction");
+		getManagedBean().setAction(outcome);
+		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
+		
+		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
+
+			// check is all items codified
+		}
+
+		requestNoteSubmit(outcome);
 	}
 
 	/**
@@ -850,6 +920,62 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// page nav. to common request note
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
 	}
+	
+	/**
+	 * Pre render page navigation to request note page based on task id for codification task
+	 * @return void
+	 */
+	public void preRenderCodificationView() {
+		debugLogger("preRenderCodificationView");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		Long dpId = 9550L;
+		Long supplierId = null;
+		ScRequestNote	requestNote = null;
+		List<ScRequestNoteDtl> requestNoteDtlList= null;
+		
+		/*SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		
+		if(directPurchaseDataType.getRnId() == null){
+			dpId = Long.valueOf(directPurchaseDataType.getDpId());
+		} else{
+			dpId = Long.valueOf(directPurchaseDataType.getRnId());
+		}*/
+		
+		/*if(directPurchaseDataType.getRnId() == null){
+			supplierId = Long.valueOf(directPurchaseDataType.getSupplierId());
+		} else{
+			supplierId = Long.valueOf(directPurchaseDataType.getSupplierId());
+		}*/
+		
+		requestNoteReqDTO.setRequestNoteId(dpId);
+		requestNoteReqDTO.setSupplierId(supplierId);
+		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().
+				getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
+		if(requestNoteResDTO.getRequestNoteDtlList() != null){
+			requestNoteDtlList = requestNoteResDTO.getRequestNoteDtlList();
+		}
+		if(requestNoteResDTO.getRequestNoteDetail() != null){
+			requestNote = requestNoteResDTO.getRequestNoteDetail();
+		}
+		
+		if(CollectionUtils.isNotEmpty(requestNoteDtlList)) {
+			getManagedBean().setSmSupplier(requestNoteDtlList.get(0).getScRequestSupplierItem().getSmSupplier());
+		}
+		
+		// created by 
+		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
+
+		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
+		
+		// title checker
+		getManagedBean().setRequestNote(requestNote);
+		getManagedBean().setRequestNoteDtls(requestNoteDtlList);
+		getManagedBean().setTitleChecker(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		// page nav. to common request note
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_CODIFICARION_PAGE);
+	}
+	
 
 	/**
 	 * Retrieve request note details.
@@ -3552,6 +3678,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
+	 * Gets the template spec so.
+	 *
+	 * @return the template spec so
+	 */
+	private ITemplateSpecSO getTemplateSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+	}
+	
+	/**
 	 * Gets the server url.
 	 *
 	 * @return the server url
@@ -3843,6 +3978,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteDtl.setTotalPricePerItem(subTotalAmount);
 		
 		return subTotalAmount;
+	}
+	
+	/**
+	 * show Item Specifications Pop up
+	 *
+	 * @param scRequestNoteDtl the sc request note dtl
+	 */
+	public void showSpecificationPopup(ScRequestNoteDtl scRequestNoteDtl){
+		debugLogger("showSpecificationPopup");
+		ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+		List<TplSpecQuestion> specificationList = getManagedBean().getSpecificationMap().
+				get(requestItem.getRequestNoteItemId());
+		TplSpecQuestion parentSpecQuestion = requestItem.getTplSpecQuestion();
+		if(specificationList == null) {
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setSpecQuestionId(parentSpecQuestion.getSpecQuestionId());
+			TemplateSpecResDTO resDTO = getTemplateSpecSO().getSpecificationsByQuestionId(reqDTO);
+			List<TplSpecQuestion> specList = resDTO.getSpecQuestionList();
+			getManagedBean().getSpecificationMap().put(requestItem.getRequestNoteItemId(), specList);
+			getManagedBean().setSpecificationList(specList);
+		} else {
+			getManagedBean().setSpecificationList(specificationList);
+		}
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 	
 	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 

@@ -102,6 +102,7 @@
 			<portlet id="scProcurementList" />
 			<portlet id="scProcurementPlanList" />
 			<portlet id="scDirectPurchaseTask" />
+			<portlet id="scRequestNoteCodeAssignment" />
 			<portlet id="scQuotationTender" />
 			<portlet id="scCommittee" />
 			<portlet id="scSpecificationBusinessOwner" />

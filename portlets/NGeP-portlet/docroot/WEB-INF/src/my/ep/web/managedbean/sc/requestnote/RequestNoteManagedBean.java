@@ -6,6 +6,7 @@ package my.ep.web.managedbean.sc.requestnote;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -312,6 +314,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The recommended supplier */
 	private List<Object[]> recommendSupplierList;
+	
+	/** The selected Spec Question List. */
+	private	List<TplSpecQuestion> specificationList = null;
+	
+	/** The map of specification list */
+	private Map<Long, List<TplSpecQuestion>> specificationMap = new HashMap<Long, List<TplSpecQuestion>>();
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1840,5 +1848,34 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setRecommendSupplierList(List<Object[]> recommendSupplierList) {
 		this.recommendSupplierList = recommendSupplierList;
+	}
+
+	/**
+	 * @return the specificationList
+	 */
+	public List<TplSpecQuestion> getSpecificationList() {
+		return specificationList;
+	}
+
+	/**
+	 * @param specificationList the specificationList to set
+	 */
+	public void setSpecificationList(List<TplSpecQuestion> specificationList) {
+		this.specificationList = specificationList;
+	}
+
+	/**
+	 * @return the specificationMap
+	 */
+	public Map<Long, List<TplSpecQuestion>> getSpecificationMap() {
+		return specificationMap;
+	}
+
+	/**
+	 * @param specificationMap the specificationMap to set
+	 */
+	public void setSpecificationMap(
+			Map<Long, List<TplSpecQuestion>> specificationMap) {
+		this.specificationMap = specificationMap;
 	}
 }
