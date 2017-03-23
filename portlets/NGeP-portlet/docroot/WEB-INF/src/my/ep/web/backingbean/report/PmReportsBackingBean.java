@@ -41,7 +41,7 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 
 	public void preRenderView() {
 		log.info("preRenderView");
-	
+		this.renewSesionObject();
 		retrieveReportListByAuthorization(ModuleCodeConst.PROFILE_MANAGEMENT
 				.toUpperCase());
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -61,7 +61,15 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 //	}
 	
 	public void onChangeReportName(){
-		log.info("onChangeReportName");
+		log.info("onChangeReportName");		
+		if(StringUtils.isNotBlank(getManagedBean().getReportCode())){
+			for(SelectItem item : getManagedBean().getReportList()){
+				if(item.getValue().equals(getManagedBean().getReportCode())){
+					getManagedBean().setReportName(item.getLabel());
+					break;
+				}
+			}
+		}
 	}
 
 }

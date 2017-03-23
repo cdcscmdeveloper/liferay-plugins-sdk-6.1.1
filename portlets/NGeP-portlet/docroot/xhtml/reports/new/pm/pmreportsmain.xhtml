@@ -8,24 +8,34 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:panel style="width: 100%;" header="#{lbl['lbl.rpt.rptcriteria']}"
-			toggleable="true" id="rptModuleId">
-			<table style="margin-top: 10px; width: 100%;">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
-							id="somReportName" value="#{pmReportsBackingBean.managedBean.reportName}"
-							required="true" style="margin-top:5px;width:300px;">
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-								itemValue="#{null}"></f:selectItem>
-							<f:selectItems value="#{pmReportsBackingBean.retrieveReportListByAuthorization(ReportConst.pmModVal)}"></f:selectItems>
-							<p:ajax event="change"
-								listener="#{pmReportsBackingBean.onChangeReportName()}"
-								process="@this" partialSubmit="true" update="@all" />
-						</p:selectOneMenu></td>
-				</tr>
-			</table>
+		<table style="margin-top: 10px; width: 100%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
+						id="somReportName"
+						value="#{pmReportsBackingBean.managedBean.reportCode}"
+						required="true" style="margin-top:5px;width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems
+							value="#{pmReportsBackingBean.managedBean.reportList}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{pmReportsBackingBean.onChangeReportName()}"
+							process="@this" partialSubmit="true" update="@form" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		<p:panel id="pmRptSearchCriteriaPnl"
+			header="#{pmReportsBackingBean.managedBean.reportName} #{ReportConst.pmBpkAdminProfileRptVal}"
+			rendered="#{not empty pmReportsBackingBean.managedBean.reportCode}"
+			toggleable="true">
+			
+			<p:outputPanel id="bpkAdnProfilePnl" 
+				rendered="#{ReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+				<ui:include src="/xhtml/reports/new/pm/bpkAdminProfileReport.xhtml"></ui:include>
+			</p:outputPanel>
+			
 		</p:panel>
 	</ui:define>
 
