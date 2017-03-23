@@ -56,7 +56,7 @@
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 						rendered="#{(isEditableStatus and !directLOABackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
 						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload)}"
-						popupWidgetVar="scDocUploadDlg"
+						popupWidgetVar="scDocDnUploadDlg"
 						attachment="#{scLoaReport.scLoaReportAttachment}"
 						readonly="#{directLOABackingBean.managedBean.readOnly}"
 						rowIndex="#{rowIndex}">
