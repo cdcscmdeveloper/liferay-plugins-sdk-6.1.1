@@ -140,6 +140,12 @@
 			readonly="#{directLOABackingBean.managedBean.readOnly}"
 			update="@([id$=scDocUploadBtn])" 
 			autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/>
+			
+		<ac:scSingleFileUploadPopup widgetVar="suppSupportDocUploadDlg"
+			fileUploadListener="directLOABackingBean.handleFileUpload"
+			readonly="#{directLOABackingBean.managedBean.readOnly}"
+			update="@([id$=supportDocUploadBtn])" 
+			autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/>
 
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
 			width="500px"
