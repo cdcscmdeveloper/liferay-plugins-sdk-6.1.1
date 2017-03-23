@@ -90,11 +90,11 @@
 				<ui:param name="branchInfoReport"
 						value="#{directLOABackingBean.managedBean.branchInfoReport}"></ui:param>
 				<ac:scSingleFileUploadButton id="dnSuppUploadBtn"
-						popupWidgetVar="dnSuppUploadDlg"
+						popupWidgetVar="dnBranchInfoUploadDlg"
 						attachment="#{branchInfoReport.scLoaReportAttachment}"
 						readonly="#{directLOABackingBean.managedBean.readOnly}" />
 				 <ac:scSingleFileUploadPopup
-						widgetVar="dnSuppUploadDlg"
+						widgetVar="dnBranchInfoUploadDlg"
 						fileUploadListener="directLOABackingBean.uploadBranchInfo"
 						update="@([id$=dnSuppUploadBtn])"
 						readonly="#{directLOABackingBean.managedBean.readOnly}" 
