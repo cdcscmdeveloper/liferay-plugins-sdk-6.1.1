@@ -19,7 +19,8 @@
   		/WEB-INF/config/faces-config/sc/faces-config-sc.xml,
   		/WEB-INF/config/faces-config/sc/dptable.xml,
   		/WEB-INF/config/faces-config/wp/faces-config-wp.xml,
-  		/WEB-INF/config/faces-config/sm/faces-config-sm.xml
+  		/WEB-INF/config/faces-config/sm/faces-config-sm.xml,
+  		/WEB-INF/config/faces-config/rpt/faces-config-rpt.xml
 		</param-value>
 	</context-param>
 	
