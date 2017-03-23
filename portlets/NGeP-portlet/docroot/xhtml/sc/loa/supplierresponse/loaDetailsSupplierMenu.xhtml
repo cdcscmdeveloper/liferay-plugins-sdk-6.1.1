@@ -91,11 +91,11 @@
 				<td><ui:param name="branchInfoReport"
 						value="#{lOADetailBackingBean.managedBean.branchInfoReport}"></ui:param>
 				<ac:scSingleFileUploadButton id="loaSuppUploadBtn"
-						popupWidgetVar="loaSuppUploadDlg"
+						popupWidgetVar="qtLoaBranchInfoUploadDlg"
 						attachment="#{branchInfoReport.scLoaReportAttachment}"
 						readonly="#{lOADetailBackingBean.managedBean.readOnly}" /> 
 				<ac:scSingleFileUploadPopup
-						widgetVar="loaSuppUploadDlg"
+						widgetVar="qtLoaBranchInfoUploadDlg"
 						fileUploadListener="lOADetailBackingBean.uploadBranchInfo"
 						update="@([id$=loaSuppUploadBtn])"
 						readonly="#{lOADetailBackingBean.managedBean.readOnly}" 
