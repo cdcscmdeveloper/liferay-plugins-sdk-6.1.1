@@ -25,6 +25,28 @@ public class ReportBaseMangedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	List<SelectItem> reportList = new ArrayList<SelectItem>();
+
+	/**
+	 * @return the reportList
+	 */
+	public List<SelectItem> getReportList() {
+		if(reportList==null){
+			reportList = new ArrayList<SelectItem>();
+		}
+		return reportList;
+	}
+
+	/**
+	 * @param reportList the reportList to set
+	 */
+	public void setReportList(List<SelectItem> reportList) {
+		this.reportList = reportList;
+	}
+	
+	
+	
+	
 	
 	
 
