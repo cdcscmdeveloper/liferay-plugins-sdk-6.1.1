@@ -1,9 +1,12 @@
 package my.ep.web.bean.ct;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.ct.CtAttachment;
 
-public class CtLetterOfAcceptance {
+public class CtLetterOfAcceptance implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private String contentTypeDesc;
 	private CtAttachment loaAttachments;
 	
