@@ -25,5 +25,10 @@ public class CmConst {
 	
 	/** The Constant COMPLETED. */
 	public static final Long COMPLETED = 15033L;
+	
+	
+	public static final String CM_ModuleCode = "CM";
+	
+	
 
 }
