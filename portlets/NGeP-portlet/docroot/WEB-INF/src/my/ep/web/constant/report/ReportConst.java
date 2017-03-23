@@ -10,13 +10,15 @@
  */
 package my.ep.web.constant.report;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
  * @Author Jangari Kondal Reddy
  */
-public class ReportConst {
-
+public class ReportConst implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	// public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
 	public static final String MALAY_LANGUAGE_CODE = "ms";
 	public static final String MALAYSIA_COUNTRY_CODE = "MY";
@@ -1076,5 +1078,64 @@ public class ReportConst {
 	// ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN = "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
+	
+	public ReportConst(){}
+	
+	/**
+	 * @return the pmListOfFinacialInstitutionsRptVal
+	 */
+	public String getPmListOfFinacialInstitutionsRptVal() {
+		return PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL;
+	}
+	/**
+	 * @return the pmListOfOrganizationRptVal
+	 */
+	public String getPmListOfOrganizationRptVal() {
+		return PM_LIST_OF_ORGANIZATION_RPT_VAL;
+	}
+	/**
+	 * @return the pmListOfProfilesRptVal
+	 */
+	public String getPmListOfProfilesRptVal() {
+		return PM_LIST_OF_PROFILES_RPT_VAL;
+	}
+	/**
+	 * @return the pmListOfGovernmentSellersRptVal
+	 */
+	public String getPmListOfGovernmentSellersRptVal() {
+		return PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL;
+	}
+	/**
+	 * @return the pmListOfExemptedItemsBySupplierRptVal
+	 */
+	public String getPmListOfExemptedItemsBySupplierRptVal() {
+		return PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL;
+	}
+	/**
+	 * @return the pmListOfExemptedItemsRptVal
+	 */
+	public String getPmListOfExemptedItemsRptVal() {
+		return PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL;
+	}
+	/**
+	 * @return the pmListOfExemptedContractedItemsRptVal
+	 */
+	public String getPmListOfExemptedContractedItemsRptVal() {
+		return PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL;
+	}
+	/**
+	 * @return the pmBpkUserProfileRptVal
+	 */
+	public String getPmBpkUserProfileRptVal() {
+		return PM_BPK_USER_PROFILE_RPT_VAL;
+	}
+	/**
+	 * @return the pmBpkAdminProfileRptVal
+	 */
+	public String getPmBpkAdminProfileRptVal() {
+		return PM_BPK_ADMIN_PROFILE_RPT_VAL;
+	}
+	
+	
 	
 }
