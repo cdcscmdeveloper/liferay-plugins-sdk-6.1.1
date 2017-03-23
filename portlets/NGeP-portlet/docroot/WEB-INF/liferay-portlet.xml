@@ -3004,7 +3004,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>reportMain</portlet-name>
+		<portlet-name>CmReport</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
@@ -3012,7 +3012,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			reportMain-portlet
+			CmReport-portlet
 		</css-class-wrapper>
 	</portlet>
 	
