@@ -89,14 +89,14 @@
 				<td>
 				<ui:param name="branchInfoReport"
 						value="#{directLOABackingBean.managedBean.branchInfoReport}"></ui:param>
-				<ac:scSingleFileUploadButton id="dnSuppUploadBtn"
+				<ac:scSingleFileUploadButton id="dnBranchInfoUploadBtn"
 						popupWidgetVar="dnBranchInfoUploadDlg"
 						attachment="#{branchInfoReport.scLoaReportAttachment}"
 						readonly="#{directLOABackingBean.managedBean.readOnly}" />
 				 <ac:scSingleFileUploadPopup
 						widgetVar="dnBranchInfoUploadDlg"
 						fileUploadListener="directLOABackingBean.uploadBranchInfo"
-						update="@([id$=dnSuppUploadBtn])"
+						update="@([id$=dnBranchInfoUploadBtn])"
 						readonly="#{directLOABackingBean.managedBean.readOnly}" 
 						autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/> 
 				 <ac:iconTooltip
