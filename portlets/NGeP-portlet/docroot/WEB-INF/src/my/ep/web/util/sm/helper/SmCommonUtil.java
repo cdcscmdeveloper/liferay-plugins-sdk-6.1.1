@@ -4762,11 +4762,12 @@ public class SmCommonUtil {
 	public static void redirectToPageForPublicPage(String xhtml,
 			String portletUrl) {
 		if (isNotFilterHttps()) {
+			log.info(">>>>>>>>>>>>NO NEED TO FILTER URL");
 			redirectToPage(xhtml, null, null, null);
 		} else {
 			String url = SmCommonUtil.getBasePortalUrl() + "/" + portletUrl;
-			if (!StringUtils.isBlank(url)
-					&& !url.contains("https")) {
+			log.info(">>>>>>>>>>>>>>>>>>>>REDIRECT URL:" + url);
+			if (!StringUtils.isBlank(url) && !url.contains("https")) {
 				redirectToPage("/xhtml/pm/shared/outputMsg.xhtml",
 						MessageConst.ERROR_722653,
 						new String[] { url.replace("http", "https") },
