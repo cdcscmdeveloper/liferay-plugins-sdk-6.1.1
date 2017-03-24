@@ -517,7 +517,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				String messageId = MessageConst.INFO_700021;
+				String messageId = MessageConst.INFO_700005;
 				String prefix = "";
 				String nextRole = null;
 				
@@ -528,6 +528,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					prefix = ResourceBundleUtils.getMessage("lbl.ct.draft", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					messageId = MessageConst.INFO_700021;
 					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						nextRole = RoleCode.CT_APPROVER.value();
