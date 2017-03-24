@@ -12,20 +12,21 @@
  */
 package my.ep.web.backingbean.report;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.constant.MessageConst;
+import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
@@ -84,6 +85,37 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	public void checkOneYearDifferent(Date fromDate, Date toDate) {
+		log.info("********checkOneYearDifferent********");
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+		if (yearToInt == yearFromInt + 1) {
+			if (monthToInt == monthFromInt) {
+				if (dayToInt > dayFromInt) {
+					throw new EpException(MessageConst.ERROR_REPORT_780011);
+				}
+			} else if (monthToInt > monthFromInt) {
+				throw new EpException(MessageConst.ERROR_REPORT_780011);
+			}
+		} else if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780011);
+		}
+	}
+	
+	
 	
 	
 	
