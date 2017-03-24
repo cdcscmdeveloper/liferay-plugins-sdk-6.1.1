@@ -647,7 +647,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 			if(!getManagedBean().getCircularVer().isDirectPurchase() 
-					&& getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
+					&& !getManagedBean().getCircularVer().isDirectNego()
+					&& !getManagedBean().getCircularVer().isQt()){
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_750019);
 			}
