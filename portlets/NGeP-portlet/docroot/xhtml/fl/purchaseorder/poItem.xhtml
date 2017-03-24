@@ -103,8 +103,8 @@
 							<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
-						<h:outputText
-							value="#{newItems.itemCode}" style="float:right;"/>
+						<h:outputText rendered="#{newItems.scRequestItem.cmItem==null}" value="#{newItems.scRequestItem.tempUnspscCode}" style="float:left;"/>
+						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%" >
 						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
