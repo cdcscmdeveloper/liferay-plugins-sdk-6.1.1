@@ -2540,21 +2540,6 @@ public class SupplierFinalizationBackingBean extends
 			isCancel = true;
 		}
 		
-		IOrgProfileSO orgProfileSO = null;
-		try {
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId());
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
-			
-			if (resDTO.getPmOrgProfile() != null) {
-				ministryName = resDTO.getPmOrgProfile().getOrgName();
-				ministryName = ministryName.toUpperCase();
-			}
-		} finally {
-			orgProfileSO = null;
-		}
 		String title = scQt.getQtTitle();
 		if (title == null) {
 			title = "";
@@ -2574,7 +2559,6 @@ public class SupplierFinalizationBackingBean extends
 			committeeTypeStr = committeeTypeStr.toUpperCase();
 		}
 		context.put("committeeTypeStr", committeeTypeStr);
-		context.put("ministryName", ministryName);
 		context.put("isSupplierFinalization", 
 					 isSupplierFinalization);
 		context.put("isForwardToHigherAuthority", 
@@ -2799,6 +2783,21 @@ public class SupplierFinalizationBackingBean extends
 			if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				chairPersonName = commMember.getMemberName().toUpperCase();
+				IOrgProfileSO orgProfileSO = null;
+				try {
+					orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(commMember.getPmOrgProfile().getOrgProfileId());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					
+					if (resDTO.getPmOrgProfile() != null) {
+						ministryName = resDTO.getPmOrgProfile().getOrgName();
+						ministryName = ministryName.toUpperCase();
+					}
+				} finally {
+					orgProfileSO = null;
+				}
 			} /*else if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				secretaryName = commMember.getMemberName().toUpperCase();
@@ -2810,6 +2809,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("commMembers", commMembers);
 		context.put("chairPerson", chairPersonName);
+		context.put("ministryName", ministryName);
 //		context.put("secretary", secretaryName);
 		context.put("member", memberName);
 		
