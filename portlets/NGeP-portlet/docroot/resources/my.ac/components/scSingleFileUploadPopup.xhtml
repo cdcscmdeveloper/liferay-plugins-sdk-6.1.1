@@ -8,7 +8,6 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <cc:interface>
-    <cc:attribute name="id" />
 	<cc:attribute name="widgetVar" required="true" />
 	<cc:attribute name="readonly" default="false" />
 	<cc:attribute name="update" default="@form" />
@@ -21,7 +20,7 @@
 
 <cc:implementation>
 	<c:if test="#{!cc.attrs.readonly}">
-		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widgetVar}" 
+		<p:dialog id="#{cc.attrs.widgetVar}Id" widgetVar="#{cc.attrs.widgetVar}" 
 			modal="true" dynamic="true"
 			resizable="false" width="700px" height="350px"
 			styleClass="pop_up_top" 
