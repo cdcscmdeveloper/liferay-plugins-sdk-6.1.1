@@ -969,6 +969,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				flItemAddr.setOrderedQty(new BigDecimal(0));
 				flItemAddr.setOrderedAmt(new BigDecimal(0));
 				allItemsList.add(flItemAddr);
+			}else{
+				if(purchaseItem.getRequestItem().getCmItem()!=null) {
+					flItemAddr.setItemCode(purchaseItem.getRequestItem().getCmItem().getExtensionCode());
+				} else {
+					flItemAddr.setItemCode(purchaseItem.getRequestItem().getTempUnspscCode());
+				}
+				allItemsList.add(flItemAddr);
 			}
 		}
 		sortItems(allItemsList);
