@@ -339,11 +339,14 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			System.out.println("**********combinedContentHtml***********"+combinedContentHtml);
 			if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
 			for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
+				String value = entry.getValue();
 				log.info("entry.getKey()"+entry.getKey());
-				log.info("entry.getValue()"+entry.getValue());
+				log.info("entry.getValue()"+value);
 				String replacekey=TemplateDocConst.PARAM_PREFIX+entry.getKey()+TemplateDocConst.PARAM_POSTFIX;
 				log.info("replacekey"+replacekey);
-				combinedContentHtml=combinedContentHtml.replaceAll(replacekey, entry.getValue());
+				if(value != null){
+					combinedContentHtml=combinedContentHtml.replaceAll(replacekey, value);
+				}
 			}
 			}
 			getManagedBean().setPreviewValue(combinedContentHtml);
