@@ -94,12 +94,6 @@
 						popupWidgetVar="qtLoaBranchInfoUploadDlg"
 						attachment="#{branchInfoReport.scLoaReportAttachment}"
 						readonly="#{lOADetailBackingBean.managedBean.readOnly}" /> 
-				<ac:scSingleFileUploadPopup
-						widgetVar="qtLoaBranchInfoUploadDlg"
-						fileUploadListener="lOADetailBackingBean.uploadBranchInfo"
-						update="@([id$=loaSuppUploadBtn])"
-						readonly="#{lOADetailBackingBean.managedBean.readOnly}" 
-						autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}"/> 
 				<ac:iconTooltip
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>

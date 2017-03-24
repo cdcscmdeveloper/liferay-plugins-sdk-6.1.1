@@ -111,7 +111,13 @@
 			fileType="#{lOADetailBackingBean.managedBean.fileTypePdf}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 			autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}"/>
-		
+
+		<ac:scSingleFileUploadPopup widgetVar="qtLoaBranchInfoUploadDlg"
+			fileUploadListener="lOADetailBackingBean.uploadBranchInfo"
+			update="@([id$=loaSuppUploadBtn])"
+			readonly="#{lOADetailBackingBean.managedBean.readOnly}"
+			autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}" />
+
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
 			width="500px" message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}" >
 			<div align="center">
