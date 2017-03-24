@@ -147,6 +147,12 @@
 			update="@([id$=supportDocUploadBtn])" 
 			autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/>
 
+		<ac:scSingleFileUploadPopup widgetVar="dnBranchInfoUploadDlg"
+			fileUploadListener="directLOABackingBean.uploadBranchInfo"
+			update="@([id$=dnBranchInfoUploadBtn])"
+			readonly="#{directLOABackingBean.managedBean.readOnly}"
+			autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}" />
+
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
 			width="500px"
 			message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}">
