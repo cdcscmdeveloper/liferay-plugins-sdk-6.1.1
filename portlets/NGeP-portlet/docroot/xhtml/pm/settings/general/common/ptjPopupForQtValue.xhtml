@@ -38,7 +38,8 @@
 					</p:outputPanel>
 					<p:spacer height="1" />
 					<p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"
-						label="#{lbl['lbl.pm.org.ptj.search.ministry']}" required="true"
+						label="#{lbl['lbl.pm.org.ptj.search.ministry']}" 
+						required="#{!empty param['qtValueValidation']}"
 						value="#{ruleCatalogueBackingBean.managedBean.ministryProfileId}">
 						<f:selectItems
 							value="#{ruleCatalogueBackingBean.getMinistryDropdown()}" />
@@ -127,7 +128,8 @@
 						<td width="30%"><p:inputText
 								value="#{ruleCatalogueBackingBean.managedBean.qtLimit}"
 								size="30" label="#{lbl['lbl.pm.settings.qt.value.limit']}"
-								maxlength="17" id="qtLimitId" required="true">
+								maxlength="17" id="qtLimitId" 
+								required="#{!empty param['qtValueValidation']}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<f:attribute name="min" value="0" />
@@ -144,7 +146,9 @@
 								value="#{lbl['lbl.btn.ok']}"								
 								action="#{ruleCatalogueBackingBean.addQtValues()}"
 								update=":form:settingTabId:qtValuePnlId"
-								process="@this,:form:ptjSearchPopup" partialSubmit="true" />
+								process="@this,:form:ptjSearchPopup" partialSubmit="true" >
+								<f:param name="qtValueValidation" value="true" /> 
+							</p:commandButton>
 							<p:commandButton id="qtCancelbtn"
 								oncomplete="ptjSearchPopup.hide();"								
 								value="#{lbl['lbl.btn.cancel']}"
