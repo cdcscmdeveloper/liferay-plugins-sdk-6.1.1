@@ -107,6 +107,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -142,6 +143,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.RoleHelper;
 
 /**
  * Circular Panel Backing bean
@@ -489,7 +491,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				String nextRole = null;
+				
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					messageId = MessageConst.INFO_700021;
+					nextRole = RoleCode.BPK_PQ_APPROVER.value();
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
@@ -501,10 +508,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					messageId = MessageConst.INFO_700010;
 				}
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
-								resDTO.getCircular().getCircularNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if(StringUtils.isNotBlank(nextRole)){
+					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+					
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
+									resDTO.getCircular().getCircularNo(), roleDesc.getRoleName()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
+									resDTO.getCircular().getCircularNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  	
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -580,7 +597,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				String nextRole = null;
+				
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					messageId = MessageConst.INFO_700021;
+					if (getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+						nextRole = RoleCode.BPK_CQ_APPROVER.value();
+					} else {
+						nextRole = RoleCode.BPK_PQ_APPROVER.value();
+					}
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
@@ -588,10 +614,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					messageId = MessageConst.INFO_700009;
 				} 
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
-								resDTO.getCancelCircularReq().getCancelCircularReqNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if(StringUtils.isNotBlank(nextRole)){
+					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+					
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
+									resDTO.getCancelCircularReq().getCancelCircularReqNo(), roleDesc.getRoleName()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
+									resDTO.getCancelCircularReq().getCancelCircularReqNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
