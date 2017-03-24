@@ -3131,7 +3131,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				
 				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-						if(itemAddr.getCmItem() == null){
+						if(itemAddr.getCmItem() == null || itemAddr.getCmItem().getExtensionCode() == null){
 							throw new EpException(MessageConst.ERROR_740053);
 						}
 					}
