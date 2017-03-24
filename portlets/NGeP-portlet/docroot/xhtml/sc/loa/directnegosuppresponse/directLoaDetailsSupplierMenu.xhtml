@@ -93,12 +93,7 @@
 						popupWidgetVar="dnBranchInfoUploadDlg"
 						attachment="#{branchInfoReport.scLoaReportAttachment}"
 						readonly="#{directLOABackingBean.managedBean.readOnly}" />
-				 <ac:scSingleFileUploadPopup
-						widgetVar="dnBranchInfoUploadDlg"
-						fileUploadListener="directLOABackingBean.uploadBranchInfo"
-						update="@([id$=dnBranchInfoUploadBtn])"
-						readonly="#{directLOABackingBean.managedBean.readOnly}" 
-						autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/> 
+			
 				 <ac:iconTooltip
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>
