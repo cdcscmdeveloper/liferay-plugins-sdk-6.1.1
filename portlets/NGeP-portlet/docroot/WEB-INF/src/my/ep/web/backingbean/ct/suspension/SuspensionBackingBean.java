@@ -46,6 +46,7 @@ import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.RoleCode;
@@ -60,7 +61,9 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.RoleHelper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
@@ -458,7 +461,17 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			 if(resDTO.isSuccessful()) {
 				 log.info("Record saved successfully");
 				 String messageId = MessageConst.INFO_700005;
-				 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				 String nextRole = null;
+					
+				 if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					 messageId = MessageConst.INFO_700021;
+					 if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							 ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						 nextRole = RoleCode.CT_APPROVER.value();
+					 } else { // Central Contract
+						 nextRole = RoleCode.BPK_CC_APPROVER.value();
+					 }
+				 } else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					 messageId = MessageConst.INFO_700025;
 				 } else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					 messageId = MessageConst.INFO_700009;
@@ -468,11 +481,24 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					 messageId = MessageConst.INFO_700008;
 				 } else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					 messageId = MessageConst.INFO_700010;
-				 }						
-				 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+				 }
+				 
+				 if(StringUtils.isNotBlank(nextRole)){
+					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+					
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							 MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+									 this.getManagedBean().getContractVer().getCtContract().getContractNo(),
+									 roleDesc.getRoleName()}, 
+									 MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						 MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 								 this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								 MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				 
 				 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					 renewSesionObject();
 					 return CommonUIConst.ACKNOWLEDGE_PAGE;
