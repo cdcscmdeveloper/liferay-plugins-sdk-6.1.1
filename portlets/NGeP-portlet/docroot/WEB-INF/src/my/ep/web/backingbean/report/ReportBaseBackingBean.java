@@ -42,13 +42,13 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = EpLogger.getLogger(ReportBaseBackingBean.class);
-	
-	
+
+
 	public void retrieveReportListByAuthorization(String moduleCode) {
 		log.info("retrieveReportListByAuthorization");
-		
+
 		this.getManagedBean().setReportList(null);
-		
+
 		Long userId = getFacesScopes().getUserSessionBean().getUserId();
 		if (userId != null) {
 			IPMReportSO reportSO = null;
@@ -82,12 +82,12 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		}
 
 	}
-	
+
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
+
 	public void checkOneYearDifferent(Date fromDate, Date toDate) {
 		log.info("********checkOneYearDifferent********");
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
@@ -116,33 +116,35 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 			throw new EpException(MessageConst.ERROR_REPORT_780011);
 		}
 	}
-	
-	
-	
-	
-	 public void retrieveReportValueFromDb(String reportCode){
-		  
-		  PMReportReqDTO reqDTO = new PMReportReqDTO();
-		  reqDTO.setReportCode(reportCode);
-		  ReportUtil reportUtil = new ReportUtil();
-		  
-		  IPMReportSO reportSO = reportUtil.getPMReportSO();
-		  PMReportResDTO resDTO = reportSO.retriveReportByrptId(reqDTO);
-		  
-		  PMReport pmReport = resDTO.getPmReportDtls();
-		  
-		  
-		  this.getManagedBean().setReportName(pmReport.getReportFilename());
-		 
-		  this.getManagedBean().setTempAccess(pmReport.getIsTempAccess() == 1 ? true : false);
-		 
-	
-		 }
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+	public void retrieveReportValueFromDb(){
+
+		
+		System.out.println("getReportCode:"+this.getManagedBean().getReportCode());
+		PMReportReqDTO reqDTO = new PMReportReqDTO();
+		reqDTO.setReportCode(this.getManagedBean().getReportCode());
+		ReportUtil reportUtil = new ReportUtil();
+
+		IPMReportSO reportSO = reportUtil.getPMReportSO();
+		PMReportResDTO resDTO = reportSO.retriveReportByrptId(reqDTO);
+
+		PMReport pmReport = resDTO.getPmReportDtls();
+
+		
+		this.getManagedBean().setReportName(pmReport.getReportFilename());
+
+		this.getManagedBean().setTempAccess(pmReport.getIsTempAccess() == 1 ? true : false);
+
+
+	}
+
+
+
+
+
+
+
 }
