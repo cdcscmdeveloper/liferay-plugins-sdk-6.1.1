@@ -9030,7 +9030,7 @@ public class ReportBackingBean extends
 			doctype = ReportConst.DOC_TYPE_PA;
 		} else if (StringUtils.isNotEmpty(this.getReportValue())
 				&& (this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))) {
-			doctype = ReportConst.DOC_TYPE_DN;
+			doctype = ReportConst.DOC_TYPE_CO;
 		} else if (StringUtils.isNotEmpty(this.getReportValue())
 				&& (this.getReportValue().equals(
 						ReportConst.SUMM_RPT_PAN_ITM_VAL)
