@@ -34,6 +34,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -1347,8 +1348,12 @@ public class ApprovalBackingBean extends
 								.createDocumentAttachments();
 					} catch (Exception e) {
 						e.printStackTrace();
-
-						throw new EpException(e.getMessage());
+						if(e.getMessage() != null)	{
+							throw new EpException(e.getMessage());
+						} else {
+							throw new EpException(MessageConst.ERROR_000001);
+						}
+						
 					}
 					scQt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
