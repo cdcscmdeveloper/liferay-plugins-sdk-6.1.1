@@ -3923,7 +3923,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == ruleHelper
 				.getMaxCategoryAllowed()) {
 			validCatCode = false;
-			throw new EpException(MessageConst.ERROR_722517);
+			throw new EpException(MessageConst.ERROR_722517,
+					new String[] { ruleHelper.getMaxCategoryAllowed() + "" });
 		}
 
 		if (validCatCode) {
@@ -10167,7 +10168,8 @@ public class SmApplicationBackingBean extends
 					.getActiveCategoryList().size() : 0) + 1;
 			if ((currentApprovedCatSize + additionalCatSize) > maxCatSize) {
 				validCatCode = false;
-				throw new EpException(MessageConst.ERROR_722517);
+				throw new EpException(MessageConst.ERROR_722517,
+						new String[] { maxCatSize + "" });
 			}
 		}
 
