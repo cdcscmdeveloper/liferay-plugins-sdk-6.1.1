@@ -21,6 +21,11 @@ public class ReportUtil {
 
 	String strLanguage;
 	
+	
+	public ReportUtil(){
+	
+	}
+	
 	public ReportUtil(String strLanguage){
 		this.strLanguage = strLanguage;
 	}
