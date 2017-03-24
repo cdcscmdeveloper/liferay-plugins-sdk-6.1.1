@@ -28,11 +28,62 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
 	
 	private String reportCode;
+	
+	private String reportName;
+	
+	private boolean tempAccess;
 
+	private boolean pdf;
 	
 	
 	
 	
+	
+	
+	
+	
+	/**
+	 * @return the reportName
+	 */
+	public String getReportName() {
+		return reportName;
+	}
+
+	/**
+	 * @param reportName the reportName to set
+	 */
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
+	}
+
+	/**
+	 * @return the tempAccess
+	 */
+	public boolean isTempAccess() {
+		return tempAccess;
+	}
+
+	/**
+	 * @param tempAccess the tempAccess to set
+	 */
+	public void setTempAccess(boolean tempAccess) {
+		this.tempAccess = tempAccess;
+	}
+
+	/**
+	 * @return the pdf
+	 */
+	public boolean isPdf() {
+		return pdf;
+	}
+
+	/**
+	 * @param pdf the pdf to set
+	 */
+	public void setPdf(boolean pdf) {
+		this.pdf = pdf;
+	}
+
 	/**
 	 * @return the reportList
 	 */

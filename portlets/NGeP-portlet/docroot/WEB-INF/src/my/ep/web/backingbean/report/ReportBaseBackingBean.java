@@ -24,8 +24,10 @@ import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.rpt.ReportUtil;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -114,6 +116,28 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 			throw new EpException(MessageConst.ERROR_REPORT_780011);
 		}
 	}
+	
+	
+	
+	
+	 public void retrieveReportValueFromDb(String reportCode){
+		  
+		  PMReportReqDTO reqDTO = new PMReportReqDTO();
+		  reqDTO.setReportCode(reportCode);
+		  ReportUtil reportUtil = new ReportUtil();
+		  
+		  IPMReportSO reportSO = reportUtil.getPMReportSO();
+		  PMReportResDTO resDTO = reportSO.retriveReportByrptId(reqDTO);
+		  
+		  PMReport pmReport = resDTO.getPmReportDtls();
+		  
+		  
+		  this.getManagedBean().setReportName(pmReport.getReportFilename());
+		 
+		  this.getManagedBean().setTempAccess(pmReport.getIsTempAccess() == 1 ? true : false);
+		 
+	
+		 }
 	
 	
 	
