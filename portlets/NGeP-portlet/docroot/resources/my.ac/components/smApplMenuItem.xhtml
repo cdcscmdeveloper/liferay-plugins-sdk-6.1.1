@@ -29,6 +29,13 @@
 			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
 			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
 			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
+			<ui:remove>
+				<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.smAppl.applType eq 'A' 
+					and cc.attrs.backingBean.managedBean.overLappedCategoryExists}">
+					&#160;<font color="red">&#x26A0;</font>&#160;
+					<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+				</p:outputPanel>
+			</ui:remove>
 		</p:commandLink>
 	</cc:implementation>
 
