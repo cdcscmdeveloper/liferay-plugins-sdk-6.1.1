@@ -5388,7 +5388,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	public boolean disableBtn(int index){
-		if(index ==0 && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+		if(index ==0 
+				&& (getManagedBean().getTaskName() != null 
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))){
 			return false;
 		} else if(index ==1 && getManagedBean().getAckFA() != null &&
 				getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
