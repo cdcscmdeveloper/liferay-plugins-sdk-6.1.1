@@ -1,0 +1,76 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.success.dialog.header']}"/>
+		<cc:attribute name="dialogWidth" default="550px" />
+		<cc:attribute name="dialogHeight" default="180px" />
+		<cc:attribute name="voList" type="java.util.List" required="true" />
+	</cc:interface>
+
+	<cc:implementation>
+			
+	<p:dialog id="overlapCategoryDialog" header="#{cc.attrs.dialogHeader}" closable="true"
+		widgetVar="overlapCategoryDialog" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}">
+		
+		<p:dataTable id="overlapMainDtId" var="vo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{cc.attrs.voList}" rowKey="#{vo}" rowIndexVar="index">
+			<ac:paginator for="overlapMainDtId" />
+
+			<p:column headerText="#{lbl['lbl.sm.overlapping.category']}">
+				<br /><h:outputText value="#{vo.categoryCode}" />&#160;<h:outputText value="#{vo.categoryName}" />
+				
+				<p:dataTable id="overlapSubDtId" var="voSub" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{vo.overlapInfoList}" rowKey="#{voSub}" rowIndexVar="index">
+					<ac:paginator for="overlapSubDtId" />
+					
+					<p:column style="width : 5%;text-align: center !important;" headerText="#{lbl['lbl.sm.userprofile.num']}">
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.name']}">
+						<h:outputText value="#{voSub.personnelName}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.idno']}">
+						<h:outputText value="#{voSub.identificationNo}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.rolename']}">
+						<h:outputText value="#{voSub.role}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.compname']}">
+						<h:outputText value="#{voSub.companyName}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.mofno']}">
+						<h:outputText value="#{voSub.mofNo}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.expdate']}">
+						<h:outputText value="#{voSub.expDate}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.regno']}">
+						<h:outputText value="#{voSub.regNo}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.applno']}">
+						<h:outputText value="#{voSub.applNo}" />
+					</p:column>
+					
+				</p:dataTable>
+		
+			</p:column>
+		</p:dataTable>
+		
+	</p:dialog>
+			
+	</cc:implementation>
+</ui:component>

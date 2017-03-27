@@ -1,6 +1,9 @@
 package my.ep.web.vo;
 
+import java.util.List;
+
 import my.ep.bpm.vo.BaseVO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 
 public class SmOverlapCategoryVO extends BaseVO {
 	/**
@@ -10,6 +13,7 @@ public class SmOverlapCategoryVO extends BaseVO {
 	private String overLappedCategoryMsg;
 	private String overLappedCategoryRemarks;
 	private boolean overLappedCategoryExist;
+	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 
 	public String getOverLappedCategoryMsg() {
 		return overLappedCategoryMsg;
@@ -33,5 +37,14 @@ public class SmOverlapCategoryVO extends BaseVO {
 
 	public void setOverLappedCategoryExist(boolean overLappedCategoryExist) {
 		this.overLappedCategoryExist = overLappedCategoryExist;
+	}
+
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
+		return overlapCategoryVOList;
+	}
+
+	public void setOverlapCategoryVOList(
+			List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+		this.overlapCategoryVOList = overlapCategoryVOList;
 	}
 }
