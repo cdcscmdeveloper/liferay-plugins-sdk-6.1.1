@@ -10156,21 +10156,16 @@ public class SmApplicationBackingBean extends
 
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		boolean validCatCode = true;
-		if (!getManagedBean().getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& !getManagedBean().getSmAppl().getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			int maxCatSize = ruleHelper.getMaxCategoryAllowed();
-			int currentApprovedCatSize = getManagedBean()
-					.getApprovedCategoryList().size();
-			int additionalCatSize = (!EntityHelper
-					.isCollectionEmpty(getManagedBean().getActiveCategoryList()) ? getManagedBean()
-					.getActiveCategoryList().size() : 0) + 1;
-			if ((currentApprovedCatSize + additionalCatSize) > maxCatSize) {
-				validCatCode = false;
-				throw new EpException(MessageConst.ERROR_722517,
-						new String[] { maxCatSize + "" });
-			}
+		int maxCatSize = ruleHelper.getMaxCategoryAllowed();
+		int currentApprovedCatSize = getManagedBean().getApprovedCategoryList()
+				.size();
+		int additionalCatSize = (!EntityHelper
+				.isCollectionEmpty(getManagedBean().getActiveCategoryList()) ? getManagedBean()
+				.getActiveCategoryList().size() : 0) + 1;
+		if ((currentApprovedCatSize + additionalCatSize) > maxCatSize) {
+			validCatCode = false;
+			throw new EpException(MessageConst.ERROR_722517,
+					new String[] { maxCatSize + "" });
 		}
 
 		log.info("pmCategoryL3.getCategoryName(): "
