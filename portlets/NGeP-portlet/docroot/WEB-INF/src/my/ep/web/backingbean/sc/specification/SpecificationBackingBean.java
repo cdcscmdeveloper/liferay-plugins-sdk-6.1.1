@@ -12810,14 +12810,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								.add(BigDecimal.valueOf(0.01d))
 								.compareTo(currScoring.getRangeFrom()) != 0) {
 							throw new EpException(MessageConst.ERROR_100055,
-									new String[] { ResourceBundleUtils.getMessage(
-											"lbl.sc.from", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()), 
-									ResourceBundleUtils.getMessage(
-											"lbl.sc.to", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()), row + 1 + "" });
+									new String[] {row + 1 + "" });
 						}
 					} else {
 						if (prevScore.getRangeTo().add(BigDecimal.valueOf(1))
