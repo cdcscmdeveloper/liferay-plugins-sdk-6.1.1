@@ -1144,28 +1144,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 												}//End for loop				 
 							
 												if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-														DecimalFormat df = new DecimalFormat("#.00");			
-														// Validation on ministry contract only
-														if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-																ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-																if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
-																		setTabValue("PB");
-																		throw new EpException(MessageConst.ERROR_750021);
-																} else {						
-																		bondAmount = Double.valueOf(df.format(bondAmount));
-																		double oriBondAmount = Double.valueOf(df.format(
-																				ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue()));
+														DecimalFormat df = new DecimalFormat("#.00");
 														
-																		int retval = Double.compare(bondAmount , oriBondAmount);
-																		if (retval >0) {
-																			setTabValue("PB");
-																			throw new EpException(MessageConst.ERROR_750015);
-																		}
-																		if (retval < 0) {
-																			setTabValue("PB");
-																			throw new EpException(MessageConst.ERROR_750016);  
-																		}	
+														if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
+																setTabValue("PB");
+																throw new EpException(MessageConst.ERROR_750021);
+														} else {						
+																bondAmount = Double.valueOf(df.format(bondAmount));
+																double oriBondAmount = Double.valueOf(df.format(
+																		ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue()));
+												
+																int retval = Double.compare(bondAmount , oriBondAmount);
+																if (retval >0) {
+																	setTabValue("PB");
+																	throw new EpException(MessageConst.ERROR_750015);
 																}
+																if (retval < 0) {
+																	setTabValue("PB");
+																	throw new EpException(MessageConst.ERROR_750016);  
+																}	
 														}
 												}
 									}	
