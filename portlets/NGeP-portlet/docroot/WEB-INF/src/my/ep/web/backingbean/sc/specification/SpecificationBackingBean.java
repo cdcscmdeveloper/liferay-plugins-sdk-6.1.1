@@ -3077,7 +3077,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		scQt.setScQtCommittees(null);
-		scQt.setScQtBriefings(null);
+		if(!scQt.isBsvRequired()){
+			scQt.setScQtBriefings(null);
+		}
 		reqDTO.setScQt(scQt);
 		// reqDTO.setTobeRemoveLocCriteriaList(getManagedBean().getExistingSupplierLocationList());
 
@@ -9465,7 +9467,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
-		scQt.setScQtBriefings(null);
+		if(!scQt.isBsvRequired()){
+			scQt.setScQtBriefings(null);
+		}
 		reqDTO.setScQt(scQt);
 	/*	List<ScQtCommitteeActivity> committeActivities = this.getManagedBean()
 				.getCommitteeActivities();
@@ -10038,9 +10042,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
-		scQt.setScQtBriefings(null);
+		if(!scQt.isBsvRequired()){
+			scQt.setScQtBriefings(null);
+		}
 		specReqDTO.setScQt(scQt);
-
 		specReqDTO.setOutcome(action);
 		if (null != pmDigiSign) {
 			updatePmDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_QUOTATION,
@@ -13242,7 +13247,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
-		scQt.setScQtBriefings(null);
+		if(!scQt.isBsvRequired()){
+			scQt.setScQtBriefings(null);
+		}
 		return scQt;
 	}
 	
