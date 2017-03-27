@@ -15,7 +15,9 @@ package my.ep.web.backingbean.report;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -44,8 +46,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-
-
 
 public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> extends BaseBackingBean<T> {
 
@@ -127,9 +127,6 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		}
 	}
 
-
-
-
 	public void retrieveReportValueFromDb(){
 
 		
@@ -151,7 +148,6 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		
 	}
 	
-	
 	public void getPopUpMsg(String reqNo){
 		
 		String msg = "";
@@ -163,7 +159,6 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		this.getManagedBean().setPopUpMsg(msg);
 		
 	}
-	
 	
 	public void redirect() throws IOException {
 		
@@ -192,14 +187,44 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 	    externalContext.redirect(reportsRequested);
 	}
+
+	public String constructParameterString(LinkedHashMap<String, String> map){
 	
+		String doubleQuotes = "\"";
+		
+		String parameterStr = "";
+		
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			
+			String key = entry.getKey();
+			String value = entry.getValue();
+			
+			parameterStr = parameterStr + key + "=" + doubleQuotes + value + doubleQuotes + " ";
+		}
+		
+		//Remove last space character.
+		if(map.size() > 0 ){
+			parameterStr = parameterStr.substring(0, parameterStr.length()-1);
+		}
+		
+		return parameterStr;
+	}
 	
-	
-
-	
-
-
-
-
-
+	//Testing method.
+	public static void main(String argv[]){
+		
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		
+		map.put("report", "CM_CATALOG_ITEMS_STD_PRICE.jsp");
+		map.put("PFROMDATE", "01/01/2017");
+		map.put("PTODATE", "31/01/2017");
+		map.put("PREPORTID", "CM_008");
+		map.put("PUSER", "243371");
+		map.put("userid", "ngep_devft/ng3pd3vft@devapp");
+		map.put("destype", "file");
+		map.put("desname", "/reports/dev/2159.pdf");
+		map.put("desformat", "pdf");
+		
+		System.out.println(new PmReportsBackingBean().constructParameterString(map));
+	}
 }
