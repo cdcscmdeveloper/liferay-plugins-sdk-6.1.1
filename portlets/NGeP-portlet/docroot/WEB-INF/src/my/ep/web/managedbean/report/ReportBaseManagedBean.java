@@ -35,6 +35,7 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 
 	private boolean pdf;
 	
+	private String popUpMsg;
 	
 	
 	
@@ -42,6 +43,21 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	
 	
+	
+	/**
+	 * @return the popUpMsg
+	 */
+	public String getPopUpMsg() {
+		return popUpMsg;
+	}
+
+	/**
+	 * @param popUpMsg the popUpMsg to set
+	 */
+	public void setPopUpMsg(String popUpMsg) {
+		this.popUpMsg = popUpMsg;
+	}
+
 	/**
 	 * @return the reportName
 	 */

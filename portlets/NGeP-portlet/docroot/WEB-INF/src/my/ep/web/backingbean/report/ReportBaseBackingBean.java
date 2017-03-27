@@ -14,6 +14,7 @@ package my.ep.web.backingbean.report;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.faces.model.SelectItem;
 
@@ -25,6 +26,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.rpt.PMReport;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.rpt.ReportUtil;
@@ -138,10 +140,26 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 
 		this.getManagedBean().setTempAccess(pmReport.getIsTempAccess() == 1 ? true : false);
 
-
+		
 	}
+	
+	
+	public void getPopUpMsg(String reqNo){
+		
+		String msg = "";
+		Locale locale = new FacesScopes().getUserLocale();
 
+		msg = ResourceBundleUtils.getMessage("lbl.rpt.popup.instruction", new String[] { ""+reqNo} ,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		
+		this.getManagedBean().setPopUpMsg(msg);
+		
+	}
+	
+	
+	
 
+	
 
 
 
