@@ -12,10 +12,13 @@
  */
 package my.ep.web.backingbean.report;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.dto.rpt.PMReportReqDTO;
@@ -36,6 +39,11 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 
 
@@ -154,6 +162,35 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		
 		this.getManagedBean().setPopUpMsg(msg);
 		
+	}
+	
+	
+	public void redirect() throws IOException {
+		
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+
+
+		String commonUrl = "";
+		
+		try {
+			commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+		} catch (PortalException e1) {
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			e1.printStackTrace();
+		}
+
+		String reportsRequested = commonUrl + "/" + "report";
+	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+	    externalContext.redirect(reportsRequested);
 	}
 	
 	
