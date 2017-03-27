@@ -5401,6 +5401,10 @@ public class LOIDetailBackingBean extends
 				}
 			}
 		}
+		
+		if(scLoiLoa.isLoiCreated()){
+			return Boolean.TRUE;
+		}
 		return Boolean.FALSE;
 	}
 	
