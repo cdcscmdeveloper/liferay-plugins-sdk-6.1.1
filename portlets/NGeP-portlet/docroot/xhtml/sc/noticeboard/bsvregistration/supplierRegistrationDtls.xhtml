@@ -239,7 +239,7 @@
 				<p:column style="width:5px;text-align:center">
 					<p:selectBooleanCheckbox value="#{bsvAttandance.preRegisterd}" disabled="#{noticeBoardBackingBean.isAttandanceEditable(noticeBoardBackingBean.managedBean.briefingDtls)}">
 						<p:ajax process="@this"
-							listener="#{noticeBoardBackingBean.updateToBeAttandance}"
+							listener="#{noticeBoardBackingBean.updateToBeAttandance(bsvAttandance,bsvAttandance.preRegisterd)}"
 							update="@form" />
 					</p:selectBooleanCheckbox>
 				</p:column>

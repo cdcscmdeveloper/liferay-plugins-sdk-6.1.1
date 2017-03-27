@@ -2146,13 +2146,12 @@ public class NoticeBoardBackingBean extends
 	 * @param event
 	 *        the instance of AjaxBehaviorEvent
 	 */
-	public void updateToBeAttandance(AjaxBehaviorEvent event) {
+	public void updateToBeAttandance(ScQtBsvAttendance bsvAttendance,boolean ispreRegisterd) {
 		
-		boolean isChecked = ((SelectBooleanCheckbox) event.getSource())
-				.isSelected();
+		
 		ScQtBsvDtl bsvDtl = this.getManagedBean().getBriefingDtls();
 		if (null != bsvDtl) {
-			if (isChecked) {
+			if (ispreRegisterd) {
 
 				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + 1);
 			} else {
@@ -2162,7 +2161,7 @@ public class NoticeBoardBackingBean extends
 			}
 			if (bsvDtl.getToBeattand() > bsvDtl.getMaxNoOfAttendance()) {
 
-				((SelectBooleanCheckbox) event.getSource()).setSelected(false);
+				bsvAttendance.setPreRegisterd(false);
 				bsvDtl.setToBeattand(bsvDtl.getToBeattand() - 1);
 				throw new EpException(MessageConst.ERROR_760230,
 						new String[] { bsvDtl.getBsvDesc() });
@@ -2250,6 +2249,7 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						attendance.setName(smPersonal.getName());
 						attendance.setBsvRegistration(bsvRegistration);
+						setUserDetails(attendance);
 	
 						bsvAttandances.add(attendance);
 					}
