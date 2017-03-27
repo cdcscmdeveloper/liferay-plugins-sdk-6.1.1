@@ -784,11 +784,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		codeResDTO = codificationSO.updateExtensionRequest(codeReqDTO);
 
 
+		
 		facesContext.addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710007, new String[] { ""
-								+ bb.getManagedBean().getReviewExtCodeList().size() },
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_710007,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
