@@ -210,21 +210,5 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		return parameterStr;
 	}
 	
-	//Testing method.
-	public static void main(String argv[]){
-		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		
-		map.put("report", "CM_CATALOG_ITEMS_STD_PRICE.jsp");
-		map.put("PFROMDATE", "01/01/2017");
-		map.put("PTODATE", "31/01/2017");
-		map.put("PREPORTID", "CM_008");
-		map.put("PUSER", "243371");
-		map.put("userid", "ngep_devft/ng3pd3vft@devapp");
-		map.put("destype", "file");
-		map.put("desname", "/reports/dev/2159.pdf");
-		map.put("desformat", "pdf");
-		
-		System.out.println(new PmReportsBackingBean().constructParameterString(map));
-	}
+	
 }
