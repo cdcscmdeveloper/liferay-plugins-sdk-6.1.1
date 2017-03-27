@@ -35,7 +35,7 @@
 	<tr>
 		<td>
 			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$fileNo - $fileExtnNo</span><br/>
-			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiNo</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$!loiNo</span><br/>
 			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierName</span><br/>
 			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierAddress</span><br/>
 			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan,</span><br/>
@@ -133,9 +133,9 @@
 							<td align="right">
 							
 							 #if($isBiddingAward || $isReFinalizationBidding) 
-							       $!scLoi.bidFinalPriceTotal
+							        $amountDF.format($!scLoi.bidFinalPriceTotal)
 							  #else
-							        $!scLoi.offeredPriceTotal
+							        $amountDF.format($!scLoi.offeredPriceTotal)
 							   #end 
 							</td>
 						</tr>
