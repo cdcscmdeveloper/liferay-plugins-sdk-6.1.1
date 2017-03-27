@@ -2516,7 +2516,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>scRequestNoteCodeAssignment</portlet-name>
-		<display-name>Code Assignment</display-name>
+		<display-name>Item Code Assignment</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -2530,8 +2530,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Code Assignment</title>
-			<short-title>Code Assignment</short-title>
+			<title>Item Code Assignment</title>
+			<short-title>Item Code Assignment</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
