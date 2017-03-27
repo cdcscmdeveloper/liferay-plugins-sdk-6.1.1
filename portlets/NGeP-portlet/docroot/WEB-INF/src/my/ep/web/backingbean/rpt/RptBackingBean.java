@@ -110,7 +110,7 @@ public class RptBackingBean{
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);
 		
-		RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, "PP_004", "pp_detail_expenditure.jsp", this.userId, false, false);
+		RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl.toString(), "PP_004", "pp_detail_expenditure.jsp", this.userId, false, false);
 		
 		this.requestId = String.valueOf(resDTO.getRequestId());
 		this.jobId = String.valueOf(resDTO.getJobId());

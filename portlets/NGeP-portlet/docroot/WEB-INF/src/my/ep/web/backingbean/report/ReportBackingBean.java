@@ -18787,7 +18787,7 @@ public class ReportBackingBean extends
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IRPTRequestSO.class);
 					
-					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, lngUserId, isExcel, isTempAccess);
+					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl.toString(), this.getReportValue(), reportTitle, lngUserId, isExcel, isTempAccess);
 					
 					log.info("6");
 					
