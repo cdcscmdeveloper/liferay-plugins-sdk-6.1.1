@@ -344,9 +344,7 @@ public class LOADetailBackingBean extends
 			if (scLoaReports != null && !scLoaReports.isEmpty()) {
 				for (ScLoaReport report : scLoaReports) {
 					// Check whether Branch Info attachment is existed or not
-					PmDocument document = report.getPmDocument();
-					if (null != document && SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
-							.equalsIgnoreCase(document.getDocDefinitionKey())) {
+					if (null == report.getPmDocument()) {
 						getManagedBean().setBranchInfoReport(report);
 						break;
 					}
@@ -1540,6 +1538,12 @@ public class LOADetailBackingBean extends
 			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
 		context.put("issueDate", issueDate);
+
+		String govtSignDate = "______________";
+		if (scLoa.getGovtSignDate() != null) {
+			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
+		}
+		context.put("govtSignDate", govtSignDate);
 
 		context.put("supplierName", scLoiLoa.getSupplierName());
 		String supplierAddress = "";
@@ -4872,7 +4876,7 @@ public class LOADetailBackingBean extends
 					docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // AD
 				}
 				scLoaReport.setDocCategory(docCategory); 
-				scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM document
+				//scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM document
 				
 			} finally {
 				parameterSO = null;
