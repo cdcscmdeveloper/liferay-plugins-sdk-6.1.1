@@ -2943,8 +2943,6 @@ public class CreateQtBackingBean extends
 			if (ptjSpecialApproval != null) {
 				scQt.setObtainSpecialApproval(false);
 			} else {
-				this.getManagedBean().setPanel(true);
-				scQt.setPanel(true);
 				scQt.setObtainSpecialApproval(null);
 			}
 		}
