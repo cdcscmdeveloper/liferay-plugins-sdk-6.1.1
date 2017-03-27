@@ -29,6 +29,42 @@ public class CmConst {
 	
 	public static final String CM_ModuleCode = "CM";
 	
+	public static final String BASIC = "Basic";
+	
+	public static final String MOF = "MOF";
+	
+	public static final String REPORT_CODE_CM002 = "CM_002";
+	
+	
+	
+	
+	
+	
+	/**
+	 * @return the reportCodeCm002
+	 */
+	public String getReportCodeCm002() {
+		return REPORT_CODE_CM002;
+	}
+
+	/**
+	 * @return the basic
+	 */
+	public String getBasic() {
+		return BASIC;
+	}
+
+	/**
+	 * @return the mof
+	 */
+	public String getMof() {
+		return MOF;
+	}
+	
+	
+	
+	
+	
 	
 
 }
