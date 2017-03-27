@@ -56,6 +56,7 @@
 						<td><p:selectOneMenu id="suppTypeList"
 								label="#{lbl['lbl.pm.poworkload.supptype']}"
 								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.supplierType}"
+								disabled="#{not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
 								required="#{!empty param['disableValidation']}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
@@ -75,7 +76,7 @@
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="appTypeList"
 								label="#{lbl['lbl.pm.poworkload.appltype']}"
-								disabled="#{poJobTypeRatioBackingBean.managedBean.applDisabled}"
+								disabled="#{poJobTypeRatioBackingBean.managedBean.applDisabled or not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
 								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.applType}"
 								required="#{!empty param['disableValidation']}">
 								<f:selectItems
@@ -91,7 +92,7 @@
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="catTypeList"
 								label="#{lbl['lbl.pm.poworkload.catType']}"
-								disabled="#{poJobTypeRatioBackingBean.managedBean.categoryDisabled}"
+								disabled="#{poJobTypeRatioBackingBean.managedBean.categoryDisabled or not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
 								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.categoryType}"
 								required="#{!empty param['disableValidation']}">
 								<f:selectItems
