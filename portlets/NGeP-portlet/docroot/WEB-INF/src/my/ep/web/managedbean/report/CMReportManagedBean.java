@@ -12,6 +12,7 @@ package my.ep.web.managedbean.report;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,186 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "cmReportManagedBean")
 @SessionScoped
 public class CMReportManagedBean extends ReportBaseManagedBean {
+	
+	private CmUnspsc selectedCmUNSPSC;
+	private String itemType;
+	private PmOrgProfile selectedOrgProfile;
+	private String regType;
+	private String mofNo;
+	private String busRegNo;
+	private String icNo;
+	private String epNo;
+	private String group;
+	private Date dateFrom;
+	private Date dateTo;
+	
+	
+	
+	
+	
+	
+
+	/**
+	 * @return the dateFrom
+	 */
+	public Date getDateFrom() {
+		return dateFrom;
+	}
+
+	/**
+	 * @param dateFrom the dateFrom to set
+	 */
+	public void setDateFrom(Date dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	/**
+	 * @return the dateTo
+	 */
+	public Date getDateTo() {
+		return dateTo;
+	}
+
+	/**
+	 * @param dateTo the dateTo to set
+	 */
+	public void setDateTo(Date dateTo) {
+		this.dateTo = dateTo;
+	}
+
+	/**
+	 * @return the group
+	 */
+	public String getGroup() {
+		return group;
+	}
+
+	/**
+	 * @param group the group to set
+	 */
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	/**
+	 * @return the epNo
+	 */
+	public String getEpNo() {
+		return epNo;
+	}
+
+	/**
+	 * @param epNo the epNo to set
+	 */
+	public void setEpNo(String epNo) {
+		this.epNo = epNo;
+	}
+
+	/**
+	 * @return the mofNo
+	 */
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	/**
+	 * @param mofNo the mofNo to set
+	 */
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+
+	/**
+	 * @return the busRegNo
+	 */
+	public String getBusRegNo() {
+		return busRegNo;
+	}
+
+	/**
+	 * @param busRegNo the busRegNo to set
+	 */
+	public void setBusRegNo(String busRegNo) {
+		this.busRegNo = busRegNo;
+	}
+
+	/**
+	 * @return the icNo
+	 */
+	public String getIcNo() {
+		return icNo;
+	}
+
+	/**
+	 * @param icNo the icNo to set
+	 */
+	public void setIcNo(String icNo) {
+		this.icNo = icNo;
+	}
+
+	/**
+	 * @return the regType
+	 */
+	public String getRegType() {
+		return regType;
+	}
+
+	/**
+	 * @param regType the regType to set
+	 */
+	public void setRegType(String regType) {
+		this.regType = regType;
+	}
+
+	/**
+	 * @return the selectedOrgProfile
+	 */
+	public PmOrgProfile getSelectedOrgProfile() {
+		return selectedOrgProfile;
+	}
+
+	/**
+	 * @param selectedOrgProfile the selectedOrgProfile to set
+	 */
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	/**
+	 * @return the itemType
+	 */
+	public String getItemType() {
+		return itemType;
+	}
+
+	/**
+	 * @param itemType the itemType to set
+	 */
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+
+	/**
+	 * @return the selectedCmUNSPSC
+	 */
+	public CmUnspsc getSelectedCmUNSPSC() {
+		if(selectedCmUNSPSC==null){
+			selectedCmUNSPSC = new CmUnspsc();
+		}
+		return selectedCmUNSPSC;
+	}
+
+	/**
+	 * @param selectedCmUNSPSC the selectedCmUNSPSC to set
+	 */
+	public void setSelectedCmUNSPSC(CmUnspsc selectedCmUNSPSC) {
+		this.selectedCmUNSPSC = selectedCmUNSPSC;
+	}
+
+	
+	
+	
+	
 	
 	
 	
