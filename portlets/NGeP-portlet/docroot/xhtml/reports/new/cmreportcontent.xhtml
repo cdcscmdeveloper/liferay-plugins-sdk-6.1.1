@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="cmReportListId">
+		<c:choose>
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm002}">
+				<ui:include src="cm/listOfApprovalCatalogItem.xhtml"></ui:include>
+			</c:when>
+		</c:choose>
+	</h:panelGroup>
+
+
+
+</ui:composition>

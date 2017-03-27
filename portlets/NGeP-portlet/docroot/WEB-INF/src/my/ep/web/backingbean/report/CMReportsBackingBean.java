@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.report;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -48,8 +49,7 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 
 		HashMap<String,String> params = new HashMap<String,String>();
 
-		System.out.println("this.getManagedBean().getDateFrom()"+this.getManagedBean().getDateFrom());
-		System.out.println("this.getManagedBean().getDateTo()"+this.getManagedBean().getDateTo());
+	
 		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
 
 
@@ -59,7 +59,49 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
 		}
 		
+		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
+			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
+		}
 		
+		if(this.getManagedBean().getGroup()!=null && this.getManagedBean().getGroup().trim().length()>0){
+			params.put(CmReportConst.GROUP, this.getManagedBean().getGroup());
+		}
+		
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+		
+		
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
+		}
+		
+		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
+			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
+		}
+		
+		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
+			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
+		}
+		
+		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
+			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
+		}
+		
+		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
+			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
+		}
+		
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+		
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
 		
 
 		getPopUpMsg("1234");
@@ -137,7 +179,13 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 	}
 
 
-
-
-
+/*
+	public static void main (String argz[]){
+		
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
+		System.out.println(""+df.format(new Date()));
+		
+	}
+*/
 }

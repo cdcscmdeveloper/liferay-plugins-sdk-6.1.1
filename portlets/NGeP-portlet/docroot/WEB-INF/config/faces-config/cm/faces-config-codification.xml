@@ -105,7 +105,7 @@
 
 	<managed-bean>
 		<description>Catalogue Constants</description>
-		<managed-bean-name>CmConstant</managed-bean-name>
+		<managed-bean-name>CmConst</managed-bean-name>
 		<managed-bean-class>my.ep.web.constant.cm.CmConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
