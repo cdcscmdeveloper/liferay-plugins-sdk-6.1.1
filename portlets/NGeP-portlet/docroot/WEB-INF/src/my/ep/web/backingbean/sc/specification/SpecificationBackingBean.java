@@ -1026,9 +1026,9 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = new TplSpecMaster();
 			String itemName="";
 			String panelCoverage="";
-			if(CollectionUtils.isEmpty(this.getManagedBean().getPanelItemList())){
-			this.getManagedBean().setPanelItemList(panelItems);
-			}
+			//if(CollectionUtils.isEmpty(this.getManagedBean().getPanelItemList())){
+			//this.getManagedBean().setPanelItemList(panelItems);
+			//}
 			if(panelItems.size()==1){
 				CtPanelItem item=panelItems.get(0);
 				if(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC.equals(item.getItemCategoryId().getParameterCode())){
@@ -7644,7 +7644,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * Retrive zones or suppliers by item.retrive zones or suppliers based on
 	 * item in supplier qualification criteria.
 	 */
-	private void retriveZonesOrSuppliersByItem() {
+	private void retriveZonesOrSuppliersByItem(CtPanelItem item) {
 		IPanelSupplierSO panelSupplierSO;
 		PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
 		try {
@@ -7655,13 +7655,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 							IPanelSupplierSO.class);
 			
-			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
+			//List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 
-			if (CollectionUtils.isNotEmpty(panelItemList)) {
-               log.info("panel Item Name"+panelItemList.get(0));
-				reqDTO.setPanelItem(panelItemList.get(0));
+			//if (CollectionUtils.isNotEmpty(panelItemList)) {
+             //  log.info("panel Item Name"+panelItemList.get(0));
+				reqDTO.setPanelItem(item);
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
-			}
+			//}
 
 			if (null != resDTO && null != resDTO.getCtPanelZones()
 					&& !resDTO.getCtPanelZones().isEmpty()) {
@@ -7704,7 +7704,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				
 				this.getManagedBean().setTotalSuppliers(0);
 				
-				if (CollectionUtils.isNotEmpty(panelItemList)) {
+				//if (CollectionUtils.isNotEmpty(panelItemList)) {
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
@@ -7723,7 +7723,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									IQTSupplierSO.class);
 					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
+					supplierReqDTO.setPanelItemId(item.getPanelItemId());
 					supplierResDTO = supplierSo
 							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
 					this.getManagedBean().setCtZoneSupplierList(
@@ -7740,7 +7740,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								supplierResDTO.getCtPanelSuppliers());
 
 					}
-				}
+				//}
 
 			}
 			/*
@@ -10609,6 +10609,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setCheckListTitle("");
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().getScQtCheckSt2techProposal();
+			checkPanelSpecs();
 			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 		}
@@ -13403,13 +13404,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					&& null != supplierCriteria.getQtZoneCriterias() && null == supplierCriteria
 					.getQtZoneCriterias().getSpecZoneId()) || (!isAtleastTechnicalSpec(technicalCheckList)))) {
 				this.getManagedBean().setPanelSpecExistedOrNot(true);
-				retriveZonesOrSuppliersByItem();
+				retriveZonesOrSuppliersByItem(item);
 					}
 		
 		}else{
 			this.getManagedBean().getQt().setZonal(false);
 			this.getManagedBean().getQt().setZoneLocationLevel(item.getLocationLevelId());
-			retriveZonesOrSuppliersByItem();
+			retriveZonesOrSuppliersByItem(item);
 		}
 		
 	}
@@ -14093,4 +14094,29 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	
+	/**
+	 * technicalChecklist TemplateSpec back action.Event handle navigate to specfication committee
+	 * Menu page.
+	 * 
+	 * @return the string
+	 */
+	public String technicalSpecBackAction(){
+		checkPanelSpecs();
+
+		return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	}
+	
+	private void checkPanelSpecs(){
+		if(this.getManagedBean().getQt().isPanel()){
+			boolean isSpecAvilable=	isAtleastTechnicalSpec( this.getManagedBean()
+							.getScQtCheckSt2techProposal());
+			log.info("isSpecAvilable"+isSpecAvilable);
+			if(!isSpecAvilable){
+				log.info("isSpecAvilable"+false);
+				getManagedBean().setZoneGeneralTrees(
+						new ArrayList<TreeNode>());
+				log.info("zonetrees"+getManagedBean().getZoneGeneralTrees().size());
+			}
+				}
+	}
 }
