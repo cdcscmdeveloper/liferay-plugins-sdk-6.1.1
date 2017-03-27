@@ -1191,11 +1191,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void deleteCircularContract(){
 		try {
 			getManagedBean().getCircularVer().getCtCircularContracts().remove(getManagedBean().getSelectedCircularContract());
-			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-				this.getManagedBean().setSelectedCircularItem(null);
-				this.getManagedBean().setSelectedZoneItems(null);
-				this.getManagedBean().setSelectedCircularContract(null);
-			}
+		    this.getManagedBean().setSelectedCircularContract(null);
+		    this.getManagedBean().setSelectedCircularItem(null);
+			this.getManagedBean().setSelectedZoneItems(null);
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
