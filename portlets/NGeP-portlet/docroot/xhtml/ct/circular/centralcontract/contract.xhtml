@@ -72,7 +72,7 @@
 		          <p:confirmDialog id="delCtContractDlg" widgetVar="delCtContractDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			             <div class="ppRightBtn">
-				              <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=contractListPnl])"
+				              <p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true" update=":form:contractListPnl"
 					              process="@all" actionListener="#{centralContractBackingBean.deleteCircularContract()}"
 					              onclick="delCtContractDlg.hide();" />
 				                  <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="delCtContractDlg.hide();" type="button" />
