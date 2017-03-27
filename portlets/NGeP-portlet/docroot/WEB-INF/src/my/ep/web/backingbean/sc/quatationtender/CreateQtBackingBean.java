@@ -2944,6 +2944,10 @@ public class CreateQtBackingBean extends
 				scQt.setObtainSpecialApproval(false);
 			} else {
 				scQt.setObtainSpecialApproval(null);
+				if(this.getManagedBean().getPanel() == null){
+					this.getManagedBean().setPanel(true);
+					scQt.setPanel(true);
+				}
 			}
 		}
 
