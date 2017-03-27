@@ -576,11 +576,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
+		
 		facesContext.addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710007, new String[] { ""
-								+ 1 },
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_710014,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
@@ -788,7 +788,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		facesContext.addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_710007,
+						MessageUtils.getMessage(MessageConst.INFO_710014,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
