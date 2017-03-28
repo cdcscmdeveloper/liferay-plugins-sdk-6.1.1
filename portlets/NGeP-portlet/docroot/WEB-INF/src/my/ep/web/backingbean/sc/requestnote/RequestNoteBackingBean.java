@@ -70,6 +70,7 @@ import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -342,6 +343,63 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
+	 * save request note details for codification
+	 * save - save data into database
+	 * @param outcome the outcome
+	 * @return the string
+	 */
+	public String saveCodificationAction(String outcome) {
+		debugLogger("saveCodificationAction");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		List<ScRequestNoteDtl> requestNoteDtls = getManagedBean().getRequestNoteDtls();
+		String [] outcomes = getManagedBean().getOutComes();
+		String taskId  = getManagedBean().getTaskId();
+		RequestNoteResDTO requestNoteResDTO = null;
+		Long supplierId = getManagedBean().getSupplierId();
+    try {
+	    FacesScopes face = new FacesScopes();
+	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
+	    requestNoteReqDTO.setRoleCode(getUserRoleCode());
+	    requestNoteReqDTO.setSubmit(Boolean.FALSE);
+	    
+	    Object token = face.getBPMAuthenticationCtxToken();
+	    
+	    requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+	    requestNoteReqDTO.setToken(token);
+	    requestNoteReqDTO.setOutcome("");
+	    requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+	    requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
+	    renewSesionObject();
+	    
+	    if (requestNoteResDTO.isSuccessful()) {
+	    	ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+	    	if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+	    		requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
+	    		requestNoteReqDTO.setSupplierId(supplierId);
+	    		requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
+	    		scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+	    		getManagedBean().setOutComes(outcomes);
+	    		getManagedBean().setTaskId(taskId);
+	    		reloadRequestNoteForCodification(requestNoteResDTO);
+	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    	} else{
+	    		successMessage(MessageConst.INFO_700024,ParameterTypeConst.DOCUMENT_TYPES,
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+	    		// clear data
+	    		super.renewSesionObject();
+	    	}
+	    }else {
+	    	throw new EpException(MessageConst.ERROR_700020);
+	    }
+    }    
+    finally {
+    	//directPurchaseSO = null;
+    }
+    return null;
+	}
+	
+	/**
 	 * Reload request note.
 	 *
 	 * @param requestNote the request note
@@ -489,6 +547,39 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
+	 * Reload request note for codification
+	 *
+	 * @param RequestNoteResDTO requestNoteResDTO
+	 */
+	private void reloadRequestNoteForCodification(RequestNoteResDTO requestNoteResDTO){
+		debugLogger("reloadRequestNoteForCodification");
+		ScRequestNote	requestNote = null;
+		List<ScRequestNoteDtl> requestNoteDtlList= null;
+		
+		if(requestNoteResDTO.getRequestNoteDtlList() != null){
+			requestNoteDtlList = requestNoteResDTO.getRequestNoteDtlList();
+		}
+		if(requestNoteResDTO.getRequestNoteDetail() != null){
+			requestNote = requestNoteResDTO.getRequestNoteDetail();
+		}
+		
+		if(CollectionUtils.isNotEmpty(requestNoteDtlList)) {
+			getManagedBean().setSmSupplier(requestNoteDtlList.get(0).getScRequestSupplierItem().getSmSupplier());
+		}
+		
+		// created by 
+		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
+
+		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
+		
+		// title checker
+		getManagedBean().setRequestNote(requestNote);
+		getManagedBean().setRequestNoteDtls(requestNoteDtlList);
+		getManagedBean().setTitleChecker(Boolean.FALSE);
+	}
+	
+	
+	/**
 	 * submit request note details.
 	 * submit - save data into database and BPM process will route to the next respective user.
 	 * @param outcome the outcome
@@ -590,6 +681,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(ctxToken);
 			requestNoteReqDTO.setOutcome(outcome);
+			requestNoteReqDTO.setPayLoad(getManagedBean().getPayLoad());
 			requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
 
 			if (requestNoteResDTO.isSuccessful()) {
@@ -688,11 +780,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-
 			// check is all items codified
+			for(ScRequestNoteDtl rnDtl : requestNoteDtls) {
+				ScRequestItem requestItem = rnDtl.getRequestItem();
+				if(requestItem.getCmItem() == null) {
+					throw new EpException(MessageConst.ERROR_760448);
+				}
+			}
 		}
-
-		requestNoteSubmit(outcome);
+		requestNoteCodificationSubmit(outcome);
 	}
 
 	/**
@@ -928,51 +1024,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void preRenderCodificationView() {
 		debugLogger("preRenderCodificationView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		Long dpId = 9550L;
+		Long dpId = null;
 		Long supplierId = null;
-		ScRequestNote	requestNote = null;
-		List<ScRequestNoteDtl> requestNoteDtlList= null;
 		
-		/*SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		SCAwardSupplierDataType awardSupplierDataType = super.getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 		
-		if(directPurchaseDataType.getRnId() == null){
-			dpId = Long.valueOf(directPurchaseDataType.getDpId());
-		} else{
-			dpId = Long.valueOf(directPurchaseDataType.getRnId());
-		}*/
+		if(awardSupplierDataType.getSourceId() != null){
+			dpId = Long.valueOf(awardSupplierDataType.getSourceId());
+		} 
 		
-		/*if(directPurchaseDataType.getRnId() == null){
-			supplierId = Long.valueOf(directPurchaseDataType.getSupplierId());
-		} else{
-			supplierId = Long.valueOf(directPurchaseDataType.getSupplierId());
-		}*/
+		if(awardSupplierDataType.getSupplierId() != null){
+			supplierId = Long.valueOf(awardSupplierDataType.getSupplierId());
+		} 
 		
 		requestNoteReqDTO.setRequestNoteId(dpId);
 		requestNoteReqDTO.setSupplierId(supplierId);
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().
 				getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
-		if(requestNoteResDTO.getRequestNoteDtlList() != null){
-			requestNoteDtlList = requestNoteResDTO.getRequestNoteDtlList();
-		}
-		if(requestNoteResDTO.getRequestNoteDetail() != null){
-			requestNote = requestNoteResDTO.getRequestNoteDetail();
-		}
-		
-		if(CollectionUtils.isNotEmpty(requestNoteDtlList)) {
-			getManagedBean().setSmSupplier(requestNoteDtlList.get(0).getScRequestSupplierItem().getSmSupplier());
-		}
-		
-		// created by 
-		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
-
-		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
-		
-		// title checker
-		getManagedBean().setRequestNote(requestNote);
-		getManagedBean().setRequestNoteDtls(requestNoteDtlList);
-		getManagedBean().setTitleChecker(Boolean.FALSE);
+		reloadRequestNoteForCodification(requestNoteResDTO);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		// page nav. to common request note
+		// page nav. to request note codification page
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_CODIFICARION_PAGE);
 	}
 	

@@ -99,6 +99,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(SCProcessNameConst.SUBMIT_DIRECT_PURCHASE,
 					SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
+			temp.put(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME,
+					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
 			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME,
 					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);

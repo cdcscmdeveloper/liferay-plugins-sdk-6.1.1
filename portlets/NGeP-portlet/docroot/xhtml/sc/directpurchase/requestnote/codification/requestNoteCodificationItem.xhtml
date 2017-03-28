@@ -79,14 +79,9 @@
 					style="white-space: normal;">
 					<p:commandButton icon="ui-icon-item-code" title="#{lbl['lbl.sc.assign.code']}"
 		    			style="background-color:transparent !important; border:0px none; width:10px !important;"
-						action="#{codificationBackingBean.assignProductCode(null, question, false)}"/>
+						action="#{codificationBackingBean.assignProductCode(requestNoteDtl.requestItem, null, false)}"/>
 				</p:column>
-
 			</p:dataTable>
 		</h:panelGrid>
-
-		<ui:param name="isSourcheMethodAsSC"
-			value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
 	</p:panel>
-	
 </ui:composition>
