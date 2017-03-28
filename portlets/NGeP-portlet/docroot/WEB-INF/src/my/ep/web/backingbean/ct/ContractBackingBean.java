@@ -3161,6 +3161,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				int counter = 0;
 				  for(CtPidReason  pidReasons : getManagedBean().getContractVer().getCtPidReasons()){
 					     if(pidReasons.getPmReason() != null 
+					    		 && pidReasons.getPmReason().getReasonId() != null
 					    		 && pidReasons.getPmReason().getReasonId().equals(resonId)){
 					    	 counter++;
 					    	 if(!PidPurchaseTypeOther(resonId) && counter == 2){
