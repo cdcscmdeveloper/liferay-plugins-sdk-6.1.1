@@ -94,12 +94,12 @@
 						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sm.catalogue.item.name']}">
-							<h:outputText value="#{reqCode.itemName}" />
+							<h:outputText value="#{reqCode.tempTitle}" />
 						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sm.catalogue.status']}">
 							<h:outputText rendered="#{!empty reqCode.cmWorkflowStatus}" 
-							value="#{smCustomerServiceBackingBean.getStatusDescById(reqCode.cmWorkflowStatus.pmStatus.statusId)}"></h:outputText>	
+							value="#{smCustomerServiceBackingBean.getStatusDescById(reqCode.cmWorkflowStatus.pmStatus.statusId)}"></h:outputText>
 						</p:column>
 					</p:dataTable>
 				</p:panel>
