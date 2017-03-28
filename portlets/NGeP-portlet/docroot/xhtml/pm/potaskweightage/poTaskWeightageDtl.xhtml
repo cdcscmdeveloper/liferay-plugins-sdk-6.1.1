@@ -98,7 +98,7 @@
 				action="#{poTaskWeightageBB.addRoleTask}" value="#{lbl['lbl.btn.add']}" oncomplete="roleTaskDlg.show();" />
 	</div>
 	
-	<p:dialog  header="#{lbl['Create New Processing Officer Task']}" widgetVar="roleTaskDlg" id="roleTaskDlgId"
+	<p:dialog  header="#{lbl['lbl.pm.po.task.new.role.task.assignment']}" widgetVar="roleTaskDlg" id="roleTaskDlgId"
 		modal="true" width="500" dynamic="true" minHeight="500">
 		<p:messages id="roleTaskDlgMessages" showDetail="true" autoUpdate="#{!empty param['disableRTValidation']}" closable="true" showSummary="false" />
 		<p:outputPanel id="roleTaskPnl">
@@ -179,7 +179,7 @@
 		<div style="text-align: right;">
 			<p:commandButton id="btnCreate" update="poRoleTaskDtTbl" 
 				action="#{poTaskWeightageBB.saveRoleTask}" 
-				value="#{empty poTaskWeightageBB.managedBean.selectedRoleTask.poRoleTaskdId ? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}">
+				value="#{empty poTaskWeightageBB.managedBean.selectedRoleTask.poRoleTaskdId ? lbl['lbl.btn.add'] : lbl['lbl.btn.update']}">
 				<f:param name="disableRTValidation" value="true" />
 			</p:commandButton>
 			
