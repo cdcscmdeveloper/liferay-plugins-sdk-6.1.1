@@ -3,6 +3,9 @@
  */
 package my.ep.web.managedbean.pm.pojobtyperatio;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -10,6 +13,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.pojobtyperatio.IPoJobTypeRatioSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
 import my.ep.exception.EpException;
@@ -17,7 +21,9 @@ import my.ep.persistence.entity.pm.common.PmPoJobTypeRatio;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
  * Managed Bean for Po Type Ratio
@@ -36,6 +42,9 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	private PmPoJobTypeRatio poJobTypeRatio;
 	private boolean applDisabled;
 	private boolean categoryDisabled;
+	private Map<String, String> appTypeMap;
+	private Map<String, String> suppTypeMap;
+	private Map<String, String> categoryTypeMap;
 	
 	public PoJobTypeRatioManagedBean() {
 	}
@@ -97,6 +106,65 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 		this.categoryDisabled = categoryDisabled;
 	}
 	
+	/**
+	 * @return the appTypeMap
+	 */
+	public Map<String, String> getAppTypeMap() {
+		if(appTypeMap == null){
+			appTypeMap = new TreeMap<String, String>(){	
+				private static final long serialVersionUID = 1L;{
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.new"), ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.renew"), ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.update"), ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.cat"), ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.bumi"), ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+			}};
+		}
+		return appTypeMap;
+	}
+
+	/**
+	 * @param appTypeMap the appTypeMap to set
+	 */
+	public void setAppTypeMap(Map<String, String> appTypeMap) {
+		this.appTypeMap = appTypeMap;
+	}
+
+	/**
+	 * @return the suppTypeMap
+	 */
+	public Map<String, String> getSuppTypeMap() {
+		return suppTypeMap;
+	}
+
+	/**
+	 * @param suppTypeMap the suppTypeMap to set
+	 */
+	public void setSuppTypeMap(Map<String, String> suppTypeMap) {
+		this.suppTypeMap = suppTypeMap;
+	}
+
+	/**
+	 * @return the categoryTypeMap
+	 */
+	public Map<String, String> getCategoryTypeMap() {
+		if(categoryTypeMap == null){
+			categoryTypeMap = new TreeMap<String, String>(){	
+				private static final long serialVersionUID = 1L;{
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.sm.catCodes.norm"), SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL);
+				     put(PmCommonUtil.getResourceBundleLabels("lbl.sm.catCodes.spl"), SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL);
+				}};
+		}
+		return categoryTypeMap;
+	}
+
+	/**
+	 * @param categoryTypeMap the categoryTypeMap to set
+	 */
+	public void setCategoryTypeMap(Map<String, String> categoryTypeMap) {
+		this.categoryTypeMap = categoryTypeMap;
+	}
+
 	// pagination for PO Job Type Ratio List
 	private class JobTypeRatioPagingDataModel extends
 			PagingDataModel<PmPoJobTypeRatio> {

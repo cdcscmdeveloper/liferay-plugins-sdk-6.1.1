@@ -36,20 +36,6 @@
 			<p:outputPanel id="jobTypeRatioCrtOpId">
 				<table width="100%">
 					<tr>
-						<td width="35%"><p:outputLabel
-								value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="*"
-								styleClass="mandatory" /></td>
-						<td><p:selectOneRadio id="sorStatus"
-								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.recordStatusFlg}"
-								label="#{lbl['lbl.pm.status']}"
-								disabled="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.active']}"
-									itemValue="#{poJobTypeRatioBackingBean.active}" />
-								<f:selectItem itemLabel="#{lbl['lbl.txt.inactive']}"
-									itemValue="#{poJobTypeRatioBackingBean.inactive}" />
-							</p:selectOneRadio></td>
-					</tr>
-					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.pm.poworkload.supptype']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -114,6 +100,23 @@
 								<p:ajax event="change" update="@this" process="@this"
 									partialSubmit="true" />
 							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel
+								value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
+						<td>
+							<p:selectOneMenu id="somStatus"
+								label="#{lbl['lbl.pm.status']}"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.recordStatusFlg}"
+								required="#{!empty param['disableValidation']}"
+								disabled="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}">
+								<f:selectItems
+									value="#{poJobTypeRatioBackingBean.getStatusOptions()}" />
+								<p:ajax event="change" update="@this" process="@this"
+									partialSubmit="true" />
+							</p:selectOneMenu>	
+						</td>
 					</tr>
 				</table>
 			</p:outputPanel>
