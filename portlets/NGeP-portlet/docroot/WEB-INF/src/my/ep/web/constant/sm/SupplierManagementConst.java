@@ -1119,4 +1119,12 @@ public class SupplierManagementConst {
 	public String getMOF_STATUS_NOT_AVAILABLE() {
 		return MOF_STATUS_NOT_AVAILABLE;
 	}
+
+	public String getSmApplCategoryTypeNormal() {
+		return SM_APPL_CATEGORY_TYPE_NORMAL;
+	}
+
+	public String getSmApplCategoryTypeSpecial() {
+		return SM_APPL_CATEGORY_TYPE_SPECIAL;
+	}
 }
