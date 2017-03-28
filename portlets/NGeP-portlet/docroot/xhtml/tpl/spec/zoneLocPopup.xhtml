@@ -11,8 +11,11 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" valign="top">
-				<p:outputLabel value="#{lbl['lbl.tpl.spec.zone']}" />
-				<ac:iconTooltip id="zoneLocPopupId"  value="#{lbl['lbl.tpl.spec.zone.tooltip']}" />
+				<p:outputLabel value="#{lbl['lbl.tpl.spec.zone']}" /> 
+				<p:graphicImage id="zoneLocPopupId" value="/css/images/design/ico-tooltips.png" /> 
+				<p:tooltip id="zoneLocPopupTooltip" for="zoneLocPopupId">
+						<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.zone.tooltip']}" />
+				</p:tooltip> 
 			</td>
 			<td width="80%">
 				<p:inputText disabled="true"
