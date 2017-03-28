@@ -899,6 +899,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 				itemAddrList.add(flItemAddr);
+			}else{
+				if(contractedItem.getScRequestItem().getCmItem()!=null) {
+					flItemAddr.setItemCode(contractedItem.getScRequestItem().getCmItem().getExtensionCode());
+				} else {
+					flItemAddr.setItemCode(contractedItem.getScRequestItem().getTempUnspscCode());
+				}	
 			}
 		}
 		getManagedBean().getItemAddrList().addAll(itemAddrList);
@@ -1065,6 +1071,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							MessageUtils.getMessage(MessageConst.ERROR_740041, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));						
 					}
 				}
+			}else{
+				setFulfilmentItemAddr(getManagedBean().getFlRequest());
 			}
 				
 		}else if(contractId != null){
@@ -1214,6 +1222,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
 			checkMofAccountExpDate(getManagedBean().getFlRequest());
+			
+			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
 		}
 		
 		//Default procurement type category to Supply of Goods in case of null
@@ -3467,6 +3477,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			return "flDocSearch";
 		}
 	}
+	
+	/**
+	 * Page navigation to FLDoc search page in CR
+	 */
+	public void backToCrList() {
+		preRenderContractList();
+
+	}
 
 	/**
 	 * get the Request Item Information based on RequestNoteItemId,SupplierId and PriceType.
@@ -4154,7 +4172,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 					for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 						for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-							if(itemAddr.getCmItem() == null){
+							if(itemAddr.getCmItem() == null || itemAddr.getCmItem().getExtensionCode() == null){
 								throw new EpException(MessageConst.ERROR_740053);
 							}
 						}
