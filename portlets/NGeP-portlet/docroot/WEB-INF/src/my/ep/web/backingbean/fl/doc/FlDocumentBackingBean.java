@@ -595,6 +595,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			if(resDTO.isTaxable()){
 				invBB.getManagedBean().setTaxable(true);
+				invBB.getManagedBean().setTaxInvoice(true);
 			}
 			navgPage=NAV_TO_MAINTAIN_INV;
 		}
