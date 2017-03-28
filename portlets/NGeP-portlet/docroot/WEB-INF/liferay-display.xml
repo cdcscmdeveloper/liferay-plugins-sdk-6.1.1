@@ -85,6 +85,7 @@
            	<portlet id="poWorkload"></portlet>
            	<portlet id="pmPoJobWeight"></portlet>
            	<portlet id="pmPoJobTypeRatio"></portlet>
+           	<portlet id="poRoleTaskWeightage"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
@@ -267,7 +268,6 @@
 			<portlet id="assignedTaskSearch"></portlet>
 			<portlet id="passwordcipher"></portlet>
 			<portlet id="Mobile Notice Board"></portlet>
-			<portlet id="poRoleTaskWeightage"></portlet>
 		</category>
 
 		<category name="Template">
