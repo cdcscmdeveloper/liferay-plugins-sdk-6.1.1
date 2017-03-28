@@ -49,8 +49,10 @@
 		</p:panel>			
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal != null}" 
-						action="#{contractRequestBackingBean.backToPervious}" /></td>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" 
+						action="#{contractRequestBackingBean.backToPervious}" />
+						<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal eq FulfilmentConst.contractRequest}" 
+						action="#{contractRequestBackingBean.backToCrList}" /></td>
 				<td colspan="4" style="text-align: right">
 					<c:if test='#{contractRequestBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 						<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
