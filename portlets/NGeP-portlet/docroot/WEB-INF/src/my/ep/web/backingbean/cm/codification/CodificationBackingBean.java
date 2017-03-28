@@ -2842,7 +2842,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 
 		bb.getManagedBean().getRequestCode().setItemName(this.getManagedBean().getSelectedRequestItem().getItemName());
-		return "unspscRequestFormII.xhtml?faces-redirect=true";
+		return "unspscRequestForm.xhtml?faces-redirect=true";
 	}
 
 	public void preRenderCodificationView() {
