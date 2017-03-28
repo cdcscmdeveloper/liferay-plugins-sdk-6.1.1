@@ -866,6 +866,48 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 
 	/**
+	 * Get status select items by statusIds.
+	 * [This is a temporary solution, as report is to be revamped.]
+	 * 
+	 * @param statusId
+	 *            the status id.
+	 */
+	
+	public SelectItem[] getStatusDropdownValuesByIds(Long[] statusIds) {
+	
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+		
+			items = new SelectItem[statusIds.length + 1];
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+			for (int i = 1; i <= statusIds.length; i++) {
+			
+				PmStatusDesc statusDesc = StatusHelper.getInstance()
+						.getStatusDescById(statusIds[i - 1]);
+				
+				items[i] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
 	 * Get Status description by status id.
 	 * 
 	 * @param statusId
