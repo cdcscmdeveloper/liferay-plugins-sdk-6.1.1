@@ -9758,7 +9758,7 @@
 	</portlet>
 	
 	<portlet>
-			<portlet-name>po-role-task-weightage</portlet-name>
+			<portlet-name>poRoleTaskWeightage</portlet-name>
 			<display-name>Processing Role Task and Weightage</display-name>
 			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 			<init-param>
