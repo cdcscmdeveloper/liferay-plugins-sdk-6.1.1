@@ -24,13 +24,13 @@
 				<ac:paginator for="dtPoJobTypeRatio" />
 
 				<p:column headerText="#{lbl['lbl.pm.poworkload.supptype']}">			
-						#{jobTypeRatio.supplierType}
+						#{SupplierManagementConst.SUPP_TYPE_CONTRACTOR eq jobTypeRatio.supplierType ? lbl['lbl.sm.contractor'] : lbl['lbl.sm.consultant']}
 					</p:column>
 				<p:column headerText="#{lbl['lbl.pm.poworkload.appltype']}">			
-						#{jobTypeRatio.applType}
+						#{poJobTypeRatioBackingBean.getAppTypeString(jobTypeRatio.applType)}
 					</p:column>
 				<p:column headerText="#{lbl['lbl.pm.poworkload.catType']}">			
-						#{not empty jobTypeRatio.categoryType ? jobTypeRatio.categoryType : lbl['lbl.txt.na']}
+						#{not empty jobTypeRatio.categoryType ? poJobTypeRatioBackingBean.getCateogryTypeString(jobTypeRatio.categoryType) : lbl['lbl.txt.na']}
 					</p:column>
 				<p:column headerText="#{lbl['lbl.pm.po.jobtyperatio.weightcat']}">	
 						#{poJobTypeRatioBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobTypeRatio.poJobWeight.weightType.parameterCode)}	
