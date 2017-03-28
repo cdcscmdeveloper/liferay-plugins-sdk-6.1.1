@@ -12817,14 +12817,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						if (prevScore.getRangeTo().add(BigDecimal.valueOf(1))
 								.compareTo(currScoring.getRangeFrom()) != 0) {
 							throw new EpException(MessageConst.ERROR_100055,
-									new String[] { ResourceBundleUtils.getMessage(
-											"lbl.sc.from", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()), 
-									ResourceBundleUtils.getMessage(
-											"lbl.sc.to", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()), row + 1 + "" });
+									new String[] { row + 1 + "" });
 						}
 					}
 				} else {
@@ -12842,15 +12835,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									.compareTo(lastObject.getRangeFrom()) != 0) {
 								throw new EpException(
 										MessageConst.ERROR_100055,
-										new String[] { ResourceBundleUtils.getMessage(
-												"lbl.sc.from", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()), 
-										ResourceBundleUtils.getMessage(
-												"lbl.sc.to", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()),
-												row + 1 + "" });
+										new String[] {row + 1 + "" });
+												
 							}
 						} else {
 							if (prevScore.getRangeTo()
@@ -12858,15 +12844,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									.compareTo(lastObject.getRangeFrom()) != 0) {
 								throw new EpException(
 										MessageConst.ERROR_100055,
-										new String[] { ResourceBundleUtils.getMessage(
-												"lbl.sc.from", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()), 
-										ResourceBundleUtils.getMessage(
-												"lbl.sc.to", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()),
-												row + 1 + "" });
+										new String[] {row + 1 + "" });
+												
 							}
 						}
 
