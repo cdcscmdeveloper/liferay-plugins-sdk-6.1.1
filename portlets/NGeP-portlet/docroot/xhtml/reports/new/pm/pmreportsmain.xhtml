@@ -27,16 +27,48 @@
 			</tr>
 		</table>
 		<p:panel id="pmRptSearchCriteriaPnl"
-			header="#{pmReportsBackingBean.managedBean.reportName} #{ReportConst.pmBpkAdminProfileRptVal}"
+			header="#{pmReportsBackingBean.managedBean.reportName}"
 			rendered="#{not empty pmReportsBackingBean.managedBean.reportCode}"
 			toggleable="true">
+			<!-- Validation Message -->
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			<c:choose>
+				<c:when
+					test="#{ReportConst.pmBpkUserProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/bpkUserProfileReport.xhtml"></ui:include>
+				</c:when>
+				
+				<c:when
+					test="#{ReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/bpkAdminProfileReport.xhtml"></ui:include>
+				</c:when>
+
+				<c:otherwise>
+        			ERROR!
+    
+				</c:otherwise>
+			</c:choose>
 			
-			<p:outputPanel id="bpkAdnProfilePnl" 
-				rendered="#{ReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
-				<ui:include src="/xhtml/reports/new/pm/bpkAdminProfileReport.xhtml"></ui:include>
-			</p:outputPanel>
-			
+			<p:commandButton 
+					id="generateBtnId"
+					value="#{lbl['lbl.btn.generate']}"
+					process="@form"   
+					update="@form" 
+					action="#{pmReportsBackingBean.generatePmReport()}">
+			</p:commandButton>
+			<p:commandButton 
+					id="resetBtnId"
+					value="#{lbl['lbl.btn.reset']}"
+					process="@this"   
+					update="@form" 
+					action="#{pmReportsBackingBean.resetAction()}">
+			</p:commandButton>
 		</p:panel>
+		<ui:include src="/xhtml/reports/new/pm/common/confirmationDialog.xhtml"></ui:include>
 	</ui:define>
 
 

@@ -51,6 +51,7 @@ import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.userattachment.IUserAttachmentSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -97,6 +98,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -122,6 +124,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
@@ -138,6 +141,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -2606,6 +2610,37 @@ public class PmCommonUtil implements Serializable{
 			jobWeightSO = null;
 		}
 		return list;
+	}
+	
+	public static SelectItem[] getPmZoneListOptions() {
+		SelectItem[] items = null;
+		IZoneSO zoneSO = null;
+		
+		try {
+			zoneSO = (IZoneSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IZoneSO.class);
+			ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
+			List<PmZone> zoneList = resDTO.getZoneList();
+			if(CollectionUtils.isNotEmpty(zoneList)){				
+				items = new SelectItem[zoneList.size() + 1];
+				int i = 0;
+				items[i++] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));			
+				for (PmZone zone : zoneList) {
+					items[i++] = new SelectItem(zone.getZoneName(), zone.getZoneName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 
 }
