@@ -260,7 +260,7 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 //							SearchOperator.OPERATOR_LIKE.value(),
 //							getManagedBean().getDesc().toLowerCase(),true));
 			
-			SearchFilterBean subClassFilterBean = new SearchFilterBean("goCode",
+			SearchFilterBean subClassFilterBean = new SearchFilterBean("glAccCode",
 					SearchOperator.OPERATOR_LIKE.value(), 
 					getManagedBean().getDesc().toLowerCase(),
 					SearchCondition.CONDITION_OR.value());
