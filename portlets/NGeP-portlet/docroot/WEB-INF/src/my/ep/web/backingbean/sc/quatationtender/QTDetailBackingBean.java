@@ -317,7 +317,18 @@ public class QTDetailBackingBean extends
 		PmOrgProfile ptjProfile = new PmOrgProfile();
 		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
 		
-		PmOrgProfile orgProfile = getOrgProfileByLoginUser();
+		PmOrgProfile orgProfile = null;
+		try {
+			orgProfile = getOrgProfileByLoginUser();
+		} catch (EpException e) {
+			String msgCode = MessageConst.ERROR_770224;
+			FacesContext.getCurrentInstance().addMessage(
+					null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(msgCode, null,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())
+									+ " (" + msgCode + ")"));
+		}
 		if (orgProfile != null) {
 			String orgType = orgProfile.getOrgTypeCode().getParameterCode();
 			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
