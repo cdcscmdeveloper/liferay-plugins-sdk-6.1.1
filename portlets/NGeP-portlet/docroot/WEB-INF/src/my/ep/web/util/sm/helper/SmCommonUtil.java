@@ -13,9 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
@@ -55,13 +52,37 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.id.Hex;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.eclipse.persistence.exceptions.ValidationException;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.pojobtyperatio.IPoJobTypeRatioSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
@@ -91,6 +112,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
+import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -130,12 +153,14 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPoJobTypeRatio;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -157,6 +182,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sm.ApplType;
 import my.ep.util.EpPropertiesUtils;
@@ -174,28 +200,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.id.Hex;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.eclipse.persistence.exceptions.ValidationException;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
@@ -4783,4 +4787,96 @@ public class SmCommonUtil {
 				"sm.url.dont.filter.https");
 		return Boolean.valueOf(notFilterHttps);
 	}
+
+	/**
+	 * Retrieve Lowest Weightage PO By Zone and role
+	 * @param String zoneCode, String supplierType, String applType, String categoryType
+	 * @return PmUser
+	 */
+	public PmUser retrievePOWithLowestWeightage(String supplierType, String applType, String categoryType){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
+		if(activeOrg.size() > 0){
+			PmUserOrg userOrg = activeOrg.get(0);
+			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setZoneCode(pmZone.getZoneCode());
+			reqDTO.setRoleCode(RoleCode.UPS_PO.value());
+			reqDTO.setSupplierType(supplierType);
+			reqDTO.setApplicationType(applType);
+			reqDTO.setCategoryType(categoryType);
+
+			List<PmUser> poList = SmServiceLookup.getUserSO().retrievePOUserListByRoleZone(reqDTO).getUserList();
+			if(poList.size() > 0){
+				return poList.get(0);
+			}else{
+				throw new EpException(MessageConst.ERROR_721117);
+			}
+		}else{
+			log.info("***retrievePOWithLowestWeightage****" + activeOrg.size());
+			throw new EpException(MessageConst.ERROR_721118);
+		}
+	}
+	
+	/**
+	 * Retrieve PO Job Weight Ratio
+	 * @param String supplierType, String applType, String categoryType
+	 * @return PmUser
+	 */
+	public Integer retrievePoJobTypeWeight(String supplierType, String applType, String categoryType){
+		PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
+		ISearchBean<PmPoJobTypeRatio> searchBean = new SearchBean<PmPoJobTypeRatio>();
+
+		if(StringUtils.isNotBlank(supplierType)){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("supplierType",
+							SearchOperator.OPERATOR_EQUALS.value(), supplierType));
+		}
+		
+		if(StringUtils.isNotBlank(applType)){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("applType",
+							SearchOperator.OPERATOR_EQUALS.value(), applType));
+		}
+		
+		if(StringUtils.isNotBlank(categoryType)){
+			boolean catTypeNull = false;
+			if(supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
+				if(categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
+						categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)){
+					catTypeNull = true;
+				}
+			}else{
+				if(categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
+						categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)){
+					catTypeNull = true;
+				}
+			}
+			
+			if(catTypeNull){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("categoryType",
+								SearchOperator.OPERATOR_EQUALS.value(), categoryType));
+			}else{
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("categoryType",
+								SearchOperator.OPERATOR_IS_NULL.value(),
+								null));
+			}
+		}
+		
+		reqDTO.setSearchBean(searchBean);
+		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IPoJobTypeRatioSO.class);
+		PoJobTypeRatioResDTO resDTO = reqSO.retrieveJobTypeRatioList(reqDTO);
+		
+		if(resDTO.getResultBean().getResultList().size() > 0){
+			return resDTO.getResultBean().getResultList().get(0).getPoJobWeight().getWeightValue();
+		}else{
+			throw new EpException(MessageConst.ERROR_721119);
+		}
+	}
+	 
 }
