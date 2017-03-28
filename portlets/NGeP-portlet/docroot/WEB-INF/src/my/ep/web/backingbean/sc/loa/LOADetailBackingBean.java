@@ -5419,6 +5419,16 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
+	 * Show guide instruction for LOA attachment
+	 */
+	public String showLoaGuideInstruction() {
+		String instruction = ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.attachment.instruction", 
+				new String[] {"showGuidelinePdf()"} ,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return instruction;
+	}
+	
+	/**
 	 * Validate ScLoaWitness before download attachment of Acknowledge LOA Receipt
 	 */
 	private void validateLoaWitness() {
