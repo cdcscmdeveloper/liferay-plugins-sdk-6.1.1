@@ -9030,7 +9030,8 @@ public class ReportBackingBean extends
 			doctype = ReportConst.DOC_TYPE_PA;
 		} else if (StringUtils.isNotEmpty(this.getReportValue())
 				&& (this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))) {
-			doctype = ReportConst.DOC_TYPE_CO;
+			// Suggest: This if clause will be removed.
+			// doctype = ReportConst.DOC_TYPE_CO;
 		} else if (StringUtils.isNotEmpty(this.getReportValue())
 				&& (this.getReportValue().equals(
 						ReportConst.SUMM_RPT_PAN_ITM_VAL)
@@ -9093,6 +9094,7 @@ public class ReportBackingBean extends
 				}
 			}
 		}
+		
 		if (StringUtils.isNotEmpty(doctype)) {
 			docTypeStatusItems = null;
 			docTypeStatusItemsList = new ArrayList<SelectItem>();
@@ -9101,6 +9103,11 @@ public class ReportBackingBean extends
 			for (SelectItem itemCommon : docTypeStatusItems) {
 				docTypeStatusItemsList.add(itemCommon);
 			}
+			
+			/**
+			 * Special case.
+			 */
+			
 			if (this.getReportValue().equals(
 					ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
 					|| this.getReportValue().equals(
@@ -9114,11 +9121,28 @@ public class ReportBackingBean extends
 							ReportConst.STATUS_CANCELLED))
 						docTypeTempStatusItemsList.add(item);
 				}
+				
 				docTypeStatusItemsList.clear();
 				docTypeStatusItemsList.addAll(docTypeTempStatusItemsList);
 				docTypeTempStatusItemsList.clear();
 			}
+		} else {
+
+			//Temporarily solution for deduction. Will change to new report design.
+			
+			if(this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL)){
+				
+				Long[] flDeductionRptStatusIds = {41530L, 41535L, 41540L};
+				docTypeStatusItems = getStatusDropdownValuesByIds(flDeductionRptStatusIds);
+			
+				for (SelectItem itemCommon : docTypeStatusItems) {
+					docTypeStatusItemsList.add(itemCommon);
+				}
+				
+				docTypeTempStatusItemsList.clear();
+			}
 		}
+		
 		return docTypeStatusItems;
 	}
 
