@@ -775,28 +775,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-		
 				// Validation for PID Reason
-				if(ctBB.getManagedBean().getContractVer().getCtPidReasons() != null && ctBB.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
-						for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
-								if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
-									getManagedBean().setSelectedTabIndex(0);
-									throw new EpException(MessageConst.ERROR_100022, 
-										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-								}
-								
-								ctBB.validatePidReason(reason.getPmReason().getReasonId());
-								if(ctBB.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
-									if(reason.getReasonDesc().isEmpty()){
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					if(ctBB.getManagedBean().getContractVer().getCtPidReasons() != null && ctBB.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+							for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
+									if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
 										getManagedBean().setSelectedTabIndex(0);
 										throw new EpException(MessageConst.ERROR_100022, 
-											new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+											new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 									}
+									
+									ctBB.validatePidReason(reason.getPmReason().getReasonId());
+									if(ctBB.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+										if(reason.getReasonDesc().isEmpty()){
+											getManagedBean().setSelectedTabIndex(0);
+											throw new EpException(MessageConst.ERROR_100022, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+										}
+									}
 								}
-							}
-					}//  End validation for PID Reason
+						}//  End validation for PID Reason
+				}
 		
 					// Validation for GST amount before GST Relief Due Date
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 

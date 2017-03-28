@@ -1185,20 +1185,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			// Validation for PID Reason
-			if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
-				for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
-					if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-					ctBackingBean.validatePidReason(reason.getPmReason().getReasonId());
-					if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
-						if(reason.getReasonDesc().isEmpty()){
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null 
+						&& ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+					for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
+						if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
 							throw new EpException(MessageConst.ERROR_100022, 
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						ctBackingBean.validatePidReason(reason.getPmReason().getReasonId());
+						if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+							if(reason.getReasonDesc().isEmpty()){
+								throw new EpException(MessageConst.ERROR_100022, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
 						}
 					}
 				}
