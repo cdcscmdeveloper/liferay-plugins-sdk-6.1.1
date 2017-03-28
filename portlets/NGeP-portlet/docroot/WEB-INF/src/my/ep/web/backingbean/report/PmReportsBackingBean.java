@@ -3,30 +3,26 @@
  */
 package my.ep.web.backingbean.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
-import my.ep.biz.dto.rpt.PMReportReqDTO;
-import my.ep.biz.dto.rpt.PMReportResDTO;
-import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.exception.EpException;
+import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.report.ReportsGenerateBean;
+import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.PmReportsManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 @ManagedBean(name = "pmReportsBackingBean")
 @ViewScoped
@@ -61,15 +57,66 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 //	}
 	
 	public void onChangeReportName(){
-		log.info("onChangeReportName");		
-		if(StringUtils.isNotBlank(getManagedBean().getReportCode())){
-			for(SelectItem item : getManagedBean().getReportList()){
-				if(item.getValue().equals(getManagedBean().getReportCode())){
-					getManagedBean().setReportName(item.getLabel());
-					break;
-				}
-			}
+		log.info("onChangeReportName");	
+		resetAction();
+		if(StringUtils.isNotBlank(getManagedBean().getReportCode())){			
+			retrieveReportValueFromDb();
 		}
 	}
+	
+	public void generatePmReport(){
+		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IRPTRequestSO.class);		
+		
+		RPTRequestResDTO resDTO = rptRequestSO.generateReport(
+				constructPmParamStrings(), 
+				getManagedBean().getReportCode(), 
+				null, 
+				getFacesScopes().getUserSessionBean().getUserId(), 
+				false, 
+				getManagedBean().isTempAccess());	
+		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+		
+	
+	}
+	
+	/**
+	 * The method used for generating a list of available display type of status
+	 * as selection.
+	 * 
+	 * @return the selection list of display type
+	 */
+	public SelectItem[] getStatusOptions() {
+		return PmCommonUtil.getRecordStatusOptions();
+	}
+	
+	public SelectItem[] getPmZoneList() {
+		return PmCommonUtil.getPmZoneListOptions();
+	}
+	
+	
+	private String constructPmParamStrings(){
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();	
+		map.put(PmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		map.put(PmReportConst.PARAM_PM_REPORT_ID_EQ, getManagedBean().getReportCode());
+		if(StringUtils.isNotBlank(getManagedBean().getZoneName())){
+			map.put(PmReportConst.PARAM_PM_SUPP_ZONE_EQ, getManagedBean().getZoneName());
+		}
+		
+		if(getManagedBean().getStatus() != null){
+			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS_EQ, getManagedBean().getStatus() == 1 ? "Active":"Inactive");
+		}
+		
+		return constructParameterString(map);
+	}
+	
+	public void resetAction(){
+		getManagedBean().setZoneName(null);
+		getManagedBean().setStatus(null);
+		
+	}
+	
 
 }
