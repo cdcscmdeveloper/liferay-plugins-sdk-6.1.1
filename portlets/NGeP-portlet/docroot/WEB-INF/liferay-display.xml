@@ -267,6 +267,7 @@
 			<portlet id="assignedTaskSearch"></portlet>
 			<portlet id="passwordcipher"></portlet>
 			<portlet id="Mobile Notice Board"></portlet>
+			<portlet id="poRoleTaskWeightage"></portlet>
 		</category>
 
 		<category name="Template">
