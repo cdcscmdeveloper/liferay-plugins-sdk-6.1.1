@@ -983,39 +983,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 			}
 
-			if (isSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
-					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
-				// Generate loa document and set into sc_attachment
-				AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
-				String fileName = null;
-				String filePath = null;
-				String content = null;
-				File file = new File(getManagedBean().getFileDirectory());
-				file.mkdirs();
-
-				for (ScLoaReport scLoaReport : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
-					if (scLoaReport.getDefinationType().getParameterId().equals(
-							(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-									ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
-						fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
-						filePath = getManagedBean().getFileDirectory() + attachmentFormat.format(fileName, null);
-						if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
-							formJadualHargaExcel(filePath);
-						} else {
-							String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
-							content = getContent(docDefinitionKey);					
-							DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
-						}
-
-						ScLoaReportAttachment attachment = new ScLoaReportAttachment();
-						attachment.setScLoaReport(scLoaReport);			    
-						attachment.setFileName(fileName);
-						attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-						attachment.setFileDesc(fileName);
-						scLoaReport.setScLoaReportAttachment(attachment);
-					}
-				}
-			}
+//			if (isSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
+//					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+//				// Generate loa document and set into sc_attachment
+//				AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
+//				String fileName = null;
+//				String filePath = null;
+//				String content = null;
+//				File file = new File(getManagedBean().getFileDirectory());
+//				file.mkdirs();
+//
+//				for (ScLoaReport scLoaReport : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
+//					if (scLoaReport.getDefinationType().getParameterId().equals(
+//							(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
+//									ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
+//						fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
+//						filePath = getManagedBean().getFileDirectory() + attachmentFormat.format(fileName, null);
+//						if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
+//							formJadualHargaExcel(filePath);
+//						} else {
+//							String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+//							content = getContent(docDefinitionKey);					
+//							DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
+//						}
+//
+//						ScLoaReportAttachment attachment = new ScLoaReportAttachment();
+//						attachment.setScLoaReport(scLoaReport);			    
+//						attachment.setFileName(fileName);
+//						attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+//						attachment.setFileDesc(fileName);
+//						scLoaReport.setScLoaReportAttachment(attachment);
+//					}
+//				}
+//			}
 			// Retrieve the proper committee role during sign off process and set the sign off flag to true
 			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
