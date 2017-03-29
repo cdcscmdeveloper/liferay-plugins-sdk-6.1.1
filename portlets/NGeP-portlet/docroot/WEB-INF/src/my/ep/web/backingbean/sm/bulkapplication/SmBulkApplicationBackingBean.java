@@ -76,6 +76,7 @@ public class SmBulkApplicationBackingBean extends
 	public void approveBulkApplication() {
 		if (!EntityHelper
 				.isCollectionEmpty(getManagedBean().getSelectedTasks())) {
+			validateTotalSelectedApplication();
 			validateOverlapRemarks();
 			FacesScopes fs = new FacesScopes();
 			ReviewApplicationReqDTO reqDTO = null;
@@ -165,6 +166,7 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void rejectBulkApplication() {
+		validateTotalSelectedApplication();
 		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
 	}
 
@@ -420,7 +422,10 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	private void validateTotalSelectedApplication() {
-
+		if (getManagedBean().getSelectedTasks().size() > getManagedBean()
+				.getMaxBulkApprovalCount()) {
+			throw new EpException(getManagedBean().getMaxBulkApprovalMsg());
+		}
 	}
 
 	/**
