@@ -33,7 +33,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
-import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -41,7 +40,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
-import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -53,8 +51,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
-import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
-import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -62,8 +58,6 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
-import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
@@ -72,8 +66,6 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1029,120 +1021,6 @@ public class CreateQtBackingBean extends
 		return ParameterHelper.getInstance().getParameterDescList(type);
 	}
 
-	/**
-	 * Retrive zones or suppliers by item.retrive zones or suppliers based on
-	 * item in supplier qualification criteria.
-	 */
-	public void retriveZonesOrSuppliersByItem() {
-		
-		IPanelSupplierSO panelSupplierSO;
-		PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
-		try {
-			PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IPanelSupplierSO.class);
-			
-			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
-
-			if (CollectionUtils.isNotEmpty(panelItemList)) {
-
-				reqDTO.setPanelItem(panelItemList.get(0));
-				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
-			}
-
-			if (null != resDTO && null != resDTO.getCtPanelZones()
-					&& !resDTO.getCtPanelZones().isEmpty()) {
-
-				if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
-
-					this.getManagedBean().setCtzones(true);
-					getManagedBean().setZoneGeneralTrees(
-							new ArrayList<TreeNode>());
-					if (null != getManagedBean().getZoneGeneralTrees()
-							&& getManagedBean().getZoneGeneralTrees().size() == 0) {
-
-						for (CtPanelZone panelZones : resDTO.getCtPanelZones()) {
-
-							TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-							tplSpecZoneDtl.setZoneName(panelZones.getName());
-							tplSpecZoneDtl.setPanelZone(panelZones);
-							setUserDetails(tplSpecZoneDtl);
-
-							List<PmState> states = SourcingLocationHelper
-									.getStateFromCtPanelZone(panelZones
-											.getPanelZoneDtls());
-							List<PmDistrict> districts = SourcingLocationHelper
-									.getDistrictFromCtPanelZone(panelZones
-											.getPanelZoneDtls());
-
-							getManagedBean()
-									.getZoneGeneralTrees()
-									.add(LocationSingleton.getInstance()
-											.buildTreeWithDisabledChilds(
-													tplSpecZoneDtl, states,
-													districts, null, null,
-													true, TplSpecZoneLoc.class));
-
-						}
-					}
-
-				}
-			} else {
-				this.getManagedBean().setTotalSuppliers(0);
-				
-				if (CollectionUtils.isNotEmpty(panelItemList)) {
-					getManagedBean().setZoneGeneralTrees(
-							new ArrayList<TreeNode>());
-					this.getManagedBean().setCtzones(false);
-					/*
-					 * PanelSupplierReqDTO supplierreqDTO = new
-					 * PanelSupplierReqDTO();
-					 * supplierreqDTO.setPanelItemId(this.getManagedBean()
-					 * .getCtPanelItem().getPanelItemId());
-					 * supplierreqDTO.setFetchSubEntity(true);
-					 * PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
-					 * .retrievePanelItem(supplierreqDTO);
-					 */
-					IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION,
-									IQTSupplierSO.class);
-					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
-					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
-					supplierResDTO = supplierSo
-							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
-					this.getManagedBean().setCtZoneSupplierList(
-							new ArrayList<CtPanelSupplier>());
-					if (null != supplierResDTO.getCtPanelSuppliers()) {
-						// CtPanelItem panelItem =
-						// supplierResDTO.getCtPanelSuppliers();
-						this.getManagedBean().setTotalSuppliers(
-								supplierResDTO.getCtPanelSuppliers().size());
-						for(CtPanelSupplier paelSupplier:supplierResDTO.getCtPanelSuppliers()){
-							paelSupplier.setSmMofAccount(retriveMofAccountBySupplier(paelSupplier.getSupplier()));
-						}
-						this.getManagedBean().setCtZoneSupplierList(
-								supplierResDTO.getCtPanelSuppliers());
-
-					}
-				}
-
-			}
-			/*
-			 * List<CtPanelItem> itemList = this.getManagedBean()
-			 * .getSelectpanelItem(); itemList = new ArrayList<CtPanelItem>();
-			 * itemList.add(this.getManagedBean().getCtPanelItem());
-			 * 
-			 * this.getManagedBean().setSelectpanelItem(itemList);
-			 */
-
-		} finally {
-
-		}
-
-	}
 	/**
 	 * Select zone location level.change Location Level Dropdown in General
 	 * information menu.
