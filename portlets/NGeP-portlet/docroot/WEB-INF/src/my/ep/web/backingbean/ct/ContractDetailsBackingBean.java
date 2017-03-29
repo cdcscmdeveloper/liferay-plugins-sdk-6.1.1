@@ -881,15 +881,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							 			if(ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
 							 					 || ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
 							 				setTabValue("AG");
-				 							throw new EpException(MessageConst.ERROR_100022, 
-				 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.refno", 
-				 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							 				throw new EpException(MessageConst.ERROR_750045);
 							 			 }else if(ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
 							 					 ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
 							 				setTabValue("AG");
-				 							throw new EpException(MessageConst.ERROR_100022, 
-				 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.attachment", 
-				 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							 				throw new EpException(MessageConst.ERROR_750046);
 							 			 }
 							 		}
 								}
