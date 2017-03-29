@@ -10,7 +10,7 @@
 			toggleable="true" id="unClaimPanelId">
 			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" 
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				var="unclaim" rowIndexVar="index" lazy="true" rows="10"
+				var="unclaim" rowIndexVar="index" lazy="true" rows="5"
 				selection="#{bulkApplicationBackingBean.managedBean.selectedUnclaimTasks}"
 				value="#{bulkApplicationBackingBean.managedBean.unClaimTaskListDataModel}">
 				<ac:paginator for="unClaimTaskListId" />
