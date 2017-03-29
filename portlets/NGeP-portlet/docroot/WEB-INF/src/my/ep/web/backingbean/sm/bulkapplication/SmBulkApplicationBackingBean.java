@@ -69,7 +69,7 @@ public class SmBulkApplicationBackingBean extends
 								.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
 										.value()));
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",
+				"/xhtml/sm/bulkApplication/bulkApplicationBasePage.xhtml", "",
 				null, null);
 	}
 
@@ -418,9 +418,9 @@ public class SmBulkApplicationBackingBean extends
 			throw new EpException(sb.toString());
 		}
 	}
-	
-	private void validateTotalSelectedApplication(){
-		
+
+	private void validateTotalSelectedApplication() {
+
 	}
 
 	/**
