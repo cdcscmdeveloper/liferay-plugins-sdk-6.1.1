@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -26,7 +25,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPoRoleTask;
 import my.ep.persistence.entity.pm.common.PmPoWeightage;
@@ -48,7 +46,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 	public static Logger log = Logger.getLogger(POTaskWeightageBackingBean.class);
 	private static final String PO_TASK_WEIGHTAGE_MAIN = "/xhtml/pm/potaskweightage/poTaskWeightageMain.xhtml";
 	private static final String PO_TASK_WEIGHTAGE_DTL = "/xhtml/pm/potaskweightage/poTaskWeightageDtl.xhtml";
-	
+	private static final String PO_TASK_TEST = "/xhtml/pm/potaskweightage/test.xhtml";
 	
 	/**
 	 * PreRender of POTaskWeightage
@@ -69,7 +67,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		}
 		prepareApplSelectionList();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PO_TASK_WEIGHTAGE_MAIN);
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PO_TASK_TEST);
 	}
 	
 	public String editUser(PmUser poUser){
@@ -98,6 +96,13 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		roleTask.setPmUser(getManagedBean().getSelectedUser());
 		roleTask.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 		getManagedBean().setSelectedRoleTask(roleTask);
+	}
+	
+	public void test(){
+		log.info("**********POTaskWeightageBackingBean Test - start**********");
+		retrievePOUsers();
+		
+		log.info("**********POTaskWeightageBackingBean Test - end**********");
 	}
 	
 /*	public void saveRoleTask(){
