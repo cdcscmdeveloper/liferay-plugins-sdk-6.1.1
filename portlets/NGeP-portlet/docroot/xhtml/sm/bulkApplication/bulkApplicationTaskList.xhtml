@@ -24,17 +24,16 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" closable="true"
-			showSummary="false" escape="false" />
+		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
+		
 		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}"
 			toggleable="true" id="unClaimPanelId">
 			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" 
-				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				var="unclaim" rowIndexVar="index" lazy="true" 
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				var="unclaim" rowIndexVar="index" lazy="true" rows="10"
 				selection="#{bulkApplicationBackingBean.managedBean.selectedUnclaimTasks}"
 				value="#{bulkApplicationBackingBean.managedBean.unClaimTaskListDataModel}">
 				<ac:paginator for="unClaimTaskListId" />
@@ -92,13 +91,15 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				value="#{lbl['lbl.bpm.refresh']}" update="@form" />
 			&#160;
-			<p:commandButton value="#{lbl['lbl.sm.button.approve']}" id="claimBtnId"
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" id="claimBtnId"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{bulkApplicationBackingBean.onClaimBpmTask}"
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedUnclaimTasks}"
 				update="@form" process="@this"/>
 		</div>
 		<br />
+		
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false" />
 
 		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}"
 			toggleable="true" id="resultPanelId">
@@ -106,22 +107,27 @@
 			<h:outputText styleClass="instruction" value="#{bulkApplicationBackingBean.managedBean.maxBulkApprovalMsg}"/>
 			
 			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true"
-				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				rowIndexVar="indexMain" var="tasks"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				rowIndexVar="indexMain" var="tasks" rows="10"
 				value="#{bulkApplicationBackingBean.managedBean.claimTaskListDataModel}"
 				selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
 				<ac:paginator for="claimTaskListId" />
 
-				<p:ajax event="toggleSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}"  
-					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this"/>
-				<p:ajax event="rowSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
-					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
-				<p:ajax event="rowSelectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
-					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
-				<p:ajax event="rowUnselectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
-					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
-				<p:ajax event="rowUnselect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')}" 
-					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
+				<p:ajax event="toggleSelect" 
+					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}"  
+					process="@this"/>
+				<p:ajax event="rowSelect" 
+					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					process="@this" />
+				<p:ajax event="rowSelectCheckbox" 
+					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					process="@this" />
+				<p:ajax event="rowUnselectCheckbox" 
+					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					process="@this" />
+				<p:ajax event="rowUnselect" 
+					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					process="@this" />
 					
 				<p:column selectionMode="multiple" style="width:2% !important;" disabledSelection="#{tasks.notAllowedToTick}"/>
 				
@@ -130,22 +136,36 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.application.no']} (#{lbl['lbl.sm.companyname']})" disabledSelection="#{tasks.notAllowedToTick}">
-					<b><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /></b>
+					
+					<br />
+					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
+						<font color="red">&#x26A0;</font>&#160;
+						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />&#160;
+					</p:outputPanel>
+					
+					<b><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /></b><br />
 					
 					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
-						<table style="width: 100%">
-							<tr>
-								<td style="white-space: normal;">
-									<span id="blinkId3"><h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" /></span>
-									<span style="opacity: 0.0;"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span>
-								</td>
-							</tr>
-							<tr>
-								<td style="white-space: normal;">
-									<h:outputText styleClass="warning" value="#{tasks.overlapMsg}" escape="false"/>
-								</td>
-							</tr>
-						</table><br /><br />
+						<br /><h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>
+						<br /><h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{bulkApplicationBackingBean.onViewOverlapCategory(tasks.overlapCategoryVOList)}"
+							process="@this"
+							partialSubmit="true" update=":form">
+								&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
+						</p:commandLink>
+						&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
+						
+						<br /><br />
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.overlapped.category.remarks.instruction']}"/><br />
+						<p:inputTextarea cols="80" style="width : auto;" rows="5"
+							maxlength="2500" value="#{tasks.overlapRemarks}"
+							label="#{lbl['lbl.sm.remarks.overLapping']}"
+							validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} 
+							#{lbl['lbl.sm.rmrkLength.thsndCharLimit']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<br /><br />
 					</p:outputPanel>
 					
 					<p:dataTable var="catBean" widgetVar="catBeanWidVar" value="#{tasks.pendingApproveCategories}"
@@ -230,11 +250,18 @@
 		<br />
 		<div align="right" >
 			<p:commandButton
-				value="#{lbl['lbl.btn.submit']}"
+				value="#{lbl['lbl.btn.approve']}"
 				id="approveBtnId" update="@form" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()"
+				oncomplete="blockWidget.hide()" process="@this"
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.approveBulkApplication}" />
+				&#160;
+			<p:commandButton
+				value="#{lbl['lbl.btn.reject']}"
+				id="rejectBtnId" update="@form" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()" process="@this"
+				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
+				action="#{bulkApplicationBackingBean.rejectBulkApplication}" />
 			&#160;
 			<p:commandButton
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
@@ -242,7 +269,73 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 				value="#{lbl['lbl.btn.cancel']}" update="@form" id="cancelBtnId"/>
 		</div>
-
+		
+		<ac:smOverlapCategoryDialog voList="#{bulkApplicationBackingBean.managedBean.selectedOverlapCategoryVOList}" />
+		
+		<p:dialog width="1200px" header="#{lbl['lbl.sm.reject.application']}"
+			closable="false" id="rejectDialogId" widgetVar="rejectDialog"
+			height="500px" resizable="false" showEffect="fade" hideEffect="fade"
+			modal="true">
+			
+			<p:outputPanel layout="block" id="rejectBlockPanel">
+				
+				<p:messages id="rejectMsgId" showDetail="true" autoUpdate="true" 
+					closable="true" showSummary="false"/>
+			
+				<p:blockUI block="rejectBlockPanel" widgetVar="rejectBlockPanelWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+				</p:blockUI>
+				
+				<p:dataTable var="bulk"
+					widgetVar="bulkWidVar"
+					value="#{bulkApplicationBackingBean.managedBean.selectedTasks}"
+					rowKey="#{bulk}" rowIndexVar="index" id="rejectBulkDtId"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<ac:paginator for="rejectBulkDtId" />
+					
+					<p:column style="width : 2%;">
+						<p:outputLabel value="#{index + 1}"
+							style="float: left;white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.application.no']}">
+						<h:outputText value="#{bulk.appl.applNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.remarks.rejection']}">
+						<p:dataTable var="reason" widgetVar="reasonWidgetVar"
+							editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{bulkApplicationBackingBean.managedBean.reasonDescList}"
+							selection="#{bulk.selectedReasonDescs}"
+							rowKey="#{reason}" rowIndexVar="index" id="reasonDtId">
+							
+							<ac:paginator for="reasonDtId" />
+							<p:ajax event="rowSelect" update=":#{p:component('rejectBulkDtId')}" />
+							<p:ajax event="rowUnselect" update=":#{p:component('rejectBlockPanel')}" />
+							<p:ajax event="rowSelectCheckbox" update=":#{p:component('rejectBlockPanel')}" />
+							<p:ajax event="rowUnselectCheckbox" update=":#{p:component('rejectBlockPanel')}" />
+							<p:ajax event="rowDblselect" update=":#{p:component('rejectBlockPanel')}" />
+							
+							<p:column selectionMode="multiple" width="1%" />
+							
+							<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
+								<h:outputText value="#{reason.reasonDesc}" />
+							</p:column>
+							
+						</p:dataTable>
+					</p:column>
+				</p:dataTable>
+				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+						update="@([id$=Msg])" partialSubmit="true" process="rejectBlockPanel"
+						action="#{bulkApplicationBackingBean.submitReject}" />
+					<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+						onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+						action="#{bulkApplicationBackingBean.cancelReject}"
+						partialSubmit="true" process="@this" />
+				</div>
+			</p:outputPanel>
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

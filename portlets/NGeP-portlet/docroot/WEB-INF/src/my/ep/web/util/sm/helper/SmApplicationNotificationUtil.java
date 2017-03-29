@@ -77,15 +77,15 @@ public class SmApplicationNotificationUtil {
 	 * @param reqDTO
 	 *            - ReviewApplicationReqDTO
 	 */
-	public static void setRejectionNotificationParameters(
-			SmApplicationManagedBean managedBean, ReviewApplicationReqDTO reqDTO) {
-		if (managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			reqDTO.setBusinessRegNo(managedBean.getSmSupplier().getRegNo());
-			reqDTO.setCompanyName(managedBean.getSmSupplier().getCompanyName());
-			reqDTO.setApproverOrPoRemarks(managedBean
-					.getApplnRejectionRemarks());
-			reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
+	public static void setRejectionNotificationParameters(SmAppl smAppl,
+			String mofNo, String applRejectionRemarks, SmSupplier supplier,
+			ReviewApplicationReqDTO reqDTO) {
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			reqDTO.setBusinessRegNo(supplier.getRegNo());
+			reqDTO.setCompanyName(supplier.getCompanyName());
+			reqDTO.setApproverOrPoRemarks(applRejectionRemarks);
+			reqDTO.setMofNum(mofNo);
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
