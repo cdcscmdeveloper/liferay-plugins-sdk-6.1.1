@@ -106,7 +106,7 @@
 				</td>
 				<td>
 					<p:inputText id="suppAdminAddr1" size="35"
-						label="#{lbl['lbl.sm.person.permAddr']}" required="true" maxlength="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" required="true" maxlength="100"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address1}">
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>
@@ -144,7 +144,7 @@
 				<td></td>
 				<td>
 					<p:inputText id="suppAdminAddr2" size="35"
-						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="100"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address2}">
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>
@@ -182,7 +182,7 @@
 				<td></td>
 				<td>
 					<p:inputText id="suppAdminAddr3" size="35"
-						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="100"
 						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address3}">
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>

@@ -282,7 +282,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.address']}" id="suppBankAddrs"
 							value="#{backingBean.managedBean.selectedBank.smAddress.address1}"
@@ -300,7 +300,7 @@
 
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedBank.smAddress.address2}"
 							size="35" />
 						<ac:smFieldChangeAlert 
@@ -313,7 +313,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedBank.smAddress.address3}"
 							size="35" />
 						<ac:smFieldChangeAlert 
