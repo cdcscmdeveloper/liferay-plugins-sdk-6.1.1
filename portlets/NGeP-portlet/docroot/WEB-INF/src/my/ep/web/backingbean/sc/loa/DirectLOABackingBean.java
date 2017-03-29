@@ -716,7 +716,7 @@ public class DirectLOABackingBean extends
 			}
 
 			if (!(endDate.after(contractEffDate) && (endDate
-					.before(contractExpDate) || endDate.equals(contractEffDate)))) {
+					.before(contractExpDate) || endDate.equals(contractExpDate)))) {
 				throw new EpException(MessageConst.ERROR_760348);
 			}
 		}
