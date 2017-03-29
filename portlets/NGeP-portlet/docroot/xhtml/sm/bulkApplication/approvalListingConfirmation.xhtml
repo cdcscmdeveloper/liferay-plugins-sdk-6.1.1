@@ -66,12 +66,12 @@
 						
 						<br /><br />
 						<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.overlapped.category.remarks.instruction']}"/><br />
-						<p:inputTextarea cols="80" style="width : auto;" rows="5"
+						<h:outputText value="*" styleClass="mandatory" />&#160;&#160;
+						<p:inputTextarea cols="120" style="width : auto;" rows="5"
 							maxlength="2500" value="#{tasks.overlapRemarks}"
 							label="#{lbl['lbl.sm.remarks.overLapping']}"
 							validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} 
 							#{lbl['lbl.sm.rmrkLength.thsndCharLimit']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
 						<br /><br />
 					</p:outputPanel>
 					
