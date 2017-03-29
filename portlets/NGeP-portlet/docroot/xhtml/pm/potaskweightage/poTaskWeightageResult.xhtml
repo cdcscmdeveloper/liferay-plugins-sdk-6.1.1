@@ -6,55 +6,43 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel header="Result" toggleable="true" id="pnlTaskWeightageResult">
-			<ui:remove>
-			<div style="text-align: right;">
-				<p:commandButton id="btnSaveValue" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{poTaskWeightageBB.savePOWeightage}" value="#{lbl['lbl.btn.save']}"
-					update="poUserResultDtTbl" />
-					
-				<p:commandButton id="btnResetValue" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{poTaskWeightageBB.resetPOWeightage}" value="#{lbl['lbl.btn.reset']}"
-					update="poUserResultDtTbl" />
-			</div>
-			</ui:remove>
-					
+	<p:panel header="Result" toggleable="true" id="pnlTaskWeightageResult">			
 			<p:dataTable id="poUserResultDtTbl"
 					value="#{poTaskWeightageBB.managedBean.userLs}" var="poUser">
 				<ac:paginator for="poUserResultDtTbl" />
 				<p:column headerText="#{lbl['lbl.pm.po.task.user.name']}">
-					#{poUser.userName}
+					<h:outputText value="#{poUser.userName}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.pm.po.task.identification.no']}">
-					#{poUser.identificationNo}
+				<p:column headerText="#{lbl['lbl.pm.po.task.identification.no']}1111111111111">
+					<h:outputText value="#{poUser.identificationNo}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.po.task.current.accumulated.weight']}">
-					<p:outputLabel value="#{poUser.pmPoWeightage.accumulatedWeight}"></p:outputLabel>
+					<h:outputText value="#{poUser.pmPoWeightage.accumulatedWeight}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.po.task.new.weight']}">
-					<p:outputLabel value="#{poUser.pmPoWeightage.newWeight}"></p:outputLabel>
+					<h:outputText value="#{poUser.pmPoWeightage.newWeight}" />
 				</p:column>
 
 				<ui:param name="roleTaskLs" value="#{poUser.pmPoRoleTasks}"></ui:param>
 				<p:column headerText="#{lbl['lbl.pm.po.task.supplier.type']}">
 					<ui:repeat var="suppType" value="#{roleTaskLs}">
-						#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,suppType.supplierType)}<br />
+						<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,suppType.supplierType)}" /><br />
 					</ui:repeat>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.pm.po.task.appl.type']}">
 					<ui:repeat var="applType" value="#{roleTaskLs}">
-						#{poTaskWeightageBB.getApplDesc(applType.applType)}<br />
+						<h:outputText value="#{poTaskWeightageBB.getApplDesc(applType.applType)}" /><br />
 					</ui:repeat>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.pm.po.task.category.type']}">
 					<ui:repeat var="category" value="#{roleTaskLs}">
-					<p:outputLabel value="#{lbl['lbl.txt.na']}" rendered="#{empty category.categoryType}" />
-					<p:outputLabel value="#{category.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}" 
+					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty category.categoryType}" />
+					<h:outputText value="#{category.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}" 
 					rendered="#{!empty category.categoryType}"/><br />
 					</ui:repeat>
 				</p:column>
