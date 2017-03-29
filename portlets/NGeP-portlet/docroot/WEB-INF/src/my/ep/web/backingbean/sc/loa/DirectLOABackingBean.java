@@ -4377,7 +4377,7 @@ public class DirectLOABackingBean extends
 			}
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 			// validate spec questions
-			validateSpecMaster();
+			validateSpecQuestions();
 			
 			//gpki for only govt seller
 			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -7373,16 +7373,17 @@ public class DirectLOABackingBean extends
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 	}
 	
-	private void validateSpecMaster(){
+	private void validateSpecQuestions(){
 		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		// product
 		TplSpecMaster  prodMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
-		if(null != prodMaster){
-			getTemplateSpecSO().validateSpecMaster(prodMaster, Boolean.TRUE, Boolean.TRUE, locale);
+		if(CollectionUtils.isNotEmpty(prodMaster.getTplSpecQuestions())){
+			getTemplateSpecSO().validateSpecQuestion(prodMaster.getTplSpecQuestions(), Boolean.TRUE, locale);
 		}
 		// service
 		TplSpecMaster  serviceMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
-		if(null != serviceMaster){
-			getTemplateSpecSO().validateSpecMaster(serviceMaster, Boolean.TRUE, Boolean.TRUE, locale);
+		if(CollectionUtils.isNotEmpty(serviceMaster.getTplSpecQuestions())){
+			getTemplateSpecSO().validateSpecQuestion(serviceMaster.getTplSpecQuestions(), Boolean.TRUE, locale);
 		}
 	}
 }
