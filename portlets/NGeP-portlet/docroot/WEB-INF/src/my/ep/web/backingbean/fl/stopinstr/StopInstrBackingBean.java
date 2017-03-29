@@ -417,7 +417,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
-			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());					
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());	
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
 		else{
@@ -598,7 +599,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
-		
+		orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -700,6 +701,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
 			crBB.getManagedBean().setHyperLinkPage(true);
+			crBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
@@ -753,6 +755,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());					
 			prBB.getManagedBean().setHyperLinkPage(true);
+			prBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());

@@ -3471,6 +3471,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
 			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
 		else{

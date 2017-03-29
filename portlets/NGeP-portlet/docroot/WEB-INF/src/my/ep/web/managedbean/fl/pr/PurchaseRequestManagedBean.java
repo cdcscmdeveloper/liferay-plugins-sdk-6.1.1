@@ -271,6 +271,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private GlAccountSearchBean glAccountSearchBean;
 	private boolean isLazy;	
 	private boolean espkb;
+	private boolean prevHideRemarks;
 	
 /**
  * Gets the charge line item root.
@@ -3182,6 +3183,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setEspkb(boolean espkb) {
 		this.espkb = espkb;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 
 }

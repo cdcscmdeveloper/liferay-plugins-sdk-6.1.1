@@ -87,7 +87,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	private boolean modificationCancel;
 	private boolean docMaintainRemarks = false;
-	private String accountNoName;
 	private FlFulfilmentRequest fulfilmentRequest;
 	
 	//gpki signing
@@ -116,8 +115,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private List<FlDeliveryOrder> delOrderList;
 	
 	private boolean hyperLinkPage = false;
-	
 	private boolean docMaintain = false;
+	private boolean prevHideRemarks = false;
 	
 	private String backToPrevious;
 	private List<FlRemark> previousRemarkList;
@@ -701,24 +700,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the account no name.
-	 *
-	 * @return the accountNoName
-	 */
-	public String getAccountNoName() {
-		return accountNoName;
-	}
-
-	/**
-	 * Sets the account no name.
-	 *
-	 * @param accountNoName the accountNoName to set
-	 */
-	public void setAccountNoName(String accountNoName) {
-		this.accountNoName = accountNoName;
-	}
-	
-	/**
 	 * Gets the pm digi sign.
 	 *
 	 * @return the pm digi sign
@@ -1170,6 +1151,14 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setDanStatusId(Long danStatusId) {
 		this.danStatusId = danStatusId;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 
 }

@@ -150,6 +150,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String buttonVal;
 	private boolean isMto = false;
 	private boolean isImportedItems = false;
+	private boolean prevHideRemarks;
 
 	//get GOSODO
 	private Long goId;
@@ -3057,6 +3058,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setEspkb(boolean espkb) {
 		this.espkb = espkb;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 
 }
