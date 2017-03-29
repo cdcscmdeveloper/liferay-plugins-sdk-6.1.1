@@ -73,7 +73,8 @@
            		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
            		      							  style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract}">
 			 									    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			 		  							  <p:ajax event="change" update=":form:tableAgencyDetails" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}"/> 
+			 		  							  <p:ajax event="change" update=":form:tableAgencyDetails,:form:messages" 
+			 		  							    listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@all" partialSubmit="true"/> 
 				 					    </p:inputText>
 				   								  <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
 				     						   	 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
