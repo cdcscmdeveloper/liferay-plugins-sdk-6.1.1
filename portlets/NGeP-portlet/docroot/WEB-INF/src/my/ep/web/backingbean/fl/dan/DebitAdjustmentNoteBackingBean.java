@@ -302,7 +302,8 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		if(getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
-			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());			
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());	
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
@@ -349,6 +350,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -373,7 +375,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-			
+			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());

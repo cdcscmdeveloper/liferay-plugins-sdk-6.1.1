@@ -829,6 +829,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
 				flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+				flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 				return getManagedBean().getBackToPrevious();
 			}
 			else{
@@ -1025,6 +1026,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 				crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				crBB.getManagedBean().setDeclarationCheck(true);
+				crBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 				ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -1079,6 +1081,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 				prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				prBB.getManagedBean().setDeclarationCheck(true);
+				prBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 				

@@ -56,6 +56,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private List<PmCriteriaDesc> criteriaDescList;
 	private boolean docMaintainRemarks = false;
 	private boolean disableEvaluation = false;
+	private boolean prevHideRemarks;
 	
 	//gpki signing
 	private PmDigiSign pmDigiSign;
@@ -930,6 +931,14 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 
 	public void setRejectionRemarkHistory(List<FlRemark> rejectionRemarkHistory) {
 		this.rejectionRemarkHistory = rejectionRemarkHistory;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 
 }

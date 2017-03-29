@@ -880,6 +880,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
 			doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			doBB.getManagedBean().setHyperLinkPage(true);
+			doBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -899,6 +900,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -962,7 +964,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
-			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());			
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
@@ -1404,6 +1407,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 			crBB.getManagedBean().setHyperLinkPage(true);
+			crBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
@@ -1457,7 +1461,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			FacesContext fc = FacesContext.getCurrentInstance();
 			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
-			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
+			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
+			prBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());

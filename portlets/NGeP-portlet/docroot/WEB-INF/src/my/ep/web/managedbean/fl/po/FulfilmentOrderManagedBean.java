@@ -120,6 +120,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     
     private boolean supplier = false;
     private boolean hyperLinkPage = false;
+    private boolean prevHideRemarks;
     private List<PmUser> approverList;
     
     private boolean gfmasError=false;
@@ -1265,6 +1266,14 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setTotalPendingInvoice(BigDecimal totalPendingInvoice) {
 		this.totalPendingInvoice = totalPendingInvoice;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 
 }

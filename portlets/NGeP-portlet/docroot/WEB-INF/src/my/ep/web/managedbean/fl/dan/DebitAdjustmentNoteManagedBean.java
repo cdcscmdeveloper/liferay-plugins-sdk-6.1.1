@@ -88,6 +88,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private PmDigiSign pmDigiSign;
 	private String buttonAction;
 	private boolean validated = false;
+	private boolean prevHideRemarks;
 	
 	
 	/**
@@ -737,6 +738,14 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 
 	public void setGfmasErrorDesc(String gfmasErrorDesc) {
 		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 	
 }

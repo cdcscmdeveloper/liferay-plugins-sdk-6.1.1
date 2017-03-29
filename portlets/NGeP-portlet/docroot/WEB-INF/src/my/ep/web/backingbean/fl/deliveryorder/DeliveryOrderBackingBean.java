@@ -885,6 +885,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
 			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			if(getManagedBean().isFromDoPage()){
 				FulfilmentOrderBackingBean flOrderBB = new FulfilmentOrderBackingBean();
 				flOrderBB.getManagedBean().getPendingDoDataModel().reloadData();
@@ -1250,7 +1251,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
 		orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 		orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-		
+		orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
