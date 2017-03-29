@@ -15,7 +15,7 @@
 			
 			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				rowIndexVar="indexMain" var="tasks" rows="10"
+				rowIndexVar="indexMain" var="tasks" rows="5"
 				value="#{bulkApplicationBackingBean.managedBean.claimTaskListDataModel}"
 				selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
 				<ac:paginator for="claimTaskListId" />

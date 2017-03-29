@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:dialog width="1200px" header="#{lbl['lbl.sm.reject.application']}"
+		closable="false" id="rejectDialogId" widgetVar="rejectDialog"
+		height="500px" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true">
+		
+		<p:outputPanel layout="block" id="rejectBlockPanel">
+			
+			<p:messages id="rejectMsgId" showDetail="true" autoUpdate="true" 
+				closable="true" showSummary="false"/>
+		
+			<p:blockUI block="rejectBlockPanel" widgetVar="rejectBlockPanelWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			
+			<p:dataTable var="bulk"
+				widgetVar="bulkWidVar"
+				value="#{bulkApplicationBackingBean.managedBean.selectedTasks}"
+				rowKey="#{bulk}" rowIndexVar="index" id="rejectBulkDtId"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<ac:paginator for="rejectBulkDtId" />
+				
+				<p:column style="width : 2%;">
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.application.no']}">
+					<h:outputText value="#{bulk.appl.applNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.remarks.rejection']}">
+					<p:dataTable var="reason" widgetVar="reasonWidgetVar"
+						editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{bulkApplicationBackingBean.managedBean.reasonDescList}"
+						selection="#{bulk.selectedReasonDescs}"
+						rowKey="#{reason}" rowIndexVar="index" id="reasonDtId">
+						
+						<ac:paginator for="reasonDtId" />
+						<p:ajax event="rowSelect" update=":#{p:component('rejectBulkDtId')}" />
+						<p:ajax event="rowUnselect" update=":#{p:component('rejectBlockPanel')}" />
+						<p:ajax event="rowSelectCheckbox" update=":#{p:component('rejectBlockPanel')}" />
+						<p:ajax event="rowUnselectCheckbox" update=":#{p:component('rejectBlockPanel')}" />
+						<p:ajax event="rowDblselect" update=":#{p:component('rejectBlockPanel')}" />
+						
+						<p:column selectionMode="multiple" width="1%" />
+						
+						<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
+							<h:outputText value="#{reason.reasonDesc}" />
+						</p:column>
+						
+					</p:dataTable>
+				</p:column>
+			</p:dataTable>
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+					update="@([id$=Msg])" partialSubmit="true" process="rejectBlockPanel"
+					action="#{bulkApplicationBackingBean.submitReject}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+					action="#{bulkApplicationBackingBean.cancelReject}"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	
+</ui:composition>
