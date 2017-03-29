@@ -15,8 +15,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -915,54 +913,6 @@ public class LocationSingleton {
 			}
 		}
 		return rootNode;
-	}
-
-	/**
-	 * To construct Panel TreeNode
-	 * 
-	 * @param ctPanelZones
-	 * @param panelZoneDtls
-	 * @return TreeNode instance
-	 */
-	public TreeNode constuctPanelTreeNodes(CtPanelZone ctPanelZones,
-			List<CtPanelZoneDtl> panelZoneDtls) {
-		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
-		if (null != ctPanelZones) {
-			// for (CtPanelZone ctPanelZone : ctPanelZones) {
-			TplSpecZoneDtl specZoneDtl = new TplSpecZoneDtl();
-			specZoneDtl.setZoneName(ctPanelZones.getName());
-			specZoneDtl.setPanelZone(ctPanelZones);
-			TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
-					specZoneDtl, root);
-			List<PmState> states = new ArrayList<PmState>();
-
-			TreeNode stateNode = null;
-			// List<CtPanelZoneDtl> panelZoneDtls = ctPanelZones
-			// .getPanelZoneDtls();
-
-			for (CtPanelZoneDtl panelZoneDtl : panelZoneDtls) {
-				TplSpecZoneLoc zoneLoc = new TplSpecZoneLoc();
-				PmState pmState = panelZoneDtl.getStateId();
-
-				if (null != pmState && !states.contains(pmState)) {
-					zoneLoc.setPmState(pmState);
-					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
-							zoneLoc, zoneNode);
-
-				}
-				PmDistrict pmDistrict = panelZoneDtl.getDistrictId();
-				if (pmDistrict != null) {
-					zoneLoc.setPmDistrict(pmDistrict);
-					new DefaultTreeNode(QTConstants.NODE_DISTRICT, zoneLoc,
-							stateNode);
-
-				}
-				states.add(pmState);
-			}
-
-			// }
-		}
-		return root;
 	}
 
 	/**
