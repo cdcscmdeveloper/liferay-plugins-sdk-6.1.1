@@ -1481,7 +1481,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    		}
 	    	}
 			if (ceilingAmt > overallContractAmount) {
-				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
+				agencyData.setCeilingAmount(BigDecimal.valueOf(0.00));
 				CommonUtils commonUtils = new CommonUtils();
 				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
 						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -2823,7 +2823,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 				 
 				  } if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
-						ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0));
+						ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0.00));
 						throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
 				  }
 			 }
