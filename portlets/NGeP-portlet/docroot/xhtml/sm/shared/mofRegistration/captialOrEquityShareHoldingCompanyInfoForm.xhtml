@@ -219,7 +219,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
@@ -236,7 +236,7 @@
 	
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}"
 							size="35" />
 						<ac:smFieldChangeAlert 
@@ -248,7 +248,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}"
 							size="35" />
 						<ac:smFieldChangeAlert 

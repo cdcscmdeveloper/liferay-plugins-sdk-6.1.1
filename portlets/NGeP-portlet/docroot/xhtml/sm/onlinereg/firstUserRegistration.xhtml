@@ -319,7 +319,7 @@
 						
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td class="tdContent"><p:inputText size="40" maxlength="35"
+					<td class="tdContent"><p:inputText size="40" maxlength="100"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
@@ -353,7 +353,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}"
-							id="txtPermAdd2" maxlength="35" /></td>
+							id="txtPermAdd2" maxlength="100" /></td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
@@ -375,7 +375,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
-							id="txtPermAdd3" maxlength="35" /></td>
+							id="txtPermAdd3" maxlength="100" /></td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.district']}" />

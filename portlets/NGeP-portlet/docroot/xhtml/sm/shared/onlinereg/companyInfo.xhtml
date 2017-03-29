@@ -243,7 +243,7 @@
 				</td>
 				<td class="tdContent" >
 					<p:inputText size="40"
-						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="35"
+						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="100"
 						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}">
 						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
@@ -274,7 +274,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd2" maxlength="35" disabled="#{registrationBackingBean.managedBean.viewMode}"
+						id="compAdd2" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" /></td>
 
 				<td class="tdTitle">
@@ -298,7 +298,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd3" maxlength="35" disabled="#{registrationBackingBean.managedBean.viewMode}"
+						id="compAdd3" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}" /></td>
 
 				<td class="tdTitle">
