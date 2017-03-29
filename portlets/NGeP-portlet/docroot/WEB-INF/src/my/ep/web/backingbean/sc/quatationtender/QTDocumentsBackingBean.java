@@ -1075,6 +1075,8 @@ public class QTDocumentsBackingBean extends
 				.getScQtDocReportList();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		for (int i = 0; i < scQtDocReports.size(); i++) {
+			
+			ScQtDocReport docReports = scQtDocReports.get(i);
 			ScQtDocReportAttachment attachment = scQtDocReports.get(i)
 					.getScQtDocReportAttachment();
 			if (attachment == null) {
@@ -1082,6 +1084,16 @@ public class QTDocumentsBackingBean extends
 				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
 			}
 			
+			String docDefinitionKey = docReports.getPmDocument().getDocDefinitionKey();
+					
+			if (attachment != null && SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
+					.equals(docDefinitionKey)) {
+				String custFileName = getDocTitleAsFileName((i + 1),
+						docReports.getTitle(), attachment.getFilePath());
+				if (custFileName != null) {
+					attachment.setFileName(custFileName);
+				}
+			}
 			scAttachments.add(attachment);
 		}
 		downloadAllFiles("NGeP-QT-Report", scAttachments);

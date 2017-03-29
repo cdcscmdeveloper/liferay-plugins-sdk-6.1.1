@@ -2802,4 +2802,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return nonRecommendedStatuses;
 	}
+	
+	/**
+	 * Get file name as doc title with actual file type.
+	 * 
+	 * @param increment
+	 * @param docTitle
+	 * @param filePath
+	 * @return fileName
+	 */
+	protected String getDocTitleAsFileName(int increment, String docTitle, String filePath) {
+
+		String fileName = null;
+		if (filePath != null) {
+			StringBuilder builder = new StringBuilder();
+			String number = (String) (increment <= 9 ? "0" + (increment)
+					: Integer.toString(increment));
+			builder.append(number).append("_").append(docTitle);
+			String[] splitFile = filePath.split("\\.");
+			if (splitFile.length > 0) {
+				builder.append(".").append(splitFile[1]);
+			}
+			fileName = builder.toString();
+		}
+		return fileName;
+	}
 }
