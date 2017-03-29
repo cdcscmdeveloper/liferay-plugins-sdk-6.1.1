@@ -85,16 +85,9 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 				if (responseDTO.getWorklistVO() != null) {
 					if (responseDTO.getWorklistVO().getWorklistItem() != null) {
-						log.info(">>>>>>>>>>>>>>>>WORKLIST CLAIM SIZE:"
-								+ responseDTO.getWorklistVO().getWorklistItem()
-										.size());
 						SmBulkApplicationVO bulkAppl = null;
 						for (WorklistItemVO worklistItemVO : responseDTO
 								.getWorklistVO().getWorklistItem()) {
-							log.info(">>>>>>>>>APPLNO:"
-									+ worklistItemVO.getDocNumber()
-									+ "] ISCLAIM:" + worklistItemVO.isClaimed()
-									+ " TITLE:" + worklistItemVO.getTitle());
 							if (worklistItemVO.isClaimed()) {
 								bulkAppl = getBulkApplicationVO(worklistItemVO);
 								if (bulkAppl != null) {
@@ -105,7 +98,8 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 						}
 					}
 
-					resultBean.setTotalRecord(smApplicationTaskList.size());
+					resultBean.setTotalRecord(responseDTO.getWorklistVO()
+							.getTotal());
 					resultBean.setResultList(smApplicationTaskList);
 				} else {
 					resultBean.setTotalRecord(0);
@@ -144,16 +138,9 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 				if (responseDTO.getWorklistVO() != null) {
 					if (responseDTO.getWorklistVO().getWorklistItem() != null) {
-						log.info(">>>>>>>>>>>>>>>>WORKLIST UNCLAIM SIZE:"
-								+ responseDTO.getWorklistVO().getWorklistItem()
-										.size());
 						SmBulkApplicationVO bulkAppl = null;
 						for (WorklistItemVO worklistItemVO : responseDTO
 								.getWorklistVO().getWorklistItem()) {
-							log.info(">>>>>>>>>APPLNO:"
-									+ worklistItemVO.getDocNumber()
-									+ "] ISCLAIM:" + worklistItemVO.isClaimed()
-									+ " TITLE:" + worklistItemVO.getTitle());
 							if (!worklistItemVO.isClaimed()) {
 								bulkAppl = getBulkApplicationVO(worklistItemVO);
 								if (bulkAppl != null) {
@@ -164,7 +151,8 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 						}
 					}
 
-					resultBean.setTotalRecord(smApplicationTaskList.size());
+					resultBean.setTotalRecord(responseDTO.getWorklistVO()
+							.getTotal());
 					resultBean.setResultList(smApplicationTaskList);
 				} else {
 					resultBean.setTotalRecord(0);
@@ -188,6 +176,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 		reqDTO.setViewBy(getViewBy());
 		reqDTO.setAssignment(getAssignment());
 		reqDTO.setCtxToken(token);
+		reqDTO.setDocType("SR");
 		return reqDTO;
 	}
 
