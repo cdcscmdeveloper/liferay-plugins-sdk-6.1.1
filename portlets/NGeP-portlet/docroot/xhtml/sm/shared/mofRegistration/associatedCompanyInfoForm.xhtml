@@ -200,7 +200,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.companyaddress']}" id="assocCompCmpAddr"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
@@ -218,7 +218,7 @@
 	
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}"
 							size="35" />
 						<ac:smFieldChangeAlert 
@@ -231,7 +231,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}"
 							size="35" />
 						<ac:smFieldChangeAlert 

@@ -222,7 +222,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
 								style="padding-top :5px;" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
-						<td><p:inputText id="companyAdd1" size="35" maxlength="35"
+						<td><p:inputText id="companyAdd1" size="35" maxlength="100"
 								required="true" label="#{lbl['lbl.sm.companyaddress']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" >
 								<p:ajax partialSubmit="true" process="@this" />
@@ -262,7 +262,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="35"
+						<td><p:inputText size="35" maxlength="100"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" >
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
@@ -301,7 +301,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="35"
+						<td><p:inputText size="35" maxlength="100"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
 							
 							<ac:smFieldChangeAlert 

@@ -74,7 +74,7 @@
 			<tr>
 				<td class="tdTitle"></td>
 				<td class="tdContent" ><p:inputText size="40"
-						id="conAddress1" maxlength="35"
+						id="conAddress1" maxlength="100"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.correspondenceadd']}"
 						value="#{registrationBackingBean.managedBean.smResAdd.address1}"
@@ -105,7 +105,7 @@
 			<tr>
 				<td class="tdTitle"></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="conAddress2" maxlength="35"
+						id="conAddress2" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smResAdd.address2}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 
@@ -132,7 +132,7 @@
 			<tr>
 				<td class="tdTitle"></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="conAddress3" maxlength="35"
+						id="conAddress3" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smResAdd.address3}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 

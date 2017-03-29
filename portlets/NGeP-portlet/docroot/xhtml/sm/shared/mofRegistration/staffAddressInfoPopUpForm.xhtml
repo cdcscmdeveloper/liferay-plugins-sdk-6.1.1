@@ -20,7 +20,7 @@
 							<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
 									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
 							<td><p:inputText id="staffEquiPersPermAddrLine" 
-									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.address']}" maxlength="35"
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.address']}" maxlength="100"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}"
 									size="35">
 									<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
@@ -37,7 +37,7 @@
 
 						<tr>
 							<td></td>
-							<td><p:inputText maxlength="35"
+							<td><p:inputText maxlength="100"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"
 									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
@@ -52,7 +52,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText maxlength="35"
+							<td><p:inputText maxlength="100"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"
 									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
@@ -241,7 +241,7 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
 										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-								<td><p:inputText id="staffEquiPersMailAddrLine" maxlength="35" 
+								<td><p:inputText id="staffEquiPersMailAddrLine" maxlength="100" 
 										label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.address']}"
 										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
@@ -261,7 +261,7 @@
 
 							<tr>
 								<td></td>
-								<td><p:inputText maxlength="35"
+								<td><p:inputText maxlength="100"
 										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
@@ -278,7 +278,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputText maxlength="35"
+								<td><p:inputText maxlength="100"
 										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"

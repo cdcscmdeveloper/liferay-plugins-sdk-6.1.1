@@ -55,7 +55,7 @@
 		</td>
 		<td>
 			<p:outputPanel id="addr1InputId">
-				<p:inputText maxlength="35" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+				<p:inputText maxlength="100" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
 					value="#{cc.attrs.facility.smAddress.address1}" size="35" /> 
 				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" />
@@ -67,7 +67,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr2InputId">
-				<p:inputText maxlength="35" value="#{cc.attrs.facility.smAddress.address2}" size="35" />
+				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address2}" size="35" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -75,7 +75,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr3InputId">
-				<p:inputText maxlength="35" value="#{cc.attrs.facility.smAddress.address3}" size="35" />
+				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address3}" size="35" />
 			</p:outputPanel>
 		</td>
 	</tr>

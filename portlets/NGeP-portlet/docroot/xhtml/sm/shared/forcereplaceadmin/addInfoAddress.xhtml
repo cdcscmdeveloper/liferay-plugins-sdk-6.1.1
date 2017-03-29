@@ -21,7 +21,7 @@
 										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 										styleClass="mandatory" /></td>
 								<td ><p:inputText
-										maxlength="35" required="true" id="permAdd1"
+										maxlength="100" required="true" id="permAdd1"
 										label="#{lbl['lbl.sm.address']}"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address1}"
 										size="35" />
@@ -31,14 +31,14 @@
 							<tr>
 								<td></td>
 								<td ><p:inputText
-										maxlength="35"
+										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address2}"
 										size="35" /></td>
 							</tr>
 							<tr>
 								<td></td>
 								<td ><p:inputText
-										maxlength="35"
+										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address3}"
 										size="35" /></td>
 							</tr>
@@ -175,7 +175,7 @@
 										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 										styleClass="mandatory" /></td>
 								<td  ><p:inputText
-										maxlength="35" label="#{lbl['lbl.sm.address']}"
+										maxlength="100" label="#{lbl['lbl.sm.address']}"
 										id="mailAdd1"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.address1}"
 										size="35"
@@ -188,7 +188,7 @@
 							<tr>
 								<td></td>
 								<td  ><p:inputText
-										maxlength="35"
+										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.address2}"
 										size="35"
 										readonly="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
@@ -197,7 +197,7 @@
 							<tr>
 								<td></td>
 								<td  ><p:inputText
-										maxlength="35"
+										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.address3}"
 										size="35"
 										readonly="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
