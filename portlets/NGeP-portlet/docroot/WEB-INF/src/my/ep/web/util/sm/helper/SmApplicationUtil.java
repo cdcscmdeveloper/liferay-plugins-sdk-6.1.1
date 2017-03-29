@@ -76,6 +76,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -2641,6 +2642,8 @@ public class SmApplicationUtil {
 					+ System.lineSeparator()
 					+ System.lineSeparator()
 					+ getOverlappedCategoryRemarks(resultList));
+			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
+					resultList, smAppl.getSupplierType()));
 		}
 		return retVal;
 	}
@@ -2738,6 +2741,109 @@ public class SmApplicationUtil {
 			}
 		}
 		return msg.toString();
+	}
+
+	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(
+			List<Object[]> resultList, String suppType) {
+		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
+
+		if (!EntityHelper.isCollectionEmpty(resultList)) {
+			SmBulkApplOverlapCatVO voTmp = null;
+			SmBulkApplOverlapCatVO voSubTmp = null;
+			String catCode = StringUtils.EMPTY;
+			boolean isNew = false;
+			for (Object[] arr : resultList) {
+				catCode = arr[0] + "" + arr[1] + arr[2] + "";
+				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
+						.getEntityBySinglePropertyFromList(catCode, retVal,
+								"categoryCode");
+				if (voTmp == null) {
+					voTmp = new SmBulkApplOverlapCatVO();
+					voTmp.setCategoryCode(catCode);
+					voTmp.setCategoryName("(" + arr[17] + "/" + arr[18] + "/"
+							+ arr[19] + ")");
+					isNew = true;
+				}
+
+				if (EntityHelper.isCollectionEmpty(voTmp.getOverlapInfoList())) {
+					voTmp.setOverlapInfoList(new ArrayList<SmBulkApplOverlapCatVO>());
+				}
+
+				voSubTmp = new SmBulkApplOverlapCatVO();
+				voSubTmp.setPersonnelName(arr[3] + "");
+				voSubTmp.setIdentificationNo(arr[16] + "");
+				voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "", arr[11]
+						+ "", arr[15] + "", arr[12] + "", arr[13] + "", arr[14]
+						+ "", suppType));
+				voSubTmp.setCompanyName(arr[4] + "");
+				voSubTmp.setMofNo(arr[5] + "");
+				if (StringUtils.isBlank(voSubTmp.getMofNo())) {
+					voSubTmp.setMofNo(SmCommonUtil.getMessage("lbl.txt.na",
+							null));
+				}
+				voSubTmp.setExpDate(arr[6] + "");
+				if (StringUtils.isBlank(voSubTmp.getExpDate())) {
+					voSubTmp.setExpDate(SmCommonUtil.getMessage("lbl.txt.na",
+							null));
+				}
+				voSubTmp.setRegNo(arr[7] + "");
+				voSubTmp.setApplNo(arr[8] + "");
+				voTmp.getOverlapInfoList().add(voSubTmp);
+
+				if (isNew) {
+					retVal.add(voTmp);
+					isNew = false;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	private static String getRoleName(String equityOwner, String director,
+			String higherManagement, String clerical, String management,
+			String prof, String semiProf, String suppType) {
+		StringBuilder sb = new StringBuilder();
+		if (equityOwner.equals("1")) {
+			sb.append(SmCommonUtil.getMessage(
+					SupplierManagementConst.PERSONNEL_EQUI_OWNER, null));
+		}
+		if (director.equals("1")) {
+			sb.append(SmCommonUtil.getMessage(
+					SupplierManagementConst.PERSONNEL_DIR_ROLENAME, null));
+		}
+		if (higherManagement.equals("1")) {
+			sb.append(SmCommonUtil.getMessage(
+					SupplierManagementConst.PERSONNEL_HGHR_ROLENAME, null));
+		}
+		if (management.equals("1")) {
+			sb.append(SmCommonUtil
+					.getMessage(
+							SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+							null));
+		}
+		if (clerical.equals("1")) {
+			if (suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+				sb.append(SmCommonUtil
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+								null));
+			} else {
+				sb.append(SmCommonUtil.getMessage(
+						SupplierManagementConst.PERSONNEL_STAFF_ROLENAME, null));
+			}
+		}
+		if (prof.equals("1")) {
+			sb.append(SmCommonUtil
+					.getMessage(
+							SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+							null));
+		}
+		if (semiProf.equals("1")) {
+			sb.append(SmCommonUtil.getMessage(
+					SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+					null));
+		}
+		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
 	}
 
 	/**
@@ -11147,6 +11253,22 @@ public class SmApplicationUtil {
 			}
 		}
 		return valid;
+	}
+
+	/**
+	 * Get the payment mode i.e. to determine if payment required.
+	 * 
+	 * @return true, if successful
+	 */
+	public static boolean getPaymentMode(SmAppl smAppl) {
+		boolean payReq = false;
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			payReq = true;
+		}
+		return payReq;
 	}
 
 	/**

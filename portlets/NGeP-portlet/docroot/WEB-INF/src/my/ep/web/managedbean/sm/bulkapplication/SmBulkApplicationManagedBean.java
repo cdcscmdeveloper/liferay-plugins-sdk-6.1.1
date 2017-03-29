@@ -1,7 +1,6 @@
 package my.ep.web.managedbean.sm.bulkapplication;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,11 +13,13 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.BpmConstants;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
@@ -34,13 +35,14 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
+import org.apache.log4j.Logger;
+
 @ManagedBean(name = "bulkApplicationMB")
 @SessionScoped
 public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
+	private static Logger log = Logger
+			.getLogger(SmBulkApplicationManagedBean.class);
 	private static final long serialVersionUID = -7139722023908927672L;
 	private List<WorklistItemVO> taskList;
 	private String viewBy = "ALL";
@@ -53,8 +55,11 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private List<SmBulkApplicationVO> initSelectedTasks;
 	private List<PmStatusDesc> regStatusDescList;
 	private List<SmAppl> failedSubmittedList;
+	private List<SmBulkApplOverlapCatVO> selectedOverlapCategoryVOList;
+	private List<PmReasonDesc> reasonDescList;
 	private String maxBulkApprovalMsg;
 	private int maxBulkApprovalCount;
+	private String page;
 
 	private class ClaimTaskPagingDataModel extends
 			PagingDataModel<SmBulkApplicationVO> {
@@ -73,15 +78,23 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 				BpmRequestDTO reqDTO = getBpmReqDTO();
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				BpmResponseDTO responseDTO = SmServiceLookup.getBpmSO()
 						.getWorklistItems(reqDTO);
 				SearchResultBean<SmBulkApplicationVO> resultBean = new SearchResultBean<SmBulkApplicationVO>();
 
 				if (responseDTO.getWorklistVO() != null) {
 					if (responseDTO.getWorklistVO().getWorklistItem() != null) {
+						log.info(">>>>>>>>>>>>>>>>WORKLIST CLAIM SIZE:"
+								+ responseDTO.getWorklistVO().getWorklistItem()
+										.size());
 						SmBulkApplicationVO bulkAppl = null;
 						for (WorklistItemVO worklistItemVO : responseDTO
 								.getWorklistVO().getWorklistItem()) {
+							log.info(">>>>>>>>>APPLNO:"
+									+ worklistItemVO.getDocNumber()
+									+ "] ISCLAIM:" + worklistItemVO.isClaimed()
+									+ " TITLE:" + worklistItemVO.getTitle());
 							if (worklistItemVO.isClaimed()) {
 								bulkAppl = getBulkApplicationVO(worklistItemVO);
 								if (bulkAppl != null) {
@@ -122,6 +135,8 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 			try {
 
 				BpmRequestDTO reqDTO = getBpmReqDTO();
+				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
+				reqDTO.setIsClaimed(false);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				BpmResponseDTO responseDTO = SmServiceLookup.getBpmSO()
 						.getWorklistItems(reqDTO);
@@ -129,9 +144,16 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 				if (responseDTO.getWorklistVO() != null) {
 					if (responseDTO.getWorklistVO().getWorklistItem() != null) {
+						log.info(">>>>>>>>>>>>>>>>WORKLIST UNCLAIM SIZE:"
+								+ responseDTO.getWorklistVO().getWorklistItem()
+										.size());
 						SmBulkApplicationVO bulkAppl = null;
 						for (WorklistItemVO worklistItemVO : responseDTO
 								.getWorklistVO().getWorklistItem()) {
+							log.info(">>>>>>>>>APPLNO:"
+									+ worklistItemVO.getDocNumber()
+									+ "] ISCLAIM:" + worklistItemVO.isClaimed()
+									+ " TITLE:" + worklistItemVO.getTitle());
 							if (!worklistItemVO.isClaimed()) {
 								bulkAppl = getBulkApplicationVO(worklistItemVO);
 								if (bulkAppl != null) {
@@ -227,15 +249,22 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 						.getPmStatus().getStatusId());
 				bulkApplicationVO.setCurrRegStatus(currentStatusDesc
 						.getStatusName());
-				SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
-						.getOverlapCategoryVO(appl);
-				if (overlapCategoryVO != null) {
-					bulkApplicationVO.setOverlappedCategory(overlapCategoryVO
-							.isOverLappedCategoryExist());
-					bulkApplicationVO.setOverlapRemarks(overlapCategoryVO
-							.getOverLappedCategoryRemarks());
-					bulkApplicationVO.setOverlapMsg(overlapCategoryVO
-							.getOverLappedCategoryMsg());
+				SmOverlapCategoryVO overlapCategoryVO = null;
+				if (appl != null
+						&& appl.getApplType().equals(
+								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+					overlapCategoryVO = SmApplicationUtil
+							.getOverlapCategoryVO(appl);
+					if (overlapCategoryVO != null) {
+						bulkApplicationVO
+								.setOverlappedCategory(overlapCategoryVO
+										.isOverLappedCategoryExist());
+						bulkApplicationVO.setOverlapMsg(overlapCategoryVO
+								.getOverLappedCategoryMsg());
+						bulkApplicationVO
+								.setOverlapCategoryVOList(overlapCategoryVO
+										.getOverlapCategoryVOList());
+					}
 				}
 				PmState state = appl.getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress()
@@ -387,5 +416,30 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 	public void setMaxBulkApprovalMsg(String maxBulkApprovalMsg) {
 		this.maxBulkApprovalMsg = maxBulkApprovalMsg;
+	}
+
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
+	public List<SmBulkApplOverlapCatVO> getSelectedOverlapCategoryVOList() {
+		return selectedOverlapCategoryVOList;
+	}
+
+	public void setSelectedOverlapCategoryVOList(
+			List<SmBulkApplOverlapCatVO> selectedOverlapCategoryVOList) {
+		this.selectedOverlapCategoryVOList = selectedOverlapCategoryVOList;
+	}
+
+	public List<PmReasonDesc> getReasonDescList() {
+		return reasonDescList;
+	}
+
+	public void setReasonDescList(List<PmReasonDesc> reasonDescList) {
+		this.reasonDescList = reasonDescList;
 	}
 }
