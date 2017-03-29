@@ -255,7 +255,7 @@
 						</c:choose>
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td class="tdContent"><p:inputText size="40" maxlength="35"
+					<td class="tdContent"><p:inputText size="40" maxlength="100"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{bb.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
@@ -287,7 +287,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{bb.managedBean.smPermenantAdd.address2}"
-							id="txtPermAdd2" maxlength="35" /></td>
+							id="txtPermAdd2" maxlength="100" /></td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
@@ -308,7 +308,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{bb.managedBean.smPermenantAdd.address3}"
-							id="txtPermAdd3" maxlength="35" /></td>
+							id="txtPermAdd3" maxlength="100" /></td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.district']}" />
@@ -457,7 +457,7 @@
 						<tr>
 							<td class="tdTitle"></td>
 							<td class="tdContent" ><p:inputText size="40"
-									id="conAddress1" maxlength="35"
+									id="conAddress1" maxlength="100"
 									required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.correspondenceadd']}"
 									value="#{bb.managedBean.smResAdd.address1}"
@@ -487,7 +487,7 @@
 						<tr>
 							<td class="tdTitle"></td>
 							<td class="tdContent"><p:inputText size="40"
-									id="conAddress2" maxlength="35"
+									id="conAddress2" maxlength="100"
 									value="#{bb.managedBean.smResAdd.address2}"
 									disabled="#{bb.managedBean.sameAddress}" /></td>
 			
@@ -513,7 +513,7 @@
 						<tr>
 							<td class="tdTitle"></td>
 							<td class="tdContent"><p:inputText size="40"
-									id="conAddress3" maxlength="35"
+									id="conAddress3" maxlength="100"
 									value="#{bb.managedBean.smResAdd.address3}"
 									disabled="#{bb.managedBean.sameAddress}" /></td>
 			

@@ -130,7 +130,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.companyaddress']}" id="supBrnAddr"
-							maxlength="35"
+							maxlength="100"
 							value="#{bb.managedBean.selectedBranch.smAddress.address1}"
 							size="35" >
 							<p:ajax process="@this" partialSubmit="true"/>
@@ -141,7 +141,7 @@
 		
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{bb.managedBean.selectedBranch.smAddress.address2}"
 							size="35" >
 							<p:ajax process="@this" partialSubmit="true"/>
@@ -150,7 +150,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText maxlength="35"
+					<td><p:inputText maxlength="100"
 							value="#{bb.managedBean.selectedBranch.smAddress.address3}"
 							size="35" >
 							<p:ajax process="@this" partialSubmit="true"/>
