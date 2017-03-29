@@ -60,6 +60,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private boolean hyperLinkPage = false;
     private boolean issuanceCogstrCheck;
     private boolean coGstr;
+    private boolean prevHideRemarks;
     
 	/**
 	 * Gets the reason descs.
@@ -375,6 +376,14 @@ public class StopInstrManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorCode(String gfmasErrorCode) {
 		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 
 }

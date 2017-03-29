@@ -1501,7 +1501,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}else if(getManagedBean().isHyperLinkPage()){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
-			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());					
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToPrevious();
 		} else {
 			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
@@ -1747,7 +1748,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					orderBackingBean.getManagedBean().setFactoringCheck("false");
 				}
 				orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
-			
+				orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -2064,6 +2065,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 				doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				doBB.getManagedBean().setHyperLinkPage(true);
+				doBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -2113,6 +2115,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		recNoteBB.getManagedBean().setAcknowledged(true);
 		recNoteBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		recNoteBB.getManagedBean().setHyperLinkPage(true);
+		recNoteBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());

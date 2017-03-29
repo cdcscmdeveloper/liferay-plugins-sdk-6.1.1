@@ -79,6 +79,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String fromPageUrl;
 	private boolean fromDoPage;
 	private boolean fromDoDashboardPage;
+	private boolean prevHideRemarks;
 	//gpki signing
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate = true;
@@ -1228,6 +1229,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierUserName(String supplierUserName) {
 		this.supplierUserName = supplierUserName;
+	}
+
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
 	}
 	
 }
