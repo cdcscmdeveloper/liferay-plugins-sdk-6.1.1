@@ -1440,6 +1440,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					}
 				}
 			}
+			crBB.setFulfilmentItemAddr(crBB.getManagedBean().getFlRequest());
+			
 			return NAV_CR;
 		}if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
