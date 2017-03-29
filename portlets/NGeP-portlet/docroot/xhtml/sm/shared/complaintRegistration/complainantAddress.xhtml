@@ -38,7 +38,7 @@
 				required="#{!empty param['disableValidation']}"
 				label="#{lbl['lbl.sm.address']}" id="identAddress"
 				value="#{complaintBackingBean.managedBean.identificationAddress.smAddress.address1}"
-				maxlength="255" readonly="#{complainantDtlViewFLag}" /> <p:message
+				maxlength="100" readonly="#{complainantDtlViewFLag}" /> <p:message
 				id="identAddressMsg" for="identAddress" display="icon" /></td>
 				
 		<td class="tdTitle"><p:outputLabel
@@ -48,7 +48,7 @@
 				required="#{!empty param['disableValidation']}" disabled="#{complaintBackingBean.managedBean.sameAddress}"
 				label="#{lbl['lbl.sm.address']}" id="mailingAddress"
 				value="#{complaintBackingBean.managedBean.mailingAddress.smAddress.address1}"
-				maxlength="255" readonly="#{complainantDtlViewFLag}" /> <p:message
+				maxlength="100" readonly="#{complainantDtlViewFLag}" /> <p:message
 				id="mailingAddressMsg" for="mailingAddress" display="icon" /></td>
 	</tr>
 
@@ -57,24 +57,24 @@
 		<td class="tdContent"><p:inputText size="50" colspan="3"
 				readonly="#{complainantDtlViewFLag}"
 				value="#{complaintBackingBean.managedBean.identificationAddress.smAddress.address2}"
-				maxlength="255" /></td>
+				maxlength="100" /></td>
 				
 		<td class="tdTitle"></td>
 		<td class="tdContent"><p:inputText size="50" colspan="3"
 				readonly="#{complainantDtlViewFLag}" disabled="#{complaintBackingBean.managedBean.sameAddress}"
 				value="#{complaintBackingBean.managedBean.mailingAddress.smAddress.address2}"
-				maxlength="255" /></td>
+				maxlength="100" /></td>
 	</tr>
 
 	<tr>
 		<td class="tdTitle"></td>
 		<td class="tdContent"><p:inputText size="50" colspan="3"
-				maxlength="255" readonly="#{complainantDtlViewFLag}"
+				maxlength="100" readonly="#{complainantDtlViewFLag}"
 				value="#{complaintBackingBean.managedBean.identificationAddress.smAddress.address3}" /></td>
 		
 		<td class="tdTitle"></td>
 		<td class="tdContent"><p:inputText size="50" colspan="3"
-				maxlength="255" readonly="#{complainantDtlViewFLag}" disabled="#{complaintBackingBean.managedBean.sameAddress}"
+				maxlength="100" readonly="#{complainantDtlViewFLag}" disabled="#{complaintBackingBean.managedBean.sameAddress}"
 				value="#{complaintBackingBean.managedBean.mailingAddress.smAddress.address3}" /></td>
 	</tr>
 	<tr>
