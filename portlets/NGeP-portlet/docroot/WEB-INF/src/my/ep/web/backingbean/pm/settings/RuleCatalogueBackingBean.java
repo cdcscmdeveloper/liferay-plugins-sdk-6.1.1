@@ -2965,7 +2965,7 @@ public class RuleCatalogueBackingBean extends
 				&& !configRuleType.getConfigRuleValues().get(markIndex)
 						.getRuleValue().isEmpty()) {
 			ruleValue.setFromValue(configRuleType.getConfigRuleValues()
-					.get(markIndex).getToValue().add(new BigDecimal(1)));
+					.get(markIndex).getToValue().add(new BigDecimal(0.01)));
 			ruleValue.setRuleType(configRuleType);
 			configRuleType.getConfigRuleValues().add(markIndex + 1, ruleValue);
 		} else {
@@ -3006,7 +3006,7 @@ public class RuleCatalogueBackingBean extends
 					configRuleType.getConfigRuleValues().get(index)
 							.getGroupValueId())) {
 				rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-						.get(index).getToValue().add(new BigDecimal(1)));
+						.get(index).getToValue().add(new BigDecimal(0.01)));
 			}
 		}
 
