@@ -46,7 +46,6 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 	public static Logger log = Logger.getLogger(POTaskWeightageBackingBean.class);
 	private static final String PO_TASK_WEIGHTAGE_MAIN = "/xhtml/pm/potaskweightage/poTaskWeightageMain.xhtml";
 	private static final String PO_TASK_WEIGHTAGE_DTL = "/xhtml/pm/potaskweightage/poTaskWeightageDtl.xhtml";
-	private static final String PO_TASK_TEST = "/xhtml/pm/potaskweightage/test.xhtml";
 	
 	/**
 	 * PreRender of POTaskWeightage
@@ -67,7 +66,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		}
 		prepareApplSelectionList();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PO_TASK_TEST);
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PO_TASK_WEIGHTAGE_MAIN);
 	}
 	
 	public String editUser(PmUser poUser){
@@ -96,13 +95,6 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		roleTask.setPmUser(getManagedBean().getSelectedUser());
 		roleTask.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 		getManagedBean().setSelectedRoleTask(roleTask);
-	}
-	
-	public void test(){
-		log.info("**********POTaskWeightageBackingBean Test - start**********");
-		retrievePOUsers();
-		
-		log.info("**********POTaskWeightageBackingBean Test - end**********");
 	}
 	
 /*	public void saveRoleTask(){
