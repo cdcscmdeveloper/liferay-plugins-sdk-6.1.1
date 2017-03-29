@@ -4284,6 +4284,15 @@ public class SPDetailBackingBean extends
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
+				String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
+						
+				if(SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE.equals(docDefinitionKey)){
+					String custFileName = getFileName((scQtDocReports.indexOf(scQtDocReport) + 1),
+							scQtDocReport.getTitle(), attachment.getFilePath());
+					if (custFileName != null) {
+						attachment.setFileName(custFileName);
+					}
+				}
 				scAttachments.add(attachment);
 			}
 			if (!scAttachments.isEmpty()) {
@@ -4386,5 +4395,22 @@ public class SPDetailBackingBean extends
 						.toComparison();
 			}
 		});
+	}
+	
+	private String getFileName(int increment, String title,String filePath) {
+		
+		String fileName = null;
+		if (filePath != null) {
+			StringBuilder builder = new StringBuilder();
+			String number = (String) (increment <= 9 ? "0" + (increment)
+					: Integer.toString(increment));
+			builder.append(number).append("_").append(title);
+			String[] splitFile = filePath.split("\\.");
+			if (splitFile.length > 0) {
+				builder.append(".").append(splitFile[1]);
+			}
+			fileName = builder.toString();
+		}
+		return fileName;
 	}
 }
