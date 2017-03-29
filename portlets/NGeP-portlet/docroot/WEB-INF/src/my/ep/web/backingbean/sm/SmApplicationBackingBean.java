@@ -7682,7 +7682,10 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getApplnRejectionRemarks());
 			}
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
-					getManagedBean(), reqDTO);
+					getManagedBean().getSmAppl(), getManagedBean()
+							.getBasicInfo().getMofNo(), getManagedBean()
+							.getApplnRejectionRemarks(), getManagedBean()
+							.getSmSupplier(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
@@ -7714,7 +7717,8 @@ public class SmApplicationBackingBean extends
 					}
 
 				}
-				reqDTO.setPaymentReqd(setPaymentMode());
+				reqDTO.setPaymentReqd(SmApplicationUtil
+						.getPaymentMode(getManagedBean().getSmAppl()));
 			}
 
 			// approve categories

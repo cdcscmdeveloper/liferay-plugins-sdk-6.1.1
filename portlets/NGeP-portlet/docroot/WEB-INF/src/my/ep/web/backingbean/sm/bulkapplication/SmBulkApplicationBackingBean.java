@@ -11,14 +11,22 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.bulkapplication.SmBulkApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.StatusHelper;
@@ -29,6 +37,7 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "bulkApplicationBackingBean")
 @RequestScoped
@@ -54,17 +63,22 @@ public class SmBulkApplicationBackingBean extends
 				SmCommonUtil.getMessage("lbl.sm.bulk.max.application",
 						new String[] { getManagedBean()
 								.getMaxBulkApprovalCount() + "" }));
+		getManagedBean()
+				.setReasonDescList(
+						SmApplicationUtil
+								.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
+										.value()));
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",
-				null);
+				null, null);
 	}
 
 	public void approveBulkApplication() {
-		if (getManagedBean().getSelectedTasks() != null
-				&& !getManagedBean().getSelectedTasks().isEmpty()) {
+		if (!EntityHelper
+				.isCollectionEmpty(getManagedBean().getSelectedTasks())) {
+			validateOverlapRemarks();
 			FacesScopes fs = new FacesScopes();
-			ReviewApplicationReqDTO reviewAppReqDTO = null;
-
+			ReviewApplicationReqDTO reqDTO = null;
 			String basePortalUrl = SmCommonUtil.getBasePortalUrl();
 			List<SmAppl> successSubmittedList = new ArrayList<SmAppl>();
 			getManagedBean().setFailedSubmittedList(new ArrayList<SmAppl>());
@@ -124,11 +138,18 @@ public class SmBulkApplicationBackingBean extends
 										ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
 										bulkAppl.getOverlapRemarks());
 					}
-					reviewAppReqDTO = getReviewApplicationReqDTO(fs,
-							basePortalUrl, bulkAppl);
+
+					reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
+							bulkAppl, "APPROVE");
+
+					SmApplicationNotificationUtil
+							.setApprovalNotificationParameters(bulkAppl
+									.getAppl(), null, false, bulkAppl.getAppl()
+									.getSmSupplier(), null, null, reqDTO);
 
 					SmServiceLookup.getReviewApplicationSO()
-							.submitPOorApproverReviewToBPM(reviewAppReqDTO);
+							.submitPOorApproverReviewToBPM(reqDTO);
+
 					successSubmittedList.add(bulkAppl.getAppl());
 
 					refreshTaskList();
@@ -139,8 +160,71 @@ public class SmBulkApplicationBackingBean extends
 				}
 
 			}
-			showSuccessApplicationMsg(successSubmittedList);
+			showSuccessApplicationMsg(successSubmittedList, "APPROVE");
 		}
+	}
+
+	public void rejectBulkApplication() {
+		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+	}
+
+	public void submitReject() {
+		FacesScopes fs = new FacesScopes();
+		String basePortalUrl = SmCommonUtil.getBasePortalUrl();
+		ReviewApplicationReqDTO reqDTO = null;
+		SmMofAccount acc = null;
+		List<SmAppl> successSubmittedList = new ArrayList<SmAppl>();
+		getManagedBean().setFailedSubmittedList(new ArrayList<SmAppl>());
+		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
+
+			try {
+				setApplPmStatus(
+						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER,
+						bulkAppl.getAppl());
+
+				if (!bulkAppl
+						.getAppl()
+						.getApplType()
+						.equalsIgnoreCase(
+								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					setSmApplRejectionReasons(bulkAppl);
+				}
+				if (!StringUtils.isBlank(bulkAppl.getRejectionRemarks())) {
+					SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
+							.getAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+							bulkAppl.getRejectionRemarks());
+				}
+				reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
+						bulkAppl, "REJECT");
+
+				acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(bulkAppl
+						.getAppl().getSmSupplier().getSupplierId(), bulkAppl
+						.getAppl().getSupplierType());
+
+				SmApplicationNotificationUtil
+						.setRejectionNotificationParameters(
+								bulkAppl.getAppl(),
+								acc == null ? StringUtils.EMPTY : acc
+										.getMofNo(), bulkAppl
+										.getRejectionRemarks(), bulkAppl
+										.getAppl().getSmSupplier(), reqDTO);
+
+				SmServiceLookup.getReviewApplicationSO()
+						.submitPOorApproverReviewToBPM(reqDTO);
+				successSubmittedList.add(bulkAppl.getAppl());
+				refreshTaskList();
+			} catch (Exception ex) {
+				getManagedBean().getFailedSubmittedList().add(
+						bulkAppl.getAppl());
+			}
+		}
+		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
+		showSuccessApplicationMsg(successSubmittedList, "REJECT");
+	}
+
+	public void cancelReject() {
+		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
 	}
 
 	public boolean failSubmitted(Long smApplId) {
@@ -210,8 +294,13 @@ public class SmBulkApplicationBackingBean extends
 		category.setApprovedDate(new Date());
 	}
 
-	private void showSuccessApplicationMsg(List<SmAppl> applList) {
+	private void showSuccessApplicationMsg(List<SmAppl> applList,
+			String decision) {
 		StringBuilder sb = new StringBuilder();
+		String messageKey = decision
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE) ? "lbl.sm.bulk.approval.success.msg"
+				: "lbl.sm.bulk.rejected.success.msg";
+
 		if (!EntityHelper.isCollectionEmpty(applList)) {
 			int count = 1;
 			sb.append("<table>");
@@ -228,23 +317,22 @@ public class SmBulkApplicationBackingBean extends
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							SmCommonUtil.getMessage(
-									"lbl.sm.bulk.approval.success.msg",
+							SmCommonUtil.getMessage(messageKey,
 									new String[] { sb.toString() })));
 		}
 	}
 
 	private ReviewApplicationReqDTO getReviewApplicationReqDTO(FacesScopes fs,
-			String basePortalUrl, SmBulkApplicationVO bulkVO) {
+			String basePortalUrl, SmBulkApplicationVO bulkVO, String decision) {
 		ReviewApplicationReqDTO revReqDTO = new ReviewApplicationReqDTO();
 		revReqDTO.setSmAppl(bulkVO.getAppl());
-		revReqDTO.setPoOrApproverDecision("APPROVE");
+		revReqDTO.setPoOrApproverDecision(decision);
 		revReqDTO.setPoLoginId(fs.getUserSessionBean().getLoginId());
 		revReqDTO.setPoRole(false);
 		revReqDTO.setApproverRole(true);
 		revReqDTO.setApplId(bulkVO.getAppl().getApplId());
 		revReqDTO.setApplNo(bulkVO.getAppl().getApplNo());
-		revReqDTO.setOutcome("APPROVE");
+		revReqDTO.setOutcome(decision);
 		revReqDTO.setSuppId(bulkVO.getAppl().getSmSupplier().getSupplierId());
 		revReqDTO.setBpmTaskName(bulkVO.getTaskName());
 		revReqDTO.setAppType(bulkVO.getAppl().getApplType());
@@ -259,9 +347,12 @@ public class SmBulkApplicationBackingBean extends
 		revReqDTO.setServerPort(fs.getRequest().getServerPort());
 		revReqDTO.setPortalBaseUrl(basePortalUrl);
 		revReqDTO.setOnlineDoc(bulkVO.isOnlineDoc());
-		SmApplicationNotificationUtil.setApprovalNotificationParameters(
-				bulkVO.getAppl(), null, false,
-				bulkVO.getAppl().getSmSupplier(), null, null, revReqDTO);
+		revReqDTO.setRejectionReasons(bulkVO.getReasonDesc());
+		if (decision
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			revReqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(bulkVO
+					.getAppl()));
+		}
 		return revReqDTO;
 	}
 
@@ -273,9 +364,9 @@ public class SmBulkApplicationBackingBean extends
 					.getSelectedUnclaimTasks()) {
 				if (!StringUtils.isBlank(bulkAppl.getTaskId())) {
 					claimTaskByTaskId(bulkAppl.getTaskId());
-					refreshTaskList();
 				}
 			}
+			refreshTaskList();
 			getManagedBean().getSelectedUnclaimTasks().clear();
 		}
 	}
@@ -288,11 +379,17 @@ public class SmBulkApplicationBackingBean extends
 					.getSelectedTasks()) {
 				if (!StringUtils.isBlank(bulkAppl.getTaskId())) {
 					releaseTaskByTaskId(bulkAppl.getTaskId());
-					refreshTaskList();
 				}
 			}
+			refreshTaskList();
 			getManagedBean().getSelectedTasks().clear();
 		}
+	}
+
+	public void onViewOverlapCategory(List<SmBulkApplOverlapCatVO> overlapList) {
+		getManagedBean().setSelectedOverlapCategoryVOList(overlapList);
+		RequestContext.getCurrentInstance().execute(
+				"overlapCategoryDialog.show();");
 	}
 
 	public void refreshTaskList() {
@@ -305,5 +402,63 @@ public class SmBulkApplicationBackingBean extends
 		PmStatusDesc pmStatusDesc = StatusHelper.getInstance()
 				.getStatusDescById(docInt.longValue());
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
+	}
+
+	private void validateOverlapRemarks() {
+		StringBuilder sb = new StringBuilder();
+		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
+			if (StringUtils.isBlank(bulkAppl.getOverlapRemarks())) {
+				sb.append(SmCommonUtil.getMessage(
+						"lbl.sm.overlapped.category.remarks.appl.required",
+						new String[] { bulkAppl.getAppl().getApplNo() }));
+				sb.append("<br />");
+			}
+		}
+		if (sb.length() > 0) {
+			throw new EpException(sb.toString());
+		}
+	}
+	
+	private void validateTotalSelectedApplication(){
+		
+	}
+
+	/**
+	 * Sets the application current pm status.
+	 * 
+	 * @param statusIdpm
+	 *            - pm status id passed as String
+	 */
+	private void setApplPmStatus(String statusId, SmAppl smAppl) {
+		StatusResDTO resDTO = SmApplicationUtil.setApplPmStatus(statusId);
+		if (resDTO != null && resDTO.getPmStatus() != null) {
+			smAppl.setPmStatus(resDTO.getPmStatus());
+		}
+	}
+
+	/**
+	 * Sets the SM application rejection reasons selected.
+	 */
+	private void setSmApplRejectionReasons(SmBulkApplicationVO bulkVO) {
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
+
+		for (PmReasonDesc desc : bulkVO.getSelectedReasonDescs()) {
+			SmApplRejectReason rej = new SmApplRejectReason();
+			rej.setPmReason(desc.getPmReason());
+			rej.setSmAppl(bulkVO.getAppl());
+			resList.add(rej);
+			sb.append(++count).append(".)");
+			sb.append(desc.getReasonDesc());
+			sb.append("\n");
+		}
+
+		if (!EntityHelper.isCollectionEmpty(bulkVO.getAppl()
+				.getSmApplRejectReasons())) {
+			bulkVO.getAppl().getSmApplRejectReasons().clear();
+		}
+		bulkVO.getAppl().getSmApplRejectReasons().addAll(resList);
+		bulkVO.setReasonDesc(sb.toString());
 	}
 }
