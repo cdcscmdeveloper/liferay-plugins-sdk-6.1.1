@@ -76,10 +76,8 @@
 						<div style="width:100%; "><p:inputText value="#{review.colorName}" disabled="true" /></div>
 
 					</p:column>
-					<p:column width="10%">
-						<f:facet name="header">
-						#{lbl['lbl.cm.review.by']}
-					</f:facet>
+					<p:column width="10%" headerText="#{lbl['lbl.cm.review.by']}" style="white-space: normal">
+						
 					
 						<div style="width:100%; "><p:inputText value="#{review.reviewedTypeName}" disabled="true" /></div>
 						<div style="width:100%; "><p:inputText value="#{review.reviewedBrandName}" disabled="true" /></div>
@@ -100,10 +98,7 @@
 
 					</p:column>
 
-					<p:column width="10%">
-						<f:facet name="header">
-						#{lbl['lbl.cm.endorse.by']}
-					</f:facet>
+					<p:column width="10%" headerText="#{lbl['lbl.cm.endorse.by']}" style="white-space: normal">
 
 						<div style="width:100%; ">
 							<p:inputText value="#{review.reviewedTypeNameII}"
