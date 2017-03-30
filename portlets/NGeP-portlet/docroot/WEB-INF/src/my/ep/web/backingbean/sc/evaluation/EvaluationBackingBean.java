@@ -7310,10 +7310,28 @@ private void retriveCommitteeRemarksList(){
 			} else {
 				qtCommittee.setMeetingAttendances(null);
 			}
+			List<ScQtMeeting> meetingRemoveList = getMeetingToBeRemoveList();
+			if (null != meetingRemoveList && !meetingRemoveList.isEmpty()) {
+				for (int i = 0; i < meetingRemoveList.size(); i++) {
+					if (null == meetingRemoveList.get(i).getQtMeetingId()) {
+						meetingRemoveList.remove(i);
+					}
+				}
 
-			reqDtO.setRemovedmeetingList(getMeetingToBeRemoveList());
+			}
+			reqDtO.setRemovedmeetingList(meetingRemoveList);
 
-			reqDtO.setRemovedmeetingAttendanceList(getAttendanceToBeRemoveList());
+			List<ScQtMeetingAttendance> meetingAttendanceRemoveList = getAttendanceToBeRemoveList();
+			if (null != meetingAttendanceRemoveList && !meetingAttendanceRemoveList.isEmpty()) {
+				log.info("before EvaluationBackingBean MeetingAttendance List Size"+meetingAttendanceRemoveList.size());
+				for (int i = 0; i < meetingAttendanceRemoveList.size(); i++) {
+					if (null == meetingAttendanceRemoveList.get(i).getQtMeetingAttendanceId()) {
+						meetingAttendanceRemoveList.remove(i);
+					}
+				}
+				log.info("after EvaluationBackingBean MeetingAttendance List Size"+meetingAttendanceRemoveList.size());
+			}
+			reqDtO.setRemovedmeetingAttendanceList(meetingAttendanceRemoveList);
 			List<ScQtEvaluationReport> evaluationReport = this.getManagedBean()
 					.getScQtEvaluationReportList();
 			if (null != evaluationReport && !evaluationReport.isEmpty()) {
@@ -10518,6 +10536,54 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	
+	
+	/**
+	 * To remove records for existing .
+	 * 
+	 * @param list
+	 * @param toBeRemovedList
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedMeetingAttendanceRowsAction(
+			List<ScQtMeetingAttendance> list, List<ScQtMeetingAttendance> markDeletedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("markDeleteSelectedRowsAction");
+		}
+		try {
+			if (list != null) {
+				if (markDeletedList == null) {
+					markDeletedList = new ArrayList<ScQtMeetingAttendance>();
+				}
+
+				for (ScQtMeetingAttendance entity : list) {
+					if (entity.isSelected()) {
+						entity.setDeleted(true);
+						markDeletedList.add(entity);
+					}
+				}
+				if (markDeletedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteMeetingAttendanceRowsAction(list, markDeletedList);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+		} finally {
+
+		}
+	}
+
+	private <ENTITY_CLASS> void deleteMeetingAttendanceRowsAction(
+			List<ScQtMeetingAttendance> list, List<ScQtMeetingAttendance> toBeRemovedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+		if (list != null && toBeRemovedList != null) {
+			this.getManagedBean().setMeetingAttendanceRemoveList(toBeRemovedList);
+			list.removeAll(toBeRemovedList);
+		}
+	}
+	
 
 	/**
 	 * check two meeting dates equal or not.
@@ -10575,7 +10641,7 @@ private void retriveCommitteeRemarksList(){
 	 *  
 	 */
 	public void deleteMeetingAttendanceDtls() {
-		markDeleteSelectedRowsAction(getManagedBean()
+		markDeleteSelectedMeetingAttendanceRowsAction(getManagedBean()
 				.getMeetingAttendanceList(), getManagedBean()
 				.getMeetingAttendanceRemoveList());
 
