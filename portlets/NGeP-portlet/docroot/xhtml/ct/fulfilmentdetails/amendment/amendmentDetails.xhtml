@@ -132,9 +132,10 @@
 			</h:panelGrid>			
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
-				<p:inputTextarea id="txtname" style="width:650px;margin-bottom:5px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="100"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}" autoResize="false" />
+				<p:inputTextarea id="txtname" style="width:650px;margin-bottom:5px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="3"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="1000"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails}" autoResize="false"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -146,10 +147,10 @@
 			</h:panelGroup>
 			<h:panelGrid columns="2">
 				<p:inputTextarea id="txtdesc" rows="5"  label="#{lbl['lbl.ct.amendment.desc']}"
-					style="width:650px;margin-bottom: 5px;"  autoResize="false" maxlength="200"
+					style="width:650px;margin-bottom: 5px;"  autoResize="false" maxlength="1000"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.description}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-					onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"  />
+					onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,1000);"  />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>			
 		</h:panelGrid>

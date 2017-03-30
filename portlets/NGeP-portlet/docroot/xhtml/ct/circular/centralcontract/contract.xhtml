@@ -8,6 +8,7 @@
 	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}" toggleable="true" toggleSpeed="500">
 		 <div>
 	      <h:panelGrid style="width:100%">
+	        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.central.contract.table']}" escape="false"/><br/>
 		   <p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index" widgetVar="centralContractWidget" 
 			   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
 			   selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
