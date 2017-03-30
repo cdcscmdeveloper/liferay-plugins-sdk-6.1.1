@@ -14277,9 +14277,9 @@ public class ReportBackingBean extends
 			}
 
 			String errMsg = ResourceBundleUtils.getMessage(
-					"lbl.rpt.search.criteria.EITHER_UNSPSC_OR_COMPANYNAME_IS_MANDATORY",
+					"lbl.rpt.report_validation",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale());
+					new FacesScopes().getUserLocale());
 			
 			if(StringUtils.isEmpty(cmUnspscCode) && StringUtils.isEmpty(companyName)){
 				throw new EpException(errMsg);
