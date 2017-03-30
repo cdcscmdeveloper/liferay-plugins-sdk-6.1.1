@@ -396,7 +396,7 @@ public class SmBulkApplicationBackingBean extends
 		if (vo.getAppl() != null
 				&& vo.getAppl().getApplType()
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				&& !EntityHelper.isCollectionEmpty(vo
+				&& EntityHelper.isCollectionEmpty(vo
 						.getOverlapCategoryVOList())) {
 			SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
 					.getOverlapCategoryVO(vo.getAppl());
