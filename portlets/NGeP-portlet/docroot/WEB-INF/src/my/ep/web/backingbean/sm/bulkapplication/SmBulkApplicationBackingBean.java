@@ -11,12 +11,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -35,6 +37,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmOverlapCategoryVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -167,6 +170,7 @@ public class SmBulkApplicationBackingBean extends
 
 	public void rejectBulkApplication() {
 		validateTotalSelectedApplication();
+		setSelectedRejectedResonsToVO();
 		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
 	}
 
@@ -388,8 +392,24 @@ public class SmBulkApplicationBackingBean extends
 		}
 	}
 
-	public void onViewOverlapCategory(List<SmBulkApplOverlapCatVO> overlapList) {
-		getManagedBean().setSelectedOverlapCategoryVOList(overlapList);
+	public void onViewOverlapCategory(SmBulkApplicationVO vo) {
+		if (vo.getAppl() != null
+				&& vo.getAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				&& !EntityHelper.isCollectionEmpty(vo
+						.getOverlapCategoryVOList())) {
+			SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
+					.getOverlapCategoryVO(vo.getAppl());
+			if (overlapCategoryVO != null) {
+				vo.setOverlappedCategory(overlapCategoryVO
+						.isOverLappedCategoryExist());
+				vo.setOverlapMsg(overlapCategoryVO.getOverLappedCategoryMsg());
+				vo.setOverlapCategoryVOList(overlapCategoryVO
+						.getOverlapCategoryVOList());
+			}
+		}
+		getManagedBean().setSelectedOverlapCategoryVOList(
+				vo.getOverlapCategoryVOList());
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
 	}
@@ -404,6 +424,44 @@ public class SmBulkApplicationBackingBean extends
 		PmStatusDesc pmStatusDesc = StatusHelper.getInstance()
 				.getStatusDescById(docInt.longValue());
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
+	}
+
+	/**
+	 * On tick checkbox during search rejection reason
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
+	public void onTickOrUnTickReason(AjaxBehaviorEvent e) {
+		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
+			verifySelectedRejectReasons(vo);
+		}
+	}
+
+	/**
+	 * Search rejected reason
+	 */
+	public void searchRejectedReason(SmBulkApplicationVO vo) {
+
+		// reset selected reject reason during search
+		vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+
+		// reset selected reject reason remarks during search
+		verifySelectedRejectReasons(vo);
+
+		vo.setReasonDescList(SmApplicationUtil.getWildCardSearchRejectReason(vo
+				.getSearchRejectReason(), getManagedBean().getReasonDescList()));
+	}
+
+	/**
+	 * Reset search rejected reason
+	 */
+	public void resetSearchRejectedReason(SmBulkApplicationVO vo) {
+		vo.setSearchRejectReason(StringUtils.EMPTY);
+		vo.setReasonDescList(SmApplicationUtil
+				.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
+						.value()));
+		vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 
 	private void validateOverlapRemarks() {
@@ -465,5 +523,51 @@ public class SmBulkApplicationBackingBean extends
 		}
 		bulkVO.getAppl().getSmApplRejectReasons().addAll(resList);
 		bulkVO.setReasonDesc(sb.toString());
+	}
+
+	private void setSelectedRejectedResonsToVO() {
+		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
+			vo.setReasonDescList(getManagedBean().getReasonDescList());
+		}
+	}
+
+	/**
+	 * Verify selected rejection reason
+	 */
+	private void verifySelectedRejectReasons(SmBulkApplicationVO vo) {
+		vo.setRejectReasonReqd(isDpaOthersSelected(vo.getReasonDescList(),
+				vo.isRejectReasonReqd()));
+		if (!vo.isRejectReasonReqd()) {
+			vo.setRejectionRemarks(StringUtils.EMPTY);
+		}
+	}
+
+	/**
+	 * Return true or false whether there is Others selected in Delete Pending
+	 * Application Reason
+	 * 
+	 * @return boolean
+	 */
+	private boolean isDpaOthersSelected(List<PmReasonDesc> reasonDescList,
+			boolean isRejectReasonReqd) {
+		if (!EntityHelper.isCollectionEmpty(reasonDescList)) {
+			for (PmReasonDesc reasonDesc : reasonDescList) {
+				if (reasonDesc.getPmReason() != null
+						&& reasonDesc.getPmReason().getReasonId() != null) {
+					ReasonReqDTO reqDTO = new ReasonReqDTO();
+					reqDTO.setReasonId(reasonDesc.getPmReason().getReasonId());
+					PmReason reason = SmServiceLookup.getReasonSO()
+							.retrieveReasonById(reqDTO).getPmReason();
+					if (reason != null
+							&& !StringUtils.isBlank(reason.getReasonCode())
+							&& reason.getReasonCode().equals(
+									SupplierManagementConst.DPA_REASON_OTHERS)) {
+						isRejectReasonReqd = true;
+						break;
+					}
+				}
+			}
+		}
+		return isRejectReasonReqd;
 	}
 }

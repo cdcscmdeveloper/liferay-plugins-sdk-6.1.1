@@ -9608,23 +9608,10 @@ public class SmApplicationBackingBean extends
 		// reset selected reject reason remarks during search
 		verifySelectedRejectReasons();
 
-		List<PmReasonDesc> resultList = new ArrayList<PmReasonDesc>();
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getReasonDescInitList())) {
-			if (StringUtils.isBlank(getManagedBean().getSearchRejectReason())) {
-				resultList = getManagedBean().getReasonDescInitList();
-			} else {
-				for (PmReasonDesc tmp : getManagedBean()
-						.getReasonDescInitList()) {
-					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
-							StringUtils.upperCase(getManagedBean()
-									.getSearchRejectReason()))) {
-						resultList.add(tmp);
-					}
-				}
-			}
-		}
-		getManagedBean().setReasonDescList(resultList);
+		getManagedBean().setReasonDescList(
+				SmApplicationUtil.getWildCardSearchRejectReason(
+						getManagedBean().getSearchRejectReason(),
+						getManagedBean().getReasonDescInitList()));
 	}
 
 	/**
