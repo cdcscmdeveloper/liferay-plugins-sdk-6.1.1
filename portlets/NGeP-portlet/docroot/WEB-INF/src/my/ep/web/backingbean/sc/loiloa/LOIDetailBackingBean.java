@@ -79,6 +79,7 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoiAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
@@ -89,7 +90,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDocAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -2138,6 +2138,9 @@ public class LOIDetailBackingBean extends
 
 			// spki
 			if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+				// download loi letter 
+				downloadLoiLetter(scLoi);
+				
 				String originalText = prepareOriginalText(scLoi.getScLoiLoa()
 						.getSmSupplier());
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -2744,14 +2747,11 @@ public class LOIDetailBackingBean extends
 	 *             the exception
 	 */
 	public StreamedContent getLoiLetterStreamContent() throws Exception {
-
-		ScPbAttachment pbAttachment = new ScPbAttachment();
-		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
-		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(),
-				(ScAttachment) pbAttachment);
+		ScLoi scLoi = getManagedBean().getScLoi();
+		ScLoiAttachment attachment = getLoiAttachment(scLoi);
+		generateLoiLetterFromVelocityToPdf(scLoi, attachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
-				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-
+				attachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		return pbStreamContent;
 	}
 
@@ -2762,12 +2762,11 @@ public class LOIDetailBackingBean extends
 	 *             the exception
 	 */
 	public StreamedContent previewLetter() throws Exception {
-		ScPbAttachment pbAttachment = new ScPbAttachment();
-		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
-		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(),
-				(ScAttachment) pbAttachment);
+		ScLoi scLoi = getManagedBean().getScLoi();
+		ScLoiAttachment attachment = getLoiAttachment(scLoi);
+		generateLoiLetterFromVelocityToPdf(scLoi,attachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
-				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+				attachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		RequestContext.getCurrentInstance().execute("loiLetterDlg.show();");
 		return pbStreamContent;
 	}
@@ -2839,196 +2838,201 @@ public class LOIDetailBackingBean extends
 	 *             the exception
 	 */
 	private void generateLoiLetterFromVelocityToPdf(ScLoi scLoi,
-			ScAttachment attachment) throws Exception {
+			ScAttachment attachment){
 		attachment.setFileName("Loi Letter.pdf");
-		populateAttachmentDetails(attachment);
+		try {
+			populateAttachmentDetails(attachment);
 
-		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
-		DecimalFormat numberDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		VelocityContext context = new VelocityContext();
+			ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+			CommonUtils commonUtils = new CommonUtils();
+			SimpleDateFormat dateSDF = new SimpleDateFormat(
+					commonUtils
+					.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
+			DecimalFormat numberDF = new DecimalFormat(
+					commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
+			DecimalFormat amountDF = new DecimalFormat(
+					commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			VelocityContext context = new VelocityContext();
 
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
-		String userName = fs.getUserSessionBean().getUserName();
-		context.put("hostUrl", hostUrl);
-		context.put("userName", userName);
+			FacesScopes fs = new FacesScopes();
+			String hostUrl = fs.getRequest().getServerName() + ":"
+					+ fs.getRequest().getServerPort();
+			String userName = fs.getUserSessionBean().getUserName();
+			context.put("hostUrl", hostUrl);
+			context.put("userName", userName);
 
-		Date newDate = new Date();
-		String date = "";
-		if (newDate != null) {
-			date = dateSDF.format(newDate);
-		}
-		context.put("date", date);
+			Date newDate = new Date();
+			String date = "";
+			if (newDate != null) {
+				date = dateSDF.format(newDate);
+			}
+			context.put("date", date);
 
-		context.put("dateSDF", dateSDF);
-		context.put("numberDF", numberDF);
-		context.put("amountDF", amountDF);
+			context.put("dateSDF", dateSDF);
+			context.put("numberDF", numberDF);
+			context.put("amountDF", amountDF);
 
-		context.put("fileNo", scLoiLoa.getFileNo());
+			context.put("fileNo", scLoiLoa.getFileNo());
 
-		String fileExtnNo = scLoi.getFileExtnNo();
-		if (fileExtnNo == null) {
-			fileExtnNo = "&lt;&lt;3-digits&gt;&gt;";
-		}
-		context.put("fileExtnNo", fileExtnNo);
+			String fileExtnNo = scLoi.getFileExtnNo();
+			if (fileExtnNo == null) {
+				fileExtnNo = "&lt;&lt;3-digits&gt;&gt;";
+			}
+			context.put("fileExtnNo", fileExtnNo);
 
-		context.put("loiNo", scLoi.getLoiNo());
+			context.put("loiNo", scLoi.getLoiNo());
 
-		String supplierName = scLoiLoa.getSupplierName();
-		supplierName = supplierName.replaceAll("&", "&#38;");
-		context.put("supplierName", supplierName);
+			String supplierName = scLoiLoa.getSupplierName();
+			supplierName = supplierName.replaceAll("&", "&#38;");
+			context.put("supplierName", supplierName);
 
-		String supplierAddress = null;
-		if (scLoi.getScSupplierAddress() != null) {
-			supplierAddress = getFullAddress(scLoi.getScSupplierAddress());
-			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-		} else {
-			supplierAddress = "&lt;&lt;Address&gt;&gt;";
-		}
-		context.put("supplierAddress", supplierAddress);
+			String supplierAddress = null;
+			if (scLoi.getScSupplierAddress() != null) {
+				supplierAddress = getFullAddress(scLoi.getScSupplierAddress());
+				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			} else {
+				supplierAddress = "&lt;&lt;Address&gt;&gt;";
+			}
+			context.put("supplierAddress", supplierAddress);
 
-		String title = scLoiLoa.getTitle();
-		if (title == null) {
-			title = "";
-		}
-		
-		//replace all special characters
-		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
-		context.put("title", title);
-		
-		boolean isZonal = Boolean.FALSE;
-		List<ScLoiLoaItem> loiloaItems = new ArrayList<ScLoiLoaItem>();
-		if (scLoi.getScLoiLoaItems() != null
-				&& scLoi.getScLoiLoaItems().size() > 0) {
-			loiloaItems = scLoi.getScLoiLoaItems();
+			String title = scLoiLoa.getTitle();
+			if (title == null) {
+				title = "";
+			}
 
-			for (ScLoiLoaItem scLoiLoaItem : loiloaItems) {
-				// zonal
-				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
-					isZonal = Boolean.TRUE;
+			//replace all special characters
+			//title = title.replaceAll("\\W", ""); 
+			title=title.replaceAll("\r\n", "<br />");
+			title=title.replaceAll("&", "&#38;");
+			title=title.replaceAll("<", "&#60;");
+			title=title.replaceAll(">", "&#62;");
+			context.put("title", title);
+
+			boolean isZonal = Boolean.FALSE;
+			List<ScLoiLoaItem> loiloaItems = new ArrayList<ScLoiLoaItem>();
+			if (scLoi.getScLoiLoaItems() != null
+					&& scLoi.getScLoiLoaItems().size() > 0) {
+				loiloaItems = scLoi.getScLoiLoaItems();
+
+				for (ScLoiLoaItem scLoiLoaItem : loiloaItems) {
+					// zonal
+					if(scLoiLoaItem.getTplSpecZoneDtl() != null){
+						isZonal = Boolean.TRUE;
+					}
+
+					if (scLoiLoaItem.getScRequestItem().getItemName() != null
+							&& !scLoiLoaItem.getScRequestItem().getItemName()
+							.isEmpty()) {
+						String itemName = scLoiLoaItem.getScRequestItem()
+								.getItemName();
+						itemName = itemName.replaceAll(" & ", "&#38;");
+						scLoiLoaItem.getScRequestItem().setItemName(itemName);
+					}
+
+					if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion() != null
+							&& scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getTplSpecMaster() != null) {
+						BigDecimal bigDecimal = BigDecimal.valueOf(0d);
+						if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+								.getClUomPerDay() == null) {
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.setClUomPerDay(bigDecimal);
+						}
+
+						if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+								.getClUomFrequency() == null) {
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.setClUomFrequency(bigDecimal);
+						}
+
+						if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+								.getClUomPerMonth() == null) {
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.setClUomPerMonth(bigDecimal);
+						}
+
+						if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+								.getClDurationMonth() == null) {
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.setClDurationMonth(bigDecimal);
+						}
+						if (scLoiLoaItem.getSubTotal() == null) {
+							scLoiLoaItem.setSubTotal(bigDecimal);
+						}
+					}
 				}
-				
-				if (scLoiLoaItem.getScRequestItem().getItemName() != null
-						&& !scLoiLoaItem.getScRequestItem().getItemName()
-								.isEmpty()) {
-					String itemName = scLoiLoaItem.getScRequestItem()
-							.getItemName();
-					itemName = itemName.replaceAll(" & ", "&#38;");
-					scLoiLoaItem.getScRequestItem().setItemName(itemName);
-				}
+				context.put("scLoiLoaItems", loiloaItems);
+			}
 
-				if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion() != null
-						&& scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-								.getTplSpecMaster() != null) {
-					BigDecimal bigDecimal = BigDecimal.valueOf(0d);
-					if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-							.getClUomPerDay() == null) {
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-								.setClUomPerDay(bigDecimal);
-					}
+			context.put("isZonal", isZonal);
+			context.put("scLoi", scLoi);
+			if (scLoi.getScNegoLocations() != null
+					&& scLoi.getScNegoLocations().size() > 0) {
+				context.put("scNegoLocations", scLoi.getScNegoLocations());
+			}
 
-					if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-							.getClUomFrequency() == null) {
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-								.setClUomFrequency(bigDecimal);
-					}
-
-					if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-							.getClUomPerMonth() == null) {
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-								.setClUomPerMonth(bigDecimal);
-					}
-
-					if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-							.getClDurationMonth() == null) {
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-								.setClDurationMonth(bigDecimal);
-					}
-					if (scLoiLoaItem.getSubTotal() == null) {
-						scLoiLoaItem.setSubTotal(bigDecimal);
+			List<ScLoiTerm> selectedNegoTerms = new ArrayList<ScLoiTerm>();
+			if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
+					if (scLoiTerm.isSelected()) {
+						selectedNegoTerms.add(scLoiTerm);
 					}
 				}
 			}
-			context.put("scLoiLoaItems", loiloaItems);
-		}
-		
-		context.put("isZonal", isZonal);
-		context.put("scLoi", scLoi);
-		if (scLoi.getScNegoLocations() != null
-				&& scLoi.getScNegoLocations().size() > 0) {
-			context.put("scNegoLocations", scLoi.getScNegoLocations());
-		}
 
-		List<ScLoiTerm> selectedNegoTerms = new ArrayList<ScLoiTerm>();
-		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
-			for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-				if (scLoiTerm.isSelected()) {
-					selectedNegoTerms.add(scLoiTerm);
+			String Keputusan = "&lt;&lt;Keputusan&gt;&gt;";
+			if (selectedNegoTerms != null && selectedNegoTerms.size() > 0) {
+				context.put("scNegoTerms", selectedNegoTerms);
+			} else if (scLoi.getScNegoTerms() != null
+					&& scLoi.getScNegoTerms().size() > 0) {
+				context.put("scNegoTerms", scLoi.getScNegoTerms());
+				context.put("Keputusan", Keputusan);
+			}
+
+			String ackDueDays = "7";
+			if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
+				ackDueDays = DateUtils.getDaysDifference(scLoi.getIssueDate(),
+						scLoi.getAckDueDate()) + "";
+			}
+			context.put("ackDueDays", ackDueDays);
+
+			String loiSigner = "";
+			if (getManagedBean().getContractSignerUser() != null) {
+				if (null != getManagedBean().getContractSignerUser().getUserName() && !getManagedBean().getContractSignerUser().getUserName().isEmpty()) {
+					loiSigner =  getManagedBean().getContractSignerUser().getUserName();
+				} 
+			}
+			context.put("loiSigner", loiSigner);
+
+			String loiSignerDesignation = "";
+			if(null != scLoi.getLoiSignerDesig() && !scLoi.getLoiSignerDesig().isEmpty()){
+				loiSignerDesignation = scLoi.getLoiSignerDesig();
+			}
+			context.put("loiSignerDesignation", loiSignerDesignation);
+
+			context.put("isReFinalizationBidding", true);
+
+			// online bidding
+			boolean isBiddingAward = Boolean.FALSE;
+			if (scLoi.getRecommendBy() != null) {
+				PmParameter recommendedBy = scLoi.getRecommendBy();
+				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+						.equals(recommendedBy.getParameterCode())) {
+					isBiddingAward = Boolean.TRUE;
 				}
 			}
-		}
+			context.put("isBiddingAward", isBiddingAward);
 
-		String Keputusan = "&lt;&lt;Keputusan&gt;&gt;";
-		if (selectedNegoTerms != null && selectedNegoTerms.size() > 0) {
-			context.put("scNegoTerms", selectedNegoTerms);
-		} else if (scLoi.getScNegoTerms() != null
-				&& scLoi.getScNegoTerms().size() > 0) {
-			context.put("scNegoTerms", scLoi.getScNegoTerms());
-			context.put("Keputusan", Keputusan);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOI_LETTER, context,
+					new FileOutputStream(getActualFilePath(attachment)));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		String ackDueDays = "7";
-		if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
-			ackDueDays = DateUtils.getDaysDifference(scLoi.getIssueDate(),
-					scLoi.getAckDueDate()) + "";
-		}
-		context.put("ackDueDays", ackDueDays);
-
-		String loiSigner = "";
-		if (getManagedBean().getContractSignerUser() != null) {
-			if (null != getManagedBean().getContractSignerUser().getUserName() && !getManagedBean().getContractSignerUser().getUserName().isEmpty()) {
-				loiSigner =  getManagedBean().getContractSignerUser().getUserName();
-			} 
-		}
-		context.put("loiSigner", loiSigner);
-		
-		String loiSignerDesignation = "";
-		if(null != scLoi.getLoiSignerDesig() && !scLoi.getLoiSignerDesig().isEmpty()){
-			loiSignerDesignation = scLoi.getLoiSignerDesig();
-		}
-		context.put("loiSignerDesignation", loiSignerDesignation);
-		
-		context.put("isReFinalizationBidding", true);
-		
-		// online bidding
-		boolean isBiddingAward = Boolean.FALSE;
-		if (scLoi.getRecommendBy() != null) {
-			PmParameter recommendedBy = scLoi.getRecommendBy();
-			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-					.equals(recommendedBy.getParameterCode())) {
-				isBiddingAward = Boolean.TRUE;
-			}
-		}
-		context.put("isBiddingAward", isBiddingAward);
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOI_LETTER, context,
-				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -3673,6 +3677,16 @@ public class LOIDetailBackingBean extends
 			scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
 		}
 		downloadFile(scLoiReportAttachment);
+	}
+	
+	/**
+	 * Download loi letter.
+	 *
+	 * @param scLoiReport the sc loi report
+	 */
+	private void downloadLoiLetter(ScLoi scLoi) {
+		debugLogger("downloadLoiLetter");
+		generateLoiLetterFromVelocityToPdf(scLoi, getLoiAttachment(scLoi));
 	}
 
 	/**
@@ -5421,5 +5435,17 @@ public class LOIDetailBackingBean extends
 								.getCommitteeType()) ? true : false);
 		
 		biddingBackingBean.retrieveBriefingPaper();
+	}
+	
+	private ScLoiAttachment getLoiAttachment(ScLoi scLoi) {
+		ScLoiAttachment scLoiAttachment = scLoi.getScLoiAttachment();
+		if(null == scLoiAttachment){
+			scLoiAttachment = new ScLoiAttachment();
+		}
+		scLoiAttachment.setScLoi(scLoi);
+		scLoi.setScLoiAttachment(scLoiAttachment);
+		scLoiAttachment.setDocNo(scLoi.getLoiNo());	
+		scLoiAttachment.setScLoi(scLoi);
+		return scLoiAttachment;
 	}
 }
