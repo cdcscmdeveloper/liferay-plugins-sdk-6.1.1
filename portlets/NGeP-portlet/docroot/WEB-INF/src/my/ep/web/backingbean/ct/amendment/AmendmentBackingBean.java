@@ -1267,14 +1267,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if(!ctBackingBean.getManagedBean().isOwnerOrgProfile()){
 		 			if(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
 		 					 || ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
-							throw new EpException(MessageConst.ERROR_100022, 
-									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.refno", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		 				throw new EpException(MessageConst.ERROR_750045);
 		 			 }else if(ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
 		 					ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
-							throw new EpException(MessageConst.ERROR_100022, 
-									new String[] {ResourceBundleUtils.getMessage("lbl.ct.agency.ap178.attachment", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		 				throw new EpException(MessageConst.ERROR_750046);
 		 			 }
 		 		}
 			}			
