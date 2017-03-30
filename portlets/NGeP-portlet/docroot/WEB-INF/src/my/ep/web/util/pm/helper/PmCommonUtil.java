@@ -119,6 +119,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPoJobTypeRatio;
 import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -1830,6 +1831,54 @@ public class PmCommonUtil implements Serializable{
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
+	
+	/**
+	 * Assign Tracking Dairy For PO Job Weight
+	 * 
+	 * @param jobWeight
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
+	public static PmTrackingDairyVO assignTrackingDairyForJobWeight(
+			PmPoJobWeight jobWeight, String actionDesc, Long statusId) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());
+		trckVO.setDocId(jobWeight.getPoJobWeightId());
+		trckVO.setDocType(ParameterConst.JOB_WEIGHT_RATIO_PARAM_CODE);
+		trckVO.setDocNo(jobWeight.getPoJobWeightId().toString());
+		trckVO.setGroupId(null);
+		trckVO.setStatusId(statusId);
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+	/**
+	 * Assign Tracking Dairy For PO Type Ratio
+	 * 
+	 * @param jobTypeRatio
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
+	public static PmTrackingDairyVO assignTrackingDairyForJobTypeRatio(
+			PmPoJobTypeRatio jobTypeRatio, String actionDesc, Long statusId) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());
+		trckVO.setDocId(jobTypeRatio.getPoJobTypeRatioId());
+		trckVO.setDocType(ParameterConst.JOB_TYPE_RATIO_PARAM_CODE);
+		trckVO.setDocNo(jobTypeRatio.getPoJobTypeRatioId().toString());
+		trckVO.setGroupId(null);
+		trckVO.setStatusId(statusId);
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
 
 	/**
 	 * get user role value
@@ -2078,6 +2127,19 @@ public class PmCommonUtil implements Serializable{
 		return ResourceBundleUtils.getMessage(label,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
+	}
+	
+	/**
+	 * Get Resource Bundle Label
+	 * 
+	 * @param label
+	 * @param locale
+	 * @return String
+	 */
+	public static String getResourceBundleLabels(String label, Locale locale) {
+		return ResourceBundleUtils.getMessage(label,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				locale);
 	}
 
 	/**
@@ -2641,6 +2703,15 @@ public class PmCommonUtil implements Serializable{
 		}
 
 		return items;
+	}
+	
+	public static String getActionDesc(String messageId, String[] params) {
+		return MessageUtils.getMessage(messageId, params,
+				MessageUtils.BUNDLE_COMMON_MESSAGES, getMyLocale());
+	}
+	
+	public static Locale getMyLocale(){
+		return new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 	}
 
 }
