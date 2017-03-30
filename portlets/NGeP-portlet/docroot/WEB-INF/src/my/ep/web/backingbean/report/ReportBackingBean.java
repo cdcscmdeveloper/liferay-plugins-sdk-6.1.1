@@ -14263,7 +14263,29 @@ public class ReportBackingBean extends
 	 * generateReport - Generate all modules reports.
 	 */
 	public void generateReport() {
+		
 		log.info("ReportBackingBean-generateReport");
+		
+		if(reportValue.equals(ReportConst.LST_PUB_CAT_ITM_RPT_VAL) || reportValue.equals(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL)){
+			
+			String companyName = null;
+			
+			if(getManagedBean().getSelectedOrgProfile() != null){
+				if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+					companyName = getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName();
+				}
+			}
+
+			String errMsg = ResourceBundleUtils.getMessage(
+					"lbl.rpt.search.criteria.EITHER_UNSPSC_OR_COMPANYNAME_IS_MANDATORY",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale());
+			
+			if(StringUtils.isEmpty(cmUnspscCode) && StringUtils.isEmpty(companyName)){
+				throw new EpException(errMsg);
+			}
+		}
+		
 		if ((StringUtils.isNotEmpty(this.getReportValue()) && this
 				.getReportValue().toString()
 				.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))
