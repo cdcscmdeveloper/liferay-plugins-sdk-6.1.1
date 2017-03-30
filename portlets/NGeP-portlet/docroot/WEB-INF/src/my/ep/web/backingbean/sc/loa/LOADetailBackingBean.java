@@ -1283,10 +1283,10 @@ public class LOADetailBackingBean extends
 					
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
-						filename.append(".docx");
+						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+					/*	generateAgreementLetterDocFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());*/
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
