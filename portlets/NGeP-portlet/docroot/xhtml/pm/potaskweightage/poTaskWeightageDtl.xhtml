@@ -67,21 +67,21 @@
 		 	<ac:paginator for="poRoleTaskDtTbl" />
 			
 			<p:column headerText="Supplier Type">
-				<p:outputLabel value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,roleTask.supplierType)}" />
+				<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,roleTask.supplierType)}" />
 			</p:column>
 			
 			<p:column headerText="ApplicationType Type">
-				<p:outputLabel value="#{poTaskWeightageBB.getApplDesc(roleTask.applType)}" />
+				<h:outputText value="#{poTaskWeightageBB.getApplDesc(roleTask.applType)}" />
 			</p:column>
 			
 			<p:column headerText="Category Type">
-				<p:outputLabel value="#{lbl['lbl.txt.na']}" rendered="#{empty roleTask.categoryType}" />
-				<p:outputLabel value="#{roleTask.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}" 
+				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty roleTask.categoryType}" />
+				<h:outputText value="#{roleTask.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}" 
 				rendered="#{!empty roleTask.categoryType}"/>
 			</p:column>
 			
 			<p:column headerText="Record Status">
-				<p:outputLabel value="#{(roleTask.recordStatusFlg==DbValueConst.recordStatusActive) ? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']} " />
+				<h:outputText value="#{(roleTask.recordStatusFlg==DbValueConst.recordStatusActive) ? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']} " />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
