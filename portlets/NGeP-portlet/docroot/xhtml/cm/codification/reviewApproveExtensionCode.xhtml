@@ -54,11 +54,8 @@
 
 
 
-					<p:column width="15%">
-						<f:facet name="header">
-						#{lbl['lbl.cm.extension']}
-					</f:facet>
-
+					<p:column headerText="#{lbl['lbl.cm.extension']}" width="15%" >
+						
 						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
 						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
 						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
@@ -67,10 +64,7 @@
 					</p:column>
 
 
-					<p:column width="15%">
-						<f:facet name="header">
-							#{lbl['lbl.sc.supp.name']}
-						</f:facet>
+					<p:column width="15%" headerText="#{lbl['lbl.sc.supp.name']}">
 
 						<div style="width:100%; "><p:inputText value="#{review.typeName}" disabled="true" /></div>
 						<div style="width:100%; "><p:inputText value="#{review.brandName}" disabled="true" /></div>
@@ -80,10 +74,8 @@
 					</p:column>
 
 
-					<p:column width="10%">
-						<f:facet name="header">
-						#{lbl['lbl.cm.review.by']}
-					</f:facet>
+					<p:column width="10%" headerText="#{lbl['lbl.cm.review.by']}" style="white-space: normal">
+					
 
 						<div style="width:100%; ">
 							<p:inputText value="#{review.reviewedTypeName}" id="reviewedTypeNameId" maxlength="100"
