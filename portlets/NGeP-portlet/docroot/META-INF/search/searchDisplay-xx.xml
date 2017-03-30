@@ -1935,6 +1935,7 @@
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="methodName"
 						value="bsvAttendanceBackingBean.mofAccountNumber(entity.smSupplier)" />
+						<property name="columnName" value="supplierMofNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sc.mof.no" />
