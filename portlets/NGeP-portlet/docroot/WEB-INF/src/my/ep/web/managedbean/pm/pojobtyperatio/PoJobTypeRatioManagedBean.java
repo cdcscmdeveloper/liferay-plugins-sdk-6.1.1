@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.pojobtyperatio;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,6 +19,7 @@ import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmPoJobTypeRatio;
+import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -40,11 +42,13 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmPoJobTypeRatio> jobTypeRatioDataModel = new JobTypeRatioPagingDataModel();
 	
 	private PmPoJobTypeRatio poJobTypeRatio;
+	private PmPoJobTypeRatio oriPoJobTypeRatio;
 	private boolean applDisabled;
 	private boolean categoryDisabled;
 	private Map<String, String> appTypeMap;
 	private Map<String, String> suppTypeMap;
 	private Map<String, String> categoryTypeMap;
+	private Map<Long,PmPoJobWeight> jobWeightMap;
 	
 	public PoJobTypeRatioManagedBean() {
 	}
@@ -113,11 +117,11 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 		if(appTypeMap == null){
 			appTypeMap = new TreeMap<String, String>(){	
 				private static final long serialVersionUID = 1L;{
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.new"), ParameterConst.NEW_SM_APPLN_FOR_MOF);
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.renew"), ParameterConst.NEW_SM_APPLN_FOR_RENEW);
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.update"), ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.cat"), ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.pm.po.jobtyperatio.bumi"), ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+				     put("lbl.pm.po.jobtyperatio.new", ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				     put("lbl.pm.po.jobtyperatio.renew", ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+				     put("lbl.pm.po.jobtyperatio.update", ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
+				     put("lbl.pm.po.jobtyperatio.cat", ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+				     put("lbl.pm.po.jobtyperatio.bumi", ParameterConst.NEW_SM_APPLN_FOR_BUMI);
 			}};
 		}
 		return appTypeMap;
@@ -151,8 +155,8 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 		if(categoryTypeMap == null){
 			categoryTypeMap = new TreeMap<String, String>(){	
 				private static final long serialVersionUID = 1L;{
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.sm.catCodes.norm"), SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL);
-				     put(PmCommonUtil.getResourceBundleLabels("lbl.sm.catCodes.spl"), SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL);
+				     put("lbl.pm.po.task.category.normal", SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL);
+				     put("lbl.pm.po.task.category.special", SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL);
 				}};
 		}
 		return categoryTypeMap;
@@ -164,6 +168,38 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	public void setCategoryTypeMap(Map<String, String> categoryTypeMap) {
 		this.categoryTypeMap = categoryTypeMap;
 	}
+
+	/**
+	 * @return the oriPoJobTypeRatio
+	 */
+	public PmPoJobTypeRatio getOriPoJobTypeRatio() {
+		return oriPoJobTypeRatio;
+	}
+
+	/**
+	 * @param oriPoJobTypeRatio the oriPoJobTypeRatio to set
+	 */
+	public void setOriPoJobTypeRatio(PmPoJobTypeRatio oriPoJobTypeRatio) {
+		this.oriPoJobTypeRatio = oriPoJobTypeRatio;
+	}
+
+
+
+	/**
+	 * @return the jobWeightMap
+	 */
+	public Map<Long,PmPoJobWeight> getJobWeightMap() {
+		return jobWeightMap;
+	}
+
+	/**
+	 * @param jobWeightMap the jobWeightMap to set
+	 */
+	public void setJobWeightMap(Map<Long,PmPoJobWeight> jobWeightMap) {
+		this.jobWeightMap = jobWeightMap;
+	}
+
+
 
 	// pagination for PO Job Type Ratio List
 	private class JobTypeRatioPagingDataModel extends
