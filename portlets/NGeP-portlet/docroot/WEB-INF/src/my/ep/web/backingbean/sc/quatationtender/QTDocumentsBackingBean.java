@@ -2438,10 +2438,13 @@ public class QTDocumentsBackingBean extends
 		
 		context.put("qtTitle", title);
 
-		StringBuilder openType = new StringBuilder();
-		if (openType != null) {
-			openType.append(getParameterDesc(
-					ParameterTypeConst.QUOTATION_TENDER_TYPE, qt.getQtType()));
+		String  openType = null;
+		
+		if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+				.equalsIgnoreCase(qt.getQtType())) {
+			openType = "Tender Terhad";
+		} else {
+			openType = "Terbuka";
 		}
 		context.put("qtType", openType);
 
