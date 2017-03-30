@@ -288,7 +288,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	}
 
 	private int calculateFinalOffSet(int currentPage) {
-		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+		int offSet = (currentPage - 1) * 5;
 		return offSet;
 	}
 
