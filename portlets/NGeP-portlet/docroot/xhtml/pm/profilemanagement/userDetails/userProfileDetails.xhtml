@@ -293,11 +293,12 @@
 								</c:when>
 								<c:otherwise>
 									<p:inputText id="itIdentityNo" styleClass="icTextL"
+										style="text-transform: uppercase;"
 										required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="23" maxlength="15" converter="toUpperCaseConverter"
+										size="23" maxlength="15" 
 										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.userdetails.passportno']} - #{lbl['lbl.pm.profiles.invalidPassportNo']}">
 										<f:validateRegex pattern="[a-zA-Z0-9]{6,15}" />
 										<p:ajax event="change"
@@ -326,6 +327,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
 								maxlength="18" 
+								style="text-transform: uppercase;"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								required="#{!empty param['disableValidation']}"
 								disabled="true"
