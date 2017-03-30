@@ -170,7 +170,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+		reqDTO.setLimit(5);
 		reqDTO.setState("ASSIGNED");
 		reqDTO.setDocType(getDocType());
 		reqDTO.setViewBy(getViewBy());
@@ -238,23 +238,26 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 						.getPmStatus().getStatusId());
 				bulkApplicationVO.setCurrRegStatus(currentStatusDesc
 						.getStatusName());
-				SmOverlapCategoryVO overlapCategoryVO = null;
+
+				// set overlap category alert
 				if (appl != null
 						&& appl.getApplType().equals(
 								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-					overlapCategoryVO = SmApplicationUtil
-							.getOverlapCategoryVO(appl);
-					if (overlapCategoryVO != null) {
-						bulkApplicationVO
-								.setOverlappedCategory(overlapCategoryVO
-										.isOverLappedCategoryExist());
-						bulkApplicationVO.setOverlapMsg(overlapCategoryVO
-								.getOverLappedCategoryMsg());
-						bulkApplicationVO
-								.setOverlapCategoryVOList(overlapCategoryVO
-										.getOverlapCategoryVOList());
+					for (SmSupplierCategory cat : appl
+							.getSmSupplierCategories()) {
+						if (cat.isOverLapCategory()
+								&& (cat.getRecordStatusFlg()
+										.compareTo(
+												SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
+										.getRecordStatusFlg()
+										.compareTo(
+												SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
+							bulkApplicationVO.setOverlappedCategory(true);
+							break;
+						}
 					}
 				}
+				
 				PmState state = appl.getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress()
 						.getPmState();
