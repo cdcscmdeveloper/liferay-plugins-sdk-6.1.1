@@ -3021,12 +3021,14 @@ public class EvaluationBackingBean extends
 
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
-					zoneItem.setAjax(true);
+					//zoneItem.setAjax(true);
+					zoneItem.setTransient(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
+					zoneItem.setOnstart("blockWidget.show();");
 					zoneItem.setOncomplete("specTabChange([ {name : 'selectedZoneTabIndex', value : "
-							+ zoneTabIndex + "}]);");
+							+ zoneTabIndex + "}]); blockWidget.hide();");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
