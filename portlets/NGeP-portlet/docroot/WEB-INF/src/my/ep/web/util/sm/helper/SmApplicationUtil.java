@@ -2804,46 +2804,61 @@ public class SmApplicationUtil {
 			String prof, String semiProf, String suppType) {
 		StringBuilder sb = new StringBuilder();
 		if (equityOwner.equals("1")) {
-			sb.append(SmCommonUtil.getMessage(
-					SupplierManagementConst.PERSONNEL_EQUI_OWNER, null));
+			sb.append(
+					SmCommonUtil.getMessage(
+							SupplierManagementConst.PERSONNEL_EQUI_OWNER, null))
+					.append(",");
 		}
 		if (director.equals("1")) {
-			sb.append(SmCommonUtil.getMessage(
-					SupplierManagementConst.PERSONNEL_DIR_ROLENAME, null));
+			sb.append(
+					SmCommonUtil.getMessage(
+							SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
+							null)).append(",");
 		}
 		if (higherManagement.equals("1")) {
-			sb.append(SmCommonUtil.getMessage(
-					SupplierManagementConst.PERSONNEL_HGHR_ROLENAME, null));
+			sb.append(
+					SmCommonUtil.getMessage(
+							SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
+							null)).append(",");
 		}
 		if (management.equals("1")) {
-			sb.append(SmCommonUtil
-					.getMessage(
-							SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
-							null));
+			sb.append(
+					SmCommonUtil
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+									null)).append(",");
 		}
 		if (clerical.equals("1")) {
 			if (suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-				sb.append(SmCommonUtil
-						.getMessage(
-								SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
-								null));
+				sb.append(
+						SmCommonUtil
+								.getMessage(
+										SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+										null)).append(",");
 			} else {
-				sb.append(SmCommonUtil.getMessage(
-						SupplierManagementConst.PERSONNEL_STAFF_ROLENAME, null));
+				sb.append(
+						SmCommonUtil
+								.getMessage(
+										SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
+										null)).append(",");
 			}
 		}
 		if (prof.equals("1")) {
-			sb.append(SmCommonUtil
-					.getMessage(
-							SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
-							null));
+			sb.append(
+					SmCommonUtil
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+									null)).append(",");
 		}
 		if (semiProf.equals("1")) {
-			sb.append(SmCommonUtil.getMessage(
-					SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
-					null));
+			sb.append(
+					SmCommonUtil
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+									null)).append(",");
 		}
-		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
+		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
+				: StringUtils.EMPTY;
 	}
 
 	/**
@@ -11269,6 +11284,33 @@ public class SmApplicationUtil {
 			payReq = true;
 		}
 		return payReq;
+	}
+
+	/**
+	 * Wild card search for rejection reasons
+	 * 
+	 * @param String
+	 *            searchQuery
+	 * @param List
+	 *            <PmReasonDesc> rejectReasons
+	 * @return List<PmReasonDesc>
+	 */
+	public static List<PmReasonDesc> getWildCardSearchRejectReason(
+			String searchQuery, List<PmReasonDesc> rejectReasons) {
+		List<PmReasonDesc> resultList = new ArrayList<PmReasonDesc>();
+		if (!EntityHelper.isCollectionEmpty(rejectReasons)) {
+			if (StringUtils.isBlank(searchQuery)) {
+				resultList = rejectReasons;
+			} else {
+				for (PmReasonDesc tmp : rejectReasons) {
+					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
+							StringUtils.upperCase(searchQuery))) {
+						resultList.add(tmp);
+					}
+				}
+			}
+		}
+		return resultList;
 	}
 
 	/**
