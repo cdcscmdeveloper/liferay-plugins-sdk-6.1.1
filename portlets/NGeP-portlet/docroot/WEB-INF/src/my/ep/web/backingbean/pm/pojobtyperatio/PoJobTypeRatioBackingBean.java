@@ -3,7 +3,10 @@
  */
 package my.ep.web.backingbean.pm.pojobtyperatio;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -26,6 +29,7 @@ import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmPoJobTypeRatio;
 import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.type.aut.SearchOperator;
@@ -37,6 +41,8 @@ import my.ep.web.managedbean.pm.pojobtyperatio.PoJobTypeRatioManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -97,16 +103,31 @@ public class PoJobTypeRatioBackingBean extends
 
 	private void loadPoJobTypeRatio(Long poJobTypeRatioId) {
 		log.info("loadPoJobTypeRaio");
-		getManagedBean().setPoJobTypeRatio(initNewJobTypeRatio());
+		getManagedBean().setPoJobTypeRatio(initNewJobTypeRatio());	
 		List<PmPoJobTypeRatio> jobTypeRatioList = retrievePoJobTypeRatios(
 				poJobTypeRatioId, null);
+		PmPoJobTypeRatio oriPoJobTypeRatio = null;
 		if (jobTypeRatioList != null && !jobTypeRatioList.isEmpty()) {
 			getManagedBean().setPoJobTypeRatio(jobTypeRatioList.get(0));
+			oriPoJobTypeRatio = (PmPoJobTypeRatio)(SerializationUtils.clone(jobTypeRatioList.get(0)));
+			getManagedBean().setOriPoJobTypeRatio(oriPoJobTypeRatio);
 			getManagedBean().setApplDisabled(false);
 			getManagedBean().setCategoryDisabled(false);
+			initJobWeightMap();
 			disableCategoryType();
 		} else {
 			throw new EpException("not able to retrive po job type ratio");
+		}
+	}
+	
+	private void initJobWeightMap(){
+		List<PmPoJobWeight> jobWeightList = PmCommonUtil.retrievePmPoJobWeightList();
+		if(CollectionUtils.isNotEmpty(jobWeightList)){
+			Map<Long,PmPoJobWeight> map = new HashMap<Long, PmPoJobWeight>();
+			for(PmPoJobWeight jobWeight : jobWeightList){
+				map.put(jobWeight.getPoJobWeightId(), jobWeight);
+			}
+			getManagedBean().setJobWeightMap(map);
 		}
 	}
 
@@ -174,7 +195,7 @@ public class PoJobTypeRatioBackingBean extends
 				getFacesScopes().getUserLocale()));
 		int i = 1;
 		for (Map.Entry<String, String> entry : map.entrySet()) {
-			items[i++] = new SelectItem(entry.getValue(), entry.getKey());
+			items[i++] = new SelectItem(entry.getValue(), PmCommonUtil.getResourceBundleLabels(entry.getKey()));
 		}
 
 		return items;
@@ -196,7 +217,7 @@ public class PoJobTypeRatioBackingBean extends
 				getFacesScopes().getUserLocale()));
 		int i = 1;
 		for (Map.Entry<String, String> entry : map.entrySet()) {
-			items[i++] = new SelectItem(entry.getValue(), entry.getKey());
+			items[i++] = new SelectItem(entry.getValue(), PmCommonUtil.getResourceBundleLabels(entry.getKey()));
 		}
 
 		return items;
@@ -210,7 +231,7 @@ public class PoJobTypeRatioBackingBean extends
 	public SelectItem[] jobWeightTypeOptions() {
 		log.info("jobWeightTypeOptions");
 		Map<String, Long> map = new TreeMap<String, Long>();
-		for (PmPoJobWeight weight : PmCommonUtil.retrievePmPoJobWeightList()) {
+		for (PmPoJobWeight weight : getManagedBean().getJobWeightMap().values()) {
 			map.put(getParameterDesc(weight.getWeightType()),
 					weight.getPoJobWeightId());
 		}
@@ -239,8 +260,9 @@ public class PoJobTypeRatioBackingBean extends
 					.isBrandNew();
 			PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
 			reqDTO.setJobTypeRatio(getManagedBean().getPoJobTypeRatio());
+			setupTrackingDiaryVal(reqDTO);
 			PoJobTypeRatioResDTO resDTO = jobRatioSO.saveJobTypeRatio(reqDTO);
-			if (resDTO.isSuccessful()) {
+			if (resDTO.isSuccessful() && resDTO.getPoJobTypeRatio() != null) {
 				if (isBrandNew) {
 					PmCommonUtil.showFacesMsg(
 							FacesContext.getCurrentInstance(),
@@ -255,6 +277,10 @@ public class PoJobTypeRatioBackingBean extends
 							FacesContext.getCurrentInstance(),
 							FacesMessage.SEVERITY_INFO,
 							MessageConst.INFO_779301, new String[] {});
+					initJobWeightMap();
+					getManagedBean().setPoJobTypeRatio(resDTO.getPoJobTypeRatio());
+					PmPoJobTypeRatio oriPoJobTypeRatio = (PmPoJobTypeRatio)(SerializationUtils.clone(resDTO.getPoJobTypeRatio()));
+					getManagedBean().setOriPoJobTypeRatio(oriPoJobTypeRatio);
 					return NAV_TO_DETAILS;
 				}
 			}
@@ -345,36 +371,110 @@ public class PoJobTypeRatioBackingBean extends
 	public String backToMain() {
 		getManagedBean().setAppTypeMap(null);
 		getManagedBean().setCategoryTypeMap(null);
+		getManagedBean().getJobTypeRatioDataModel().reloadData();
 		return NAV_TO_MAIN;
 	}
 
 	public static SelectItem[] getStatusOptions() {
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	public String getAppTypeString(String appType) {
-		String appTypeString = null;
-		for (Entry<String, String> entry : getManagedBean().getAppTypeMap()
-				.entrySet()) {
-			if (Objects.equals(appType, entry.getValue())) {
-				appTypeString = entry.getKey();
-				break;
-			}
-		}
-		return appTypeString;
-
+		return getStringMapValByKey(appType, getManagedBean().getAppTypeMap(),null);
 	}
 
 	public String getCateogryTypeString(String categoryType) {
-		String cateogryTypeString = null;
-		for (Entry<String, String> entry : getManagedBean().getCategoryTypeMap()
+		return getStringMapValByKey(categoryType,getManagedBean().getCategoryTypeMap(),null);
+	}
+	
+	private String getStringMapValByKey(String key,Map<String, String> map,Locale locale) {
+		String value = null;
+		for (Entry<String, String> entry : map
 				.entrySet()) {
-			if (Objects.equals(categoryType, entry.getValue())) {
-				cateogryTypeString = entry.getKey();
+			if (Objects.equals(key, entry.getValue())) {
+				value = PmCommonUtil.getResourceBundleLabels(entry.getKey(),locale != null ? locale : getFacesScopes().getUserLocale());
 				break;
 			}
 		}
-		return cateogryTypeString;
+		return value;
+		
+
+	}
+	
+	private void setupTrackingDiaryVal(PoJobTypeRatioReqDTO reqDTO){
+		PmPoJobTypeRatio jobTypeRatio = getManagedBean().getPoJobTypeRatio();
+		PmPoJobTypeRatio oriJobTypeRatio = getManagedBean().getOriPoJobTypeRatio();
+		getManagedBean().setAppTypeMap(null);
+		getManagedBean().setCategoryTypeMap(null);
+		String messageId = null;
+		String[] params = null;
+		Locale myLocale = PmCommonUtil.getMyLocale();
+		if(jobTypeRatio.isBrandNew()){
+			messageId = MessageConst.TD_81520;
+			params = initMessageParam(jobTypeRatio,
+					getParameterDesc(jobTypeRatio.getPoJobWeight().getWeightType(),myLocale));
+			addTrackingDiaryIntoList(messageId, params, oriJobTypeRatio, reqDTO);
+		}else{
+			if(oriJobTypeRatio != null && jobTypeRatio != null){
+				if(!oriJobTypeRatio.getPoJobWeight().getPoJobWeightId().equals(jobTypeRatio.getPoJobWeight().getPoJobWeightId())){
+					messageId = MessageConst.TD_81521;
+					params = initMessageParam(jobTypeRatio,
+							getManagedBean().getJobWeightMap().get(oriJobTypeRatio.getPoJobWeight().getPoJobWeightId()).getWeightValue().toString(),
+							getManagedBean().getJobWeightMap().get(jobTypeRatio.getPoJobWeight().getPoJobWeightId()).getWeightValue().toString()
+							);
+					addTrackingDiaryIntoList(messageId, params, oriJobTypeRatio, reqDTO);
+				
+				}
+				
+				if(!oriJobTypeRatio.getRecordStatusFlg().equals(jobTypeRatio.getRecordStatusFlg())){
+					if(DbValueConst.RECORD_STATUS_SUSPENDED == jobTypeRatio.getRecordStatusFlg()){
+						messageId = MessageConst.TD_81522;
+					}else if(DbValueConst.RECORD_STATUS_ACTIVE == jobTypeRatio.getRecordStatusFlg()){
+						messageId = MessageConst.TD_81523;
+					}
+					params = initMessageParam(jobTypeRatio);	
+					addTrackingDiaryIntoList(messageId, params, oriJobTypeRatio, reqDTO);
+				
+				}
+			}
+		}
+	}
+	
+	private String[] initMessageParam(PmPoJobTypeRatio jobTypeRatio,String... moreParam ){		
+		Locale myLocale = PmCommonUtil.getMyLocale();
+		String[] returnParams; 
+		if(moreParam.length > 0){
+			List<String> arrayList = new ArrayList<String>();
+			arrayList.add(jobTypeRatio.getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) 
+					? PmCommonUtil.getResourceBundleLabels("lbl.sm.contractor" , myLocale) 
+							: PmCommonUtil.getResourceBundleLabels("lbl.sm.consultant" , myLocale));
+			arrayList.add(getStringMapValByKey(jobTypeRatio.getApplType(),getManagedBean().getAppTypeMap(),myLocale));
+			arrayList.add(jobTypeRatio.getCategoryType() != null ? getStringMapValByKey(jobTypeRatio.getCategoryType(),getManagedBean().getCategoryTypeMap(),myLocale) : "-");
+			for(String string : moreParam){
+				arrayList.add(string);
+			}
+			returnParams = new String[ arrayList.size() ];
+			arrayList.toArray(returnParams);
+		}else{
+			returnParams = new String[]{
+					jobTypeRatio.getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) 
+					? PmCommonUtil.getResourceBundleLabels("lbl.sm.contractor" , myLocale) 
+						: PmCommonUtil.getResourceBundleLabels("lbl.sm.consultant" , myLocale),
+					getStringMapValByKey(jobTypeRatio.getApplType(),getManagedBean().getAppTypeMap(),myLocale),
+					jobTypeRatio.getCategoryType() != null ? getStringMapValByKey(jobTypeRatio.getCategoryType(),getManagedBean().getCategoryTypeMap(),myLocale) : "-"
+			};
+		}
+		
+		return returnParams;
+	}
+	
+	private void addTrackingDiaryIntoList(String messageId, String[] params,PmPoJobTypeRatio jobTypeRatio,PoJobTypeRatioReqDTO reqDTO){
+		if(messageId != null && params != null && params.length > 0){			
+			reqDTO.getTrackingDiaryList().add(
+					PmCommonUtil.assignTrackingDairyForJobTypeRatio(jobTypeRatio, 
+							PmCommonUtil.getActionDesc(messageId, params), 
+							jobTypeRatio.getRecordStatusFlg().longValue()));
+		}
 	}
 
 }

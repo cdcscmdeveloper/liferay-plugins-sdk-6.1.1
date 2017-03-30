@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.pojobweight;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -23,6 +24,7 @@ public class PoJobWeightManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private List<PmPoJobWeight> jobWeightList;
+	private List<PmPoJobWeight> oriJobWeightList;
 
 	public PoJobWeightManagedBean (){}
 
@@ -39,6 +41,25 @@ public class PoJobWeightManagedBean extends BaseManagedBean {
 	 */
 	public void setJobWeightList(List<PmPoJobWeight> jobWeightList) {
 		this.jobWeightList = jobWeightList;
+	}
+
+
+	/**
+	 * @return the oriJobWeightList
+	 */
+	public List<PmPoJobWeight> getOriJobWeightList() {
+		if(oriJobWeightList == null){
+			oriJobWeightList = new ArrayList<PmPoJobWeight>();
+		}
+		return oriJobWeightList;
+	}
+
+
+	/**
+	 * @param oriJobWeightList the oriJobWeightList to set
+	 */
+	public void setOriJobWeightList(List<PmPoJobWeight> oriJobWeightList) {
+		this.oriJobWeightList = oriJobWeightList;
 	}
 
 

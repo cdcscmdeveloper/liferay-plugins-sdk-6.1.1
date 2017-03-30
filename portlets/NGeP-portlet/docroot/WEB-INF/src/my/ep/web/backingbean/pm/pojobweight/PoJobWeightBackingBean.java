@@ -53,6 +53,11 @@ public class PoJobWeightBackingBean extends
 	private void initJobWeight() {
 		log.info("initJobWeight");
 		getManagedBean().setJobWeightList(PmCommonUtil.retrievePmPoJobWeightList());
+		PmPoJobWeight oriJobWeight = null;
+		for(PmPoJobWeight jobWeight : getManagedBean().getJobWeightList()){
+			oriJobWeight = (PmPoJobWeight)jobWeight.cloneEntity();  
+			getManagedBean().getOriJobWeightList().add(oriJobWeight);
+		}
 	}
 
 	public void saveJobWeight() {
@@ -64,6 +69,7 @@ public class PoJobWeightBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IPoJobWeightSO.class);
 			PoJobWeightReqDTO reqDTO = new PoJobWeightReqDTO();
 			reqDTO.setJobWeightList(getManagedBean().getJobWeightList());
+			setupTrackingDiaryVal(reqDTO);
 			PoJobWeightResDTO resDTO = jobWeightSO.saveJobWeight(reqDTO);
 			if (resDTO.isSuccessful()) {
 				initJobWeight();
@@ -111,7 +117,7 @@ public class PoJobWeightBackingBean extends
 			throw new EpException("Cannot more than 9");
 		}
 		
-		if(moderate == high || moderate == extraHigh || high == extraHigh ){
+		if(moderate.equals(high) || moderate.equals(extraHigh) || high.equals(extraHigh) ){
 			throw new EpException(MessageConst.ERROR_779201);
 		}
 		
@@ -150,4 +156,34 @@ public class PoJobWeightBackingBean extends
 		}
 		return false;
 	}
+	
+	private void setupTrackingDiaryVal(PoJobWeightReqDTO reqDTO){
+		String messageId = null;
+		for(PmPoJobWeight jobWeight : getManagedBean().getJobWeightList()){
+			for(PmPoJobWeight oriJobWeight : getManagedBean().getOriJobWeightList()){
+				if(jobWeight.getPoJobWeightId().equals(oriJobWeight.getPoJobWeightId()) &&
+						!jobWeight.getWeightValue().equals(oriJobWeight.getWeightValue())){
+					messageId = null;
+					if(ParameterConst.JOB_WEIGHT_MODERATE.equals(jobWeight.getWeightType().getParameterCode())){
+						messageId = MessageConst.TD_81500;
+					}else if(ParameterConst.JOB_WEIGHT_HIGH.equals(jobWeight.getWeightType().getParameterCode())){
+						messageId = MessageConst.TD_81501;
+					}else if(ParameterConst.JOB_WEIGHT_EXTRA_HIGH.equals(jobWeight.getWeightType().getParameterCode())){
+						messageId = MessageConst.TD_81502;
+					}	
+					if(messageId != null){
+						reqDTO.getTrackingDiaryList().add(
+								PmCommonUtil.assignTrackingDairyForJobWeight(jobWeight,
+										 PmCommonUtil.getActionDesc(messageId, 
+												 new String[]{oriJobWeight.getWeightValue().toString(),
+												 jobWeight.getWeightValue().toString()}), 
+												 jobWeight.getRecordStatusFlg().longValue()));
+				
+					}
+				}
+			}
+		}
+	}
+	
+	
 }
