@@ -45,19 +45,19 @@
 				<p:column headerText="#{lbl['lbl.sm.application.no']} (#{lbl['lbl.sm.companyname']})" disabledSelection="#{tasks.notAllowedToTick}">
 					
 					<br />
-					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
+					<p:outputPanel rendered="#{tasks.overlappedCategory}">
 						<font color="red">&#x26A0;</font>&#160;
 						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />&#160;
 					</p:outputPanel>
 					
 					<b><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /></b><br />
 					
-					<p:outputPanel rendered="#{not empty tasks.overlapMsg}">
+					<p:outputPanel rendered="#{tasks.overlappedCategory}">
 						<br /><h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>
 						<br /><h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{bulkApplicationBackingBean.onViewOverlapCategory(tasks.overlapCategoryVOList)}"
+							action="#{bulkApplicationBackingBean.onViewOverlapCategory(tasks)}"
 							process="@this"
 							partialSubmit="true" update=":form">
 								&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
