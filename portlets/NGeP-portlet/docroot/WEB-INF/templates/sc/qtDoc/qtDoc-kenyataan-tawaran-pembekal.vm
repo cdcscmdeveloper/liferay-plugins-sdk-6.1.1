@@ -76,13 +76,7 @@ th{
 			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KETERANGAN TAWARAN :</span> $qtTitle</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> #if ($qtType == "Open")
-				Terbuka
-			#end 
-			#if ($qtType == "Restricted") 
-				Tender Terhad
-			#end
-			</td>
+			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> $qtType</td>
 		</tr>
 		#if($panel == "true")
 		#else
