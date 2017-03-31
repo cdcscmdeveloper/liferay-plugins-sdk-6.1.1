@@ -37,6 +37,7 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	private String popUpMsg;
 	
+	private String defaultOutputType;
 	
 	
 	
@@ -44,6 +45,21 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	
 	
+	
+	/**
+	 * @return the defaultOutputType
+	 */
+	public String getDefaultOutputType() {
+		return defaultOutputType;
+	}
+
+	/**
+	 * @param defaultOutputType the defaultOutputType to set
+	 */
+	public void setDefaultOutputType(String defaultOutputType) {
+		this.defaultOutputType = defaultOutputType;
+	}
+
 	/**
 	 * @return the popUpMsg
 	 */
