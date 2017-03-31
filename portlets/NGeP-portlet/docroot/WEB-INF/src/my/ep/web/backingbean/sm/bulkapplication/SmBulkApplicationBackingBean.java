@@ -10,23 +10,30 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.ReasonCategory;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.bulkapplication.SmBulkApplicationManagedBean;
@@ -57,8 +64,6 @@ public class SmBulkApplicationBackingBean extends
 	public void preRenderBulkApplication() {
 		renewSesionObject();
 		getManagedBean().setSelectedTasks(new ArrayList<SmBulkApplicationVO>());
-		getManagedBean().setInitSelectedTasks(
-				new ArrayList<SmBulkApplicationVO>());
 		SmCommonUtil.setMDCUserId();
 		getManagedBean().setMaxBulkApprovalCount(
 				SmRuleHelper.getInstance().getMaxBulkApproval());
@@ -71,6 +76,7 @@ public class SmBulkApplicationBackingBean extends
 						SmApplicationUtil
 								.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
 										.value()));
+		refreshTaskList();
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/bulkApplication/bulkApplicationBasePage.xhtml", "",
 				null, null);
@@ -80,6 +86,7 @@ public class SmBulkApplicationBackingBean extends
 		if (!EntityHelper
 				.isCollectionEmpty(getManagedBean().getSelectedTasks())) {
 			validateTotalSelectedApplication();
+			validateApproveCategories();
 			validateOverlapRemarks();
 			FacesScopes fs = new FacesScopes();
 			ReviewApplicationReqDTO reqDTO = null;
@@ -151,8 +158,8 @@ public class SmBulkApplicationBackingBean extends
 									.getAppl(), null, false, bulkAppl.getAppl()
 									.getSmSupplier(), null, null, reqDTO);
 
-					SmServiceLookup.getReviewApplicationSO()
-							.submitPOorApproverReviewToBPM(reqDTO);
+					// SmServiceLookup.getReviewApplicationSO()
+					// .submitPOorApproverReviewToBPM(reqDTO);
 
 					successSubmittedList.add(bulkAppl.getAppl());
 
@@ -242,52 +249,6 @@ public class SmBulkApplicationBackingBean extends
 			retVal = true;
 		}
 		return retVal;
-	}
-
-	/**
-	 * Remove un selected admin from the selected personnel list.
-	 * 
-	 * @param e
-	 *            - AjaxBehaviorEvent
-	 * 
-	 */
-	public void onCheckSelectedAppl(AjaxBehaviorEvent e) {
-		boolean isReachMaxBulkApproval = getManagedBean().getSelectedTasks()
-				.size() > getManagedBean().getMaxBulkApprovalCount() ? true
-				: false;
-		if (isReachMaxBulkApproval) {
-			SmBulkApplicationVO removeBulkVO = null;
-			for (SmBulkApplicationVO bulkVO : getManagedBean()
-					.getSelectedTasks()) {
-				SmBulkApplicationVO tempBulkVO = (SmBulkApplicationVO) EntityHelper
-						.getEntityBySinglePropertyFromList(bulkVO.getAppl()
-								.getApplId(), getManagedBean()
-								.getInitSelectedTasks(), "appl");
-				if (tempBulkVO == null) {
-					removeBulkVO = bulkVO;
-					break;
-				}
-			}
-			if (removeBulkVO != null) {
-				getManagedBean().getSelectedTasks().remove(removeBulkVO);
-			}
-		}
-
-		for (SmBulkApplicationVO bulkVO : getManagedBean()
-				.getClaimTaskListDataModel()) {
-			SmBulkApplicationVO tempBulkVO = (SmBulkApplicationVO) EntityHelper
-					.getEntityBySinglePropertyFromList(bulkVO.getAppl()
-							.getApplId(), getManagedBean().getSelectedTasks(),
-							"appl");
-			if (isReachMaxBulkApproval && tempBulkVO == null) {
-				bulkVO.setNotAllowedToTick(true);
-			} else {
-				bulkVO.setNotAllowedToTick(false);
-			}
-		}
-
-		getManagedBean().setInitSelectedTasks(
-				getManagedBean().getSelectedTasks());
 	}
 
 	/**
@@ -396,8 +357,8 @@ public class SmBulkApplicationBackingBean extends
 		if (vo.getAppl() != null
 				&& vo.getAppl().getApplType()
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				&& EntityHelper.isCollectionEmpty(vo
-						.getOverlapCategoryVOList())) {
+				&& EntityHelper
+						.isCollectionEmpty(vo.getOverlapCategoryVOList())) {
 			SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
 					.getOverlapCategoryVO(vo.getAppl());
 			if (overlapCategoryVO != null) {
@@ -415,8 +376,12 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void refreshTaskList() {
-		this.getManagedBean().getClaimTaskListDataModel().reloadData();
-		this.getManagedBean().getUnClaimTaskListDataModel().reloadData();
+		getManagedBean().setClaimTasks(new ArrayList<SmBulkApplicationVO>());
+		getManagedBean().setUnClaimTasks(new ArrayList<SmBulkApplicationVO>());
+		initTasks(BpmConstants.ASSIGNMENT_MY, getManagedBean().getClaimTasks(),
+				true);
+		initTasks(BpmConstants.ASSIGNMENT_GROUP, getManagedBean()
+				.getUnClaimTasks(), false);
 		this.getManagedBean().setFailedSubmittedList(null);
 	}
 
@@ -467,7 +432,7 @@ public class SmBulkApplicationBackingBean extends
 	private void validateOverlapRemarks() {
 		StringBuilder sb = new StringBuilder();
 		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
-			if (StringUtils.isBlank(bulkAppl.getOverlapRemarks())) {
+			if (bulkAppl.isOverlappedCategory()) {
 				sb.append(SmCommonUtil.getMessage(
 						"lbl.sm.overlapped.category.remarks.appl.required",
 						new String[] { bulkAppl.getAppl().getApplNo() }));
@@ -484,6 +449,51 @@ public class SmBulkApplicationBackingBean extends
 				.getMaxBulkApprovalCount()) {
 			throw new EpException(getManagedBean().getMaxBulkApprovalMsg());
 		}
+	}
+
+	private void validateApproveCategories() {
+		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
+			for (SmSupplierCategory cat : vo.getPendingApproveCategories()) {
+				if (cat.getApprvrDecFlg() == null) {
+					throw new EpException(
+							SmCommonUtil
+									.getMessage(
+											"lbl.sm.required.msg",
+											new String[] { SmCommonUtil
+													.getMessage(
+															"lbl.sm.catCodes.appAct",
+															null)
+													+ " "
+													+ SmCommonUtil
+															.getMessage(
+																	"lbl.sm.catCodes.forCatCode",
+																	null)
+													+ " "
+													+ cat.getPmCategoryL1()
+															.getCategoryL1Code()
+													+ cat.getPmCategoryL2()
+															.getCategoryL2Code()
+													+ cat.getPmCategoryL3()
+															.getCategoryL3Code() }));
+				}
+				if (StringUtils.isBlank(cat.getApproverRemarks())
+						&& cat.getApprvrDecFlg() == 0) {
+					throw new EpException(
+							SmCommonUtil.getMessage(
+									"lbl.sm.required.msg",
+									new String[] { SmCommonUtil.getMessage(
+											"lbl.sm.catCodes.rejRemarks", null)
+											+ " "
+											+ cat.getPmCategoryL1()
+													.getCategoryL1Code()
+											+ cat.getPmCategoryL2()
+													.getCategoryL2Code()
+											+ cat.getPmCategoryL3()
+													.getCategoryL3Code() }));
+				}
+			}
+		}
+
 	}
 
 	/**
@@ -569,5 +579,152 @@ public class SmBulkApplicationBackingBean extends
 			}
 		}
 		return isRejectReasonReqd;
+	}
+
+	private void initTasks(String assignmentType,
+			List<SmBulkApplicationVO> taskList, boolean isClaim) {
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setAssignment(assignmentType);
+		reqDTO.setState("ASSIGNED");
+		reqDTO.setCtxToken(token);
+		reqDTO.setDocType("SR");
+
+		BpmResponseDTO responseDTO = SmServiceLookup.getBpmSO()
+				.getWorklistItems(reqDTO);
+
+		if (responseDTO.getWorklistVO() != null) {
+			if (responseDTO.getWorklistVO().getWorklistItem() != null) {
+				SmBulkApplicationVO bulkAppl = null;
+				for (WorklistItemVO worklistItemVO : responseDTO
+						.getWorklistVO().getWorklistItem()) {
+					bulkAppl = getBulkApplicationVO(worklistItemVO);
+					if (bulkAppl != null
+							&& ((isClaim && worklistItemVO.isClaimed()) || (!isClaim && !worklistItemVO
+									.isClaimed()))) {
+						taskList.add(getBulkApplicationVO(worklistItemVO));
+					}
+				}
+			}
+		}
+	}
+
+	private SmBulkApplicationVO getBulkApplicationVO(
+			WorklistItemVO worklistItemVO) {
+		SmBulkApplicationVO bulkApplicationVO = null;
+		if (worklistItemVO.getDocType() != null
+				&& worklistItemVO.getDocType().equalsIgnoreCase("SR")) {
+			FacesScopes face = new FacesScopes();
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			mofReqDTO.setApplId(worklistItemVO.getDocId().longValue());
+			SmAppl appl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(mofReqDTO).getSmAppl();
+			SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							SupplierManagementConst.SECTION_REV_ROLE_PO,
+							appl.getSmApplSectionReviews(), "roleType");
+
+			if (appl != null) {
+				String companyName = appl.getSmSupplier().getCompanyName();
+				StringBuilder sb = new StringBuilder();
+				sb.append(ResourceBundleUtils.getMessage(
+						worklistItemVO.getTitle(),
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				if (companyName != null) {
+					sb.append(" ( ");
+					sb.append(companyName);
+					sb.append(" ) ");
+				}
+				worklistItemVO.setTitle(sb.toString());
+				bulkApplicationVO = new SmBulkApplicationVO();
+				bulkApplicationVO.setTaskId(worklistItemVO.getTaskId());
+				bulkApplicationVO.setTaskName(worklistItemVO.getTaskName());
+				bulkApplicationVO.setCreateDate(worklistItemVO.getCreateDate());
+				bulkApplicationVO.setExpirationDate(worklistItemVO
+						.getExpirationDate());
+				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
+				bulkApplicationVO.setTitle(worklistItemVO.getTitle());
+				bulkApplicationVO.setAppl(appl);
+				if (poRev != null) {
+					bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
+							.getChangedBy()));
+				}
+				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
+						.getInstance().retrieveRegistrationStatusList(
+								appl.getSupplierType(), appl.getApplType()));
+				bulkApplicationVO.setHqFacility(SmApplicationUtil
+						.getHqFacilityByAppl(appl));
+				PmStatusDesc currentStatusDesc = SmApplicationUtil
+						.getCurrRegStatusDesc(appl);
+				if (currentStatusDesc == null) {
+					currentStatusDesc = SmApplicationUtil
+							.getDefaultRegStatusDesc(bulkApplicationVO
+									.getHqFacility(), appl.getSmSupplier()
+									.isBumi());
+				}
+				bulkApplicationVO.setApprovedStatusId(currentStatusDesc
+						.getPmStatus().getStatusId());
+				bulkApplicationVO.setCurrRegStatus(currentStatusDesc
+						.getStatusName());
+
+				// set overlap category alert
+				if (appl != null
+						&& appl.getApplType().equals(
+								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+					for (SmSupplierCategory cat : appl
+							.getSmSupplierCategories()) {
+						if (cat.isOverLapCategory()
+								&& (cat.getRecordStatusFlg()
+										.compareTo(
+												SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
+										.getRecordStatusFlg()
+										.compareTo(
+												SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
+							bulkApplicationVO.setOverlappedCategory(true);
+							break;
+						}
+					}
+				}
+
+				PmState state = appl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress()
+						.getPmState();
+				bulkApplicationVO.setPmZone(SmApplicationUtil
+						.retrieveZoneByStateId(state.getStateId()));
+				if (appl.getSupportingDocMode().equalsIgnoreCase(
+						SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+					bulkApplicationVO.setOnlineDoc(true);
+				} else {
+					bulkApplicationVO.setOnlineDoc(false);
+				}
+				bulkApplicationVO.setPaymentReqd(getPaymentMode(appl));
+				bulkApplicationVO
+						.setPendingApproveCategories(new ArrayList<SmSupplierCategory>());
+				for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							|| cat.getRecordStatusFlg()
+									.compareTo(
+											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+						bulkApplicationVO.getPendingApproveCategories()
+								.add(cat);
+					}
+				}
+			}
+		}
+		return bulkApplicationVO;
+	}
+
+	private boolean getPaymentMode(SmAppl smAppl) {
+		boolean payReq = false;
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			payReq = true;
+		}
+		return payReq;
 	}
 }
