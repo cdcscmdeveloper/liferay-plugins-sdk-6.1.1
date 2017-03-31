@@ -289,7 +289,7 @@
 	       </h:panelGroup>    
 	</p:outputPanel>
    </p:panel>
-    <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
+    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
 		 <table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -328,6 +328,7 @@
 					</table>    					
 				</td>
 				<td width="50%" valign="top">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
 				<table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
