@@ -10730,6 +10730,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		reqDTO.setCheckLists(updatedCheckLists);
 		reqDTO.setTobeStatusChangeList(toBeRemoveList);
 		resetCommitteeActivity(reqDTO);
+		reqDTO.setScQt(getManagedBean().getQt());
+		reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
+				this.getManagedBean().getSpecMaintenanceScreen()));
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		SpecificationResDTO resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
 
 		// Need to redirect particualr page..
@@ -11271,6 +11275,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		reqDTO.setCheckLists(updatedCheckLists);
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		resetCommitteeActivity(reqDTO);
+		reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
+				this.getManagedBean().getSpecMaintenanceScreen()));
 		// code if alredy checklist exist need to remove existing finalcialspec
 
 		/*
