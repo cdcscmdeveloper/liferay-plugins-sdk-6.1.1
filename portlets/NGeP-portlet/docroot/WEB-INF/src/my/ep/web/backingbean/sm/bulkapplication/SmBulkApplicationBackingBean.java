@@ -158,8 +158,8 @@ public class SmBulkApplicationBackingBean extends
 									.getAppl(), null, false, bulkAppl.getAppl()
 									.getSmSupplier(), null, null, reqDTO);
 
-					// SmServiceLookup.getReviewApplicationSO()
-					// .submitPOorApproverReviewToBPM(reqDTO);
+					SmServiceLookup.getReviewApplicationSO()
+							.submitPOorApproverReviewToBPM(reqDTO);
 
 					successSubmittedList.add(bulkAppl.getAppl());
 

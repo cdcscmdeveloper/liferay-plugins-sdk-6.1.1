@@ -772,6 +772,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				} else {
 					cat.setApprvrDecFlg(1);
 				}
+				SmApplicationUtil.setSupplierCategoryEffectiveDate(cat,
+						getManagedBean().getSmAppl().getApplType());
 			}
 		}
 	}
