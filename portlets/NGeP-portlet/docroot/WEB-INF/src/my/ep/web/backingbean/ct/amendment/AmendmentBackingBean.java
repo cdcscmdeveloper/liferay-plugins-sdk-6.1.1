@@ -957,6 +957,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(
 						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 			}
+			
+			if(ctBackingBean.getManagedBean().getContractVer().getCtSchedules() != null){
+				for(CtSchedule schedules : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()){
+							PmParameter parameter =  new PmParameter();
+							parameter.setParameterId(schedules.getFulfilmentTypeId());
+							schedules.setScheduleType(parameter);
+				}
+			}
 
 			if (getManagedBean().isPrepareLOA()) {
 				int contractDuration = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
@@ -1360,7 +1368,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 											+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
-						if (schedules.getScheduleType() == null || schedules.getScheduleType().getParameterId() == null) {
+						if (schedules.getFulfilmentTypeId() == null) {
 							throw new EpException(MessageConst.ERROR_100022, 
 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
