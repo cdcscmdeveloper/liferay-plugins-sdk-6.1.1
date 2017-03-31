@@ -177,6 +177,13 @@
 				value="#{lbl['lbl.btn.cancel']}" update="@form" id="cancelBtnId"/>
 		</div>
 		
-		<ac:smOverlapCategoryDialog voList="#{bulkApplicationBackingBean.managedBean.selectedOverlapCategoryVOList}" />
+		<ac:smOverlapCategoryDialog 
+			voList="#{bulkApplicationBackingBean.managedBean.selectedOverlapCategoryVOList}" />
+		
+		<ac:confirmationPopup id="approveConfirmPopup" width="400" height="100"
+			widget="approveConfirmPopup" update="@form"
+			okAction="bulkApplicationBackingBean.submitApprove()"
+			title="#{lbl['lbl.sm.overlapped.category.approval.confirmation.title']}"
+			content="#{lbl['lbl.sm.overlapped.category.approval.confirmation.msg']}" />
 	
 </ui:composition>
