@@ -1621,17 +1621,17 @@ public class DirectLOABackingBean extends
 	 */
 	public void contractSignerEvent() {
 		debugLogger("contractSignerEvent");
-		PmUser contractSigner = getManagedBean().getScLoa().getContractSigner();
-		if (contractSigner != null) {
+		ScLoa scLoa = getManagedBean().getScLoa();
+		if (scLoa.getContractSigner() != null) {
 			if (getManagedBean().getContractSignerList() != null
 					&& getManagedBean().getContractSignerList().size() > 0) {
 				List<PmUser> contractSignerList = getManagedBean()
 						.getContractSignerList();
 				for (PmUser user : contractSignerList) {
 
-					if (user.getUserId().equals(contractSigner.getUserId())) {
-						getManagedBean().getScLoa().setLoaSignerDesig(
-								user.getDesignation());
+					if (user.getUserId().equals(scLoa.getContractSigner().getUserId())) {
+						scLoa.setContractSigner(user);
+						scLoa.setLoaSignerDesig(user.getDesignation());
 						break;
 					} else {
 						getManagedBean().getScLoa().setLoaSignerDesig("");
@@ -5887,7 +5887,7 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		BigDecimal loaAmount = scLoa.getLoaAmt();
 		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
-		prepareSignerInfo();
+		
 		if (loaAmount != null) {
 			contractOverAllAmt   = overallCtAmount(loaAmount, gstAmount);
 			this.getManagedBean().setOverallContractAmt(contractOverAllAmt);
@@ -5901,10 +5901,9 @@ public class DirectLOABackingBean extends
 			
 			if (null != scLoa.getContractSigner()
 					&& scLoa.getContractSigner().getUserId() != null) {
-
 				scLoa.setLoaSignerDesig(null);
 				scLoa.setContractSigner(null);
-
+				prepareSignerInfo();
 				RequestContext.getCurrentInstance().execute(
 						"gstSignerConfirmPopupWin.show()");
 			}
