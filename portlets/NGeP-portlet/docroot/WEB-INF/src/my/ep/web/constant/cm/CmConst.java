@@ -35,11 +35,62 @@ public class CmConst {
 	
 	public static final String REPORT_CODE_CM002 = "CM_002";
 	
+	public static final String REPORT_CODE_CM008 = "CM_008";
+	
+	public static final String REPORT_CODE_CM009 = "CM_009";
+	
+	public static final String REPORT_CODE_CM010 = "CM_010";
+	
+	public static final String REPORT_CODE_CM011 = "CM_011";
+	
+	public static final String REPORT_CODE_CM005 = "CM_005";
 	
 	
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * @return the reportCodeCm005
+	 */
+	public String getReportCodeCm005() {
+		return REPORT_CODE_CM005;
+	}
+
+	/**
+	 * @return the reportCodeCm011
+	 */
+	public String getReportCodeCm011() {
+		return REPORT_CODE_CM011;
+	}
+
+	/**
+	 * @return the reportCodeCm010
+	 */
+	public String getReportCodeCm010() {
+		return REPORT_CODE_CM010;
+	}
+
+	/**
+	 * @return the reportCodeCm009
+	 */
+	public String getReportCodeCm009() {
+		return REPORT_CODE_CM009;
+	}
+
+	/**
+	 * @return the reportCodeCm008
+	 */
+	public String getReportCodeCm008() {
+		return REPORT_CODE_CM008;
+	}
+
 	/**
 	 * @return the reportCodeCm002
 	 */

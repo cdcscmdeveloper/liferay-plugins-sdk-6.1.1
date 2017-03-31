@@ -5,20 +5,23 @@ package my.ep.web.backingbean.report;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.rpt.ReportConst;
+import my.ep.dto.pm.common.report.RPTRequestReqDTO;
+import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.constant.cm.CmReportConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.CMReportManagedBean;
 import my.ep.web.util.FacesScopes;
 
@@ -47,10 +50,11 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 
 	public void generateReportCM002(){
 
-		HashMap<String,String> params = new HashMap<String,String>();
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 
-	
+
 		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+
 
 
 
@@ -58,60 +62,103 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 				&& this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode().trim().length()>0){
 			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
 		}
-		
+
 		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
 			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
 		}
-		
+
 		if(this.getManagedBean().getGroup()!=null && this.getManagedBean().getGroup().trim().length()>0){
 			params.put(CmReportConst.GROUP, this.getManagedBean().getGroup());
 		}
-		
+
 		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
 				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
 			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
 		}
-		
-		
+
+
 		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
 			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
 		}
-		
+
 		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
 			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
 		}
-		
+
 		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
 			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
 		}
-		
+
 		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
 			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
 		}
-		
+
 		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
 			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
 		}
-		
+
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		
+
 		if(this.getManagedBean().getDateFrom()!=null ){
 			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
 		}
-		
+
 		if(this.getManagedBean().getDateTo()!=null ){
 			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
 		}
-		
 
-		getPopUpMsg("1234");
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		/*String paramsURL = constructParameterString(params);
+
+		System.out.println("paramsURL:"+paramsURL);
+		 */
+		preGenerateReportAPI(params);
+		/*	RPTRequestResDTO resDTO = rptRequestSO.generateReport(paramsURL, this.getManagedBean().getReportCode(), 
+				this.getManagedBean().getReportName(), userId, false, this.getManagedBean().isTempAccess());*/
+
+
+
 
 		RequestContext.getCurrentInstance().execute("confirmationId.show()");
 
 
 	}
 
-	public void resetReportCM002(){
+
+	public void preGenerateReportAPI(LinkedHashMap<String, String> map){
+
+		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IRPTRequestSO.class);
+		
+		System.out.println("TempAccess"+this.getManagedBean().isTempAccess());
+		System.out.println("this.getManagedBean().getReportName():"+this.getManagedBean().getReportName());
+		System.out.println("this.getManagedBean().getReportCode():"+this.getManagedBean().getReportCode());
+
+		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
+		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
+		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
+		reqDTO.setParametersMap(map);
+		try {
+			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+			System.out.println("resDTO.getRequestId():"+resDTO.getRequestId());
+			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void resetReport(){
 
 		this.getManagedBean().setDateFrom(null);
 		this.getManagedBean().setDateTo(null);
@@ -179,13 +226,349 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 	}
 
 
-/*
-	public static void main (String argz[]){
-		
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		
-		System.out.println(""+df.format(new Date()));
-		
+	public void retrieveCmReportValueFromDb(){
+
+		resetReport();
+		retrieveReportValueFromDb();
 	}
-*/
+
+	public void generateReportCM008(){
+
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+
+		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+
+		if(this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode()!=null 
+				&& this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode().trim().length()>0){
+			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
+		}
+
+		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
+			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
+		}
+
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+
+
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
+		}
+
+		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
+			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
+		}
+
+		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
+			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
+		}
+
+		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
+			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
+		}
+
+		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
+			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
+		}
+
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
+
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		preGenerateReportAPI(params);
+
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+
+
+	}
+
+
+
+	public void generateReportCM009(){
+
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+
+		if(this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode()!=null 
+				&& this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode().trim().length()>0){
+			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
+		}
+
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
+		}
+
+		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
+			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
+		}
+
+		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
+			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
+		}
+
+		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
+			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
+		}
+
+		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
+			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
+		}
+
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
+
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		preGenerateReportAPI(params);
+
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+
+
+	}
+
+
+
+	public void generateReportCM010(){
+
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+
+		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+
+		if(this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode()!=null 
+				&& this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode().trim().length()>0){
+			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
+		}
+
+		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
+			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
+		}
+
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+
+
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
+		}
+
+		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
+			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
+		}
+
+		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
+			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
+		}
+
+		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
+			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
+		}
+
+		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
+			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
+		}
+
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
+
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		preGenerateReportAPI(params);
+
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+
+
+	}
+
+
+	public void generateReportCM011(){
+
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+
+		if(this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode()!=null 
+				&& this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode().trim().length()>0){
+			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
+		}
+
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
+		}
+
+		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
+			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
+		}
+
+		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
+			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
+		}
+
+		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
+			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
+		}
+
+		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
+			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
+		}
+
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
+
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		preGenerateReportAPI(params);
+
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+
+
+	}
+
+
+
+	public void generateReportCM005(){
+
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+
+		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+
+
+
+
+		if(this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode()!=null 
+				&& this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode().trim().length()>0){
+			params.put(CmReportConst.UNSPSC_CODE, this.getManagedBean().getSelectedCmUNSPSC().getUnspscCode());
+		}
+
+		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
+			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
+		}
+
+		if(this.getManagedBean().getGroup()!=null && this.getManagedBean().getGroup().trim().length()>0){
+			params.put(CmReportConst.GROUP, this.getManagedBean().getGroup());
+		}
+
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+
+
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
+		}
+
+		if(this.getManagedBean().getEpNo()!=null && this.getManagedBean().getEpNo().trim().length()>0){
+			params.put(CmReportConst.EP_NO, this.getManagedBean().getEpNo());
+		}
+
+		if(this.getManagedBean().getIcNo()!=null && this.getManagedBean().getIcNo().trim().length()>0){
+			params.put(CmReportConst.IC_NO, this.getManagedBean().getIcNo());
+		}
+
+		if(this.getManagedBean().getMofNo()!=null && this.getManagedBean().getMofNo().trim().length()>0){
+			params.put(CmReportConst.MOF_NO, this.getManagedBean().getMofNo());
+		}
+
+		if(this.getManagedBean().getBusRegNo()!=null && this.getManagedBean().getBusRegNo().trim().length()>0){
+			params.put(CmReportConst.REG_NO, this.getManagedBean().getBusRegNo());
+		}
+
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
+
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		preGenerateReportAPI(params);
+
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+
+
+	}
+
+
+
 }
