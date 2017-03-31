@@ -28,6 +28,31 @@ public class CmReportConst {
 	public static final String REG_NO = "PREGNO";
 	public static final String DATE_FROM = "PFROMDATE";
 	public static final String DATE_TO = "PTODATE";
+	public static final String REPORT = "report";
+	public static final String USER = "PUSER";
+	public static final String REPORT_ID = "PREPORTID";
+	public static final String ITEM_NAME = "PITEMNAME";
+	public static final String EXTENSION_CODE = "PEXTENSIONCODE";
+	public static final String SUPP_OR_ADMIN = "PSUPPORADMIN";
+	public static final String ITEM_STATUS = "PITEMSTATUS";
+	public static final String UNSPSC_TITLE = "PUNSPSCTITLE";
+	
+	public static final String REQUEST_NO = "PREQUESTNO";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 
+	
 	
 
 	
