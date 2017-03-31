@@ -74,6 +74,7 @@ public class PoJobTypeRatioBackingBean extends
 
 	public void redirectToMaintainPoJobTypeRatio(Long poJobTypeRatioId) {
 		log.info("redirectToMaintainPoJobTypeRatio");
+		initJobWeightMap();
 		if (poJobTypeRatioId != null && poJobTypeRatioId > 0) {
 			loadPoJobTypeRatio(poJobTypeRatioId);
 		} else {
@@ -112,8 +113,7 @@ public class PoJobTypeRatioBackingBean extends
 			oriPoJobTypeRatio = (PmPoJobTypeRatio)(SerializationUtils.clone(jobTypeRatioList.get(0)));
 			getManagedBean().setOriPoJobTypeRatio(oriPoJobTypeRatio);
 			getManagedBean().setApplDisabled(false);
-			getManagedBean().setCategoryDisabled(false);
-			initJobWeightMap();
+			getManagedBean().setCategoryDisabled(false);			
 			disableCategoryType();
 		} else {
 			throw new EpException("not able to retrive po job type ratio");
