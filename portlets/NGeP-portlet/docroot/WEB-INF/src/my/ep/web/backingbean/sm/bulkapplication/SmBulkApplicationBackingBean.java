@@ -553,8 +553,7 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	/**
-	 * Return true or false whether there is Others selected in Delete Pending
-	 * Application Reason
+	 * Return true or false whether there is Others selected in Rejection reason
 	 * 
 	 * @return boolean
 	 */
