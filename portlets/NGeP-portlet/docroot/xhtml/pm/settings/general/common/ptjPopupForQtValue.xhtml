@@ -39,7 +39,7 @@
 					<p:spacer height="1" />
 					<p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"
 						label="#{lbl['lbl.pm.org.ptj.search.ministry']}" 
-						required="#{!empty param['qtValueValidation']}"
+						required="#{!empty param['ptjValueValidation']}"
 						value="#{ruleCatalogueBackingBean.managedBean.ministryProfileId}">
 						<f:selectItems
 							value="#{ruleCatalogueBackingBean.getMinistryDropdown()}" />
@@ -78,7 +78,7 @@
 						value="#{lbl['lbl.btn.search']}" update=":form:dtOrgProfile"
 						action="#{ruleCatalogueBackingBean.searchOrgProfiles('FPJ')}"
 						process="ptjPnlId" >
-						<f:param name="qtValueValidation" value="true" /> 
+						<f:param name="ptjValueValidation" value="true" /> 
 					</p:commandButton>
 
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
