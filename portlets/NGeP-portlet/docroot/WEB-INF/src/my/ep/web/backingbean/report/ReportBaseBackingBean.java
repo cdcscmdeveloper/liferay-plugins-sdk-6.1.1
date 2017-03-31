@@ -140,7 +140,7 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 
 		PMReport pmReport = resDTO.getPmReportDtls();
 
-		
+		this.getManagedBean().setDefaultOutputType(pmReport.getDefaultOutputType());
 		this.getManagedBean().setReportName(pmReport.getReportFilename());
 
 		this.getManagedBean().setTempAccess(pmReport.getIsTempAccess() == 1 ? true : false);
