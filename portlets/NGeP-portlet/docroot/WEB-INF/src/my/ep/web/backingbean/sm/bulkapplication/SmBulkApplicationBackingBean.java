@@ -83,96 +83,93 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void approveBulkApplication() {
-		if (!EntityHelper
-				.isCollectionEmpty(getManagedBean().getSelectedTasks())) {
-			validateTotalSelectedApplication();
-			validateApproveCategories();
-			validateOverlapRemarks();
-			FacesScopes fs = new FacesScopes();
-			ReviewApplicationReqDTO reqDTO = null;
-			String basePortalUrl = SmCommonUtil.getBasePortalUrl();
-			List<SmAppl> successSubmittedList = new ArrayList<SmAppl>();
-			getManagedBean().setFailedSubmittedList(new ArrayList<SmAppl>());
+		validateTotalSelectedApplication();
+		validateApproveCategories();
+		validateOverlapRemarks();
+		RequestContext.getCurrentInstance().execute(
+				"approveConfirmPopup.show();");
+	}
 
-			for (SmBulkApplicationVO bulkAppl : getManagedBean()
-					.getSelectedTasks()) {
+	public void submitApprove() {
+		FacesScopes fs = new FacesScopes();
+		ReviewApplicationReqDTO reqDTO = null;
+		String basePortalUrl = SmCommonUtil.getBasePortalUrl();
+		List<SmAppl> successSubmittedList = new ArrayList<SmAppl>();
+		getManagedBean().setFailedSubmittedList(new ArrayList<SmAppl>());
 
-				try {
-					// approve SME Status
-					SmApplicationUtil.setSmeStatus(bulkAppl.getAppl());
+		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
 
-					if (bulkAppl.getApprovedStatusId() != null) {
-						// approve status
-						PmStatus regStatus = SmCommonUtil.getInstance()
-								.retrievePmStatusById(
-										bulkAppl.getApprovedStatusId());
-						if (regStatus != null
-								&& regStatus.getPmRegStatus() != null) {
-							bulkAppl.getAppl().setPmStatus(regStatus);
-							bulkAppl.getAppl().setPmRegStatus(
-									regStatus.getPmRegStatus());
-							bulkAppl.getAppl()
-									.getSmSupplier()
-									.setBumi(
-											regStatus.getPmRegStatus()
-													.isBumiAppl());
-							bulkAppl.getAppl()
-									.setBumi(
-											bulkAppl.getAppl().getSmSupplier()
-													.isBumi());
-						}
+			try {
+				// approve SME Status
+				SmApplicationUtil.setSmeStatus(bulkAppl.getAppl());
 
+				if (bulkAppl.getApprovedStatusId() != null) {
+					// approve status
+					PmStatus regStatus = SmCommonUtil.getInstance()
+							.retrievePmStatusById(
+									bulkAppl.getApprovedStatusId());
+					if (regStatus != null && regStatus.getPmRegStatus() != null) {
+						bulkAppl.getAppl().setPmStatus(regStatus);
+						bulkAppl.getAppl().setPmRegStatus(
+								regStatus.getPmRegStatus());
+						bulkAppl.getAppl()
+								.getSmSupplier()
+								.setBumi(
+										regStatus.getPmRegStatus().isBumiAppl());
+						bulkAppl.getAppl().setBumi(
+								bulkAppl.getAppl().getSmSupplier().isBumi());
 					}
 
-					// approve categories
-					SmApplicationUtil.approveApplCategories(true, false,
-							bulkAppl.getAppl());
-
-					// approval remarks
-					if (!StringUtils.isBlank(bulkAppl.getApprovalRemarks())) {
-						SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
-								.getAppl().getApplId(),
-								ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
-								bulkAppl.getApprovalRemarks());
-					}
-
-					if (bulkAppl.isOverlappedCategory()
-							&& StringUtils.isNotBlank(bulkAppl
-									.getOverlapRemarks())) {
-						SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
-								.getAppl().getApplId(),
-								ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
-								bulkAppl.getOverlapRemarks());
-						SmApplicationUtil
-								.manageAndSaveNewSmRemarks(
-										bulkAppl.getAppl().getApplId(),
-										ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
-										bulkAppl.getOverlapRemarks());
-					}
-
-					reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
-							bulkAppl, "APPROVE");
-
-					SmApplicationNotificationUtil
-							.setApprovalNotificationParameters(bulkAppl
-									.getAppl(), null, false, bulkAppl.getAppl()
-									.getSmSupplier(), null, null, reqDTO);
-
-					SmServiceLookup.getReviewApplicationSO()
-							.submitPOorApproverReviewToBPM(reqDTO);
-
-					successSubmittedList.add(bulkAppl.getAppl());
-
-					refreshTaskList();
-
-				} catch (Exception ex) {
-					getManagedBean().getFailedSubmittedList().add(
-							bulkAppl.getAppl());
 				}
 
+				// approve categories
+				SmApplicationUtil.approveApplCategories(true, false,
+						bulkAppl.getAppl());
+
+				// approval remarks
+				if (!StringUtils.isBlank(bulkAppl.getApprovalRemarks())) {
+					SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
+							.getAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
+							bulkAppl.getApprovalRemarks());
+				}
+
+				if (bulkAppl.isOverlappedCategory()
+						&& StringUtils.isNotBlank(bulkAppl.getOverlapRemarks())) {
+					SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
+							.getAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
+							bulkAppl.getOverlapRemarks());
+					SmApplicationUtil
+							.manageAndSaveNewSmRemarks(
+									bulkAppl.getAppl().getApplId(),
+									ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
+									bulkAppl.getOverlapRemarks());
+				}
+
+				reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
+						bulkAppl, "APPROVE");
+
+				SmApplicationNotificationUtil
+						.setApprovalNotificationParameters(bulkAppl.getAppl(),
+								null, false,
+								bulkAppl.getAppl().getSmSupplier(), null, null,
+								reqDTO);
+
+				// SmServiceLookup.getReviewApplicationSO()
+				// .submitPOorApproverReviewToBPM(reqDTO);
+
+				successSubmittedList.add(bulkAppl.getAppl());
+
+				refreshTaskList();
+
+			} catch (Exception ex) {
+				getManagedBean().getFailedSubmittedList().add(
+						bulkAppl.getAppl());
 			}
-			showSuccessApplicationMsg(successSubmittedList, "APPROVE");
+
 		}
+		showSuccessApplicationMsg(successSubmittedList, "APPROVE");
 	}
 
 	public void rejectBulkApplication() {
@@ -432,7 +429,8 @@ public class SmBulkApplicationBackingBean extends
 	private void validateOverlapRemarks() {
 		StringBuilder sb = new StringBuilder();
 		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
-			if (bulkAppl.isOverlappedCategory()) {
+			if (bulkAppl.isOverlappedCategory()
+					&& StringUtils.isBlank(bulkAppl.getOverlapRemarks())) {
 				sb.append(SmCommonUtil.getMessage(
 						"lbl.sm.overlapped.category.remarks.appl.required",
 						new String[] { bulkAppl.getAppl().getApplNo() }));
