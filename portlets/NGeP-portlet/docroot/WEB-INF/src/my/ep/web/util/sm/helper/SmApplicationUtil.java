@@ -11463,7 +11463,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	private static void setSupplierCategoryEffectiveDate(
+	public static void setSupplierCategoryEffectiveDate(
 			SmSupplierCategory cat, String applType) {
 		Calendar c = Calendar.getInstance();
 		if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
