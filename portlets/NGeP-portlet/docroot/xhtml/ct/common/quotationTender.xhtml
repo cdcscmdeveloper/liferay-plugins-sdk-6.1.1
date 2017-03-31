@@ -108,14 +108,6 @@
 							</p:inputText></td>	
 					</tr>
 					<tr>
-						<h:panelGroup rendered="#{(!ctBackingBean.managedBean.commonView or 
-				              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral) and 
-				              ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode==ParameterConst.procurementModeDirectNego}">
-							<td><p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" /></td>
-							<td><p:inputText style="width:170px;" disabled="true"
-									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.procurementMode)}" />
-							</td>
-						</h:panelGroup>
 						<td><p:outputLabel value="#{lbl['lbl.ct.gst.service']}"
 								styleClass="required"
 								rendered="#{ctBackingBean.isBeforeGstReliefDueDate() and ctBackingBean.imposedServiceTaxCondition()}" />
