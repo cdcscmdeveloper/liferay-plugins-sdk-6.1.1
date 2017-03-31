@@ -726,8 +726,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * On click add category code
 	 */
 	public void onAddCategoryCode() {
-		RequestContext.getCurrentInstance().execute(
-				"catCodePopup.show();");
+		RequestContext.getCurrentInstance().execute("catCodePopup.show();");
 	}
 
 	/**
@@ -767,6 +766,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+				cat.setApprovedDate(new Date());
 				if (getManagedBean().isPoUser()) {
 					cat.setPoDecFlg(1);
 				} else {
