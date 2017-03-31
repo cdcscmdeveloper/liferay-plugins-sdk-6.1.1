@@ -412,8 +412,8 @@ public class PoJobTypeRatioBackingBean extends
 		if(jobTypeRatio.isBrandNew()){
 			messageId = MessageConst.TD_81520;
 			params = initMessageParam(jobTypeRatio,
-					getParameterDesc(jobTypeRatio.getPoJobWeight().getWeightType(),myLocale));
-			addTrackingDiaryIntoList(messageId, params, oriJobTypeRatio, reqDTO);
+					getParameterDesc(getManagedBean().getJobWeightMap().get(jobTypeRatio.getPoJobWeight().getPoJobWeightId()).getWeightType(),myLocale));
+			addTrackingDiaryIntoList(messageId, params, jobTypeRatio, reqDTO);
 		}else{
 			if(oriJobTypeRatio != null && jobTypeRatio != null){
 				if(!oriJobTypeRatio.getPoJobWeight().getPoJobWeightId().equals(jobTypeRatio.getPoJobWeight().getPoJobWeightId())){
@@ -422,7 +422,7 @@ public class PoJobTypeRatioBackingBean extends
 							getManagedBean().getJobWeightMap().get(oriJobTypeRatio.getPoJobWeight().getPoJobWeightId()).getWeightValue().toString(),
 							getManagedBean().getJobWeightMap().get(jobTypeRatio.getPoJobWeight().getPoJobWeightId()).getWeightValue().toString()
 							);
-					addTrackingDiaryIntoList(messageId, params, oriJobTypeRatio, reqDTO);
+					addTrackingDiaryIntoList(messageId, params, jobTypeRatio, reqDTO);
 				
 				}
 				
@@ -433,7 +433,7 @@ public class PoJobTypeRatioBackingBean extends
 						messageId = MessageConst.TD_81523;
 					}
 					params = initMessageParam(jobTypeRatio);	
-					addTrackingDiaryIntoList(messageId, params, oriJobTypeRatio, reqDTO);
+					addTrackingDiaryIntoList(messageId, params, jobTypeRatio, reqDTO);
 				
 				}
 			}

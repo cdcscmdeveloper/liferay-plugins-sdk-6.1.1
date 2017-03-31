@@ -102,6 +102,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
@@ -1871,14 +1872,41 @@ public class PmCommonUtil implements Serializable{
 		trckVO.setActionDesc(actionDesc);
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
 		trckVO.setActionedByRole(getUserRoleValue());
-		trckVO.setDocId(jobTypeRatio.getPoJobTypeRatioId());
-		trckVO.setDocType(ParameterConst.JOB_TYPE_RATIO_PARAM_CODE);
-		trckVO.setDocNo(jobTypeRatio.getPoJobTypeRatioId().toString());
+		if(!jobTypeRatio.isBrandNew()){
+			trckVO.setDocId(jobTypeRatio.getPoJobTypeRatioId());
+			trckVO.setDocNo(jobTypeRatio.getPoJobTypeRatioId().toString());
+		}
+		trckVO.setDocType(ParameterConst.JOB_TYPE_RATIO_PARAM_CODE);		
 		trckVO.setGroupId(null);
 		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
+	
+	/**
+	 * Assign Tracking Dairy For QT values
+	 * 
+	 * @param approval
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
+	public static PmTrackingDairyVO assignTrackingDairyForQtValues(
+			PmPtjSpecialApproval approval, String actionDesc, Long statusId) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());
+		trckVO.setDocId(approval.getPtjSpecialApprovalId());
+		trckVO.setDocType(ParameterConst.JOB_TYPE_RATIO_PARAM_CODE);
+		trckVO.setDocNo(approval.getPtjSpecialApprovalId().toString());
+		trckVO.setGroupId(null);
+		trckVO.setStatusId(statusId);
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+
 
 	/**
 	 * get user role value
