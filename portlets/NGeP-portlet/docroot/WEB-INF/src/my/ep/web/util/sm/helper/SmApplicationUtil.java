@@ -2750,10 +2750,14 @@ public class SmApplicationUtil {
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
 			SmBulkApplOverlapCatVO voTmp = null;
 			SmBulkApplOverlapCatVO voSubTmp = null;
+			SmBulkApplOverlapCatVO voSubRemove = null;
 			String catCode = StringUtils.EMPTY;
-			boolean isNew = false;
+			String isActiveAppl = StringUtils.EMPTY;
+			boolean isAdd = false;
+			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
+				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
 						.getEntityBySinglePropertyFromList(catCode, retVal,
 								"categoryCode");
@@ -2762,38 +2766,61 @@ public class SmApplicationUtil {
 					voTmp.setCategoryCode(catCode);
 					voTmp.setCategoryName("(" + arr[17] + "/" + arr[18] + "/"
 							+ arr[19] + ")");
-					isNew = true;
+					isAdd = true;
 				}
 
 				if (EntityHelper.isCollectionEmpty(voTmp.getOverlapInfoList())) {
 					voTmp.setOverlapInfoList(new ArrayList<SmBulkApplOverlapCatVO>());
 				}
 
-				voSubTmp = new SmBulkApplOverlapCatVO();
-				voSubTmp.setPersonnelName(arr[3] + "");
-				voSubTmp.setIdentificationNo(arr[16] + "");
-				voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "", arr[11]
-						+ "", arr[15] + "", arr[12] + "", arr[13] + "", arr[14]
-						+ "", suppType));
-				voSubTmp.setCompanyName(arr[4] + "");
-				voSubTmp.setMofNo(arr[5] + "");
-				if (StringUtils.isBlank(voSubTmp.getMofNo())) {
-					voSubTmp.setMofNo(SmCommonUtil.getMessage("lbl.txt.na",
-							null));
-				}
-				voSubTmp.setExpDate(arr[6] + "");
-				if (StringUtils.isBlank(voSubTmp.getExpDate())) {
-					voSubTmp.setExpDate(SmCommonUtil.getMessage("lbl.txt.na",
-							null));
-				}
-				voSubTmp.setRegNo(arr[7] + "");
-				voSubTmp.setApplNo(arr[8] + "");
-				voTmp.getOverlapInfoList().add(voSubTmp);
+				voSubTmp = (SmBulkApplOverlapCatVO) EntityHelper
+						.getEntityBySinglePropertyFromList(arr[7] + "",
+								voTmp.getOverlapInfoList(), "regNo");
 
-				if (isNew) {
-					retVal.add(voTmp);
-					isNew = false;
+				if (voSubTmp == null) {
+					isSubAdd = true;
+				} else {
+					if (isActiveAppl.equals("1") && !voSubTmp.isActiveAppl()) {
+						voSubRemove = voSubTmp;
+						isSubAdd = true;
+					}
 				}
+
+				if (isSubAdd) {
+					voSubTmp = new SmBulkApplOverlapCatVO();
+					voSubTmp.setActiveAppl(isActiveAppl.equals("1") ? true
+							: false);
+					voSubTmp.setPersonnelName(arr[3] + "");
+					voSubTmp.setIdentificationNo(arr[16] + "");
+					voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "",
+							arr[11] + "", arr[15] + "", arr[12] + "", arr[13]
+									+ "", arr[14] + "", suppType));
+					voSubTmp.setCompanyName(arr[4] + "");
+					voSubTmp.setMofNo(arr[5] + "");
+					if (StringUtils.isBlank(voSubTmp.getMofNo())) {
+						voSubTmp.setMofNo(SmCommonUtil.getMessage("lbl.txt.na",
+								null));
+					}
+					voSubTmp.setExpDate(arr[6] + "");
+					if (StringUtils.isBlank(voSubTmp.getExpDate())) {
+						voSubTmp.setExpDate(SmCommonUtil.getMessage(
+								"lbl.txt.na", null));
+					}
+					voSubTmp.setRegNo(arr[7] + "");
+					voSubTmp.setApplNo(arr[8] + "");
+					voTmp.getOverlapInfoList().add(voSubTmp);
+					isSubAdd = false;
+				}
+
+				if (voSubRemove != null) {
+					voTmp.getOverlapInfoList().remove(voSubRemove);
+				}
+
+				if (isAdd) {
+					retVal.add(voTmp);
+					isAdd = false;
+				}
+
 			}
 		}
 		return retVal;
