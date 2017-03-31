@@ -926,7 +926,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void addScheduleDetails() {
 		CtSchedule ctSchedules = new CtSchedule();
 		ctSchedules.setScheduleNo(getManagedBean().getContractVer().getCtSchedules().size() + 1);
-		ctSchedules.setScheduleType(new PmParameter());
 		getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
        

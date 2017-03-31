@@ -588,7 +588,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			   
+			
+			if(ctBB.getManagedBean().getContractVer().getCtSchedules() != null){
+				for(CtSchedule schedules : ctBB.getManagedBean().getContractVer().getCtSchedules()){
+							PmParameter parameter =  new PmParameter();
+							parameter.setParameterId(schedules.getFulfilmentTypeId());
+							schedules.setScheduleType(parameter);
+				}
+			}
+			
 			if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				ctBB.getManagedBean().getContractVer().getCtContractItems().clear();
 			}
@@ -1002,7 +1010,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 																			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 													}
 									
-													if (schedules.getScheduleType() == null || schedules.getScheduleType().getParameterId() == null) {
+													if (schedules.getFulfilmentTypeId() == null) {
 															setTabValue("SC");
 															throw new EpException(MessageConst.ERROR_100022, 
 																	new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", 
