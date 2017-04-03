@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.settings;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -102,6 +103,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -109,6 +111,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RuleConfigHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -1643,11 +1646,12 @@ public class RuleCatalogueBackingBean extends
 
 						}
 					}else if(ruleTypeValue.isModified()){
-						messageId = MessageConst.TD_80216;
+						messageId = MessageConst.TD_80221;
 						msgParam = new String[] {
 								getRuleTypeDesc(ruleTypeDesc.getRuleType()
 										.getRuleType(),
 										CommonConstants.LANGUAGE_CODE_MALAY),
+										ruleTypeValue.getRuleValue(),
 										ruleTypeValue.getEffDate() != null ? 
 												DateUtils.dateToString("dd/MM/yyyy",ruleTypeValue.getEffDate()) : "",
 										ruleTypeValue.getExpDate() != null ? 
@@ -4617,6 +4621,7 @@ public class RuleCatalogueBackingBean extends
 				this.getManagedBean().getNewPtjSpecialApprovalList().clear();
 				this.getManagedBean().getDeletedPtjSpecialApprovalList().clear();
 				this.getManagedBean().getMainPtjSpecialApprovalList().clear();
+				this.getManagedBean().getCloneMainPtjSpecialApprovalList().clear();
 				this.getManagedBean().getPtjSpecialApprovalList().clear();
 				
 				ptjSpecialApprovalSO = (IPtjSpecialApprovalSO) BusinessDelegate.getInstance()
@@ -4625,11 +4630,14 @@ public class RuleCatalogueBackingBean extends
 				PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();				
 				//reqDTO.setMinistryOrgProfileId(getManagedBean().getSelectedMinistryId());
 				PtjSpecialApprovalResDTO resDTO = ptjSpecialApprovalSO.searchPtjSpecialApproval(reqDTO);
-				if(resDTO.isSuccessful() && resDTO.getPtjSpecialApprovalList() != null 
-						&& !resDTO.getPtjSpecialApprovalList().isEmpty()){
+				if(resDTO.isSuccessful() && CollectionUtils.isNotEmpty(resDTO.getPtjSpecialApprovalList())){
 					sortPmPtjSpecialApprovalByMinistryName(resDTO.getPtjSpecialApprovalList());
-					this.getManagedBean().setMainPtjSpecialApprovalList(
-							resDTO.getPtjSpecialApprovalList());
+					PmPtjSpecialApproval clone = null;
+					for(PmPtjSpecialApproval approval : resDTO.getPtjSpecialApprovalList()){
+						clone = (PmPtjSpecialApproval) approval.cloneEntity();
+						this.getManagedBean().getCloneMainPtjSpecialApprovalList().add(clone);
+					}
+					this.getManagedBean().setMainPtjSpecialApprovalList(resDTO.getPtjSpecialApprovalList());
 					this.getManagedBean().setPtjSpecialApprovalList(
 							resDTO.getPtjSpecialApprovalList());
 				}
@@ -4875,6 +4883,8 @@ public class RuleCatalogueBackingBean extends
 
 				if (result == true) {
 					// hit error and return
+					this.getManagedBean().setDisabledSelectedMinistryId(false);
+					this.getManagedBean().setMinistryProfileId(null);
 					throw new EpException("QT Values : Date Overlapping - " + approval.getPmOrgProfile().getOrgName());
 				}
 			}// end of second loop
@@ -4888,6 +4898,9 @@ public class RuleCatalogueBackingBean extends
 							IPtjSpecialApprovalSO.class);
 			PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();
 			getManagedBean().getMainPtjSpecialApprovalList().addAll(getManagedBean().getDeletedPtjSpecialApprovalList());
+			setupTrackingDiaryVal(reqDTO);
+			reqDTO.setUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRoleValue(PmCommonUtil.getUserRoleValue());
 			reqDTO.setPtjSpecialApprovalList(getManagedBean().getMainPtjSpecialApprovalList());
 			PtjSpecialApprovalResDTO resDTO = approvalSO.updatePtjSpecialApprovalList(reqDTO);
 			if(resDTO.isSuccessful()){	
@@ -4902,6 +4915,8 @@ public class RuleCatalogueBackingBean extends
 										new FacesScopes().getUserLocale())));
 			}
 		}catch(Exception e){
+			this.getManagedBean().setDisabledSelectedMinistryId(false);
+			this.getManagedBean().setMinistryProfileId(null);
 			throw e;
 		}finally{
 			approvalSO = null;
@@ -4945,6 +4960,100 @@ public class RuleCatalogueBackingBean extends
 		}else{
 			getManagedBean().setPtjSpecialApprovalList(getManagedBean().getMainPtjSpecialApprovalList());
 			sortPmPtjSpecialApprovalByMinistryName(getManagedBean().getPtjSpecialApprovalList());
+		}
+	}
+	
+	private void setupTrackingDiaryVal(PtjSpecialApprovalReqDTO reqDTO){
+		String messageId = null;
+		String[] params = null;
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		for(PmPtjSpecialApproval approval :getManagedBean().getMainPtjSpecialApprovalList()){
+//			if(approval.isBrandNew()){
+//				messageId = MessageConst.TD_80216;
+//				params= new String[]{
+//					approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
+//					approval.getPmOrgProfile().getPmOrgValidity().getOrgName()
+//				};
+//				addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
+//				continue;
+//			}
+			if(!approval.isBrandNew()){
+				for(PmPtjSpecialApproval clone :getManagedBean().getCloneMainPtjSpecialApprovalList()){
+					if(approval.getPtjSpecialApprovalId().equals(clone.getPtjSpecialApprovalId())){
+						if(!approval.getEffDate().equals(clone.getEffDate())){
+							messageId = MessageConst.TD_80217;
+							params= new String[]{
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgName(),
+									clone.getEffDate() != null ? 
+											DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,clone.getEffDate()) : "-",
+									approval.getEffDate() != null ? 
+											DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,approval.getEffDate()) : "-"
+							};
+							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
+						}
+						
+						if(approval.getExpDate() !=null && clone.getExpDate() !=null 
+								&& !approval.getExpDate().equals(clone.getExpDate())){
+							messageId = MessageConst.TD_80218;
+							params= new String[]{
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgName(),
+									clone.getExpDate() != null ? 
+											DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,clone.getExpDate()) : "-",
+									approval.getExpDate() != null ? 
+											DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,approval.getExpDate()) : "-"
+							};
+							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
+						}else if(clone.getExpDate() == null && approval.getExpDate() !=null){
+							messageId = MessageConst.TD_80218;
+							params= new String[]{
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgName(),
+									clone.getExpDate() != null ? 
+											DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,clone.getExpDate()) : "-",
+									approval.getExpDate() != null ? 
+											DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,approval.getExpDate()) : "-"
+							};
+							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
+						}
+						
+						if(!nf.format(approval.getProcureAmt()).equals(nf.format(clone.getProcureAmt()))){
+							messageId = MessageConst.TD_80219;
+							params= new String[]{
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
+									approval.getPmOrgProfile().getPmOrgValidity().getOrgName(),
+									clone.getProcureAmt() != null ? nf.format(clone.getProcureAmt()).toString() : "-",
+									approval.getProcureAmt() != null ? nf.format(approval.getProcureAmt()).toString() : "-"
+							};
+							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
+						}
+						
+					}
+				}
+			}
+		}
+		
+		for(PmPtjSpecialApproval deleted :getManagedBean().getDeletedPtjSpecialApprovalList()){
+			// only apply to effective records
+			if(!deleted.isBrandNew()){
+				messageId = MessageConst.TD_80220;
+				params= new String[]{
+						deleted.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
+						deleted.getPmOrgProfile().getPmOrgValidity().getOrgName()
+				};
+				addTrackingDiaryIntoList(messageId, params, deleted, reqDTO);	
+			}
+		}
+	}
+	
+	private void addTrackingDiaryIntoList(String messageId, String[] params,PmPtjSpecialApproval approval,PtjSpecialApprovalReqDTO reqDTO){
+		if(messageId != null && params != null && params.length > 0){			
+			reqDTO.getTrackingDiaryList().add(
+					PmCommonUtil.assignTrackingDairyForQtValues(approval, 
+							PmCommonUtil.getActionDesc(messageId, params), 
+							approval.getRecordStatusFlg().longValue()));
 		}
 	}
 
