@@ -4163,6 +4163,7 @@ public class DirectLOABackingBean extends
 
 			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 			backingBean.retrieveTemplateSpecMaster(serviceBean);
+			backingBean.calcGrandTotalAmount(serviceBean);
 			this.getManagedBean()
 					.getServicescQtDoc()
 					.setTplSpecMaster(
