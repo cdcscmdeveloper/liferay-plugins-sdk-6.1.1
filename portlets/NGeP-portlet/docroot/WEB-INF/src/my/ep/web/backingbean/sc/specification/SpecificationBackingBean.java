@@ -11233,6 +11233,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 					TemplateSpecHelper.getInstance().copySpecDetails(
 							specMaster, oldSpecMaster);
+					// fetch total intenedprice while copy Finanical specs
+					if (getSpecMaintenance().equalsIgnoreCase(
+							this.getManagedBean().getSpecMaintenanceScreen())) {
+						SpecificationReqDTO reqDTO_ = new SpecificationReqDTO();
+						reqDTO_.setScQt(scQt);
+						reqDTO_.setSpecMaster(specMaster);
+						SpecificationResDTO resDTO_ = specSO
+								.calCulateTemplateSpecEstimations(reqDTO_);
+						scQt.setEstimatedAmount(resDTO_.getEstimatedamount());
+					}
+			
 				} finally {
 					templateSpecSO = null;
 				}
