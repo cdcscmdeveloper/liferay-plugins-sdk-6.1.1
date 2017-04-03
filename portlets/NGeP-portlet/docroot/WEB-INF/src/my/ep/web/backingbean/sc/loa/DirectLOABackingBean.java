@@ -284,7 +284,6 @@ public class DirectLOABackingBean extends
 					retriveLoaDetails(scLoa.getLoaId(), null, false);
 
 					contractTypeChanged();
-					constructStartNEndMonth();
 				}
 				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
@@ -4057,7 +4056,6 @@ public class DirectLOABackingBean extends
 			String redirectUrl = retriveLoaDetails(awardSupplierDataType.getAwardId(), null, false);
 	
 			contractTypeChanged();
-			constructStartNEndMonth();
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			fc.getApplication()
 					.getNavigationHandler()
@@ -4213,6 +4211,8 @@ public class DirectLOABackingBean extends
 			this.getManagedBean().setSelectedScQtDeduction(
 					scLoa.getScQtDeductions().get(0));
 		}
+		// construct frequence schedule
+		constructStartNEndMonth();
 
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
