@@ -778,7 +778,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_PENDING_REQ;
 	}
 	
-	private void changeRoleForSupplierTemp(Long personnelId){
+	private void changeRoleForSupplierTemp(Long personnelId, SmSupplier supplier){
 		log.info("*****changeRoleForSupplierTemp - start******");
 		changeRoleSection = true;
 		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
@@ -792,7 +792,21 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			//resDTO.setSuccessful(true);
 			if(resDTO.isSuccessful()){
 				roleChangeSuccess = true;
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721035,
+				String msgId = null;
+				
+				if(supplier.getSmAppl().getApplType()
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)){
+					msgId = MessageConst.INFO_721035;
+				}else{
+					if(supplier.getBusinessType()
+							.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)){
+						msgId = MessageConst.INFO_721038;
+					}else{
+						msgId = MessageConst.INFO_721037;
+					}
+				}
+
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(msgId,
 						MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));	
 
@@ -854,13 +868,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 					if(isPublishedCatalogue(supplier.getSupplierId()) && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 						log.info(">>>CHange ROle for SUpplier Temp<<");
-						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 					}
 				}else{
 					log.info(">>>Contractor<<<");
 					if(validSupplierTemp()){
 						log.info(">>>CHange ROle for SUpplier Temp<<");
-						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 
 					}
 				}
@@ -868,7 +882,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				log.info(">>>Consultant<<");
 				if(validSupplierTemp()){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
-					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 				}
 			}
 		}
@@ -908,7 +922,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 				log.info(">>>CHange ROle for SUpplier Temp<<");
-				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 			}
 		}
 		
