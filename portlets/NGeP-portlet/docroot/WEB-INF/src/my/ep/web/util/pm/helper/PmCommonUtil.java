@@ -1899,7 +1899,7 @@ public class PmCommonUtil implements Serializable{
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
 		trckVO.setActionedByRole(getUserRoleValue());
 		trckVO.setDocId(approval.getPtjSpecialApprovalId());
-		trckVO.setDocType(ParameterConst.JOB_TYPE_RATIO_PARAM_CODE);
+		trckVO.setDocType(ParameterConst.QT_VALUES_PARAM_CODE);
 		trckVO.setDocNo(approval.getPtjSpecialApprovalId().toString());
 		trckVO.setGroupId(null);
 		trckVO.setStatusId(statusId);

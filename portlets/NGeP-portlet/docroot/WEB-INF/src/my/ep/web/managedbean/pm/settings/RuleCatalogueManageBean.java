@@ -125,6 +125,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmOrgProfile currentActiveOrg;
 	private Integer deleteRowIndex;
 	private List<PmPtjSpecialApproval> mainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> cloneMainPtjSpecialApprovalList;
     private List<PmPtjSpecialApproval> ptjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> newPtjSpecialApprovalList;
@@ -1389,6 +1390,22 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 */
 	public void setPtjSpecialApprovalList(List<PmPtjSpecialApproval> ptjSpecialApprovalList) {
 		this.ptjSpecialApprovalList = ptjSpecialApprovalList;
+	}
+	/**
+	 * @return the cloneMainPtjSpecialApprovalList
+	 */
+	public List<PmPtjSpecialApproval> getCloneMainPtjSpecialApprovalList() {
+		if(cloneMainPtjSpecialApprovalList == null){
+			cloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return cloneMainPtjSpecialApprovalList;
+	}
+	/**
+	 * @param cloneMainPtjSpecialApprovalList the cloneMainPtjSpecialApprovalList to set
+	 */
+	public void setCloneMainPtjSpecialApprovalList(
+			List<PmPtjSpecialApproval> cloneMainPtjSpecialApprovalList) {
+		this.cloneMainPtjSpecialApprovalList = cloneMainPtjSpecialApprovalList;
 	}
 
 
