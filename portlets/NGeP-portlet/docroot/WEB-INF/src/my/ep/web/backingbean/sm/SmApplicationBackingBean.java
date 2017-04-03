@@ -4025,6 +4025,24 @@ public class SmApplicationBackingBean extends
 					doc.setApproverVerifiedFlg(1);
 				}
 			}
+
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getMandatoryLicenseDocs())) {
+				for (SmLicenseInfoVO vo : getManagedBean()
+						.getMandatoryLicenseDocs()) {
+					if (!EntityHelper
+							.isCollectionEmpty(vo.getLicenseSuppDocs())) {
+						for (SmApplSupportDoc doc : vo.getLicenseSuppDocs()) {
+							if (getManagedBean().isPoUser()) {
+								doc.setVerifiedFlg(1);
+							}
+							if (getManagedBean().isApproverUser()) {
+								doc.setApproverVerifiedFlg(1);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
