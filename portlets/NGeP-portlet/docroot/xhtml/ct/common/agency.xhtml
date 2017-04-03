@@ -146,7 +146,7 @@
 							<td class="TableFieldLeft" width="15%">  <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.refno']}"/></td>
 							<td class="TableFieldRight">  <p:inputText id="uploadRefNoDoc"   style="width:130px;"   
 							        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}" 
-							       disabled="#{ctBackingBean.managedBean.disableAmendDetails}" rendered="#{!ctBackingBean.managedBean.viewContract}">
+							       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract}">
 							       <p:ajax process="@this"/></p:inputText>
 							</td>
 				   </tr>
