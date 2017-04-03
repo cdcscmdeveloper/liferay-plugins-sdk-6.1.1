@@ -3009,8 +3009,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateBranchToSmAppl() {
 		// validate branch GST only for New Application
-		SmApplicationUtil.validateBranchGstInformation(true, -1,
-				getManagedBean());
+		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
+				.getSelectedBranch(), getManagedBean().getSelectedBranch()
+				.getGst(), getManagedBean().getCompanyBasicGst());
 
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()

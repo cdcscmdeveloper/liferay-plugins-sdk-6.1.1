@@ -8580,21 +8580,20 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Validate added branch GST information
+	 * Validate branch GST info is required if HQ had GST info
 	 * 
-	 * @param boolean valid
-	 * @param int currentTab
-	 * @param SmApplicationManagedBean
-	 *            bean
+	 * @param SmSupplierBranch
+	 *            br
+	 * @param SmGstSupplier
+	 *            brGst
+	 * @param SmGstSupplier
+	 *            hqGst
 	 */
-	public static void validateBranchGstInformation(boolean valid,
-			int currentTab, SmApplicationManagedBean bean) {
-		SmSupplierBranch br = bean.getSelectedBranch();
-		if (bean.getCompanyBasicGst() != null
-				&& !StringUtils
-						.isBlank(bean.getCompanyBasicGst().getGstRegNo())) {
+	public static void validateBranchGstInformation(SmSupplierBranch br,
+			SmGstSupplier brGst, SmGstSupplier hqGst) {
+		if (hqGst != null && !StringUtils.isBlank(hqGst.getGstRegNo())) {
 			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-					&& (br.getGst() == null || StringUtils.isBlank(br.getGst()
+					&& (brGst == null || StringUtils.isBlank(brGst
 							.getGstRegNo()))) {
 				throw new EpException(SmCommonUtil.getMessage(
 						"lbl.sm.gst.branch.req.msg", null));
@@ -11463,8 +11462,8 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static void setSupplierCategoryEffectiveDate(
-			SmSupplierCategory cat, String applType) {
+	public static void setSupplierCategoryEffectiveDate(SmSupplierCategory cat,
+			String applType) {
 		Calendar c = Calendar.getInstance();
 		if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 				&& cat.getCategoryEffDate() == null) {
