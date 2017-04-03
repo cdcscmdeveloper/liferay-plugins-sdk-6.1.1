@@ -3318,12 +3318,29 @@ public class SmApplicationBackingBean extends
 	 * set cert name when on change selection cert body
 	 */
 	public void onChangeCertBody() {
-		PmDocument docCert = SmApplicationUtil
-				.getCertDocByCertBodyId(getManagedBean().getSelectedCert()
-						.getPmCertBody().getCertBodyId());
 		getManagedBean().getSelectedCert().setCertName(
-				docCert == null ? SmCommonUtil.getMessage("lbl.txt.na", null)
-						: docCert.getDocName());
+				SmCommonUtil.getMessage("lbl.txt.na", null));
+		if (getManagedBean().getSelectedCert() != null
+				&& getManagedBean().getSelectedCert().getPmCertBody() != null) {
+			PmDocument docCert = SmApplicationUtil
+					.getCertDocByCertBodyId(getManagedBean().getSelectedCert()
+							.getPmCertBody().getCertBodyId());
+			if (docCert != null) {
+				getManagedBean().getSelectedCert().setCertName(
+						docCert.getDocName());
+			} else {
+				PmCertBody certBody = (PmCertBody) EntityHelper
+						.getEntityBySinglePropertyFromList(getManagedBean()
+								.getSelectedCert().getPmCertBody()
+								.getCertBodyId(), getManagedBean()
+								.getCertBodyLs(), "certBodyId");
+				if (!StringUtils.isBlank(certBody.getDescription())) {
+					getManagedBean().getSelectedCert().setCertName(
+							certBody.getDescription());
+				}
+			}
+		}
+
 	}
 
 	/**
