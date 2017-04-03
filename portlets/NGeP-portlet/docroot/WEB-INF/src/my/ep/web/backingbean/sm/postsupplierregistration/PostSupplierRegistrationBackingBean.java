@@ -802,7 +802,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)){
 						msgId = MessageConst.INFO_721038;
 					}else{
-						msgId = MessageConst.INFO_721037;
+						msgId = MessageConst.INFO_721039;
 					}
 				}
 
