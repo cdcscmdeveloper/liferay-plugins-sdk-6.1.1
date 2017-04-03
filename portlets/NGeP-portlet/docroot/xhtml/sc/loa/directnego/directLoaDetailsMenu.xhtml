@@ -351,7 +351,7 @@
 				</td>
 				<td colspan="3"><p:inputText style="text-align: right;"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						value="#{directLOABackingBean.managedBean.scLoa.scQt.estimatedAmount}"
+						value="#{directLOABackingBean.managedBean.scLoa.estimatedPrice}"
 						size="35">
 						<p:ajax event="blur" process="@this" update="@this"></p:ajax>
 						<f:convertNumber
