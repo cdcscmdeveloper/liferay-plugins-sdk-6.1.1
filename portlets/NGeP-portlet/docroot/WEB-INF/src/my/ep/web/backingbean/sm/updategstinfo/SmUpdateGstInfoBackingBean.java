@@ -561,6 +561,12 @@ public class SmUpdateGstInfoBackingBean extends
 	private void validateBranch() {
 		if (getManagedBean().getBranches() != null) {
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
+
+				// validate branch GST is required if HQ had GST info
+				SmApplicationUtil.validateBranchGstInformation(
+						brVO.getBranch(), brVO.getGst(), getManagedBean()
+								.getHqGstSupplier());
+
 				if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
 
 					if (brVO.isSameWithHq()) {
