@@ -29,14 +29,16 @@ public class PmReportConst implements Serializable {
 	public static final String AMP_PM_LOA_NO_EQ = "&PLOA =";
 	public static final String AMP_PM_PHYSICAL_LOA_NO_EQ = "&PPHYSICALLOA=";
 	
-	public static final String PARAM_PM_SUPP_ZONE_EQ = "PSUPPZONE=";
-	public static final String PARAM_PM_SUPP_PROFILE_STATUS_EQ = "PPRSTAT=";
+
 	public static final String PARAM_PM_USER_ID_EQ = "PUSER=";
 	public static final String PARAM_PM_REPORT_ID_EQ = "PREPORTID=";
 	
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_USER_ID = "PUSER";
+	public static final String PARAM_PM_REPORT_ID = "PREPORTID";
+	public static final String PARAM_PM_SUPP_ZONE = "PSUPPZONE";
+	public static final String PARAM_PM_SUPP_PROFILE_STATUS = "PPRSTAT";
 	
 	public PmReportConst(){}
 
