@@ -135,7 +135,7 @@ p {
 				<p>
 					<span class="text_family">Dengan ini dimaklumkan bahawa
 						Kerajaan telah bersetuju menerima tawaran *$subTitle tuan
-						dengan harga sebanyak Ringgit $overallCtAmtWording (RM
+						dengan harga sebanyak Ringgit Malaysia $overallCtAmtWording (RM
 						$overallCtAmt) merupakan jumlah harga kontrak bagi tempoh
 						kontrak selama $contractDuration bulan tertakluk kepada dokumen *sebut
 						harga/tender yang menjadi sebahagian daripada perolehan ini dan Surat
@@ -313,14 +313,14 @@ p {
 						<td style="padding-left: 20px">
 
 							<p>
-								<span class="text_family_red"> *(a)	suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit $bondAmtText (RM $bondAmt); </span>
+								<span class="text_family_red"> *(a)	suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia $bondAmtText (RM $bondAmt); </span>
 							</p>
 						</td>
 					</tr>
 					<tr>
 						<td style="padding-left: 20px">
 							<p>
-								<span class="text_family_red"> *(b)	  suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit ______________ (______________) dan resit premium; </span>
+								<span class="text_family_red"> *(b)	  suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (______________) dan resit premium; </span>
 							</p>
 						</td>
 					</tr>
