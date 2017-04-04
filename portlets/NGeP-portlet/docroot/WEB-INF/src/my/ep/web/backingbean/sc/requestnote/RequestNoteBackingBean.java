@@ -4085,8 +4085,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 	
+	/**
+	 * Retrieve fresh copy of ScRequestItem before assign product code
+	 * @param requestNoteDtl
+	 * @return
+	 */
 	public String assignProductCode(ScRequestNoteDtl requestNoteDtl) {
-		log.info(">>>>>>>>>assignProductCode");
+		log.info(">>>>>>>>>requestNoteBackingBean assignProductCode");
 		ScRequestItem requestItem = requestNoteDtl.getRequestItem();
 		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
 		reqDTO.setRequestItemId(requestItem.getRequestNoteItemId());
