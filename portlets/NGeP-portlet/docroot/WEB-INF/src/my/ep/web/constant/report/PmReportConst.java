@@ -36,7 +36,7 @@ public class PmReportConst implements Serializable {
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_USER_ID = "PUSER";
-	public static final String PARAM_PM_REPORT_ID = "PREPORTID";
+	public static final String PARAM_REPORT_ID = "PREPORTID";
 	public static final String PARAM_PM_SUPP_ZONE = "PSUPPZONE";
 	public static final String PARAM_PM_SUPP_PROFILE_STATUS = "PPRSTAT";
 	
