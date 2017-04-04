@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -9,7 +8,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.ModuleCodeConst;
@@ -20,7 +18,6 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.managedbean.report.sm.SmReportManagedBean;
 import my.ep.web.util.FacesScopes;
 
