@@ -689,7 +689,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				
 				getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
-				sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			}else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_745053, new String[]{getFullAddress(addrType.getPmAddress())}, 
@@ -697,7 +696,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 			}	
 		}
-		sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 		getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
