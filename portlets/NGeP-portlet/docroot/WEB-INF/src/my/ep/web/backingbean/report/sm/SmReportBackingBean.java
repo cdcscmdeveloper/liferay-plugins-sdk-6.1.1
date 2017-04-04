@@ -71,7 +71,4 @@ public class SmReportBackingBean<T extends SmReportManagedBean> extends ReportBa
 		return facesScopes;
 	}
 	
-	protected ReportBaseManagedBean getReportBaseManagedBean(){
-		return this.getManagedBean();
-	}
 }
