@@ -309,14 +309,20 @@ public class QTScheduleDetailBackingBean extends
 				.getScQtContactPersons();
 		List<ScQtContactPerson> selectcontactPersonsList = getManagedBean()
 				.getSelectedContactPersons();
+		List<ScQtContactPerson> contactPersonList=	this.getManagedBean().getToBeRemovalContactPersonList();
+		if(null== contactPersonList){
+			contactPersonList=new ArrayList<ScQtContactPerson>();
+		}
 		if (null == selectcontactPersonsList
 				|| selectcontactPersonsList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
+			contactPersonList.addAll(selectcontactPersonsList);
 			for (ScQtContactPerson scQtContactPerson : selectcontactPersonsList) {
 				contactPersonsList.remove(scQtContactPerson);
 			}
 		}
+		this.getManagedBean().setToBeRemovalContactPersonList(contactPersonList);
 		this.getManagedBean().setSelectedContactPersons(null);
 	}
 
@@ -385,13 +391,19 @@ public class QTScheduleDetailBackingBean extends
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
+	List<ScQtContactPerson> contactPersonList=	this.getManagedBean().getToBeRemovalContactPersonList();
+	if(null== contactPersonList){
+		contactPersonList=new ArrayList<ScQtContactPerson>();
+	}
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
+			contactPersonList.addAll(selectedContactList);
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
 			}
 		}
+		this.getManagedBean().setToBeRemovalContactPersonList(contactPersonList);
 		this.getManagedBean()
 		.setSelectedpmuserContactpersonList(null);
 	}

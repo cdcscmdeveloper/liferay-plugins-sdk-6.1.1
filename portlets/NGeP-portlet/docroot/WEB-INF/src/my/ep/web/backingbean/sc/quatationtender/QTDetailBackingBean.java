@@ -1215,7 +1215,17 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
+		List<ScQtContactPerson> removeContactPerson=	this.getManagedBean().getToBeRemovalContactPersonList();
+		if (CollectionUtils.isNotEmpty(removeContactPerson)) {
+			for (int i = 0; i < removeContactPerson.size(); i++) {
+				ScQtContactPerson contactPerson=removeContactPerson.get(i);
+				if (null == contactPerson.getQtContactPersonId()) {
+					removeContactPerson.remove(contactPerson);
+				}
+			}
+		}
 		quationTenderReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);
+		quationTenderReqDTO.setToBeRemovalContactPersonList(removeContactPerson);
 		quationTenderReqDTO.setMaintanceFlow(this.getManagedBean()
 				.isMaintanceFlow());
 		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
@@ -2901,7 +2911,7 @@ public class QTDetailBackingBean extends
 							.setOfficerType(SourcingConstants.OFFICER_TYPE_QT);
 					contactPerson.setName(user.getUserName());
 					contactPerson.setScQt(this.getManagedBean().getQt());
-					qtContactPerson.add(contactPerson);
+					qtContactPerson.add(contactPerson);					
 				}
 				this.getManagedBean().setScQtContactPersons(qtContactPerson);
 				this.getManagedBean().setPmuserContactpersonList(
