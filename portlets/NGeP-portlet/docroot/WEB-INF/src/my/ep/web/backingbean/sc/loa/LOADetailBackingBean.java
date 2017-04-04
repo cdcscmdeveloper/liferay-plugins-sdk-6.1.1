@@ -4765,14 +4765,12 @@ public class LOADetailBackingBean extends
 	}
 	
 	private void calculateOverallCtAmtForSupplier(){
-		
 		ScLoa scLoa = getManagedBean().getScLoa();
-		SmSupplier supplier = getManagedBean().getScLoa().getScLoiLoa()
-				.getSmSupplier();
-		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
+		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+		BigDecimal overallContractAmt = scLoa.getLoaAmt();
 		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& null != getManagedBean().getScLoa().getGstAmt()) {
-			overallContractAmt.add(getManagedBean().getScLoa().getGstAmt());
+				&& null != scLoa.getGstAmt()) {
+			overallContractAmt = overallContractAmt.add(scLoa.getGstAmt());
 
 		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
 
