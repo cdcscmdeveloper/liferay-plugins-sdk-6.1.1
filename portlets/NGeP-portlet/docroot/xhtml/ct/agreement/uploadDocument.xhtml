@@ -103,6 +103,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
 			update="contractDocumentList" >
 		</p:fileUpload>
@@ -132,6 +133,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="singedUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			update="upAgrSignedPagePg" label="#{lbl['lbl.btn.choose']}" oncomplete="upAgrSignedPageDlg.hide();">
 		</p:fileUpload>
 		<f:facet name="footer">
@@ -159,6 +161,7 @@
 			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="stampedUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			update="upStampedPagePg"  label="#{lbl['lbl.btn.choose']}" oncomplete="upStampedPageDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">

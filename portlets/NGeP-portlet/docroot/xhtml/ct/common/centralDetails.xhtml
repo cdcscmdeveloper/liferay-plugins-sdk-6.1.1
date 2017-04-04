@@ -279,6 +279,7 @@
     		fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}"  multiple="false"
        		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="centralBondUploadWV"
          	invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update="centralUploadBondExemptedPg"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
  			label="#{lbl['lbl.btn.choose']}" oncomplete="centralUploadBondExemptedDlg.hide();" >
       	</p:fileUpload>
       	<f:facet name="footer">

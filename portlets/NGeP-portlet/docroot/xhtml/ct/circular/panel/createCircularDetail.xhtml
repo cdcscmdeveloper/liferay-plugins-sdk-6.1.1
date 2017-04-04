@@ -136,6 +136,7 @@
     		fileUploadListener="#{panelBackingBean.fileUpload}"  multiple="false"
        		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="panelUploadWV"
          	invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update="uploadCircularPg"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
          	label="#{lbl['lbl.btn.choose']}" oncomplete="uploadCircularDlg.hide();" >
       	</p:fileUpload>
 		<f:facet name="footer">
