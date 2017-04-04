@@ -87,8 +87,8 @@
 		  	disabled="#{terminationBackingBean.managedBean.contractVer.ctTermination.complaintLodged}" />
 		</h:panelGrid>
 	    
-	    <p:confirmDialog message="Are you sure to lodge a complaint to #{terminationBackingBean.managedBean.contractVer.ctContractValue.supplierName}?"
-	    	header="Lodge a Complaint" severity="alert" widgetVar="confirmation">
+	    <p:confirmDialog message="#{lbl['lbl.ct.lodge.complaint.msg']} #{terminationBackingBean.managedBean.contractVer.ctContractValue.supplierName}?"
+	    	header="#{lbl['lbl.ct.lodge.complaint']}" severity="alert" widgetVar="confirmation">
 	        <p:commandButton value="Yes" update="lodgeComplaintBtn" oncomplete="confirmation.hide()" 
 	        	actionListener="#{terminationBackingBean.lodgeComplaint}" />
 	        <p:commandButton value="No" onclick="confirmation.hide()" type="button" />
