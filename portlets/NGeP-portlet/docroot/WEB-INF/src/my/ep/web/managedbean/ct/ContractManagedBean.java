@@ -105,6 +105,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableGstAmount;	
 	private boolean disableContractAmount = true;
 	private boolean bondWaiver;
+	private CtContractAmount ctTestBondWaiverAmount;	
 	
 	private boolean selectAll;
 	private CtPerformanceBond ctPerformanceBond;
@@ -1087,5 +1088,13 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setUpdateZoneMap(Map<String, CtContractZone> updateZoneMap) {
 		this.updateZoneMap = updateZoneMap;
+	}
+
+	public CtContractAmount getCtTestBondWaiverAmount() {
+		return ctTestBondWaiverAmount;
+	}
+
+	public void setCtTestBondWaiverAmount(CtContractAmount ctTestBondWaiverAmount) {
+		this.ctTestBondWaiverAmount = ctTestBondWaiverAmount;
 	}
 }
