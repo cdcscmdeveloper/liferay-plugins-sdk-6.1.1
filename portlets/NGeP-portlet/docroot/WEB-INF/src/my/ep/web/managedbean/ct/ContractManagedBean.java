@@ -27,6 +27,7 @@ import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -130,6 +131,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, CtAgency> deleteAgencyMap;
 	private Map<String, CtContractZone> updateZoneMap;	
 	private Map<Long, CtContractItem> updateItemMap;		  
+	private List<PmOrgProfile> agencySelected;
 	  
 	/**
 	 * @return the fileDirectory
@@ -1097,4 +1099,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtTestBondWaiverAmount(CtContractAmount ctTestBondWaiverAmount) {
 		this.ctTestBondWaiverAmount = ctTestBondWaiverAmount;
 	}
+
+	public List<PmOrgProfile> getAgencySelected() {
+		return agencySelected;
+	}
+
+	public void setAgencySelected(List<PmOrgProfile> agencySelected) {
+		this.agencySelected = agencySelected;
+	}
+	
+	
 }

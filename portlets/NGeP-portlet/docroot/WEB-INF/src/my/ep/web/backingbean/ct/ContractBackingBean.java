@@ -1884,10 +1884,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		Long ministryId = retrieveMinistryOrgProfile(
  				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
-		    if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null && selectedOnly) {
+		    if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
 		    		ctAgencyList = new ArrayList<CtAgency>();
-			        for(PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
-			        	  if(pmOrgProfiles.isSelectedCheckBox()){
+			        for(PmOrgProfile pmOrgProfiles : getManagedBean().getAgencySelected()) {
+			        //	  if(pmOrgProfiles.isSelectedCheckBox()){
 			        		  //Remove if already exist, avoid duplicate
 			        		  for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
 			        			  if (agency.getOrgProfile().getOrgProfileId().equals(pmOrgProfiles.getOrgProfileId())) {
@@ -1935,7 +1935,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        			  }
 			        		  }
 			        	  }
-			        } //getManagedBean().setOwnerOrgProfile(false);
+			        //} //getManagedBean().setOwnerOrgProfile(false);
 		    } else {
 		
 		    		boolean contractSharing = true;
