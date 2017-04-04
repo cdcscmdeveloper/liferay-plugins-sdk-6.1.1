@@ -15,7 +15,9 @@ import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.report.PmReportConst;
@@ -65,19 +67,23 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 	}
 	
 	public void generatePmReport(){
-		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IRPTRequestSO.class);		
-		
-		RPTRequestResDTO resDTO = rptRequestSO.generateReport(
-				constructPmParamStrings(), 
-				getManagedBean().getReportCode(), 
-				null, 
-				getFacesScopes().getUserSessionBean().getUserId(), 
-				false, 
-				getManagedBean().isTempAccess());	
-		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
-		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+		IRPTRequestSO rptRequestSO = null;
+		try {
+			rptRequestSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IRPTRequestSO.class);		
+			RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
+			reqDTO.setParametersMap(constructParamMap());
+			reqDTO.setDefaultOutputType(getManagedBean().getDefaultOutputType());
+			reqDTO.setTempAccess(getManagedBean().isTempAccess());
+			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);	
+			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
+			RequestContext.getCurrentInstance().execute("confirmationId.show()");
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
+		}finally{
+			rptRequestSO = null;
+		}	
 		
 	
 	}
@@ -97,19 +103,20 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 	}
 	
 	
-	private String constructPmParamStrings(){
+	private LinkedHashMap<String, String> constructParamMap(){
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();	
 		map.put(PmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-		map.put(PmReportConst.PARAM_PM_REPORT_ID_EQ, getManagedBean().getReportCode());
+		map.put(PmReportConst.PARAM_REPORT_ID, getManagedBean().getReportCode());
+		map.put(PmReportConst.PARAM_USER_ID,getFacesScopes().getUserSessionBean().getUserId().toString());
 		if(StringUtils.isNotBlank(getManagedBean().getZoneName())){
-			map.put(PmReportConst.PARAM_PM_SUPP_ZONE_EQ, getManagedBean().getZoneName());
+			map.put(PmReportConst.PARAM_PM_SUPP_ZONE, getManagedBean().getZoneName());
 		}
 		
 		if(getManagedBean().getStatus() != null){
-			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS_EQ, getManagedBean().getStatus() == 1 ? "Active":"Inactive");
+			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS, getManagedBean().getStatus() == 1 ? "Active":"Inactive");
 		}
 		
-		return constructParameterString(map);
+		return map;
 	}
 	
 	public void resetAction(){
