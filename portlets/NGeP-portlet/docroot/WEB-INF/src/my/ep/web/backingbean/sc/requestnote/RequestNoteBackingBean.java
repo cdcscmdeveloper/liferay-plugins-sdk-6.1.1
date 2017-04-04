@@ -42,6 +42,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -67,6 +68,7 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -110,6 +112,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -355,7 +358,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		String [] outcomes = getManagedBean().getOutComes();
 		String taskId  = getManagedBean().getTaskId();
 		RequestNoteResDTO requestNoteResDTO = null;
-		Long supplierId = getManagedBean().getSupplierId();
+		SmSupplier supplier = getManagedBean().getSmSupplier();
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
     try {
 	    FacesScopes face = new FacesScopes();
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
@@ -372,20 +376,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    renewSesionObject();
 	    
 	    if (requestNoteResDTO.isSuccessful()) {
-	    	ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 	    	if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
-	    		requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
-	    		requestNoteReqDTO.setSupplierId(supplierId);
+	    		requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+	    		requestNoteReqDTO.setSupplierId(supplier.getSupplierId());
 	    		requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
-	    		scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+	    		requestNote = requestNoteResDTO.getRequestNoteDetail();
 	    		getManagedBean().setOutComes(outcomes);
 	    		getManagedBean().setTaskId(taskId);
 	    		reloadRequestNoteForCodification(requestNoteResDTO);
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,requestNote.getRequestNoteNo(), Boolean.FALSE);
 	    	} else{
 	    		successMessage(MessageConst.INFO_700024,ParameterTypeConst.DOCUMENT_TYPES,
-	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,requestNote.getRequestNoteNo(), Boolean.TRUE);
 	    		// clear data
 	    		super.renewSesionObject();
 	    	}
@@ -670,6 +673,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
+		ScRequestNote requestNote = this.getManagedBean().getRequestNote();
 		try {
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -685,14 +689,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
 
 			if (requestNoteResDTO.isSuccessful()) {
-				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
-				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
-					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
-
-				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
+				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
 					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+							ParameterConst.DOCTYPE_REQUEST_NOTE, requestNote.getRequestNoteNo(), Boolean.TRUE);
 				}	
 				// clear data
 				super.renewSesionObject();
@@ -784,7 +783,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			for(ScRequestNoteDtl rnDtl : requestNoteDtls) {
 				ScRequestItem requestItem = rnDtl.getRequestItem();
 				if(requestItem.getCmItem() == null) {
-					throw new EpException(MessageConst.ERROR_760448);
+					throw new EpException(
+							MessageConst.ERROR_760448,
+							new String[] {requestItem.getItemName()});
 				}
 			}
 		}
@@ -3758,6 +3759,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
+	 * Gets the request item so.
+	 *
+	 * @return the request item so
+	 */
+	private IRequestItemSO getRequestItemSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+	}
+	
+	/**
 	 * Gets the server url.
 	 *
 	 * @return the server url
@@ -4073,6 +4083,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setSpecificationList(specificationList);
 		}
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
+	}
+	
+	public String assignProductCode(ScRequestNoteDtl requestNoteDtl) {
+		log.info(">>>>>>>>>assignProductCode");
+		ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
+		reqDTO.setRequestItemId(requestItem.getRequestNoteItemId());
+		ScRequestItem freshRequestItem = getRequestItemSO().retrieveItemByRequestItemId(reqDTO).getRequestItem();
+		if(freshRequestItem != null) {
+			requestItem = freshRequestItem;
+		}
+		requestNoteDtl.setRequestItem(requestItem);
+		CodificationBackingBean codificationBB = new CodificationBackingBean();
+		return codificationBB.assignProductCode(requestItem, null, false);
 	}
 	
 	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 

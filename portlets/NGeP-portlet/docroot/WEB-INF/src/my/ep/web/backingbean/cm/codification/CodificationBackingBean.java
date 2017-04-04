@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -54,7 +55,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
@@ -1397,8 +1397,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			if(null == getManagedBean().getSelectedVPendingCodifiedItem()){
 				// Dp or QT Loa
 				if(null != scRequestItem){
-					LOADetailBackingBean loaBackingBean = new LOADetailBackingBean();
-					loaBackingBean.updateUnspscItem(scRequestItem);
+					/*LOADetailBackingBean loaBackingBean = new LOADetailBackingBean();
+					loaBackingBean.updateUnspscItem(scRequestItem);*/
 				}
 
 			} else {
