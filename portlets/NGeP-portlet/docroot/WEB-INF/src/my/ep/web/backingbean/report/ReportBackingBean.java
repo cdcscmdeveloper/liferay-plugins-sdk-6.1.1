@@ -18846,7 +18846,7 @@ public class ReportBackingBean extends
 					
 					
 					if(isReportTest()){
-						this.getManagedBean().setReportUrl(reportUrl.toString());
+						this.getManagedBean().setReportUrl(resDTO.getReportUrl());
 					}
 					
 				}  else {
@@ -20470,6 +20470,10 @@ public class ReportBackingBean extends
 			
 			if(ip != null){
 				
+				if(ip.equals("192.168.13.119")){
+					return true;
+				}
+				else
 				if(ip.equals("192.168.12.120")){
 					return true;
 				}
