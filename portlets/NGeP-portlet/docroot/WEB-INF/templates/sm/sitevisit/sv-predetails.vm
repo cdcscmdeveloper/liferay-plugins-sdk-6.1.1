@@ -48,22 +48,22 @@
  
 	    <tr>
 			 <td width="35%" valign="top"><b>Site Visit Address</b></td>
-			 <td>$addressFormatter.getAddress($svAddress.smAddress)</td>
+			 <td>$addressFormatter.getAddress($svAddress)</td>
 		</tr>
 		    	
 		<tr>
 			 <td width="35%"><b>Postal Code</b></td>
-			 <td>$svAddress.smAddress.postcode</td>
+			 <td>$svAddress.postcode</td>
 		</tr>
 		    	
 		<tr>
 			 <td width="35%"><b>Town/City</b></td>
-			 <td>$svAddress.smAddress.pmCity.cityName</td>
+			 <td>$svAddress.pmCity.cityName</td>
 		</tr>
 		    	
 		<tr>
 			 <td width="35%"><b>State</b></td>
-			 <td>$svAddress.smAddress.pmState.stateName</td>
+			 <td>$svAddress.pmState.stateName</td>
 		 </tr>
 		    	
 		 <tr>
@@ -129,4 +129,4 @@
   		#end
 	</table>
 	
-#include("templates/sm/sitevisit/shared/footer.vm")
+#include("/sm/sitevisit/shared/footer.vm")
