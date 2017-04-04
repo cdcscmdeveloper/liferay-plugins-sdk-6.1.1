@@ -20,7 +20,9 @@
             </p:row>
             </p:columnGroup>
 			<p:column style="width:55%;white-space:normal;" >
-				<h:outputText value="#{accessApplDoc.document.docName}" />
+				<h:outputText 
+						value="*" styleClass="mandatory" />
+				<h:outputText value="#{accessApplDoc.document.docName}" />				
 			</p:column>
 			<p:column style="width:40%;text-align:left;white-space:normal;">
 				<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
