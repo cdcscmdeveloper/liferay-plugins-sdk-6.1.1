@@ -278,6 +278,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="bondUploadWV"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			update="uploadBondExemptedPg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadBondExemptedDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
