@@ -35,7 +35,7 @@
 
 						<f:selectItems
 							value="#{cmReportsBackingBean.managedBean.reportList}"></f:selectItems>
-						<p:ajax event="change" process="@this" listener="#{cmReportsBackingBean.retrieveReportValueFromDb()}"
+						<p:ajax event="change" process="@this" listener="#{cmReportsBackingBean.retrieveCmReportValueFromDb()}"
 							update=":form:cmReportListId" />
 					</p:selectOneMenu></td>
 			</tr>

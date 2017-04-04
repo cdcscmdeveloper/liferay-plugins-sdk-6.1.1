@@ -53,10 +53,9 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	private Date dateFrom;
 	private Date dateTo;
 	
+	private CmItem selectedCmItem;
 	
-	
-	
-	
+
 	
 
 	/**
@@ -216,10 +215,23 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 		this.selectedCmUNSPSC = selectedCmUNSPSC;
 	}
 
-	
-	
-	
-	
+	/**
+	 * @return the selectedCmItem
+	 */
+	public CmItem getSelectedCmItem() {
+		if(selectedCmItem==null){
+			selectedCmItem = new CmItem();
+		}
+		return selectedCmItem;
+	}
+
+	/**
+	 * @param selectedCmItem the selectedCmItem to set
+	 */
+	public void setSelectedCmItem(CmItem selectedCmItem) {
+		this.selectedCmItem = selectedCmItem;
+	}
+
 	
 	
 	
