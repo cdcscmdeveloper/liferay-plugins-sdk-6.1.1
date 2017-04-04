@@ -12,6 +12,50 @@
 				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm002}">
 				<ui:include src="cm/listOfApprovalCatalogItem.xhtml"></ui:include>
 			</c:when>
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm008}">
+				<ui:include src="cm/listOfCatalogItemNormalPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm009}">
+				<ui:include src="cm/listOfCatalogItemTierPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm010}">
+				<ui:include src="cm/listOfCatalogItemZonalPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm011}">
+				<ui:include src="cm/listOfCatalogItemZonalTierPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm005}">
+				<ui:include src="cm/listOfExpiredCatalogItem.xhtml"></ui:include>
+			</c:when>
+			
+			
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm017}">
+				<ui:include src="cm/listOfItemCode.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm016}">
+				<ui:include src="cm/listOfNewExtensionCode.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm004}">
+				<ui:include src="cm/listOfPendingApprovalItem.xhtml"></ui:include>
+			</c:when>
+			
+			
+			
 		</c:choose>
 	</h:panelGroup>
 
