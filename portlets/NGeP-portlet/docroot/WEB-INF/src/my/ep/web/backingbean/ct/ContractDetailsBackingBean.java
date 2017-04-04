@@ -1118,14 +1118,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 												for (CtPerformanceBond performanceBond : ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 														bondAmount = bondAmount + performanceBond.getBondAmount();
 														if (performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
-																getManagedBean().setSelectedTabIndex(0);
+																setTabValue("PB");
 																throw new EpException(MessageConst.ERROR_100022,
 																		new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.ref.no",
 																				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 														}						
 									
 														if (performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
-																getManagedBean().setSelectedTabIndex(0);
+																setTabValue("PB");
 																throw new EpException(MessageConst.ERROR_100022, 
 																		new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.financial.org", 
 																				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -1133,7 +1133,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								
 														if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 																if (performanceBond.getBondAmount() == 0) {
-																	getManagedBean().setSelectedTabIndex(0);
+																	setTabValue("PB");
 																	throw new EpException(MessageConst.ERROR_100033,
 																			new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount",
 																					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -1141,7 +1141,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 														}						
 									
 														if (performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
-																getManagedBean().setSelectedTabIndex(0);
+																setTabValue("PB");
 																throw new EpException(MessageConst.ERROR_100022,
 																		new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.ref.letter",
 																				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -1177,19 +1177,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 											 ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() ==  null){
 										       setTabValue("PB");
 										       throw new EpException(MessageConst.ERROR_750044);
-									}else if(!ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
-											    && ctBB.getManagedBean().isBondWaiver()
-												&& ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() !=  null){
-										        int temp=0;
-										       for(CtAttachment attachments : ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
-										    	      if(!attachments.isBondWaivedTrue() && (attachments.getFilePath() !=null || !attachments.getFilePath().isEmpty())){
+									}else if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
+										     boolean isEqual = ctBB.getManagedBean().getCtContractAmount().isBondWaived()==ctBB.getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
+										     if(!isEqual){
+										    	  int temp=0;
+										    	 for(CtAttachment attachments : ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
+										    		 if(!attachments.isBondWaivedTrue() && (attachments.getFilePath() !=null || !attachments.getFilePath().isEmpty())){
 										    	    	  temp++;
 										    	      }
-										       }
-										       if(temp == 0){
-										    	   setTabValue("PB");
-											       throw new EpException(MessageConst.ERROR_750044);
-										       }    
+										    	 }
+										    	    if(temp == 0){
+												    	   setTabValue("PB");
+													       throw new EpException(MessageConst.ERROR_750044);
+												       }    
+										     }
 						            }
 					     	}
 		
