@@ -1238,10 +1238,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
 		}
 		
+		SmAddress svAddress = getSmAddressById(svTask.getSmSvAddress().getSiteRefId());
+		
 		context.put("smVmUtil", new VmUtil());
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
-		context.put("svAddress", svTask.getSmSvAddress());
+		context.put("svAddress", svAddress);
 		context.put("addressFormatter", new AddressUtils());
 		context.put("scheduleDate", svTask.getScheduleDate());
 		
