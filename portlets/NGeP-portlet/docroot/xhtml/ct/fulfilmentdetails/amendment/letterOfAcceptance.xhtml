@@ -74,7 +74,9 @@
 					<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false" 
 					      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"  
 					      fileUploadListener="#{amendmentBackingBean.UploadLetterOfAcceptance}" multiple="false" 
-					      	allowTypes="/(\.|\/)(pdf)$/"  widgetVar="letterUploadWV" invalidFileMessage="#{lbl['lbl.txt.upload.pdf.only']}"  
+					      allowTypes="/(\.|\/)(pdf)$/"  widgetVar="letterUploadWV"
+					      invalidFileMessage="#{lbl['lbl.txt.upload.pdf.only']}"					      
+						  invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 					      update=":form:loaContentDt" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadLetterDlg.hide();" >
 					</p:fileUpload>
 					<f:facet name="footer">

@@ -349,7 +349,8 @@
 				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
 					fileUploadListener="#{supplierBackingBean.fileUpload}"  showButtons="false"
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="factoringUploadWV"
-					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+					invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 					update="factoringPanel" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadFactoringDlg.hide();" >
 				</p:fileUpload>
 				<f:facet name="footer">
