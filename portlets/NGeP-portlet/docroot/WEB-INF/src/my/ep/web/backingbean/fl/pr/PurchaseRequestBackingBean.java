@@ -566,7 +566,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 				
 				getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
-				sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_745053, new String[]{getFullAddress(addrType.getPmAddress())}, 
@@ -574,7 +573,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 			}
 		}
-		sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 		getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
