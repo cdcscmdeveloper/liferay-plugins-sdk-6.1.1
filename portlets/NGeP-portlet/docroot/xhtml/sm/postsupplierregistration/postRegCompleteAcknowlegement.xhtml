@@ -10,9 +10,8 @@
     <ui:define name="contentSection">
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false"/>
 			<div align="right">
-				<p:commandButton action="#{postSupplierRegBB.naviToDashBoard()}" value="Complete" ajax="false"
+				<p:commandButton action="#{postSupplierRegBB.naviToDashBoard()}" value="#{lbl['lbl.sm.basic.finish']}" ajax="false"
 				rendered="#{postSupplierRegBB.roleChangeSuccess}"></p:commandButton>
 			</div>
 	</ui:define>
-		    
 </ui:composition>				
