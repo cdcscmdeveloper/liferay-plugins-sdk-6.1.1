@@ -1557,6 +1557,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private ScWorkFlowStatus specMaintenanceWorkFlowStatus;
     private boolean isPtjPresent = true;
     
+    private List<ScQtContactPerson> toBeRemovalContactPersonList;
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -9817,6 +9818,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPtjPresent(boolean isPtjPresent) {
 		this.isPtjPresent = isPtjPresent;
+	}
+
+	/**
+	 * @return the toBeRemovalContactPersonList
+	 */
+	public List<ScQtContactPerson> getToBeRemovalContactPersonList() {
+		return toBeRemovalContactPersonList;
+	}
+
+	/**
+	 * @param toBeRemovalContactPersonList the toBeRemovalContactPersonList to set
+	 */
+	public void setToBeRemovalContactPersonList(
+			List<ScQtContactPerson> toBeRemovalContactPersonList) {
+		this.toBeRemovalContactPersonList = toBeRemovalContactPersonList;
 	}
 
 	
