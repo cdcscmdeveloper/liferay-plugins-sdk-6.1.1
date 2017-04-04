@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
@@ -64,6 +65,7 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -126,6 +128,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
@@ -4445,6 +4448,15 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
+	 * Gets the request item so.
+	 *
+	 * @return the request item so
+	 */
+	private IRequestItemSO getRequestItemSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+	}
+	
+	/**
 	 * Called on click of Update Specification button & shows item details
 	 * 
 	 * @param loa
@@ -5424,6 +5436,25 @@ public class LOADetailBackingBean extends
 				new String[] {"showGuidelinePdf()"} ,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return instruction;
+	}
+	
+	/**
+	 * Retrieve fresh copy of ScRequestItem before assign product code
+	 * @param requestNoteDtl
+	 * @return
+	 */
+	public String assignProductCode(ScLoiLoaItem loiLoaItem) {
+		log.info(">>>>>>>>>loaDetailBackingBean assignProductCode");
+		ScRequestItem requestItem = loiLoaItem.getScRequestItem();
+		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
+		reqDTO.setRequestItemId(requestItem.getRequestNoteItemId());
+		ScRequestItem freshRequestItem = getRequestItemSO().retrieveItemByRequestItemId(reqDTO).getRequestItem();
+		if(freshRequestItem != null) {
+			requestItem = freshRequestItem;
+		}
+		loiLoaItem.setScRequestItem(requestItem);
+		CodificationBackingBean codificationBB = new CodificationBackingBean();
+		return codificationBB.assignProductCode(requestItem, null, false);
 	}
 	
 	/**
