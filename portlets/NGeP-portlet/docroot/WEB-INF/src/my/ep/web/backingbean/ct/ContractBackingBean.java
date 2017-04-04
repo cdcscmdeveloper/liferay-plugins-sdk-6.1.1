@@ -3486,4 +3486,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			      }
 		}
 	}
+	
+    public boolean disableBondAttachmentBtn(){
+    	
+    		boolean isEqual = false;
+    	
+    		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
+    				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+    					for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
+    						if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+    									&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+    								getManagedBean().setCtTestBondWaiverAmount(contractAmt);
+    								break;
+    						}
+    				}
+    				isEqual = getManagedBean().getCtContractAmount().isBondWaived()==getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
+    			}
+    	
+	    		if(getManagedBean().isViewContract()){
+	    			return true;
+	    		}else if(!getManagedBean().getCtContractAmount().isBondWaived() &&
+	    				getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
+	    			return true;
+	    		}else if(isEqual){
+	    			return true;
+	    		} else if(!getManagedBean().getCtContractAmount().isBondReq()){
+	    			return true;
+	    		}
+	    		return false;
+	    	}
 }  
