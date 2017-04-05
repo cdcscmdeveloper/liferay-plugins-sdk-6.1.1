@@ -455,15 +455,16 @@ public class QTDocumentsBackingBean extends
 		if (null == removeDocumentList) {
 			removeDocumentList = new ArrayList<ScQtDocReport>();
 		}
-		removeDocumentList.addAll(selectedReportsList);
-		if (docReportsList.size() == selectedReportsList.size()) {
-			docReportsList.clear();
-		} else {
+		if (null == selectedReportsList || selectedReportsList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760098);
+		}
+		
 			for (ScQtDocReport report : selectedReportsList) {
 				report.setDeleted(true);
+				removeDocumentList.add(report);
 				docReportsList.remove(report);
 			}
-		}
+		
 		if (null != removeDocumentList && !removeDocumentList.isEmpty()) {
 			for (int i = 0; i < removeDocumentList.size(); i++) {
 				if (null == removeDocumentList.get(i).getDocId()) {
