@@ -6223,19 +6223,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (null == selectdeliveryList || selectdeliveryList.isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760146);
 			}
-			locationRemoveList.addAll(selectdeliveryList);
-
-			if (nonzone.size() == selectdeliveryList.size()) {
-
-				nonzone.clear();
-
-			} else {
-
+					
 				for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
 					delLoc.setDeleted(true);
+					locationRemoveList.add(delLoc);
 					nonzone.remove(delLoc);
 				}
-			}
+			
 			this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
 		} finally {
 
