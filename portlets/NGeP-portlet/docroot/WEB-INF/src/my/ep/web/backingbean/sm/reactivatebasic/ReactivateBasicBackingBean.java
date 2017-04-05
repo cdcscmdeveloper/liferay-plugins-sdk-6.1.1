@@ -12,7 +12,6 @@ import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -47,9 +46,9 @@ public class ReactivateBasicBackingBean extends
 	public void preRenderReactivateBasic() {
 		renewObject();
 		reactivateBasic = new ReactivateSupplierVO();
-		SmCommonUtil.redirectToPageForPublicPage(
-				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml",
-				"reactivate-basic-account");
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml", null,
+				null, null);
 	}
 
 	/**

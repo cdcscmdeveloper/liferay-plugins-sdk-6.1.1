@@ -70,8 +70,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initIdentificationTypes();
 		initCountries();
 		initStates();
-		SmCommonUtil.redirectToPageForPublicPage("forceReplaceAdmin.xhtml",
-				"replace-supplier-admin");
+		SmCommonUtil
+				.redirectToPage("forceReplaceAdmin.xhtml", null, null, null);
 	}
 
 	/**
