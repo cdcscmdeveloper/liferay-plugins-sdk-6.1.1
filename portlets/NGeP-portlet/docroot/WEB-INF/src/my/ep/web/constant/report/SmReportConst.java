@@ -12,6 +12,10 @@ public class SmReportConst implements Serializable{
 	public static final String PARAM_REPORT_CODE = "PREPORTID";
 	public static final String PARAM_KEY_REPORT = "report";
 	
+	public static final String PARAM_COMPANY_NAME = "PCOMPANYNAME";
+	public static final String PARAM_MOF_NO = "PMOFNO";
+	public static final String PARAM_ZONE = "PSUPPZONE";
+	
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";
