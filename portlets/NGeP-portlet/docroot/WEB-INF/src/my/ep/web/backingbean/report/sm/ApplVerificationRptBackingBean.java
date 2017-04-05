@@ -30,12 +30,10 @@ public class ApplVerificationRptBackingBean extends SmReportBackingBean<ApplVeri
 		
 		retrieveReportValueFromDb();
 		
-		params.put(SmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		//params.put(SmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
-/*		params.put(SmReportConst.PARAM_REPORT_CODE, getManagedBean().getReportCode());
-		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
-*/
+
 		generateSmReport(params);
 		resetSearch();
 		
