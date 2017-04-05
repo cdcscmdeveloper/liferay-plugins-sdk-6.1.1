@@ -51,7 +51,6 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		}
 		
 		generateSmReport(params);
-		resetSearch();
 	}
 	
 	public void resetSearch(){

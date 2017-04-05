@@ -45,7 +45,6 @@ public class ApplRejectedRptBackingBean extends SmReportBackingBean<ApplRejected
 		}
 		
 		generateSmReport(params);
-		resetSearch();
 	}
 	
 	public void resetSearch(){
