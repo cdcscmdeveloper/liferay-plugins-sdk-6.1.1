@@ -6592,19 +6592,19 @@ public class DirectLOABackingBean extends
 		List<ScLoaReport> scLoaReports = loa.getScLoaReports();
 		if (scLoaReports != null && scLoaReports.size() > 0) {
 			for (ScLoaReport scLoaReport : scLoaReports) {
-				//if (null == scLoaReport.getPmDocument()) {
-				String docDefinitionKey = scLoaReport.getPmDocument()
-						.getDocDefinitionKey();
-				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-						.equals(docDefinitionKey)) {
-					if (scLoaReport.getScLoaReportAttachment() != null) {
-						String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
-								EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-						StringBuilder path = new StringBuilder(docRepoBaseDir);
-						path.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-						path.append(scLoaReport.getScLoaReportAttachment().getFilePath());
-						actualFilePath = splitFilePath(path.toString());
-						//}
+				if (null != scLoaReport.getPmDocument()) {
+					String docDefinitionKey = scLoaReport.getPmDocument()
+							.getDocDefinitionKey();
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						if (scLoaReport.getScLoaReportAttachment() != null) {
+							String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+									EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+							StringBuilder path = new StringBuilder(docRepoBaseDir);
+							path.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+							path.append(scLoaReport.getScLoaReportAttachment().getFilePath());
+							actualFilePath = splitFilePath(path.toString());
+						}
 					}
 				}
 			}
