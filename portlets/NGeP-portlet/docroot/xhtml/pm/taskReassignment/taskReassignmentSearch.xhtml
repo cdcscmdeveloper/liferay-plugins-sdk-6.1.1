@@ -142,7 +142,7 @@
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
 		            	update="@this,:form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.document.type']}"
-						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeDesc}"
+						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeName}"
 						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType"
 						conditionField="#{taskReassignmentBackingBean.constuctConditionFields()}"
 						postUpdateListener="taskReassignmentBackingBean.onChangeDocType"/>
