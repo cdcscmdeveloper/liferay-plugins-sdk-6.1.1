@@ -41,6 +41,15 @@
 			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationApprovedRptVal}">
 				<ui:include src="/xhtml/reports/new/sm/SM_006_appl_approved_rpt.xhtml"></ui:include>
 			</c:if>
+			
+			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationRejectedRptVal}">
+				<ui:include src="/xhtml/reports/new/sm/SM_007_appl_rejected_rpt.xhtml"></ui:include>
+			</c:if>
+			
+			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smAgencyStatistical}">
+				<ui:include src="/xhtml/reports/new/sm/SM_064_agency_stat_status_rpt.xhtml"></ui:include>
+			</c:if>
+			
 		</p:outputPanel>
 	</ui:define>
 

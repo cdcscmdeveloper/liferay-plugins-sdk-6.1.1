@@ -17,8 +17,8 @@ public class SmReportManagedBean extends ReportBaseManagedBean{
 	private Date dateFrom;
 	private Date dateTo;
 	private String zone;
-	private String companyName;
 	private PmOrgProfile selectedOrgProfile;
+	private String mofNo;
 	
 	public Date getDateFrom() {
 		return dateFrom;
@@ -44,19 +44,19 @@ public class SmReportManagedBean extends ReportBaseManagedBean{
 		this.zone = zone;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
 	public PmOrgProfile getSelectedOrgProfile() {
 		return selectedOrgProfile;
 	}
 
 	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
 		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
 	}
 }
