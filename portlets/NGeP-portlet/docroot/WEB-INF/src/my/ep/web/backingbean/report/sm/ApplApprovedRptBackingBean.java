@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
@@ -17,19 +18,46 @@ import my.ep.web.managedbean.report.sm.ApplApprovedRptManagedBean;
 @ViewScoped
 public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApprovedRptManagedBean>{
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = EpLogger.getLogger(ApplVerificationRptBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(ApplApprovedRptBackingBean.class);
+	
+	public ApplApprovedRptBackingBean(){
+		setDefaultDateFromAndDateTo();
+	}
 	
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		retrieveReportValueFromDb();
 		
+		log.info("Date From>>>>>>" + getManagedBean().getDateFrom());
+		log.info("Date To>>>>>>" + getManagedBean().getDateTo());
+		log.info("Mof No>>>>>>" + getManagedBean().getMofNo());
+		log.info("Org Profile>>>>>>" + getManagedBean().getSelectedOrgProfile());
+		log.info("Zone>>>>>>" + getManagedBean().getZone());
+		
+		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
+
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+				params.put(SmReportConst.PARAM_COMPANY_NAME, 
+						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			}
+		}
+		
+		if(StringUtils.isNotBlank(getManagedBean().getMofNo().toString())){
+			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
+		}
+		
+		generateSmReport(params);
+		resetSearch();
 	}
 	
 	public void resetSearch(){
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setDateTo(null);
+		setDefaultDateFromAndDateTo();
+		getManagedBean().setMofNo(null);
+		getManagedBean().setSelectedOrgProfile(null);
+		getManagedBean().setZone(null);
 	}
 }
