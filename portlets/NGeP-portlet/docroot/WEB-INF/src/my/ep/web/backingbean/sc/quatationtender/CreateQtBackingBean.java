@@ -2587,14 +2587,17 @@ public class CreateQtBackingBean extends
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(isPanel ? RuleTypeConst.PANEL_PUBLISHING_PERIOD_DAYS : RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS);
-			/*if (publishDate != null) {
-				reqDTO.setValidityDate(publishDate);
-			}*/
+			reqDTO.setValidityDate(publishDate);
+			
 			List<PmConfigRuleValue> ruleValueList = ruleSO
 					.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
 			if (ruleValueList != null && ruleValueList.size() > 0) {
 				return ruleValueList;
+			} else if (publishDate != null) {
+				// if not found, always get the latest rule
+				log.info(getManagedBean().getQt().getQtNo() + " " + reqDTO.getRuleType() + " rule not found for " + publishDate +  ".");
+				return getPublishingPeriodDaysRuleValues(qtType, isPanel, null);
 			} else {
 				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
 			}
