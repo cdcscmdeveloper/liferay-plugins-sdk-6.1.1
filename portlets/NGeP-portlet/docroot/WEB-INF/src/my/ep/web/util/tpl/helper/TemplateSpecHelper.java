@@ -221,6 +221,8 @@ public class TemplateSpecHelper {
 									} else {
 										newSpecQuestion.setParentSpecQuestion(null);
 									}
+								} else if (!isTechnicalSpec) {
+									newSpecQuestion.setParentSpecQuestion(specQuestion);
 								} else {
 									newSpecQuestion.setParentSpecQuestion(null);
 								}
@@ -882,7 +884,10 @@ public class TemplateSpecHelper {
 			List<TplSpecQuestion> oldSpecQuestions = new ArrayList<TplSpecQuestion>(oldSpecMaster.getTplSpecQuestions());
 			for (TplSpecQuestion newSpecQuestion : newSpecMaster.getTplSpecQuestions()) {
 				for (TplSpecQuestion oldSpecQuestion : oldSpecQuestions) {
-					if (newSpecQuestion.getClItem() != null && newSpecQuestion.getClItem().equals(oldSpecQuestion.getClItem())) {
+					if (oldSpecQuestion.getParentSpecQuestion() != null
+							&& oldSpecQuestion.getParentSpecQuestion()
+									.getSpecQuestionId().equals(newSpecQuestion.getParentSpecQuestion()
+											.getSpecQuestionId())) {
 						copySpecQuestionDetails(newSpecQuestion, oldSpecQuestion);
 						oldSpecQuestions.remove(oldSpecQuestion);
 						break;
@@ -941,5 +946,33 @@ public class TemplateSpecHelper {
 		}
 		
 		return pmOrgProfile;
+	}
+	
+	/**
+	 * Add  the financial spec question based on deleted tech spec question
+	 * 
+	 * @param specQuestion 
+	 */
+	public void deleteFinancialSpecQuestions(TplSpecQuestion specQuestion) {
+
+		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+
+		List<TplSpecQuestion> specQuestionsToBeDeleted = specMaster
+				.getFinSpecQuestionsToDelete();
+		if (CollectionUtils.isNotEmpty(specQuestion.getFinSpecQuestions())) {
+			if (specQuestionsToBeDeleted == null) {
+				specQuestionsToBeDeleted = new ArrayList<TplSpecQuestion>();
+				specMaster.setFinSpecQuestionsToDelete(specQuestionsToBeDeleted);
+			}
+			for (TplSpecQuestion specquestion : specQuestion.getFinSpecQuestions()) {
+				if (!specquestion.isBrandNew()
+						&& TemplateSpecConst.QUESTION_TYPE_ITEM
+								.equalsIgnoreCase(specquestion.getQuestionType())) {
+					specquestion.setDeleted(true);
+					specQuestionsToBeDeleted.add(specquestion);
+				}
+			}
+			specQuestion.setFinSpecQuestions(null);
+		}
 	}
 }
