@@ -35,8 +35,6 @@ public class ApplVerificationRptBackingBean extends SmReportBackingBean<ApplVeri
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
 		generateSmReport(params);
-		resetSearch();
-		
 	}
 	
 	public void resetSearch(){

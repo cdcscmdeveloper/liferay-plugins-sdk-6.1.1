@@ -29,7 +29,6 @@ public class AgencyStatStatusRptBackingBean extends SmReportBackingBean<ApplAppr
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
 		generateSmReport(params);
-		resetSearch();
 		
 	}
 	
