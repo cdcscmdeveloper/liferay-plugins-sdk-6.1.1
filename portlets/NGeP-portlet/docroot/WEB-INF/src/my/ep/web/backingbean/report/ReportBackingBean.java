@@ -14277,7 +14277,7 @@ public class ReportBackingBean extends
 			}
 
 			String errMsg = ResourceBundleUtils.getMessage(
-					"lbl.rpt.report_validation",
+					"lbl.rpt.report.validation",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			
