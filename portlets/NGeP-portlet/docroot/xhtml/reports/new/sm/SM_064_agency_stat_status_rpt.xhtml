@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.rpt.sm.SM_AGENCY_STAT_SUMM_RPT_NAME']}" toggleable="true">
+		<table>
+			<tr>
+				<td class="columnGenClass">
+					<p:outputLabel value="#{lbl['lbl.rpt.approveddatelabel']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+			
+				<td>
+					<ac:smReportDateFromTo bBean="#{agencyStatStatusRptBB}" />
+				</td>
+			</tr>
+		</table>
+		
+		<ac:smGenerateReport bBean="#{agencyStatStatusRptBB}" reportCode="#{smReportBB.managedBean.reportCode}"
+			generateMethod="generateReport" resetMethod="resetSearch">
+		</ac:smGenerateReport>
+	</p:panel>
+</ui:composition>

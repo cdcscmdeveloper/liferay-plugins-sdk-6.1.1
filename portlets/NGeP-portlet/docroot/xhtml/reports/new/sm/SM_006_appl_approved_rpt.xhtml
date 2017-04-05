@@ -11,10 +11,12 @@
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.zone']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+				
 			</td>
 			<td class="tdContent">
-				<p:selectOneMenu value="#{applApprovedRptBB.managedBean.zone}"
-					style="width:300px;">
+				<p:selectOneMenu value="#{applApprovedRptBB.managedBean.zone}" id="zoneId"
+					style="width:300px;" required="true" label="#{lbl['lbl.rpt.zone']}"">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
@@ -23,12 +25,8 @@
 						itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
 						itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
-					<ui:remove>
-					<p:ajax event="change"
-						listener="#{applApprovedRptBB.retrieveProcessingOfficerList}"
-						partialSubmit="true" update="@form" />
-					</ui:remove>
 				</p:selectOneMenu>
+				<p:message id="zoneIdMsg" for="zoneId" display="icon" />
 			</td>
 			
 			<td class="tdTitle">
@@ -37,7 +35,7 @@
 			<td class="tdContent">
 				<ac:lov id="smCompanyName" readonly="true" style="width:289px;"
 					lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="40"
-					headerText="#{lbl['lbl.rpt.cmpName']}" update="@form"
+					headerText="#{lbl['lbl.rpt.cmpName']}" 
 					value="#{applApprovedRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="applApprovedRptBB.managedBean.selectedOrgProfile" />
 			</td>
@@ -55,32 +53,17 @@
 		
 		<tr>
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.approvedyearfrom']}" />
+				<p:outputLabel value="#{lbl['lbl.rpt.approveddatelabel]}" />
 			</td>
-			<td class="tdContent">
-				<table style="width: 100%;">
-					<tr>
-						<td class="columnGenClass"><p:outputLabel
-								value="#{lbl['lbl.rpt.smApprovedDateFrm']}" /></td>
-						<td class="columnDateFromClass"><p:calendar showOn="button"
-								navigator="true" display="inline" readonlyInput="true" size="9"
-								value="#{applApprovedRptBB.managedBean.dateFrom}"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								partialSubmit="true" process="@form">
-							</p:calendar></TD>
-						<td class="columnDateToClass"><p:outputLabel
-								value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
-						<td><p:calendar showOn="button" navigator="true" size="9"
-								display="inline" readonlyInput="true"
-								value="#{applApprovedRptBB.managedBean.dateTo}"
-								style="columnDateToWidthClass"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								partialSubmit="true" process="@form">
-							</p:calendar>
-						</td>
-					</tr>
-				</table>
+			<td>
+				<ac:smReportDateFromTo bBean="#{applApprovedRptBB}" />
 			</td>
 		</tr>
 	</table>
+	</p:panel>
+	<ac:lovPopup />
+	
+	<ac:smGenerateReport bBean="#{applApprovedRptBB}" reportCode="#{smReportBB.managedBean.reportCode}"
+		generateMethod="generateReport" resetMethod="resetSearch">
+	</ac:smGenerateReport>
 </ui:composition>

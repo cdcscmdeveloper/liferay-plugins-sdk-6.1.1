@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
@@ -46,6 +48,7 @@ public class SmReportBackingBean<T extends SmReportManagedBean> extends ReportBa
 		/*log.info("TempAccess"+this.getManagedBean().isTempAccess());
 		log.info("this.getManagedBean().getReportName():"+this.getManagedBean().getReportName());
 		log.info("this.getManagedBean().getReportCode():"+this.getManagedBean().getReportCode());*/
+		params.put(SmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 		params.put(SmReportConst.PARAM_REPORT_CODE, getManagedBean().getReportCode());
 		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
 		
@@ -68,4 +71,12 @@ public class SmReportBackingBean<T extends SmReportManagedBean> extends ReportBa
 		return facesScopes;
 	}
 	
+	public void setDefaultDateFromAndDateTo(){
+		if(getManagedBean().getDateFrom() == null || getManagedBean().getDateFrom() == null){
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
+			getManagedBean().setDateFrom(fromDate.getTime());
+			getManagedBean().setDateTo(new Date());
+		}
+	}
 }
