@@ -377,6 +377,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 				setDeliveryOrder(resDTO);
 				getSupplierGst(resDTO.getFlOrder().getFlFulfilmentRequest());
+				updateDeliveryAddress();
 			}
 		} finally {
 			deliveryOrderSO = null;
@@ -779,15 +780,26 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null && getManagedBean().getButtonVal()==null) {
 				sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 				sortOrderSummaryList(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
-				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-					for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
-						BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
-						deliveryAddress.setSuppDelOrdNoEnabled(false);
-						if(remainOrderQty.doubleValue()> 0){
-							deliveryAddress.setSuppDelOrdNoEnabled(true);
-							break;
-						}
-					}
+				updateDeliveryAddress();
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * Sets SuppDelOrdNoEnabled flag.
+	 *
+	 * @param SuppDelOrdNoEnabled the SuppDelOrdNoEnabled to set
+	 */
+	public void updateDeliveryAddress() {
+		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
+				deliveryAddress.setSuppDelOrdNoEnabled(false);
+				if(remainOrderQty.doubleValue()> 0){
+					deliveryAddress.setSuppDelOrdNoEnabled(true);
+					break;
 				}
 			}
 		}
