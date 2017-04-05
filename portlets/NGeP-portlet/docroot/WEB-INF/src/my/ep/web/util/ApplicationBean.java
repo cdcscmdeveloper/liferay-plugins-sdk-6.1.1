@@ -19,6 +19,7 @@ import my.ep.dto.pm.common.telco.TelcoResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmTelco;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
@@ -34,6 +35,7 @@ public class ApplicationBean {
 
 	private static Logger log = EpLogger.getLogger(ApplicationBean.class);
 	List<PmTelco> telcoList = new ArrayList<PmTelco>();
+	private boolean notFilterHttps;
 
 	/**
 	 * to retrieve all active telco from DB and cache in Application Scoped.
@@ -101,5 +103,19 @@ public class ApplicationBean {
 	 */
 	public void onClickGstSample(String dialogWidget) {
 		RequestContext.getCurrentInstance().execute(dialogWidget + ".show()");
+	}
+
+	public boolean notFilterHttps() {
+		String notFilterHttps = EpPropertiesUtils.getInstance().getProperty(
+				"sm.url.dont.filter.https");
+		return Boolean.valueOf(notFilterHttps);
+	}
+
+	public boolean isNotFilterHttps() {
+		return notFilterHttps();
+	}
+
+	public void setNotFilterHttps(boolean notFilterHttps) {
+		this.notFilterHttps = notFilterHttps;
 	}
 }

@@ -13,19 +13,22 @@
 
 <cc:implementation>
 	
-    <script>
+	<p:outputPanel rendered="#{!applicationBean.notFilterHttps}">
+		<script>
 		
-		window.onload = function(){
-			var url = window.location.href;
-			if(url.indexOf('https')>=0){
-				
-			}else{
-				var urlRedirect = url.replace('http', 'https');
-				window.location.replace(urlRedirect);
+			window.onload = function(){
+				var url = window.location.href;
+				if(url.indexOf('https')>=0){
+					
+				}else{
+					var urlRedirect = url.replace('http', 'https');
+					alert("#{lbl['lbl.sm.https.redirect.msg']}");
+					window.location.replace(urlRedirect);
+				}
+	
 			}
-
-		}
-	</script>
+		</script>
+	</p:outputPanel>
 
 </cc:implementation>
 </ui:composition>
