@@ -344,6 +344,8 @@ public class TemplateSpecBackingBean extends
 
 		if (questionToDelete.getQuestionType().equalsIgnoreCase(
 				TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+			TemplateSpecHelper.getInstance().deleteFinancialSpecQuestions(
+					specQuestionList.get(selectedIndex));
 			for (int i = selectedIndex + 1; i < specQuestionList.size(); i++) {
 				TplSpecQuestion childToDelete = specQuestionList.get(i);
 				if (childToDelete.getQuestionType().equalsIgnoreCase(
