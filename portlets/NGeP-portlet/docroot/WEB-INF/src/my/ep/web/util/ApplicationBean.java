@@ -105,14 +105,11 @@ public class ApplicationBean {
 		RequestContext.getCurrentInstance().execute(dialogWidget + ".show()");
 	}
 
-	public boolean notFilterHttps() {
-		String notFilterHttps = EpPropertiesUtils.getInstance().getProperty(
-				"sm.url.dont.filter.https");
-		return Boolean.valueOf(notFilterHttps);
-	}
-
 	public boolean isNotFilterHttps() {
-		return notFilterHttps();
+		String notFilterHttpsStr = EpPropertiesUtils.getInstance().getProperty(
+				"sm.url.dont.filter.https");
+		notFilterHttps = Boolean.valueOf(notFilterHttpsStr);
+		return notFilterHttps;
 	}
 
 	public void setNotFilterHttps(boolean notFilterHttps) {
