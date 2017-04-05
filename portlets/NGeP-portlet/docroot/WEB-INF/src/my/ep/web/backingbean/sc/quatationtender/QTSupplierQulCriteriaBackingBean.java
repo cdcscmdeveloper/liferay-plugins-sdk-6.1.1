@@ -2008,6 +2008,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @return the maximum no of supplier for restricted tender
 	 */
 	public BigDecimal getNoOfSupplierForRestrictedTender() {
+		ScQt scQt = getManagedBean().getQt();
+		Date publishDate = null;
+		if (scQt != null &&
+				scQt.getCurrentWorkFlowStatus() != null && 
+				super.isQTStatusPublished(scQt.getCurrentWorkFlowStatus().getPmStatus().getStatusId())) {
+			publishDate = scQt.getPublishDate();
+		}		
+		return getMaxNoOfSupplierForRestrictedTender(publishDate);
+	}
+	
+	private BigDecimal getMaxNoOfSupplierForRestrictedTender(Date publishDate) {
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -2015,13 +2026,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER);
-			/*ScQt scQt = getManagedBean().getQt();
-			if (scQt != null &&
-					scQt.getCurrentWorkFlowStatus() != null && 
-					super.isQTStatusPublished(scQt.getCurrentWorkFlowStatus().getPmStatus().getStatusId())) {
-				
-				reqDTO.setValidityDate(scQt.getPublishDate());	
-			}*/
+			reqDTO.setValidityDate(publishDate);
 			
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
@@ -2033,6 +2038,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 					return configRuleValue.getToValue();
 				}
 				
+			} else if (publishDate != null) {
+				// if not found, always get the latest rule
+				log.info(getManagedBean().getQt().getQtNo() + " " + reqDTO.getRuleType() + " rule not found for " + publishDate +  ".");
+				return getMaxNoOfSupplierForRestrictedTender(null);
 			} else {
 				log.warn("Rule " + RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER + " is not found.");
 			}
