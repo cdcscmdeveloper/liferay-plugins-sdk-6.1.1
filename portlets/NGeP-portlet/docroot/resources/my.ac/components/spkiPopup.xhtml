@@ -20,46 +20,52 @@
 	</cc:interface>
 
 	<cc:implementation>
-		
-	<script>
-		$(document).keypress(
-		    function(event){
-		     if (event.which == '13') {
-		        event.preventDefault();
-		      }
-		});
-		
-		var runEnableAutoUpdate = true;
-		function setRunEnableAutoUpdate(runEnableAutoUpdate) {
-		  this.runEnableAutoUpdate = runEnableAutoUpdate;
-		}
 
-		function isRunEnableAutoUpdate() {
-		  return this.runEnableAutoUpdate;
-		}
-	</script>
+		<script>
+			$(document).keypress(function(event) {
+				if (event.which == '13') {
+					event.preventDefault();
+				}
+			});
+
+			var runEnableAutoUpdate = true;
+			function setRunEnableAutoUpdate(runEnableAutoUpdate) {
+				this.runEnableAutoUpdate = runEnableAutoUpdate;
+			}
+
+			function isRunEnableAutoUpdate() {
+				return this.runEnableAutoUpdate;
+			}
+		</script>
+		<p:remoteCommand name="resetQuestion"
+			id="resetQuestion"
+			action="#{spkiBackingBean.clearInput}"
+			update=":form"></p:remoteCommand>
+
+
 		<p:dialog header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg"
-			resizable="false" modal="true">
-			
-			<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}" 
-				onstart="return isRunEnableAutoUpdate()" 
+			onHide="resetQuestion();" resizable="false"
+			modal="true">
+
+			<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}"
+				onstart="return isRunEnableAutoUpdate()"
 				oncomplete="setRunEnableAutoUpdate(true);"
 				disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
-			
+
 			<p:blockUI block="spkiPopup" widgetVar="spkiBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 			<p:panel id="spkiPopup">
-				<span id="#{cc.clientId}"> <p:messages id="dlgMessages" showDetail="true" escape="false" autoUpdate="true" closable="true" />
+				<span id="#{cc.clientId}"> <p:messages id="dlgMessages"
+						showDetail="true" escape="false" autoUpdate="true" closable="true" />
 					<h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
 						<h:outputLabel style="white-space: normal;"
 							value="#{cc.attrs.challengeQues1}" />
 						<p:inputText value="#{cc.attrs.challengeAns1}" />
 
 						<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-						<p:password id="password"
-							value="#{cc.attrs.password}" />
-						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}" 
+						<p:password id="password" value="#{cc.attrs.password}" />
+						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}"
 							onstart="spkiBlockWidget.show(); setRunEnableAutoUpdate(false);"
 							action="#{spkiBackingBean.spkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"
 							oncomplete="spkiBlockWidget.hide();" />
