@@ -116,12 +116,11 @@
 			<ac:paginator for="apprHistTbl" />
 
 			<p:column headerText="#{lbl['lbl.sc.approved.by']}" style="width:40%">
-				#{scLoaApproval.approver.userName}
+			    <h:outputText value="#{scLoaApproval.approver.userName}" rendered="#{scLoaApproval.approverActionDate != null}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:35%">
 				#{directLOABackingBean.getApprovalActionDisplayName(scLoaApproval.approverAction)}
-		
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.date']}" style="width:25%">
