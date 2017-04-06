@@ -347,7 +347,7 @@
 				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
-				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="approvalLetterUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="approvalLetterUploadWV"
 				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 				update="uploadApprovalLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
 			</p:fileUpload>
