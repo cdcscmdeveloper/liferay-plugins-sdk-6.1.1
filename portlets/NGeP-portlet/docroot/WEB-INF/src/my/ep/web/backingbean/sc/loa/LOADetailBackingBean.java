@@ -523,6 +523,7 @@ public class LOADetailBackingBean extends
 				editLOAAction(scLoa);
 			}
 			getManagedBean().setEditFlag(Boolean.FALSE);
+			getManagedBean().setLoaTitle(Boolean.TRUE);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -2983,10 +2984,13 @@ public class LOADetailBackingBean extends
 			} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 				action = ApprovalAction.APPROVAL_REVISED.value();
 			}
-
-			scLoaApproval.setApproverAction(action);
-			scLoaApproval.setApproverActionDate(new Date());
-			scLoa.setScLoaApproval(scLoaApproval);
+			
+			if(null != action){
+				scLoaApproval.setApproverAction(action);
+				scLoaApproval.setApproverActionDate(new Date());
+				scLoa.setScLoaApproval(scLoaApproval);
+			}
+			
 		} else if (!scLoa.isApprovalReq()) {
 			scLoa.setScLoaApproval(null);
 		}
