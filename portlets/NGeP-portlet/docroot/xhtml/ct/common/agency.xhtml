@@ -414,7 +414,7 @@
 	   	width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 	   	onShow="singleUploadListener(agencyUploadWV);">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="ctSharingAttachFileId"
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 			fileUploadListener="#{ctBackingBean.ComonFileUpload}"  showButtons="false"
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
@@ -432,7 +432,7 @@
 	<p:dialog id="uploadAgencyDlg" widgetVar="uploadAgencyDlg" modal="true"  resizable="false"
 	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" id= "uploadAgencyFileId"
+		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{ctBackingBean.fileUpload}"
 			mode="advanced" id="uploadAgency1" multiple="true"
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
