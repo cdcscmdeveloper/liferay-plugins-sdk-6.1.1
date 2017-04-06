@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -6689,46 +6690,58 @@ public class SimpleQuoteBackingBean extends
 	 * @param quote the quote
 	 */
 	private void validateQuote(ScQuote quote, boolean isSubmit){
-		if (quote.getEndDate() != null && quote.getStartDate() != null) {
-			Date startDate = quote.getStartDate();
-			Date endDate = quote.getEndDate();
-			
+		Date startDate = quote.getStartDate();
+		Date endDate = quote.getEndDate();
+		
+		if(startDate != null) {
+			BigDecimal maxDays = BigDecimal.ZERO, minHours = BigDecimal.ZERO;
+			BigDecimal minMinutes = BigDecimal.ZERO, maxMinutes = BigDecimal.ZERO;
 			PmConfigRuleValue ruleValue = getDurationRuleValue();
-			int maxDays = 0, minHours = 0;
+			int maxiDays = maxDays.intValue() + 1;
 			if (ruleValue != null) {
-				int mHours = ruleValue.getFromValue().intValue();
-				int mxDays = ruleValue.getToValue().intValue();
-				minHours = mHours/60;
-				maxDays = (mxDays/60)/24;
+				minMinutes = ruleValue.getFromValue();
+				maxMinutes = ruleValue.getToValue();
+				minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
 			}
+			/*if(minHours.compareTo(BigDecimal.valueOf(0.25)) > 0) {
+				maxiDays = maxiDays + 1;
+			}*/
+			getManagedBean().setMaxDate(DateUtils.addDays(startDate, maxiDays));
+			if (endDate != null && startDate != null) {
+				if (endDate.before(startDate)
+						|| quote.getStartDate().equals(quote.getEndDate())) {
+					throw new EpException(MessageConst.ERROR_760164);
+				}
 
-			// max 3 days 
-			getManagedBean().setMaxDate(DateUtils.addDays(startDate, maxDays));
+				BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
+				diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+				/*
+				
+				BigDecimal twentyFour = BigDecimal.valueOf(24);
+				BigDecimal minutes = diff.divide(sixty.multiply(thousand), 2, RoundingMode.HALF_UP).remainder(sixty);
+				BigDecimal hours = diff.divide(sixty.multiply(sixty).multiply(thousand), 2, RoundingMode.HALF_UP).remainder(twentyFour);
 
-			if (endDate.before(startDate)
-					|| quote.getStartDate().equals(quote.getEndDate())) {
-				throw new EpException(MessageConst.ERROR_760164);
+				BigDecimal days = diff.divide(twentyFour.multiply(sixty).multiply(sixty).multiply(thousand), 2, RoundingMode.HALF_UP);
+
+				BigDecimal one = BigDecimal.valueOf(1);*/
+				if(diff.compareTo(minMinutes) < 0){
+					throw new EpException(
+							MessageConst.ERROR_760429,
+							new String[] {minHours.toString()});
+				}
+				
+				if(diff.compareTo(maxMinutes) > 0){
+					throw new EpException(
+							MessageConst.ERROR_760430,
+							new String[] {maxDays.toString()});
+				} 
+			} else {
+				if (isSubmit && (null == quote.getStartDate() ||  null == quote.getEndDate())) {
+					throw new EpException(MessageConst.ERROR_760388);
+				}
 			}
-
-			long diff = endDate.getTime() - startDate.getTime();
-			long minutes = diff / (60 * 1000) % 60;
-			long hours = diff / (60 * 60 * 1000) % 24;
-			long days = diff / (24 * 60 * 60 * 1000);
-
-			if(days < 1 && hours < minHours){
-				throw new EpException(
-						MessageConst.ERROR_760429,
-						new String[] {Integer.toString(minHours)});
-			}
-			if(days >= maxDays && (hours >0 || minutes >0)){
-				throw new EpException(
-						MessageConst.ERROR_760430,
-						new String[] {Integer.toString(maxDays)});
-			} 
-		} else
-			if (isSubmit && (null == quote.getStartDate() ||  null == quote.getEndDate())) {
-				throw new EpException(MessageConst.ERROR_760388);
-			}
+		}
 	}
 	
 	/**
