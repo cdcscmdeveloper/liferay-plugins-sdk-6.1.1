@@ -14,7 +14,8 @@
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.zone}" style="width:300px;" 
-			required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}">
+			required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}"
+			label="#{lbl['lbl.rpt.zone']}">
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 				itemValue="" />
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
