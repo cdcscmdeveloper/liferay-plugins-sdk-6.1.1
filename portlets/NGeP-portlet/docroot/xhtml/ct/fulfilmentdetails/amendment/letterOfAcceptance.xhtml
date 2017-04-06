@@ -69,7 +69,7 @@
 		 </p:dataTable>
 
 			 <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" height="auto" resizable="false" modal="true" 
-		    	  width="700px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(letterUploadWV);">
+		    	  width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(letterUploadWV);">
 					<p:ajax event="close" />
 					<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false" 
 					      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"  

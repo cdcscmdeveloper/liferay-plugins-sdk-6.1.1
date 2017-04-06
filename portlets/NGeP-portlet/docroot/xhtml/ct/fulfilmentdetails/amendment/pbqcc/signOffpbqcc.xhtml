@@ -74,7 +74,7 @@
 				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
-				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="pbqcDecisionLetterUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="pbqcDecisionLetterUploadWV"
 				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 				update="uploadPbqcDecisionLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadPbqcDecisionLetterDlg.hide();" >
 			</p:fileUpload>
@@ -232,7 +232,7 @@
 				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
-				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="mofDecisionLetterUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="mofDecisionLetterUploadWV"
 				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 				update="uploadMofDecisionLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadMofDecisionLetterDlg.hide();" >
 			</p:fileUpload>
