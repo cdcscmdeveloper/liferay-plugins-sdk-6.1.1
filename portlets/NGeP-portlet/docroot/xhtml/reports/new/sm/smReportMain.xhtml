@@ -28,28 +28,41 @@
 
 						<f:selectItems
 							value="#{smReportBB.managedBean.reportList}"></f:selectItems>
-						<p:ajax event="change" update="outputPnlSmReport" />
+						<p:ajax event="change" update="outputPnlSmReport" listener="#{smReportBB.reportOnChange}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
 
 		<p:outputPanel id="outputPnlSmReport">
-			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationVerificationRptVal}">
-				<ui:include src="/xhtml/reports/new/sm/SM_005_appl_verification_rpt.xhtml"></ui:include>
-			</c:if>
-			
-			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationApprovedRptVal}">
-				<ui:include src="/xhtml/reports/new/sm/SM_006_appl_approved_rpt.xhtml"></ui:include>
-			</c:if>
-			
-			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationRejectedRptVal}">
-				<ui:include src="/xhtml/reports/new/sm/SM_007_appl_rejected_rpt.xhtml"></ui:include>
-			</c:if>
-			
-			<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smAgencyStatistical}">
-				<ui:include src="/xhtml/reports/new/sm/SM_064_agency_stat_status_rpt.xhtml"></ui:include>
-			</c:if>
-			
+			<p:panel header="#{smReportBB.managedBean.reportTitle}" rendered="#{!empty smReportBB.managedBean.reportCode}">
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationVerificationRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_005_appl_verification_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationApprovedRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_006_appl_approved_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationRejectedRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_007_appl_rejected_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smAgencyStatistical}">
+					<ui:include src="/xhtml/reports/new/sm/SM_064_agency_stat_status_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplClientCharterRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_011_appl_verification_performance.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCdcssDepositAdjustmentRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_077_cdc_deposit_adjustment_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRegCompanyInMofRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_001_profile_of_reg_company.xhtml"></ui:include>
+				</c:if>
+			</p:panel>
 		</p:outputPanel>
 	</ui:define>
 
