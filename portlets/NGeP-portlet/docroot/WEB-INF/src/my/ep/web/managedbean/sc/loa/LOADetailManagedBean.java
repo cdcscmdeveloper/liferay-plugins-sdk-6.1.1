@@ -256,6 +256,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
     /** The file type pdf. */
     private String fileTypePdf ="/(\\.|\\/)(pdf)$/i";
     
+	/** The is loa title. */
+	private boolean isLoaTitle = Boolean.FALSE;
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1423,4 +1426,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setFileTypePdf(String fileTypePdf) {
 		this.fileTypePdf = fileTypePdf;
 	}
+
+	/**
+	 * @return the isLoaTitle
+	 */
+	public boolean isLoaTitle() {
+		return isLoaTitle;
+	}
+
+	/**
+	 * @param isLoaTitle the isLoaTitle to set
+	 */
+	public void setLoaTitle(boolean isLoaTitle) {
+		this.isLoaTitle = isLoaTitle;
+	}
+	
+	
 }
