@@ -19,6 +19,7 @@ public class SmReportManagedBean extends ReportBaseManagedBean{
 	private String zone;
 	private PmOrgProfile selectedOrgProfile;
 	private String mofNo;
+	private String supplierType;
 	
 	public Date getDateFrom() {
 		return dateFrom;
@@ -58,5 +59,13 @@ public class SmReportManagedBean extends ReportBaseManagedBean{
 
 	public void setMofNo(String mofNo) {
 		this.mofNo = mofNo;
+	}
+
+	public String getSupplierType() {
+		return supplierType;
+	}
+
+	public void setSupplierType(String supplierType) {
+		this.supplierType = supplierType;
 	}
 }
