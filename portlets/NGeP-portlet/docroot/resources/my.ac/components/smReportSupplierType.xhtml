@@ -1,0 +1,21 @@
+<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="bBean" required="true" default="" />
+	</cc:interface>
+
+	<cc:implementation>
+		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.supplierType}"
+			style="width:300px;">
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="all"></f:selectItem>
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="J"></f:selectItem>
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="K"></f:selectItem>
+		</p:selectOneMenu>
+	</cc:implementation>
+</ui:composition>
