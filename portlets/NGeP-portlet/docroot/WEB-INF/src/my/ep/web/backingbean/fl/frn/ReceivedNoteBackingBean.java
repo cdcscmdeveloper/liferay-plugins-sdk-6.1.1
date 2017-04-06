@@ -1042,7 +1042,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
-			
+			for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+				if(noteItem.getFulfilmentNoteItemId() != null){
+					reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+					resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+					noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+					initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+				}else{
+					noteItem.getRejectionRemarks().add(new FlRemark());
+				}
+			}
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
 		}
