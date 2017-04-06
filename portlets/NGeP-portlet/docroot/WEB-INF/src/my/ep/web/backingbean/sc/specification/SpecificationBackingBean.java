@@ -6689,9 +6689,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-			if (technical.getOverallTechnical().intValue() < 50
+			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+			if (null!=passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
 					&& !this.getManagedBean().isReadOnly()) {
-				throw new EpException(MessageConst.ERROR_760365);
+				throw new EpException(MessageConst.ERROR_760365,new String[] { String.valueOf(passingScore) });
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -12912,11 +12913,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	private void calculateRecommendationPackageAndItemScores(
 			ScQtScoreSetting recommendationPackage,
 			ScQtScoreSetting recommendationItem) {
+		BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 		if (null != recommendationPackage
-				&& null != recommendationPackage.getOverallTechnical()
-				&& recommendationPackage.getOverallTechnical().intValue() < 50) {
+				&& null != recommendationPackage.getOverallTechnical() && null!=passingScore
+				&& recommendationPackage.getOverallTechnical().intValue() < passingScore.intValue()) {
 			this.getManagedBean().setActiveIndex(6);
-			throw new EpException(MessageConst.ERROR_760365);
+			throw new EpException(MessageConst.ERROR_760365,new String[] { String.valueOf(passingScore) });
 		}
 		if (null != recommendationItem) {
 			int itemPassingScore = 0;
