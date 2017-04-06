@@ -343,6 +343,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		Object returnObj = null;
 		
 		try {
+			
 			if (postSignActionMtdExpr != null) {
 				returnObj = postSignActionMtdExpr.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
@@ -633,8 +634,14 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 		return signedData;
 	}
+	
+	
+	public void clearInput(){
+		
+		this.setChallengeAns1("");
+	}
 
 
-
+	
 
 }
