@@ -39,7 +39,7 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	private String defaultOutputType;
 	
-	
+	private String reportTitle;
 	
 	
 	
@@ -145,6 +145,14 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	 */
 	public void setReportCode(String reportCode) {
 		this.reportCode = reportCode;
+	}
+
+	public String getReportTitle() {
+		return reportTitle;
+	}
+
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
 	}
 	
 	
