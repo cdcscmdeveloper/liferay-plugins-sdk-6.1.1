@@ -439,7 +439,7 @@
 	<p:panel header="#{lbl['lbl.sc.contact.person.details']}" id="quotationTndermainPersonContactsdtlsPanel"
 		toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
-			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
+			value="#{qTDetailBB.managedBean.scQtContactPersons}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
 			styleClass="contactdetails" rowKey="#{contactpersondetails}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
