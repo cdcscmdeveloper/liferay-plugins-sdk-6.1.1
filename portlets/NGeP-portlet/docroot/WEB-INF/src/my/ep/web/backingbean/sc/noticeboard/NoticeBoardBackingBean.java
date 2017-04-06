@@ -1756,8 +1756,14 @@ public class NoticeBoardBackingBean extends
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO,
 										null,
-										ResourceBundleUtils.getMessage(
-												"lbl.sc.notice.board.bsv.success.msg",new String[] {zoneNames.toString()}, 
+										ResourceBundleUtils
+												.getMessage(
+														"lbl.sc.notice.board.bsv.success.msg",
+														new String[] {getParameterDesc(currentQt.getProcurementMode()),
+																currentQt.getQtNo(),
+																(currentQt.isZonal() ? ","
+																		+ zoneNames.toString()
+																		: zoneNames.toString()) },
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes().getUserLocale())));
 			}
