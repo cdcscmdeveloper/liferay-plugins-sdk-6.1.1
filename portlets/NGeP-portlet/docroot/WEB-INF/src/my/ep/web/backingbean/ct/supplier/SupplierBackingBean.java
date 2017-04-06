@@ -954,6 +954,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
    		try {
    			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
    			reqDTO = new FinancialOrgReqDTO();
+   			getManagedBean().setAccBankName(null);
    			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
    				reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
    				resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
@@ -1094,13 +1095,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		if ((getManagedBean().getSelectedContract() != null 
 			|| (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) 
 				&& getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null 
-				&& getManagedBean().getFactoring().getAuthRefNo() != null 
+				&& (getManagedBean().getFactoring().getAuthRefNo() != null  && !getManagedBean().getFactoring().getAuthRefNo().isEmpty())
 				&& getManagedBean().getFactoring().getEffDate() != null 
 				&& getManagedBean().getFactoring().getExpDate() != null
 				&& getManagedBean().getFactoring().getAgreementDate() != null) {
-			return true;
+			return false;
 		} else {
-		return false;
+		return true;
 		}
 	}
 
