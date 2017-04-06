@@ -246,7 +246,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		
 		//Validate GST No
-		//validateGstRegNo();
+		validateGstRegNo();
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
@@ -2692,6 +2692,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("**********RegistrationBB - ChangeExpiredMofPersonnelToBasicJob - End************");
 	}
 	
+	public void sameAsOwnerOnChange(){
+		SmPersonnel personnel = getManagedBean().getSmPersonnel();
+		if(getManagedBean().isSameAsOwner()){
+			personnel.setPmCountry(getManagedBean().getSmSuppOwner().getNationality());
+			personnel.setName(getManagedBean().getSmSuppOwner().getOwnerName());
+			personnel.setIdentificationNo(getManagedBean().getSmSuppOwner().getIdentificationNo());
+			personnel.setIdentificationTypeId(getManagedBean().getSmSuppOwner().getIdentificationTypeId());
+
+		}else{
+			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			personnel.setPmCountry(defaultCountry);
+			personnel.setName(null);
+			personnel.setIdentificationNo(null);
+			personnel.setIdentificationTypeId(null);
+		}
+	}
+	
 	private void validateNewIC(SmPersonnel smPersonnel){
 		//Validate IC Length
 		PmParameter personnelIDType = ParameterHelper.getInstance().getPmParameterById(smPersonnel.getIdentificationTypeId());
@@ -2718,6 +2735,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 	}
+
 }
 
 
