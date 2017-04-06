@@ -18810,15 +18810,17 @@ public class ReportBackingBean extends
 
 					log.info("4");
 					
-					paramConstrString = paramConstrString.replace("&", " ");
+					//paramConstrString = paramConstrString.replace("&", " ");
 					paramConstrString = paramConstrString.replaceAll("^\\s+", "");
 					paramConstrString = paramConstrString.replaceAll("\\s+$", "");
 					paramConstrString = paramConstrString.replaceAll("(=)","$1\"");
 					paramConstrString = paramConstrString.replaceAll("( )","\"$1");
 					paramConstrString = paramConstrString + "\"";
 					
-					paramConstrString = paramConstrString.replaceAll("%20" , " ");
+					paramConstrString = paramConstrString.replaceAll("%20" , "\" ");
 
+					paramConstrString = paramConstrString.substring(1, paramConstrString.length());
+				
 					log.info("5");
 					
 					StringBuffer reportUrl = new StringBuffer(paramConstrString);
@@ -20470,11 +20472,11 @@ public class ReportBackingBean extends
 			
 			if(ip != null){
 				
-				if(ip.equals("192.168.13.119")){
+				if(ip.startsWith("192.168.12")){
 					return true;
 				}
 				else
-				if(ip.equals("192.168.12.120")){
+				if(ip.startsWith("192.168.13")){
 					return true;
 				}
 				else
