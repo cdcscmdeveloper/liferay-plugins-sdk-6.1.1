@@ -142,9 +142,15 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 
 		this.getManagedBean().setDefaultOutputType(pmReport.getDefaultOutputType());
 		this.getManagedBean().setReportName(pmReport.getReportFilename());
-
+		
 		this.getManagedBean().setTempAccess(pmReport.getIsTempAccess() == 1 ? true : false);
-
+		
+		String locale = getFacesScopes().getUserLocale().getLanguage();
+		if(locale.equalsIgnoreCase("en")){
+			this.getManagedBean().setReportTitle(pmReport.getReportTitle());
+		}else{
+			this.getManagedBean().setReportTitle(pmReport.getReportTitleMalay());
+		}
 		
 	}
 	
