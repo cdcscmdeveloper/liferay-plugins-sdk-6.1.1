@@ -1881,10 +1881,11 @@ public class QTCommitteBackingBean extends
 						
 					} else {
 						Date closingDate = this.getManagedBean().getQt().getClosingDate();
+						//Temporary fix on date . needs to look for some date api
 						if (closingDate != null && 
 								DateUtils.getDaysDifference(
 										DateUtils.setDefaultDateTime(new Date()), 
-										DateUtils.setDefaultDateTime(closingDate)) <= 7 &&
+										DateUtils.setDefaultDateTime(closingDate))+1 <= 7 &&
 								(QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) || 
 										QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
 							return false;
