@@ -1965,6 +1965,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    					}
 	    						
 				        		CtAgency ctAgency = new CtAgency();
+				        		orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
 				        		ctAgency.setOrgProfile(orgProfile);
 				        		ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(orgProfile.getOrgProfileId()));
 				        		ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(orgProfile.getOrgProfileId()));
@@ -1977,8 +1978,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				        		str.append(getManagedBean().getContractVer().getCtContract().getContractId());
 				        		str.append(ctAgency.getOrgProfile().getOrgProfileId());
 				        		ctAgency.setCommitmentNo("K"+str.toString());
-		    			
-				        		ctAgency.setAp178(true);
+		    			        if(!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)){
+		    			        		ctAgency.setAp178(true);
+		    			        }
 				        		if(contractSharing){
 				        			ctAgency.setContractSharing(contractSharing);
 				        			contractSharing = false;
