@@ -79,4 +79,8 @@ public class SmReportBackingBean<T extends SmReportManagedBean> extends ReportBa
 			getManagedBean().setDateTo(new Date());
 		}
 	}
+	
+	public void onChangeZone(){
+		
+	}
 }
