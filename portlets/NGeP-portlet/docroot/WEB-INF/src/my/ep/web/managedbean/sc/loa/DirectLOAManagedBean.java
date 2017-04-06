@@ -282,6 +282,8 @@ public class DirectLOAManagedBean extends BaseManagedBean {
     
     /** The file type pdf. */
     private String fileTypePdf ="/(\\.|\\/)(pdf)$/i";
+    
+    private String guidelineTooltip;
 	
 	/**
 	 * Gets the spki backing bean.
@@ -1676,4 +1678,19 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setSupplierBranchId(Long supplierBranchId) {
 		this.supplierBranchId = supplierBranchId;
 	}
+
+	/**
+	 * @return the guidelineTooltip
+	 */
+	public String getGuidelineTooltip() {
+		return guidelineTooltip;
+	}
+
+	/**
+	 * @param guidelineTooltip the guidelineTooltip to set
+	 */
+	public void setGuidelineTooltip(String guidelineTooltip) {
+		this.guidelineTooltip = guidelineTooltip;
+	}
+	
 }

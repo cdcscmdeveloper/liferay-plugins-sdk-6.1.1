@@ -10,6 +10,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+
+		<c:if test="#{lOADetailBackingBean.managedBean.isLoaTitle()}">
+			<ac:title value="#{lbl['lbl.sc.loiloa.loa.header.title']}" />
+		</c:if>
+
 		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="#{lOADetailBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" />
 		
 		<ui:param name="isTrackingDairyView" value="#{lOADetailBackingBean.managedBean.trackingDairyView}" />
