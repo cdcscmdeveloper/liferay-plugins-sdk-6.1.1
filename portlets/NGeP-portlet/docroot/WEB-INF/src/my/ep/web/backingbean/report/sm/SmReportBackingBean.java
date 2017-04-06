@@ -83,4 +83,13 @@ public class SmReportBackingBean<T extends SmReportManagedBean> extends ReportBa
 	public void onChangeZone(){
 		
 	}
+
+	public void reportOnChange(){
+		if(StringUtils.isNotBlank(getManagedBean().getReportCode())){
+			retrieveReportValueFromDb();
+		}
+	}
+
+	
+
 }
