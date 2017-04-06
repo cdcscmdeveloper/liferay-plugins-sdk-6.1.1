@@ -1333,11 +1333,11 @@ public class DirectLOABackingBean extends
 			} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 				action = ApprovalAction.APPROVAL_REVISED.value();
 			}
-
-			scLoaApproval.setApproverAction(action);
-			scLoaApproval.setApproverActionDate(new Date());
-
-			scLoa.setScLoaApproval(scLoaApproval);
+			if(null != action){
+				scLoaApproval.setApproverAction(action);
+				scLoaApproval.setApproverActionDate(new Date());
+				scLoa.setScLoaApproval(scLoaApproval);
+			}
 		}
 		
 		TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
@@ -4214,6 +4214,9 @@ public class DirectLOABackingBean extends
 		}
 		// construct frequence schedule
 		constructStartNEndMonth();
+		
+		// Guide Instruction
+		showLoaGuideInstruction();
 
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
@@ -7009,6 +7012,33 @@ public class DirectLOABackingBean extends
 				serviceMaster.getTplSpecQuestions().set(serviceQuestionIndex, selectedSpecQuestion);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Show guide instruction for LOA attachment
+	 */
+	private void showLoaGuideInstruction() {
+		//String link="<p:commandLink ajax=\"false\" update=\"@this\" actionListener=\"#{directLOABackingBean.downloadGuidelinePdf}\"> <h:outputText value=\"click here\" /></p:commandLink>";
+		String instruction = ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.attachment.instruction", 
+				new String[] {"javascript:downloadGuidelinePdf()"} ,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		getManagedBean().setGuidelineTooltip(instruction);
+		
+	}
+
+	public void downloadGuidelinePdf() throws Exception{
+		debugLogger("downloadGuidelinePdf");
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
+		pbAttachment.setFileName("Guideline.pdf");
+		populateAttachmentDetails(pbAttachment);
+		VelocityContext context = new VelocityContext();
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_GUIDELINE, context,
+				new FileOutputStream(getActualFilePath(pbAttachment)));
+		downloadFile(getActualFilePath(pbAttachment));
 	}
 	
 	/**
