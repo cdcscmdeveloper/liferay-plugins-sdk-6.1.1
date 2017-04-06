@@ -178,7 +178,8 @@
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 					<td colspan="3">
-						<p:inputTextarea cols="47" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
+						<p:inputTextarea cols="47" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
+						onkeypress="if (event.keyCode == 13) { remarks.jq.click(); return false; }" widgetVar="remarks">
 							<p:ajax process="@this" />
 						</p:inputTextarea>
 					</td>
