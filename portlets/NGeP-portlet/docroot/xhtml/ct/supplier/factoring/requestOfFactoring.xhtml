@@ -207,7 +207,7 @@
 							style="width:360px;" value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
 							    <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
 							    <p:ajax event="change" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								     update="bankName,clausePanel, notificationBtn" listener="#{supplierBackingBean.resetFactoringCompany}" />
+								     update=":form:bankName,:form:clausePanel, :form:notificationBtn" listener="#{supplierBackingBean.resetFactoringCompany}" />
 						</p:selectOneMenu>
 						<p:inputText style="width:360px;"
 							rendered="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
@@ -222,7 +222,7 @@
 						      maxlength="50" style="width:200px;" label="#{lbl['lbl.ct.factoring.agreement.ref']}" id="authRefNo"
 						      required="true" disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
 							  or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}">
-						       <p:ajax event="change" process="@this" update="notificationBtn" />
+						       <p:ajax event="change" process="@this" update=":form:authRefNo, :form:notificationBtn" partialSubmit="true" />
 					      </p:inputText>
 					   <p:message for="authRefNo" display="icon" />
 				   </h:panelGrid>
@@ -245,7 +245,7 @@
 							    or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						     readonlyInput="true" navigator="true"
 						     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						       <p:ajax event="dateSelect" update="expdateCal, notificationBtn" />
+						       <p:ajax event="dateSelect" update=":form:expdateCal, :form:notificationBtn" />
 					     </p:calendar>
 					        <p:spacer width="1"/>
 				            <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.request.effective.date']}" />
@@ -290,7 +290,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<f:attribute name="startDate" value="#{supplierBackingBean.managedBean.factoring.effDate}" />
 						<f:validator validatorId="primeDateRangeValidator" />
-						<p:ajax event="dateSelect" update="notificationBtn" />
+						<p:ajax event="dateSelect" update=":form:notificationBtn" />
 					</p:calendar>
 					   <p:spacer width="1"/>
 				            <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.request.expiry.date']}" />
@@ -335,7 +335,7 @@
 						maxdate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<f:validator validatorId="primeDateRangeValidator" />
-						<p:ajax event="dateSelect" update="notificationBtn" />
+						<p:ajax event="dateSelect" update=":form:notificationBtn" />
 					</p:calendar>
 					<p:message for="agDateCal" display="icon" />
 				</h:panelGrid>
@@ -377,7 +377,7 @@
 				<tr>
 					<td />
 					<td><p:commandButton id="notificationBtn"
-							disabled="#{!supplierBackingBean.isLetterGenerated()}"
+							disabled="#{supplierBackingBean.isLetterGenerated()}"
 							value="#{lbl['lbl.ct.panel.notification.factoring']}"
 							process="@this,approverpickList" update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
@@ -408,7 +408,7 @@
 			     id="factoringClauseDlg" styleClass="pop_up_top" header="#{lbl['lbl.ct.factoring.clauses']}"
 				widgetVar="factoringClauseDlg" modal="true" width="820" height="480" resizable="false">
 				<p:editor controls="print" 
-				  id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430" />
+				  id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430"  disabled="true"/>
 				  <p:commandButton value="#{lbl['lbl.btn.close']}" process="@this" 
 				      onclick="factoringClauseDlg.hide()" style="float:right;"/>
 			</p:dialog>
