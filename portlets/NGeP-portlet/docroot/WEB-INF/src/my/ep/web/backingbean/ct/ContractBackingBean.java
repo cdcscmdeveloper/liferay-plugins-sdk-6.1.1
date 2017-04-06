@@ -1853,6 +1853,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			
+			if(getManagedBean().isSelectAll()){
+				getManagedBean().setSelectAll(false);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1881,7 +1885,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAgency> ctAgencyList = null;
 		OrgProfileReqDTO reqDTO = null;
 		List<PmOrgProfile> orgProfileList = null;
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		Long ministryId = retrieveMinistryOrgProfile(
  		   getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 		    if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
@@ -1939,6 +1942,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    	} else {
 		    	
 		    			boolean contractSharing = true;
+		    			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		    			try
 		    					{
 	    							ctAgencyList = new ArrayList<CtAgency>();
