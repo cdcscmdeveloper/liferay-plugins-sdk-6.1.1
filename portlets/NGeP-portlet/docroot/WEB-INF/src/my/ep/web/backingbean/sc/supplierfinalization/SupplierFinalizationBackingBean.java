@@ -2541,6 +2541,21 @@ public class SupplierFinalizationBackingBean extends
 			isCancel = true;
 		}
 		
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+			
+			if (resDTO.getPmOrgProfile() != null) {
+				ministryName = resDTO.getPmOrgProfile().getOrgName();
+				ministryName = ministryName.toUpperCase();
+			}
+		} finally {
+			orgProfileSO = null;
+		}
 		String title = scQt.getQtTitle();
 		if (title == null) {
 			title = "";
@@ -2560,6 +2575,7 @@ public class SupplierFinalizationBackingBean extends
 			committeeTypeStr = committeeTypeStr.toUpperCase();
 		}
 		context.put("committeeTypeStr", committeeTypeStr);
+		context.put("ministryName", ministryName);
 		context.put("isSupplierFinalization", 
 					 isSupplierFinalization);
 		context.put("isForwardToHigherAuthority", 
@@ -2776,7 +2792,7 @@ public class SupplierFinalizationBackingBean extends
 		String chairPersonName = null;
 		//String secretaryName = null;
 		String memberName = null;
-		
+		String chairPersonMinistry = null;
 		List<ScCommitteeMember> commMembers = new ArrayList<ScCommitteeMember>();
 		for (ScQtCommitteeActivity scQtCommitteeActivity 
 					: getManagedBean().getCommitteeList()) {
@@ -2784,20 +2800,20 @@ public class SupplierFinalizationBackingBean extends
 			if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				chairPersonName = commMember.getMemberName().toUpperCase();
-				IOrgProfileSO orgProfileSO = null;
+				IOrgProfileSO orgProfileSO_ = null;
 				try {
-					orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					orgProfileSO_ = BusinessDelegate.getInstance().getServiceObject(
 										ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 					reqDTO.setOrgProfileId(commMember.getPmOrgProfile().getOrgProfileId());
-					OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					OrgProfileResDTO resDTO = orgProfileSO_.retrieveMinistryByOrgProfileId(reqDTO);
 					
 					if (resDTO.getPmOrgProfile() != null) {
-						ministryName = resDTO.getPmOrgProfile().getOrgName();
-						ministryName = ministryName.toUpperCase();
+						chairPersonMinistry = resDTO.getPmOrgProfile().getOrgName();
+						chairPersonMinistry = chairPersonMinistry.toUpperCase();
 					}
 				} finally {
-					orgProfileSO = null;
+					orgProfileSO_ = null;
 				}
 			} /*else if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
@@ -2810,7 +2826,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("commMembers", commMembers);
 		context.put("chairPerson", chairPersonName);
-		context.put("ministryName", ministryName);
+		context.put("chairPersonMinistry", chairPersonMinistry);
 //		context.put("secretary", secretaryName);
 		context.put("member", memberName);
 		
