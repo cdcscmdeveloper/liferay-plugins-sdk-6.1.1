@@ -872,7 +872,8 @@ public class SupplierFinalizationBackingBean extends
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
-		if (getManagedBean().getCurrentZone() != null) {
+		if (getManagedBean().getCurrentZone() != null
+				&& SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage)) {
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
 		getManagedBean().setQualifiedSuppliersByEvalStage(
