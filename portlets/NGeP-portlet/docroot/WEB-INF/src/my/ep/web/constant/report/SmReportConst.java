@@ -12,7 +12,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_REPORT_CODE = "PREPORTID";
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_SUPPLIER_TYPE = "PSUPPTYPE";
-	
+
 	public static final String PARAM_COMPANY_NAME = "PCOMPANYNAME";
 	public static final String PARAM_MOF_NO = "PMOFNO";
 	public static final String PARAM_ZONE = "PSUPPZONE";
@@ -86,7 +86,17 @@ public class SmReportConst implements Serializable {
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
 	public static final String SM_ZONE_SABAH = "Sabah";
 	public static final String SM_ZONE_SARAWAK = "Sarawak";
+	public static final String SM_REG_TYPE_BASIC = "Basic";
+	public static final String SM_REG_TYPE_MOF = "MOF";
 	
+	public String getSM_REG_TYPE_BASIC() {
+		return SM_REG_TYPE_BASIC;
+	}
+
+	public String getSM_REG_TYPE_MOF() {
+		return SM_REG_TYPE_MOF;
+	}
+
 	public String getSM_ZONE_SEMENANJUNG() {
 		return SM_ZONE_SEMENANJUNG;
 	}

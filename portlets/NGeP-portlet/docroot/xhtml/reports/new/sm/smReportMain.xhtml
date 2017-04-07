@@ -62,6 +62,11 @@
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRegCompanyInMofRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_001_profile_of_reg_company.xhtml"></ui:include>
 				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfGstRgstrdSupplier}">
+					<ui:include src="/xhtml/reports/new/sm/SM_065_gst_registered_supplier_rpt.xhtml"></ui:include>
+				</c:if>
+				
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
