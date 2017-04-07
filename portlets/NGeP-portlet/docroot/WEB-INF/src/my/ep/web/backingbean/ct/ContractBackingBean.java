@@ -3499,8 +3499,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
     	
     		boolean isEqual = false;
     	
-    		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
-    				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+    		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+    				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
     					for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
     						if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
     									&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
