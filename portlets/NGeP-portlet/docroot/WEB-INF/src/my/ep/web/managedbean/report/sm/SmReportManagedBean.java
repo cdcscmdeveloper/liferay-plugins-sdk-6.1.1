@@ -11,7 +11,7 @@ import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
 @ManagedBean(name = "smReportMB")
 @SessionScoped
-public class SmReportManagedBean extends ReportBaseManagedBean{
+public class SmReportManagedBean extends ReportBaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private Date dateFrom;
@@ -20,19 +20,20 @@ public class SmReportManagedBean extends ReportBaseManagedBean{
 	private PmOrgProfile selectedOrgProfile;
 	private String mofNo;
 	private String supplierType;
-	
+	private String regType;
+
 	public Date getDateFrom() {
 		return dateFrom;
 	}
-	
+
 	public void setDateFrom(Date dateFrom) {
 		this.dateFrom = dateFrom;
 	}
-	
+
 	public Date getDateTo() {
 		return dateTo;
 	}
-	
+
 	public void setDateTo(Date dateTo) {
 		this.dateTo = dateTo;
 	}
@@ -67,5 +68,13 @@ public class SmReportManagedBean extends ReportBaseManagedBean{
 
 	public void setSupplierType(String supplierType) {
 		this.supplierType = supplierType;
+	}
+
+	public String getRegType() {
+		return regType;
+	}
+
+	public void setRegType(String regType) {
+		this.regType = regType;
 	}
 }
