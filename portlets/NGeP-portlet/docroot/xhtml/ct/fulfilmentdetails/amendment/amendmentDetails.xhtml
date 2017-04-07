@@ -357,42 +357,5 @@
    			</div>
    			</f:facet>
 		</p:dialog>
-		
-		<!-- <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170"
-			 rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
-			!empty amendmentBackingBean.managedBean.amendHistoryList and amendmentBackingBean.bpkApprover}">
-			<h:panelGroup>
-				<div style="height: 35px; vertical-align: top;">
-					<p:outputLabel for="contractHistory"
-						value="#{lbl['lbl.ct.extension.history']}" style="text-align:right;" />
-				</div>
-			</h:panelGroup>
-			<h:panelGrid id="contractHistory" columns="1">
-				<p:dataTable id="dataTableHistory" var="data" style="width:100%;"
-				     value="#{amendmentBackingBean.managedBean.amendHistoryList}">
-	                <ac:paginator for="dataTableHistory" />
-					<p:columnGroup type="header">
-						<p:row>
-							<p:column headerText="#{lbl['lbl.ct.file.ref.no']}" styleClass="column-align-center" style="width:35%;white-space:normal;"/>
-							<p:column headerText="#{lbl['lbl.ct.extension.period.month']}" styleClass="column-align-center" style="width:20%;white-space:normal;"/>
-							<p:column headerText="#{lbl['lbl.ct.extension.start.date']}" styleClass="column-align-center" style="width:25%;white-space:normal;"/>
-							<p:column headerText="#{lbl['lbl.ct.extension.end.date']}" styleClass="column-align-center" style="width:25%;white-space:normal;"/>
-						</p:row>
-					</p:columnGroup>
-						<p:column> <h:outputText value="#{data.ctAmendment.fileRefNo}" style="float:left;"/></p:column>
-						<p:column> <h:outputText value="#{data.ctAmendment.extendPeriod}" style="float:left;"/></p:column>
-						<p:column>
-							<h:outputText value="#{data.ctAmendment.extendStartDate}" style="float:left;">
-								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-							</h:outputText>
-						</p:column>
-						<p:column>
-							<h:outputText value="#{data.ctAmendment.extendEndDate}" style="float:left;">
-								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />								
-							</h:outputText>
-						</p:column>
-				</p:dataTable>
-			</h:panelGrid>
-		</h:panelGrid>  -->
 	</p:panel>
 </ui:composition>
