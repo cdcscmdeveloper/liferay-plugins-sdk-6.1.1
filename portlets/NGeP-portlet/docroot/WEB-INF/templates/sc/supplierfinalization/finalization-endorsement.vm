@@ -499,7 +499,7 @@
 		
 	<tr>
 		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Pengerusi $!committeeType <br />
-		Kementerian Keselamatan Dalam Negeri <br /> $!chairPerson <br/>
+		$!chairPersonMinistry <br /> $!chairPerson <br/>
 		---------------- </span>
 		<br /><br/><br/><br/></td>
 	</tr>
