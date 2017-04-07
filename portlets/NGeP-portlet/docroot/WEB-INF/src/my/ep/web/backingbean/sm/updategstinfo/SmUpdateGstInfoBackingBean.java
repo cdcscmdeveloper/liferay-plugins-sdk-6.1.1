@@ -324,9 +324,16 @@ public class SmUpdateGstInfoBackingBean extends
 			brVO.setGst(new SmGstSupplier());
 			SmApplicationUtil.initGstSuppDocs(brVO.getGst());
 		}
+		boolean isCurrent = brVO.getGst().getIsCurrent();
 		SmCommonUtil.copyHqGstToBranch(getManagedBean().getHqGstSupplier(),
 				brVO.getGst(), brVO.isSameWithHq(), brVO.getBranch()
 						.getBranchCode());
+
+		// maintain isCurrent value if true because to show input field if
+		// untick same with hq
+		if (isCurrent) {
+			brVO.getGst().setIsCurrent(isCurrent);
+		}
 	}
 
 	/**
