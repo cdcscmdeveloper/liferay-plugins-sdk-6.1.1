@@ -26,7 +26,7 @@ import my.ep.web.util.FacesScopes;
 @ManagedBean(name = "smReportBB")
 @ViewScoped
 public class SmReportBackingBean<T extends SmReportManagedBean> extends
-		ReportBaseBackingBean<SmReportManagedBean> {
+		ReportBaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(SmReportBackingBean.class);
