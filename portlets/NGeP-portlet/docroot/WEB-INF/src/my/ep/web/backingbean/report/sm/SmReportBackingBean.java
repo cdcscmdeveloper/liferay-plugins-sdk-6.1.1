@@ -25,63 +25,81 @@ import my.ep.web.util.FacesScopes;
 
 @ManagedBean(name = "smReportBB")
 @ViewScoped
-public class SmReportBackingBean<T extends SmReportManagedBean> extends ReportBaseBackingBean<SmReportManagedBean> {
+public class SmReportBackingBean<T extends SmReportManagedBean> extends
+		ReportBaseBackingBean<SmReportManagedBean> {
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = EpLogger.getLogger(SmReportBackingBean.class);
+	private static final Logger log = EpLogger
+			.getLogger(SmReportBackingBean.class);
 	private static final String REPORT_MAIN = "/xhtml/reports/new/sm/smReportMain.xhtml";
 
 	public void preRender() {
 		log.info(".................SmReport Pre-Render................");
-		retrieveReportListByAuthorization(StringUtils.upperCase(ModuleCodeConst.SUPPLIER_MANAGEMENT));
+		retrieveReportListByAuthorization(StringUtils
+				.upperCase(ModuleCodeConst.SUPPLIER_MANAGEMENT));
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REPORT_MAIN);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, REPORT_MAIN);
 	}
-	
-	public void generateSmReport(LinkedHashMap<String,String> params){
+
+	public void generateSmReport(LinkedHashMap<String, String> params) {
 		String paramStr = constructParameterString(params);
 		log.info("paramStr>>>>>>>>" + paramStr);
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IRPTRequestSO.class);	
-		
-		/*log.info("TempAccess"+this.getManagedBean().isTempAccess());
-		log.info("this.getManagedBean().getReportName():"+this.getManagedBean().getReportName());
-		log.info("this.getManagedBean().getReportCode():"+this.getManagedBean().getReportCode());*/
-		params.put(SmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-		params.put(SmReportConst.PARAM_REPORT_CODE, getManagedBean().getReportCode());
-		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
-		
+						IRPTRequestSO.class);
+
+		/*
+		 * log.info("TempAccess"+this.getManagedBean().isTempAccess());
+		 * log.info(
+		 * "this.getManagedBean().getReportName():"+this.getManagedBean(
+		 * ).getReportName());
+		 * log.info("this.getManagedBean().getReportCode():"+
+		 * this.getManagedBean().getReportCode());
+		 */
+		params.put(SmReportConst.PARAM_KEY_REPORT, getManagedBean()
+				.getReportName());
+		params.put(SmReportConst.PARAM_REPORT_CODE, getManagedBean()
+				.getReportCode());
+		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes()
+				.getUserSessionBean().getUserId().toString());
+
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
-		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
+		reqDTO.setDefaultOutputType(this.getManagedBean()
+				.getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
-			log.info("resDTO.getRequestId():"+resDTO.getRequestId());
+			log.info("resDTO.getRequestId():" + resDTO.getRequestId());
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
-	public void setDefaultDateFromAndDateTo(){
-		if(getManagedBean().getDateFrom() == null || getManagedBean().getDateFrom() == null){
+
+	public void setDefaultDateFromAndDateTo() {
+		if (getManagedBean().getDateFrom() == null
+				|| getManagedBean().getDateFrom() == null) {
 			Calendar fromDate = Calendar.getInstance();
 			fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 			getManagedBean().setDateFrom(fromDate.getTime());
 			getManagedBean().setDateTo(new Date());
 		}
 	}
-	
-	public void onChangeZone(){
-		
+
+	public void onChangeZone() {
+
+	}
+
+	public void onChangeRegType() {
+
 	}
 
 	public void reportOnChange(){
