@@ -79,4 +79,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 
+	public void addCompanyNameParam(LinkedHashMap<String, String> params){
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+				params.put(SmReportConst.PARAM_COMPANY_NAME, 
+						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			}
+		}
+	}
 }
