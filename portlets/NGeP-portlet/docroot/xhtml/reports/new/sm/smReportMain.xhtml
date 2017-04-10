@@ -63,6 +63,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_001_profile_of_reg_company.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfApplStatus}">
+					<ui:include src="/xhtml/reports/new/sm/SM_063_appl_status_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfGstRgstrdSupplier}">
 					<ui:include src="/xhtml/reports/new/sm/SM_065_gst_registered_supplier_rpt.xhtml"></ui:include>
 				</c:if>

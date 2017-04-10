@@ -16,6 +16,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String supplierType;
 	private String regType;
 	private String regNo;
+	private String applNo;
+	private String applType;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -79,5 +81,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setRegNo(String regNo) {
 		this.regNo = regNo;
+	}
+
+	public String getApplNo() {
+		return applNo;
+	}
+
+	public void setApplNo(String applNo) {
+		this.applNo = applNo;
+	}
+
+	public String getApplType() {
+		return applType;
+	}
+
+	public void setApplType(String applType) {
+		this.applType = applType;
 	}
 }
