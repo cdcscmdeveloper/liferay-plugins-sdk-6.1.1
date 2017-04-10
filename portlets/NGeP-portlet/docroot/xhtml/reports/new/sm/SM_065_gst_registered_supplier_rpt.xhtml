@@ -18,8 +18,7 @@
 			</td>
 			
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
 			</td>
 			<td class="tdContent">
 				<ac:smReportSupplierType bBean="#{gstRegSupplierRptBB}" />
@@ -69,16 +68,20 @@
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.gstregisteredstatus']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="*" styleClass="mandatory" />	
 			</td>
 		
 			<td class="tdContent">
-				<p:selectOneMenu value="#{gstRegSupplierRptBB.managedBean.gstRegStatus}" style="width:300px;">
+				<p:selectOneMenu value="#{gstRegSupplierRptBB.managedBean.gstRegStatus}" 
+					required="true" style="width:300px;" id="gstRegStatusId" 
+					label="#{lbl['lbl.rpt.gstregisteredstatus']}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{SmReportConst.SM_STATUS_ACTIVE}" />
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{SmReportConst.SM_STATUS_INACTIVE}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
+				<p:message id="gstRegStatusIdMsg" for="gstRegStatusId" showSummary="true" 
+					showDetail="false" display="icon" />
 			</td>
 			
 			<td class="tdTitle">
