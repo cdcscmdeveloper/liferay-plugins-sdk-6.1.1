@@ -1,4 +1,10 @@
-
+/**
+ * Release 29/3/2017
+ * [+] Change timeout to 120000 (2minutes)
+ * [+] Change status message from English to Bahasa Malaysia
+ */
+ 
+ 
 /**
  * Address of Agent's servlet
  * @type String
@@ -10,8 +16,8 @@ var host = "https://127.0.0.1:8441/";
  * The time for Agent to response
  * @type Number
  */
-var transaction_timeout = 9000;
-var url_timeout = 15000;
+var transaction_timeout = 120000;
+var url_timeout = 120000;
 
 
 
@@ -61,7 +67,7 @@ runScript: function(src,callback,failedcallback){
 	var reqURLTimeout = setTimeout(function()
 	{
 		Gpki.end();	
-		parseTimeout('{"status_code":888,"status_message":"AGENT TIMEOUT","status_ext_message":"The result was not recieved whithin expected time. Please check if GPKI Agent is running and try again."}');
+		parseTimeout('{"status_code":888,"status_message":"AGENT TIMEOUT","status_ext_message":"Keptusan tidak diterima dalam tempoh yang ditetapkan. Sila pastikan agen anda telah diaktifkan dan cuba lagi."}');
 		if(jqxhr!=null){ 
 			jqxhr.abort();
 		}			
@@ -89,7 +95,7 @@ runScript: function(src,callback,failedcallback){
 		{
 			console.log(jqXHR);
 			if (textStatus == "timeout"){
-				Gpki.alert("The result was not recieved whithin expected time.\n Please check if GPKI Agent is running and try again."); 
+				Gpki.alert("Keptusan tidak diterima dalam tempoh yang ditetapkan. Sila pastikan agen anda telah diaktifkan dan cuba lagi."); 
 			}
 			//else if (textStatus == "abort"){
 				//Gpki.alert("Aborting reque");
