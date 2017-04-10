@@ -56,6 +56,17 @@
 				<td><h:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
 				<td class="header-info-text">#{backingBean.managedBean.mofNumber}</td>
 			</tr>
+			<p:outputPanel rendered="#{not empty backingBean.managedBean.rejectReasonsMsg and backingBean.managedBean.smAppl.resubmit}">
+				<tr>
+					<td style="vertical-align: baseline;"><p:outputLabel
+							value="#{lbl['lbl.sm.rejection.reasons']}"
+							styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" escape="false"
+							value="#{backingBean.managedBean.rejectReasonsMsg}" />
+					</td>
+					<td colspan="4">&#160;</td>
+				</tr>
+			</p:outputPanel>
 		</table>
 		
 		<p:outputPanel rendered="#{backingBean.managedBean.showFieldChanges}">
