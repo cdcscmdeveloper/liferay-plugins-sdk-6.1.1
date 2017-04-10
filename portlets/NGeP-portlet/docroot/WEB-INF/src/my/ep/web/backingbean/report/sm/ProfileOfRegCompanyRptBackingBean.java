@@ -19,7 +19,7 @@ public class ProfileOfRegCompanyRptBackingBean extends SmReportBackingBean<Profi
 		
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
+		//params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
 		
 		generateSmReport(params);
 	}

@@ -67,6 +67,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_065_gst_registered_supplier_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smVirtualDayReportRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_044_virtual_cert_release_rpt.xhtml"></ui:include>
+				</c:if>
+				
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
