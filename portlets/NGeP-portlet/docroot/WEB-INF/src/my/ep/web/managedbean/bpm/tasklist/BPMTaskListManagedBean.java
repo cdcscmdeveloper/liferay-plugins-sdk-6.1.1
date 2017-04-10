@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.fl.invoice.IInvoiceSO;
+import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -27,6 +29,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constants.BpmConstants;
+import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
@@ -676,6 +680,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   
 						    	   
 						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " - " + worklistItemVO.getTitle());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
+						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
+						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId()) + " - " + worklistItemVO.getTitle());
+						       }
 						}
 					}
 					
@@ -941,5 +955,19 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			}
 			
 		}
+	}
+	
+	private String retreiveSupplierInvoiceNo(int docId){
+		IInvoiceSO invoiceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setDocId(new Long(docId));
+		return invoiceSO.retreiveSupplierInvoiceNo(reqDTO).getSupplierInvoiceNo();
+	}
+	
+	private String retreiveSupplierDoRefNo(int docId){
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setDocId(new Long(docId));
+		return deliveryOrderSO.retreiveSupplierDoRefNo(reqDTO).getSupplierDoRefNo();
 	}
 }
