@@ -22,6 +22,13 @@ public class GstRegSupplierRptBackingBean extends
 	 */
 	private static final long serialVersionUID = 4204281795015981972L;
 
+	public GstRegSupplierRptBackingBean() {
+		if (getManagedBean().getDateFrom() == null
+				|| getManagedBean().getDateTo() == null) {
+			setDefaultDateFromAndDateTo();
+		}
+	}
+
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(
@@ -54,8 +61,7 @@ public class GstRegSupplierRptBackingBean extends
 		getManagedBean().setRegNo(StringUtils.EMPTY);
 		getManagedBean().setGstRegNo(StringUtils.EMPTY);
 		getManagedBean().setGstRegStatus(StringUtils.EMPTY);
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setDateTo(null);
+		setDefaultDateFromAndDateTo();
 	}
 
 }
