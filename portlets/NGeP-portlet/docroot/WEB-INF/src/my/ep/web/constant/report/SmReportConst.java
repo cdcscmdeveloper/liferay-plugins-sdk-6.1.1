@@ -19,6 +19,8 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_REG_TYPE = "PREGTYPE";
 	public static final String PARAM_GST_REG_NO = "PGSTREGNO";
 	public static final String PARAM_GST_STATUS = "PGSTSTAT";
+	public static final String PARAM_APPL_NO = "PAPPLNO";
+	public static final String PARAM_APPL_TYPE = "PAPPLTYPE";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -93,7 +95,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_REG_TYPE_MOF = "MOF";
 	public static final String SM_STATUS_ACTIVE = "Active";
 	public static final String SM_STATUS_INACTIVE = "Inactive";
-	
+
 	public String getSM_STATUS_ACTIVE() {
 		return SM_STATUS_ACTIVE;
 	}
@@ -101,7 +103,7 @@ public class SmReportConst implements Serializable {
 	public String getSM_STATUS_INACTIVE() {
 		return SM_STATUS_INACTIVE;
 	}
-	
+
 	public String getSM_REG_TYPE_BASIC() {
 		return SM_REG_TYPE_BASIC;
 	}
