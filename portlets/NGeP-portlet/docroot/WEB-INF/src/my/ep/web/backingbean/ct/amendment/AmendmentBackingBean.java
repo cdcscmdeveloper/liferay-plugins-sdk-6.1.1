@@ -101,7 +101,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -112,7 +111,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -1069,7 +1067,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				String nextRole = null;
+				String[] params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+													this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+													this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 				
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
@@ -1095,42 +1095,62 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					} else {
 						messageId = MessageConst.INFO_700011;
 					}
-				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
-					messageId = MessageConst.INFO_700013;
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					if (getManagedBean().getTaskName() != null
-							&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
-						messageId = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isApprovalReq()
-								? MessageConst.INFO_700046 : MessageConst.INFO_700043;
-					} else {
+					if (getManagedBean().getTaskName() == null
+							|| (getManagedBean().getTaskName() != null
+									&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+										|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)))) {
 						messageId = MessageConst.INFO_700021;
 						if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 								ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							nextRole = RoleCode.CT_APPROVER.value();
+							params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+														this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+														this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+														RoleHelper.getInstance().getRoleDescByCode(RoleCode.CT_APPROVER.value()).getRoleName()};
 						} else { // Central Contract
-							nextRole = RoleCode.BPK_CC_APPROVER.value();
+							params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+									this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+									this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+									RoleHelper.getInstance().getRoleDescByCode(RoleCode.BPK_CC_APPROVER.value()).getRoleName()};
+						}
+					}
+					
+					if (getManagedBean().getTaskName() != null) {
+						if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+							messageId = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isApprovalReq()
+									? MessageConst.INFO_700046 : MessageConst.INFO_700043;
+							
+						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)) {
+							messageId = MessageConst.INFO_758002;
+							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+							messageId = MessageConst.INFO_758003;
+							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 						}
 					}
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}
 				
-				if(StringUtils.isNotBlank(nextRole)){
-					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
-					
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
-									new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.ctBackingBean.getManagedBean().getContractVer().getDocType()), 
-											this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
-											roleDesc.getRoleName()},
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				} else {
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
-									new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.ctBackingBean.getManagedBean().getContractVer().getDocType()), 
-											this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()},
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
+				successMessage(messageId, params);
+				
+//				if(StringUtils.isNotBlank(nextRole)){
+//					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+//					
+//					FacesContext.getCurrentInstance().addMessage(null,
+//							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
+//									new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.ctBackingBean.getManagedBean().getContractVer().getDocType()), 
+//											this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+//											roleDesc.getRoleName()},
+//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+//				} else {
+//					FacesContext.getCurrentInstance().addMessage(null,
+//							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
+//									new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.ctBackingBean.getManagedBean().getContractVer().getDocType()), 
+//											this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()},
+//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+//				}
 				
 				if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
@@ -4080,7 +4100,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)){
 			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_SST);
 			getManagedBean().getCtLetterOfAcceptance().get(0).setLoaAttachments(attachment);
 		}
