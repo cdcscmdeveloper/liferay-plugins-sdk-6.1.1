@@ -2,16 +2,10 @@ package my.ep.web.managedbean.report.sm;
 
 import java.util.Date;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile_;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
-@ManagedBean(name = "smReportMB")
-@SessionScoped
-public class SmReportManagedBean extends ReportBaseManagedBean {
+public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private Date dateFrom;
@@ -21,6 +15,7 @@ public class SmReportManagedBean extends ReportBaseManagedBean {
 	private String mofNo;
 	private String supplierType;
 	private String regType;
+	private String regNo;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -76,5 +71,13 @@ public class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setRegType(String regType) {
 		this.regType = regType;
+	}
+
+	public String getRegNo() {
+		return regNo;
+	}
+
+	public void setRegNo(String regNo) {
+		this.regNo = regNo;
 	}
 }

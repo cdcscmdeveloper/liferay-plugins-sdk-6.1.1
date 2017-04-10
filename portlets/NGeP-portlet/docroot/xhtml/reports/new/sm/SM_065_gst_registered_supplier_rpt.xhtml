@@ -42,6 +42,53 @@
 				<ac:smReportRegType bBean="#{gstRegSupplierRptBB}" />
 			</td>
 		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.business.registrationNo']}" />
+			</td>
+		
+			<td class="tdContent">
+				<p:inputText maxlength="20"
+					value="#{gstRegSupplierRptBB.managedBean.regNo}"
+					style="width:290px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.gstregistrationNo']}" />
+			</td>
+			<td class="tdContent">
+				<p:inputText maxlength="20"
+					value="#{gstRegSupplierRptBB.managedBean.gstRegNo}"
+					style="width:290px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.gstregisteredstatus']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+		
+			<td class="tdContent">
+				<p:selectOneMenu value="#{gstRegSupplierRptBB.managedBean.gstRegStatus}" style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{SmReportConst.SM_STATUS_ACTIVE}" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{SmReportConst.SM_STATUS_INACTIVE}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.gsteffectivedate']}" /> 
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportDateFromTo bBean="#{gstRegSupplierRptBB}" />
+			</td>
+		</tr>
 	</table>
 	
 	<ac:smGenerateReport bBean="#{applVerificationRptBB}" 
