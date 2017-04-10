@@ -1234,8 +1234,7 @@ public class SmApplicationBackingBean extends
 		initMissingDocs(false, null);
 
 		// show po remarks and rejection reason for resubmit application
-		if (getManagedBean().isSupplierUser()
-				&& getManagedBean().getSmAppl().isResubmit()
+		if (getManagedBean().getSmAppl().isResubmit()
 				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
 			applSectionRevExist();
 			getManagedBean().setRejectReasonsMsg(
