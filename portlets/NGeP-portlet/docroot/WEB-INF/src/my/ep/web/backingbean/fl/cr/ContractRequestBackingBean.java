@@ -2318,12 +2318,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void retrieveDivisionList(AjaxBehaviorEvent e){
 		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDivision() != null){
-			getManagedBean().getFlManualAddress().getFlAddress().getPmDivision().setDivisionId(null);;
+			getManagedBean().setDivisionList(null);
+			getManagedBean().getFlManualAddress().getFlAddress().getPmDivision().setDivisionId(null);
 		}
 		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDistrict() != null){
+			getManagedBean().setDistrictList(null);
 			getManagedBean().getFlManualAddress().getFlAddress().getPmDistrict().setDistrictId(null);
 		}
 		if(getManagedBean().getFlManualAddress().getFlAddress().getPmCity() != null){
+			getManagedBean().setCityList(null);
 			getManagedBean().getFlManualAddress().getFlAddress().getPmCity().setCityId(null);
 		}
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
