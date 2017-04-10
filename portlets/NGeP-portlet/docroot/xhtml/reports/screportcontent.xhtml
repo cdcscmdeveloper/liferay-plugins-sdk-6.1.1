@@ -106,9 +106,9 @@
 									<tr>
 										<td style="width: 84%"><p:inputText
 												label="#{lbl['lbl.rpt.qtNo']}"
-												id="rptQuotationCommitte" maxlength="40"
+												id="rptQuotationCommitte" maxlength="17" size="17"
 												value="#{reportBackingBean.scQuotationNo}"
-												required="true" style="margin-top:5px;width:290px;">
+												required="true" style="margin-top:5px;width:120px;">
 												<p:ajax event="blur"
 													listener="#{reportBackingBean.quotationNumberValidation()}"
 													process="@form" partialSubmit="true" update="@form" />
