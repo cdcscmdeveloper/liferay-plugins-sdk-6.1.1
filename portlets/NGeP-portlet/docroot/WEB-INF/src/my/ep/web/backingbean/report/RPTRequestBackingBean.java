@@ -415,7 +415,6 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 					"lbl.rpt.fail", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 		}
-		
 	}
 	
 	public String getReportName(String reportCode){
