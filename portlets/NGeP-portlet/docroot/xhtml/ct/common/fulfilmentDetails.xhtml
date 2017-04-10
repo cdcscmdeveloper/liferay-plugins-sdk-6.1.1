@@ -19,8 +19,8 @@
 						<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 					</td>
 					<td>
-						<p:inputText for="cno"  disabled="true" maxlength="17" style="width:130px;"
-							value="#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}" />
+						<p:inputTextarea for="cno"  disabled="true" maxlength="17" style="width:130px;margin-bottom:5px;"
+							value="#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}" rows="2"  autoResize="false"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
 					<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
@@ -28,9 +28,9 @@
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 					</td> 
 					<td>
-						<p:inputText for="physicalNo" maxlength="30" style="width:130px;"
-						disabled="#{ctBackingBean.getConditionalValue()}"
-		 	    		value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}" />
+						<p:inputTextarea for="physicalNo" maxlength="30" style="width:130px;margin-bottom:5px;"
+						disabled="#{ctBackingBean.getConditionalValue()}" rows="2"
+		 	    		value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}"  autoResize="false" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 					</td>
 					</h:panelGroup>
