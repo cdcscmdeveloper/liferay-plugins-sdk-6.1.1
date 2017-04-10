@@ -22,6 +22,13 @@ public class ApplStatusRptBackingBean extends
 	 */
 	private static final long serialVersionUID = -3440385149367317737L;
 
+	public ApplStatusRptBackingBean() {
+		if (getManagedBean().getDateFrom() == null
+				|| getManagedBean().getDateTo() == null) {
+			setDefaultDateFromAndDateTo();
+		}
+	}
+
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(
@@ -46,8 +53,7 @@ public class ApplStatusRptBackingBean extends
 		getManagedBean().setApplNo(StringUtils.EMPTY);
 		getManagedBean().setApplType(StringUtils.EMPTY);
 		getManagedBean().setRegNo(StringUtils.EMPTY);
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setDateTo(null);
+		setDefaultDateFromAndDateTo();
 	}
 
 }
