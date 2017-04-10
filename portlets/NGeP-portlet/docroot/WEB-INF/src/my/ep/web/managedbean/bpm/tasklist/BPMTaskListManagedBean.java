@@ -509,6 +509,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 														face.getUserLocale()));
 							}
+							 if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " - " + worklistItemVO.getTitle());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
+						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
+						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId()) + " - " + worklistItemVO.getTitle());
+						       }
 						}
 					}
 					
