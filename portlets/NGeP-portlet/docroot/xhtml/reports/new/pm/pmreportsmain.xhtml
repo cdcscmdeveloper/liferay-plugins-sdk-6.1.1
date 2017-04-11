@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 		<table style="margin-top: 10px; width: 100%;">
@@ -37,38 +38,76 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 			<c:choose>
+				<!-- PM_001 -->
 				<c:when
-					test="#{ReportConst.pmBpkUserProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					test="#{PmReportConst.pmListOfFinacialInstitutionsRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfFinancialOrgReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_002 -->
+				<c:when
+					test="#{PmReportConst.pmListOfOrganizationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfOrgReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_003 -->
+				<c:when
+					test="#{PmReportConst.pmListOfProfilesRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfUserProfileReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_004 -->
+				<c:when
+					test="#{PmReportConst.pmListOfGovernmentSellersRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfGovtSellerReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_005 -->
+				<c:when
+					test="#{PmReportConst.pmListOfExemptedItemsBySupplierRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfExemptedItemsBySupplierReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_006 -->
+				<c:when
+					test="#{PmReportConst.pmListOfExemptedItemsRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfExemptedItemsReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_007 -->
+				<c:when
+					test="#{PmReportConst.pmListOfExemptedContractedItemsRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfExemptionContractedItemsReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_008 -->
+				<c:when
+					test="#{PmReportConst.pmBpkUserProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/bpkUserProfileReport.xhtml"></ui:include>
 				</c:when>
-				
+				<!-- PM_009 -->
 				<c:when
-					test="#{ReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					test="#{PmReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/bpkAdminProfileReport.xhtml"></ui:include>
 				</c:when>
-
 				<c:otherwise>
-        			ERROR!
-    
+        			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>
 			</c:choose>
-			
-			<p:commandButton 
-					id="generateBtnId"
-					value="#{lbl['lbl.btn.generate']}"
-					process="@form"   
-					update="@form" 
-					action="#{pmReportsBackingBean.generatePmReport()}">
+
+			<p:commandButton id="generateBtnId"
+				value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
+				action="#{pmReportsBackingBean.generatePmReport()}">
+				 <f:param name="disableValidation" value="true" /> 
 			</p:commandButton>
-			<p:commandButton 
-					id="resetBtnId"
-					value="#{lbl['lbl.btn.reset']}"
-					process="@this"   
-					update="@form" 
-					action="#{pmReportsBackingBean.resetAction()}">
+			<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+				process="@this" update="@form"
+				action="#{pmReportsBackingBean.resetAction()}">
 			</p:commandButton>
 		</p:panel>
-		<ui:include src="/xhtml/reports/new/pm/common/confirmationDialog.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/reports/new/pm/common/confirmationDialog.xhtml"></ui:include>
+		<ac:lovPopup />
 	</ui:define>
 
 

@@ -25,12 +25,11 @@
 			<td><p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{pmReportsBackingBean.managedBean.status}"
-					style="margin-top:5px;width:300px;">
+				<p:selectOneMenu value="#{pmReportsBackingBean.managedBean.status}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 					<f:selectItems
-						value="#{organisationBackingBean.getStatusOptions()}" />
+						value="#{pmReportsBackingBean.getStatusOptions()}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>

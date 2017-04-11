@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<script>
+		function autoSelectOrgType() {
+			if ($("input[id$=':form:sorSearchOrgTypeId:0']").is(':disabled')) {
+				console.log("0");
+				$("input[id$=':form:sorSearchOrgTypeId:1']").prop('checked',
+						true);
+				$("input[id$=':form:sorSearchOrgTypeId:1']").change();
+			} else if ($("input[id$=':form:sorSearchOrgTypeId:1']").is(
+					':disabled')) {
+				console.log("1");
+				$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked',
+						true);
+				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
+			} else {
+				console.log("2");
+				$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked',
+						true);
+				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
+			}
+		}
+	</script>
+	<p:outputPanel id="orgSearchPanel">
+		<table style="width: 100%;">
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></th>
+				<td><p:selectOneRadio id="sorSearchOrgTypeId" layout="custom"
+						styleClass="commonLabel" widgetVar="myCheckbox"
+						value="#{pmReportsBackingBean.managedBean.searchOrgCategory}">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}"
+							itemValue="#{PmReportConst.orgCatFederalGovt}" />
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
+							itemValue="#{PmReportConst.orgCatOthers}" />
+						<p:ajax process="@this,orgCategoryMaintainPG"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							event="change" partialSubmit="true" update=":form:orgSearchPanel"
+							listener="#{pmReportsBackingBean.resetOrganisationSearchBean()}" />
+					</p:selectOneRadio> <h:panelGrid id="orgCategoryMaintainPG" columns="7">
+						<p:radioButton id="sorSearchGovn" for="sorSearchOrgTypeId"
+							itemIndex="0" />
+						<h:outputLabel styleClass="commonLabel"
+							for="sorMaintainFederalGovn"
+							value="#{lbl['lbl.pm.org.federal.government']}" />
+						<p:radioButton id="sorSearchOthers" for="sorSearchOrgTypeId"
+							itemIndex="1" />
+						<h:outputLabel styleClass="commonLabel" for="sorMaintainOthers"
+							value="#{lbl['lbl.pm.org.others']}" />	
+					     &#160; <p:graphicImage id="giOthersOrg"
+							style="vertical-align:top;"
+							value="/css/images/design/tooltips.png" />
+						<p:tooltip id="ttOthersOrg" for="giOthersOrg">
+							<h:outputText escape="false"
+								value="#{lbl['lbl.pm.org.others.tooltip']}" />
+						</p:tooltip>
+					</h:panelGrid></td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="orgTypeFederalList"
+						rendered="#{pmReportsBackingBean.managedBean.searchOrgCategory eq PmReportConst.orgCatFederalGovt}"
+						styleClass="ppDropDownWidthL"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.organisation.orgType']}"
+						style="margin-bottom: 5px;"
+						value="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId}">
+						<f:selectItems
+							value="#{pmReportsBackingBean.getOrgTypeDropdownValues()}" />
+						<p:ajax process="@this" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()" event="change"
+							partialSubmit="true"
+							update=":form:orgNameIt,:form:orgProfilePG"
+							listener="#{pmReportsBackingBean.onChangeOrgType()}" />
+					</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersList"
+						rendered="#{pmReportsBackingBean.managedBean.searchOrgCategory eq PmReportConst.orgCatOthers}"
+						styleClass="ppDropDownWidthL"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.organisation.orgType']}"
+						style="margin-bottom: 5px;"
+						value="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId}">
+						<f:selectItems
+							value="#{pmReportsBackingBean.getOrgTypeDropdownValues()}" />
+						<p:ajax process="@this" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()" event="change"
+							partialSubmit="true"
+							update=":form:orgNameIt,:form:orgProfilePG"
+							listener="#{pmReportsBackingBean.onChangeOrgType()}" />
+					</p:selectOneMenu></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgCode']}" /></td>
+				<td><h:panelGroup id="orgProfilePG">
+						<ac:lov id="pmOrgCode" lovId="PM_ORG_PROFILE_REPORT" size="40"
+							update="@this,:form:orgNameIt"
+							headerText="#{lbl['lbl.pm.organisation.orgCode']}"
+							readonly="true"
+							conditionField="#{pmReportsBackingBean.constructConditionFields()}"
+							value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgCode}"
+							saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" />
+					</h:panelGroup></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgName']}" /></td>
+				<td><p:inputText id="orgNameIt" maxlength="50" readonly="true"
+						value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}">
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}" /></td>
+				<td><p:selectOneMenu
+						value="#{pmReportsBackingBean.managedBean.status}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{pmReportsBackingBean.getStatusOptions()}" />
+						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+	</p:outputPanel>
+</ui:composition>

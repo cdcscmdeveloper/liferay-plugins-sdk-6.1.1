@@ -93,14 +93,10 @@ public class OrgProfileSearchBackingBean extends
 			getManagedBean().setJabatanProfileId(pmOrgProfile.getOrgProfileId());
 			getManagedBean().setDisabledMinistry(true);
 			getManagedBean().setDisabledPegaiPengawa(true);
-			getManagedBean().setDisabledJabatan(true);	
-			
-			
+			getManagedBean().setDisabledJabatan(true);
 		} 
 		
 		this.getManagedBean().setPtjCodeName(ProfileManagementConst.PTJ_CODE);
-		//only For Report to disable the IdentificationField
-		this.getManagedBean().getReportManagedBean().setDisabledOrgFields(true);
 	}
 
 	private class OrgProfileDataModel extends PagingDataModel<PmOrgProfile> {

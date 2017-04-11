@@ -3,35 +3,65 @@
  */
 package my.ep.web.backingbean.report;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.PmReportsManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 @ManagedBean(name = "pmReportsBackingBean")
 @ViewScoped
-public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManagedBean> {
+public class PmReportsBackingBean extends
+		ReportBaseBackingBean<PmReportsManagedBean> {
 
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
+
+	private static Map<Long, Object> orgTypeMapper;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -46,48 +76,52 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_PMREPORT);
 	}
-	
+
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
 
-//	public List<SelectItem> retrieveReportListByAuthorization() {
-//		log.info("ReportBackingBean-retrieveReportListByAuthorization");
-//		return this.retrieveReportListByAuthorization(ModuleCodeConst.PROFILE_MANAGEMENT
-//				.toUpperCase());
-//	}
-	
-	public void onChangeReportName(){
-		log.info("onChangeReportName");	
+	// public List<SelectItem> retrieveReportListByAuthorization() {
+	// log.info("ReportBackingBean-retrieveReportListByAuthorization");
+	// return
+	// this.retrieveReportListByAuthorization(ModuleCodeConst.PROFILE_MANAGEMENT
+	// .toUpperCase());
+	// }
+
+	public void onChangeReportName() {
+		log.info("onChangeReportName");
 		resetAction();
-		if(StringUtils.isNotBlank(getManagedBean().getReportCode())){			
+		setCurrentActiveOrg();
+		retrieveOrgTypeMap();
+		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
 	}
-	
-	public void generatePmReport(){
+
+	public void generatePmReport() {
 		IRPTRequestSO rptRequestSO = null;
 		try {
 			rptRequestSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IRPTRequestSO.class);		
+							IRPTRequestSO.class);
 			RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
 			reqDTO.setParametersMap(constructParamMap());
 			reqDTO.setDefaultOutputType(getManagedBean().getDefaultOutputType());
 			reqDTO.setTempAccess(getManagedBean().isTempAccess());
-			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);	
-			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
-			RequestContext.getCurrentInstance().execute("confirmationId.show()");
+			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId()
+					.toString() : "");
+			RequestContext.getCurrentInstance()
+					.execute("confirmationId.show()");
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
-		}finally{
+		} finally {
 			rptRequestSO = null;
-		}	
-		
-	
+		}
+
 	}
-	
+
 	/**
 	 * The method used for generating a list of available display type of status
 	 * as selection.
@@ -97,33 +131,542 @@ public class PmReportsBackingBean extends ReportBaseBackingBean<PmReportsManaged
 	public SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getRecordStatusOptions();
 	}
-	
+
 	public SelectItem[] getPmZoneList() {
 		return PmCommonUtil.getPmZoneListOptions();
 	}
-	
-	
-	private LinkedHashMap<String, String> constructParamMap(){
-		LinkedHashMap<String, String> map = new LinkedHashMap<>();	
-		map.put(PmReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-		map.put(PmReportConst.PARAM_REPORT_ID, getManagedBean().getReportCode());
-		map.put(PmReportConst.PARAM_USER_ID,getFacesScopes().getUserSessionBean().getUserId().toString());
-		if(StringUtils.isNotBlank(getManagedBean().getZoneName())){
-			map.put(PmReportConst.PARAM_PM_SUPP_ZONE, getManagedBean().getZoneName());
+
+	private LinkedHashMap<String, String> constructParamMap() {
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
+		// To cater 'All'
+		boolean ignoreAtLeastOne = false;
+		switch (getManagedBean().getReportCode()) {
+		case PmReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL:
+			constructPm001Map(map);
+			break;
+		case PmReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL:
+			constructPm002Map(map);
+			break;
+		case PmReportConst.PM_LIST_OF_PROFILES_RPT_VAL:
+			constructPm003Map(map);
+			break;
+		case PmReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL:
+			constructPm004Map(map);
+			break;
+		case PmReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL:
+			constructPm005Map(map);
+			break;
+		case PmReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL:
+			constructPm006Map(map);
+			break;
+		case PmReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL:
+			constructPm007Map(map);
+			break;
+		case PmReportConst.PM_BPK_USER_PROFILE_RPT_VAL:
+			ignoreAtLeastOne = true;
+			constructPm008Map(map);
+			break;
+		case PmReportConst.PM_BPK_ADMIN_PROFILE_RPT_VAL:
+			ignoreAtLeastOne = true;
+			constructPm009Map(map);
+			break;
+		default:
+			throw new EpException("Report not found.");
+
 		}
-		
-		if(getManagedBean().getStatus() != null){
-			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS, getManagedBean().getStatus() == 1 ? "Active":"Inactive");
+
+		if (MapUtils.isNotEmpty(map) || ignoreAtLeastOne) {
+			// mandatory map values
+			map.put(PmReportConst.PARAM_KEY_REPORT, getManagedBean()
+					.getReportName());
+			map.put(PmReportConst.PARAM_REPORT_ID, getManagedBean()
+					.getReportCode());
+			map.put(PmReportConst.PARAM_USER_ID, getFacesScopes()
+					.getUserSessionBean().getUserId().toString());
+
+		} else {
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
-		
+
 		return map;
 	}
-	
-	public void resetAction(){
+
+	// Financial Institution List
+	private void constructPm001Map(LinkedHashMap<String, String> map) {
+		if (StringUtils.isNotBlank(getManagedBean().getServiceType())) {
+			map.put(PmReportConst.PARAM_PM_SERVICE_TYPE, getManagedBean()
+					.getServiceType());
+		}
+
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getPmFinancialOrg() != null) {
+			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getPmFinancialOrg()
+					.getFinOrgName());
+			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
+					.getSelectedOrgProfile().getPmFinancialOrg()
+					.getBizRegNumber());
+		}
+
+		if (getManagedBean().getStatus() != null) {
+			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
+					getManagedBean().getStatus().toString());
+		}
+	}
+
+	// Organization list
+	private void constructPm002Map(LinkedHashMap<String, String> map) {
+
+		map.put(PmReportConst.PARAM_PM_ORG_CATEGORY,
+				String.valueOf(getManagedBean().getSearchOrgCategory()));
+
+		if (getManagedBean().getSelectedOrgType() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PARAM_ID, getManagedBean()
+					.getSelectedOrgType().getParameterId().toString());
+		}
+
+		if (getManagedBean().getSelectedOrgProfile() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
+		}
+
+		if (getManagedBean().getStatus() != null) {
+			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
+					.toString());
+		}
+	}
+
+	// User Profile List
+	private void constructPm003Map(LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedPmUser() != null) {
+			map.put(PmReportConst.PARAM_PM_USERNAME, getManagedBean()
+					.getSelectedPmUser().getUserName());
+			map.put(PmReportConst.PARAM_PM_IDENTIFICATION_NO, getManagedBean()
+					.getSelectedPmUser().getIdentificationNo());
+		}
+		
+		if (getManagedBean().getSelectedOrgProfile() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
+		}
+		
+		if(StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())){
+			map.put(PmReportConst.PARAM_PM_ROLE_CODE, getManagedBean()
+					.getSelectedRoleCode());
+		}
+		
+		if (getManagedBean().getStatus() != null) {
+			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
+					.toString());
+		}
+	}
+
+	// Govt Seller Org List
+	private void constructPm004Map(LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedOrgProfile() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
+		}
+
+		if (getManagedBean().getStatus() != null) {
+			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
+					.toString());
+		}
+	}
+
+	// Exempted Items List by Supplier
+	private void constructPm005Map(LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			map.put(PmReportConst.PARAM_PM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+
+		if (StringUtils.isNotBlank(getManagedBean().getBizRegNo())) {
+			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
+					.getBizRegNo());
+		}
+
+		if (StringUtils.isNotBlank(getManagedBean().getEpNo())) {
+			map.put(PmReportConst.PARAM_PM_EP_NO, getManagedBean().getEpNo());
+		}
+
+		constructExemptionCommonFieldsToMap(map);
+	}
+
+	// Exempted Items List
+	private void constructPm006Map(LinkedHashMap<String, String> map) {
+		constructExemptionCommonFieldsToMap(map);
+	}
+
+	// Exempted Contract Items
+	private void constructPm007Map(LinkedHashMap<String, String> map) {
+		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
+			map.put(PmReportConst.PARAM_PM_CONTRACT_NO, getManagedBean()
+					.getContractNo());
+		}
+
+		if (StringUtils.isNotBlank(getManagedBean().getContractPhyscialNo())) {
+			map.put(PmReportConst.PARAM_PM_PHYSICAL_CONTRACT_NO,
+					getManagedBean().getContractPhyscialNo());
+		}
+
+		if (StringUtils.isNotBlank(getManagedBean().getLoaNo())) {
+			map.put(PmReportConst.PARAM_PM_LOA_NO, getManagedBean().getLoaNo());
+		}
+
+		if (StringUtils.isNotBlank(getManagedBean().getLoaPhyscialNo())) {
+			map.put(PmReportConst.PARAM_PM_PHYSICAL_LOA_NO, getManagedBean()
+					.getLoaPhyscialNo());
+		}
+
+		constructExemptionCommonFieldsToMap(map);
+	}
+
+	// BPK User Profile List
+	private void constructPm008Map(LinkedHashMap<String, String> map) {
+		if (StringUtils.isNotBlank(getManagedBean().getZoneName())) {
+			map.put(PmReportConst.PARAM_PM_SUPP_ZONE, getManagedBean()
+					.getZoneName());
+		}
+	}
+
+	// BPK Admin Profile List
+	private void constructPm009Map(LinkedHashMap<String, String> map) {
+		if (StringUtils.isNotBlank(getManagedBean().getZoneName())) {
+			map.put(PmReportConst.PARAM_PM_SUPP_ZONE, getManagedBean()
+					.getZoneName());
+		}
+
+		if (getManagedBean().getStatus() != null) {
+			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
+					getManagedBean().getStatus() == 1 ? "Active" : "Inactive");
+		}
+	}
+
+	// Item Code, Date From, Date To
+	private void constructExemptionCommonFieldsToMap(
+			LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedUnspscItem() != null) {
+			map.put(PmReportConst.PARAM_PM_ITEM_CODE, getManagedBean()
+					.getSelectedUnspscItem().getUnspscCode());
+			// map.put(PmReportConst.PARAM_PM_ITEM_NAME,
+			// getManagedBean().getSelectedUnspscItem().getUnspscTitle());
+		}
+
+		if (getManagedBean().getFromDate() != null) {
+			map.put(PmReportConst.PARAM_PM_FROM_DATE, DateUtils.dateToString(
+					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+							.getFromDate()));
+		}
+
+		if (getManagedBean().getToDate() != null) {
+			map.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
+					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+							.getToDate()));
+		}
+	}
+
+	public void resetAction() {
 		getManagedBean().setZoneName(null);
 		getManagedBean().setStatus(null);
+		getManagedBean().setContractNo(null);
+		getManagedBean().setContractPhyscialNo(null);
+		getManagedBean().setLoaNo(null);
+		getManagedBean().setLoaPhyscialNo(null);
+		getManagedBean().setSelectedUnspscItem(null);
+		getManagedBean().setFromDate(null);
+		getManagedBean().setToDate(null);
+		getManagedBean().setBizRegNo(null);
+		getManagedBean().setEpNo(null);
+		getManagedBean().setSelectedOrgProfile(null);
+		getManagedBean().setServiceType(null);
+		getManagedBean().setNotFirstRun(false);
+		getManagedBean().setSearchOrgCategory(0);
+		getManagedBean().setSelectedOrgType(null);
+		getManagedBean().setSelectedPmUser(null);
+		getManagedBean().setRoleDescResults(null);
+		getManagedBean().setSelectedRoleDesc(null);
+
+	}
+
+	public void autoSelectOrgType() {
+		if (!getManagedBean().isNotFirstRun()) {
+			log.info("autoSelectOrgType");
+			RequestContext.getCurrentInstance().execute("autoSelectOrgType();");
+			getManagedBean().setNotFirstRun(true);
+		}
+
+	}
+
+	public void resetOrganisationSearchBean() {
+		log.info("resetOrgSearchBean");
+		this.getManagedBean().setSelectedOrgProfile(null);
+		this.getManagedBean().setSelectedOrgType(null);
+		getManagedBean().setNotFirstRun(false);
+	}
+
+	/**
+	 * The method used for generating a list of available display type of org
+	 * type as selection.
+	 * 
+	 */
+	public SelectItem[] getOrgTypeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = null;
+		if (getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_FEDERAL_GOVT) {
+			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
+		} else if (getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_OTHERS) {
+			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
+		}
+		SelectItem[] items = null;
+		if (searchBean != null) {
+			searchBean.getSortColumns();
+			items = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		}
+
+		return items;
+	}
+
+	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
+		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
+				.createSearchBean(PmParameterDesc.class, componentId);
+		return orgTypeSearchBean;
+	}
+
+	public void onChangeOrgType() {
+		getManagedBean().setSelectedOrgProfile(null);
+	
+		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {
+			PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this
+					.getManagedBean().getSelectedOrgType().getParameterId());
+			this.getManagedBean().getSelectedOrgType()
+					.setParameterCode(pmParameter.getParameterCode());
+		}else{
+			this.getManagedBean().getSelectedOrgType()
+			.setParameterCode(null);
+		}
 		
+		if(PmReportConst.PM_LIST_OF_PROFILES_RPT_VAL.equals(getManagedBean().getReportCode())){
+			getManagedBean().setSelectedPmUser(null);
+			getManagedBean().setSelectedRoleDesc(null);
+			
+		}
+	}
+
+	public String constructConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("recordStatus^1");
+		if (PmReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL
+				.equals(getManagedBean().getReportCode())) {
+			if (getManagedBean().getSelectedOrgType() != null) {
+				sb.append("|orgTypeCode.parameterId^");
+				sb.append(getManagedBean().getSelectedOrgType()
+						.getParameterId());
+			}
+		} else if (PmReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL
+				.equals(getManagedBean().getReportCode())) {
+			sb.append("|govtSeller^1|orgTypeCode.parameterCode^");
+			sb.append(OrganizationType.DIVISION.value());
+		}else if (PmReportConst.PM_LIST_OF_PROFILES_RPT_VAL
+				.equals(getManagedBean().getReportCode())){
+			sb.append("orgTypeCode.parameterId^");
+			sb.append(getManagedBean().getSelectedOrgType().getParameterId());			
+			sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
+					getManagedBean().getSelectedOrgType().getParameterCode(),
+					getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+					getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+					getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+					getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * retrieve all org type into mapper
+	 */
+	private void retrieveOrgTypeMap() {
+		log.info("....retrieveOrgTypeMap....");
+		List<PmParameterDesc> parameterDescs = PmCommonUtil
+				.retrieveFilteredParamDesc(
+						ParameterTypeConst.ORGANISATION_TYPES, null, null);
+
+		orgTypeMapper = new HashMap<Long, Object>();
+		for (PmParameterDesc pmDesc : parameterDescs) {
+			orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(),
+					pmDesc.getPmParameter());
+		}
+
 	}
 	
+	/**
+	 * retrieve and set the current active org
+	 */
+	private void setCurrentActiveOrg() {
+		log.info("setCurrentActiveOrg");
+		boolean isFactoring = false;
+		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
+			throw new EpException(MessageConst.ERROR_770149);
+		}
+		if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
+			isFactoring = true;
+		}
+		List<PmUserOrg> userOrgList = PmCommonUtil
+				.retrieveActiveOrgWithoutRole(getFacesScopes()
+						.getUserSessionBean().getUserId(), isFactoring);
 
+		if (userOrgList == null || userOrgList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770105);
+		}
+
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+	}
+	
+	public void searchRoleMatrix(){
+		IRoleSO roleSO = null;		
+		if(getManagedBean().getSelectedRoleOptionSearch() == null && StringUtils.isNotBlank(getManagedBean().getUserRoleNameSearch())){
+			throw new EpException(MessageConst.ERROR_100060);
+		}
+		
+		try {
+			ISearchBean<PmRoleDesc> searchBeanData =  new SearchBean<PmRoleDesc>();
+			
+			if(StringUtils.isNotBlank(getManagedBean().getUserRoleNameSearch())){
+				searchBeanData.getDataFilterBeans().add(
+					new SearchFilterBean("roleName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getUserRoleNameSearch(),true));
+			}
+			
+			
+			RoleReqDTO roleReqDTO = new RoleReqDTO();
+			roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
+					.getLanguage());
+
+			roleReqDTO.setSearchRoleBean(searchBeanData);
+			
+			roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
+					.getLanguage());
+			roleReqDTO.setRoleCode(getRoleCode());
+			roleReqDTO.setOrgTypeId(getManagedBean().getSelectedOrgType().getParameterId());
+			roleReqDTO.setBpk(true);
+			roleSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IRoleSO.class);
+			RoleResDTO resDto = roleSO
+					.retrieveRoleDecsFromRoleMatrix(roleReqDTO);
+
+			if (resDto != null && resDto.isSuccessful()) {
+				getManagedBean().setRoleDescResults(resDto.getSearchRoleResultBean().getResultList());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			roleSO = null;
+		}
+	}
+	
+	public void resetRoleSearchAction(){
+		getManagedBean().setSelectedRoleOptionSearch(null);
+		getManagedBean().setUserRoleNameSearch(null);
+		getManagedBean().getRoleDescResults().clear();
+		searchRoleMatrix();
+	}
+	
+	private String getRoleCode(){
+		String roleCode = null;
+		//Exclude Auditor role in order to bypass assignor role.
+		//Means will retrieve all roles by org type
+		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+			roleCode = RoleCode.EP_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value())){
+			roleCode = RoleCode.EP_ADMIN_1.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value())){
+			roleCode = RoleCode.EP_ADMIN_2.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+			roleCode = RoleCode.MINISTRY_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			roleCode = RoleCode.JABATAN_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+			roleCode = RoleCode.PTJ_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())){
+			roleCode = RoleCode.BPK_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+			roleCode = RoleCode.UPS_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())){
+			roleCode = RoleCode.PROCUREMENT_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
+			roleCode = RoleCode.SUPPORT_ADMIN.value();
+		}
+		
+		return roleCode;
+	}
+	
+	public void populateToRoleSaveObject(){
+		if(getManagedBean().getSelectedRoleDesc() != null){
+			getManagedBean().setSelectedRoleCode(getManagedBean().getSelectedRoleDesc().getPmRole().getRoleCode());
+		}
+	}
+	
+	public void selectPtjAction(PmOrgProfile orgProfile){
+		getManagedBean().setSelectedOrgProfile(orgProfile);
+		getManagedBean().setSelectedPmUser(null);
+		getManagedBean().setSelectedRoleDesc(null);
+	}
+	
+	public String constructConditionForIdentification() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("pmUserOrgs.pmOrgProfile.recordStatus^1");
+		sb.append("|pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode^");
+		sb.append(getManagedBean().getSelectedOrgType().getParameterCode());
+		sb.append("|pmUserOrgs.pmOrgProfile.orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		if (this.getManagedBean().getSelectedOrgType().getParameterCode()
+				.equals(ParameterConst.ORG_TYPE_FACTORING)) {
+			if (this.getManagedBean().getSelectedOrgProfile()
+					.getPmFinancialOrg().getBizRegNumber() != null) {
+				sb.append("|pmUserOrgs.pmOrgProfile.pmFinancialOrg.recordStatus^1");
+				sb.append("|pmUserOrgs.pmOrgProfile.pmFinancialOrg.bizRegNumber^");
+				sb.append(getManagedBean().getSelectedOrgProfile()
+						.getPmFinancialOrg().getBizRegNumber());
+			}
+		} else if (this.getManagedBean().getSelectedOrgType()
+				.getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
+			if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier()
+					.getRegNo() != null) {
+				sb.append("|pmUserOrgs.pmOrgProfile.smSupplier.recordStatus^1");
+				sb.append("|pmUserOrgs.pmOrgProfile.smSupplier.regNo");
+				sb.append(getManagedBean().getSelectedOrgProfile()
+						.getSmSupplier().getRegNo());
+			}
+		} else {
+			if (this.getManagedBean().getSelectedOrgProfile() != null
+					&& this.getManagedBean().getSelectedOrgProfile()
+							.getPmOrgValidity() != null) {
+				sb.append("|pmUserOrgs.pmOrgProfile.pmOrgValidity.recordStatus^1");
+				sb.append("|pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode^");
+				sb.append(getManagedBean().getSelectedOrgProfile()
+						.getPmOrgValidity().getOrgCode());
+			}
+		}
+		return sb.toString();
+	}
+	
+	public void onChangeOrgLov(BaseEntity entity){
+		getManagedBean().setSelectedPmUser(null);
+		getManagedBean().setSelectedRoleDesc(null);
+	}
+
+	public void onChangeUserLov(BaseEntity entity){
+		getManagedBean().setSelectedRoleDesc(null);
+	}
 }
