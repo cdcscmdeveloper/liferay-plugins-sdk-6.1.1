@@ -4407,16 +4407,13 @@ public class LOADetailBackingBean extends
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
 		if(!isOneOffFulfilment) {
 			isAgreementMandatory = true;
+			loa.setAgreementReq(isAgreementMandatory);
 		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
 			isAgreementMandatory = true;
+			loa.setAgreementReq(isAgreementMandatory);
 		}
 		
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
-		if(isAgreementMandatory) {
-			loa.setAgreementReq(Boolean.TRUE);
-		} else{
-			loa.setAgreementReq(Boolean.FALSE);
-		} 
 	}
 
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
@@ -5433,13 +5430,22 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Show guide instruction for LOA attachment
+	 * Download guideline pdf.
+	 *
+	 * @throws Exception the exception
 	 */
-	public String showLoaGuideInstruction() {
-		String instruction = ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.attachment.instruction", 
-				new String[] {"showGuidelinePdf()"} ,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		return instruction;
+	public void downloadGuidelinePdf() throws Exception{
+		debugLogger("downloadGuidelinePdf");
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
+		pbAttachment.setFileName("Guideline.pdf");
+		populateAttachmentDetails(pbAttachment);
+		VelocityContext context = new VelocityContext();
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_GUIDELINE, context,
+				new FileOutputStream(getActualFilePath(pbAttachment)));
+		downloadFile(getActualFilePath(pbAttachment));
 	}
 	
 	/**

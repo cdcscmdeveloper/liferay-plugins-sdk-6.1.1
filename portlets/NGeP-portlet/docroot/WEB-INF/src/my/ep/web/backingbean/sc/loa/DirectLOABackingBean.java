@@ -4214,10 +4214,6 @@ public class DirectLOABackingBean extends
 		}
 		// construct frequence schedule
 		constructStartNEndMonth();
-		
-		// Guide Instruction
-		showLoaGuideInstruction();
-
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
 	
@@ -6545,6 +6541,7 @@ public class DirectLOABackingBean extends
 		 * RM500k is mandatory
 		 */
 		boolean isAgreementMandatory = Boolean.FALSE;
+		boolean isOneOffFulfilment = Boolean.FALSE;
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
 
@@ -6552,16 +6549,17 @@ public class DirectLOABackingBean extends
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
 					.getParameterCode();
 
-			boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF
+			isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF
 					.equals(fulfilmentType);
 			if (!isOneOffFulfilment) {
 				isAgreementMandatory = true;
+				loa.setAgreementReq(isAgreementMandatory);
 			} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)) {
 				isAgreementMandatory = true;
+				loa.setAgreementReq(isAgreementMandatory);
 			}
 		}
-		loa.setAgreementReq(isAgreementMandatory);
-
+		
 		return isAgreementMandatory;
 	}
 
@@ -7013,20 +7011,12 @@ public class DirectLOABackingBean extends
 			}
 		}
 	}
-	
-	
-	/**
-	 * Show guide instruction for LOA attachment
-	 */
-	private void showLoaGuideInstruction() {
-		//String link="<p:commandLink ajax=\"false\" update=\"@this\" actionListener=\"#{directLOABackingBean.downloadGuidelinePdf}\"> <h:outputText value=\"click here\" /></p:commandLink>";
-		String instruction = ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.attachment.instruction", 
-				new String[] {"javascript:downloadGuidelinePdf()"} ,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		getManagedBean().setGuidelineTooltip(instruction);
-		
-	}
 
+	/**
+	 * Download guideline pdf.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void downloadGuidelinePdf() throws Exception{
 		debugLogger("downloadGuidelinePdf");
 		ScPbAttachment pbAttachment = new ScPbAttachment();
