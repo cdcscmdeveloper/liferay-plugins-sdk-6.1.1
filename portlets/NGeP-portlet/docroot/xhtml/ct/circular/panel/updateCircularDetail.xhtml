@@ -9,7 +9,7 @@
            <h:panelGrid id="pGrid1" columns="2" style="width:550px;" columnClasses="columnWidth200">
 				   <p:outputLabel id="lbl1"  value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required"/>
 				   <h:panelGrid columns="5" id="pGrid2">
-					   <p:inputText  id="circularNoTxt1" style="width:200px;"  
+					   <p:inputTextarea  id="circularNoTxt1" style="width:200px;" autoResize="false" rows="5"
 						    required="true" maxlength="60" disabled="#{panelBackingBean.managedBean.viewContract}"
 						    label="#{lbl['lbl.ct.physical.circular.no']}" value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
 					        <p:spacer width="5"/>
@@ -24,7 +24,7 @@
 					        disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
 					        required="true" label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 					      <p:spacer width="5"/>
-					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.panel.name']}" />
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.name']}" />
 					        <p:spacer width="5"/>
 					        <p:message for="circularNameTxt1" display="icon" />
 				    </h:panelGrid>
