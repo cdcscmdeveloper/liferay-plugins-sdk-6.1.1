@@ -21,6 +21,8 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_GST_STATUS = "PGSTSTAT";
 	public static final String PARAM_APPL_NO = "PAPPLNO";
 	public static final String PARAM_APPL_TYPE = "PAPPLTYPE";
+	public static final String PARAM_STATE = "PSTATEID";
+	public static final String PARAM_APPL_STATUS = "PAPPLSTATUS";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
