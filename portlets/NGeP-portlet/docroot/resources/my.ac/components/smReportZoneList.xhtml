@@ -10,14 +10,16 @@
 		<cc:attribute name="bBean" required="true" default="" />
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
+		<cc:attribute name="showItemAll" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
+		<ui:param name="paramRequired" value="#{cc.attrs.showItemAll ? false : cc.attrs.required}" />
+		<ui:param name="defaultLabel" value="#{cc.attrs.showItemAll ? 'lbl.rpt.all' : 'lbl.rpt.selectOne'}" />
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.zone}" style="width:300px;" 
-			required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}"
+			required="#{paramRequired}" disabled="#{cc.attrs.disabled}"
 			label="#{lbl['lbl.rpt.zone']}">
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-				itemValue="" />
+			<f:selectItem itemLabel="#{lbl[defaultLabel]}" itemValue="" />
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
 				itemValue="#{SmReportConst.SM_ZONE_SEMENANJUNG}"></f:selectItem>
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}"
