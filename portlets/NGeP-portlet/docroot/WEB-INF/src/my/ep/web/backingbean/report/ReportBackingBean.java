@@ -15985,7 +15985,7 @@ public class ReportBackingBean extends
 			}
 			if (StringUtils.isNotEmpty(this.getSmEpNo())) {
 				rptGenBean.setSmEpNoVar(ReportConst.AMP_SM_EP_NO_EQ
-						+ this.getSmEpNo());
+						+ "\"" + this.getSmEpNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmRegistrationNo())) {
 				rptGenBean.setSmRegistrationNoVar(ReportConst.AMP_SM_REG_NO_EQ
@@ -16552,14 +16552,14 @@ public class ReportBackingBean extends
 			if ((this.getScPublishFromDate() != null)
 					&& (this.getScPublishFromDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
-						.setScPublishFromDateVar(ReportConst.AMP_PUB_FRM_DT_EQ + "\""
+						.setScPublishFromDateVar(ReportConst.AMP_PUB_FRM_DT_EQ 
 								+ outputDateFormat.format(this
-										.getScPublishFromDate() + "\""));
+										.getScPublishFromDate()));
 			}
 			if ((this.getScPublishToDate() != null)
 					&& (this.getScPublishToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScPublishToDateVar(ReportConst.AMP_PUB_TO_DT_EQ
-						+ "\"" + outputDateFormat.format(this.getScPublishToDate())+ "\"");
+						+ outputDateFormat.format(this.getScPublishToDate()));
 			}
 			SimpleDateFormat outputDateFormat2 = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -17208,7 +17208,7 @@ public class ReportBackingBean extends
 				 */
 				rptGenBean
 						.setPegwaiPengawaiTotVar(ReportConst.FL_AMP_PEGAWAI_PENGAWAI_EQ
-								+ this.getCommonPegaWaiPengawal());
+								+ "\"" + this.getCommonPegaWaiPengawal() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCommonKumpulanPTJ())) {
 				/*
@@ -17413,21 +17413,21 @@ public class ReportBackingBean extends
 									.equalsIgnoreCase(ReportConst.FL_SUB_MOD_CENTRAL_TREASURY))) {
 						rptGenBean
 								.setFlGroupThreeVar(ReportConst.FL_AMP_TREASURY_CIRCULAR_EQ
-										+ this.getFlGroupThree());
+										+ "\"" + this.getFlGroupThree() + "\"");
 					} else if (StringUtils.isNotEmpty(this.getFlGroupOne())
 							&& (this.getFlGroupOne()
 									.equalsIgnoreCase(ReportConst.FL_SUB_MOD_CENTRAL_TREASURY))) {
 						rptGenBean
 								.setFlGroupOneVar(ReportConst.FL_AMP_TREASURY_CIRCULAR_EQ
-										+ this.getFlGroupOne());
+										+ "\"" + this.getFlGroupOne() + "\"");
 					}
 				}
 			} else if (StringUtils.isNotEmpty(this.getFlGroupThree())) {
 				rptGenBean.setFlGroupThreeVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupThree());
+						+ "\"" + this.getFlGroupThree()+ "\"");
 			} else if (StringUtils.isNotEmpty(this.getFlGroupOne())) {
 				rptGenBean.setFlGroupOneVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupOne());
+						+ "\""+ this.getFlGroupOne()+ "\"");
 			}
 			/*
 			 * if ((this.getFlGroupThree() != null) && (this.getFlGroupThree()
