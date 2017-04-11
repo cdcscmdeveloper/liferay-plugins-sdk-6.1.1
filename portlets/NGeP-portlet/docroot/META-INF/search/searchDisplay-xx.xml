@@ -2027,7 +2027,7 @@
 					<property name="columnName" value="pmFinancialOrg.finOrgName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.fl.pm.org.name" />
+					<property name="bundleKey" value="lbl.pm.financialorg.name" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">

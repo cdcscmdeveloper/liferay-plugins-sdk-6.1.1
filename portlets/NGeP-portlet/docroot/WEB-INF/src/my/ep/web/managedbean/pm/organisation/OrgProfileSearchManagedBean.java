@@ -4,13 +4,11 @@
 package my.ep.web.managedbean.pm.organisation;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.report.ReportMangedBean;
 
 /**
  * Managed Bean for Organization Search
@@ -35,8 +33,6 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private boolean disabledJabatan;
 	private boolean disabledMinistry;
 	private boolean disabledPegaiPengawa;	
-	@ManagedProperty(value = "#{reportManagedBean}")
-	private ReportMangedBean reportManagedBean;
 	
 	
 	public OrgProfileSearchManagedBean() {
@@ -211,19 +207,6 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 		this.disabledPegaiPengawa = disabledPegaiPengawa;
 	}
 
-	/**
-	 * @return the reportManagedBean
-	 */
-	public ReportMangedBean getReportManagedBean() {
-		return reportManagedBean;
-	}
-
-	/**
-	 * @param reportManagedBean the reportManagedBean to set
-	 */
-	public void setReportManagedBean(ReportMangedBean reportManagedBean) {
-		this.reportManagedBean = reportManagedBean;
-	}
-
+	
 	
 }
