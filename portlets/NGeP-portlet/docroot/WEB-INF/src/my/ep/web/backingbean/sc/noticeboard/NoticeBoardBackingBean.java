@@ -46,6 +46,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -129,7 +130,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -343,6 +343,16 @@ public class NoticeBoardBackingBean extends
 							Date prevApprovalDate = amendmentBeanMap.get(amendMentBeanValue.getKey());
 							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
 								continue;
+							}
+							
+							// proposal start date not same date only put into map
+							if (QTFieldConst.FIELD_QT_PROPOSAL_START_DATE.equals(amendMentBeanValue.getKey())) {
+								if (valueBean.getOldValue() != null &&
+										valueBean.getNewValue() != null &&
+										DateUtils.setDefaultDateTime((Date)valueBean.getOldValue())
+											.equals(DateUtils.setDefaultDateTime((Date)valueBean.getNewValue()))) {
+									continue;
+								}
 							}
 							amendmentBeanMap.put(amendMentBeanValue.getKey(), approvalDate);	
 						}
