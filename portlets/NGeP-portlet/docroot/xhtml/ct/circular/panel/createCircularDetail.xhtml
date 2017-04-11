@@ -10,7 +10,7 @@
 		           <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required" />
 			       <h:panelGrid columns="5">
 		                  <p:inputTextarea  id="circularNoTxt" style="width:200px;"  required="true"
-		                  		autoResize="false" rows="5"
+		                  		autoResize="false" rows="3"
 		                        maxlength="60"  disabled="#{panelBackingBean.managedBean.viewContract}"
 					            value="#{panelBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}" 
 					        	onkeyup="limitTextArea(this,60);" onkeydown="limitTextArea(this,60);" />
