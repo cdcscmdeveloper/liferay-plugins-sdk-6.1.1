@@ -8,8 +8,22 @@
 			
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
 		id="loaletterOfAcceptancePanelIds" toggleable="true">
-		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-			escape="false" value="#{lOADetailBackingBean.showLoaGuideInstruction()}" />
+		<h:outputText styleClass="instruction"
+			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			escape="false"
+			value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction1']}" />
+
+		<p:commandLink styleClass="instruction" style="padding-left: 4px;padding-right: 4px;font-size: 11px;" ajax="false"
+		    value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction2']}"
+			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			actionListener="#{lOADetailBackingBean.downloadGuidelinePdf}" />
+
+		<h:outputText styleClass="instruction"
+			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			escape="false"
+			value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction3']}" />
+
+			
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 			var="scLoaReport"
 			rowIndexVar="rowIndex"
