@@ -25,7 +25,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			.getLogger(SmReportBackingBean.class);
 
 	public void generateSmReport(LinkedHashMap<String, String> params) {
-		String paramStr = constructParameterString(params);
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);
