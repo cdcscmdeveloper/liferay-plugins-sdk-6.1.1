@@ -423,7 +423,8 @@ width:32.5%;
 	        width: 32%;
             }
           
-
+	.ui-dialog .ui-dialog-titlebar .ui-state-default .ui-icon {   background-image: url("/css/images/design/icon_trash.png") !important; }
+	
 </style>
 
 
@@ -433,6 +434,9 @@ width:32.5%;
 		<tr>
 			<td><p:panel style="width: 100%;"
 					header="#{lbl['lbl.rpt.rptcriteria']}" id="rptModuleId">
+					
+					<p:outputLabel id="reportUrl" value="#{reportBackingBean.managedBean.reportUrl}"></p:outputLabel>
+				
 					<table style="margin-top: 10px; width: 100%;">
 						<tr>
 							<td width="100%"><h:panelGrid id="rptModule" columns="4"
@@ -625,22 +629,18 @@ width:32.5%;
 													test="#{reportBackingBean.managedBean.rptGenBean.conditionGenerateButton}">
 													<p:commandButton onstart="blkReportContent.show();"
 														oncomplete="blkReportContent.hide();"
-														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                
+														value="#{lbl['lbl.rpt.generate']}" process="@form"                                                
 														rendered="#{reportBackingBean.valuesEmpty}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="true" update="@form" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
+														update="@form" action="#{reportBackingBean.generateReportTesting()}">
 													</p:commandButton>
 													
 													<p:commandButton onstart="blkReportContent.show();"
 														oncomplete="blkReportContent.hide();"
-														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                   														
+														value="#{lbl['lbl.rpt.generate']}" process="@form"                                                   														
                                                         rendered="#{!reportBackingBean.valuesEmpty}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="false" update="@form" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
+														update="@form" action="#{reportBackingBean.generateReportTesting()}">
 													</p:commandButton>
 													
 												</c:if>
@@ -650,27 +650,64 @@ width:32.5%;
 														id="falseGenerate" oncomplete="blkReportContent.hide();"                                                       
 														value="#{lbl['lbl.rpt.generate']}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="false" update="@form" process="@this" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
+														update="@form" process="@form" 
+															action="#{reportBackingBean.generateReportTesting()}">
 													</p:commandButton>
 												</c:if>
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{reportBackingBean.resetReportForm}"
 													update="@form" partialSubmit="true" process="@form" />
+												
 											</div>
 										</h:panelGroup>
 									</p:panel>
 								</c:if></td>
 						</tr>
 					</table>
-					
-					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" width="376" 
-						draggable="false" closable="true"  header="#{lbl['lbl.rpt.reportstatus']}"
-						resizable="false">	
-						<h:outputText  value="#{lbl['lbl.rpt.warninformation']}" />					
-						<p:graphicImage value="/css/images/ajax-loader.gif" />						
+					<p:dialog id="dialog1"  widgetVar="ex" header="#{lbl['lbl.rpt.gen.popup.title']}" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+						<table>
+							<tr>
+								<td style="padding:5px" width="20px">
+									<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/tooltips.png" height="16px" width="16px"/>
+								</td>
+								<td>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.one']}"/>
+									<h:outputText value=" ("/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.two']}"/>
+									<h:outputText value=" = "/>
+									<h:outputText value="#{reportBackingBean.managedBean.requestId}"/>
+									<h:outputText value=")."/>
+									<br/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.three']}."/>
+									<br/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.four']}."/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" height="2px"></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="right">
+									<p:commandButton value="#{lbl['lbl.rpt.btn.generate']}" onclick="ex.hide();"/>
+									<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}" action="#{reportBackingBean.redirect()}">
+									</p:commandButton>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" height="3px"></td>
+							</tr>
+						</table>
 					</p:dialog>
+					
+					<p:dialog id="errorDialog"  widgetVar="errorDialog" header="Report server down" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+						<table>
+							<tr>
+								<td> The connection to report server is interrupt.</td>
+							</tr>
+						</table>
+					</p:dialog>
+					
+					<input type="hidden" id="reportUrl" value="" />
 					
 				</p:panel></td>
 		</tr>
