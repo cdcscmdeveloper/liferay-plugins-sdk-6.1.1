@@ -18,43 +18,56 @@
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 				</td>
-				<td style="width: 10%">
+				<td style="width: 15%">
 				  <p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}" 
 				       process="@this" partialSubmit="true" styleClass="blue_font"
 				       action="#{amendmentBackingBean.gotoCommonViewPage(ctBackingBean.managedBean.contractVer.ctContract.contractId)}"/>
 				</td>
+			   <h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq null}">
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 				</td>
-				<td style="width: 25%" class="header-info-text">
+				<td style="width: 15%" class="header-info-text">
 					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
 				</td>
+				</h:panelGroup>
+				  <h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA ne null}">
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+				</td>
+				<td style="width: 35%" class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
+				</td>
+				</h:panelGroup>
 				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq null}">
-				<td style="width: 5%">
+				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.fulfilment.details.status']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
 					#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
 				</td>
 				</h:panelGroup>				
+			</tr>
+			<tr>
 				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
-				<td style="width: 5%">
+				<td style="width: 20%">
 					<h:outputLabel value="#{lbl['lbl.ct.loa.issue.date']}" />
 				</td>
-				<td style="width: 5%" class="header-info-text">
+				<td style="width: 10%" class="header-info-text">
 					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.issueDate}">
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</td>
-				<td style="width: 5%">
+				<td style="width: 20%" colspan="2">
 					<h:outputLabel value="#{lbl['lbl.ct.response.due.date']}" />
 				</td>
-				<td style="width: 5%" class="header-info-text">
+				<td style="width: 15%" class="header-info-text" colspan="2">
 					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackDueDate}">
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 					(#{DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackDueDate)} #{lbl['lbl.ct.days']})
 				</td>
+				<td style="width: 20%"></td><td style="width: 20%"></td>
 				</h:panelGroup>
 			</tr>
 		</table>

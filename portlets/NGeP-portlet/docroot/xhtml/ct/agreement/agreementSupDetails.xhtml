@@ -101,14 +101,20 @@
 	  	</h:panelGrid>
 	  	 </h:panelGrid>
 	  	
-         <p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />  
-         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" 
-              maxlength="100" style="width:520px;" disabled="true" />
-	     <h:panelGroup>
-		   <div style="height: 40px; vertical-align: top;">
-		      <p:outputLabel for="amendmentD" value="#{lbl['lbl.ct.description']}" />
-		   </div>
-		 </h:panelGroup>
+	  		 <h:panelGroup>
+		 			  <div style="height: 40px; vertical-align: top;">
+        					 <p:outputLabel for ="txtname"  value="#{lbl['lbl.ct.amendment.title']}" />  
+        			  </div>
+        	</h:panelGroup>
+         <p:inputTextarea id="txtname" style="width:520px;margin-bottom:5px;"  rows="3"
+				value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" maxlength="1000"
+				disabled="true" autoResize="false" onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
+      
+	   		  <h:panelGroup>
+			  		 <div style="height: 40px; vertical-align: top;">
+		     				 <p:outputLabel for="amendmentD" value="#{lbl['lbl.ct.description']}" />
+		 	  		</div>
+			 </h:panelGroup>
 		 <h:panelGrid>
 		    <p:inputTextarea id="amendmentD" 
 		    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  
