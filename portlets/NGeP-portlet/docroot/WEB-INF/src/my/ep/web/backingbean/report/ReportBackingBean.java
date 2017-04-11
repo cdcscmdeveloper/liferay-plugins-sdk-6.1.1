@@ -15208,30 +15208,30 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getCtSupplierName())) {
 				rptGenBean
 						.setCtSupplierNameVar(ReportConst.CT_AMP_SUPPLIER_NAME_EQ
-								+ this.getCtSupplierName());
+								+ "\"" + this.getCtSupplierName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtCircularNo())) {
 				rptGenBean.setCtCircularNoVar(ReportConst.CT_AMP_CIRCULAR_NO_EQ
-						+ this.getCtCircularNo());
+						+ "\"" + this.getCtCircularNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtCircularName())) {
 				rptGenBean
 						.setCtCircularNameVar(ReportConst.CT_AMP_CIRCULAR_NAME_EQ
-								+ this.getCtCircularName());
+								+ "\"" + this.getCtCircularName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtCircularType())) {
 				rptGenBean
 						.setCtCircularTypeVar(ReportConst.CT_AMP_CIRCULAR_TYPE_EQ
-								+ this.getCtCircularType());
+								+ "\"" + this.getCtCircularType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtTerminationType())) {
 				rptGenBean
 						.setCtTerminationTypeVar(ReportConst.CT_AMP_TERMINATION_TYPE_EQ
-								+ this.getCtTerminationType());
+								+ "\"" + this.getCtTerminationType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtStatus())) {
 				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ
-						+ this.getCtStatus());
+						+ "\"" + this.getCtStatus()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtStatusTwo())) {
 				/*
@@ -15240,29 +15240,29 @@ public class ReportBackingBean extends
 				 * + this.getCtStatusTwo()); }
 				 */
 				rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
-						+ this.getCtStatusTwo());
+						+ "\"" + this.getCtStatusTwo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtContractNo())) {
 				rptGenBean.setCtContractNoVar(ReportConst.CT_AMP_CONTRACT_NO_EQ
-						+ this.getCtContractNo());
+						+ "\"" + this.getCtContractNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtPhysicalContractNo())) {
 				rptGenBean
 						.setCtPhysicalContractNoVar(ReportConst.CT_AMP_PHYSICALCONTRACT_NO_EQ
-								+ this.getCtPhysicalContractNo());
+								+ "\"" + this.getCtPhysicalContractNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtAgreement())) {
 				rptGenBean.setCtAgreementVar(ReportConst.CT_AMP_AGREEMENT_EQ
-						+ this.getCtAgreement());
+						+ "\"" + this.getCtAgreement()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtComplete())) {
 				rptGenBean.setCtCompleteVar(ReportConst.CT_AMP_COMPLETE_EQ
-						+ this.getCtComplete());
+						+ "\"" + this.getCtComplete()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtContrMontrStatus())) {
 				rptGenBean
 						.setCtContrMontrStatusVar(ReportConst.CT_AMP_STATUS_EQ
-								+ this.getCtContrMontrStatus());
+								+ "\"" + this.getCtContrMontrStatus()+ "\"" );
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -15293,33 +15293,33 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getCtProcurementMode())) {
 				rptGenBean
 						.setCtProcurementModeVar(ReportConst.CT_AMP_PROCUREMENTMODE_EQ
-								+ this.getCtProcurementMode());
+								+ "\"" + this.getCtProcurementMode()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtGroupOne())) {
 				rptGenBean.setCtGroupOneVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getCtGroupOne());
+						+ "\"" + this.getCtGroupOne()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtGroupTwo())) {
 				rptGenBean.setCtGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getCtGroupTwo());
+						+ "\"" + this.getCtGroupTwo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtGroupThree())) {
 				rptGenBean.setCtGroupThreeVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getCtGroupThree());
+						+ "\"" + this.getCtGroupThree()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtProductService())) {
 				rptGenBean
 						.setCtProductServiceVar(ReportConst.CT_AMP_PPRODUCTSERVICE_EQ
-								+ this.getCtProductService());
+								+ "\"" + this.getCtProductService()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtLoanNo())) {
 				rptGenBean.setCtLoanNoVar(ReportConst.CT_AMP_PLOANO_EQ
-						+ this.getCtLoanNo());
+						+ "\"" + this.getCtLoanNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtLOAPhysicalNo())) {
 				rptGenBean
 						.setCtLOAPhysicalNoVar(ReportConst.CT_AMP_PLOAPHYSICALNO_EQ
-								+ this.getCtLOAPhysicalNo());
+								+ "\"" + this.getCtLOAPhysicalNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCommonMinistry())) {
 				/*
@@ -15328,31 +15328,31 @@ public class ReportBackingBean extends
 				 * retrieveMinistryName(orgprofileid));
 				 */
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
-						+ this.getCommonMinistry());
+						+ "\"" + this.getCommonMinistry()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getCommonPegaWaiPengawal())) {
 				rptGenBean
 						.setCtPegaiPengawaiVar(ReportConst.CT_AMP_PPEGAIPENGAWAI_EQ
-								+ this.getCommonPegaWaiPengawal());
+								+ "\"" + this.getCommonPegaWaiPengawal() + "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCommonKumpulanPTJ())) {
 				rptGenBean.setCtKumpulanVar(ReportConst.CT_AMP_PKUMPULAN_EQ
-						+ this.getCommonKumpulanPTJ());
+						+ "\"" + this.getCommonKumpulanPTJ()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getCommonPtj())) {
 				rptGenBean.setCtPtjVar(ReportConst.CT_AMP_PPTJNAME_EQ
-						+ this.getCommonPtj());
+						+ "\"" + this.getCommonPtj()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getCtUserType())) {
 				rptGenBean.setCtUserTypeVar(ReportConst.CT_AMP_USERTYPE_EQ
-						+ this.getCtUserType());
+						+ "\"" + this.getCtUserType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCtSubType())) {
 				rptGenBean.setCtSubTypeVar(ReportConst.CT_AMP_SUBTYPE_EQ
-						+ this.getCtSubType());
+						+ "\"" + this.getCtSubType()+ "\"" );
 			}
 
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
@@ -15477,28 +15477,28 @@ public class ReportBackingBean extends
 					if (StringUtils.isNotEmpty(this.getSmZone())) {
 						rptGenBean
 								.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
-										+ this.getSmZone());
+										+ "\"" + this.getSmZone() + "\"");
 					} else {
 						rptGenBean
 								.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
-										+ ReportConst.EMPTY_VAL);
+										+ "\"" + ReportConst.EMPTY_VAL + "\"");
 					}
 				}
 			}
 			if (StringUtils.isNotEmpty(this.getSmCreatedFromYear())) {
 				rptGenBean
 						.setSmMandatoryCreatedFromYearVar(ReportConst.AMP_SM_YEAR_FROM_EQ
-								+ this.getSmCreatedFromYear());
+								+ "\"" + this.getSmCreatedFromYear() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmCreatedToYear())) {
 				rptGenBean
 						.setSmMandatoryCreatedToYearVar(ReportConst.AMP_SM_YEAR_TO_EQ
-								+ this.getSmCreatedToYear());
+								+ "\"" + this.getSmCreatedToYear() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmReportType())) {
 				rptGenBean
 						.setReportTypeTotVar(ReportConst.AMP_SM_REPORT_TYPE_EQ
-								+ this.getSmReportType());
+								+ "\"" + this.getSmReportType() + "\"");
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -15519,7 +15519,7 @@ public class ReportBackingBean extends
 				 */
 				String month = getCalendarMonthNameByNo(this.getSmFromMonth());
 				rptGenBean.setSmFromMonthVar(ReportConst.AMP_SM_FROM_DATE_EQ
-						+ month);
+						+ "\"" + month + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmToMonth())) {
 				/*
@@ -15706,71 +15706,71 @@ public class ReportBackingBean extends
 
 					if (StringUtils.isNotEmpty(this.getSmCode())) {
 						rptGenBean.setSmCodeVar(ReportConst.AMP_SM_OCDE_TYPE
-								+ this.getSmCode());
+								+ "\"" + this.getSmCode() + "\"");
 					}
 
 					if (StringUtils.isNotEmpty(this.getSmPaymentMethod())) {
 						rptGenBean
 								.setSmPaymentMethodVar(ReportConst.AMP_SM_PAYMENT_TYPE_METHOD_EQ
-										+ this.getSmPaymentMethod());
+										+ "\"" + this.getSmPaymentMethod() + "\"");
 					}
 					if (StringUtils.isNotEmpty(this.getSmRTReportType())) {
 						rptGenBean
 								.setSmRTReportTypeVar(ReportConst.AMP_SM_REP_TYPE_EQ
-										+ this.getSmRTReportType());
+										+ "\"" + this.getSmRTReportType() + "\"");
 					}
 					if (StringUtils.isNotEmpty(this.getSmSupplierName())) {
 						rptGenBean
 								.setSmSupplierNameVar(ReportConst.AMP_SM_SUP_NAME_EQ
-										+ this.getSmSupplierName());
+										+ "\"" + this.getSmSupplierName() + "\"");
 					}
 					if (CollectionUtils.isNotEmpty(this
 							.getSmMofRegistrationFeeList())) {
 						rptGenBean
 								.setSmMofRegistrationFeeVar(ReportConst.AMP_SM_MOF_REG_FEE_TYPE_EQ
-										+ this.getSmMofRegistrationFeeList()
-												.get(0));
+										+ "\"" + this.getSmMofRegistrationFeeList()
+												.get(0) + "\"");
 					}
 					if (CollectionUtils.isNotEmpty(this
 							.getSmProcessingFeeList())) {
 						rptGenBean
 								.setSmProcessingFeeVar(ReportConst.AMP_SM_PROCESSING_FEE_TYPE_EQ
-										+ this.getSmProcessingFeeList().get(0));
+										+ "\"" + this.getSmProcessingFeeList().get(0) + "\"");
 					}
 					if (CollectionUtils.isNotEmpty(this
 							.getSmSoftCertificateFeeList())) {
 						rptGenBean
 								.setSmSoftCertificateFeeVar(ReportConst.AMP_SM_SOFTCERTIFICATE_TYPE_EQ
-										+ this.getSmSoftCertificateFeeList()
-												.get(0));
+										+ "\"" + this.getSmSoftCertificateFeeList()
+												.get(0) + "\"");
 					}
 
 				}
 			}
 			if (StringUtils.isNotEmpty(this.getSmProfileStatus())) {
 				rptGenBean.setSmProfileStatusVar(ReportConst.AMP_SM_PRFL_STS_EQ
-						+ this.getSmProfileStatus());
+						+ "\"" + this.getSmProfileStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmGSTRegistrationNo())) {
 				rptGenBean
 						.setSmGSTRegistrationNoVar(ReportConst.AMP_SM_GST_REGNO_EQ
-								+ this.getSmGSTRegistrationNo());
+								+ "\"" + this.getSmGSTRegistrationNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmGSTRegisteredStatus())) {
 				rptGenBean
 						.setSmGSTRegisteredStatusVar(ReportConst.AMP_SM_GST_STS_EQ
-								+ this.getSmGSTRegisteredStatus());
+								+ "\"" + this.getSmGSTRegisteredStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmUserName())) {
 				rptGenBean.setSmUserNameVar(ReportConst.AMP_SM_USER_NAME_EQ
-						+ this.getSmUserName());
+						+ "\"" + this.getSmUserName() + "\"");
 			}
 
 			
 			if (StringUtils.isNotEmpty(this.getSmRequestExpiryRenewalDate())) {
 				rptGenBean
 						.setSmRequestExpiryRenewalDateVar(ReportConst.AMP_SM_REQ_ENQ_DATE_EQ
-								+ this.getSmRequestExpiryRenewalDate());
+								+ "\"" + this.getSmRequestExpiryRenewalDate() + "\"");
 			}
 			
 			
@@ -15806,129 +15806,129 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getSmMainCategory())) {
 				rptGenBean
 						.setMainCategoryTotVar(ReportConst.AMP_SM_MAIN_CATEGORY_EQ
-								+ this.getSmMainCategory());
+								+ "\"" + this.getSmMainCategory() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmSubCategory())) {
 				rptGenBean
 						.setSubCategoryTotVar(ReportConst.AMP_SM_SUB_CATEGORY_EQ
-								+ this.getSmSubCategory());
+								+ "\"" + this.getSmSubCategory() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmSubCategoryDivision())) {
 				rptGenBean
 						.setSubCategoryDivisionTotVar(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ
-								+ this.getSmSubCategoryDivision());
+								+ "\"" + this.getSmSubCategoryDivision() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmRegistrationType())) {
 				rptGenBean
 						.setRegistrationTypeTotVar(ReportConst.AMP_SM_REG_TYPE_EQ
-								+ this.getSmRegistrationType());
+								+ "\"" + this.getSmRegistrationType() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmMofRegNo())) {
 				rptGenBean.setMofRegNoTotVar(ReportConst.AMP_SM_MOF_REG_NO_EQ
-						+ this.getSmMofRegNo());
+						+ "\"" + this.getSmMofRegNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmApplicationStatus())) {
 				rptGenBean
 						.setApplicationStatusTotVar(ReportConst.AMP_SM_APPL_STATUS_EQ
-								+ this.getSmApplicationStatus());
+								+ "\"" + this.getSmApplicationStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmPaymentTo())) {
 				rptGenBean.setSmPaymentToVar(ReportConst.AMP_SM_PAYMENT_TO_EQ
-						+ this.getSmPaymentTo());
+						+ "\"" + this.getSmPaymentTo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmCompanyName())) {
 				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_SM_COMP_NAME_EQ
-						+ this.getSmCompanyName());
+						+ "\"" + this.getSmCompanyName() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmRegistrationStatus())) {
 				rptGenBean
 						.setRegistrationStatusTotVar(ReportConst.AMP_SM_REG_STATUS_EQ
-								+ this.getSmRegistrationStatus());
+								+ "\"" + this.getSmRegistrationStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmState())) {
 				rptGenBean.setStateTotVar(ReportConst.AMP_SM_STATE_NAME_EQ
-						+ this.getSmState());
+						+ "\"" + this.getSmState() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmDistrict())) {
 				rptGenBean
 						.setDistrictTotVar(ReportConst.AMP_SM_DISTRICT_NAME_EQ
-								+ this.getSmDistrict());
+								+ "\"" + this.getSmDistrict() + "\"");
 			}
 			
 			if (StringUtils.isNotEmpty(this.getSmSiteVisitStatus())) {
 				rptGenBean
 						.setSiteVisitStatusTotVar(ReportConst.AMP_SM_SITE_VISIT_STATUS_EQ
-								+ this.getSmSiteVisitStatus());
+								+ "\"" +  this.getSmSiteVisitStatus() + "\"");
 			}
 			
 			if (StringUtils.isNotEmpty(this.getSmSupplierType())) {
 				rptGenBean
 						.setSupplierTypeTotVar(ReportConst.AMP_SM_SUPPLIER_TYPE_EQ
-								+ this.getSmSupplierType());
+								+ "\"" + this.getSmSupplierType() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmZone())
 					|| StringUtils.isEmpty(this.getSmZone())) {
 				if (StringUtils.isNotEmpty(this.getSmZone())) {
 					rptGenBean
 							.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
-									+ this.getSmZone());
+									+ "\"" + this.getSmZone() + "\"");
 				} else {
 					rptGenBean
 							.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
-									+ ReportConst.EMPTY_VAL);
+									+ "\"" + ReportConst.EMPTY_VAL + "\"");
 				}
 			}
 			if (StringUtils.isNotEmpty(this.getSmReportType())) {
 				rptGenBean
 						.setReportTypeTotVar(ReportConst.AMP_SM_REPORT_TYPE_EQ
-								+ this.getSmReportType());
+								+ "\"" + this.getSmReportType() + "\"");
 			}
 
 			if (StringUtils.isNotEmpty(this.getSmPaymentMethod())) {
 				rptGenBean
 						.setSmPaymentMethodVar(ReportConst.AMP_SM_PAYMENT_MENTHOD_EQ
-								+ this.getSmPaymentMethod());
+								+ "\"" + this.getSmPaymentMethod() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmProcessingType())) {
 				rptGenBean
 						.setSmProcessingTypeVar(ReportConst.AMP_SM_PRO_TYPE_EQ
-								+ this.getSmProcessingType());
+								+ "\"" + this.getSmProcessingType()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getSmReceiptNo())) {
 				rptGenBean.setSmReceiptNoVar(ReportConst.AMP_SM_RECEIPT_NO_EQ
-						+ this.getSmReceiptNo());
+						+ "\"" + this.getSmReceiptNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmProcessingOfficerName())) {
 				rptGenBean
 						.setSmProcessingOfficerNameVar(ReportConst.AMP_SM_PRO_OFFICERNAME_EQ
-								+ this.getSmProcessingOfficerName());
+								+ "\"" + this.getSmProcessingOfficerName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmApplicationNo())) {
 				rptGenBean
 						.setApplicationNoTotVar(ReportConst.AMP_SM_APPLICATION_NO_EQ
-								+ this.getSmApplicationNo());
+								+ "\"" + this.getSmApplicationNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmPaymentType())) {
 				rptGenBean
 						.setPaymentTypeTotVar(ReportConst.AMP_SM_PAYMENT_TYPE_EQ
-								+ this.getSmPaymentType());
+								+ "\"" + this.getSmPaymentType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmApplicationType())) {
 				rptGenBean
 						.setApplicationTypeTotVar(ReportConst.AMP_SM_APPL_TYPE_EQ
-								+ this.getSmApplicationType());
+								+ "\"" + this.getSmApplicationType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmSVOUser())) {
 				rptGenBean.setSmSVOUserVar(ReportConst.AMP_SM_APPL_TYPE_EQ
-						+ this.getSmSVOUser());
+						+ "\"" + this.getSmSVOUser() + "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmYearText())) {
 				rptGenBean.setSmYearTextVar(ReportConst.AMP_SM_YEAR_EQ
-						+ this.getSmYearText());
+						+ "\"" + this.getSmYearText()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmMonthlyRptByYear())) {
 				rptGenBean.setSmMonthlyRptByYearVar(ReportConst.AMP_SM_YEAR_EQ
-						+ this.getSmMonthlyRptByYear());
+						+ "\"" + this.getSmMonthlyRptByYear()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmMofRegNoFrom())
 					&& (StringUtils.isNotEmpty(this.getSmMofRegNoTo()))) {
@@ -15961,27 +15961,27 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getSmMofRegNoFrom())) {
 				rptGenBean
 						.setSmMofRegNoFromVar(ReportConst.AMP_SM_MOF_REG_NO_FRM_EQ
-								+ this.getSmMofRegNoFrom());
+								+ "\"" + this.getSmMofRegNoFrom()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmMofRegNoTo())) {
 				rptGenBean
 						.setSmMofRegNoToVar(ReportConst.AMP_SM_MOF_REG_NO_TO_EQ
-								+ this.getSmMofRegNoTo());
+								+ "\"" + this.getSmMofRegNoTo() + "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmPaidUpCapitalFrm())) {
 				rptGenBean
 						.setSmPaidUpCapitalFrmVar(ReportConst.AMP_SM_PAIDUP_CPTL_FROM_EQ
-								+ this.getSmPaidUpCapitalFrm());
+								+ "\"" + this.getSmPaidUpCapitalFrm()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmPaidUpCapitalTo())) {
 				rptGenBean
 						.setSmPaidUpCapitalToVar(ReportConst.AMP_SM_PAIDUP_CPTL_TO_EQ
-								+ this.getSmPaidUpCapitalTo());
+								+ "\"" + this.getSmPaidUpCapitalTo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmPaidUpCapitalNaccum())) {
 				rptGenBean
 						.setSmPaidUpCapitalNaccumVar(ReportConst.AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ
-								+ this.getSmPaidUpCapitalNaccum());
+								+ "\"" + this.getSmPaidUpCapitalNaccum() + "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmEpNo())) {
 				rptGenBean.setSmEpNoVar(ReportConst.AMP_SM_EP_NO_EQ
@@ -15989,59 +15989,59 @@ public class ReportBackingBean extends
 			}
 			if (StringUtils.isNotEmpty(this.getSmRegistrationNo())) {
 				rptGenBean.setSmRegistrationNoVar(ReportConst.AMP_SM_REG_NO_EQ
-						+ this.getSmRegistrationNo());
+						+ "\"" + this.getSmRegistrationNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmSupportingDocumentMode())) {
 				rptGenBean
 						.setSmSupportingDocumentModeVar(ReportConst.AMP_SM_SUPP_DOC_MODE_EQ
-								+ this.getSmSupportingDocumentMode());
+								+ "\"" + this.getSmSupportingDocumentMode()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmSupportingDocumentStatus())) {
 				rptGenBean
 						.setSmSupportingDocumentStatusVar(ReportConst.AMP_SM_SUPP_DOC_STATUS_EQ
-								+ this.getSmSupportingDocumentStatus());
+								+ "\"" + this.getSmSupportingDocumentStatus()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmPersonnelRole())) {
 				rptGenBean
 						.setSmPersonnelRoleVar(ReportConst.AMP_SM_PERSONNEL_ROLE_EQ
-								+ this.getSmPersonnelRole());
+								+ "\"" + this.getSmPersonnelRole()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmIdentificationType())) {
 				rptGenBean
 						.setSmIdentificationTypeVar(ReportConst.AMP_SM_IDENT_TYPE_EQ
-								+ this.getSmIdentificationType());
+								+ "\"" + this.getSmIdentificationType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmIdentificationNumber())) {
 				rptGenBean
 						.setSmIdentificationNumberVar(ReportConst.AMP_SM_IDENT_NO_EQ
-								+ this.getSmIdentificationNumber());
+								+ "\"" + this.getSmIdentificationNumber()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmCancellationBy())) {
 				rptGenBean
 						.setSmCancellationByVar(ReportConst.AMP_SM_CANCEL_BY_EQ
-								+ this.getSmCancellationBy());
+								+ "\"" + this.getSmCancellationBy()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this
 					.getSmBusCompTypeRegistrationStatus())) {
 				rptGenBean
 						.setSmBusCompTypeRegistrationStatusByVar(ReportConst.AMP_SM_BUS_REG_TYPE_BY_EQ
-								+ this.getSmBusCompTypeRegistrationStatus());
+								+ "\"" + this.getSmBusCompTypeRegistrationStatus()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getSmBusCompanyType())) {
 				rptGenBean
 						.setSmBusCompanyTypeByVar(ReportConst.AMP_SM_BUS_TYPE_BY_EQ
-								+ this.getSmBusCompanyType());
+								+ "\"" + this.getSmBusCompanyType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmBusPaidUpCapitalFrm())) {
 				rptGenBean
 						.setSmBusPaidUpCapitalFrmByVar(ReportConst.AMP_SM_BUS_TYPE_BY_EQ
-								+ this.getSmBusPaidUpCapitalFrm());
+								+ "\"" + this.getSmBusPaidUpCapitalFrm()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getSmBusPaidUpCapitalTo())) {
 				rptGenBean
 						.setSmBusPaidUpCapitalToByVar(ReportConst.AMP_SM_BUS_TYPE_BY_EQ
-								+ this.getSmBusPaidUpCapitalTo());
+								+ "\"" + this.getSmBusPaidUpCapitalTo()+ "\"" );
 			}
 
 			StringBuffer maincategory = new StringBuffer();
@@ -16380,102 +16380,102 @@ public class ReportBackingBean extends
 							&& StringUtils.isNotEmpty(this
 									.getScCreatedFromMonth())) {
 						rptGenBean
-								.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
+								.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ + "\""
 										+ this.getScCreatedFromMonth()
-										+ this.getScCreatedFromYear());
+										+ this.getScCreatedFromYear() + "\"");
 						rptGenBean
-								.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
+								.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ + "\""
 										+ this.getScCreatedToMonth()
-										+ this.getScCreatedToYear());
+										+ this.getScCreatedToYear()+ "\"");
 					} else {
 						rptGenBean
-								.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
-										+ this.getScCreatedFromYear());
+								.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ + "\""
+										+ this.getScCreatedFromYear() + "\"");
 						rptGenBean
-								.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
-										+ this.getScCreatedToYear());
+								.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ + "\""
+										+ this.getScCreatedToYear() + "\"");
 					}
 				}
 			}
 			// }
 
 			if (StringUtils.isNotEmpty(this.getScSOAStatus())) {
-				rptGenBean.setScSOAStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ
-						+ this.getScSOAStatus());
+				rptGenBean.setScSOAStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ + "\""
+						+ this.getScSOAStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScSimpleQuoteType())) {
 				rptGenBean
-						.setScSimpleQuoteTypeVar(ReportConst.SC_AMP_SIMPL_QUOTE_TYPE_EQ
-								+ this.getScSimpleQuoteType());
+						.setScSimpleQuoteTypeVar(ReportConst.SC_AMP_SIMPL_QUOTE_TYPE_EQ + "\""
+								+ this.getScSimpleQuoteType() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScLOANo())) {
-				rptGenBean.setScLOANoVar(ReportConst.SC_AMP_LOA_NO_EQ
-						+ this.getScLOANo());
+				rptGenBean.setScLOANoVar(ReportConst.SC_AMP_LOA_NO_EQ + "\""
+						+ this.getScLOANo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScRequestQuoteNo())) {
-				rptGenBean.setScRequestQuoteNoVar(ReportConst.SC_AMP_RQ_NO_EQ
-						+ this.getScRequestQuoteNo());
+				rptGenBean.setScRequestQuoteNoVar(ReportConst.SC_AMP_RQ_NO_EQ + "\""
+						+ this.getScRequestQuoteNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScContractOrPKPName())) {
 				rptGenBean
-						.setScContractOrPKPNameVar(ReportConst.SC_AMP_CON_M_EQ
-								+ this.getScContractOrPKPName());
+						.setScContractOrPKPNameVar(ReportConst.SC_AMP_CON_M_EQ + "\""
+								+ this.getScContractOrPKPName() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScContractOrPKPNo())) {
-				rptGenBean.setScContractOrPKPNoVar(ReportConst.SC_AMP_CON_NO_EQ
-						+ this.getScContractOrPKPNo());
+				rptGenBean.setScContractOrPKPNoVar(ReportConst.SC_AMP_CON_NO_EQ + "\""
+						+ this.getScContractOrPKPNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScContractOrPKPType())) {
 				rptGenBean
-						.setScContractOrPKPTypeVar(ReportConst.SC_AMP_CON_TYPE_EQ
-								+ this.getScContractOrPKPType());
+						.setScContractOrPKPTypeVar(ReportConst.SC_AMP_CON_TYPE_EQ + "\""
+								+ this.getScContractOrPKPType() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScPIDNo())) {
-				rptGenBean.setScPIDNoVar(ReportConst.SC_AMP_PID_NO_EQ
-						+ this.getScPIDNo());
+				rptGenBean.setScPIDNoVar(ReportConst.SC_AMP_PID_NO_EQ + "\""
+						+ this.getScPIDNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getReportValue())
 					&& (this.getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL))) {
 				if (StringUtils.isNotEmpty(this.getScREQUESTNOTESUMMARYGroup())) {
 					rptGenBean
-							.setScREQUESTNOTESUMMARYGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-									+ this.getScREQUESTNOTESUMMARYGroup());
+							.setScREQUESTNOTESUMMARYGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ + "\""
+									+ this.getScREQUESTNOTESUMMARYGroup() + "\"");
 				}
 			}
 			if (StringUtils.isNotEmpty(this.getScLAPRNPURCHDEFAULTGroup())) {
 				rptGenBean
-						.setScLAPRNPURCHDEFAULTGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-								+ this.getScLAPRNPURCHDEFAULTGroup());
+						.setScLAPRNPURCHDEFAULTGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ + "\""
+								+ this.getScLAPRNPURCHDEFAULTGroup() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScSimpleQuoteDtlGroup())) {
 				rptGenBean
-						.setScSimpleQuoteDtlGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-								+ this.getScSimpleQuoteDtlGroup());
+						.setScSimpleQuoteDtlGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ + "\""
+								+ this.getScSimpleQuoteDtlGroup() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScCommonStatus())) {
-				rptGenBean.setScCommonStatusVar(ReportConst.SC_AMP_STATUS_EQ
-						+ this.getScCommonStatus());
+				rptGenBean.setScCommonStatusVar(ReportConst.SC_AMP_STATUS_EQ + "\""
+						+ this.getScCommonStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScPurchaseInDefaultStatus())) {
 				rptGenBean
-						.setScPurchaseInDefaultStatusVar(ReportConst.SC_AMP_STATUS_EQ
-								+ this.getScPurchaseInDefaultStatus());
+						.setScPurchaseInDefaultStatusVar(ReportConst.SC_AMP_STATUS_EQ + "\""
+								+ this.getScPurchaseInDefaultStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScSimpleQuoteStatus())) {
 				rptGenBean
-						.setScSimpleQuoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
-								+ this.getScSimpleQuoteStatus());
+						.setScSimpleQuoteStatusVar(ReportConst.SC_AMP_STATUS_EQ + "\""
+								+ this.getScSimpleQuoteStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScRequestNoteStatus())) {
 				rptGenBean
-						.setScRequestNoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
-								+ this.getScRequestNoteStatus());
+						.setScRequestNoteStatusVar(ReportConst.SC_AMP_STATUS_EQ + "\""
+								+ this.getScRequestNoteStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScQuotationNo())) {
 				quotationNumberValidation();
-				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ
-						+ this.getScQuotationId());
+				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ + "\""
+						+ this.getScQuotationId() + "\"");
 			}	
 			if (this.getManagedBean().getReportValue().trim()
 					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
@@ -16495,21 +16495,21 @@ public class ReportBackingBean extends
 							.equalsIgnoreCase(
 									ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
 				rptGenBean
-						.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ
-								+ this.getScEstimatedAmount());
+						.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ + "\""
+								+ this.getScEstimatedAmount() + "\"");
 			}
 			
 			if (StringUtils.isNotEmpty(this.getScDeskOfficer())) {
-				rptGenBean.setScDeskOfficerVar(ReportConst.AMP_DESK_OFFCR_EQ
-						+ this.getScDeskOfficer());
+				rptGenBean.setScDeskOfficerVar(ReportConst.AMP_DESK_OFFCR_EQ + "\""
+						+ this.getScDeskOfficer() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScPtj())) {
-				rptGenBean.setScPtjVar(ReportConst.AMP_PROCURE_PTJ_EQ
-						+ this.getScPtj());
+				rptGenBean.setScPtjVar(ReportConst.AMP_PROCURE_PTJ_EQ + "\""
+						+ this.getScPtj() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScStatus())) {
-				rptGenBean.setScStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ
-						+ this.getScStatus());
+				rptGenBean.setScStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ + "\""
+						+ this.getScStatus() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScProcessRptQuotationNo())) {
 				if (StringUtils.isNotEmpty(getManagedBean().getReportValue())
@@ -16518,19 +16518,19 @@ public class ReportBackingBean extends
 					simpleQuoteNoValidation();
 				}
 				rptGenBean
-						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_QT_NO_EQ
-								+ this.getScProcessRptQuotationNo());
+						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_QT_NO_EQ + "\""
+								+ this.getScProcessRptQuotationNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScProcurementType())) {
 				rptGenBean
-						.setScProcurementTypeVar(ReportConst.SC_AMP_PROC_TYPE_EQ
-								+ this.getScProcurementType());
+						.setScProcurementTypeVar(ReportConst.SC_AMP_PROC_TYPE_EQ + "\""
+								+ this.getScProcurementType() + "\"");
 			}
 			StringBuilder procureMethod = new StringBuilder();
 			if (this.getScProcureAllList()!=null && this.getScProcureAllList().length > 0) {
 				rptGenBean
 						.setScProcureMethodChkVar(ReportConst.AMP_PROCURE_METHOD_EQ
-								+ this.scProcureAllList[0]);
+								+ "\"" + this.scProcureAllList[0] + "\"");
 			} else {
 				if (this.getScQuotationList()!=null && this.getScQuotationList().length > 0) {
 					procureMethod.append(this.scQuotationList[0]);
@@ -16544,7 +16544,7 @@ public class ReportBackingBean extends
 				if ((procureMethod.length() > 0)) {
 					rptGenBean
 							.setScProcureMethodChkVar(ReportConst.AMP_PROCURE_METHOD_EQ
-									+ procureMethod);
+									+ "\"" + procureMethod + "\"");
 				}
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
@@ -16552,14 +16552,14 @@ public class ReportBackingBean extends
 			if ((this.getScPublishFromDate() != null)
 					&& (this.getScPublishFromDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
-						.setScPublishFromDateVar(ReportConst.AMP_PUB_FRM_DT_EQ
+						.setScPublishFromDateVar(ReportConst.AMP_PUB_FRM_DT_EQ + "\""
 								+ outputDateFormat.format(this
-										.getScPublishFromDate()));
+										.getScPublishFromDate() + "\""));
 			}
 			if ((this.getScPublishToDate() != null)
 					&& (this.getScPublishToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScPublishToDateVar(ReportConst.AMP_PUB_TO_DT_EQ
-						+ outputDateFormat.format(this.getScPublishToDate()));
+						+ "\"" + outputDateFormat.format(this.getScPublishToDate())+ "\"");
 			}
 			SimpleDateFormat outputDateFormat2 = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -16567,7 +16567,7 @@ public class ReportBackingBean extends
 					&& (this.getScSoneCrtdFromDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setScSoneCrtdFromDateVar(ReportConst.AMP_CREAT_FRM_DT_EQ
-								+ outputDateFormat2.format(this
+								+  outputDateFormat2.format(this
 										.getScSoneCrtdFromDate()));
 			}
 			if ((this.getScSoneCrtdToDate() != null)
@@ -16579,17 +16579,17 @@ public class ReportBackingBean extends
 			}
 			if (StringUtils.isNotEmpty(this.getScPIno())) {
 				rptGenBean.setScPInoVar(ReportConst.SC_AMP_PI_NO_EQ
-						+ this.getScPIno());
+						+ "\"" + this.getScPIno()+ "\"");
 			}
 
 			if (StringUtils.isNotEmpty(this.getScSupplier())) {
 				supplierNameValidate();
 				rptGenBean.setScSupplierVar(ReportConst.SC_AMP_SUPPLIER_EQ
-						+ this.getScSupplier());
+						+ "\"" + this.getScSupplier()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getScSoneStatus())) {
 				rptGenBean.setScSoneStatusVar(ReportConst.SC_AMP_STATUS_EQ
-						+ this.getScSoneStatus());
+						+ "\"" + this.getScSoneStatus()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getReportValue())
 					&& (this.getReportValue().trim()
@@ -16598,13 +16598,13 @@ public class ReportBackingBean extends
 						&& (this.getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
 							.setScPIDtlsPrcRptGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-									+ this.getScPIDtlsPrcRptGroup());
+									+ "\"" + this.getScPIDtlsPrcRptGroup()+ "\"");
 				}
 			}
 			if (StringUtils.isNotEmpty(this.getScPrcRptGroup())) {
 				rptGenBean
 						.setScPrcRptGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-								+ this.getScPrcRptGroup());
+								+ "\"" + this.getScPrcRptGroup() + "\"");
 			}
 			String userRoleLogin = ReportConst.EMPTY_VAL;
 			if (approverNayakTarafList.size() > 0) {
@@ -16635,13 +16635,13 @@ public class ReportBackingBean extends
 				if (StringUtils.isNotEmpty(this.getScRequisenerId())) {
 					rptGenBean
 							.setScRequisenerIdVar(ReportConst.SC_AMP_REQUISENER_EQ
-									+ this.getScRequisenerId());
+									+ "\"" + this.getScRequisenerId() + "\"");
 				}
 			}
 			if (StringUtils.isNotEmpty(userRoleLogin)) {
 				rptGenBean
 						.setScUserAccessRoleVar(ReportConst.AMP_USER_ACCESS_ROLE_EQ
-								+ userRoleLogin);
+								 + "\"" + userRoleLogin + "\"");
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
@@ -16971,64 +16971,64 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getCmRequestNumber())) {
 				rptGenBean
 						.setCmRequestNumberVar(ReportConst.CM_AMP_REQUEST_NO_EQ
-								+ this.getCmRequestNumber());
+								+ "\"" + this.getCmRequestNumber()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmItemName())) {
 				rptGenBean.setItemNameTotVar(ReportConst.CM_AMP_ITM_NAME_EQ
-						+ this.getCmItemName());
+						+ "\"" + this.getCmItemName()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmItemType())) {
 				rptGenBean.setItemTypeTotVar(ReportConst.CM_AMP_ITEM_TYPE_EQ
-						+ this.getCmItemType());
+						+ "\"" + this.getCmItemType()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmUnspscCode())) {
 				rptGenBean
 						.setUnspscCodeTotVar(ReportConst.CM_AMP_UNSPSC_CODE_EQ
-								+ this.getCmUnspscCode());
+								+ "\"" + this.getCmUnspscCode()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmUnspscTitle())) {
 				rptGenBean
 						.setUnspscTitleTotVar(ReportConst.CM_AMP_UNSPSC_TITLE_EQ
-								+ this.getCmUnspscTitle());
+								+ "\"" + this.getCmUnspscTitle()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmExtentionType())) {
 				rptGenBean.setCmExtentionTypeVar(ReportConst.AMP_EXT_TYPE_EQ
-						+ this.getCmExtentionType());
+						+ "\"" + this.getCmExtentionType()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmExtentionBrand())) {
 				rptGenBean.setCmExtentionBrandVar(ReportConst.AMP_EXT_BRAND_EQ
-						+ this.getCmExtentionBrand());
+						+ "\"" + this.getCmExtentionBrand() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmExtentionMeasurment())) {
 				rptGenBean
 						.setCmExtentionMeasurmentVar(ReportConst.AMP_EXT_MEASURMENT_EQ
-								+ this.getCmExtentionMeasurment());
+								+ "\"" + this.getCmExtentionMeasurment() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmExtentionColour())) {
 				rptGenBean
 						.setCmExtentionColourVar(ReportConst.AMP_EXT_COLOUR_EQ
-								+ this.getCmExtentionColour());
+								+ "\"" + this.getCmExtentionColour() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmExtentionCode())) {
 				rptGenBean.setCmExtentionCodeVar(ReportConst.CM_AMP_EXT_CODE_EQ
-						+ this.getCmExtentionCode());
+						+ "\"" + this.getCmExtentionCode() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCmCompanyName())) {
 				rptGenBean.setCompanyNameTotVar(ReportConst.CM_AMP_COMP_NAME_EQ
-						+ this.getCmCompanyName());
+						+ "\"" + this.getCmCompanyName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmRegistrationType())) {
 				rptGenBean
 						.setRegistrationTypeTotVar(ReportConst.CM_AMP_REG_TYPE_EQ
-								+ this.getCmRegistrationType());
+								+ "\"" + this.getCmRegistrationType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmItemCategory())) {
 				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ
-						+ this.getCmItemCategory());
+						+ "\"" + this.getCmItemCategory()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmProofIdentity())) {
 				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ
-						+ this.getCmProofIdentity());
+						+ "\"" + this.getCmProofIdentity()+ "\"" );
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -17044,29 +17044,29 @@ public class ReportBackingBean extends
 			}
 			if (StringUtils.isNotEmpty(this.getCmEpNumber())) {
 				rptGenBean.setEpNumberTotVar(ReportConst.CM_AMP_EP_NO_EQ
-						+ this.getCmEpNumber());
+						+ "\"" + this.getCmEpNumber()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmBusinessRegNo())) {
 				rptGenBean
 						.setBusinessRegNoTotVar(ReportConst.CM_AMP_BUSI_REG_NO_EQ
-								+ this.getCmBusinessRegNo());
+								+ "\"" + this.getCmBusinessRegNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmIcNumber())) {
 				rptGenBean.setIcNumberTotVar(ReportConst.CM_AMP_IC_NO_EQ
-						+ this.getCmIcNumber());
+						+ "\"" + this.getCmIcNumber()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmMofNumber())) {
 				rptGenBean.setMofNumberTotVar(ReportConst.CM_AMP_MOF_NO_EQ
-						+ this.getCmMofNumber());
+						+ "\"" + this.getCmMofNumber()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getCmExtention())) {
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ
-						+ this.getCmExtention());
+						+ "\"" + this.getCmExtention()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCmGroupOne())) {
 				rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ
-						+ this.getCmGroupOne());
+						+ "\"" + this.getCmGroupOne()+ "\"" );
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
@@ -17177,16 +17177,16 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getFlContractNo())) {
 				rptGenBean
 						.setContractNoTotVar(ReportConst.FL_AMP_CONTRACT_NO_EQ
-								+ this.getFlContractNo());
+								 + "\"" + this.getFlContractNo() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getFlContractSystem())) {
 				rptGenBean
 						.setContractSystemTotVar(ReportConst.FL_AMP_CONTRACT_SYSTEM_EQ
-								+ this.getFlContractSystem());
+								 + "\""+ this.getFlContractSystem() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getFlSst())) {
 				rptGenBean.setSstTotVar(ReportConst.FL_AMP_SST_NO_EQ
-						+ this.getFlSst());
+						 + "\"" + this.getFlSst() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCommonMinistry())) {
 				/*
@@ -17196,7 +17196,7 @@ public class ReportBackingBean extends
 				 * retrieveMinistryName(orgprofileid));
 				 */
 				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ this.getCommonMinistry());
+						+ "\"" + this.getCommonMinistry()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getCommonPegaWaiPengawal())) {
@@ -17218,154 +17218,154 @@ public class ReportBackingBean extends
 				 * retrieveMinistryName(orgprofileid));
 				 */
 				rptGenBean.setKumpulanPTJTotVar(ReportConst.FL_AMP_KUMPULAN_EQ
-						+ this.getCommonKumpulanPTJ());
+						+ "\"" + this.getCommonKumpulanPTJ()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCommonPtj())) {
 				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ
-						+ this.getCommonPtj());
+						+ "\"" + this.getCommonPtj()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getFlSupplier())) {
 				rptGenBean.setSupplierTotVar(ReportConst.FL_AMP_SUPPL_NAME_EQ
-						+ this.getFlSupplier());
+						+ "\"" + this.getFlSupplier()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlStatus())) {
 				rptGenBean.setStatusTotVar(ReportConst.FL_AMP_STATUS_EQ
-						+ this.getFlStatus());
+						+ "\"" + this.getFlStatus()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlRecievingOfficer())) {
 				rptGenBean
 						.setRecievingOfficerTotVar(ReportConst.FL_AMP_FL_REC_OFF_EQ
-								+ this.getFlRecievingOfficer());
+								+ "\"" + this.getFlRecievingOfficer()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlDeliveryAddress())) {
 				rptGenBean
 						.setDeliveryAddressTotVar(ReportConst.FL_AMP_DELI_ADDR_EQ
-								+ this.getFlDeliveryAddress());
+								+ "\"" + this.getFlDeliveryAddress()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlRecNoteNo())) {
 				rptGenBean
 						.setFlRecNoteNoTotVar(ReportConst.FL_AMP_FL_REC_NOTE_EQ
-								+ this.getFlRecNoteNo());
+								+ "\"" + this.getFlRecNoteNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlContractType())) {
 				rptGenBean
 						.setContractTypeTotVar(ReportConst.FL_AMP_COTRACT_TYPE_EQ
-								+ this.getFlContractType());
+								+ "\"" + this.getFlContractType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPhysicalContractNo())) {
 				rptGenBean
 						.setPhysicalContractTotVar(ReportConst.FL_AMP_PHY_CONTRACT_NAME_EQ
-								+ this.getFlPhysicalContractNo());
+								+ "\"" + this.getFlPhysicalContractNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlLoaPhysicalNo())) {
 				rptGenBean
 						.setPhysicalLOATotVar(ReportConst.FL_AMP_PHY_LOA_NAME_EQ
-								+ this.getFlLoaPhysicalNo());
+								+ "\"" + this.getFlLoaPhysicalNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlContractRequestNo())) {
 				rptGenBean
 						.setContractReqTotVar(ReportConst.FL_AMP_CONTRACT_NAME_EQ
-								+ this.getFlContractRequestNo());
+								+ "\"" + this.getFlContractRequestNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlRequisitioner())) {
 				rptGenBean
 						.setRequisitionerTotVar(ReportConst.FL_AMP_REQUI_NAME_EQ
-								+ this.getFlRequisitioner());
+								+ "\"" + this.getFlRequisitioner() + "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getFlAcknowledgeOfficer())) {
 				rptGenBean
 						.setAcknowledgeOfficerTotVar(ReportConst.FL_AMP_ACKNOWLEDGE_NAME_EQ
-								+ this.getFlAcknowledgeOfficer());
+								+ "\"" + this.getFlAcknowledgeOfficer()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPaymentofficer())) {
 				rptGenBean
 						.setPaymentOfficerTotVar(ReportConst.FL_AMP_PAYMENT_NAME_EQ
-								+ this.getFlPaymentofficer());
+								+ "\"" + this.getFlPaymentofficer()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlMtoContract())) {
 				rptGenBean.setMtoContractTotVar(ReportConst.AMP_MTO_CONTR_EQ
-						+ this.getFlMtoContract());
+						+ "\"" + this.getFlMtoContract()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlInvoiceNo())) {
 				rptGenBean.setInvoiceNoTotVar(ReportConst.FL_AMP_INV_NO_EQ
-						+ this.getFlInvoiceNo());
+						+ "\"" + this.getFlInvoiceNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlSupplierInvoiceNo())) {
 				rptGenBean
 						.setFlSupplierInvoiceNoVar(ReportConst.FL_AMP_SUPPL_INV_NO_EQ
-								+ this.getFlSupplierInvoiceNo());
+								+ "\"" + this.getFlSupplierInvoiceNo()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getFlPaymentAdviceNo())) {
 				rptGenBean
 						.setFlPaymentAdviceNoVar(ReportConst.FL_AMP_PAYMENT_ADV_NO_EQ
-								+ this.getFlPaymentAdviceNo());
+								+ "\"" + this.getFlPaymentAdviceNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlDeductionType())) {
 				rptGenBean
 						.setDeductionTypeTotVar(ReportConst.AMP_DEDUCT_TYPE_EQ
-								+ this.getFlDeductionType());
+								+ "\"" + this.getFlDeductionType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlCrNo())) {
 				rptGenBean.setCrNoTotVar(ReportConst.AMP_CR_NO_EQ
-						+ this.getFlCrNo());
+						+ "\"" + this.getFlCrNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlApproverName())) {
 				rptGenBean
 						.setApproverNameTotVar(ReportConst.FL_AMP_APPROVER_NAME_EQ
-								+ this.getFlApproverName());
+								+ "\"" + this.getFlApproverName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlDocumentType())) {
 				rptGenBean.setDocumentTypeTotVar(ReportConst.FL_AMP_DOC_TYPE_EQ
-						+ this.getFlDocumentType());
+						+ "\"" + this.getFlDocumentType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlCriteria())) {
 				rptGenBean.setCriteriaTotVar(ReportConst.AMP_CRITERIA_EQ
-						+ this.getFlCriteria());
+						+ "\"" + this.getFlCriteria()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlScoring())) {
 				rptGenBean.setScoringTotVar(ReportConst.AMP_SCORING_EQ
-						+ this.getFlScoring());
+						+ "\"" + this.getFlScoring()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPkpNo())) {
 				rptGenBean.setPkpNoTotVar(ReportConst.FL_AMP_PKP_NO_EQ
-						+ this.getFlPkpNo());
+						+ "\"" + this.getFlPkpNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlStopInstructionNo())) {
 				rptGenBean
 						.setFlStopInstructionNoVar(ReportConst.FL_AMP_STOP_INSTR_NO_EQ
-								+ this.getFlStopInstructionNo());
+								+ "\"" + this.getFlStopInstructionNo());
 			}
 			if (StringUtils.isNotEmpty(this.getFlDeliveryOrderNo())) {
 				rptGenBean
 						.setDeliveryOrderNoTotVar(ReportConst.FL_AMP_DELI_ORD_NO_EQ
-								+ this.getFlDeliveryOrderNo());
+								+ "\"" + this.getFlDeliveryOrderNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlSupplierDeliveryOrderNo())) {
 				rptGenBean
 						.setFlSupplierDeliveryOrderNoVar(ReportConst.FL_AMP_SUP_DELI_ORD_NO_EQ
-								+ this.getFlSupplierDeliveryOrderNo());
+								+ "\"" + this.getFlSupplierDeliveryOrderNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlItemCode())) {
 				rptGenBean.setItemCodeTotVar(ReportConst.AMP_ITM_CODE_EQ
-						+ this.getFlItemCode());
+						+ "\"" + this.getFlItemCode()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPoAmount())) {
 				rptGenBean.setPoAmountTotVar(ReportConst.AMP_PO_AMT_EQ
-						+ this.getFlPoAmount());
+						+ "\"" + this.getFlPoAmount()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPrNo())) {
 				rptGenBean.setPrNoTotVar(ReportConst.AMP_PR_NO_EQ
-						+ this.getFlPrNo());
+						+ "\"" + this.getFlPrNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPmo())) {
 				rptGenBean.setPmoTotVar(ReportConst.AMP_PMO_EQ
-						+ this.getFlPmo());
+						+ "\"" + this.getFlPmo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlItemName())) {
 				rptGenBean.setItemNameTotVar(ReportConst.FL_AMP_ITM_NAME_EQ
-						+ this.getFlItemName());
+						+ "\"" + this.getFlItemName() + "\"" );
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -17382,22 +17382,22 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getFlContractOrder())) {
 				rptGenBean
 						.setFlContractOrderVar(ReportConst.FL_AMP_COTRACT_ORDER_EQ
-								+ this.getFlContractOrder());
+								+ "\"" + this.getFlContractOrder()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlContractRequest())) {
 				rptGenBean
 						.setFlContractRequestVar(ReportConst.FL_AMP_COTRACT_REQUEST_EQ
-								+ this.getFlContractRequest());
+								+ "\"" + this.getFlContractRequest()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlPurchaseOrderNo())) {
 				rptGenBean
 						.setFlPurchaseOrderNoVar(ReportConst.FL_AMP_PURCHASE_ORDER_EQ
-								+ this.getFlPurchaseOrderNo());
+								+ "\"" + this.getFlPurchaseOrderNo()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getFlGroupTwo())) {
 				rptGenBean.setFlGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupTwo());
+						+ "\"" + this.getFlGroupTwo()+ "\"" );
 			}
 
 			if (this.getReportCategory().equalsIgnoreCase(
@@ -17444,70 +17444,70 @@ public class ReportBackingBean extends
 								ReportConst.FL_SUB_MOD_FULLFILLEMENT_RECEIVE)) {
 					rptGenBean
 							.setFlGroupFourVar(ReportConst.FL_AMP_FULLFILLEMENT_RECEIVE_EQ
-									+ this.getFlGroupFour());
+									+ "\"" + this.getFlGroupFour()+ "\"" );
 				} else if (StringUtils.isNotEmpty(this.getFlGroupFifteen())
 						&& this.getFlGroupFifteen().equalsIgnoreCase(
 								ReportConst.FL_SUB_MOD_FULLFILLEMENT_RECEIVE)) {
 					rptGenBean
 							.setFlGroupFifteenVar(ReportConst.FL_AMP_FULLFILLEMENT_RECEIVE_EQ
-									+ this.getFlGroupFifteen());
+									+ "\"" + this.getFlGroupFifteen()+ "\"" );
 				}
 			} else if (StringUtils.isNotEmpty(this.getFlGroupFour())) {
 				rptGenBean.setFlGroupFourVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupFour());
+						+ "\"" + this.getFlGroupFour()+ "\"" );
 			} else if (StringUtils.isNotEmpty(this.getFlGroupFifteen())) {
 				rptGenBean.setFlGroupFifteenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupFifteen());
+						+ "\"" + this.getFlGroupFifteen()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getFlGroupFive())) {
 				rptGenBean.setFlGroupFiveVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupFive());
+						+ "\"" + this.getFlGroupFive()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupSix())) {
 				rptGenBean.setFlGroupSixVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupSix());
+						+ "\"" + this.getFlGroupSix()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupSeven())) {
 				rptGenBean.setFlGroupSevenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupSeven());
+						+ "\"" + this.getFlGroupSeven()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupEight())) {
 				rptGenBean.setFlGroupEightVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupEight());
+						+ "\"" + this.getFlGroupEight()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupNine())) {
 				rptGenBean.setFlGroupNineVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupNine());
+						+ "\"" + this.getFlGroupNine()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupTen())) {
 				rptGenBean.setFlGroupTenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupTen());
+						+ "\"" + this.getFlGroupTen()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupEleven())) {
 				rptGenBean.setFlGroupElevenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupEleven());
+						+ "\"" + this.getFlGroupEleven()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupTwelve())) {
 				rptGenBean.setFlGroupTwelveVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupTwelve());
+						+ "\"" + this.getFlGroupTwelve()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupThirteen())) {
 				rptGenBean.setFlGroupThirteenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupThirteen());
+						+ "\"" + this.getFlGroupThirteen()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupFourteen())) {
 				rptGenBean.setFlGroupFourteenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupFourteen());
+						+ "\"" + this.getFlGroupFourteen()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getFlGroupSixteen())) {
 				rptGenBean.setFlGroupSixteenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupSixteen());
+						+ "\"" + this.getFlGroupSixteen()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getFlGroupSeventeen())) {
 				rptGenBean.setFlGroupSeventeenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupSeventeen());
+						+ "\"" + this.getFlGroupSeventeen()+ "\"" );
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
@@ -17604,24 +17604,24 @@ public class ReportBackingBean extends
 		if (checkDefaultValuesForPP()) {
 			if (StringUtils.isNotEmpty(this.getCommonMinistry())) {
 				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ this.getCommonMinistry());
+						+ "\"" + this.getCommonMinistry()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCommonPegaWaiPengawal())) {
 				rptGenBean
 						.setPpPegaiPengawaiVar(ReportConst.FL_AMP_PEGAWAI_PENGAWAI_EQ
-								+ this.getCommonPegaWaiPengawal());
+								+ "\""+ this.getCommonPegaWaiPengawal()+ "\"");
 			}
 			if (StringUtils.isNotEmpty(this.getCommonKumpulanPTJ())) {
 				rptGenBean.setPpKumpulanVar(ReportConst.FL_AMP_KUMPULAN_EQ
-						+ this.getCommonKumpulanPTJ());
+						+ "\"" + this.getCommonKumpulanPTJ()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getCommonPtj())) {
 				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
-						+ this.getCommonPtj());
+						+ "\"" + this.getCommonPtj()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPpYear())) {
 				rptGenBean.setPpYearVar(ReportConst.AMP_SM_YEAR_EQ
-						+ this.getPpYear());
+						+ "\"" + this.getPpYear()+ "\"" );
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
@@ -17676,21 +17676,21 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getPmServiceType())) {
 				rptGenBean
 						.setPmServiceTypeVar(ReportConst.PM_AMP_SERVICE_TYPE_EQ
-								+ this.getPmServiceType());
+								+ "\"" + this.getPmServiceType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmBusinessRegNo())) {
 				rptGenBean
 						.setPmBusinessRegNoVar(ReportConst.PM_AMP_BIZREG_NO_EQ
-								+ this.getPmBusinessRegNo());
+								+ "\"" + this.getPmBusinessRegNo());
 			}
 			if (StringUtils.isNotEmpty(this.getPmStatus())) {
 				rptGenBean.setPmStatusVar(ReportConst.PM_AMP_STATUS_EQ
-						+ this.getPmStatus());
+						+ "\"" + this.getPmStatus()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmFinancialOrgName())) {
 				rptGenBean
 						.setPmFinancialOrgNameVar(ReportConst.PM_AMP_FINORG_NAME_EQ
-								+ this.getPmFinancialOrgName());
+								+ "\"" + this.getPmFinancialOrgName()+ "\"" );
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
@@ -17706,81 +17706,81 @@ public class ReportBackingBean extends
 			}
 			if (StringUtils.isNotEmpty(this.getPmEpNo())) {
 				rptGenBean.setPmEpNoVar(ReportConst.AMP_PM_EP_NO_EQ
-						+ this.getPmEpNo());
+						+ "\"" + this.getPmEpNo()+ "\"" );
 			}
 
 			if (StringUtils.isNotEmpty(this.getPmOrgCategory())) {
 				rptGenBean
 						.setPmOrgCategoryVar(ReportConst.AMP_PM_ORG_CATEGORY_EQ
-								+ this.getPmOrgCategory());
+								+ "\"" + this.getPmOrgCategory()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmOrgType())) {
 				rptGenBean.setPmOrgTypeVar(ReportConst.AMP_PM_ORG_TYPE_EQ
-						+ this.getPmOrgType());
+						+ "\"" + this.getPmOrgType()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmOrgName())) {
 				rptGenBean.setPmOrgNameVar(ReportConst.AMP_PM_ORG_NAME_EQ
-						+ this.getPmOrgName());
+						+ "\"" + this.getPmOrgName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmOrgCode())) {
 				rptGenBean.setPmOrgCodeVar(ReportConst.AMP_PM_ORG_CODE_EQ
-						+ this.getPmOrgCode());
+						+ "\"" + this.getPmOrgCode()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmItemName())) {
 				rptGenBean.setPmItemNameVar(ReportConst.AMP_PM_ITEM_NAME_EQ
-						+ this.getPmItemName());
+						+ "\"" + this.getPmItemName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmItemCode())) {
 				rptGenBean.setPmItemCodeVar(ReportConst.AMP_PM_ITEM_CODE_EQ
-						+ this.getPmItemCode());
+						+ "\"" + this.getPmItemCode()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmCompanyName())) {
 				rptGenBean
 						.setPmCompanyNameVar(ReportConst.AMP_PM_COMPANY_NAME_EQ
-								+ this.getPmCompanyName());
+								+ "\"" + this.getPmCompanyName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmIdentificationNo())) {
 				rptGenBean
 						.setPmIdentificationNoVar(ReportConst.AMP_PM_IDENTIFICATION_NO_EQ
-								+ this.getPmIdentificationNo());
+								+ "\"" + this.getPmIdentificationNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmUserName())) {
 				rptGenBean.setPmUserNameVar(ReportConst.AMP_PM_USERNAME_EQ
-						+ this.getPmUserName());
+						+ "\"" + this.getPmUserName()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmRoleCode())) {
 				rptGenBean.setPmRoleCodeVar(ReportConst.AMP_PM_ROLE_CODE_EQ
-						+ this.getPmRoleCode());
+						+ "\"" + this.getPmRoleCode()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmContractNo())) {
 				rptGenBean.setPmContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
-						+ this.getPmContractNo());
+						+ "\"" + this.getPmContractNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmPhysicalContractNo())) {
 				rptGenBean
 						.setPmPhysicalContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
-								+ this.getPmPhysicalContractNo());
+								+ "\"" + this.getPmPhysicalContractNo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmLOANo())) {
 				rptGenBean.setPmLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
-						+ this.getPmLOANo());
+						+ "\"" + this.getPmLOANo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmPhysicalLOANo())) {
 				rptGenBean
 						.setPmPhysicalLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
-								+ this.getPmPhysicalLOANo());
+								+ "\"" + this.getPmPhysicalLOANo()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmZone())) {
 				rptGenBean.setPmZoneVar(ReportConst.AMP_PM_SUPP_ZONE_EQ
-						+ this.getPmZone());
+						+ "\"" + this.getPmZone()+ "\"" );
 			} else {
 				rptGenBean.setPmZoneVar(ReportConst.AMP_PM_SUPP_ZONE_EQ
-						+ this.getPmZone());
+						+ "\"" + this.getPmZone()+ "\"" );
 			}
 			if (StringUtils.isNotEmpty(this.getPmProfileStatus())) {
 				rptGenBean
 						.setPmProfileStatusVar(ReportConst.AMP_PM_SUPP_PROFILE_STATUS_EQ
-								+ this.getPmProfileStatus());
+								+ "\"" + this.getPmProfileStatus()+ "\"" );
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
@@ -18811,13 +18811,13 @@ public class ReportBackingBean extends
 					log.info("4");
 					
 					//paramConstrString = paramConstrString.replace("&", " ");
-					paramConstrString = paramConstrString.replaceAll("^\\s+", "");
-					paramConstrString = paramConstrString.replaceAll("\\s+$", "");
-					paramConstrString = paramConstrString.replaceAll("(=)","$1\"");
-					paramConstrString = paramConstrString.replaceAll("( )","\"$1");
-					paramConstrString = paramConstrString + "\"";
+					//paramConstrString = paramConstrString.replaceAll("^\\s+", "");
+					//paramConstrString = paramConstrString.replaceAll("\\s+$", "");
+					//paramConstrString = paramConstrString.replaceAll("(=)","$1\"");
+					//paramConstrString = paramConstrString.replaceAll("( )","\"$1");
+					//paramConstrString = paramConstrString + "\"";
 					
-					paramConstrString = paramConstrString.replaceAll("%20" , "\" ");
+					paramConstrString = paramConstrString.replaceAll("%20" , " ");
 
 					paramConstrString = paramConstrString.substring(1, paramConstrString.length());
 				
