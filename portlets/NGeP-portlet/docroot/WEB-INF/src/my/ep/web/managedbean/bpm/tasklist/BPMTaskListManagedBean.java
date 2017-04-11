@@ -514,9 +514,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId()) + " - " + worklistItemVO.getTitle());
+						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " - " + worklistItemVO.getTitle());
+						       }
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " - " + worklistItemVO.getTitle());
 						       }
 						}
 					}
@@ -695,9 +697,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId()) + " - " + worklistItemVO.getTitle());
+						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " - " + worklistItemVO.getTitle());
+						       }
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " - " + worklistItemVO.getTitle());
 						       }
 						}
 					}
@@ -973,10 +977,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return invoiceSO.retreiveSupplierInvoiceNo(reqDTO).getSupplierInvoiceNo();
 	}
 	
-	private String retreiveSupplierDoRefNo(int docId){
+	private String retreiveSupplierDoRefNo(int docId,boolean isAckFRN){
 		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setDocId(new Long(docId));
+		reqDTO.setAckFRN(isAckFRN);
 		return deliveryOrderSO.retreiveSupplierDoRefNo(reqDTO).getSupplierDoRefNo();
 	}
 }
