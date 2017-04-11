@@ -308,7 +308,7 @@
 				</p:inputText>	
 				<p:spacer width="8px" />
 				<p:inputText 
-					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate) - 1 : ''}"
+					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate): ''}"
 					disabled="true" size="6" style="text-align:right;"/>
 				#{lbl['lbl.sc.days']}
 			</td>
