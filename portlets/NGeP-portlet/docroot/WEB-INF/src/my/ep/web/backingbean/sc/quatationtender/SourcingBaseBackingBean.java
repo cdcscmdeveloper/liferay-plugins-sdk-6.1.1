@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -137,7 +136,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -794,7 +792,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected File generatePdfFromOracle(String reportName,
 			Map<String, String> paramMap, ScAttachment attachment,
 			boolean isDirectDownload) throws IOException {
-		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+	/*	EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils
@@ -808,10 +806,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
 			reportUrl.append(ReportConst.VALUE_SEPARATOR);
-			//reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
-			reportUrl.append(params.getValue());
+			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
 		}
-		reportUrl.append(excNextUrl);
+		reportUrl.append(excNextUrl);*/
+		String reportUrl= generateReportURL(reportName,paramMap);
 		log.info("reportUrl: " + reportUrl);
 
 		if (log.isDebugEnabled()) {
