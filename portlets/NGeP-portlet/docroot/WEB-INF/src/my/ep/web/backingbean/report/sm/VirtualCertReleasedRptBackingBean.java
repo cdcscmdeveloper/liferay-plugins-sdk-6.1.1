@@ -38,6 +38,9 @@ public class VirtualCertReleasedRptBackingBean extends SmReportBackingBean<Virtu
 	}
 	
 	public void resetSearch(){
-		
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		getManagedBean().setZone("");
+		getManagedBean().setSelectedOrgProfile(null);
 	}
 }
