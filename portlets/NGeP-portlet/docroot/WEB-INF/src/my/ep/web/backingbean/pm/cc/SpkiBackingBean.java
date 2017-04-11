@@ -164,8 +164,8 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 				default:
 					System.out.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-					throw new EpException(res.getStatusMessage());
-
+					//throw new EpException(res.getStatusMessage());
+					throw new EpException(MessageConst.ERROR_776062);
 				}
 
 
@@ -370,7 +370,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 	}
 
-	public static void main2(String[] args) {
+	public static void main(String[] args) {
 		try{
 			// Create property file
 			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
@@ -378,7 +378,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			KMCClient client = KMCClientFactory.getInstance(f);
 
 			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("78553333333L", 1));
 			//			List<String> challs = null;
 			switch(res.getStatusCode())
 			{
@@ -410,7 +410,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main3(String[] args) {
 		try{
 			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
 			KMCClient client = KMCClientFactory.getInstance(f);
