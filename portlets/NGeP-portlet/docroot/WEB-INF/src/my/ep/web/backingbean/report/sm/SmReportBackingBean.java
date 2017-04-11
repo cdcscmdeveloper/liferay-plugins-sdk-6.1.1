@@ -8,12 +8,15 @@ import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.SmReportManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -71,6 +74,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeRegType() {
 
 	}
+	
+	public void onChangeState(){
+		
+	}
 
 	public void reportOnChange() {
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
@@ -78,12 +85,20 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 
-	public void addCompanyNameParam(LinkedHashMap<String, String> params){
-		if(getManagedBean().getSelectedOrgProfile() != null){
-			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
-				params.put(SmReportConst.PARAM_COMPANY_NAME, 
-						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
+		if (getManagedBean().getSelectedOrgProfile() != null) {
+			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+						.getSelectedOrgProfile().getSmSupplier()
+						.getCompanyName());
 			}
 		}
+	}
+
+	public void initStates() {
+		PmCountry country = SmCommonUtil
+				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		getManagedBean().setStateLst(
+				SmCommonUtil.getStateList(country.getCountryId()));
 	}
 }
