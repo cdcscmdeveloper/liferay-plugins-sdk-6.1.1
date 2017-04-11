@@ -110,13 +110,20 @@
 						value="#{lbl['lbl.sm.gst.effdate']}" /></td>
 				<td colspan="3"><p:inputText disabled="true" readonly="true"
 						size="30"
-						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstEffDate : lbl['lbl.sm.no.available']}" /></td>
+						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstEffDate : lbl['lbl.sm.no.available']}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+						
+						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 				<td colspan="3"><p:inputText disabled="true" readonly="true"
 						size="30"
-						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstEndDate : lbl['lbl.sm.no.available']}" /></td>
+						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstEndDate : lbl['lbl.sm.no.available']}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+						</td>
 			</tr>
 		</table>
 	</p:panel>
