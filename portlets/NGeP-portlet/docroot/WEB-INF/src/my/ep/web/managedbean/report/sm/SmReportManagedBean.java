@@ -1,6 +1,9 @@
 package my.ep.web.managedbean.report.sm;
 
 import java.util.Date;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
@@ -18,6 +21,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String regNo;
 	private String applNo;
 	private String applType;
+	private String state;
+	private List<SelectItem> stateLst;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -97,5 +102,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setApplType(String applType) {
 		this.applType = applType;
+	}
+
+	public List<SelectItem> getStateLst() {
+		return stateLst;
+	}
+
+	public void setStateLst(List<SelectItem> stateLst) {
+		this.stateLst = stateLst;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }
