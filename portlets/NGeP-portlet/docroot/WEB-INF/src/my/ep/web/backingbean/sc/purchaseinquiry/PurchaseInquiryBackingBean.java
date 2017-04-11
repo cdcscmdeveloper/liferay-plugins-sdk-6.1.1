@@ -1309,7 +1309,7 @@ public class PurchaseInquiryBackingBean extends
 		// no of response days
 		prInquiry.setDayToResponse((int) DateUtils.getDaysDifference(
 				getCurrentDateWithoutTime(prInquiry.getCreatedDate()),
-				getCurrentDateWithoutTime(prInquiry.getDateToResponse())) - 1);
+				getCurrentDateWithoutTime(prInquiry.getDateToResponse())));
 
 		getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 		getManagedBean().setScPrInquiry(prInquiry);
@@ -1542,7 +1542,7 @@ public class PurchaseInquiryBackingBean extends
 		// no of response days
 				prInquiry.setDayToResponse((int) DateUtils.getDaysDifference(
 						getCurrentDateWithoutTime(prInquiry.getCreatedDate()),
-						getCurrentDateWithoutTime(prInquiry.getDateToResponse())) - 1);
+						getCurrentDateWithoutTime(prInquiry.getDateToResponse())));
 
 		getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 		getManagedBean().setScPrInquiry(prInquiry);
