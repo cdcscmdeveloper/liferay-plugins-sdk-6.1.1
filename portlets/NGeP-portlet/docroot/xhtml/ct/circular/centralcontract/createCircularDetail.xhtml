@@ -11,7 +11,7 @@
 				
 			      <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}"  styleClass="required" />
 				  <h:panelGrid columns="5" styleClass="top-aligned-columns">
-				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4"
+				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4" maxlength="60"
 					 	required="true"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  
 						autoResize="false"
@@ -24,12 +24,12 @@
 						
 					 <p:outputLabel value="#{lbl['lbl.ct.circular.central.name']}"   styleClass="required"/>
 				    <h:panelGrid columns="5"  styleClass="top-aligned-columns">
-				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:200px;" required="true" 
+				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:200px;" required="true" maxlength="500"
 						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
 						   label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" 
 						   onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" />
 						   <p:spacer width="5"/>
-				         	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.central.name']}" />
+				         	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.name']}" />
 				         	<p:spacer width="5"/>
 				         	<p:message for="circularNameTxt" display="icon" />
 				    </h:panelGrid>
