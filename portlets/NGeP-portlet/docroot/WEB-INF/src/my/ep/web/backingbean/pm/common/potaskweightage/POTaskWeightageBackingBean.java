@@ -128,16 +128,18 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 			/*msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_770127, 
 					new String[] {SmCommonUtil.getMessage("lbl.pm.po.task", null)});*/
 		}else{
+			PmPoRoleTask currentRoleTask = getManagedBean().getExistingRoleTask();
 			if(!compareUpdateRoleTask()){
 				checkDuplicateRoleTask(selectedRoleTaskStr);
 				
-				PmPoRoleTask currentRoleTask = getManagedBean().getExistingRoleTask();
 				currentRoleTask.setApplType(selectedRoleTask.getApplType());
 				currentRoleTask.setSupplierType(selectedRoleTask.getSupplierType());
 				currentRoleTask.setCategoryType(selectedRoleTask.getCategoryType());
 				currentRoleTask.setRecordStatusFlg(selectedRoleTask.getRecordStatusFlg());
 				
 				//updateUser(usr);
+			}else{
+				currentRoleTask.setRecordStatusFlg(selectedRoleTask.getRecordStatusFlg());
 			}
 			
 			//RequestContext.getCurrentInstance().execute("roleTaskDlg.hide();");
