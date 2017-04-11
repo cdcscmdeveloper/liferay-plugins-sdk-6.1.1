@@ -6,21 +6,24 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<script type="text/javascript">
-		function downloadGuidelinePdf() {
-			//alert(myMessage);
-			downloadGuidelinePdf();
-		}
-	</script>
-	
+
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
 		id="directLoaLetterOfAcceptancePanel" toggleable="true">
-		<p:remoteCommand name="downloadGuidelinePdf" update="directLoaLetterOfAcceptancePanel"
-		   actionListener="#{directLOABackingBean.downloadGuidelinePdf()}" />
-		
-		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-			escape="false" value="#{directLOABackingBean.managedBean.guidelineTooltip}" />
-		
+		<h:outputText styleClass="instruction"
+			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			escape="false"
+			value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction1']}" />
+
+		<p:commandLink styleClass="instruction" style="padding-left: 4px;padding-right: 4px;font-size: 11px;" ajax="false"
+		    value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction2']}"
+			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			actionListener="#{directLOABackingBean.downloadGuidelinePdf}" />
+
+		<h:outputText styleClass="instruction"
+			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			escape="false"
+			value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction3']}" />
+
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="scLoaReport"
@@ -201,5 +204,4 @@
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 	</p:panel>
-
 </ui:composition>
