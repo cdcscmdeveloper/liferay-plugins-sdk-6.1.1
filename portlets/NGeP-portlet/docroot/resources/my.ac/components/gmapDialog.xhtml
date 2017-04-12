@@ -19,8 +19,7 @@
 		
 		<p:remoteCommand name="disableMap" action="#{gmapBackingBean.setRenderMap(false)}" />
 		<h:panelGroup id="mapPanel2" >
-			<p:inputText id="dlglat" type="hidden" value="#{gmapBackingBean.latitude}" />
-			<p:inputText id="dlglng" type="hidden" value="#{gmapBackingBean.longitude}" />
+
 		</h:panelGroup>
 		
 		<p:dialog id="gmapDialogId" 
@@ -33,14 +32,14 @@
 			onHide="disableMap();">
 		
 			<p:panel id="mapPanel">
-
+				#{gmapBackingBean.latitude} | #{gmapBackingBean.longitude}
 			 	<p:gmap id="geomap" 
 			 		center="#{gmapBackingBean.latitude}, #{gmapBackingBean.longitude}" 
 			 		zoom="15" 
 			 		type="HYBRID" 
 			 		style="width:100%;height:490px"
 					rendered="#{gmapBackingBean.renderMap}"
-			 		model="#{gmapBackingBean.retSimpleModel(gmapBackingBean.latitude, gmapBackingBean.longitude, cc.attrs.locationName)}" />
+			 		model="#{gmapBackingBean.retSimpleModel(cc.attrs.locationName)}" />
 			 		
 			</p:panel>
 			

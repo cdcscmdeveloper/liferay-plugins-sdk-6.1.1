@@ -27,6 +27,7 @@
     	  //var address = document.getElementById('address').value;
     	  //var address = getAddress();
 		initialize();
+		console.log('address: ' + address + '\ninputX: ' + inputX + '\nInputY: ' + inputY);
         geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             //map.setCenter(results[0].geometry.location);
@@ -44,11 +45,9 @@
             //alert(4 + ": " + results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng() + ": " + results[0].formatted_address);
             inputX.value = results[0].geometry.location.lat();
             inputY.value = results[0].geometry.location.lng();
-            
-            document.getElementById('#{p:component(&quot;dlglat&quot;)}').value = results[0].geometry.location.lat();
-            document.getElementById('#{p:component(&quot;dlglng&quot;)}').value = results[0].geometry.location.lng();
 
-            updateGmap();
+            //updateGmap();
+            updateGmap([{name:'lat',value:results[0].geometry.location.lat()},{name:'lng',value:results[0].geometry.location.lng()}]);
 
           } else {
             alert('Geocode was not successful for the following reason: ' + status);
