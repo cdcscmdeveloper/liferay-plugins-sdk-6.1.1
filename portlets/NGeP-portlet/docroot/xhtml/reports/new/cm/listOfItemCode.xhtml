@@ -21,18 +21,18 @@
 
 		<table style="margin-top: 5px; width: 100%;">
 			<tr>
-				<td width="20%"><p:outputLabel
+				<td width="15%"><p:outputLabel
 						value="#{lbl['lbl.cm.unspsc.code.lov']}" /></td>
-				<td width="30%"><ac:lov id="unspscCodeLovId" lovId="CM_UNSPSC"
+				<td width="35%"><ac:lov id="unspscCodeLovId" lovId="CM_UNSPSC"
 						headerText="#{lbl['lbl.cm.unspsc.code.lov']}"
 						update=":form:unspscTitleId"
 						saveObject="cmReportsBackingBean.managedBean.selectedCmUNSPSC"
 						value="#{cmReportsBackingBean.managedBean.selectedCmUNSPSC.unspscCode}"
 						conditionField="recordStatus^1">
 					</ac:lov> <ac:lovPopup /></td>
-				<td width="20%"><p:outputLabel
+				<td width="15%"><p:outputLabel
 						value="#{lbl['lbl.cm.unspsc.title.lov']}" /></td>
-				<td width="30%"><p:inputText style="width:100%;"
+				<td width="35%"><p:inputText style="width:90%;"
 						id="unspscTitleId"
 						value="#{cmReportsBackingBean.managedBean.selectedCmUNSPSC.unspscTitle}"
 						readonly="true" /></td>
