@@ -1292,7 +1292,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
 				resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
-				noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+				getManagedBean().getSelectedItem().getRejectionRemarks().addAll(resDTO.getFNIRejectionRemarks());
+				
 				initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
 			}else{
 				noteItem.getRejectionRemarks().add(new FlRemark());
