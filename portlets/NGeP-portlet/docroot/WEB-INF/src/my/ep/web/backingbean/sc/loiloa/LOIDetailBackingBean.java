@@ -2919,11 +2919,13 @@ public class LOIDetailBackingBean extends
 			if (title == null) {
 				title = "";
 			}
+			//import org.apache.velocity.tools.generic.EscapeTool;
+		
 
 			//replace all special characters
 			//title = title.replaceAll("\\W", ""); 
 			title=title.replaceAll("\r\n", "<br />");
-			title=title.replaceAll("&", "&#38;");
+			//title=title.replaceAll("&", "&#38;");
 			title=title.replaceAll("<", "&#60;");
 			title=title.replaceAll(">", "&#62;");
 			context.put("title", title);
