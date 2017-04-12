@@ -872,8 +872,7 @@ public class SupplierFinalizationBackingBean extends
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
-		if (getManagedBean().getCurrentZone() != null
-				&& SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage)) {
+		if (getManagedBean().getCurrentZone() != null) {
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
 		getManagedBean().setQualifiedSuppliersByEvalStage(
@@ -5888,7 +5887,7 @@ public class SupplierFinalizationBackingBean extends
 					new SearchFilterBean("qtEvaluationResult.evaluationStage",
 							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));
 			
-			if (null != selectedZoneId) {
+			if (null != selectedZoneId &&  SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage)) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
 								SearchOperator.OPERATOR_EQUALS.value(), selectedZoneId));
