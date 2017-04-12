@@ -2072,6 +2072,8 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setSmSupplier(new SmSupplier());
 		}
 		boolean isNotRigistered = false;
+		boolean isRenderRigsterbtn = false;
+		
 		if (!scQt.isZonal()) {
 			ScQtBsv scQtBsv = resDTO.getScQtBsv();
 
@@ -2080,6 +2082,10 @@ public class NoticeBoardBackingBean extends
 					resDTO.getSiteVisitResultBean(), scQtBsv,null);
 			this.getManagedBean().setNormalBsvBean(briefingZoneBean);
 			isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
+			if(isNotRigistered){
+				isRenderRigsterbtn = isRenderRigisterBtn(briefingZoneBean);
+			}
+			
 		} else if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
 			// Need to construct tab bean for zone
@@ -2109,6 +2115,9 @@ public class NoticeBoardBackingBean extends
 							briefingResDTO.getScQtBsv(),null);
 					bsvZoneBeans.add(briefingZoneBean);
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
+					if(isNotRigistered && !isRenderRigsterbtn){
+						isRenderRigsterbtn = isRenderRigisterBtn(briefingZoneBean);	
+					}
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName());
 					zoneItem.setAjax(true);
@@ -2130,8 +2139,8 @@ public class NoticeBoardBackingBean extends
 			}
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
-		this.getManagedBean().setRenderRegisterBtn(isNotRigistered);
 		this.getManagedBean().setDisableRegisterBtn(isNotRigistered);
+		this.getManagedBean().setRenderRegisterBtn(isRenderRigsterbtn);
 	}
 
 	/**
@@ -3119,5 +3128,28 @@ public class NoticeBoardBackingBean extends
 							e.getMessage()));
 		}
 		return null;
+	}
+	
+	private boolean isRenderRigisterBtn(BriefingZoneBean briefingZoneBean){
+		
+        boolean isRenderRigisterBtn = false;
+		List<ScQtBsvDtl> briefinfDtls = briefingZoneBean.getBriefingList();
+		if (briefinfDtls != null && !briefinfDtls.isEmpty()) {
+			for (ScQtBsvDtl bsvDtl : briefinfDtls) {
+				if(!isRenderRigisterBtn){
+					isRenderRigisterBtn = !isAttandanceEditable(bsvDtl);
+				}
+				
+			}
+		}
+		List<ScQtBsvDtl> svDtls = briefingZoneBean.getSitevisitList();
+		if (svDtls != null && !svDtls.isEmpty()) {
+			for (ScQtBsvDtl bsvDtl : svDtls) {
+				if(!isRenderRigisterBtn){
+					isRenderRigisterBtn = !isAttandanceEditable(bsvDtl);
+				}
+			}
+		}
+		return isRenderRigisterBtn;
 	}
 }
