@@ -23,18 +23,18 @@
 
 
 			<tr>
-				<td><p:outputLabel
+				<td width="15%"><p:outputLabel
 						value="#{lbl['lbl.rpt.dtFrm']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar showOn="button" navigator="true"
+				<td width="35%"><p:calendar showOn="button" navigator="true"
 						readonlyInput="true" size="9"
 						value="#{cmReportsBackingBean.managedBean.dateFrom}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.rpt.dtTo']}" />
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.rpt.dtTo']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:calendar showOn="button" navigator="true"
+				<td width="35%"><p:calendar showOn="button" navigator="true"
 						readonlyInput="true" size="9"
 						value="#{cmReportsBackingBean.managedBean.dateTo}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -48,7 +48,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{cmReportsBackingBean.managedBean.itemType}"
-						style="width:100%">
+						style="width:90%">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
 						<f:selectItem itemValue="Product"
 							itemLabel="#{lbl['lbl.txt.product']}" />
