@@ -554,6 +554,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    		}
 		    	}
 			}
+			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+    				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+    					for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
+    						if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+    									&& ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+    							ctBB.getManagedBean().setCtTestBondWaiverAmount(contractAmt);
+    								break;
+    						}
+    				}
+			}
 			ctBB.chkBondWaivedAttachment();
 		} catch(Exception e){
 			e.printStackTrace();
@@ -1177,7 +1187,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 											 ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() ==  null){
 										       setTabValue("PB");
 										       throw new EpException(MessageConst.ERROR_750044);
-									}else if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
+									}else if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
+											|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 										     boolean isEqual = ctBB.getManagedBean().getCtContractAmount().isBondWaived()==ctBB.getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
 										     if(!isEqual){
 										    	  int temp=0;
