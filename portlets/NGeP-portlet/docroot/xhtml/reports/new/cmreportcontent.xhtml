@@ -54,6 +54,35 @@
 				<ui:include src="cm/listOfPendingApprovalItem.xhtml"></ui:include>
 			</c:when>
 			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm012}">
+				<ui:include src="cm/listOfPendingCodeAssignment.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm001}">
+				<ui:include src="cm/listOfPublishCatalogItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm003}">
+				<ui:include src="cm/listOfRejectCatalogItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm015}">
+				<ui:include src="cm/listOfUnspscCodeReq.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm013}">
+				<ui:include src="cm/summaryOfRejectCatItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm014}">
+				<ui:include src="cm/totalCatItemApproveReject.xhtml"></ui:include>
+			</c:when>
 			
 			
 		</c:choose>
