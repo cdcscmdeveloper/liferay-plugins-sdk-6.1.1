@@ -4187,8 +4187,35 @@ public class LOADetailBackingBean extends
 	 * @return the approval action display name
 	 */
 	public String getApprovalActionDisplayName(String value) {
-		return ApprovalAction.getDisplayName(value);
-	}
+		 FacesScopes scope=new FacesScopes();
+		 Locale locale=	scope.getUserLocale();
+		 log.info("display language"+locale.getDisplayLanguage());
+		 String approverName= ApprovalAction.getDisplayName(value);
+		  log.info("approver Status"+approverName);
+		
+			if (!locale.getDisplayLanguage().equalsIgnoreCase("english")) {
+				 log.info("not  equallanguage");
+				
+			if("Approved".equalsIgnoreCase(approverName)){	 
+			 approverName=getApproverStatus("lbl.sc.status.approved");	 
+			}
+			else if("Rejected".equalsIgnoreCase(approverName)){	 
+				 approverName=getApproverStatus("lbl.sc.status.rejected");	 
+				}
+			else if("Revised".equalsIgnoreCase(approverName)){	 
+				 approverName=getApproverStatus("lbl.sc.status.revised");	 
+				}
+			}
+			return approverName;
+		}
+		
+		private String getApproverStatus(String label){
+		return	ResourceBundleUtils
+			.getMessage(label,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());	
+		}
+
 
 	/**
 	 * Calc sub total price.
