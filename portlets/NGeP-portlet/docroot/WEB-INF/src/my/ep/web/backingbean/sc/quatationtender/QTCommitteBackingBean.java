@@ -1671,26 +1671,27 @@ public class QTCommitteBackingBean extends
 			}
 		}
 
-		if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evalStg)
-				&& status.getStatusId() < QTStatusConst.QT_SUPPLIER_FINALIZATION) {
-			for (String committee : committeCodes) {
-				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-						.equalsIgnoreCase(committee)
-						|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-								.equalsIgnoreCase(committee)
-						|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-								.equalsIgnoreCase(committee)) {
-					throw new EpException(MessageConst.ERROR_760104,
-							new String[] { committee });
+		if (super.isQTStatusLessThan(status.getStatusId(), QTStatusConst.QT_CONSOLIDATION_REPORT) ||
+				QTStatusConst.QT_RE_EVALUATION.equals(status.getStatusId())) {
+			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evalStg)) {
+				for (String committee : committeCodes) {
+					if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+							.equalsIgnoreCase(committee)
+							|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+									.equalsIgnoreCase(committee)
+							|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+									.equalsIgnoreCase(committee)) {
+						throw new EpException(MessageConst.ERROR_760104,
+								new String[] { committee });
+					}
 				}
-			}
-		} else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evalStg)
-				&& status.getStatusId() < QTStatusConst.QT_SUPPLIER_FINALIZATION) {
-			for (String committee : committeCodes) {
-				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(committee)) {
-					throw new EpException(MessageConst.ERROR_760104,
-							new String[] { committee });
+			} else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evalStg)) {
+				for (String committee : committeCodes) {
+					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(committee)) {
+						throw new EpException(MessageConst.ERROR_760104,
+								new String[] { committee });
+					}
 				}
 			}
 		}
