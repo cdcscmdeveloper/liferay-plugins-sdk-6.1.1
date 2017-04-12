@@ -68,6 +68,7 @@
 						value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="orgTypeFederalList"
+						disabled="#{pmReportsBackingBean.managedBean.disabledOrgFields}"
 						rendered="#{pmReportsBackingBean.managedBean.searchOrgCategory eq PmReportConst.orgCatFederalGovt}"
 						styleClass="ppDropDownWidthL"
 						required="#{!empty param['disableValidation']}"
