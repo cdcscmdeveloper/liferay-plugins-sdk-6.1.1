@@ -156,7 +156,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getSerializedApplicationByFilePathName(getDeSerFileNameAndPath(getManagedBean()
 								.getApplicationNoParam()));
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
-				setApplication(resDTO.getSmAppl());
+				if (resDTO != null) {
+					setApplication(resDTO.getSmAppl());
+				}
 			}
 
 		} catch (NullPointerException ne) {
@@ -398,7 +400,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setTabActiveIndex(outputTab);
 		getManagedBean().setRedirectToPersonPage(false);
 		getManagedBean().setCurrentPageType(outputPageType);
-		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+		if (getManagedBean().getSmAppl() != null) {
+			getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+		}
 	}
 
 	/**

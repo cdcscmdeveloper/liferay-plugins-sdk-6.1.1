@@ -9102,22 +9102,28 @@ public class SmApplicationUtil {
 	public static PmStatusDesc getCurrRegStatusDesc(SmAppl appl) {
 		PmStatusDesc retVal = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (appl != null
-				&& appl.getSmSupplier() != null
-				&& appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
-				&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
-						.getPmStatus() != null
-				&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
-						.getSmAppl().getPmRegStatus().getPmStatus()
-						.getPmStatusDescs())) {
-			for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
-					.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
-				if (language.equals(sd.getLanguageCode())) {
-					retVal = sd;
-					break;
+		
+		try{
+			if (appl != null
+					&& appl.getSmSupplier() != null
+					&& appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
+					&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
+							.getPmStatus() != null
+					&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
+							.getSmAppl().getPmRegStatus().getPmStatus()
+							.getPmStatusDescs())) {
+				for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
+						.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
+					if (language.equals(sd.getLanguageCode())) {
+						retVal = sd;
+						break;
+					}
 				}
 			}
+		}catch(Exception ex){
+			
 		}
+		
 		return retVal;
 	}
 
