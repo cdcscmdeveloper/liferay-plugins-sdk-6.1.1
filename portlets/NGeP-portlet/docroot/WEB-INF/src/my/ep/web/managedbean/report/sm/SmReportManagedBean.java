@@ -22,7 +22,9 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String applNo;
 	private String applType;
 	private String state;
+	private String year;
 	private List<SelectItem> stateLst;
+	private List<String> yearList;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -118,5 +120,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public List<String> getYearList() {
+		return yearList;
+	}
+
+	public void setYearList(List<String> yearList) {
+		this.yearList = yearList;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

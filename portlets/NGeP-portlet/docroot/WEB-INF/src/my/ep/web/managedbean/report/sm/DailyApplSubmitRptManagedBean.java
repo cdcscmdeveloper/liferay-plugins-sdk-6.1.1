@@ -6,7 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-@ManagedBean(name = "dqailyApplSubmitRptMB")
+@ManagedBean(name = "dailyApplSubmitRptMB")
 @SessionScoped
 public class DailyApplSubmitRptManagedBean extends SmReportManagedBean {
 

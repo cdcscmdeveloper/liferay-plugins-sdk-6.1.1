@@ -21,10 +21,8 @@
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.reportCode}" />
 			</p:commandButton>
 
-			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" 
-				update=":form"
-				action="#{cc.attrs.bBean[cc.attrs.resetMethod]}">
-			</p:commandButton>
+			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" update=":form" 
+				process="@this" action="#{cc.attrs.bBean[cc.attrs.resetMethod]}" />
 		</div>
 
 		<p:dialog id="rptConfirmationDlgId" widgetVar="rptConfirmationDlg" modal="true"
