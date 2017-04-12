@@ -12,9 +12,10 @@
 		<h:panelGrid columns="3" style="width:500px;" >
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" styleClass="required" style="width:250px;"/> 
      			<p:calendar style="width:80px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
+     					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 			   		 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" 
-					     disabled="#{amendmentBackingBean.disableBtn(0)}"
+					    disabled="#{amendmentBackingBean.disableBtn(0)}"
 					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.govtSignDate}">
 				</p:calendar>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
