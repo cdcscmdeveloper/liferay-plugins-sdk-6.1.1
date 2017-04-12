@@ -53,7 +53,7 @@
 		<p:remoteCommand 
 			id="updateGmap"
 			name="updateGmap" 
-			process="plat, plng, @([id$=mapPanel2])" 
+			action="#{gmapBackingBean.updateCoordinates}"
 			update="@([id$=mapPanel])" 
 			oncomplete="dlg.show();" />
 		</div>

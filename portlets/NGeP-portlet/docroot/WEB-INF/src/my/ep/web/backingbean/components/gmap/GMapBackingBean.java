@@ -31,13 +31,14 @@ public class GMapBackingBean implements Serializable {
 	private String latitude;
 	private String longitude;
 	
-	public MapModel retSimpleModel(String mapLatitude, String mapLongitude, String locationName) {
+//	public MapModel retSimpleModel(String mapLatitude, String mapLongitude, String locationName) {
+	public MapModel retSimpleModel(String locationName) {
 		log.info("in retSimpleModel");
-		log.info("latitude: " + latitude);
-		log.info("longitude: " + longitude);
+		log.info("latitude: " + this.getLatitude());
+		log.info("longitude: " + this.getLongitude());
 		simpleModel = new DefaultMapModel();
-		double dlat = Double.valueOf(mapLatitude).doubleValue();
-		double dlng = Double.valueOf(mapLongitude).doubleValue();
+		double dlat = Double.valueOf(this.getLatitude()).doubleValue();
+		double dlng = Double.valueOf(this.getLongitude()).doubleValue();
 
 		LatLng coord1 = new LatLng(dlat, dlng);
 		simpleModel.addOverlay(new Marker(coord1, locationName));
@@ -81,8 +82,10 @@ public class GMapBackingBean implements Serializable {
 		FacesScopes fs = new FacesScopes();
 	    String lat =  fs.getParameter("lat");
 	    String lng = fs.getParameter("lng");
-	    System.out.println("lat: " + lat);
-	    System.out.println("lng: " + lng);
+	    this.setLatitude(lat);
+	    this.setLongitude(lng);
+	    log.info("lat: " + this.getLatitude());
+	    log.info("lng: " + this.getLongitude());
 	}
 	
 }
