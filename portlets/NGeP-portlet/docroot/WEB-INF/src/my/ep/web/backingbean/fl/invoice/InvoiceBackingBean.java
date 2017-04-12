@@ -767,6 +767,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FlInvoiceItemSummary invItemSummary = null;
 		for(FlFulfilmentNote fulfilmentNote : frnNoteRes.getFulfilmentNoteList()){
 			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+				if(noteItem.getReceivedQty().doubleValue() == 0){
+					continue;
+				}
 					String key = noteItem.getGstUnitPrice().toString()+noteItem.getGstFlag().getParameterCode();
 					if(itemMapLv1.containsKey(noteItem.getFlItem().getFulfilmentItemId())){
 						FlInvoiceItemSummary extItemSumm = itemMapLv1.get(noteItem.getFlItem().getFulfilmentItemId());
@@ -852,6 +855,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FeeExemptionResDTO resDTO = new FeeExemptionResDTO();
 		
 		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
+		BigDecimal standardTotalAmount = new BigDecimal(0);
 		BigDecimal orderTotalAmount = new BigDecimal(0);
 		BigDecimal gstAmount = new BigDecimal(0);
 		BigDecimal gstTotalAmount = new BigDecimal(0);
@@ -860,12 +864,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			orderTotalAmount = orderTotalAmount.add(invSummary.getOrderedAmt());
 			for(FlInvoiceItem invItem : invSummary.getFlInvoiceItem()){
 				if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+					standardTotalAmount = standardTotalAmount.add(invItem.getInvAmt());
 					if(invSummary.getFlFulfilmentItem().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 						if(getManagedBean().getInvoice().getFlRequest().getGstRate() == null){
 							getManagedBean().getInvoice().getFlRequest().setGstRate(BigDecimal.ZERO);
 						}
 						Double serviceFee = 100 + getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue();
-						BigDecimal serviceGstAmount = (new BigDecimal((invoiceTotalAmount.doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / serviceFee));
+						BigDecimal serviceGstAmount = (new BigDecimal((standardTotalAmount.doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / serviceFee));
 						gstTotalAmount = gstTotalAmount.add(serviceGstAmount);
 					}else{
 						gstAmount = (new BigDecimal(invItem.getGstAmount().doubleValue() * (invItem.getReceivedQty().doubleValue())));
