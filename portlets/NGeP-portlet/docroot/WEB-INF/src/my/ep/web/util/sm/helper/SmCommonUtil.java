@@ -4608,7 +4608,8 @@ public class SmCommonUtil {
 		reqDTO.setDeSerFileName(filePathName);
 		SmApplRevisionResDTO resDTO = null;
 		if (!StringUtils.isBlank(filePathName)) {
-			SmServiceLookup.getSmApplRevisionSO().readApplicationHist(reqDTO);
+			resDTO = SmServiceLookup.getSmApplRevisionSO().readApplicationHist(
+					reqDTO);
 		}
 		return resDTO;
 	}
@@ -4790,13 +4791,18 @@ public class SmCommonUtil {
 
 	/**
 	 * Retrieve Lowest Weightage PO By Zone and role
-	 * @param String zoneCode, String supplierType, String applType, String categoryType
+	 * 
+	 * @param String
+	 *            zoneCode, String supplierType, String applType, String
+	 *            categoryType
 	 * @return PmUser
 	 */
-	public PmUser retrievePOWithLowestWeightage(String supplierType, String applType, String categoryType){
+	public PmUser retrievePOWithLowestWeightage(String supplierType,
+			String applType, String categoryType) {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
-		if(activeOrg.size() > 0){
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser
+				.getUserId());
+		if (activeOrg.size() > 0) {
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
 
@@ -4807,76 +4813,88 @@ public class SmCommonUtil {
 			reqDTO.setApplicationType(applType);
 			reqDTO.setCategoryType(categoryType);
 
-			List<PmUser> poList = SmServiceLookup.getUserSO().retrievePOUserListByRoleZone(reqDTO).getUserList();
-			if(poList.size() > 0){
+			List<PmUser> poList = SmServiceLookup.getUserSO()
+					.retrievePOUserListByRoleZone(reqDTO).getUserList();
+			if (poList.size() > 0) {
 				return poList.get(0);
-			}else{
+			} else {
 				throw new EpException(MessageConst.ERROR_721117);
 			}
-		}else{
+		} else {
 			log.info("***retrievePOWithLowestWeightage****" + activeOrg.size());
 			throw new EpException(MessageConst.ERROR_721118);
 		}
 	}
-	
+
 	/**
 	 * Retrieve PO Job Weight Ratio
-	 * @param String supplierType, String applType, String categoryType
+	 * 
+	 * @param String
+	 *            supplierType, String applType, String categoryType
 	 * @return PmUser
 	 */
-	public Integer retrievePoJobTypeWeight(String supplierType, String applType, String categoryType){
+	public Integer retrievePoJobTypeWeight(String supplierType,
+			String applType, String categoryType) {
 		PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
 		ISearchBean<PmPoJobTypeRatio> searchBean = new SearchBean<PmPoJobTypeRatio>();
 
-		if(StringUtils.isNotBlank(supplierType)){
+		if (StringUtils.isNotBlank(supplierType)) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("supplierType",
-							SearchOperator.OPERATOR_EQUALS.value(), supplierType));
+							SearchOperator.OPERATOR_EQUALS.value(),
+							supplierType));
 		}
-		
-		if(StringUtils.isNotBlank(applType)){
+
+		if (StringUtils.isNotBlank(applType)) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("applType",
 							SearchOperator.OPERATOR_EQUALS.value(), applType));
 		}
-		
-		if(StringUtils.isNotBlank(categoryType)){
+
+		if (StringUtils.isNotBlank(categoryType)) {
 			boolean catTypeNull = false;
-			if(supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
-				if(categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
-						categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)){
+			if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) {
+				if (categoryType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
+						|| categoryType
+								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)) {
 					catTypeNull = true;
 				}
-			}else{
-				if(categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
-						categoryType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)){
+			} else {
+				if (categoryType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
+						|| categoryType
+								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
 					catTypeNull = true;
 				}
 			}
-			
-			if(catTypeNull){
+
+			if (catTypeNull) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("categoryType",
-								SearchOperator.OPERATOR_EQUALS.value(), categoryType));
-			}else{
+								SearchOperator.OPERATOR_EQUALS.value(),
+								categoryType));
+			} else {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("categoryType",
-								SearchOperator.OPERATOR_IS_NULL.value(),
-								null));
+								SearchOperator.OPERATOR_IS_NULL.value(), null));
 			}
 		}
-		
+
 		reqDTO.setSearchBean(searchBean);
-		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
 						IPoJobTypeRatioSO.class);
 		PoJobTypeRatioResDTO resDTO = reqSO.retrieveJobTypeRatioList(reqDTO);
-		
-		if(resDTO.getResultBean().getResultList().size() > 0){
-			return resDTO.getResultBean().getResultList().get(0).getPoJobWeight().getWeightValue();
-		}else{
+
+		if (resDTO.getResultBean().getResultList().size() > 0) {
+			return resDTO.getResultBean().getResultList().get(0)
+					.getPoJobWeight().getWeightValue();
+		} else {
 			throw new EpException(MessageConst.ERROR_721119);
 		}
 	}
-	 
+
 }
