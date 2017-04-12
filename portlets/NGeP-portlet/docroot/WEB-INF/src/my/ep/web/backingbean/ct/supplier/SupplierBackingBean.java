@@ -1131,7 +1131,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		       setEditorValue("");
 		       if (vmFile !=null && templateName != null) {
 		    	   UserReqDTO userReqDTO =  new UserReqDTO();
-		    	   context.put("imgUrl", getServerUrl()+ContractConst.IMAGE_PATH+ "eperolehan.png");
+		    	   context.put("imgUrl",getServerUrl()+  "NGeP-portlet/css/images/gov.png" );
 		    	   if (getManagedBean().getFactoring().getCreatedBy() == null) {
 		    		   userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		    		   context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
