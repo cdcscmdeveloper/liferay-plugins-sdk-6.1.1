@@ -8,13 +8,13 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.companyName']}" /></td>
+			<td width="20%"><p:outputLabel value="#{lbl['lbl.rpt.companyName']}" /></td>
 			<td><ac:lov id="pmCompanyName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="50" update="@form"
 					headerText="#{lbl['lbl.rpt.companyName']}"
 					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" /></td>
-			<td></td>
+			<td width="20%"></td>
 			<td></td>
 		</tr>
 		<tr>

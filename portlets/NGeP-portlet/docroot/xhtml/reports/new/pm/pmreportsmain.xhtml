@@ -25,6 +25,8 @@
 							listener="#{pmReportsBackingBean.onChangeReportName()}"
 							process="@this" partialSubmit="true" update="@form" />
 					</p:selectOneMenu></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
 			</tr>
 		</table>
 		<p:panel id="pmRptSearchCriteriaPnl"
@@ -47,8 +49,7 @@
 				<!-- PM_002 -->
 				<c:when
 					test="#{PmReportConst.pmListOfOrganizationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
-					<ui:include
-						src="/xhtml/reports/new/pm/listOfOrgReport.xhtml"></ui:include>
+					<ui:include src="/xhtml/reports/new/pm/listOfOrgReport.xhtml"></ui:include>
 				</c:when>
 				<!-- PM_003 -->
 				<c:when
@@ -94,16 +95,21 @@
         			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>
 			</c:choose>
-
-			<p:commandButton id="generateBtnId"
-				value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
-				action="#{pmReportsBackingBean.generatePmReport()}">
-				 <f:param name="disableValidation" value="true" /> 
-			</p:commandButton>
-			<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-				process="@this" update="@form"
-				action="#{pmReportsBackingBean.resetAction()}">
-			</p:commandButton>
+			<br />
+			<br />
+			<p:outputPanel id="btnOp">
+				<div align="right" style="width: 100%">
+					<p:commandButton id="generateBtnId"
+						value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
+						action="#{pmReportsBackingBean.generatePmReport()}">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+					<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+						process="@this" update="@form"
+						action="#{pmReportsBackingBean.resetAction()}">
+					</p:commandButton>
+				</div>
+			</p:outputPanel>
 		</p:panel>
 		<ui:include
 			src="/xhtml/reports/new/pm/common/confirmationDialog.xhtml"></ui:include>

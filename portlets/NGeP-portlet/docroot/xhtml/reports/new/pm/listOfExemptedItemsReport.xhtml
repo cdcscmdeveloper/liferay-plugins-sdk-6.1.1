@@ -8,13 +8,13 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pm.itemcode']}" /></td>
+			<td width="20%"><p:outputLabel value="#{lbl['lbl.pm.itemcode']}" /></td>
 			<td><ac:lov id="itemCode" lovId="CM_UNSPSC_REPORT"
 					readonly="true" size="40" update="@form"
 					headerText="#{lbl['lbl.pm.itemcode']}"
 					value="#{pmReportsBackingBean.managedBean.selectedUnspscItem.unspscCode}"
 					saveObject="pmReportsBackingBean.managedBean.selectedUnspscItem" /></td>
-			<td><p:outputLabel value="#{lbl['lbl.pm.itemname']}" /></td>
+			<td width="20%"><p:outputLabel value="#{lbl['lbl.pm.itemname']}" /></td>
 			<td><p:inputText maxlength="100" readonly="true"
 					value="#{pmReportsBackingBean.managedBean.selectedUnspscItem.unspscTitle}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
