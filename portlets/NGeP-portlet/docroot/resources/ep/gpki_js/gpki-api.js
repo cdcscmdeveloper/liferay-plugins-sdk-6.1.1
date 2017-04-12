@@ -1,10 +1,10 @@
 /**
- * Release 29/3/2017
- * [+] Change timeout to 120000 (2minutes)
- * [+] Change status message from English to Bahasa Malaysia
+ * Agent 2.0 
+ * Release v1.0.1.0
+ * Special release for eP NextGen
+ * [+] Omit JQUERY which originally integrated in this JS - got issue to assimilate with eP application
  */
- 
- 
+
 /**
  * Address of Agent's servlet
  * @type String
@@ -16,8 +16,8 @@ var host = "https://127.0.0.1:8441/";
  * The time for Agent to response
  * @type Number
  */
-var transaction_timeout = 120000;
-var url_timeout = 120000;
+var transaction_timeout = 300000;
+var url_timeout = 300000;
 
 
 
@@ -67,7 +67,7 @@ runScript: function(src,callback,failedcallback){
 	var reqURLTimeout = setTimeout(function()
 	{
 		Gpki.end();	
-		parseTimeout('{"status_code":888,"status_message":"AGENT TIMEOUT","status_ext_message":"Keptusan tidak diterima dalam tempoh yang ditetapkan. Sila pastikan agen anda telah diaktifkan dan cuba lagi."}');
+		Gpki.alert("Keptusan tidak diterima dalam tempoh yang ditetapkan. Sila pastikan agen anda telah diaktifkan dan cuba lagi."); 	
 		if(jqxhr!=null){ 
 			jqxhr.abort();
 		}			
@@ -117,7 +117,7 @@ runScript: function(src,callback,failedcallback){
  * @returns {undefined}
  */
 start : function (message){
-  /* if($('.modal').length < 1)	{
+ /*  if($('.modal').length < 1)	{
 		var $div = $('<div/>').appendTo('body');
 		$div.attr('class', 'modal');
     }
@@ -127,7 +127,7 @@ start : function (message){
     	$(".modal").append("<p/>");
     }
     if (typeof message == 'undefined'){
-       // $(".modal > p").html("Please Wait...");
+        $(".modal > p").html("Please Wait...");
     }
     else {    
         $(".modal > p").html(message);
@@ -138,7 +138,7 @@ start : function (message){
  * @returns {undefined}
  */
 end: function(){
-   /* $("body").removeClass("loading");
+  /*  $("body").removeClass("loading");
     $('.modal').hide();*/
 },
 
@@ -401,9 +401,9 @@ function verify_detach(originalText, signedText)
 	var url = host+"verify?";	
 	var params = "originalText=" + originalText + "&signedText=" + signedText;
 	params += "&detach=true";
+
 	Gpki.runScript(url + params);
 }
-
 /**
  * Encrypt a text for a recipent
  * @param recipient_id id of the reciever 
@@ -507,6 +507,7 @@ function verify_so_pin(sopin){
 	var params = "sopin=" + sopin;
 	return Gpki.runScript(url + params);	
 }
+
 
 
 
