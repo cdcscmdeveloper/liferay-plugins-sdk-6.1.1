@@ -175,7 +175,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String ministryName;
 	private String jabatan;
 	private Long qtId;
-	private boolean  renderRegisterBtn = true;
+	private boolean  renderRegisterBtn;
 	private boolean  disableRegisterBtn;
 	private boolean isNavigateFromNoticeBoard = true;
 	private List<TreeNode> zoneTree;
