@@ -74,9 +74,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeRegType() {
 
 	}
+
+	public void onChangeState() {
+
+	}
 	
-	public void onChangeState(){
-		
+	public void onChangeYear() {
+
 	}
 
 	public void reportOnChange() {

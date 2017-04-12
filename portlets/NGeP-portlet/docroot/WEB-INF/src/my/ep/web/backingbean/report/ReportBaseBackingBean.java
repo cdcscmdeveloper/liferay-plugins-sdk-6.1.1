@@ -14,8 +14,10 @@ package my.ep.web.backingbean.report;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -214,6 +216,25 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		}
 		
 		return parameterStr;
+	}
+	
+	public List<String> getCommonYearList() {
+		List<String> years = new ArrayList<String>();
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+
+		Date currentDate = new Date();
+		Integer year = null;
+		String yearFrom = outputDateFormat.format(currentDate).substring(6, 10);
+		if (yearFrom != null) {
+			year = Integer.parseInt(yearFrom);
+		}
+		if (year != null) {
+			for (int i = year - 7; i <= year; i++) {
+				years.add(Integer.toString(i));
+			}
+		}
+		return years;
 	}
 	
 	
