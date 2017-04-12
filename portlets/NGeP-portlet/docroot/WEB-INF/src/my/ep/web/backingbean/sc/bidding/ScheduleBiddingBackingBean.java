@@ -147,6 +147,10 @@ public class ScheduleBiddingBackingBean extends
 							QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
 		} catch (Exception e) {
 			handleException(e);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, e
+							.getMessage()));
 		}
 	}
 
@@ -340,55 +344,45 @@ public class ScheduleBiddingBackingBean extends
 		debugLogger("retriveItemsToBid");
 		IScheduleBiddingSO scheduleBiddingSO = null;
 
-		try {
-			scheduleBiddingSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IScheduleBiddingSO.class);
-			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-			reqDTO.setQtID(qtId);
-			reqDTO.setRecommandIds(recommandIds);
-			reqDTO.setUserId(userId);
-			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
-					.retrieveBidScduleDetials(reqDTO);
+		scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
+		ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+		reqDTO.setQtID(qtId);
+		reqDTO.setRecommandIds(recommandIds);
+		reqDTO.setUserId(userId);
+		ScheduleBiddingResDTO resDTO = scheduleBiddingSO
+				.retrieveBidScduleDetials(reqDTO);
 
-			if (resDTO.isSuccessful()) {
-				getManagedBean().setScQt(resDTO.getScQT());
-				getManagedBean().setScQtFinalization(
-						resDTO.getScQtFinalization());
-				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
-				getManagedBean().setScBid(resDTO.getScBid());
-				getManagedBean().setBidItemList(resDTO.getBidItemsList());
-				getManagedBean().setBidMinDuration(resDTO.getMinDuration());
-				getManagedBean().setBidMaxDuration(resDTO.getMaxDuration());
-				if (resDTO.getScQT().isZonal()) {
-					getManagedBean().setRowSelectedBid(
-							resDTO.getBidSchedules().get(0));
-					getManagedBean().setSelectedBidItem(
-							resDTO.getBidSchedules().get(0).getScBidItems()
-									.get(0));
-				}
-				if (!(resDTO.getScQT().isZonal())
-						&& ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
-								.getScQtFinalization().getRecommendedTypeId()
-								.getParameterCode())) {
-					getManagedBean().setRowSelectedBid(new ScBidSchedule());
-					getManagedBean().setSelectedBidItem(
-							resDTO.getBidItemsList().get(0));
-				}
-				if (!(resDTO.getScQT().isZonal())
-						&& ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(resDTO
-								.getScQtFinalization().getRecommendedTypeId()
-								.getParameterCode())) {
-					getManagedBean().setSelectedBidItem(
-							resDTO.getBidSchedules().get(0).getScBidItems()
-									.get(0));
-				}
-				retrieveParticipantsListAction();
+		if (resDTO.isSuccessful()) {
+			getManagedBean().setScQt(resDTO.getScQT());
+			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+			getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
+			getManagedBean().setScBid(resDTO.getScBid());
+			getManagedBean().setBidItemList(resDTO.getBidItemsList());
+			getManagedBean().setBidMinDuration(resDTO.getMinDuration());
+			getManagedBean().setBidMaxDuration(resDTO.getMaxDuration());
+			if (resDTO.getScQT().isZonal()) {
+				getManagedBean().setRowSelectedBid(
+						resDTO.getBidSchedules().get(0));
+				getManagedBean().setSelectedBidItem(
+						resDTO.getBidSchedules().get(0).getScBidItems().get(0));
 			}
-		}
-
-		finally {
-			scheduleBiddingSO = null;
+			if (!(resDTO.getScQT().isZonal())
+					&& ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
+							.getScQtFinalization().getRecommendedTypeId()
+							.getParameterCode())) {
+				getManagedBean().setRowSelectedBid(new ScBidSchedule());
+				getManagedBean().setSelectedBidItem(
+						resDTO.getBidItemsList().get(0));
+			}
+			if (!(resDTO.getScQT().isZonal())
+					&& ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(resDTO
+							.getScQtFinalization().getRecommendedTypeId()
+							.getParameterCode())) {
+				getManagedBean().setSelectedBidItem(
+						resDTO.getBidSchedules().get(0).getScBidItems().get(0));
+			}
+			retrieveParticipantsListAction();
 		}
 	}
 
@@ -675,8 +669,9 @@ public class ScheduleBiddingBackingBean extends
 						this.getManagedBean().getSelectedBidItem().getQty());
 		return itemSubTotal;
 	}
-	
-	public void itemDetailsPopupAction(ScRequestItem requestItem,BigDecimal awardedQty){
+
+	public void itemDetailsPopupAction(ScRequestItem requestItem,
+			BigDecimal awardedQty) {
 		this.getManagedBean().setRequestItem(requestItem);
 		this.getManagedBean().setAwardedQuantity(awardedQty);
 	}
