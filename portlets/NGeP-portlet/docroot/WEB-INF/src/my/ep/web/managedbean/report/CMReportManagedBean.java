@@ -52,11 +52,28 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	private String group;
 	private Date dateFrom;
 	private Date dateTo;
+	private String requestNo;
 	
 	private CmItem selectedCmItem;
 	
 
 	
+	
+	
+
+	/**
+	 * @return the requestNo
+	 */
+	public String getRequestNo() {
+		return requestNo;
+	}
+
+	/**
+	 * @param requestNo the requestNo to set
+	 */
+	public void setRequestNo(String requestNo) {
+		this.requestNo = requestNo;
+	}
 
 	/**
 	 * @return the dateFrom
