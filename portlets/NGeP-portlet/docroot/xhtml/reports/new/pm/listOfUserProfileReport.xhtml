@@ -106,7 +106,8 @@
 						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
 					</p:outputPanel> <p:outputPanel id="opPtjOrgCode"
 						rendered="#{ParameterConst.orgTypePtj eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode or 
-					ParameterConst.orgTypePtjGroup eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
+						ParameterConst.orgTypePtjGroup eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
+						or ParameterConst.orgTypePegawaiPengawal eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
 						<p:inputText size="60" id="itSelectedPtj"
 							value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
 							readonly="true" />
@@ -122,7 +123,8 @@
 						rendered="#{ParameterConst.orgTypeFactoring ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode 
 							and ParameterConst.orgTypeSupplier ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
 							and ParameterConst.orgTypePtj ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
-							and ParameterConst.orgTypePtjGroup ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
+							and ParameterConst.orgTypePtjGroup ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
+							and ParameterConst.orgTypePegawaiPengawal ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
 						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60"
 							disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null or pmReportsBackingBean.managedBean.disabledOrgFields}"
 							update=":form:opDefinedSearch" readonly="true"
@@ -139,7 +141,7 @@
 						value="#{lbl['lbl.pm.profiles.userdetails.idno']}" /></th>
 				<td><ac:lov id="pmIdentificationNo" style="width:265px;"
 						lovId="PM_USER_ID_REPORT" size="40" update="@form"
-						disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null or pmReportsBackingBean.managedBean.disabledOrgFields}"
+						disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null}"
 						headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 						readonly="true"
 						postUpdateListener="pmReportsBackingBean.onChangeUserLov"
@@ -195,6 +197,7 @@
 	<ac:ptjPopup id="orgProfileCcId"
 		orgTypeParamCode="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}"
 		okAction="pmReportsBackingBean.selectPtjAction"
-		update=":form:opDefinedSearch" />
+		update=":form:opDefinedSearch"
+		includePegawaiPengawal="true" />
 	<ui:include src="/xhtml/reports/new/pm/common/roleSearchPopUp.xhtml" />
 </ui:composition>

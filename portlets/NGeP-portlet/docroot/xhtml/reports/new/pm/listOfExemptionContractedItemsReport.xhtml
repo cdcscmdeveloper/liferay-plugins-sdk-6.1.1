@@ -8,12 +8,12 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pm.contract.no']}" /></td>
+			<td width="20%"><p:outputLabel value="#{lbl['lbl.pm.contract.no']}" /></td>
 			<td><p:inputText maxlength="100"
 					value="#{pmReportsBackingBean.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
-			<td><p:outputLabel value="#{lbl['lbl.pm.contract.physical.no']}" /></td>
+			<td width="20%"><p:outputLabel value="#{lbl['lbl.pm.contract.physical.no']}" /></td>
 			<td><p:inputText maxlength="100"
 					value="#{pmReportsBackingBean.managedBean.contractPhyscialNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
