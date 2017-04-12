@@ -68,8 +68,7 @@
 					     <p:column style="width:15%;" styleClass="column-align-center">
 					     <f:facet name="header">
 					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
-					           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.signer.user']}"/>
-				        </f:facet>
+					        </f:facet>
                  
                              <p:selectOneMenu id="contractSigner" style="width:180px;" value="#{agSignerVar.officer.userId}" label="#{lbl['lbl.ct.contract.signer']}">
                                  <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
@@ -150,7 +149,11 @@
 		                          style="width:90%" maxlength="80" />
 		                </p:column> 
 		
-		                <p:column headerText="#{lbl['lbl.ct.identification.no']}" style="width:20%;" styleClass="column-align-center">
+		                <p:column style="width:20%;" styleClass="column-align-center">
+		                        <f:facet name="header">
+		                           <h:outputText value="#{lbl['lbl.ct.identification.no']}" styleClass="required"/>
+		                         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.signer.user']}"/>
+				              </f:facet>
 		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%"
 		                        label="#{lbl['lbl.ct.identification.no']}"  maxlength="20">
 		                    <p:ajax event="change" listener="#{agreementBackingBean.checkDuplicateAgreementParty()}"/>
