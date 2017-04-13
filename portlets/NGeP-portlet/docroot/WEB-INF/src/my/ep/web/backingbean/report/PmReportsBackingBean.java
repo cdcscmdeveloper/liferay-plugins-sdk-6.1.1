@@ -408,6 +408,7 @@ public class PmReportsBackingBean extends
 		getManagedBean().setSelectedPmUser(null);
 		getManagedBean().setRoleDescResults(null);
 		getManagedBean().setSelectedRoleDesc(null);
+		getManagedBean().setCurrentActiveOrg(null);
 
 	}
 
