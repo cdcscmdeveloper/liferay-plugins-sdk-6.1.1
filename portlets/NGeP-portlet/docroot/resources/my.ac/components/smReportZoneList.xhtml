@@ -26,7 +26,7 @@
 				itemValue="#{SmReportConst.SM_ZONE_SABAH}"></f:selectItem>
 			<f:selectItem itemLabel="#{SmReportConst.SM_ZONE_SARAWAK}"
 				itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
-			<p:ajax event="change"
+			<p:ajax event="change" process="@this"
 				listener="#{cc.attrs.bBean.onChangeZone}"
 				partialSubmit="true" update="@form" />
 		</p:selectOneMenu>
