@@ -96,6 +96,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_ZONE_SARAWAK = "Sarawak";
 	public static final String SM_REG_TYPE_BASIC = "Basic";
 	public static final String SM_REG_TYPE_MOF = "MOF";
+	public static final String SM_REG_TYPE_UPGRADE_BASIC_TO_MOF = "UPGRADE FROM BASIC TO MOF ACCOUNT";
 	public static final String SM_STATUS_ACTIVE = "Active";
 	public static final String SM_STATUS_INACTIVE = "Inactive";
 
@@ -113,6 +114,10 @@ public class SmReportConst implements Serializable {
 
 	public String getSM_REG_TYPE_MOF() {
 		return SM_REG_TYPE_MOF;
+	}
+
+	public String getSM_REG_TYPE_UPGRADE_BASIC_TO_MOF() {
+		return SM_REG_TYPE_UPGRADE_BASIC_TO_MOF;
 	}
 
 	public String getSM_ZONE_SEMENANJUNG() {
