@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.stopinstr;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -99,6 +100,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @RequestScoped
 public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrManagedBean>{
 
+	private static final long serialVersionUID = 1L;
 	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
 	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	public static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
@@ -115,9 +117,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 *  <p>submit - save data into database and BPM process will route to the next respective user.
 	 * 	<p>save - save data into database.
 	 *  navigate to acknowledge page.
+	 *  @throws IOException 
 	 */
-	
-	public String saveStopInstruction(String action) {
+	public String saveStopInstruction(String action) throws IOException {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
