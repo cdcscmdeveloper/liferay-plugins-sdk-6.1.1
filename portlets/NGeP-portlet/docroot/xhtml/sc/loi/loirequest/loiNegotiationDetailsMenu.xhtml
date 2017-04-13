@@ -119,7 +119,7 @@
 							listener="#{lOIDetailBackingBean.selectAll}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{negoTerm.selectedTerm}"
+				<p:selectBooleanCheckbox value="#{negoTerm.selectTerm}"
 					disabled="#{!empty negoTerm.pmTerm}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 						listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />

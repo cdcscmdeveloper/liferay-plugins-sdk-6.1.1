@@ -143,8 +143,8 @@
 			</span>
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Berikut adalah terma terma yang akan di runding:-</span></p>
 				<ol type="i" style="font-size:13px;font-weight:normal;color:#333333;text-align:justify;">
-					#foreach( $scNegoTerm in $scNegoTerms )
-						#if ($!scNegoTerm.pmTerm)
+					#foreach( $scNegoTerm in $scLoi.scNegoTerms)
+						#if ($scNegoTerm.selectedTerm)
 							<li>$scNegoTerm.termDesc</li>
 						 #end
 					#end
