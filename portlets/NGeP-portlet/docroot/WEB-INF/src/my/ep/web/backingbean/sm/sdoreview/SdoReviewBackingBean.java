@@ -82,6 +82,15 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		reqDTO.setApplId(this.getManagedBean().getAppId());
 		SdoReviewResDTO resDTO = reqSO.retrieveApplById(reqDTO);
 		this.getManagedBean().setSmAppl(resDTO.getSmAppl());
+		
+		// show rejection reason for resubmit application
+		if (getManagedBean().getSmAppl().isResubmit()
+				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
+			getManagedBean().setRejectReasonsMsg(
+					SmCommonUtil
+							.getHtmlApplicationRejectReasons(getManagedBean()
+									.getSmAppl().getOriginalAppl()));
+		}
 
 		log.info("----------------------------------" + resDTO.getSmAppl().getSmPersonnels().size());
 		for(SmPersonnel sp : resDTO.getSmAppl().getSmPersonnels()){
