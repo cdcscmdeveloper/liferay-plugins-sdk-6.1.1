@@ -84,7 +84,7 @@
 						value="#{lbl['lbl.pm.profiles.search.orgname']}" /></th>
 				<td><p:outputPanel id="opFfcOrgCode"
 						rendered="#{ParameterConst.orgTypeFactoring eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
-						<ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="60"
+						<ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="100"
 							update=":form:opDefinedSearch" readonly="true"
 							disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null or pmReportsBackingBean.managedBean.disabledOrgFields}"
 							postUpdateListener="pmReportsBackingBean.onChangeOrgLov"
@@ -96,7 +96,7 @@
 					</p:outputPanel> <p:outputPanel id="opSupOrgCode"
 						rendered="#{ParameterConst.orgTypeSupplier eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
 						<ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
-							size="60" update=":form:opDefinedSearch" readonly="true"
+							size="100" update=":form:opDefinedSearch" readonly="true"
 							postUpdateListener="pmReportsBackingBean.onChangeOrgLov"
 							disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null or pmReportsBackingBean.managedBean.disabledOrgFields}"
 							headerText="#{pmReportsBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, pmReportsBackingBean.managedBean.selectedOrgType.parameterCode)}"
@@ -108,7 +108,7 @@
 						rendered="#{ParameterConst.orgTypePtj eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode or 
 						ParameterConst.orgTypePtjGroup eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
 						or ParameterConst.orgTypePegawaiPengawal eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
-						<p:inputText size="60" id="itSelectedPtj"
+						<p:inputText size="100" id="itSelectedPtj"
 							value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
 							readonly="true" />
 					&#160;	
@@ -125,7 +125,7 @@
 							and ParameterConst.orgTypePtj ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
 							and ParameterConst.orgTypePtjGroup ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode
 							and ParameterConst.orgTypePegawaiPengawal ne pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
-						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60"
+						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="100"
 							disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null or pmReportsBackingBean.managedBean.disabledOrgFields}"
 							update=":form:opDefinedSearch" readonly="true"
 							postUpdateListener="pmReportsBackingBean.onChangeOrgLov"
@@ -140,7 +140,7 @@
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.idno']}" /></th>
 				<td><ac:lov id="pmIdentificationNo"
-						lovId="PM_USER_ID_REPORT" size="40" update="@form"
+						lovId="PM_USER_ID_REPORT" size="60" update="@form"
 						disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null}"
 						headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 						readonly="true"
@@ -154,7 +154,7 @@
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.search.name']}" /></th>
-				<td><p:inputText readonly="true"
+				<td><p:inputText readonly="true" size="60"
 						value="#{pmReportsBackingBean.managedBean.selectedPmUser.userName}">						
 					</p:inputText></td>
 				<th>&#160;</th>
@@ -163,7 +163,7 @@
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.search.role']}" /></th>
-				<td><p:inputText size="38" id="itSelectedRoleDesc"
+				<td><p:inputText size="60" id="itSelectedRoleDesc"
 						value="#{not empty(pmReportsBackingBean.managedBean.selectedRoleDesc) ? pmReportsBackingBean.managedBean.selectedRoleDesc.roleName :''}"
 						readonly="true" /> &#160; <p:commandLink id="roleSearchCL"
 						partialSubmit="true" process="@this"

@@ -102,7 +102,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /></td>
 				<td><h:panelGroup id="orgProfilePG">
-						<ac:lov id="pmOrgCode" lovId="PM_ORG_PROFILE_REPORT" size="40"
+						<ac:lov id="pmOrgCode" lovId="PM_ORG_PROFILE_REPORT" size="100"
 							update="@this,:form:orgNameIt"
 							headerText="#{lbl['lbl.pm.organisation.orgCode']}"
 							readonly="true"
@@ -115,7 +115,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgName']}" /></td>
-				<td><p:inputText id="orgNameIt" maxlength="150" readonly="true" size="60"
+				<td><p:inputText id="orgNameIt" maxlength="150" readonly="true" size="100"
 						value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}">
 					</p:inputText></td>
 			</tr>

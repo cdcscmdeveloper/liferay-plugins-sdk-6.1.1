@@ -8,13 +8,15 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td width="15%"><p:outputLabel value="#{lbl['lbl.pm.contract.no']}" /></td>
-			<td width="35%"><p:inputText maxlength="100" size="40"
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.pm.contract.no']}" /></td>
+			<td width="35%"><p:inputText maxlength="100" size="50"
 					value="#{pmReportsBackingBean.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
-			<td width="15%"><p:outputLabel value="#{lbl['lbl.pm.contract.physical.no']}" /></td>
-			<td width="35%"><p:inputText maxlength="100" size="40"
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.pm.contract.physical.no']}" /></td>
+			<td width="35%"><p:inputText maxlength="100" size="50"
 					value="#{pmReportsBackingBean.managedBean.contractPhyscialNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
@@ -22,13 +24,13 @@
 		<tr>
 			<td><p:outputLabel
 					value="#{lbl['lbl.pm.contract.loa.referece.no']}" /></td>
-			<td><p:inputText maxlength="100" size="40"
+			<td><p:inputText maxlength="100" size="50"
 					value="#{pmReportsBackingBean.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
 			<td><p:outputLabel
 					value="#{lbl['lbl.pm.contract.loa.physical.no']}" /></td>
-			<td><p:inputText maxlength="100" size="40"
+			<td><p:inputText maxlength="100" size="50"
 					value="#{pmReportsBackingBean.managedBean.loaPhyscialNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
@@ -36,7 +38,7 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.pm.itemcode']}" /></td>
 			<td><ac:lov id="itemCode" lovId="CM_UNSPSC_REPORT"
-					readonly="true" size="40" update="@form"
+					readonly="true" size="50" update="@form"
 					headerText="#{lbl['lbl.pm.itemcode']}"
 					value="#{pmReportsBackingBean.managedBean.selectedUnspscItem.unspscCode}"
 					saveObject="pmReportsBackingBean.managedBean.selectedUnspscItem" /></td>
@@ -46,36 +48,32 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
 		</tr>
+	</table>
+	<table style="width: 100%;">
 		<tr>
-			<td colspan="2">
-				<table style="width: 100%;">
-					<tr>
-						<td width="15%"><p:outputLabel
-								value="#{lbl['lbl.rpt.effDateFrom']}" /></td>
-						<td width="40%"><p:calendar showOn="button" navigator="true"
-								display="inline" readonlyInput="true" size="9"
-								value="#{pmReportsBackingBean.managedBean.fromDate}"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-								<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-									update="@this" />
-								<p:ajax event="change" partialSubmit="true" process="@this"
-									update="@this" />
-							</p:calendar></td>
-						<td width="5%"><p:outputLabel
-								value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
-						<td width="40%"><p:calendar showOn="button" navigator="true"
-								display="inline" readonlyInput="true"
-								value="#{pmReportsBackingBean.managedBean.toDate}" size="9"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-								<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-									update="@this" />
-								<p:ajax event="change" partialSubmit="true" process="@this"
-									update="@this" />
-							</p:calendar></td>
-					</tr>
-				</table>
-			</td>
-			<td colspan="2"></td>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.rpt.effDateFrom']}" /></td>
+			<td width="15%"><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true" size="9"
+					value="#{pmReportsBackingBean.managedBean.fromDate}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
+				</p:calendar></td>
+			<td width="1%"><p:outputLabel
+					value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
+			<td><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{pmReportsBackingBean.managedBean.toDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
+				</p:calendar></td>
+
 		</tr>
 	</table>
 </ui:composition>
