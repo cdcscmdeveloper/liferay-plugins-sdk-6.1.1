@@ -95,7 +95,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
-import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
@@ -2456,7 +2455,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
-		StringBuilder pengesyoran=new StringBuilder();
+		/*StringBuilder pengesyoran=new StringBuilder();
 		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
 		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
 			for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
@@ -2464,11 +2463,11 @@ public class SupplierFinalizationBackingBean extends
 					pengesyoran.append(remark.getRemark() + "\n");
 				}
 			}
-		}
+		}*/
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
-		paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
-				StringUtils.EMPTY : pengesyoran.toString());
+		//paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
+				//StringUtils.EMPTY : pengesyoran.toString());
 
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
