@@ -6,15 +6,6 @@ public class PmReportConst implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	// PM	
-	public static final String AMP_PM_EP_NO_EQ = "&PEPNO=";
-	public static final String AMP_PM_COMPANY_NAME_EQ = "&PCOMPANYNAME=";
-
-	public static final String AMP_PM_USERNAME_EQ = "&PUSERNAME=";
-	
-	public static final String PARAM_PM_USER_ID_EQ = "PUSER=";
-	public static final String PARAM_PM_REPORT_ID_EQ = "PREPORTID=";
-
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_USER_ID = "PUSER";
