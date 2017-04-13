@@ -39,6 +39,18 @@
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
+			<table width="100%">
+				<tr>
+					<td><h:outputText styleClass="instruction"
+							style="float:left;margin-left:20px;"
+							value="#{lbl['lbl.instruction.mandatory']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText styleClass="instruction"
+							style="float:left;margin-left:20px;"
+							value="#{lbl['lbl.instruction.dpatleast']}" /></td>
+				</tr>
+			</table>
 			<c:choose>
 				<!-- PM_001 -->
 				<c:when

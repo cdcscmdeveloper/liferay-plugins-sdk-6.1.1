@@ -86,8 +86,7 @@
 						rendered="#{pmReportsBackingBean.managedBean.searchOrgCategory eq PmReportConst.orgCatOthers}"
 						styleClass="ppDropDownWidthL"
 						required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.pm.organisation.orgType']}"
-						style="margin-bottom: 5px;"
+						label="#{lbl['lbl.pm.organisation.orgType']}"					
 						value="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId}">
 						<f:selectItems
 							value="#{pmReportsBackingBean.getOrgTypeDropdownValues()}" />
@@ -107,6 +106,7 @@
 							update="@this,:form:orgNameIt"
 							headerText="#{lbl['lbl.pm.organisation.orgCode']}"
 							readonly="true"
+							disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null}"
 							conditionField="#{pmReportsBackingBean.constructConditionFields()}"
 							value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgCode}"
 							saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" />
@@ -115,7 +115,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgName']}" /></td>
-				<td><p:inputText id="orgNameIt" maxlength="50" readonly="true"
+				<td><p:inputText id="orgNameIt" maxlength="150" readonly="true" size="60"
 						value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}">
 					</p:inputText></td>
 			</tr>

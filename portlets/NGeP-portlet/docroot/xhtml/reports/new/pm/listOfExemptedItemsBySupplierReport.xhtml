@@ -8,29 +8,30 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td width="20%"><p:outputLabel value="#{lbl['lbl.rpt.companyName']}" /></td>
-			<td><ac:lov id="pmCompanyName" readonly="true"
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.rpt.companyName']}" /></td>
+			<td width="35%"><ac:lov id="pmCompanyName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="50" update="@form"
 					headerText="#{lbl['lbl.rpt.companyName']}"
 					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" /></td>
-			<td width="20%"></td>
-			<td></td>
+			<td width="15%"></td>
+			<td width="35%"></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /></td>
-			<td><p:inputText maxlength="50"
+			<td><p:inputText maxlength="50" size="50"
 					value="#{pmReportsBackingBean.managedBean.bizRegNo}">
 				</p:inputText></td>
 			<td><p:outputLabel value="#{lbl['lbl.sm.epno']}"></p:outputLabel></td>
-			<td><p:inputText maxlength="50"
+			<td><p:inputText maxlength="50" size="50"
 					value="#{pmReportsBackingBean.managedBean.epNo}">
 				</p:inputText></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.pm.itemcode']}" /></td>
 			<td><ac:lov id="itemCode" lovId="CM_UNSPSC_REPORT"
-					readonly="true" size="40" update="@form"
+					readonly="true" size="50" update="@form"
 					headerText="#{lbl['lbl.pm.itemcode']}"
 					value="#{pmReportsBackingBean.managedBean.selectedUnspscItem.unspscCode}"
 					saveObject="pmReportsBackingBean.managedBean.selectedUnspscItem" /></td>
@@ -41,26 +42,35 @@
 				</p:inputText></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}" /></td>
-			<td><p:calendar showOn="button" navigator="true"
-					display="inline" readonlyInput="true" size="9"
-					value="#{pmReportsBackingBean.managedBean.fromDate}"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-						update="@this" />
-					<p:ajax event="change" partialSubmit="true" process="@this"
-						update="@this" />
-				</p:calendar></td>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
-			<td><p:calendar showOn="button" navigator="true"
-					display="inline" readonlyInput="true"
-					value="#{pmReportsBackingBean.managedBean.toDate}" size="9"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-						update="@this" />
-					<p:ajax event="change" partialSubmit="true" process="@this"
-						update="@this" />
-				</p:calendar></td>
+			<td colspan="2">
+				<table style="width: 100%;">
+					<tr>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.rpt.effDateFrom']}" /></td>
+						<td width="40%"><p:calendar showOn="button" navigator="true"
+								display="inline" readonlyInput="true" size="9"
+								value="#{pmReportsBackingBean.managedBean.fromDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+									update="@this" />
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									update="@this" />
+							</p:calendar></td>
+						<td width="5%"><p:outputLabel
+								value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
+						<td width="40%"><p:calendar showOn="button" navigator="true"
+								display="inline" readonlyInput="true"
+								value="#{pmReportsBackingBean.managedBean.toDate}" size="9"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+									update="@this" />
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									update="@this" />
+							</p:calendar></td>
+					</tr>
+				</table>
+			</td>
+			<td colspan="2"></td>
 		</tr>
 	</table>
 </ui:composition>
