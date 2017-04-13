@@ -619,7 +619,7 @@ public class ConsolidationReportBackingBean extends
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
 		initializeFinalizationUlasanRemarks();
-		initializeFinalizationPengreysonRemarks();
+		//initializeFinalizationPengreysonRemarks();
 	}
 	
 	private void setZoneAndTabIndexOnException(boolean isItemized, TplSpecZoneDtl zoneDtl) {
@@ -1015,7 +1015,7 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getFinalizationPengreysonremarks();
+	/*	List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getFinalizationPengreysonremarks();
 		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
 			for (int i = 0; i < pengerysonRemarks.size(); i++) {
 				String userRemark = pengerysonRemarks.get(i).getRemark();
@@ -1025,7 +1025,7 @@ public class ConsolidationReportBackingBean extends
 				}
 				
 			}
-		}
+		}*/
 		
 		boolean isZonal = getManagedBean().getScQt().isZonal();
 		Map<Long,List<ScQtRecommend>> itemsByZone = scQtFinalization.getScQtRecommendsByZone();
@@ -1239,7 +1239,7 @@ public class ConsolidationReportBackingBean extends
 
 		finalizeRemarks();
 		finalizeUlasanremarks();
-		finalizePengrysonremarks();
+		//finalizePengrysonremarks();
 		return reqDTO;
 	}
 	
@@ -1344,13 +1344,15 @@ public class ConsolidationReportBackingBean extends
 		StringBuilder ulasan=new StringBuilder();
 		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getFinalizationUlasanremarks();
 		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+			log.info("ulasanremarknotempty");
 			for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
 				if(StringUtils.isNotBlank(remark.getRemark())){
+					log.info("ulasanremark"+remark.getRemark());
 					ulasan.append(remark.getRemark() + "\n");
 				}
 			}
 		}
-		StringBuilder pengesyoran=new StringBuilder();
+	/*	StringBuilder pengesyoran=new StringBuilder();
 		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getFinalizationPengreysonremarks();
 		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
 			for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
@@ -1358,11 +1360,11 @@ public class ConsolidationReportBackingBean extends
 					pengesyoran.append(remark.getRemark() + "\n");
 				}
 			}
-		}
+		}*/
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
-		paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
-				StringUtils.EMPTY : pengesyoran.toString());
+		//paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
+				//StringUtils.EMPTY : pengesyoran.toString());
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 	
