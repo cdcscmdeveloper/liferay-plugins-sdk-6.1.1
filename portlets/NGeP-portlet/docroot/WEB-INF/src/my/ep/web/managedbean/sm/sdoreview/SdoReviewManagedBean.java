@@ -40,6 +40,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private boolean claimTask;
 	private List<SmApplSupportDoc> mandatoryDocs;
 	private List<SmApplSupportDoc> nonMandatoryDocs;
+	private String rejectReasonsMsg;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -192,6 +193,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setNonMandatoryDocs(List<SmApplSupportDoc> nonMandatoryDocs) {
 		this.nonMandatoryDocs = nonMandatoryDocs;
+	}
+
+	public String getRejectReasonsMsg() {
+		return rejectReasonsMsg;
+	}
+
+	public void setRejectReasonsMsg(String rejectReasonsMsg) {
+		this.rejectReasonsMsg = rejectReasonsMsg;
 	}
 
 	
