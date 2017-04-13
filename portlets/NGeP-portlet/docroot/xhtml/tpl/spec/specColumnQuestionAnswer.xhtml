@@ -141,9 +141,9 @@
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</f:facet>
-		<p:commandButton icon="ui-icon-item-code" rendered="#{isQuestionTypeItem and isWorkflowStatus}" title="#{lbl['lbl.sc.assign.code']}"
-		    style="background-color:transparent !important; border:0px none; width:10px !important;"
-			action="#{codificationBackingBean.assignProductCode(null, question, false)}"/>
+		
+		<p:commandButton value="#{lbl['lbl.btn.assign']}" rendered="#{isQuestionTypeItem and isWorkflowStatus}"
+					action="#{codificationBackingBean.assignProductCode(null, question, false)}"/>
 			
 		<p:commandButton id="addBtn" icon="ui-icon-add"
 			style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"

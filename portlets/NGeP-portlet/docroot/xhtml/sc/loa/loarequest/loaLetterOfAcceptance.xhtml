@@ -68,8 +68,8 @@
 				headerText="#{lbl['lbl.sc.action']}">
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="scDocUploadDlg"
-					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
-					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}"
+					rendered="#{(isEditableStatus and !lOADetailBackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
+						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload)}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
 					rowIndex="#{rowIndex}">
