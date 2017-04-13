@@ -11,20 +11,18 @@
 		<tr>
 			<td width="15%"><p:outputLabel value="#{lbl['lbl.pm.organisation.orgCode']}" /></td>
 			<td><ac:lov id="pmOrgCode" lovId="PM_ORG_PROFILE_REPORT"
-					size="40" update="@this,:form:orgNameIt"
+					size="100" update="@this,:form:orgNameIt"
 					headerText="#{lbl['lbl.pm.organisation.orgCode']}" readonly="true"
 					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgCode}"
 					saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile"
 					conditionField="#{pmReportsBackingBean.constructConditionFields()}" /></td>
-			<td width="50%"></td>
 		</tr>
 		<tr>
 			<td width="15%"><p:outputLabel value="#{lbl['lbl.pm.organisation.orgName']}" /></td>
 			<td><p:inputText id="orgNameIt" maxlength="100" readonly="true"
-					size="60"
+					size="100"
 					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}">
 				</p:inputText></td>
-			<td width="50%"></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}" /></td>
@@ -35,7 +33,7 @@
 					<f:selectItems value="#{pmReportsBackingBean.getStatusOptions()}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-			<td width="50%"></td>
+			
 		</tr>
 	</table>
 </ui:composition>
