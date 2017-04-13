@@ -1305,6 +1305,10 @@ public class LOIDetailBackingBean extends
 	public void addNegotiationTerm() {
 		debugLogger("addNegotiationTerm");
 		ScLoi scLoi = getManagedBean().getScLoi();
+		
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
+				.longValue();
+		
 		List<ScLoiTerm> scNegoTerms = scLoi
 				.getScNegoTerms();
 		if (null == scNegoTerms) {
@@ -1312,7 +1316,12 @@ public class LOIDetailBackingBean extends
 		}
 		ScLoiTerm negoTerm = new ScLoiTerm();
 		negoTerm.setPmTerm(null);
-		negoTerm.setSelected(Boolean.TRUE);
+		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+			negoTerm.setSelectedTerm(Boolean.FALSE);
+		} else{
+			negoTerm.setSelectedTerm(Boolean.TRUE);
+		}
+		negoTerm.setSelected(true);
 		negoTerm.setScLoi(scLoi);
 		negoTerm.setModified(true);
 		scNegoTerms.add(negoTerm);
@@ -1331,7 +1340,7 @@ public class LOIDetailBackingBean extends
 		if (scLoiTerms != null && scLoiTerms.size() > 0) {
 
 			for (ScLoiTerm scLoiTerm : scLoiTerms) {
-				if (!scLoiTerm.isSelectedTerm()) {
+				if (!scLoiTerm.isSelectTerm()) {
 					negoTermsList.add(scLoiTerm);
 				} else {
 					flag = false;
@@ -2138,9 +2147,6 @@ public class LOIDetailBackingBean extends
 
 			// spki
 			if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-				// download loi letter 
-				downloadLoiLetter(scLoi);
-				
 				String originalText = prepareOriginalText(scLoi.getScLoiLoa()
 						.getSmSupplier());
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -2919,13 +2925,11 @@ public class LOIDetailBackingBean extends
 			if (title == null) {
 				title = "";
 			}
-			//import org.apache.velocity.tools.generic.EscapeTool;
-		
 
 			//replace all special characters
 			//title = title.replaceAll("\\W", ""); 
 			title=title.replaceAll("\r\n", "<br />");
-			//title=title.replaceAll("&", "&#38;");
+			title=title.replaceAll("&", "&#38;");
 			title=title.replaceAll("<", "&#60;");
 			title=title.replaceAll(">", "&#62;");
 			context.put("title", title);
@@ -2993,10 +2997,10 @@ public class LOIDetailBackingBean extends
 				context.put("scNegoLocations", scLoi.getScNegoLocations());
 			}
 
-			List<ScLoiTerm> selectedNegoTerms = new ArrayList<ScLoiTerm>();
+			/*List<ScLoiTerm> selectedNegoTerms = new ArrayList<ScLoiTerm>();
 			if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
 				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-					if (scLoiTerm.isSelected()) {
+					if (scLoiTerm.isSelectedTerm()) {
 						selectedNegoTerms.add(scLoiTerm);
 					}
 				}
@@ -3009,7 +3013,7 @@ public class LOIDetailBackingBean extends
 					&& scLoi.getScNegoTerms().size() > 0) {
 				context.put("scNegoTerms", scLoi.getScNegoTerms());
 				context.put("Keputusan", Keputusan);
-			}
+			}*/
 
 			String ackDueDays = "7";
 			if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
@@ -3146,7 +3150,10 @@ public class LOIDetailBackingBean extends
 				List<ScLoiTerm> selectedTerms = new ArrayList<ScLoiTerm>();
 				for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
 					if (loiTerm.isSelected()) {
+						loiTerm.setSelectedTerm(Boolean.TRUE);
 						selectedTerms.add(loiTerm);
+					} else{
+						loiTerm.setSelectedTerm(Boolean.FALSE);
 					}
 				}
 				scLoi.setScNegoTerms(selectedTerms);
@@ -3696,16 +3703,6 @@ public class LOIDetailBackingBean extends
 			scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
 		}
 		downloadFile(scLoiReportAttachment);
-	}
-	
-	/**
-	 * Download loi letter.
-	 *
-	 * @param scLoiReport the sc loi report
-	 */
-	private void downloadLoiLetter(ScLoi scLoi) {
-		debugLogger("downloadLoiLetter");
-		generateLoiLetterFromVelocityToPdf(scLoi, getLoiAttachment(scLoi));
 	}
 
 	/**
@@ -4398,9 +4395,9 @@ public class LOIDetailBackingBean extends
 		if (scLoiTerms != null && scLoiTerms.size() > 0) {
 			for (ScLoiTerm scLoiTerm : scLoiTerms) {
 				if (isSelectAll && scLoiTerm.getPmTerm() == null) {
-					scLoiTerm.setSelectedTerm(true);
+					scLoiTerm.setSelectTerm(true);
 				} else {
-					scLoiTerm.setSelectedTerm(false);
+					scLoiTerm.setSelectTerm(false);
 				}
 			}
 		}
@@ -5379,7 +5376,7 @@ public class LOIDetailBackingBean extends
 			List<ScLoiTerm> list) {
 		if (list != null) {
 			for (ScLoiTerm entity : list) {
-				if(entity.isSelectedTerm()){
+				if(entity.isSelectTerm()){
 					return false;
 				}
 				
@@ -5460,11 +5457,11 @@ public class LOIDetailBackingBean extends
 		ScLoiAttachment scLoiAttachment = scLoi.getScLoiAttachment();
 		if(null == scLoiAttachment){
 			scLoiAttachment = new ScLoiAttachment();
+			scLoiAttachment.setScLoi(scLoi);
+			scLoiAttachment.setDocNo(scLoi.getLoiNo());
+			scLoiAttachment.setScLoi(scLoi);
+			scLoi.setScLoiAttachment(scLoiAttachment);
 		}
-		scLoiAttachment.setScLoi(scLoi);
-		scLoi.setScLoiAttachment(scLoiAttachment);
-		scLoiAttachment.setDocNo(scLoi.getLoiNo());	
-		scLoiAttachment.setScLoi(scLoi);
 		return scLoiAttachment;
 	}
 }
