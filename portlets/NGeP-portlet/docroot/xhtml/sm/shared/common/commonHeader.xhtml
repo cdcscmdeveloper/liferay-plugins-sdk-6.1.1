@@ -23,6 +23,18 @@
 					#{lbl[applType]}
 				</td>
 			</tr>
+			<p:outputPanel rendered="#{not empty sdoReviewBackingBean.managedBean.rejectReasonsMsg 
+				and sdoReviewBackingBean.managedBean.smAppl.resubmit}">
+				<tr>
+					<td style="vertical-align: baseline;"><p:outputLabel
+							value="#{lbl['lbl.sm.rejection.reasons']}"
+							styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" escape="false"
+							value="#{sdoReviewBackingBean.managedBean.rejectReasonsMsg}" />
+					</td>
+					<td colspan="4">&#160;</td>
+				</tr>
+			</p:outputPanel>
 	</table>
 	</div>
 </ui:composition>
