@@ -48,7 +48,7 @@
                               <td></td>
                                       <td>
                                             <h:panelGrid columns="4">
-                                            <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
+                                            <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 			                                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
 				                                   <p:ajax event="change" 
 				                                        listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName, supplierRegNo, supplierMofNo" />
@@ -159,7 +159,7 @@
                  <td></td>
                  <td>
                   <h:panelGrid columns="4">
-                        <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
+                        <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 			                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
 			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
 			                 </p:selectBooleanCheckbox>

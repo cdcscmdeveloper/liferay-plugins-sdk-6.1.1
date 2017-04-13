@@ -580,10 +580,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setSupplierMofNo(mofresDTO.getMofAccount().getMofNo());
 			}
 		} else {
-			getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			getManagedBean().setSupplierBranchName(getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
-			getManagedBean().setSupplierRegNo(getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-			getManagedBean().setSupplierMofNo(getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+			if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
+				getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierName());
+				getManagedBean().setSupplierBranchName(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierBranch());
+				getManagedBean().setSupplierRegNo(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierRegNo());
+				getManagedBean().setSupplierMofNo(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierMofNo());
+			} else {
+				getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+				getManagedBean().setSupplierBranchName(getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+				getManagedBean().setSupplierRegNo(getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+				getManagedBean().setSupplierMofNo(getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+			}
 		}
 	}
 	
@@ -3008,22 +3015,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	   * management module.
 	   */
 	public void renderUpdateCheckbox(CtContractVer ctContractVer) {
-		   if ((ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				   || ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))
-				   && getManagedBean().isUpdateContract()) {
-			   if (!ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
-					   getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {
-				   getManagedBean().setUpdateCompanyName(true);
-			   }
-			   if (CtAddressUtil.isSupplierInfoChanged(
-					   getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl(),
-					   ctContractVer.getCtContractValue().getSupplierAddress())) {
-				   getManagedBean().setUpdateSupplierAddress(true);
-			   }
-		   } else {
-			   getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
-			   getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
-		   }
+		getManagedBean().setUpdateCompanyName(false);
+	    getManagedBean().setUpdateSupplierAddress(false);
+		if (ctContractVer.getCtContractValue().isCompanyNameChange()
+				|| !ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
+						getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {
+			getManagedBean().setUpdateCompanyName(true);
+		}
+		if (ctContractVer.getCtContractValue().isAddressChange()
+				|| CtAddressUtil.isSupplierInfoChanged(
+						getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl(),
+						ctContractVer.getCtContractValue().getSupplierAddress())) {
+			getManagedBean().setUpdateSupplierAddress(true);
+		}
 	}
 	   
 	 /**
