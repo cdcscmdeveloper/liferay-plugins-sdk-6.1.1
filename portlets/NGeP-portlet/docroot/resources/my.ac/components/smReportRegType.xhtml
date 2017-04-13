@@ -10,17 +10,15 @@
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
+		<cc:attribute name="showAll" default="true" />
+		<cc:attribute name="showUpgrade" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.regType}"
 			style="width:300px;">
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="" />
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{SmReportConst.SM_REG_TYPE_BASIC}" />
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}" itemValue="#{SmReportConst.SM_REG_TYPE_MOF}" />
-			<p:ajax event="change"
-				listener="#{cc.attrs.bBean.onChangeRegType}"
-				process="@this" partialSubmit="true" update="@form" />
+			<f:selectItems value="#{cc.attrs.bBean.retrieveRegType(cc.attrs.showAll,cc.attrs.showUpgrade)}"/>
+			<p:ajax event="change" listener="#{cc.attrs.bBean.onChangeRegType}" process="@this" partialSubmit="true" update="@form" />
 		</p:selectOneMenu>
 	</cc:implementation>
 </ui:composition>

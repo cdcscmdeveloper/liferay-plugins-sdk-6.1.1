@@ -1,8 +1,12 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
@@ -78,13 +82,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeState() {
 
 	}
-	
+
 	public void onChangeYear() {
 
 	}
 
 	public void reportOnChange() {
-		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
+		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
 	}
@@ -104,5 +108,32 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().setStateLst(
 				SmCommonUtil.getStateList(country.getCountryId()));
+	}
+
+	public List<SelectItem> retrieveRegType(boolean showAll, boolean showUpgrade) {
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		SelectItem item = null;
+		if (showAll) {
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.all", null));
+			item.setValue(StringUtils.EMPTY);
+			items.add(item);
+		}
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regBasic", null));
+		item.setValue(SmReportConst.SM_REG_TYPE_BASIC);
+		items.add(item);
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regMOF", null));
+		item.setValue(SmReportConst.SM_REG_TYPE_MOF);
+		items.add(item);
+		if (showUpgrade) {
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.upgradeBasicToMOF",
+					null));
+			item.setValue(SmReportConst.SM_REG_TYPE_UPGRADE_BASIC_TO_MOF);
+			items.add(item);
+		}
+		return items;
 	}
 }
