@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,7 +134,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
 	private T managedBean;
-
+	private static final String UTF = "UTF-8";
 	@SuppressWarnings("unchecked")
 	public BaseBackingBean() {
 		if (log.isDebugEnabled()) {
@@ -1224,9 +1225,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param reportFile the report file
 	 * @param paramMap the param map
 	 * @return the string
+	 * @throws IOException 
 	 */
 	protected String generateReportURL(String reportFile,
-			Map<String, String> paramMap) {
+			Map<String, String> paramMap) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
@@ -1243,7 +1245,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
 			reportUrl.append(ReportConst.VALUE_SEPARATOR);
-			reportUrl.append(params.getValue());
+			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
 		}
 		reportUrl.append(excNextUrl);
 
