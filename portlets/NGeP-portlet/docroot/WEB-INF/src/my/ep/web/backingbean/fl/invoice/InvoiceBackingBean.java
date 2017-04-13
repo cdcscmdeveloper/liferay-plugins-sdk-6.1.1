@@ -141,6 +141,8 @@ import my.ep.web.vo.TaxInvoiceVO;
 @ViewScoped
 public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManagedBean> {
 	
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(InvoiceBackingBean.class);
 	
@@ -175,8 +177,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 *  <p>submit - save data into database and BPM process will route to the next respective user.
 	 * 	<p>save - save data into database.
 	 *  navigate to acknowledge page.
+	 *  @throws IOException 
 	 */
-	public String submitAction(String action) {
+	public String submitAction(String action) throws IOException {
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
 		IAdjustmentSO adjustmentSO = null;

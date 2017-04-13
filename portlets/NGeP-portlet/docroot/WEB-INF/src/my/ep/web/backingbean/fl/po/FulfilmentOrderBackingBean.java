@@ -132,8 +132,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 *  <p>submit - save data into database and BPM process will route to the next respective user.
 	 * 	<p>save - save data into database.
 	 *  navigate to acknowledge page.
+	 *  @throws IOException 
 	 */
-   	public String fulfillmentOrderAction(String action) {
+   	public String fulfillmentOrderAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
 		IFulfilmentOrderSO fulfilmentOrderSO = null;		
 		try {
