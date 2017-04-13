@@ -24,6 +24,12 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_STATE = "PSTATEID";
 	public static final String PARAM_APPL_STATUS = "PAPPLSTATUS";
 	public static final String PARAM_YEAR = "PYEAR";
+	public static final String PARAM_PAYMENT_TYPE = "PPAYTYPE";
+	public static final String PARAM_PAYMENT_TYPE1 = "PPAYTYPE1";
+	public static final String PARAM_PAYMENT_TYPE2 = "PPAYTYPE2";
+	public static final String PARAM_PAYMENT_TYPE3 = "PPAYTYPE3";
+	public static final String PARAM_YEAR_FROM = "PYEARFROM";
+	public static final String PARAM_YEAR_TO= "PYEARTO";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -99,7 +105,11 @@ public class SmReportConst implements Serializable {
 	public static final String SM_REG_TYPE_UPGRADE_BASIC_TO_MOF = "UPGRADE FROM BASIC TO MOF ACCOUNT";
 	public static final String SM_STATUS_ACTIVE = "Active";
 	public static final String SM_STATUS_INACTIVE = "Inactive";
-
+	
+	public static final String PAYMENT_MOF = "M";
+	public static final String PAYMENT_PROCESSING = "P";
+	public static final String PAYMENT_SOFTC_CERT = "S";
+	
 	public String getSM_STATUS_ACTIVE() {
 		return SM_STATUS_ACTIVE;
 	}
@@ -386,5 +396,17 @@ public class SmReportConst implements Serializable {
 
 	public String getSmRejectedSoftcertRptVal() {
 		return SM_REJECTED_SOFTCERT_RPT_VAL;
+	}
+
+	public String getPaymentMof() {
+		return PAYMENT_MOF;
+	}
+
+	public String getPaymentProcessing() {
+		return PAYMENT_PROCESSING;
+	}
+
+	public String getPaymentSoftcCert() {
+		return PAYMENT_SOFTC_CERT;
 	}
 }
