@@ -5472,7 +5472,7 @@ public class QTDetailBackingBean extends
 		if(statusId.equals(QTStatusConst.QT_PENDING_LOI) || statusId.equals(QTStatusConst.QT_PENDING_LOA) ||
 				statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)) {
 			isQTAwarded = checkIsQTAwarded(scQt);
-			if(statusId.equals(QTStatusConst.QT_PENDING_LOI)) {
+			if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION)) {
 				isBiddingActive = checkIsBiddingActive(scQt);
 			} 
 		}
