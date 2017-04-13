@@ -503,11 +503,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 			//ctBB.getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 			ctBB.getManagedBean().setSupplierAddress(getFullAddress(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()));
-			ctBB.renderUpdateCheckbox(ctBB.getManagedBean().getContractVer());
 			ctBB.getManagedBean().setSupplierCompanyName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			ctBB.getManagedBean().setSupplierBranchName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 			ctBB.getManagedBean().setSupplierRegNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 			ctBB.getManagedBean().setSupplierMofNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+			if (!ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)) {
+				ctBB.renderUpdateCheckbox(ctBB.getManagedBean().getContractVer());
+			}
 			ctBB.retrieveBranchInfo();
 			if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 				ctBB.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
@@ -620,12 +622,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          	reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
          	CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
          	
-         	if (ctContractVer.getCtContractValue().isCompanyNameChange()) {
-         		ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
-         		ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
-         		ctContractVer.getCtContractValue().setSupplierRegNo(ctBB.getManagedBean().getSupplierRegNo());
-         		ctContractVer.getCtContractValue().setSupplierMofNo(ctBB.getManagedBean().getSupplierMofNo());
-         	}
+     		ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
+     		ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
+     		ctContractVer.getCtContractValue().setSupplierRegNo(ctBB.getManagedBean().getSupplierRegNo());
+     		ctContractVer.getCtContractValue().setSupplierMofNo(ctBB.getManagedBean().getSupplierMofNo());
          	if (ctBB.getManagedBean().getCtAddress() != null) {
          		ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getCtAddress());
          	}

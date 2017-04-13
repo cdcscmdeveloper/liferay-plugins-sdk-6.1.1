@@ -821,18 +821,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    	}else{
 			    		 ctBackingBean.getManagedBean().setGstTotalAmount(ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount());
 			  		}
-				     ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
+				    ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 				    ctBackingBean.getManagedBean().setViewContract(false);
 				    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
 				    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
 				    ctBackingBean.getManagedBean().setCtAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 				    ctBackingBean.getManagedBean().setSupplierAddress(getFullAddress(ctBackingBean.getManagedBean().getCtAddress()));
-				    ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 				    ctBackingBean.getManagedBean().setSupplierCompanyName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				    ctBackingBean.getManagedBean().setSupplierBranchName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 				    ctBackingBean.getManagedBean().setSupplierRegNo(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 				    ctBackingBean.getManagedBean().setSupplierMofNo(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
 					ctBackingBean.retrieveBranchInfo();
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+				    	ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
+				    }			    
 				    ctBackingBean.initializeRemarkAndAttachement(ctBackingBean.getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 				    if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 				    	ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
@@ -963,6 +965,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							schedules.setScheduleType(parameter);
 				}
 			}
+			
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierName(ctBackingBean.getManagedBean().getSupplierCompanyName());
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierBranch(ctBackingBean.getManagedBean().getSupplierBranchName());
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierRegNo(ctBackingBean.getManagedBean().getSupplierRegNo());
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierMofNo(ctBackingBean.getManagedBean().getSupplierMofNo());
+	         	if (ctBackingBean.getManagedBean().getCtAddress() != null) {
+	         		ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierAddress(ctBackingBean.getManagedBean().getCtAddress());
+	         	}
+			}
 
 			if (getManagedBean().isPrepareLOA()) {
 				int contractDuration = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
@@ -987,41 +999,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					|| getManagedBean().getScLoaWitness().getDesignation() != null || getManagedBean().getScLoaWitness().getAddress() != null
 					|| getManagedBean().getScLoaWitness().getPhoneNo() != null || getManagedBean().getScLoaWitness().getWitnessName() != null)) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
-			}
-
-//			if (isSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
-//					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
-//				// Generate loa document and set into sc_attachment
-//				AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
-//				String fileName = null;
-//				String filePath = null;
-//				String content = null;
-//				File file = new File(getManagedBean().getFileDirectory());
-//				file.mkdirs();
-//
-//				for (ScLoaReport scLoaReport : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
-//					if (scLoaReport.getDefinationType().getParameterId().equals(
-//							(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-//									ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
-//						fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
-//						filePath = getManagedBean().getFileDirectory() + attachmentFormat.format(fileName, null);
-//						if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
-//							formJadualHargaExcel(filePath);
-//						} else {
-//							String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
-//							content = getContent(docDefinitionKey);					
-//							DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
-//						}
-//
-//						ScLoaReportAttachment attachment = new ScLoaReportAttachment();
-//						attachment.setScLoaReport(scLoaReport);			    
-//						attachment.setFileName(fileName);
-//						attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-//						attachment.setFileDesc(fileName);
-//						scLoaReport.setScLoaReportAttachment(attachment);
-//					}
-//				}
-//			}
+			}			
+			
 			// Retrieve the proper committee role during sign off process and set the sign off flag to true
 			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
@@ -5300,6 +5279,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.isBeforeGstReliefDueDate() && ctBackingBean.imposedServiceTaxCondition()) {
 			ctBackingBean.onChangeServiceTax();
 		}
+		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 	}
 	
 	/**
