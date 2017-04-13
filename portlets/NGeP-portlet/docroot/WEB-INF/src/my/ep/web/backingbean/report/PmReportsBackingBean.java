@@ -256,6 +256,11 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_IDENTIFICATION_NO, getManagedBean()
 					.getSelectedPmUser().getIdentificationNo());
 		}
+		
+		if (getManagedBean().getSelectedOrgType() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PARAM_ID, getManagedBean()
+					.getSelectedOrgType().getParameterId().toString());
+		}
 
 		if (getManagedBean().getSelectedOrgProfile() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
