@@ -543,11 +543,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void showConfirmDialog() {
 		validateRequestSoftcert();
-		if (getManagedBean().isApplySoftcertForOthers()) {
-			onDisplaySpkiPopup();
-		} else {
-			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
-		}
+		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
 
 	/**
@@ -577,8 +573,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				.spkiSignTransaction(prepareOriginalText());
 		pmDigiSign.setSpkiSignedData(signedData);
 		getManagedBean().setDigiSign(pmDigiSign);
+		makePayment();
 		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		RequestContext.getCurrentInstance().update("@form");
 	}
 
