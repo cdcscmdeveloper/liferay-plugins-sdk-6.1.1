@@ -526,7 +526,7 @@ public class SpecificationBackingBean extends
 			techCheckList = this.getManagedBean().getScQtCheckSt2techProposal();
 
 			if (null == techCheckList || techCheckList.isEmpty()
-					|| techCheckList.isEmpty()) {
+					) {
 				throw new EpException(MessageConst.ERROR_760138);
 
 			} else {
@@ -10568,8 +10568,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 						for (ScQtCheckList financialspec : resDto
 								.getFinSpecResultBean().getResultList()) {
-							if (financialspec.getTitle().equalsIgnoreCase(
-									this.getManagedBean().getCheckListTitle())) {
+							if (financialspec.getTitle().trim()
+									.replaceAll("\\s", "").equalsIgnoreCase(
+									this.getManagedBean().getCheckListTitle().trim()
+									.replaceAll("\\s", "")) || financialspec.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 								financialspec.setDeleted(true);
 								toBeRemoveCheckLists.add(financialspec);
 								break;
@@ -10690,11 +10692,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (this.getManagedBean().getIndex() == -1
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-
-					if (technicalCheckList.contains(scQtCheckList)) {
+                       for(ScQtCheckList techlist:technicalCheckList){
+					if (techlist.getTitle().trim()
+							.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
 						throw new EpException(MessageConst.ERROR_760207,
 								new String[] { scQtCheckList.getTitle() });
 					}
+                      }
 				}
 			}
 
@@ -10707,8 +10711,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					for (int i = 0; i < finanicalCheckList.size(); i++) {
 						ScQtCheckList localCheckList = finanicalCheckList
 								.get(i);
-						if (this.getManagedBean().getCheckListTitle()
-								.equalsIgnoreCase(localCheckList.getTitle())) {
+						if (this.getManagedBean().getCheckListTitle().trim()
+								.replaceAll("\\s", "")
+								.equalsIgnoreCase(localCheckList.getTitle().trim()
+										.replaceAll("\\s", ""))) {
 							//localCheckList.setDeleted(true);
 							localCheckList.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 							toBeRemoveList.add(localCheckList);
@@ -11130,10 +11136,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 
-					if (technicalCheckList.contains(scQtCheckList)) {
+					  for(ScQtCheckList techlist:technicalCheckList){
+							if (techlist.getTitle().trim()
+									.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
 						throw new EpException(MessageConst.ERROR_760207,
 								new String[] { scQtCheckList.getTitle() });
 					}
+					  }
 				}
 			}
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
@@ -11246,8 +11255,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					for (int i = 0; i < finanicalCheckList.size(); i++) {
 						ScQtCheckList localCheckList = finanicalCheckList
 								.get(i);
-						if (this.getManagedBean().getCheckListTitle()
-								.equalsIgnoreCase(localCheckList.getTitle())) {
+						if (this.getManagedBean().getCheckListTitle().trim()
+								.replaceAll("\\s", "")
+								.equalsIgnoreCase(localCheckList.getTitle().trim()
+										.replaceAll("\\s", ""))) {
 							localCheckList.setDeleted(true);
 							toBeRemoveList.add(localCheckList);
 							finanicalCheckList.remove(localCheckList);
@@ -11369,16 +11380,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				specSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				resDto = specSO.retrieveSpecDetails(reqDTO);
-
+				
 				if (null != resDto
 						&& null != resDto.getFinSpecResultBean()
 								.getResultList()
 						&& !resDto.getFinSpecResultBean().getResultList()
 								.isEmpty()) {
+					if(null != this.getManagedBean().getCheckListTitle()
+							&& !"".equals(this.getManagedBean().getCheckListTitle())){
 					for (ScQtCheckList financialspec : resDto
 							.getFinSpecResultBean().getResultList()) {
-						if (financialspec.getTitle().equalsIgnoreCase(
-								financialSpecs.getTitle())) {
+						if (financialspec.getTitle().trim()
+								.replaceAll("\\s", "").equalsIgnoreCase(
+								this.getManagedBean().getCheckListTitle().trim()
+								.replaceAll("\\s", "")) || financialspec.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 							financialspec.setDeleted(true);
 							toBeRemovedList.add(financialspec);
 							break;
@@ -11387,6 +11402,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							 * new String[] { financialSpecs.getTitle() });
 							 */
 						}
+					}
 					}
 					if (null != toBeRemovedList && !toBeRemovedList.isEmpty()) {
 						removeDuplicateFinancialSpec(flowType, toBeRemovedList);
