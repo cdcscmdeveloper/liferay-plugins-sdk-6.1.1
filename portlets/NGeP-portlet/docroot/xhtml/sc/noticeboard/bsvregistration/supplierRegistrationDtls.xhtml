@@ -194,7 +194,7 @@
 				value="#{noticeBoardBackingBean.managedBean.briefingDtls.tempRegistration.bsvAttendance}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10">
-
+				<ac:paginator for="attendanceDetailstbl" />
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sc.name']}">
