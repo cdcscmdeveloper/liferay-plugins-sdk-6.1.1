@@ -1320,8 +1320,8 @@ public class LOIDetailBackingBean extends
 			negoTerm.setSelectedTerm(Boolean.FALSE);
 		} else{
 			negoTerm.setSelectedTerm(Boolean.TRUE);
+			negoTerm.setSelected(true);
 		}
-		negoTerm.setSelected(true);
 		negoTerm.setScLoi(scLoi);
 		negoTerm.setModified(true);
 		scNegoTerms.add(negoTerm);
@@ -2755,6 +2755,7 @@ public class LOIDetailBackingBean extends
 	public StreamedContent getLoiLetterStreamContent() throws Exception {
 		ScLoi scLoi = getManagedBean().getScLoi();
 		ScLoiAttachment attachment = getLoiAttachment(scLoi);
+		attachment.setDocNo(scLoi.getLoiNo());
 		generateLoiLetterFromVelocityToPdf(scLoi, attachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				attachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
@@ -2770,6 +2771,7 @@ public class LOIDetailBackingBean extends
 	public StreamedContent previewLetter() throws Exception {
 		ScLoi scLoi = getManagedBean().getScLoi();
 		ScLoiAttachment attachment = getLoiAttachment(scLoi);
+		attachment.setDocNo(scLoi.getLoiNo());
 		generateLoiLetterFromVelocityToPdf(scLoi,attachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				attachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
@@ -3143,8 +3145,7 @@ public class LOIDetailBackingBean extends
 
 		// nego terms
 		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
-				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId)
-				|| QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId)) {
 			if (scLoi.getScNegoTerms() != null
 					&& scLoi.getScNegoTerms().size() > 0) {
 				List<ScLoiTerm> selectedTerms = new ArrayList<ScLoiTerm>();
