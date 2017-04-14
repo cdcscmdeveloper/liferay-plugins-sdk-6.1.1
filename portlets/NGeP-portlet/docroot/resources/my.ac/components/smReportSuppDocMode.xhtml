@@ -20,7 +20,7 @@
 		<p:selectOneMenu label="#{lbl['lbl.rpt.supportingDocumentMode']}" id="#{cc.attrs.id}" 
 			value="#{cc.attrs.bBean.managedBean.suppDocMode}" style="width:300px;" 
 			required="#{paramRequired}" disabled="#{cc.attrs.disabled}" >
-			<f:selectItem itemLabel="#{lbl['defaultLabel']}" itemValue="" />
+			<f:selectItem itemLabel="#{lbl[defaultLabel]}" itemValue="" />
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.online']}" itemValue="#{lbl['lbl.rpt.online.val']}" />
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.offline']}" itemValue="#{lbl['lbl.rpt.offline.val']}" />
 			<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />

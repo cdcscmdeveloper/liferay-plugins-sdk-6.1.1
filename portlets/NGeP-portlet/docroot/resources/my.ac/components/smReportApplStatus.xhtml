@@ -20,7 +20,7 @@
 		<p:selectOneMenu label="#{lbl['lbl.rpt.applStatus']}" id="#{cc.attrs.id}" 
 			value="#{cc.attrs.bBean.managedBean.applStatus}" style="width:300px;" 
 			required="#{paramRequired}" disabled="#{cc.attrs.disabled}">
-			<f:selectItem itemLabel="#{defaultLabel}"
+			<f:selectItem itemLabel="#{lbl[defaultLabel]}"
 				itemValue=""></f:selectItem>
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.approve']}"
 				itemValue="A"></f:selectItem>
