@@ -1141,9 +1141,9 @@ public class QTDetailBackingBean extends
 					}
 
 				}
-				List<ScQtApprovalRemark> remarks = pubApproval
+				/**List<ScQtApprovalRemark> remarks = pubApproval
 						.getScQtApprovalRemarks();
-				finalizeRemarks(remarks);
+				finalizeRemarks(remarks);**/
 				approvals.add(pubApproval);
 				scQt.setScQtApprovals(approvals);
 			}
