@@ -99,6 +99,26 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_044_virtual_cert_release_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfSoftcertPaymentRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_078_list_of_softcert_payment_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRejectedSoftcertRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_079_rejected_softcert_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smPayRegisFeeRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_027_payment_pro_reg_fee.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfPreExpiryCompanyRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_021_expired_company_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRevenueCollectionRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_074_revenue_collection_rpt.xhtml"></ui:include>
+				</c:if>
+				
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
