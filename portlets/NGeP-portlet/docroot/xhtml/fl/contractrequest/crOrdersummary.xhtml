@@ -6,7 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="#{lbl['lbl.fl.menu.order.summary']}" toggleable="true">
-	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary']}" escape="false"/>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary1']}" escape="false"/>&#160;
+	<p:graphicImage value="/css/images/icon-expand.png" />&#160;
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary2']}" escape="false"/>
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}">
