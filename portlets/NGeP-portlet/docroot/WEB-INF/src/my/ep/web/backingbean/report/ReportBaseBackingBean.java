@@ -13,6 +13,7 @@
 package my.ep.web.backingbean.report;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -235,6 +236,92 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 			}
 		}
 		return years;
+	}
+	
+	public List<SelectItem> getCommonMonthList() {
+		List<SelectItem> monthList = new ArrayList<SelectItem>();
+		Locale locale = null;
+		String lang = new FacesScopes().getUserLocale().getLanguage();
+		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+		}
+		String month = ReportConst.EMPTY_VAL;
+		int monthNoInt;
+		String monthNoStr = ReportConst.EMPTY_VAL;
+		DateFormatSymbols dfs = new DateFormatSymbols(locale);
+		String[] months = dfs.getMonths();
+		for (int i = 0; i <= 11; i++) {
+			monthNoInt = i + 1;
+			if (monthNoInt < 10) {
+				monthNoStr = ReportConst.ZERO_VAL + monthNoInt;
+			} else {
+				monthNoStr = monthNoInt + ReportConst.EMPTY_VAL;
+			}
+			month = months[i];
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(month);
+			selectItem.setValue(monthNoStr);
+			monthList.add(selectItem);
+		}
+		return monthList;
+	}
+	
+	/**
+	 * Gets the calendar month name by no.
+	 * 
+	 * @param monthNo
+	 *            the month no
+	 * @return the calendar month name by no
+	 */
+	public String getCalendarMonthNameByNo(String monthNo) {
+
+		int month = Integer.parseInt(monthNo);
+		String monthString = "";
+
+		switch (month) {
+		case 1:
+			monthString = "January";
+			break;
+		case 2:
+			monthString = "February";
+			break;
+		case 3:
+			monthString = "March";
+			break;
+		case 4:
+			monthString = "April";
+			break;
+		case 5:
+			monthString = "May";
+			break;
+		case 6:
+			monthString = "June";
+			break;
+		case 7:
+			monthString = "July";
+			break;
+		case 8:
+			monthString = "August";
+			break;
+		case 9:
+			monthString = "September";
+			break;
+		case 10:
+			monthString = "October";
+			break;
+		case 11:
+			monthString = "November";
+			break;
+		case 12:
+			monthString = "December";
+			break;
+		default:
+			monthString = "Invalid month";
+			break;
+		}
+		return monthString;
 	}
 	
 	
