@@ -1203,14 +1203,12 @@ public class LOADetailBackingBean extends
 			try {
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
-				
 				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 				
-				
-				StringBuilder filename = new StringBuilder();
-				//replace white space due to firefox 
-				filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
 				if (scLoaReportAttachment == null) {
+					StringBuilder filename = new StringBuilder();
+					//replace white space due to firefox 
+					filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
@@ -1287,20 +1285,19 @@ public class LOADetailBackingBean extends
 					
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
+						//filename.append(".pdf");
+						//scLoaReportAttachment.setFileName(filename.toString());
 					/*	generateAgreementLetterDocFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());*/
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
-						generateAckOfLOAReceiptPdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+						//filename.append(".pdf");
+						//scLoaReportAttachment.setFileName(filename.toString());
+						//generateAckOfLOAReceiptPdfFromVelocity((ScAttachment) scLoaReportAttachment, scLoa);
 					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
+						//filename.append(".pdf");
+						//scLoaReportAttachment.setFileName(filename.toString());
 						generateDeclarationPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
 					} 
@@ -1434,9 +1431,9 @@ public class LOADetailBackingBean extends
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		//title=title.replaceAll("&", "&#38;");
+		//title=title.replaceAll("<", "&#60;");
+		//title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 		context.put("supplierName", scLoiLoa.getSupplierName());
 		context.put("loaAmt", amountDF.format(scLoa.getLoaAmt()));
@@ -1554,7 +1551,7 @@ public class LOADetailBackingBean extends
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			//supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
 		context.put("supplierAddress", supplierAddress);
 		
@@ -1579,9 +1576,9 @@ public class LOADetailBackingBean extends
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		//title=title.replaceAll("&", "&#38;");
+		//title=title.replaceAll("<", "&#60;");
+		//title=title.replaceAll(">", "&#62;");
 		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false);
@@ -1911,9 +1908,9 @@ public class LOADetailBackingBean extends
 		//title = title.replaceAll("\\W", ""); 
 		title=title.replaceAll("\r\n", "<br />");
 		//#13245 don't escape
-//		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+        //title=title.replaceAll("&", "&#38;");
+		//title=title.replaceAll("<", "&#60;");
+		//title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 
 		String userName = "Nama Pembekal";
