@@ -156,6 +156,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         	html = html.replaceAll("&amp;nbsp;", "");
         	html = html.replaceAll("&amp;", "&amp;amp;")
         			   .replaceAll("&", "&amp;");
+        	html = html.replaceAll("&amp;#62", "&#62");
+          	html = html.replaceAll("&amp;#60", "&#60");
+        	 
             render.setDocumentFromString(html);
             render.layout();
             render.createPDF(os);
