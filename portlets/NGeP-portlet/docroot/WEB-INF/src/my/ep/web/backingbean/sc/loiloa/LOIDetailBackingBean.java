@@ -2893,14 +2893,14 @@ public class LOIDetailBackingBean extends
 			context.put("loiNo", scLoi.getLoiNo());
 
 			String supplierName = scLoiLoa.getSupplierName();
-			supplierName = supplierName.replaceAll("&", "&#38;");
+			//supplierName = supplierName.replaceAll("&", "&#38;");
 			context.put("supplierName", supplierName);
 
 			String supplierAddress = null;
 			if (scLoi.getScSupplierAddress() != null) {
 				supplierAddress = getFullAddress(scLoi.getScSupplierAddress());
 				supplierAddress = supplierAddress.replaceAll("\r\n", "");
-				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+				//supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 				supplierAddress = supplierAddress.replaceAll(",,", ",");
 			} else {
 				supplierAddress = "&lt;&lt;Address&gt;&gt;";
@@ -2931,9 +2931,9 @@ public class LOIDetailBackingBean extends
 			//replace all special characters
 			//title = title.replaceAll("\\W", ""); 
 			title=title.replaceAll("\r\n", "<br />");
-			title=title.replaceAll("&", "&#38;");
+			/*title=title.replaceAll("&", "&#38;");
 			title=title.replaceAll("<", "&#60;");
-			title=title.replaceAll(">", "&#62;");
+			title=title.replaceAll(">", "&#62;");*/
 			context.put("title", title);
 
 			boolean isZonal = Boolean.FALSE;
@@ -4290,9 +4290,9 @@ public class LOIDetailBackingBean extends
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		//title=title.replaceAll("&", "&#38;");
+		//title=title.replaceAll("<", "&#60;");
+		//title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 		/*context.put("fulfilmentType",
 				getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));*/
