@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.paymentmatch;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,6 +123,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
@@ -825,10 +827,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}
 		getManagedBean().setTaxInvoiceList(new ArrayList<TaxInvoiceVO>());
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		if(taxAmountMap.containsKey(GSFType.STANDARD.value())){
 			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.STANDARD.value());
 			BigDecimal amtWithoutGst = (new BigDecimal(taxInvoice.getAmountWithoutGst())).subtract(getManagedBean().getGstAmount()) ;
-			taxInvoice.setAmountWithoutGst(amtWithoutGst.toString());
+			taxInvoice.setAmountWithoutGst(amountDF.format(amtWithoutGst));
+			BigDecimal amtGst = new BigDecimal(taxInvoice.getGstAmount());
+			taxInvoice.setGstAmount(amountDF.format(amtGst));
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}else{
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
@@ -842,6 +848,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		if(taxAmountMap.containsKey(GSFType.ZERO_RATED.value())){
 			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.ZERO_RATED.value());
+			BigDecimal amtWithoutGst = new BigDecimal(taxInvoice.getAmountWithoutGst());
+			taxInvoice.setAmountWithoutGst(amountDF.format(amtWithoutGst));
+			BigDecimal amtGst = new BigDecimal(taxInvoice.getGstAmount());
+			taxInvoice.setGstAmount(amountDF.format(amtGst));
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}else{
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
@@ -852,6 +862,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		if(taxAmountMap.containsKey(GSFType.RELIEF.value())){
 			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.RELIEF.value());
+			BigDecimal amtWithoutGst = new BigDecimal(taxInvoice.getAmountWithoutGst());
+			taxInvoice.setAmountWithoutGst(amountDF.format(amtWithoutGst));
+			BigDecimal amtGst = new BigDecimal(taxInvoice.getGstAmount());
+			taxInvoice.setGstAmount(amountDF.format(amtGst));
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}else{
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
@@ -862,6 +876,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		if(taxAmountMap.containsKey(GSFType.OUT_OF_SCOPE.value())){
 			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.OUT_OF_SCOPE.value());
+			BigDecimal amtWithoutGst = new BigDecimal(taxInvoice.getAmountWithoutGst());
+			taxInvoice.setAmountWithoutGst(amountDF.format(amtWithoutGst));
+			BigDecimal amtGst = new BigDecimal(taxInvoice.getGstAmount());
+			taxInvoice.setGstAmount(amountDF.format(amtGst));
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}else{
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
