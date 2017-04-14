@@ -167,7 +167,6 @@ public class NoticeBoardBackingBean extends
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
 	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
-	private static final String REGIST_MSG_KEY = "lbl.sc.notice.board.regist.msg";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
@@ -814,16 +813,7 @@ public class NoticeBoardBackingBean extends
 		retriveBsvDetails(qtId);
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
-		if (smSupplier != null && null != managedBean.getMofNumber()) {
-			managedBean.setCompanyName(smSupplier.getCompanyName());
-			managedBean.setValidMofNo(true);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							null, ResourceBundleUtils.getMessage(
-									REGIST_MSG_KEY, 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())));
-		} else {
+		if (smSupplier == null || null == managedBean.getMofNumber()) {
 			managedBean.setValidMofNo(false);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
