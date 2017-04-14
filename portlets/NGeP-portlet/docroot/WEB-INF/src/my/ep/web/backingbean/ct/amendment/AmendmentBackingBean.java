@@ -4079,12 +4079,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)){
+		if(getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
 			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_SST);
 			getManagedBean().getCtLetterOfAcceptance().get(0).setLoaAttachments(attachment);
-		}
-		if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+		} else if(getManagedBean().getAckFA() != null
+				&& getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
 			 getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
 		}
