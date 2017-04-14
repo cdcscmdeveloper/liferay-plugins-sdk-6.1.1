@@ -81,7 +81,7 @@
 						action="#{templateDocBackingBean.reNumbering(templateDocBackingBean.managedBean.docSectionTN)}"
 						process="@this" update="@form" />
 					<p:commandButton action="#{templateDocBackingBean.previewAction}" 
-						value="Preview" update="display" oncomplete="dlg.show()" />
+						value="#{lbl['lbl.tpl.doc.preview']}" update="display" oncomplete="dlg.show()" />
 				</h:panelGroup>
 			</h:panelGrid>
 		</p:panel>
