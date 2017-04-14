@@ -171,19 +171,20 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		this.getManagedBean().setQtCustomerServiceSearchBean(customerService);
 		this.getManagedBean().setQtCustomerServiceDataModel(customerServiceModel);
 		this.getManagedBean().setOfficerName(" ");
-		if(statusId >=QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT){
+		log.info("=status Id==="+statusId);
+		if(isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
 			log.info("=status greater==="+statusId);
 			retriveCustomerServiceBriefingSiteVisitdtls(scQt.getQtId());
-			if(statusId >QTStatusConst.QT_PENDING_PUBLICATION){
+			if(isQTStatusGreaterThan(statusId, QTStatusConst.QT_PENDING_PUBLICATION)){
 			this.getManagedBean().setTotalProposalSubmitCount(totalproposaSubmitteed(scQt.getQtId()));
 			}
-			if(statusId >=QTStatusConst.QT_SUPPLIER_FINALIZATION){
+			if(isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_SUPPLIER_FINALIZATION)){
 				List<ScBidSchedule> bidScheduleList=retriveCustomerServiceBidSchedules(scQt.getQtId());
 				if(CollectionUtils.isNotEmpty(bidScheduleList)){
 					this.getManagedBean().setBidScheduleList(bidScheduleList);
 				}	
 			}
-		if(statusId>=QTStatusConst.QT_PENDING_LOI || statusId>=QTStatusConst.QT_PENDING_LOA){
+		if(isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_PENDING_LOI) || isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_PENDING_LOA)){
 		 docNumberList=retriveListOfLoiLoaDocNumbers(scQt.getQtId());
 		}
 		}
