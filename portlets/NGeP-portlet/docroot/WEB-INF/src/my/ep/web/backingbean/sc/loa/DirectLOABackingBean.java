@@ -3825,11 +3825,10 @@ public class DirectLOABackingBean extends
 						.getDocDefinitionKey();
 				ScLoa scLoa = getManagedBean().getScLoa();
 				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-				StringBuilder filename = new StringBuilder(); // replace white
-																// space due to
-																// firefox
-				filename.append(scLoaReport.getTitle().replaceAll("\\s", ""));
+				
 				if (scLoaReportAttachment == null) {
+					StringBuilder filename = new StringBuilder(); // replace white space due to firefox
+                    filename.append(scLoaReport.getTitle().replaceAll("\\s", ""));
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
@@ -3923,18 +3922,18 @@ public class DirectLOABackingBean extends
 							.getLoaNo());
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
+						//filename.append(".pdf");
+						//scLoaReportAttachment.setFileName(filename.toString());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
-						generateAckOfLOAReceiptPdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+						//filename.append(".pdf");
+						//scLoaReportAttachment.setFileName(filename.toString());
+						/*generateAckOfLOAReceiptPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());*/
 					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
+						//filename.append(".pdf");
+						//scLoaReportAttachment.setFileName(filename.toString());
 						generateDeclarationPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
 					} 
@@ -4637,9 +4636,9 @@ public class DirectLOABackingBean extends
 				//replace all special characters
 				//title = title.replaceAll("\\W", ""); 
 				title=title.replaceAll("\r\n", "<br />");
-				title=title.replaceAll("&", "&#38;");
-				title=title.replaceAll("<", "&#60;");
-				title=title.replaceAll(">", "&#62;");
+				//title=title.replaceAll("&", "&#38;");
+				//title=title.replaceAll("<", "&#60;");
+				//title=title.replaceAll(">", "&#62;");
 				context.put("title", title);
 		
 
@@ -4883,7 +4882,7 @@ public class DirectLOABackingBean extends
 			
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			//supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
 		context.put("supplierAddress", supplierAddress);
 		context.put("supplierEmail", supplierEmail);
@@ -4917,9 +4916,9 @@ public class DirectLOABackingBean extends
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		//title=title.replaceAll("&", "&#38;");
+		//title=title.replaceAll("<", "&#60;");
+		//title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 
 		context.put("hasLoi", false); // TODO
@@ -5053,7 +5052,7 @@ public class DirectLOABackingBean extends
 		if (bankName == null) {
 			bankName = "";
 		}
-		context.put("bankName", bankName.replaceAll("&", "&#38;"));
+		context.put("bankName", bankName);
 		String bankBranch = scLoa.getBankBranch();
 		if (bankBranch == null) {
 			bankBranch = "";
@@ -5063,7 +5062,7 @@ public class DirectLOABackingBean extends
 		if (scLoa.getScBankAddress() != null) {
 			bankAddress = getFullAddress(scLoa.getScBankAddress());
 			bankAddress = bankAddress.replaceAll("\r\n", "<br />");
-			bankAddress = bankAddress.replaceAll("&", "&#38;");
+			//bankAddress = bankAddress.replaceAll("&", "&#38;");
 		}
 		context.put("bankAddress", bankAddress);
 
@@ -5435,7 +5434,7 @@ public class DirectLOABackingBean extends
 		}
 
 		String zoneName = specZoneDtl != null ? specZoneDtl.getZoneName() : "";
-		zoneName = zoneName.replaceAll("&", "&#38;");
+		//zoneName = zoneName.replaceAll("&", "&#38;");
 		itemBean.setZoneName(zoneName);
 		itemBean.setItem(specQuestion.getClItem());
 
@@ -7089,7 +7088,7 @@ public class DirectLOABackingBean extends
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			//supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
 		context.put("supplierAddress", supplierAddress);
 		
@@ -7114,9 +7113,9 @@ public class DirectLOABackingBean extends
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		//title=title.replaceAll("&", "&#38;");
+		//title=title.replaceAll("<", "&#60;");
+		//title=title.replaceAll(">", "&#62;");
 		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false); // TODO
