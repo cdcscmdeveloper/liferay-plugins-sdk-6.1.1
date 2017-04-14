@@ -43,6 +43,17 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" toggleable="true">
+		<script>
+			function getAddress(addr1, addr2, addr3, cityName,
+					districtName, stateName, countryName) {
+
+				var address = addr1 + addr2 + addr3 + cityName + ','
+						+ districtName + ',' + stateName + ',' + countryName;
+
+				return address;
+			}
+		</script>
+	
 		<p:dataTable var="svTask"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -75,19 +86,14 @@
 					</tr>
 				</table>
 				</ui:remove>
-				<script  type="text/javascript">
-					function getAddress(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
-						var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
-						return address;
-					}
-				</script>
-				
-				
+			
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
 					locationName="#{svTask.smAppl.smCompanyBasic.companyName}"
 					latitude="#{svTask.smSvAddress.address.mapLatitude}" 
 					longitude="#{svTask.smSvAddress.address.mapLongitude}" 
-					address="#{svTask.smSvAddress.address.address1}#{svTask.smSvAddress.address.address2}#{svTask.smSvAddress.address.address3}#{svTask.smSvAddress.address.pmCity.cityName},#{svTask.smSvAddress.address.pmDistrict.districtName}, #{svTask.smSvAddress.address.pmState.stateName},#{svTask.smSvAddress.address.pmCountry.countryName}" />
+					address="getAddress('#{svTask.smSvAddress.address.address1}','#{svTask.smSvAddress.address.address2}','#{svTask.smSvAddress.address.address3}',
+					'#{svTask.smSvAddress.address.pmCity.cityName}','#{svTask.smSvAddress.address.pmDistrict.districtName}','#{svTask.smSvAddress.address.pmState.stateName}',
+					'#{svTask.smSvAddress.address.pmCountry.countryName}')" />
 			</p:column>
 			
 			<p:column
