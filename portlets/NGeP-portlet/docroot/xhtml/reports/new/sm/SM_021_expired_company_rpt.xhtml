@@ -32,4 +32,8 @@
 			</td>
 		</tr>
 	</table>
+	
+	<ac:smGenerateReport bBean="#{expiredCompanyRptBB}" reportCode="#{smReportBB.managedBean.reportCode}"
+		generateMethod="generateReport" resetMethod="resetSearch">
+	</ac:smGenerateReport>
 </ui:composition>
