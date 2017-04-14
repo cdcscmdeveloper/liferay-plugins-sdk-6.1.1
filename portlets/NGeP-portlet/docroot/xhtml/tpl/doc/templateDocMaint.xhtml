@@ -165,11 +165,11 @@
 			</h:panelGrid>
 			<h:panelGrid width="100%" columns="1" >
 				<h:panelGroup style="float: right;">
-					<p:commandButton value="Re-Numbering"
+					<p:commandButton value="#{lbl['lbl.tpl.doc.renumbering']}"
 						action="#{templateDocBackingBean.reNumbering(templateDocBackingBean.managedBean.docSectionTN)}"
 						process="@this" update=":form:sampleTT" />
 					<p:commandButton action="#{templateDocBackingBean.previewAction}" 
-						value="Preview" update="display" oncomplete="dlg.show()" />
+						value="#{lbl['lbl.tpl.doc.preview']}" update="display" oncomplete="dlg.show()" />
 				</h:panelGroup>
 			</h:panelGrid>
 		</p:panel>
