@@ -1055,14 +1055,14 @@ public class QTDetailBackingBean extends
 			}
 			scQt.setScQtApprovals(approvalList);
 		}
-		if (CollectionUtils.isNotEmpty(scQt.getScQtApprovals())) {
+		/*if (CollectionUtils.isNotEmpty(scQt.getScQtApprovals())) {
 			for (ScQtApproval qtApproval : scQt.getScQtApprovals()) {
 				qtApproval.setScQtApprovalRemarks(
 						finalizeRemarks(qtApproval
 								.getScQtApprovalRemarks()));
 			}
 		}
-
+*/
 		scQt.setScQtBriefings(null);
 		if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
 			List<ScQtBsv> scQtBsvs = constructBriefingSiteVisitList(scQt);
