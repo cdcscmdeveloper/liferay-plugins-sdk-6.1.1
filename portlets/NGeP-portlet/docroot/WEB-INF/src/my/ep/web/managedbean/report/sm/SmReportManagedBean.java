@@ -24,6 +24,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String state;
 	private String year;
 	private String yearTo;
+	private String applStatus;
+	private String suppDocMode;
 	private List<SelectItem> stateLst;
 	private List<String> yearList;
 
@@ -145,5 +147,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setYearTo(String yearTo) {
 		this.yearTo = yearTo;
+	}
+
+	public String getApplStatus() {
+		return applStatus;
+	}
+
+	public void setApplStatus(String applStatus) {
+		this.applStatus = applStatus;
+	}
+
+	public String getSuppDocMode() {
+		return suppDocMode;
+	}
+
+	public void setSuppDocMode(String suppDocMode) {
+		this.suppDocMode = suppDocMode;
 	}
 }
