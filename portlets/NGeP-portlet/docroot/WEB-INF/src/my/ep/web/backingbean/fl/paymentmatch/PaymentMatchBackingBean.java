@@ -864,8 +864,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.RELIEF.value());
 			BigDecimal amtWithoutGst = new BigDecimal(taxInvoice.getAmountWithoutGst());
 			taxInvoice.setAmountWithoutGst(amountDF.format(amtWithoutGst));
-			BigDecimal amtGst = new BigDecimal(taxInvoice.getGstAmount());
-			taxInvoice.setGstAmount(amountDF.format(amtGst));
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}else{
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
@@ -878,8 +876,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.OUT_OF_SCOPE.value());
 			BigDecimal amtWithoutGst = new BigDecimal(taxInvoice.getAmountWithoutGst());
 			taxInvoice.setAmountWithoutGst(amountDF.format(amtWithoutGst));
-			BigDecimal amtGst = new BigDecimal(taxInvoice.getGstAmount());
-			taxInvoice.setGstAmount(amountDF.format(amtGst));
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}else{
 			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
