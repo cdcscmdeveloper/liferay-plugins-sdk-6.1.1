@@ -10,11 +10,12 @@
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
+		<cc:attribute name="id" default="#{cc.id}"/>
 	</cc:interface>
 
 	<cc:implementation>
 		<p:selectOneMenu label="#{lbl['lbl.rpt.state']}"
-			id="smManStatByState" value="#{cc.attrs.bBean.managedBean.state}"
+			id="#{cc.attrs.id}" value="#{cc.attrs.bBean.managedBean.state}"
 			required="#{cc.attrs.required}" style="width:300px;">
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
 			<f:selectItems value="#{cc.attrs.bBean.managedBean.stateLst}" />
@@ -22,6 +23,6 @@
 				listener="#{cc.attrs.bBean.onChangeState}"
 				process="@this" partialSubmit="true" update="@form" />
 		</p:selectOneMenu>
-		<p:message id="smManStatByStateMsg" for="smManStatByState" display="icon" showDetail="false" />
+		<p:message id="#{cc.attrs.id}Msg" for="#{cc.attrs.id}" display="icon" showDetail="false" />
 	</cc:implementation>
 </ui:composition>
