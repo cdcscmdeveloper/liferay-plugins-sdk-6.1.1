@@ -31,6 +31,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_YEAR_FROM = "PYEARFROM";
 	public static final String PARAM_YEAR_TO= "PYEARTO";
 	public static final String PARAM_SUPP_DOC_MODE = "PSUPPDOCMODE";
+	public static final String PARAM_DISTRICT = "PDISTRICTID";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
