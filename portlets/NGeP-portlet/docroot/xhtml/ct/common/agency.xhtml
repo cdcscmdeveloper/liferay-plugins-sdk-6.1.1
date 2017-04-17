@@ -154,7 +154,7 @@
 				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}"/>     </td>
 				           <td> <p:commandButton id="uploadSharingDoc" oncomplete="ctSharingAttachDlg.show();return false;" 
 				                      rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
-					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"/>
+					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" process="@this" partialSubmit="true"/>
 
 		     					 <h:commandLink
 										value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.fileName)}"						
@@ -163,7 +163,7 @@
 						
 			   					<p:commandLink process="@this" partialSubmit="true"
 			   						   onclick="delCtSharingAttachDlg.show();"  
-			   						   disabled="#{ctBackingBean.managedBean.viewContract}"
+			   						   disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
 									  rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath != null}">
 			   								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" style="margin-bottom:-10px;"/>
 			 					</p:commandLink>
