@@ -343,10 +343,8 @@
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 						<p:ajax event="dateSelect" />
 					</p:calendar>
-					<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
-				</td>
-				<td style="margin-top: -3px">
 					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.government.sign.date.tooltip']}" />
+					<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
 				</td>
 			</tr>
 			<tr>
