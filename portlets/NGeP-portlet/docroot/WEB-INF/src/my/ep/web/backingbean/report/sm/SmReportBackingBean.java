@@ -11,8 +11,11 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -21,6 +24,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.SmReportManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -82,6 +86,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeState() {
 
 	}
+	
+	public void onChangeDistrict() {
+
+	}
 
 	public void onChangeYear() {
 
@@ -108,6 +116,23 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().setStateLst(
 				SmCommonUtil.getStateList(country.getCountryId()));
+	}
+	
+	public void initStatesByZone(){
+		getManagedBean().setDistrictLst(new ArrayList<SelectItem>());
+		if (StringUtils.isBlank(getManagedBean().getZone())) {
+			initStates();
+		} else {
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			reqDTO.setZoneName(getManagedBean().getZone());
+			List<PmState> stateList = SmServiceLookup.getStateSO()
+					.retriveStatesListByCountryCodeWithZoneName(reqDTO)
+					.getStateList();
+			getManagedBean().setStateLst(
+					EntityHelper.convertListToSelectItem(stateList,
+							"stateName", "stateId"));
+		}
 	}
 
 	public List<SelectItem> retrieveRegType(boolean showAll, boolean showUpgrade) {

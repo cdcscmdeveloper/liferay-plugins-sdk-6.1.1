@@ -22,11 +22,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String applNo;
 	private String applType;
 	private String state;
+	private String district;
 	private String year;
 	private String yearTo;
 	private String applStatus;
 	private String suppDocMode;
 	private List<SelectItem> stateLst;
+	private List<SelectItem> districtLst;
 	private List<String> yearList;
 
 	public Date getDateFrom() {
@@ -163,5 +165,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setSuppDocMode(String suppDocMode) {
 		this.suppDocMode = suppDocMode;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public List<SelectItem> getDistrictLst() {
+		return districtLst;
+	}
+
+	public void setDistrictLst(List<SelectItem> districtLst) {
+		this.districtLst = districtLst;
 	}
 }
