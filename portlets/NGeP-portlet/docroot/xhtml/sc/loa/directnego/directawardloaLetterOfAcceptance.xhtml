@@ -52,14 +52,18 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}"
-				    id="contendId"
-					value="#{scLoaReport.title}" required="true"
+					id="contendId" value="#{scLoaReport.title}" required="true"
 					disabled="#{directLOABackingBean.managedBean.readOnly}"
 					rendered="#{empty scLoaReport.pmDocument}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-				</h:inputText> 
+				</h:inputText>
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
+				<h:panelGroup id="SuratSetujuTerimaId"
+					rendered="#{scLoaReport.pmDocument.docDefinitionKey eq 'SP' and isPendingSubmissionStatus}">
+					<span style="color: red;">*</span>
+				</h:panelGroup>
+
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
