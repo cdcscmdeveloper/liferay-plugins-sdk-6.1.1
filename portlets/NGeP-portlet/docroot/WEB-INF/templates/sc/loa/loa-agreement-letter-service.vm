@@ -111,7 +111,7 @@ p {
 				$govtSignDate <br /></td>
 		</tr>
 		<tr>
-			<td>$supplierName <br /> $supplierAddress <br /> <br />
+			<td>$supplierName <br /> $supplierAddressTable <br /> <br />
 			</td>
 		</tr>
 		
