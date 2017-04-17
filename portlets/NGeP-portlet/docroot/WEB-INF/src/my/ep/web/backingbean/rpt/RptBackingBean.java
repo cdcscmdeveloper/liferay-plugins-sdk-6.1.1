@@ -35,6 +35,8 @@ public class RptBackingBean{
 	
 	private String requestId;
 	private String jobId;
+	private boolean reportServerHasError;
+	
 	private String reportId;
 	private String reportName;
 	private boolean isExcel;
@@ -114,6 +116,7 @@ public class RptBackingBean{
 		
 		this.requestId = String.valueOf(resDTO.getRequestId());
 		this.jobId = String.valueOf(resDTO.getJobId());
+		this.reportServerHasError = resDTO.isReportServerHasError();
 		
 		RequestContext.getCurrentInstance().execute("ex.show();");
 

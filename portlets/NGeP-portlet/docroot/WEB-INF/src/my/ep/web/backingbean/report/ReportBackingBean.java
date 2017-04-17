@@ -41,6 +41,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -126,6 +127,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.report.EnumReportType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -1231,6 +1233,8 @@ public class ReportBackingBean extends
 	private List<PmCategoryL3> supplierSubChildCatList;
 
 	boolean testing = false;
+	
+	private String message;
 	/**
 	 * Gets the select cat deletion list.
 	 * 
@@ -8769,18 +8773,30 @@ public class ReportBackingBean extends
 	public List<SelectItem> getAllModuleList() {
 		log.info("ReportBackingBean-getAllModuleList");
 		moduleList = new ArrayList<SelectItem>();
+		
+		log.info("1");
+		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+		
+			log.info("2");
+			
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
+			
+			log.info("3");
 			/*
 			 * String language =
 			 * ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,
 			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
 			 * FacesScopes().getUserLocale()); //String language = "ms";
 			 */
+			
+			log.info("4");
 			List<Object[]> moduleLst = reportSO.retrieveModuleList(strLanguage,
 					lngUserId);
+			
+			log.info("5");
 			if (CollectionUtils.isNotEmpty(moduleLst)) {
 				for (Object[] object : moduleLst) {
 					SelectItem selectItem = new SelectItem();
@@ -10170,6 +10186,7 @@ public class ReportBackingBean extends
 	 */
 	public List<SelectItem> retrieveReportListByAuthorization() {
 		log.info("ReportBackingBean-retrieveReportListByAuthorization");
+		System.out.println("jere");
 		reportList = new ArrayList<SelectItem>();
 		
 		//rptGenBean = new ReportsGenerateBean();
@@ -18843,9 +18860,16 @@ public class ReportBackingBean extends
 					
 					this.getManagedBean().setRequestId(String.valueOf(resDTO.getRequestId()));
 					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
+					this.getManagedBean().setReportServerHasError(resDTO.isReportServerHasError());
 					
-					RequestContext.getCurrentInstance().execute("ex.show();");
-					
+					if(!resDTO.isReportServerHasError()){
+						RequestContext.getCurrentInstance().execute("ex.show();");
+					} else {
+						FacesContext facesContext = FacesContext.getCurrentInstance();
+						facesContext.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Error while communicating with report server. Please try again later."));
+					}
 					
 					if(isReportTest()){
 						this.getManagedBean().setReportUrl(resDTO.getReportUrl());
@@ -20509,5 +20533,12 @@ public class ReportBackingBean extends
 		
 		return false;
 	}
-
+	
+	public void setMessage(String message){
+		this.message = message;
+	}
+	
+	public String getMessage() {
+		return message;
+	}
 }
