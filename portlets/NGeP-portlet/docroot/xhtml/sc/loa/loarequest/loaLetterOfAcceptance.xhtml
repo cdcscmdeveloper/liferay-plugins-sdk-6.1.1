@@ -61,6 +61,10 @@
 				</h:inputText>
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
+				<h:panelGroup id="SuratSetujuTerimaQtLoaId"
+					rendered="#{scLoaReport.pmDocument.docDefinitionKey eq 'SP' and isPendingSubmissionStatus}">
+					<span style="color: red;">*</span>
+				</h:panelGroup>
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
