@@ -188,7 +188,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	
 	private String reportUrl;
 	
-
+	private boolean isReportServerHasError;
+	
 	/**
 	 * Gets the report jsp.
 	 * 
@@ -1091,5 +1092,19 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
+	}
+
+	/**
+	 * @return the isReportServerHasError
+	 */
+	public boolean isReportServerHasError() {
+		return isReportServerHasError;
+	}
+
+	/**
+	 * @param isReportServerHasError the isReportServerHasError to set
+	 */
+	public void setReportServerHasError(boolean isReportServerHasError) {
+		this.isReportServerHasError = isReportServerHasError;
 	}
 }
