@@ -177,9 +177,9 @@
 					<h:outputText value="#{lbl['lbl.sc.selection']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.selection.loi.negotiate.tooltip']}" />
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{negoTerm.selected}"
+				<p:selectBooleanCheckbox value="#{negoTerm.selectedTerm}"
 					disabled="#{empty negoTerm.pmTerm or lOIDetailBackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				    <p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 		</p:dataTable>
