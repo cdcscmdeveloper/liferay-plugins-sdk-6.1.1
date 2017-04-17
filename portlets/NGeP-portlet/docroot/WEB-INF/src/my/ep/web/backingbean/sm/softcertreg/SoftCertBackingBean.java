@@ -16,15 +16,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -56,6 +47,15 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "softCertBackingBean")
 @RequestScoped
@@ -544,6 +544,18 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	public void showConfirmDialog() {
 		validateRequestSoftcert();
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
+	}
+
+	/**
+	 * Submit softcert request
+	 */
+	public void onSubmit() {
+		if (getManagedBean().isApplySoftcertForOthers()) {
+			onDisplaySpkiPopup();
+		} else {
+			makePayment();
+			RequestContext.getCurrentInstance().update("@form");
+		}
 	}
 
 	/**
