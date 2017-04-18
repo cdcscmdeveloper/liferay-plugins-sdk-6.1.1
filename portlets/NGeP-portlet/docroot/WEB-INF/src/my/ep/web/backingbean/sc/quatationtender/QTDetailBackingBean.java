@@ -3896,7 +3896,17 @@ public class QTDetailBackingBean extends
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 2:
-			// Skip the validation for committee while save - 10266
+			//Added the validation for committee while save - 13342
+			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setScQt(reqDTO.getQtdetail());
+			committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
+			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			committeReqDTO.setSaveFlow(true);
+			committeSO.validateAppointCommitteDtls(committeReqDTO);
+			
 			resDTO = detailSO.saveQTDtl(reqDTO);
 
 			int committeeTabIndex = this.getManagedBean()
