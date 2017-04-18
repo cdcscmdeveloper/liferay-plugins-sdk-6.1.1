@@ -324,5 +324,20 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		return monthString;
 	}
 	
-	
+	/**
+	 * checkTwoYearsFieldDefference - Check two years field defference.
+	 * 
+	 * @param yearFrom
+	 *            the year from
+	 * @param yearTo
+	 *            the year to
+	 */
+	public void checkTwoYearsFieldDefference(String yearFrom, String yearTo) {
+		log.info("ReportBackingBean-checkTwoYearsFieldDefference");
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780017);
+		}
+	}
 }
