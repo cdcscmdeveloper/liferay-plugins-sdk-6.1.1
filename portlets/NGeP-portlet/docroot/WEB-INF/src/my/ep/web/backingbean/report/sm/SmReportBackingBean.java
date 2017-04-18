@@ -73,7 +73,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 
 	public void setDefaultDateFromAndDateTo() {
 		if (getManagedBean().getDateFrom() == null
-				|| getManagedBean().getDateFrom() == null) {
+				|| getManagedBean().getDateTo() == null) {
 			Calendar fromDate = Calendar.getInstance();
 			fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 			getManagedBean().setDateFrom(fromDate.getTime());
