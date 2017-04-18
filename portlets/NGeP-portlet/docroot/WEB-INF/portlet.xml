@@ -9790,8 +9790,8 @@
 	
 	
 	<portlet>
-		<portlet-name>scSpecificationCommitteeEndorsment</portlet-name>
-		<display-name>Specification Committee Maintenance</display-name>
+		<portlet-name>scSpecificationCommitteeEndorsement</portlet-name>
+		<display-name>Specification Committee Maintenance Endorsement</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -9803,8 +9803,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Specification Committee Maintenance</title>
-			<short-title>Specification Committee Maintenance</short-title>
+			<title>Specification Committee Maintenance Endorsement</title>
+			<short-title>Specification Committee Maintenance Endorsement</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
