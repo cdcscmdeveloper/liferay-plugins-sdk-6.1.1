@@ -16,6 +16,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String zone;
 	private PmOrgProfile selectedOrgProfile;
 	private String mofNo;
+	private String epNo;
 	private String supplierType;
 	private String regType;
 	private String regNo;
@@ -27,6 +28,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String yearTo;
 	private String applStatus;
 	private String suppDocMode;
+	private String suppDocStatus;
 	private String role;
 	public String mofRegNoFrom;
 	public String mofRegNoTo;
@@ -208,5 +210,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setMofRegNoTo(String mofRegNoTo) {
 		this.mofRegNoTo = mofRegNoTo;
+	}
+
+	public String getEpNo() {
+		return epNo;
+	}
+
+	public void setEpNo(String epNo) {
+		this.epNo = epNo;
+	}
+
+	public String getSuppDocStatus() {
+		return suppDocStatus;
+	}
+
+	public void setSuppDocStatus(String suppDocStatus) {
+		this.suppDocStatus = suppDocStatus;
 	}
 }
