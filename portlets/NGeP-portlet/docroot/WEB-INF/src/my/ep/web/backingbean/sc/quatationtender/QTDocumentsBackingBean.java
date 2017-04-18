@@ -1080,10 +1080,18 @@ public class QTDocumentsBackingBean extends
 			ScQtDocReport docReports = scQtDocReports.get(i);
 			ScQtDocReportAttachment attachment = scQtDocReports.get(i)
 					.getScQtDocReportAttachment();
-			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
-				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			
+			if(currentStatusId != null && !isQTStatusPublished(currentStatusId)){
+				scQtDocReports.get(i).setScQtDocReportAttachment(
+						generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i + 1))));
+			} else {
+				if (attachment == null) {
+					attachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
+					scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
+				}
 			}
+			
 			
 			String docDefinitionKey = docReports.getPmDocument().getDocDefinitionKey();
 					
@@ -2659,8 +2667,7 @@ public class QTDocumentsBackingBean extends
 				.getScQtDocReportList();
 		for (int i = 0; i < scQtDocReports.size(); i++) {
 			scQtDocReports.get(i).setScQtDocReportAttachment(
-					generateDocumentAttachment(scQtDocReports.get(i),
-							getPrefixFileName((i + 1))));
+					generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i + 1))));
 			
 		}
 
