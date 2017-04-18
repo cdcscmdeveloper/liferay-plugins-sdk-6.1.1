@@ -5,13 +5,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -75,6 +79,63 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 
+	public void validateMofRegNo() {
+		if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom())
+				|| StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
+			throw new EpException(MessageConst.ERROR_REPORT_780035);
+		}
+		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
+		Pattern pattern1 = Pattern.compile(ptString1);
+		if (StringUtils.isNotEmpty(getManagedBean().getMofRegNoFrom())) {
+			String mofRegNoFrom = null;
+			if (getManagedBean().getMofRegNoFrom().contains(
+					ReportConst.PARAM_IFON)) {
+				mofRegNoFrom = getManagedBean().getMofRegNoFrom().replace(
+						ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+				if (mofRegNoFrom.contains(ReportConst.PARAM_SPACE)) {
+					mofRegNoFrom = mofRegNoFrom.replace(
+							ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);
+				}
+			} else {
+				mofRegNoFrom = getManagedBean().getMofRegNoFrom();
+			}
+
+			Matcher match1 = pattern1.matcher(mofRegNoFrom);
+			if (match1.matches()) {
+
+			} else {
+				getManagedBean().setMofRegNoFrom(null);
+				getManagedBean().setMofRegNoTo(null);
+				throw new EpException(MessageConst.ERROR_REPORT_780018);
+			}
+		}
+		String ptString2 = ReportConst.NUMERIC_PATTERN_ONLY;
+		Pattern pattern2 = Pattern.compile(ptString2);
+		if (StringUtils.isNotEmpty(getManagedBean().getMofRegNoTo())) {
+			String mofRegNoTo = null;
+			if (getManagedBean().getMofRegNoTo().contains(
+					ReportConst.PARAM_IFON)) {
+				mofRegNoTo = getManagedBean().getMofRegNoTo().replace(
+						ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+				if (mofRegNoTo.contains(ReportConst.PARAM_SPACE)) {
+					mofRegNoTo = mofRegNoTo.replace(ReportConst.PARAM_SPACE,
+							ReportConst.EMPTY_VAL);
+				}
+			} else {
+				mofRegNoTo = getManagedBean().getMofRegNoTo();
+			}
+
+			Matcher match2 = pattern2.matcher(mofRegNoTo);
+			if (match2.matches()) {
+				// this.setSmMofRegNoTo(mofRegNoTo);
+			} else {
+				getManagedBean().setMofRegNoFrom(null);
+				getManagedBean().setMofRegNoTo(null);
+				throw new EpException(MessageConst.ERROR_REPORT_780018);
+			}
+		}
+	}
+
 	public void onChangeZone() {
 
 	}
@@ -86,7 +147,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeState() {
 
 	}
-	
+
 	public void onChangeDistrict() {
 
 	}
@@ -117,8 +178,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		getManagedBean().setStateLst(
 				SmCommonUtil.getStateList(country.getCountryId()));
 	}
-	
-	public void initStatesByZone(){
+
+	public void initStatesByZone() {
 		getManagedBean().setDistrictLst(new ArrayList<SelectItem>());
 		if (StringUtils.isBlank(getManagedBean().getZone())) {
 			initStates();
