@@ -38,6 +38,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_MOF_REG_NO_TO = "PTOMOFNO";
 	public static final String PARAM_EP_NO = "PEPNO";
 	public static final String PARAM_RECEIPT_NO = "PRECEIPTNO";
+	public static final String PARAM_REPORT_TYPE = "PREPORTTYPE";
 	
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -118,10 +119,20 @@ public class SmReportConst implements Serializable {
 	public static final String SM_ROLE_CEO = "CEO";
 	public static final String SM_COMPLETE = "C";
 	public static final String SM_IN_COMPLETE = "IC";
+	public static final String SM_RESPONSE_REPORT = "RESPONSE";
+	public static final String SM_SUMMARY_REPORT = "SUMMARY";
 
 	public static final String PAYMENT_MOF = "M";
 	public static final String PAYMENT_PROCESSING = "P";
 	public static final String PAYMENT_SOFTC_CERT = "S";
+	
+	public String getSM_RESPONSE_REPORT() {
+		return SM_RESPONSE_REPORT;
+	}
+
+	public String getSM_SUMMARY_REPORT() {
+		return SM_SUMMARY_REPORT;
+	}
 
 	public String getSM_COMPLETE() {
 		return SM_COMPLETE;
