@@ -27,6 +27,9 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String yearTo;
 	private String applStatus;
 	private String suppDocMode;
+	private String role;
+	public String mofRegNoFrom;
+	public String mofRegNoTo;
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
 	private List<String> yearList;
@@ -181,5 +184,29 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setDistrictLst(List<SelectItem> districtLst) {
 		this.districtLst = districtLst;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getMofRegNoFrom() {
+		return mofRegNoFrom;
+	}
+
+	public void setMofRegNoFrom(String mofRegNoFrom) {
+		this.mofRegNoFrom = mofRegNoFrom;
+	}
+
+	public String getMofRegNoTo() {
+		return mofRegNoTo;
+	}
+
+	public void setMofRegNoTo(String mofRegNoTo) {
+		this.mofRegNoTo = mofRegNoTo;
 	}
 }

@@ -83,6 +83,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_016_supplier_stat_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfCompDirOwnCeoRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_046_comp_dir_owner_mngmnt_equi_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCompanyAddressListRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_052_company_addr_list_rpt.xhtml"></ui:include>
 				</c:if>

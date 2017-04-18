@@ -32,6 +32,9 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_YEAR_TO= "PYEARTO";
 	public static final String PARAM_SUPP_DOC_MODE = "PSUPPDOCMODE";
 	public static final String PARAM_DISTRICT = "PDISTRICTID";
+	public static final String PARAM_ROLE = "PPERSONNELROLE";
+	public static final String PARAM_MOF_REG_NO_FROM = "PFROMMOFNO";
+	public static final String PARAM_MOF_REG_NO_TO = "PTOMOFNO";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -107,10 +110,25 @@ public class SmReportConst implements Serializable {
 	public static final String SM_REG_TYPE_UPGRADE_BASIC_TO_MOF = "UPGRADE FROM BASIC TO MOF ACCOUNT";
 	public static final String SM_STATUS_ACTIVE = "Active";
 	public static final String SM_STATUS_INACTIVE = "Inactive";
+	public static final String SM_ROLE_DIRECTOR = "Director";
+	public static final String SM_ROLE_OWNER = "Owner";
+	public static final String SM_ROLE_CEO = "CEO";
 	
 	public static final String PAYMENT_MOF = "M";
 	public static final String PAYMENT_PROCESSING = "P";
 	public static final String PAYMENT_SOFTC_CERT = "S";
+	
+	public String getSM_ROLE_DIRECTOR() {
+		return SM_ROLE_DIRECTOR;
+	}
+
+	public String getSM_ROLE_OWNER() {
+		return SM_ROLE_OWNER;
+	}
+
+	public String getSM_ROLE_CEO() {
+		return SM_ROLE_CEO;
+	}
 	
 	public String getSM_STATUS_ACTIVE() {
 		return SM_STATUS_ACTIVE;
