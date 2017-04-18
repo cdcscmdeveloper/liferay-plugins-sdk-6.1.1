@@ -10,7 +10,7 @@
 		<table class="ppTwoTable">
 
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></th>
 				<td><p:selectOneRadio id="sorSearchOrgTypeId" layout="custom"
@@ -45,7 +45,7 @@
 					</h:panelGrid></td>
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgType']}" /></th>
 				<td><p:outputPanel id="somType">
 						<p:selectOneMenu id="orgTypeFederalList"
@@ -80,7 +80,7 @@
 
 			<tr>
 
-				<th width="20%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.search.orgname']}" /></th>
 				<td><p:outputPanel id="opFfcOrgCode"
 						rendered="#{ParameterConst.orgTypeFactoring eq pmReportsBackingBean.managedBean.selectedOrgType.parameterCode}">
@@ -137,7 +137,7 @@
 					</p:outputPanel></td>
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.idno']}" /></th>
 				<td><ac:lov id="pmIdentificationNo"
 						lovId="PM_USER_ID_REPORT" size="60" update="@form"
@@ -152,7 +152,7 @@
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.search.name']}" /></th>
 				<td><p:inputText readonly="true" size="60"
 						value="#{pmReportsBackingBean.managedBean.selectedPmUser.userName}">						
@@ -161,7 +161,7 @@
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.search.role']}" /></th>
 				<td><p:inputText size="60" id="itSelectedRoleDesc"
 						value="#{not empty(pmReportsBackingBean.managedBean.selectedRoleDesc) ? pmReportsBackingBean.managedBean.selectedRoleDesc.roleName :''}"
