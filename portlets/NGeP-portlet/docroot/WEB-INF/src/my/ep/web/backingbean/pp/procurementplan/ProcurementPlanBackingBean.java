@@ -1985,12 +1985,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						nextRole = RoleCode.PLAN_APPROVER.value();
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 						nextRole = RoleCode.PLAN_VERF_OFFICER.value();
-						if(ppPlan.getCurrentStatus()!= null 
-								&& ppPlan.getCurrentStatus().getPmStatus() != null 
-								&& ProcurementPlanConst.PPP_PENDING_REVISION
-								.equals(ppPlan.getCurrentStatus().getPmStatus().getStatusId())){
-							nextRole = resDTO.getPreviousActionedRoleCode();						
-						}
+//						if(ppPlan.getCurrentStatus()!= null 
+//								&& ppPlan.getCurrentStatus().getPmStatus() != null 
+//								&& ProcurementPlanConst.PPP_PENDING_REVISION
+//								.equals(ppPlan.getCurrentStatus().getPmStatus().getStatusId())){
+//							nextRole = resDTO.getPreviousActionedRoleCode();						
+//						}
 					}
 				}else if(BpmOutcomeConst.BPM_REVISE.equals(action)){
 					messageId = MessageConst.INFO_730032;
