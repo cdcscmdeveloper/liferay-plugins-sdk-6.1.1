@@ -2991,7 +2991,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>scSpecificationCommitteeEndorsment</portlet-name>
+		<portlet-name>scSpecificationCommitteeEndorsement</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
@@ -2999,7 +2999,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			scSpecificationCommitteeEndorsment-portlet
+			scSpecificationCommitteeEndorsement-portlet
 		</css-class-wrapper>
 	</portlet>
 	
