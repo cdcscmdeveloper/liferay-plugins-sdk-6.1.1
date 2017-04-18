@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
@@ -30,6 +31,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -221,5 +223,36 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			items.add(item);
 		}
 		return items;
+	}
+	
+	/**
+	 * retrieveRegStatusList - will retrieve registration status list.
+	 * 
+	 * @return the registrationStatusList
+	 */
+	public List<SelectItem> retrieveRegStatusList() {
+		log.info("ReportBackingBean-retrieveRegStatusList");
+		List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> regStatusList = reportSO
+					.retrieveRegStatusList(getFacesScopes().getUserLocale().getLanguage());
+			if (CollectionUtils.isNotEmpty(regStatusList)) {
+				for (Object[] object : regStatusList) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setValue(object[1].toString());
+					selectItem.setLabel(object[0].toString());
+					registrationStatusList.add(selectItem);
+				}
+			}
+		}
+		return registrationStatusList;
+	}
+	
+	public List<SelectItem> retrieveDistrictLsByStateId(Long stateId) {
+		return SmCommonUtil.getDistrictList(stateId);
 	}
 }
