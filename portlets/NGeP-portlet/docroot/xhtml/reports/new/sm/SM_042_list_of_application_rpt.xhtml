@@ -41,12 +41,7 @@
 
 			</td>
 			<td class="tdContent">
-				<p:selectOneMenu value="#{listOfApplicationRptBB.managedBean.applStatus}"
-					style="width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
-					<f:selectItems value="#{listOfApplicationRptBB.managedBean.applStatusList}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
+				<ac:smReportApplProgressStatus bBean="#{listOfApplicationRptBB}" />
 			</td>
 		</tr>
 		<tr>
@@ -112,7 +107,7 @@
 		</tr>
 	</table>
 	
-	<ac:smGenerateReport bBean="#{gstRegSupplierRptBB}" 
+	<ac:smGenerateReport bBean="#{listOfApplicationRptBB}" 
 		reportCode="#{smReportBB.managedBean.reportCode}"
 		generateMethod="generateReport" resetMethod="resetSearch">
 	</ac:smGenerateReport>
