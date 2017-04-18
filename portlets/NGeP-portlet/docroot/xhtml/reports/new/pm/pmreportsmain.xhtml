@@ -9,12 +9,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td width="90%"><p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
-						id="somReportName"
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td width="90%"><p:selectOneMenu
+						label="#{lbl['lbl.rpt.rptName']}" id="somReportName"
 						value="#{pmReportsBackingBean.managedBean.reportCode}"
 						required="true" style="margin-top:5px;width:300px;">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -27,17 +34,11 @@
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
-		<br/>
+		<br />
 		<p:panel id="pmRptSearchCriteriaPnl"
 			header="#{pmReportsBackingBean.managedBean.reportTitle}"
 			rendered="#{not empty pmReportsBackingBean.managedBean.reportCode}"
 			toggleable="true">
-			<!-- Validation Message -->
-			<p:messages id="messages" showDetail="true" autoUpdate="true"
-				closable="true" showSummary="false" />
-			<p:blockUI block=":form" widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
 			<table width="100%">
 				<tr>
 					<td><h:outputText styleClass="instruction"
@@ -50,7 +51,7 @@
 							value="#{lbl['lbl.instruction.dpatleast']}" /></td>
 				</tr>
 			</table>
-			<br/>
+			<br />
 			<c:choose>
 				<!-- PM_001 -->
 				<c:when
