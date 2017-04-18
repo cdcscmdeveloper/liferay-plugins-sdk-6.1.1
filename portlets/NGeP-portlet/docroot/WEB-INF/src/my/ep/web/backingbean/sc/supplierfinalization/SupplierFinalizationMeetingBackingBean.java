@@ -1459,11 +1459,6 @@ if (CollectionUtils.isNotEmpty(
 			
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
-			
-			if (QTStatusConst.SF_PENDING_BIDDING_CONFIRMATION_COMMITTEE
-					.equals(getManagedBean().getCurrentStatusId())) {
-				reqDTO.setBiddingMeeting(true);
-			}
 			reqDTO.setScQtCommitte(scQtCommittee);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			
