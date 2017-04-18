@@ -158,6 +158,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 
 	}
 
+	public void onChangeApplProgressStatus() {
+
+	}
+
 	public void reportOnChange() {
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
@@ -224,7 +228,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		return items;
 	}
-	
+
 	/**
 	 * retrieveRegStatusList - will retrieve registration status list.
 	 * 
@@ -239,7 +243,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							IPMReportSO.class);
 
 			List<Object[]> regStatusList = reportSO
-					.retrieveRegStatusList(getFacesScopes().getUserLocale().getLanguage());
+					.retrieveRegStatusList(getFacesScopes().getUserLocale()
+							.getLanguage());
 			if (CollectionUtils.isNotEmpty(regStatusList)) {
 				for (Object[] object : regStatusList) {
 					SelectItem selectItem = new SelectItem();
@@ -251,7 +256,34 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		return registrationStatusList;
 	}
-	
+
+	public List<SelectItem> retrieveApplStatus() {
+		if (EntityHelper
+				.isCollectionEmpty(getManagedBean().getApplStatusList())
+				&& null != new FacesScopes().getUserSessionBean().getUserId()) {
+
+			getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> applStatusList = reportSO
+					.retrieveApplicationStatusList(new FacesScopes()
+							.getUserLocale().getLanguage());
+
+			if (CollectionUtils.isNotEmpty(applStatusList)) {
+				for (Object[] object : applStatusList) {
+					if (object[0] != null && object[1] != null) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						getManagedBean().getApplStatusList().add(selectItem);
+					}
+				}
+			}
+		}
+		return getManagedBean().getApplStatusList();
+	}
+
 	public List<SelectItem> retrieveDistrictLsByStateId(Long stateId) {
 		return SmCommonUtil.getDistrictList(stateId);
 	}

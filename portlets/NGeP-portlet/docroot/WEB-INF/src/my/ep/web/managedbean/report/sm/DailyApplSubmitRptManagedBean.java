@@ -14,23 +14,5 @@ public class DailyApplSubmitRptManagedBean extends SmReportManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 3600160373567150282L;
-	private List<SelectItem> applStatusList;
-	private String applStatus;
-
-	public List<SelectItem> getApplStatusList() {
-		return applStatusList;
-	}
-
-	public void setApplStatusList(List<SelectItem> applStatusList) {
-		this.applStatusList = applStatusList;
-	}
-
-	public String getApplStatus() {
-		return applStatus;
-	}
-
-	public void setApplStatus(String applStatus) {
-		this.applStatus = applStatus;
-	}
 
 }
