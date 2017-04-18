@@ -57,7 +57,7 @@
 		<p:commandLink
 			id="#{cc.attrs.id}lovLink"
 			action="#{lovBackingBean.initLov}"
-			oncomplete="updateSearchDialog(); lovPopup.show();"
+			oncomplete="updateSearchDialog(); "
 			disabled="#{cc.attrs.disabled}"
 			readonly="#{cc.attrs.readonly}"
 			partialSubmit="true" process="@this">
@@ -85,7 +85,7 @@
 			id="#{cc.attrs.id}lovSingleBtn"
 			icon="#{cc.attrs.buttonIcon}"
 			action="#{lovBackingBean.initLov}"
-			oncomplete="updateSearchDialog(); lovPopup.show();"
+			oncomplete="updateSearchDialog(); "
 			disabled="#{cc.attrs.disabled}"
 			readonly="#{cc.attrs.readonly}">
 			
@@ -112,7 +112,7 @@
 		<p:commandButton
 			id="#{cc.attrs.id}lovBtn"
 			action="#{lovBackingBean.initLov}"
-			oncomplete="updateSearchDialog(); lovPopup.show();"
+			oncomplete="updateSearchDialog(); "
 			disabled="#{cc.attrs.disabled}"
 			readonly="#{cc.attrs.readonly}">
 			
