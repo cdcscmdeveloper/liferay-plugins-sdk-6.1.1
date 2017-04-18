@@ -2457,7 +2457,7 @@ public class EvaluationBackingBean extends
 					checklistType);
 			this.getManagedBean().setUserScoreSchemaType("");
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-
+			this.getManagedBean().setTemplateSpecBean(new TemplateSpecBean());
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -2587,7 +2587,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setUserScores(null);
 			this.getManagedBean().setUserScoreSchemaType("");
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-
+			this.getManagedBean().setTemplateSpecBean(new TemplateSpecBean());
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -2718,6 +2718,7 @@ public class EvaluationBackingBean extends
 					checklistType);
 			this.getManagedBean().setUserScoreSchemaType("");
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			this.getManagedBean().setTemplateSpecBean(new TemplateSpecBean());
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
@@ -3163,6 +3164,7 @@ public class EvaluationBackingBean extends
 					checklistType);
 			this.getManagedBean().setUserScoreSchemaType("");
 			this.getManagedBean().setUserScores(null);
+			this.getManagedBean().setTemplateSpecBean(new TemplateSpecBean());
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
