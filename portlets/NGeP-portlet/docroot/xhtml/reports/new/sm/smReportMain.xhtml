@@ -127,6 +127,14 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_074_revenue_collection_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCategoryStatisticRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_002_category_stat_rpt.xhtml"></ui:include>
+				</c:if>
+
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListDailyReciptRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_075_daily_receipt_rpt.xhtml"></ui:include>
+				</c:if>
+				
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
