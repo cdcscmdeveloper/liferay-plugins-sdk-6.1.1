@@ -31,7 +31,6 @@ public class DailyApplSubmitRptBackingBean extends
 	private static final long serialVersionUID = -5599569176798032965L;
 
 	public DailyApplSubmitRptBackingBean() {
-		initApplStatuses();
 		initStates();
 		setDefaultDateFromAndDateTo();
 	}
@@ -59,29 +58,6 @@ public class DailyApplSubmitRptBackingBean extends
 		getManagedBean().setRegType("all");
 		getManagedBean().setState(StringUtils.EMPTY);
 		setDefaultDateFromAndDateTo();
-	}
-
-	public void initApplStatuses() {
-		getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
-			List<Object[]> applStatusList = reportSO
-					.retrieveApplicationStatusList(new FacesScopes()
-							.getUserLocale().getLanguage());
-
-			if (CollectionUtils.isNotEmpty(applStatusList)) {
-				for (Object[] object : applStatusList) {
-					SelectItem selectItem = new SelectItem();
-					selectItem.setValue(object[0].toString());
-					selectItem.setLabel(object[1].toString());
-					getManagedBean().getApplStatusList().add(selectItem);
-				}
-			}
-		}
-
 	}
 
 }

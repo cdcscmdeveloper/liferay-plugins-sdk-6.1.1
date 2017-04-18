@@ -32,6 +32,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String role;
 	public String mofRegNoFrom;
 	public String mofRegNoTo;
+	private List<SelectItem> applStatusList;
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
 	private List<String> yearList;
@@ -226,5 +227,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setSuppDocStatus(String suppDocStatus) {
 		this.suppDocStatus = suppDocStatus;
+	}
+
+	public List<SelectItem> getApplStatusList() {
+		return applStatusList;
+	}
+
+	public void setApplStatusList(List<SelectItem> applStatusList) {
+		this.applStatusList = applStatusList;
 	}
 }

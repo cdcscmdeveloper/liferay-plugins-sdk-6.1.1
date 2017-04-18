@@ -13,12 +13,7 @@
 
 			</td>
 			<td class="tdContent">
-				<p:selectOneMenu value="#{dailyApplSubmitRptBB.managedBean.applStatus}"
-					style="width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
-					<f:selectItems value="#{dailyApplSubmitRptBB.managedBean.applStatusList}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
+				<ac:smReportApplProgressStatus bBean="#{dailyApplSubmitRptBB}" />
 			</td>
 			
 			<td class="tdTitle">
