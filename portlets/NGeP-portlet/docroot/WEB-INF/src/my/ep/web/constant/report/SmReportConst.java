@@ -35,7 +35,8 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_ROLE = "PPERSONNELROLE";
 	public static final String PARAM_MOF_REG_NO_FROM = "PFROMMOFNO";
 	public static final String PARAM_MOF_REG_NO_TO = "PTOMOFNO";
-
+	public static final String PARAM_RECEIPT_NO = "PRECEIPTNO";
+	
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";
