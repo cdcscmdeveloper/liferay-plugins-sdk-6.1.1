@@ -1938,6 +1938,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						lvl2TaxMapTree.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv2TaxTreeNode);
 						if(lvl3TaxMap == null){
 							lvl3TaxMap = new HashMap<String, InvoiceChargeLineVO>();
+						}else{
+							lvl3TaxMap.clear();
 						}
 						InvoiceChargeLineVO chargeLineLv3 = null;
 						for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
