@@ -16,7 +16,7 @@
 	<cc:implementation>
 
 		<div style="text-align: right;">
-			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
+			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" 
 				 action="#{cc.attrs.bBean[cc.attrs.generateMethod]}" update="rptConfirmationDlgId">
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.reportCode}" />
 			</p:commandButton>
