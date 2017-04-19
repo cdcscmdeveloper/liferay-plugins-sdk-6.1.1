@@ -360,6 +360,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		SmSupplier supplier = getManagedBean().getSmSupplier();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		Object payload = getManagedBean().getPayLoad();
     try {
 	    FacesScopes face = new FacesScopes();
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
@@ -372,6 +373,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setToken(token);
 	    requestNoteReqDTO.setOutcome("");
 	    requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+	    requestNoteReqDTO.setPayLoad(payload);
 	    requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
 	    renewSesionObject();
 	    
@@ -383,6 +385,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		requestNote = requestNoteResDTO.getRequestNoteDetail();
 	    		getManagedBean().setOutComes(outcomes);
 	    		getManagedBean().setTaskId(taskId);
+	    		getManagedBean().setPayLoad(payload);
 	    		reloadRequestNoteForCodification(requestNoteResDTO);
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,requestNote.getRequestNoteNo(), Boolean.FALSE);
