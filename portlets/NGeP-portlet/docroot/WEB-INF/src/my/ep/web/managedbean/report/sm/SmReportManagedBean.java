@@ -34,6 +34,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public String mofRegNoTo;
 	private String reportType;
 	private String paymentType;
+	private String identificationNo;
+	
 	private List<SelectItem> applStatusList;
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
@@ -263,5 +265,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public String getIdentificationNo() {
+		return identificationNo;
+	}
+
+	public void setIdentificationNo(String identificationNo) {
+		this.identificationNo = identificationNo;
 	}
 }
