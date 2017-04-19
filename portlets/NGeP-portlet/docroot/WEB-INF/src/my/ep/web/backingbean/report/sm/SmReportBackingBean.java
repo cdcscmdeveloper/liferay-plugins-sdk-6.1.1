@@ -35,6 +35,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		extends ReportBaseBackingBean<T> {
@@ -61,6 +62,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
+			RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
