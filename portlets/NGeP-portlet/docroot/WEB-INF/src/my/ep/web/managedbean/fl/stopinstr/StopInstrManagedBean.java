@@ -61,7 +61,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private boolean issuanceCogstrCheck;
     private boolean coGstr;
     private boolean prevHideRemarks;
-    
+    private String backToNtf;
 	/**
 	 * Gets the reason descs.
 	 *
@@ -384,6 +384,14 @@ public class StopInstrManagedBean extends BaseManagedBean {
 
 	public void setPrevHideRemarks(boolean prevHideRemarks) {
 		this.prevHideRemarks = prevHideRemarks;
+	}
+
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
 	}
 
 }
