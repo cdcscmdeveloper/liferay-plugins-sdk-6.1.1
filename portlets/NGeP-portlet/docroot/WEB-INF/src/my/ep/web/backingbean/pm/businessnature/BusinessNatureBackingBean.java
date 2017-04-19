@@ -99,11 +99,11 @@ public class BusinessNatureBackingBean extends
 		return "/xhtml/pm/businessnature/businessNatureMain.xhtml?faces-redirect=true";
 
 	}
-	
+
 	/**
 	 * Update Business Category Level
 	 */
-	public void updateBusinessCategoryLevel(){
+	public void updateBusinessCategoryLevel() {
 		businessNatureDataModel.updatePagingResults(null);
 	}
 
@@ -167,7 +167,9 @@ public class BusinessNatureBackingBean extends
 		PmBusinessNature pmBusinessNature2 = new PmBusinessNature();
 
 		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
+						IBusinessNatureSO.class);
 		try {
 
 			if (Integer.valueOf(pmBusinessNature.getBusinessLevel()) > 10) {
@@ -255,7 +257,7 @@ public class BusinessNatureBackingBean extends
 
 			// section
 			if (getManagedBean().getCategoryLvl() == 10L) {
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -265,7 +267,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -288,7 +290,7 @@ public class BusinessNatureBackingBean extends
 
 			// division
 			if (getManagedBean().getCategoryLvl() == 20L) {
-				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())){
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -298,7 +300,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -319,7 +321,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -342,7 +344,8 @@ public class BusinessNatureBackingBean extends
 
 			// group
 			if (getManagedBean().getCategoryLvl() == 30L) {
-				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelCode())){
+				if (StringUtils
+						.isNotBlank(getManagedBean().getGroupLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -352,7 +355,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelName())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getGroupLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -362,7 +366,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())){
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -373,7 +377,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -384,7 +388,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -395,7 +399,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -417,7 +421,8 @@ public class BusinessNatureBackingBean extends
 
 			// class
 			if (getManagedBean().getCategoryLvl() == 40L) {
-				if (StringUtils.isNotBlank(getManagedBean().getClassLevelCode())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getClassLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -427,7 +432,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getClassLevelName())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getClassLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -437,7 +443,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelCode())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getGroupLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -448,7 +455,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelName())){
+				if (StringUtils
+						.isNotBlank(getManagedBean().getGroupLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -459,7 +467,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())){
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -470,7 +478,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -481,7 +489,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -492,7 +500,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -534,7 +542,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getClassLevelCode())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getClassLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -545,7 +554,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getClassLevelName())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getClassLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -556,7 +566,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelCode())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getGroupLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -567,7 +578,8 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelName())) {
+				if (StringUtils
+						.isNotBlank(getManagedBean().getGroupLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -685,7 +697,8 @@ public class BusinessNatureBackingBean extends
 	}
 
 	/**
-	 * @param businessNatureDataModel the categoryLvl to businessNatureDataModel
+	 * @param businessNatureDataModel
+	 *            the categoryLvl to businessNatureDataModel
 	 */
 	public void setBusinessNatureDataModel(
 			IPagingDataModel<PmBusinessNature> businessNatureDataModel) {
@@ -696,7 +709,7 @@ public class BusinessNatureBackingBean extends
 	 * Business Nature Paging Data Model for searching
 	 * 
 	 * @author DK
-	 *
+	 * 
 	 */
 	private class BusinessNaturePagingDataModel extends
 			PagingDataModel<PmBusinessNature> {
@@ -720,7 +733,8 @@ public class BusinessNatureBackingBean extends
 							.toString());
 
 					IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate
-							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
 									IBusinessNatureSO.class);
 					BusinessNatureResDTO resDTO = reqSO
 							.retrieveBusinessNatureBySearch(reqDTO);
@@ -744,7 +758,9 @@ public class BusinessNatureBackingBean extends
 		getManagedBean().setNewcategory(false);
 		debugLogger("goToBusinessMaintaincePage");
 		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
+						IBusinessNatureSO.class);
 		try {
 			BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
 			businessNatureReqDTO.setBusinessLevel(pmBusinessNature
@@ -780,152 +796,190 @@ public class BusinessNatureBackingBean extends
 		if (StringUtils.isBlank(businessNature.getLevelName())) {
 			throw new EpException(MessageConst.ERROR_738001);
 		}
-		
-		if (DbValueConst.RECORD_STATUS_ACTIVE == businessNature.getRecordStatusFlg().intValue()) {
+
+		if (DbValueConst.RECORD_STATUS_ACTIVE == businessNature
+				.getRecordStatusFlg().intValue()) {
 			validateLevelCode(businessNature);
 			validateLevelName(businessNature);
 		}
 	}
-	
+
 	/**
 	 * Validate Unique Level Code
 	 * 
 	 * @param businessNature
 	 */
-	private void validateLevelCode(PmBusinessNature businessNature){
+	private void validateLevelCode(PmBusinessNature businessNature) {
 		log.info("validateLevelCode");
 		IBusinessNatureSO businessNatureSO = null;
 		try {
 			businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);
-		BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
-		if(Integer.valueOf(businessNature
-				.getBusinessLevel()) > 10){
-			businessNatureReqDTO.setParentBusinessNatureId(businessNature
-					.getParentBusinessNature().getBusinessNatureId());
-		}
-		businessNatureReqDTO.setBusinessLevel(businessNature
-				.getBusinessLevel());
-		businessNatureReqDTO
-				.setLevelCode(businessNature.getLevelCode());
-		if(!businessNature.isBrandNew()){
-			businessNatureReqDTO
-				.setBusinessNatureId(businessNature.getBusinessNatureId());
-		}
-		
-		BusinessNatureResDTO businessNatureResDTO = businessNatureSO
-				.retrieveBusinessNatureListByLevel(businessNatureReqDTO);
-		if (businessNatureResDTO.getBusinessNatureList().size() > 0) {
-			String levelDesc = "";
-			if(businessNature.isBrandNew()){
-				if(ParameterConst.BUSINESS_NATURE_LVL_SECTION.equals(businessNature.getBusinessLevel())){
-					levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_SECTION);
-				}else if(ParameterConst.BUSINESS_NATURE_LVL_DIVISION.equals(businessNature.getBusinessLevel())){
-					levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_DIVISION);
-				}else if(ParameterConst.BUSINESS_NATURE_LVL_GROUP.equals(businessNature.getBusinessLevel())){
-					levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_GROUP);
-				}else if(ParameterConst.BUSINESS_NATURE_LVL_CLASS.equals(businessNature.getBusinessLevel())){
-					levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_CLASS);
-				}else if(ParameterConst.BUSINESS_NATURE_LVL_ITEM.equals(businessNature.getBusinessLevel())){
-					levelDesc =getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_ITEM);
-				}
-				throw new EpException(MessageConst.ERROR_770218, new String[]{
-						levelDesc,
-						PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.code"),
-						PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.code")});
-			}else{
-				throw new EpException(MessageConst.ERROR_770220, new String[] {
-						PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.code")
-				});	
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IBusinessNatureSO.class);
+			BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+			if (Integer.valueOf(businessNature.getBusinessLevel()) > 10) {
+				businessNatureReqDTO.setParentBusinessNatureId(businessNature
+						.getParentBusinessNature().getBusinessNatureId());
 			}
-		}
-		}finally {
+			businessNatureReqDTO.setBusinessLevel(businessNature
+					.getBusinessLevel());
+			businessNatureReqDTO.setLevelCode(businessNature.getLevelCode());
+			if (!businessNature.isBrandNew()) {
+				businessNatureReqDTO.setBusinessNatureId(businessNature
+						.getBusinessNatureId());
+			}
+
+			BusinessNatureResDTO businessNatureResDTO = businessNatureSO
+					.retrieveBusinessNatureListByLevel(businessNatureReqDTO);
+			if (businessNatureResDTO.getBusinessNatureList().size() > 0) {
+				String levelDesc = "";
+				if (businessNature.isBrandNew()) {
+					if (ParameterConst.BUSINESS_NATURE_LVL_SECTION
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_SECTION);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_DIVISION
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_DIVISION);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_GROUP
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_GROUP);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_CLASS
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_CLASS);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_ITEM
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_ITEM);
+					}
+					throw new EpException(
+							MessageConst.ERROR_770218,
+							new String[] {
+									levelDesc,
+									PmCommonUtil
+											.getResourceBundleLabels("lbl.pm.bn.code"),
+									PmCommonUtil
+											.getResourceBundleLabels("lbl.pm.bn.code") });
+				} else {
+					throw new EpException(
+							MessageConst.ERROR_770220,
+							new String[] { PmCommonUtil
+									.getResourceBundleLabels("lbl.pm.bn.code") });
+				}
+			}
+		} finally {
 			businessNatureSO = null;
 		}
 	}
-	
+
 	/**
 	 * Validate Unique Level Name
 	 * 
 	 * @param businessNature
 	 */
-	private void validateLevelName(PmBusinessNature businessNature){
+	private void validateLevelName(PmBusinessNature businessNature) {
 		log.info("validateLevelName");
 		IBusinessNatureSO businessNatureSO = null;
-		try{
+		try {
 			ISearchBean<PmBusinessNature> searchBean = new SearchBean<PmBusinessNature>();
-			
-			if(Integer.valueOf(businessNature
-					.getBusinessLevel()) > 10){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"parentBusinessNature.businessNatureId", 
-						SearchOperator.OPERATOR_EQUALS.value(), 
-						businessNature.getParentBusinessNature().getBusinessNatureId()
-						));
+
+			if (Integer.valueOf(businessNature.getBusinessLevel()) > 10) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"parentBusinessNature.businessNatureId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								businessNature.getParentBusinessNature()
+										.getBusinessNatureId()));
 			}
-			
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"businessLevel", 
-					SearchOperator.OPERATOR_EQUALS.value(), 
-					businessNature.getBusinessLevel()
-					));
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"levelName", 
-					SearchOperator.OPERATOR_EQUALS.value(), 
-					businessNature.getLevelName().toLowerCase().trim(),
-			true));
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"recordStatusFlg", 
-					SearchOperator.OPERATOR_EQUALS.value(), 
-					DbValueConst.RECORD_STATUS_ACTIVE
-					));
-			
-			
-			if(!businessNature.isBrandNew()){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"businessNatureId", 
-						SearchOperator.OPERATOR_NOT_EQUALS.value(), 
-						businessNature.getBusinessNatureId()
-						));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("businessLevel",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							businessNature.getBusinessLevel()));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("levelName",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							businessNature.getLevelName().toLowerCase().trim(),
+							true));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+
+			if (!businessNature.isBrandNew()) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("businessNatureId",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								businessNature.getBusinessNatureId()));
 			}
-			
+
 			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 			reqDTO.setBusinessNatureSearchBean(searchBean);
 			reqDTO.setBusinessLevel(businessNature.getBusinessLevel());
-	
+
 			businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IBusinessNatureSO.class);
 			BusinessNatureResDTO resDTO = businessNatureSO
 					.retrieveBusinessNatureBySearch(reqDTO);
-			if (resDTO.isSuccessful() && !resDTO.getBusinessNatureList().isEmpty()) {
+			if (resDTO.isSuccessful()
+					&& !resDTO.getBusinessNatureList().isEmpty()) {
 				String levelDesc = "";
-				if(businessNature.isBrandNew()){
-					if(ParameterConst.BUSINESS_NATURE_LVL_SECTION.equals(businessNature.getBusinessLevel())){
-						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_SECTION);
-					}else if(ParameterConst.BUSINESS_NATURE_LVL_DIVISION.equals(businessNature.getBusinessLevel())){
-						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_DIVISION);
-					}else if(ParameterConst.BUSINESS_NATURE_LVL_GROUP.equals(businessNature.getBusinessLevel())){
-						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_GROUP);
-					}else if(ParameterConst.BUSINESS_NATURE_LVL_CLASS.equals(businessNature.getBusinessLevel())){
-						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_CLASS);
-					}else if(ParameterConst.BUSINESS_NATURE_LVL_ITEM.equals(businessNature.getBusinessLevel())){
-						levelDesc =getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_ITEM);
+				if (businessNature.isBrandNew()) {
+					if (ParameterConst.BUSINESS_NATURE_LVL_SECTION
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_SECTION);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_DIVISION
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_DIVISION);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_GROUP
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_GROUP);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_CLASS
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_CLASS);
+					} else if (ParameterConst.BUSINESS_NATURE_LVL_ITEM
+							.equals(businessNature.getBusinessLevel())) {
+						levelDesc = getParameterDesc(
+								ParameterTypeConst.BUSINESS_NATURE,
+								ParameterConst.BUSINESS_NATURE_LVL_ITEM);
 					}
-					throw new EpException(MessageConst.ERROR_770218, new String[]{
-							levelDesc,
-							PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.name"),
-							PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.name")});
-				}else{
-					throw new EpException(MessageConst.ERROR_770220, new String[] {
-							PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.name")
-					});	
+					throw new EpException(
+							MessageConst.ERROR_770218,
+							new String[] {
+									levelDesc,
+									PmCommonUtil
+											.getResourceBundleLabels("lbl.pm.bn.name"),
+									PmCommonUtil
+											.getResourceBundleLabels("lbl.pm.bn.name") });
+				} else {
+					throw new EpException(
+							MessageConst.ERROR_770220,
+							new String[] { PmCommonUtil
+									.getResourceBundleLabels("lbl.pm.bn.name") });
 				}
 			}
-		}finally{
+		} finally {
 			businessNatureSO = null;
 		}
 	}
@@ -939,9 +993,8 @@ public class BusinessNatureBackingBean extends
 		IBusinessNatureSO businessNatureSO = null;
 		String returnUrl = null;
 		try {
-			businessNatureSO = EpEjbBusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
+			businessNatureSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IBusinessNatureSO.class);
 			PmBusinessNature businessnature = getManagedBean()
 					.getPmBusinessNature();
@@ -962,75 +1015,77 @@ public class BusinessNatureBackingBean extends
 					resDTO.getBusinessNature());
 			if (resDTO.isSuccessful()) {
 				if (this.getManagedBean().isBrandNew()) {
-					returnUrl =  "/xhtml/pm/businessnature/businessNatureMain.xhtml";
-//					if (Integer.valueOf(this.getManagedBean()
-//							.getPmBusinessNature().getBusinessLevel()) > 10) {
-//						BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
-//						businessNatureReqDTO.setBusinessLevel(this
-//								.getManagedBean().getPmBusinessNature()
-//								.getParentBusinessNature().getBusinessLevel());
-//						businessNatureReqDTO.setBusinessNatureId(this
-//								.getManagedBean().getPmBusinessNature()
-//								.getParentBusinessNature()
-//								.getBusinessNatureId());
-//						BusinessNatureResDTO businessNatureResDTO = businessNatureSO
-//								.retrieveBusinessNatureFetchAll(businessNatureReqDTO);
-//
-//						businessNatureResDTO
-//								.getBusinessNature()
-//								.getChildBusinessNatures()
-//								.add(this.getManagedBean()
-//										.getPmBusinessNature());
-//						reqDTO.setBusinessNature(businessNatureResDTO
-//								.getBusinessNature());
-//						businessNatureSO.saveBusinessNatureDtls(reqDTO);
-//					}
-					
+					returnUrl = "/xhtml/pm/businessnature/businessNatureMain.xhtml";
+					// if (Integer.valueOf(this.getManagedBean()
+					// .getPmBusinessNature().getBusinessLevel()) > 10) {
+					// BusinessNatureReqDTO businessNatureReqDTO = new
+					// BusinessNatureReqDTO();
+					// businessNatureReqDTO.setBusinessLevel(this
+					// .getManagedBean().getPmBusinessNature()
+					// .getParentBusinessNature().getBusinessLevel());
+					// businessNatureReqDTO.setBusinessNatureId(this
+					// .getManagedBean().getPmBusinessNature()
+					// .getParentBusinessNature()
+					// .getBusinessNatureId());
+					// BusinessNatureResDTO businessNatureResDTO =
+					// businessNatureSO
+					// .retrieveBusinessNatureFetchAll(businessNatureReqDTO);
+					//
+					// businessNatureResDTO
+					// .getBusinessNature()
+					// .getChildBusinessNatures()
+					// .add(this.getManagedBean()
+					// .getPmBusinessNature());
+					// reqDTO.setBusinessNature(businessNatureResDTO
+					// .getBusinessNature());
+					// businessNatureSO.saveBusinessNatureDtls(reqDTO);
+					// }
+
 					FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
+							.getCurrentInstance()
+							.addMessage(
 									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.ERR_900016,
-													new String[] {
-															getManagedBean()
-																	.getTaskName(),
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.ERR_900016,
+															new String[] {
 																	getManagedBean()
-																	.getPmBusinessNature()
-																	.getLevelCode() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-				}else{
-					returnUrl =  "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
+																			.getTaskName(),
+																	getManagedBean()
+																			.getPmBusinessNature()
+																			.getLevelCode() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+				} else {
+					returnUrl = "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 					FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
+							.getCurrentInstance()
+							.addMessage(
 									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.ERR_900024,
-													new String[] {
-															getManagedBean()
-																	.getTaskName(),
-															getManagedBean()
-																	.getPmBusinessNature()
-																	.getLevelCode() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.ERR_900024,
+															new String[] {
+																	getManagedBean()
+																			.getTaskName(),
+																	getManagedBean()
+																			.getPmBusinessNature()
+																			.getLevelCode() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 				}
 			}
 
 		} catch (Exception e) {
-			throw(e);
+			throw (e);
 		} finally {
 			businessNatureSO = null;
 		}
@@ -1092,28 +1147,45 @@ public class BusinessNatureBackingBean extends
 	 * @param level
 	 * @return String
 	 */
-	public String retrieveActionLabel(String level){
+	public String retrieveActionLabel(String level) {
 		String label = "";
-		if("10".equals(level)){
+		if ("10".equals(level)) {
 			label = ResourceBundleUtils.getMessage(
 					"lbl.pm.add.division.category",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
-		}else if("20".equals(level)){
-			label = ResourceBundleUtils.getMessage(
-					"lbl.pm.add.group.category",
+		} else if ("20".equals(level)) {
+			label = ResourceBundleUtils.getMessage("lbl.pm.add.group.category",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
-		}else if("30".equals(level)){
-			label = ResourceBundleUtils.getMessage(
-					"lbl.pm.add.class.category",
+		} else if ("30".equals(level)) {
+			label = ResourceBundleUtils.getMessage("lbl.pm.add.class.category",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
-		}else if("40".equals(level)){
-			label = ResourceBundleUtils.getMessage(
-					"lbl.pm.add.item.category",
+		} else if ("40".equals(level)) {
+			label = ResourceBundleUtils.getMessage("lbl.pm.add.item.category",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
+		}
+		return label;
+	}
+
+	public String retrieveCodeTT() {
+		String label = "";
+		if (getManagedBean().getPmBusinessNature() != null
+				&& StringUtils.isNotBlank(getManagedBean().getPmBusinessNature().getBusinessLevel())) {
+			String level = getManagedBean().getPmBusinessNature().getBusinessLevel();
+			if ("10".equals(level)) {
+				label = PmCommonUtil.getMessage("lbl.pm.bn.seccode.tt", null);				
+			} else if ("20".equals(level)) {
+				label = PmCommonUtil.getMessage("lbl.pm.bn.divcode.tt", null);	
+			} else if ("30".equals(level)) {
+				label = PmCommonUtil.getMessage("lbl.pm.bn.groupcode.tt", null);	
+			} else if ("40".equals(level)) {
+				label = PmCommonUtil.getMessage("lbl.pm.bn.classcode.tt", null);	
+			}else if ("50".equals(level)) {
+				label = PmCommonUtil.getMessage("lbl.pm.bn.itemcode.tt", null);	
+			}
 		}
 		return label;
 	}

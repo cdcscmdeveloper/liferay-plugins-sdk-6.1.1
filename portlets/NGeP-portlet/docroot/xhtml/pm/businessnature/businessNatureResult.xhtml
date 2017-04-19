@@ -7,6 +7,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.pm.organisation.result']}" toggleable="true">
+		<table width="100%">
+				<tr>
+					<td><h:outputText styleClass="instruction"
+							style="float:left;margin-left:20px;"
+							value="#{lbl['lbl.pm.bn.instruction']}" /></td>
+				</tr>				
+			</table>
+			<br />
 		<p:dataTable id="businessNatureDataModel"
 			value="#{businessNatureBackingBean.businessNatureDataModel}"
 			var="businessNature" rows="10" rowIndexVar="index" lazy="true">
