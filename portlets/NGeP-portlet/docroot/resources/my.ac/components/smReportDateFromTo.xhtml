@@ -29,7 +29,7 @@
 				<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 					id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
 					display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
-					value="#{cc.attrs.bBean.managedBean.dateTo}" required="#{cc.attrs.required}" maxdate="#{CommonConstants.CURRENT_DATE}"
+					value="#{cc.attrs.bBean.managedBean.dateTo}" required="#{!empty cc.attrs.bBean.managedBean.dateFrom or cc.attrs.required}" maxdate="#{CommonConstants.CURRENT_DATE}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar>
 					<p:message id="calDtToMsg" for="calDtTo" display="icon" showDetail="false" />

@@ -38,6 +38,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
 	private List<String> yearList;
+	
+	private List<String> selectedPaymentTypes;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -213,6 +215,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setMofRegNoTo(String mofRegNoTo) {
 		this.mofRegNoTo = mofRegNoTo;
+	}
+
+	public List<String> getSelectedPaymentTypes() {
+		return selectedPaymentTypes;
+	}
+
+	public void setSelectedPaymentTypes(List<String> selectedPaymentTypes) {
+		this.selectedPaymentTypes = selectedPaymentTypes;
 	}
 
 	public String getEpNo() {

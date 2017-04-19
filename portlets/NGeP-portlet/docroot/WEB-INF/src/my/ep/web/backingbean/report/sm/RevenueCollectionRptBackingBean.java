@@ -25,8 +25,8 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		retrieveReportValueFromDb();
-		
-		for(String paymentType : getManagedBean().getSelectedPaymentTypes()){
+		addSelectedPaymentTypeParam(params);
+/*		for(String paymentType : getManagedBean().getSelectedPaymentTypes()){
 			if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_MOF)){
 				params.put(SmReportConst.PARAM_PAYMENT_TYPE1, paymentType);
 			}else if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_PROCESSING)){
@@ -34,7 +34,7 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 			}else if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_SOFTC_CERT)){
 				params.put(SmReportConst.PARAM_PAYMENT_TYPE3, paymentType);
 			}
-		}
+		}*/
 
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));

@@ -8,14 +8,4 @@ import javax.faces.bean.SessionScoped;
 public class ColReceiptTransDtRptManagedBean extends SmReportManagedBean{
 	private static final long serialVersionUID = 1L;
 
-	private String rptType;
-
-	public String getRptType() {
-		return rptType;
-	}
-
-	public void setRptType(String rptType) {
-		this.rptType = rptType;
-	}
-
 }

@@ -21,6 +21,7 @@ import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -287,4 +288,45 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public List<SelectItem> retrieveDistrictLsByStateId(Long stateId) {
 		return SmCommonUtil.getDistrictList(stateId);
 	}
+	
+	public void addSelectedPaymentTypeParam(LinkedHashMap<String, String> params) {
+		if(getManagedBean().getSelectedPaymentTypes().size() > 0){
+			for(String paymentType : getManagedBean().getSelectedPaymentTypes()){
+				if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_MOF)){
+					params.put(SmReportConst.PARAM_PAYMENT_TYPE1, paymentType);
+				}else if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_PROCESSING)){
+					params.put(SmReportConst.PARAM_PAYMENT_TYPE2, paymentType);
+				}else if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_SOFTC_CERT)){
+					params.put(SmReportConst.PARAM_PAYMENT_TYPE3, paymentType);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the payment type method list.
+	 * 
+	 * @return the payment type method list
+	 */
+	public List<SelectItem> getPaymentTypeMethodList() {
+		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
+		SelectItem item = new SelectItem();
+		item.setValue(ReportConst.SM_REPORT_CREDIT);
+		item.setLabel(ResourceBundleUtils.getMessage(
+					"lbl.rpt.credit",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		paymentTypeMethodList.add(item);
+		item = new SelectItem();
+		String fpx = ResourceBundleUtils.getMessage(
+					"lbl.rpt.fpx",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale());
+		item.setValue(fpx);
+		item.setLabel(fpx);
+		paymentTypeMethodList.add(item);
+
+		return paymentTypeMethodList;
+	}
+
 }
