@@ -135,7 +135,6 @@ public class CreateQtBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(CreateQtBackingBean.class);
 	
-	private static final String PTJ_ADDRESS_TYPE_ERROR_MSG_KEY = "lbl.sc.qt.ptj.address.not.found";
 	
 
 	/**
@@ -303,14 +302,7 @@ public class CreateQtBackingBean extends
 					scQt.setObtainSpecialApproval(false);
 				}
 			}else{
-				String msgCode = MessageConst.ERROR_760447;
-				fc.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(
-										msgCode, null,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())+" ("+msgCode+")"));
+				addFacesMessage(fc, MessageConst.ERROR_760447, null);
 				this.getManagedBean().setPtjPresent(false);
 			}
 			
@@ -372,13 +364,7 @@ public class CreateQtBackingBean extends
 			
 			
 			if (pmOrgProfile != null && !isPtjAddressTypePresent(pmOrgProfile.getOrgProfileId())) {
-				fc.addMessage(null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,null,
-								ResourceBundleUtils.getMessage(
-												PTJ_ADDRESS_TYPE_ERROR_MSG_KEY,
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale())));
+				addFacesMessage(fc, MessageConst.ERROR_760450, null);
 			}
 			fc.getApplication()
 					.getNavigationHandler()
