@@ -38,6 +38,11 @@ public class DecimalConverter extends NumberConverter {
 			int maxIntegerDigits = getMaxIntegerDigits();
 			int maxFractionDigits = getMaxFractionDigits();
 			boolean isIntegerOnly = isIntegerOnly();
+			String patternAttr = (String) component.getAttributes().get("pattern");
+			
+			if (patternAttr != null) {
+				setPattern(patternAttr);	
+			}
 
 			// To Remove the , if exist while doing the conversion...
 			if (value.contains(",")) {
@@ -125,6 +130,11 @@ public class DecimalConverter extends NumberConverter {
 			Object value) {
 		if (null == value) {
 			return "";
+		}
+		String patternAttr = (String) component.getAttributes().get("pattern");
+		
+		if (patternAttr != null) {
+			setPattern(patternAttr);	
 		}
 		return super.getAsString(context, component, value);
 
