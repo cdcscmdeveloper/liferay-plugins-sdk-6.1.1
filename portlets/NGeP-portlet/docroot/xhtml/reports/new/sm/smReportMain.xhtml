@@ -147,6 +147,13 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_075_daily_receipt_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCollectionAndTransactionDateRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_071_collection_receipt_trans_date_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCollectionPaymentMethodsRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_072_collection_payment_method_rpt.xhtml"></ui:include>
+				</c:if>
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>

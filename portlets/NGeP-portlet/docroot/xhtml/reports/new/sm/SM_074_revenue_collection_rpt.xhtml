@@ -14,12 +14,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent" colspan="3">
-				<p:selectManyCheckbox id="paymentTypeId" label="#{lbl['lbl.rpt.smPaymentType']}"
-					value="#{revenueCollectionRptBB.managedBean.selectedPaymentTypes}" required="true">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.smMofRegistrationFee']}" itemValue="M" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.processingFee']}" itemValue="P" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}" itemValue="S" />
-				</p:selectManyCheckbox>
+				<ac:smReportPaymentType id="paymentType" required="true" />
 			</td>
 		</tr>
 	
