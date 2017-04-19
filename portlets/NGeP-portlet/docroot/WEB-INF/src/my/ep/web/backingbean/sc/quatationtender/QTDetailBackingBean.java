@@ -223,7 +223,6 @@ public class QTDetailBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
 	
-	private static final String PTJ_ADDRESS_TYPE_ERROR_MSG_KEY = "lbl.sc.qt.ptj.address.not.found";
 	
 	private static final int FORM_NO_ACTION = 0;
 	private static final int FORM_SC = 1;
@@ -532,10 +531,7 @@ public class QTDetailBackingBean extends
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus)
 					&& qtOrgProfile != null
 					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
-				throw new EpException(ResourceBundleUtils.getMessage(
-						PTJ_ADDRESS_TYPE_ERROR_MSG_KEY,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				throw new EpException(MessageConst.ERROR_760450);
 			}
 			validateQtDetails();
 			FacesContext
@@ -581,10 +577,7 @@ public class QTDetailBackingBean extends
 			PmOrgProfile qtOrgProfile = scQt_.getPmOrgProfile();
 			if (qtOrgProfile != null
 					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
-				throw new EpException(ResourceBundleUtils.getMessage(
-						PTJ_ADDRESS_TYPE_ERROR_MSG_KEY,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				throw new EpException(MessageConst.ERROR_760450);
 			}
 			
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
