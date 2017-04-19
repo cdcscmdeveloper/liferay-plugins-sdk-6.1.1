@@ -33,6 +33,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public String mofRegNoFrom;
 	public String mofRegNoTo;
 	private String reportType;
+	private String paymentType;
 	private List<SelectItem> applStatusList;
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
@@ -244,5 +245,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setReportType(String reportType) {
 		this.reportType = reportType;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 }

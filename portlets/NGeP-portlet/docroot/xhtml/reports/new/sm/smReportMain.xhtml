@@ -83,6 +83,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_016_supplier_stat_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smLaporanTerimaanHarianRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_020_daily_received_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smQuestionnaireResponseRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_028_question_response_summary_rpt.xhtml"></ui:include>
 				</c:if>
