@@ -24,6 +24,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -37,6 +39,7 @@ import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
@@ -77,6 +80,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -414,8 +418,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * Page navigation to FLDoc search page in StopInstr.
 	 *
 	 * @return the string
+	 * @throws IOException 
 	 */
-	public String backToPervious() {
+	public String backToPervious() throws PortalException, SystemException, IOException {
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -423,7 +428,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
-		else{
+		else if(getManagedBean().getBackToNtf() != null){
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			return null;
+		}else{
 			return "flDocSearch";
 		}
 	}
@@ -815,6 +824,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setBackToDocument(null);
+			getManagedBean().setBackToNtf("notifications");
 			getPopulateReasonList();
 			populateChargeLineData();
 			flBB.getManagedBean().setHideRemarks(true);

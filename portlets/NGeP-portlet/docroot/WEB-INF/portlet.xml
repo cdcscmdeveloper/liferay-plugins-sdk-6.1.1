@@ -2126,7 +2126,7 @@
 		</security-role-ref>
 	</portlet><portlet>
 		<portlet-name>flViewStopInstruction</portlet-name>
-		<display-name>View Stop Instruction</display-name>
+		<display-name>Stop Delivery Instruction</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -2138,8 +2138,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>View Stop Instruction</title>
-			<short-title>View Stop Instruction</short-title>
+			<title>Stop Delivery Instruction</title>
+			<short-title>Stop Delivery Instruction</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
