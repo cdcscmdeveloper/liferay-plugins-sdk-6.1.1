@@ -60,6 +60,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -721,6 +722,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
+		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -755,7 +757,7 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setPanel(scQt.isPanel());
 			
 			setAmmendMentBean(resDTO.getAmendMentBean());
-
+			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setQt(selectedScQt);
@@ -2032,6 +2034,7 @@ public class QTDetailBackingBean extends
 			renewSesionObject();
 			debugLogger("preRenderView, @Managedbean = "+ this.getManagedBean());
 			
+			FacesContext fc = FacesContext.getCurrentInstance();
 			Long qtId = null;
 			Object payLoad = getBpmTaskDetails(Object.class, null);
 			String taskName = this.getManagedBean().getTaskName();
@@ -2146,6 +2149,7 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setProcMethodDropdownPresent(
 							checkForProcumentMethodDropdown(scQt));
 				}
+				checkForPublishperiodAndValidityDays(scQt,fc);
 			}
 			
 			if (null == this.getManagedBean().getQt().getProcurementMode()) {
@@ -2157,7 +2161,7 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setPcbProcess(true);
 			}
 
-			FacesContext fc = FacesContext.getCurrentInstance();
+			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 			
@@ -5781,6 +5785,25 @@ public class QTDetailBackingBean extends
 			statusList = getStatusDropdownValues(moduleCode, docType);
 		}
 		return statusList;
+	}
+	
+	private void checkForPublishperiodAndValidityDays(ScQt scQt, FacesContext fc){
+		
+		if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) {
+			if (null == scQt.getPublishPeriod()) {
+				
+				addFacesMessage(fc,
+						MessageConst.ERROR_770222,
+						new String[] { getRuleTypeDesc(scQt.isPanel() ? RuleTypeConst.PANEL_PUBLISHING_PERIOD_DAYS
+								: RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS) });
+			}
+			if (null == scQt.getQtValidityPeriod()) {
+				
+				addFacesMessage(fc,
+						MessageConst.ERROR_770222,
+						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
+			}
+		}
 	}
 	
 }
