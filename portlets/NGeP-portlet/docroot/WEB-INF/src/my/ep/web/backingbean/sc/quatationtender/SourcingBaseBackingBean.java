@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
@@ -132,6 +133,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
@@ -2839,5 +2841,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			fileName = builder.toString();
 		}
 		return fileName;
+	}
+	
+	/**
+	 * Add defined message to FacesMessage based on msgcode from
+	 * message-common.properties
+	 * 
+	 * @param fc
+	 * @param msgCode
+	 */
+	protected void addFacesMessage(FacesContext fc, String msgCode, Object[] params) {
+
+		fc.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(msgCode, params,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())
+								+ " (" + msgCode + ")"));
 	}
 }
