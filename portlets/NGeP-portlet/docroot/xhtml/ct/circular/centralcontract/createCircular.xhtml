@@ -148,10 +148,10 @@
 						                    <p:column style="width:15%;" styleClass="column-align-center">
 						                    	<f:facet name="header">
 										            <h:outputText value="#{lbl['lbl.ct.tel']}"/>
-								               		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
+								               		<ac:iconTooltip value="#{lbl['lbl.sc.telephone.no.tooltip']}"/>
 								               	</f:facet>
 						                       <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
-							                     <p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
+							                     <p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="20"
 							                           value="#{contactPersonsVar.phoneNo}" 
 							                           disabled="#{centralContractBackingBean.managedBean.viewContract}"
 							                           onkeypress="if (event.keyCode == 13) {  return false; }"/>
