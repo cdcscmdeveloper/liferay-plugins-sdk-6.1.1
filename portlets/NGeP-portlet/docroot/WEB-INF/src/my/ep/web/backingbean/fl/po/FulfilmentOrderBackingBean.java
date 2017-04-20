@@ -440,7 +440,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().getFulfilmentOrder().setFactored(false);
 					}
 				}
-				getEspkbCommitmentNo();
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
 				getManagedBean().setContractRequest(Boolean.TRUE);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
@@ -471,6 +470,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 			}
 		}
+		getEspkbCommitmentNo();
 		
 	}
 	
