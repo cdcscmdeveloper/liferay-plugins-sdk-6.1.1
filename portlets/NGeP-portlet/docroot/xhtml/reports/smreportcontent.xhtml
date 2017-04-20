@@ -3864,8 +3864,9 @@
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smAllRegisteredDateView}">
-						<TD class="columnGenClass"><p:outputLabel
-								value="#{lbl['lbl.rpt.allregistereddatefrom']}" /></TD>
+						<TD class="columnGenClass">
+							<p:outputLabel value="*" styleClass="mandatory" />
+							<p:outputLabel value="#{lbl['lbl.rpt.allregistereddatefrom']}" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smLCMOFRegisteredDateView}">
@@ -3918,8 +3919,8 @@
 							value="#{reportBackingBean.toDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
-
-						</p:calendar></TD>
+						</p:calendar>
+					</TD>
 				</TR>
 				<TR>
 					<c:if
