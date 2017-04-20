@@ -284,6 +284,7 @@
 		<portlet id="pmReports"></portlet>
 		<portlet id="smReports"></portlet>
 		<portlet id="ppReports"></portlet>
+		<portlet id="qtReports"></portlet>
 	</category>
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>
