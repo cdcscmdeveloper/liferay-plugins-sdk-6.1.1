@@ -78,113 +78,118 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class ContractRequestManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	
+	public ContractRequestManagedBean(){
 
+	}
+	
+	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
+	private FlShippingInstr shippingInstr;
 	private FlFulfilmentRequest flRequest;
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
-	private boolean checkPtjFlg = true;
-	private List<PmAddressType> addressTypesList; 
-	private List<PmAddressType> selectedPmAddrTypeList;
-	private List<PmAddressType> selectedAddrTypeList;
+	private FlFulfilmentItem selectedItemRow;
+	private FlFulfilmentItemAddr selectedItemAddr;
+	private FlDeliveryAddress flManualAddress;
+	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
+	private FlFulfilmentItemAddr selectedItemChargeSection;
+	private PmOrgProfile currentChargePtjGroup;
+	private PmOrgProfile pmOrgProfile;
+	private PmUserOrg pmUserOrg = new PmUserOrg();
+	private PmVotFund feeVoteFund;
+	private PmParameter priceType;
+	private PmVotFund pmVoteFund;
+	private PmGlAccount gosodo;
+	private PmPrgActivity pmPrgActivity;
+	private PmSubSetia pmSubSetia;
+	private PmUser pmUser;
+	private PmDigiSign pmDigiSign;
+	private CtContract selectedContract;
+	private CtContract ctContract = new CtContract();
+	private GlAccountSearchBean glAccountSearchBean;
+	
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;	
+	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
+	private List<FlFulfilmentItemAddr> itemAddrList;
+	private List<FlFulfilmentItemAddr> showItemAddrList;
+	private List <FlFulfilmentItemAddr>  selectedItemsRows;
+	private List<FlDeliveryAddress> selectedAddressRows;
+	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
+	private List<CtContract> contractList;
 	private List<VCtActiveContract> activeContractList; 
-	private FlFulfilmentItem selectedItemRow;
-	private HashMap<Long, PmUserGroupUser> approverMap;
-	private BigDecimal subTotal;
-	private FlFulfilmentItemAddr selectedItemAddr;
-	private FlDeliveryAddress flManualAddress;
-	private List<SelectItem> supplierBranchesList;
-	private List<PmUserGroup> userGroupList;
-	private List<Long> agentOrgProfileList;
-	private Long selectedApprover;
-	private List<Long> approverList;
-	private List<PmUserGroupUser> approverGroupUserList;
-	private List<Long> bpmApproverList;
-	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
-
-	private List <FlFulfilmentItemAddr>  selectedItemsRows;
-	private PmOrgProfile pmOrgProfile;
-	private PmUserOrg pmUserOrg = new PmUserOrg();
-	private Map<Long, PmUserGroup> userGroupMap;
-	private List<Long> agenciesList; 
-	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
-	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
-	
-	private String requisitioner;
-	private String approver;
-	private Long docStatusId;
-	private Long contractId;
-	private Long testOrg;
-	private String orgProfileIds;
-	private String fulfilmentRequisitioner;
-	private Date maxDate;
-	private Long currentPtjGroupId;
-	private Long currentPreparedOrgId;
-	private String searchItemType;
-	private String searchItemCode;
-	private String searchItemName;
-	private boolean isFlRequestLink = false;
-	private boolean agencyAddress = false;
-	private PmOrgProfile currentChargePtjGroup;
-	private boolean declarationCheck;
-	//getcontract
-	private CtContract ctContract = new CtContract();
-	private List <CtContract> contractList;
-	private CtContract selectedContract;
-	private Long searchContractListDD;
-	private String searchContractCriteria;
-	private String searchTypesDD;
-	private boolean fulfilmentTypes;
-	private boolean types;
-
-	//getSI
-	private FlShippingInstr shippingInstr;
-	private boolean selectedRowFlg;
-	private String tempLogin; //TODO: temp and to be removed
-
-	//doc search
-	private String docProcess;
-	private String flDocId;
-	private String buttonVal;
-	private boolean isMto = false;
-	private boolean isImportedItems = false;
-	private boolean prevHideRemarks;
-
-	//get GOSODO
-	private Long goId;
-	private Long soId;
-	private Long doId;
-	//supp address
-	private String supplierAddress;
-
-	//remove multiple selection from data table
-	private List<FlDeliveryAddress> selectedAddressRows;
-	//private List<FlFulfilmentItem> selectedItemsRows;
-	
-	//receving officer List
+	private List<CtItemPrice> reqItemInfoList;
+	private List<PmGlAccount> glAccountList;
+	private List<PmAddressType> manualAddressList;
 	private List<PmAddressType> receivingOffList;
-	
-	//chargeline
-	private TreeNode chargeLineItemRoot ;
-	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
-	//private  List<TreeNode> selectedNodes;
-	private TreeNode[] selectedNodes;
-	private TreeNode selectedNode;
-	private FlFulfilmentItemAddr selectedItemChargeSection;
-	//private Long pmPrjSetia;
-	private BigDecimal orderedAmtGrandTotal ;
-	private String chargeCheck ="false";
-		
-	// charge Line dropdown lists
+	private List<PmUserGroup> userGroupList;
+	private List<PmAddressType> addressTypesList; 
+	private List<PmAddressType> selectedPmAddrTypeList;
+	private List<PmAddressType> selectedAddrTypeList;
+	private List<PmCountry> countryList;
+	private List<PmState> stateList;
+	private List<PmDivision> divisionList;
+	private List<PmCity> cityList;
+	private List<PmDistrict> districtList;
 	private List<PmVotFund> votFundList;
 	private List<PmSubSetia> subSetiaList;
 	private List<PmPrgActivity> prgActivityList;
+	private List<PmUserGroupUser> approverGroupUserList;
+	private List<Long> approverList;
+	private List<Long> agentOrgProfileList;
+	private List<Long> agenciesList; 
+	private List<Long> bpmApproverList;
+	private List<SelectItem> supplierBranchesList;
 	private List<SelectItem> manualAddrList;
-	private List<PmGlAccount> glAccountList;
-		
-	// set chargeline for selected items
+	
+	private HashMap<Long, PmUserGroupUser> approverMap;
+	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
+	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
+	private Map<Long, List<PmAddressType>> manualAddressMap;
+	private Map<Long, PmUserGroup> userGroupMap;
+	
+	private TreeNode chargeLineItemRoot ;
+	private TreeNode selectedNode;
+	private TreeNode[] selectedNodes;
+	
+	private int deliveryTerm;
+	private int selectedTabIndex;
+	
+	private Double quantity;
+	private Double standardUnitPrice;
+	private Double minOrderQuantity;
+	
+	private Date gstRegistrationDate;
+	private Date maxDate;
+	
+	private String tempLogin; //TODO: temp and to be removed
+	private String espkbCommitmentNo;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	private String itemDesc;
+	private String gstRegistrationNo;
+	private String uomName;
+	private String uomCode;
+	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
+	private String facSupplierAddress;
+	private String phoneNo;
+	private String faxNo;
+	private String contactEmail;
+	private String contactPerson;
+	private String contactPhoneNo;
+	private String backToDocument;
+	private String itemName;
+	private String textBeforeSign;
+	private String buttonAction;
+	private String measurementCodes;	
+	private String measurementNames;
+	private String financingTypeCode;
+	private String termDays;
 	private String votFundCode;
 	private String assetIndCode;
 	private String glAccountCode;
@@ -193,80 +198,40 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String subSetiaCode;
 	private String prgActivityCode;
 	private String votFundType;
-		
+	private String chargeCheck ="false";
+	private String docProcess;
+	private String flDocId;
+	private String buttonVal;
+	private String supplierAddress;
+	private String searchContractCriteria;
+	private String searchTypesDD;
+	private String searchItemType;
+	private String searchItemCode;
+	private String searchItemName;
+	private String requisitioner;
+	private String approver;
+	private String orgProfileIds;
+	private String fulfilmentRequisitioner;
+	
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
 	private Long votFundId;
 	private Long assetIndId;
 	private Long glAccountId;
 	private Long subSetiaId;
 	private Long prgActivityId;
-	private String financingTypeCode;
+	private Long goId;
+	private Long soId;
+	private Long doId;
+	private Long searchContractListDD;
+	private Long currentPtjGroupId;
+	private Long currentPreparedOrgId;
+	private Long docStatusId;
+	private Long contractId;
+	private Long testOrg;
+	private Long selectedApprover;
 	
-	private boolean deleteButtonHide;
-	private boolean zonal;
-	private boolean centralContract;
-	
-	private String termDays;
-	private int deliveryTerm;
-	
-	// for Manual Address
-	private List<PmCountry> countryList;
-	private List<PmState> stateList;
-	private List<PmDivision> divisionList;
-	private List<PmCity> cityList;
-	private List<PmDistrict> districtList;
-	//tab menu
-	private int selectedTabIndex;
-	// manual address
-	private boolean required;
-	private Map<Long, List<PmAddressType>> manualAddressMap;
-	private List<PmAddressType> manualAddressList;
-	//private List<PmAddressType> addressManualTypesList;
-	private PmUser pmUser;
-	private List<FlFulfilmentItemAddr> itemAddrList;
-	private List<FlFulfilmentItemAddr> showItemAddrList;
-	
-	//gpki signing
-	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate = true;
-	private String textBeforeSign;
-	private String buttonAction;
-	private boolean validated = false;
-	private boolean itemAutoUpdate = false;
-	
-	//uom
-	private String measurementCodes;	
-	private String measurementNames;
-	
-	public ContractRequestManagedBean(){
-
-	}
-	
-	//charge line new screen 
-	private boolean chargeLinePanel=false;
-	private boolean programLov=false;
-	private boolean projectLov=false;
-	private boolean votFundDisplay=false;
-	
-	private PmVotFund pmVoteFund;
-	private PmGlAccount gosodo;
-	private PmPrgActivity pmPrgActivity;
-	private PmSubSetia pmSubSetia;
-	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
-	
-	//item price
-	//RequestItemInfo List
-	private List<CtItemPrice> reqItemInfoList;
-	private String itemName;
-	private Double quantity;
-	private Double standardUnitPrice;
-	private PmParameter priceType;
-	private boolean standardPrice = false;
-	private boolean zonalPrice = false;
-	private boolean zonalTierPrice = false;
-	private boolean tariffPrice = false;
-	private boolean serviceItem = false;
-//	private PmParameter pmPriceType;
-	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
+	private BigDecimal maxOrderQuantity;
 	private BigDecimal UomFrequency ; 
 	private BigDecimal UomPerYear ; 
 	private BigDecimal UomPerMonth ; 
@@ -274,57 +239,49 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private BigDecimal pricePerUom;
 	private BigDecimal ctQuantity;
 	private BigDecimal ceilingQuantity;
-	private String uomName;
-	private String uomCode;
-	
-	private boolean emailValidate = false;
-	private boolean queryDisplay=false;
-
-	private PmVotFund feeVoteFund;
-	private boolean gfmasError=false;
-	private String gfmasErrorContent;
-	private String gfmasErrorCode;
-	private String gfmasErrorDesc;
-	
-	//getFactoring address details
-	private boolean factored;
-	private String facSupplierAddress;
-	private String phoneNo;
-	private String faxNo;
-	private String contactEmail;
-	private String contactPerson;
-	private String contactPhoneNo;
-	private String backToDocument;
-	private List<FlRemark> previousRemarkList;
-	private List<FlAttachment> previousAttachmentList;	
-	
-	//display gst info
-	private String gstRegistrationNo;
-	private Date gstRegistrationDate;
+	private BigDecimal orderedAmtGrandTotal ;
+	private BigDecimal subTotal;
 	
 	private boolean selectChargeLineRow=false;
-	
+	private boolean gfmasError=false;
+	private boolean factored;
 	private boolean itemDeleteButtonShow=false;
 	private boolean itemAddButtonShow;
 	private boolean gstRateChange;
-	
 	private boolean hyperLinkPage = false;
 	private boolean pidValidityExpired = false;
-	
-	private Long ministryProfileId;
-	private Long jabatanProfileId;
-	private String ptjCodeName;
-	private String ptjCodeNameSearchValues;
-	
+	private boolean emailValidate = false;
+	private boolean queryDisplay=false;
+	private boolean standardPrice = false;
+	private boolean zonalPrice = false;
+	private boolean zonalTierPrice = false;
+	private boolean tariffPrice = false;
+	private boolean serviceItem = false;
+	private boolean chargeLinePanel=false;
+	private boolean programLov=false;
+	private boolean projectLov=false;
+	private boolean votFundDisplay=false;
+	private boolean validated = false;
+	private boolean itemAutoUpdate = false;
+	private boolean required;
+	private boolean deleteButtonHide;
+	private boolean zonal;
+	private boolean centralContract;
+	private boolean isMto = false;
+	private boolean isImportedItems = false;
+	private boolean prevHideRemarks;
+	private boolean selectedRowFlg;
+	private boolean fulfilmentTypes;
+	private boolean types;
+	private boolean declarationCheck;
+	private boolean isFlRequestLink = false;
+	private boolean agencyAddress = false;
+	private boolean checkPtjFlg = true;
+	private boolean autoUpdate = true;
 	private boolean divisionDisplay = true;
-	
-	private String itemDesc;
-	
-	private BigDecimal maxOrderQuantity;
-	private Double minOrderQuantity;
-	private GlAccountSearchBean glAccountSearchBean;
 	private boolean isLazy;	
 	private boolean espkb;
+	private boolean showCommitmentNo;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
@@ -3066,6 +3023,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setPrevHideRemarks(boolean prevHideRemarks) {
 		this.prevHideRemarks = prevHideRemarks;
+	}
+
+	public boolean isShowCommitmentNo() {
+		return showCommitmentNo;
+	}
+
+	public void setShowCommitmentNo(boolean showCommitmentNo) {
+		this.showCommitmentNo = showCommitmentNo;
+	}
+
+	public String getEspkbCommitmentNo() {
+		return espkbCommitmentNo;
+	}
+
+	public void setEspkbCommitmentNo(String espkbCommitmentNo) {
+		this.espkbCommitmentNo = espkbCommitmentNo;
 	}
 
 }
