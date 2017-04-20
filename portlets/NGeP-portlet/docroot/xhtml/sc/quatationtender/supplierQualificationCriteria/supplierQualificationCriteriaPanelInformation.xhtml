@@ -81,7 +81,8 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
 					style="width:15%; text-align:right;">
 					<h:outputText value="#{panelItem.minimumOrderQty}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItem.pmUom.uomCode)}" />
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItem.pmUom.uomCode)}" />
 					</h:outputText>
 				</p:column>
 
