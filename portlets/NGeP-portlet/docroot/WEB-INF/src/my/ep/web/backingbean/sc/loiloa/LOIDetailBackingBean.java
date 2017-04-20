@@ -3174,7 +3174,7 @@ public class LOIDetailBackingBean extends
 			if (scLoi.getScNegoTerms() != null
 					&& scLoi.getScNegoTerms().size() > 0) {
 				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-					if (scLoiTerm.isSelected()) {
+					if (scLoiTerm.isSelectedTerm()) {
 						isSelected = Boolean.FALSE;
 					}
 				}
