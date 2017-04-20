@@ -3142,6 +3142,20 @@ public class LOIDetailBackingBean extends
 		if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))){
 			scLoi.setScLoiRemarks(finalizeRemarks(scLoi.getScLoiRemarks()));
 		}
+		// nego terms
+		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
+				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId)) {
+			if (scLoi.getScNegoTerms() != null
+					&& scLoi.getScNegoTerms().size() > 0) {
+				List<ScLoiTerm> selectedTerms = new ArrayList<ScLoiTerm>();
+				for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
+					if (loiTerm.isSelectedTerm()) {
+						selectedTerms.add(loiTerm);
+					}
+				}
+				scLoi.setScNegoTerms(selectedTerms);
+			}
+		}
 	}
 	
 	/**
