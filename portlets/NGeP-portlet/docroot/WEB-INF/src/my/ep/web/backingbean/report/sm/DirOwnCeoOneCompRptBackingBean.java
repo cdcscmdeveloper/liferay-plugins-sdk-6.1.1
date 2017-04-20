@@ -52,8 +52,8 @@ public class DirOwnCeoOneCompRptBackingBean extends
 	}
 
 	public void resetSearch() {
-		getManagedBean().setMofRegNoFrom(StringUtils.EMPTY);
-		getManagedBean().setMofRegNoTo(StringUtils.EMPTY);
+		getManagedBean().setMofRegNoFrom(SmReportConst.SUPPL_CONSULT_MOF_NO);
+		getManagedBean().setMofRegNoTo(SmReportConst.SUPPL_CONSULT_MOF_NO);
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 			getManagedBean().getSelectedOrgProfile().getSmSupplier()
