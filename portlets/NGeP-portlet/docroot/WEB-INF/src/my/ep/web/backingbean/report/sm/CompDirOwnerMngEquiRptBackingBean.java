@@ -25,13 +25,14 @@ public class CompDirOwnerMngEquiRptBackingBean extends
 	private static final long serialVersionUID = -6634506001926215613L;
 
 	public CompDirOwnerMngEquiRptBackingBean() {
-		if (getManagedBean().getDateFrom() == null
-				|| getManagedBean().getDateTo() == null) {
-			setDefaultDateFromAndDateTo();
-		}
+		setDefaultDateFromAndDateTo();
 	}
 
 	public void generateReport() {
+		if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom())
+				|| StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
+			throw new EpException(MessageConst.ERROR_REPORT_780035);
+		}
 		validateMofRegNo();
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(
@@ -62,14 +63,12 @@ public class CompDirOwnerMngEquiRptBackingBean extends
 		getManagedBean().setRole(StringUtils.EMPTY);
 		getManagedBean().setMofRegNoFrom(StringUtils.EMPTY);
 		getManagedBean().setMofRegNoTo(StringUtils.EMPTY);
-		setDefaultDateFromAndDateTo();
-	}
-
-	public void validate() {
-		if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom())
-				|| StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
-			throw new EpException(MessageConst.ERROR_REPORT_780035);
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			getManagedBean().getSelectedOrgProfile().getSmSupplier()
+					.setCompanyName(StringUtils.EMPTY);
 		}
+		setDefaultDateFromAndDateTo();
 	}
 
 }

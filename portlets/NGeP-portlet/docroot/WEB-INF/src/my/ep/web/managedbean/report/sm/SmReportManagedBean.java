@@ -13,6 +13,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	private Date dateFrom;
 	private Date dateTo;
+	private Date dateExpTo;
+	private Date dateExpFrom;
 	private String zone;
 	private PmOrgProfile selectedOrgProfile;
 	private String mofNo;
@@ -273,5 +275,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
+	}
+
+	public Date getDateExpTo() {
+		return dateExpTo;
+	}
+
+	public void setDateExpTo(Date dateExpTo) {
+		this.dateExpTo = dateExpTo;
+	}
+
+	public Date getDateExpFrom() {
+		return dateExpFrom;
+	}
+
+	public void setDateExpFrom(Date dateExpFrom) {
+		this.dateExpFrom = dateExpFrom;
 	}
 }

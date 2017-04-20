@@ -8,6 +8,8 @@ public class SmReportConst implements Serializable {
 	// Param
 	public static final String PARAM_DATE_TO = "PTODATE";
 	public static final String PARAM_DATE_FROM = "PFROMDATE";
+	public static final String PARAM_DATE_EXP_TO = "PEXTODATE";
+	public static final String PARAM_DATE_EXP_FROM = "PEXFROMDATE";
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_REPORT_CODE = "PREPORTID";
 	public static final String PARAM_KEY_REPORT = "report";
@@ -44,7 +46,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_USER_NAME = "PUSERNAME";
 	public static final String PARAM_IDENT_NO = "PIDENNO";
 	public static final String PARAM_DATE_TYPE = "PDATE";
-	
+
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";
@@ -126,11 +128,14 @@ public class SmReportConst implements Serializable {
 	public static final String SM_IN_COMPLETE = "IC";
 	public static final String SM_RESPONSE_REPORT = "RESPONSE";
 	public static final String SM_SUMMARY_REPORT = "SUMMARY";
-
+	
+	public static final String SUPPL_CONSULT_MOF_NO = "465-";
+	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
+	
 	public static final String PAYMENT_MOF = "M";
 	public static final String PAYMENT_PROCESSING = "P";
 	public static final String PAYMENT_SOFTC_CERT = "S";
-	
+
 	public static final String CLASSIFICATION_CODE_1 = "H0171403";
 	public static final String CLASSIFICATION_CODE_2 = "L1121109";
 	public static final String SOFTCERT_REQ_DATE = "R";
