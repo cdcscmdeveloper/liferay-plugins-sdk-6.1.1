@@ -14316,10 +14316,29 @@ public class ReportBackingBean extends
 						.equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))
 				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this
 						.getReportValue().toString()
-						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
+						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))
+				){
 			mofRegNoNumericValidation();
 		}
-
+		
+		if (StringUtils.isNotEmpty(this.getReportValue()) && (this
+				.getReportValue().toString()
+				.equals(ReportConst.SM_PERSON_BRANCH_BANK)
+				||
+				this
+				.getReportValue().toString()
+				.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||
+				this
+				.getReportValue().toString()
+				.equals(ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL)
+				)){
+			
+			if (this.getFromDate() == null
+					|| this.getToDate() == null) {
+				throw new EpException(MessageConst.ERROR_REPORT_780051);
+			}
+		}
+		
 		rptGenBean = new ReportsGenerateBean();
 		// rptGenBean.setReportCategory(this.getReportCategory());
 

@@ -64,14 +64,14 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlApproverNameView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlItemNameView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
-			//rptGenBean.setFlGroupThreeView(true);
-			rptGenBean.setFlGroupTwoView(true);			
+			// rptGenBean.setFlGroupThreeView(true);
+			rptGenBean.setFlGroupTwoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlContractOrderDateView(true);
 			break;
@@ -125,11 +125,11 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlAcknowledgeOfficerView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlDeliveryOrderNoView(true);
 			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
-			rptGenBean.setFlGroupTwentySevenView(true);			
+			rptGenBean.setFlGroupTwentySevenView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlDeliveryOrderCreatedDateView(true);
 			break;
@@ -190,7 +190,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPayOfficerView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStatusView(true);
@@ -199,8 +199,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlContractOrderCreatedDateView(true);
-			//rptGenBean.setFlGroupThreeView(true);
-			rptGenBean.setFlGroupThreePaymentMatchView(true);					
+			// rptGenBean.setFlGroupThreeView(true);
+			rptGenBean.setFlGroupThreePaymentMatchView(true);
 			break;
 		case ReportConst.DED_RPT_MIN_VAL:
 			rptGenBean.setFlContractNoView(true);
@@ -236,9 +236,9 @@ public class FLReportBackingBean extends
 		case ReportConst.CON_ORD_CANC_RPT_MIN_VAL:
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
-			rptGenBean.setFlGroupSixExtraView(true);			
+			rptGenBean.setFlGroupSixExtraView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlPegaWaiPengawalView(true);
 			rptGenBean.setFlKumpulanPTJView(true);
@@ -337,10 +337,10 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlApproverNameView(true);
-			rptGenBean.setFlGroupTwoView(true);			
+			rptGenBean.setFlGroupTwoView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			if (!rptGenBean.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_MINISTRY_VAL)) {
 				rptGenBean.setFlContractSystemView(true);
@@ -416,7 +416,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPhysicalContractNoView(true);
 			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
-			rptGenBean.setFlGroupFourView(true);		
+			rptGenBean.setFlGroupFourView(true);
 			if (!rptGenBean.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_MINISTRY_VAL)) {
 				rptGenBean.setFlContractSystemView(true);
@@ -470,7 +470,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlInvoiceCreatedDateView(true);
-			rptGenBean.setFlGroupThreeNewView(true);	
+			rptGenBean.setFlGroupThreeNewView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -480,7 +480,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPayOfficerView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
 			// rptGenBean.setFlContractOrderView(true);
 			if (!rptGenBean.getReportCategory().equalsIgnoreCase(
@@ -495,8 +495,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlContractOrderCreatedDateView(true);
-			rptGenBean.setFlGroupThreePaymentView(true);	
-					
+			rptGenBean.setFlGroupThreePaymentView(true);
+
 			break;
 		case ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -527,7 +527,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			if (!rptGenBean.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_MINISTRY_VAL)) {
 				rptGenBean.setFlContractSystemView(true);
@@ -947,13 +947,13 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlApproverNameView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			/* rptGenBean.setFlPkpNoView(true); */
 			rptGenBean.setFlPurchaseOrderNoView(true);
-			rptGenBean.setFlStopInstructionNoView(true);			
+			rptGenBean.setFlStopInstructionNoView(true);
 			rptGenBean.setFlGroupTwentyTwoView(true);
 			break;
 		case ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_CEN_PEN_VAL:
@@ -962,10 +962,10 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPegaWaiPengawalView(true);
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
-		    rptGenBean.setFlApproverNameView(true);
-			rptGenBean.setFlContractNoView(true);			
+			rptGenBean.setFlApproverNameView(true);
+			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			if (!rptGenBean.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_MINISTRY_VAL)) {
 				rptGenBean.setFlContractSystemView(true);
@@ -975,7 +975,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
-			rptGenBean.setFlStopInstructionNoView(true);			
+			rptGenBean.setFlStopInstructionNoView(true);
 			rptGenBean.setFlGroupNineteenView(true);
 			break;
 		case ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL:
@@ -1008,16 +1008,16 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlSupplierView(true);
-			rptGenBean.setFlContractNoView(true);			
+			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
 			rptGenBean.setFlLoaPhysicalNoView(true);
-			rptGenBean.setFlStatusView(true);			 
+			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			/* rptGenBean.setFlPkpNoView(true); */
 			rptGenBean.setFlPurchaseOrderNoView(true);
-			rptGenBean.setFlStopInstructionNoView(true);			
+			rptGenBean.setFlStopInstructionNoView(true);
 			rptGenBean.setFlGroupTwentyView(true);
 			break;
 		case ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL:
@@ -1026,9 +1026,9 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPegaWaiPengawalView(true);
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
-			rptGenBean.setFlContractNoView(true);			
+			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlPhysicalContractNoView(true);
-			rptGenBean.setFlLoaPhysicalNoView(true);			 
+			rptGenBean.setFlLoaPhysicalNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlStatusView(true);
 			if (!rptGenBean.getReportCategory().equalsIgnoreCase(

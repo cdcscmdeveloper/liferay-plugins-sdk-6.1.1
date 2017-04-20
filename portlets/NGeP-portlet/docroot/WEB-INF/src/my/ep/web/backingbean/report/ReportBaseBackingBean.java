@@ -30,6 +30,7 @@ import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -38,11 +39,13 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.rpt.ReportUtil;
+import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -56,7 +59,50 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 
 	private static final Logger log = EpLogger.getLogger(ReportBaseBackingBean.class);
 
+	public void retrieveReportCategoryListByModuleCode(String moduleCode) {
 
+		Long userId = getFacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			
+			IPMReportSO reportSO = null;
+			
+			try {
+			
+				reportSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+								IPMReportSO.class);
+				
+				String languageCode = getFacesScopes().getUserLocale()
+						.getLanguage();
+				PMReportReqDTO reqDTO = new PMReportReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setModuleCode(moduleCode);
+				reqDTO.setLanguageCode(languageCode);
+				
+				List<Object[]> reportCatList = reportSO
+						.retrieveSubModuleReportCategoryList(reqDTO);
+
+				if (CollectionUtils.isNotEmpty(reportCatList)) {
+	
+					for (Object[] object : reportCatList) {
+					
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1].toString());
+					
+						this.getManagedBean().getReportCategoryList().add(selectItem);
+					}
+				}
+		
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+				reportSO = null;
+			}
+		}
+	}
+	
 	public void retrieveReportListByAuthorization(String moduleCode) {
 		log.info("retrieveReportListByAuthorization");
 
@@ -94,6 +140,54 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 			}
 		}
 
+	}
+	
+	public void retrieveSubModuleReportCategoryList(String subModuleName) {
+	
+		log.info("ReportBackingBean-retrieveSubModuleReportCategoryList");
+		
+		this.getManagedBean().setReportList(null);
+
+		Long userId = getFacesScopes().getUserSessionBean().getUserId();
+
+		if (userId != null) {
+		
+			IPMReportSO reportSO = null;
+			
+			try {
+			
+				reportSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+								IPMReportSO.class);
+				
+				String languageCode = getFacesScopes().getUserLocale()
+						.getLanguage();
+				
+//				PMReportReqDTO reqDTO = new PMReportReqDTO();
+//				reqDTO.setUserId(userId);
+//				reqDTO.setModuleCode(moduleCode);
+//				reqDTO.setLanguageCode(languageCode);
+				
+				List<Object[]> reportCatList = reportSO
+						.retrieveReportListBySubModule(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase(),
+								subModuleName, userId);
+			
+				if (CollectionUtils.isNotEmpty(reportCatList)) {
+					
+					for (Object[] object : reportCatList) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1].toString());
+						this.getManagedBean().getReportList().add(selectItem);
+					}
+				}
+				
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+				reportSO = null;
+			}
+		}
 	}
 
 	private FacesScopes getFacesScopes() {

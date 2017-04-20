@@ -25,7 +25,11 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	private List<SelectItem> reportCategoryList = new ArrayList<SelectItem>();
+	
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
+	
+	private String reportCategory;
 	
 	private String reportCode;
 	
@@ -41,10 +45,26 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	private String reportTitle;
 	
+	/**
+	 * @return the reportCategoryList
+	 */
+	public List<SelectItem> getReportCategoryList() {
+		
+		if(reportCategoryList==null){
+			reportCategoryList = new ArrayList<SelectItem>();
+		}
+		
+		return reportCategoryList;
+	}
+
 	
 	
-	
-	
+	/**
+	 * @param reportCategoryList the reportCategoryList to set
+	 */
+	public void setReportCategoryList(List<SelectItem> reportCategoryList) {
+		this.reportCategoryList = reportCategoryList;
+	}
 	
 	/**
 	 * @return the defaultOutputType
@@ -133,6 +153,20 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 		this.reportList = reportList;
 	}
 
+	/**
+	 * @return the reportCategory
+	 */
+	public String getReportCategory() {
+		return reportCategory;
+	}
+
+	/**
+	 * @param reportCategory the reportCategory to set
+	 */
+	public void setReportCategory(String reportCategory) {
+		this.reportCategory = reportCategory;
+	}
+	
 	/**
 	 * @return the reportCode
 	 */

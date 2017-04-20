@@ -461,6 +461,8 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmMofRegNoFromView(true);
 			rptGenBean.setSmMofRegNoToView(true);
 			rptGenBean.setSmGenIdentificationNumberView(true);
+			rptGenBean.setSmNonMandatoryDateView(true);
+			rptGenBean.setSmAllRegisteredDateView(true);
 			break;
 		case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL:
 			//rptGenBean.setSmDOHCompanyNameView(true);
@@ -505,6 +507,8 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmMofRegNoToView(true);
 			rptGenBean.setSmPSIdentificationNumberView(true);
 			rptGenBean.setSmPersonnelStaffRoleView(true);
+			rptGenBean.setSmNonMandatoryDateView(true);
+			rptGenBean.setSmAllRegisteredDateView(true);
 
 			/*
 			 * rptGenBean.setSmCompanyNameView(true);
