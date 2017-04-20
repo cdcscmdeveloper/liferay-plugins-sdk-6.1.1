@@ -111,6 +111,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_048_comp_sorted_alphabet_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfPerMoreCompanyRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_050_list_pers_more_comp_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCompanyAddressListRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_052_company_addr_list_rpt.xhtml"></ui:include>
 				</c:if>
