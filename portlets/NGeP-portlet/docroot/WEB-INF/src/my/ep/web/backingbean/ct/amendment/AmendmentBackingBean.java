@@ -1570,7 +1570,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					}	
-				} else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+				} else if(getManagedBean().getAckFA() != null
+						&& getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 					if (getManagedBean().getCtLetterOfAcceptance().get(1).getLoaAttachments() != null &&
 							getManagedBean().getCtLetterOfAcceptance().get(1).getLoaAttachments().getFilePath() == null) {						
 						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
