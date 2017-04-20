@@ -1112,24 +1112,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					messageId = MessageConst.INFO_700010;
 				}
 				
+				//SIR#14189: Replace the doc type in acknowledge message for Supplemental Contract Letter process
+				if (getManagedBean().getTaskName() != null
+						&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME))) {
+					params[0] = ResourceBundleUtils.getMessage("lbl.ct.amend.loa.sst", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				}
 				successMessage(messageId, params);
-				
-//				if(StringUtils.isNotBlank(nextRole)){
-//					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
-//					
-//					FacesContext.getCurrentInstance().addMessage(null,
-//							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
-//									new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.ctBackingBean.getManagedBean().getContractVer().getDocType()), 
-//											this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
-//											roleDesc.getRoleName()},
-//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-//				} else {
-//					FacesContext.getCurrentInstance().addMessage(null,
-//							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
-//									new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.ctBackingBean.getManagedBean().getContractVer().getDocType()), 
-//											this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()},
-//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-//				}
 				
 				if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
