@@ -115,7 +115,8 @@
 									item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and
 										(finalizationMethod != ParameterConst.recommendByMultipleAward or 
 											(item.awardedItem and item.activeSupplierCount lt 2)) }">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+					<f:converter converterId="dynamicNumberConverter" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" />		
 				</h:outputText>
 			</p:column>
