@@ -62,7 +62,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
-			RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
+			RequestContext.getCurrentInstance().execute(
+					"rptConfirmationDlg.show()");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,10 +86,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 
 	public void validateMofRegNo() {
-		if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom())
-				|| StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
-			throw new EpException(MessageConst.ERROR_REPORT_780035);
-		}
 		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern1 = Pattern.compile(ptString1);
 		if (StringUtils.isNotEmpty(getManagedBean().getMofRegNoFrom())) {
@@ -164,6 +161,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeApplProgressStatus() {
 
 	}
+	
+	public void onChangeSuppType() {
+
+	}
 
 	public void reportOnChange() {
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
@@ -232,6 +233,26 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return items;
 	}
 
+	public List<SelectItem> retrieveSuppType(boolean showAll) {
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		SelectItem item = null;
+		if (showAll) {
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.all", null));
+			item.setValue(StringUtils.EMPTY);
+			items.add(item);
+		}
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.rpt.consultant", null));
+		item.setValue(SupplierManagementConst.SUPP_TYPE_CONSULTANT);
+		items.add(item);
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.rpt.contractor", null));
+		item.setValue(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+		items.add(item);
+		return items;
+	}
+
 	/**
 	 * retrieveRegStatusList - will retrieve registration status list.
 	 * 
@@ -290,21 +311,24 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public List<SelectItem> retrieveDistrictLsByStateId(Long stateId) {
 		return SmCommonUtil.getDistrictList(stateId);
 	}
-	
+
 	public void addSelectedPaymentTypeParam(LinkedHashMap<String, String> params) {
-		if(getManagedBean().getSelectedPaymentTypes().size() > 0){
-			for(String paymentType : getManagedBean().getSelectedPaymentTypes()){
-				if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_MOF)){
+		if (getManagedBean().getSelectedPaymentTypes().size() > 0) {
+			for (String paymentType : getManagedBean()
+					.getSelectedPaymentTypes()) {
+				if (paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_MOF)) {
 					params.put(SmReportConst.PARAM_PAYMENT_TYPE1, paymentType);
-				}else if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_PROCESSING)){
+				} else if (paymentType
+						.equalsIgnoreCase(SmReportConst.PAYMENT_PROCESSING)) {
 					params.put(SmReportConst.PARAM_PAYMENT_TYPE2, paymentType);
-				}else if(paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_SOFTC_CERT)){
+				} else if (paymentType
+						.equalsIgnoreCase(SmReportConst.PAYMENT_SOFTC_CERT)) {
 					params.put(SmReportConst.PARAM_PAYMENT_TYPE3, paymentType);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the payment type method list.
 	 * 
@@ -314,16 +338,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
 		SelectItem item = new SelectItem();
 		item.setValue(ReportConst.SM_REPORT_CREDIT);
-		item.setLabel(ResourceBundleUtils.getMessage(
-					"lbl.rpt.credit",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale()));
+		item.setLabel(ResourceBundleUtils.getMessage("lbl.rpt.credit",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes()
+						.getUserLocale()));
 		paymentTypeMethodList.add(item);
 		item = new SelectItem();
-		String fpx = ResourceBundleUtils.getMessage(
-					"lbl.rpt.fpx",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale());
+		String fpx = ResourceBundleUtils.getMessage("lbl.rpt.fpx",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes()
+						.getUserLocale());
 		item.setValue(fpx);
 		item.setLabel(fpx);
 		paymentTypeMethodList.add(item);
