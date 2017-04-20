@@ -146,11 +146,11 @@
 			                   <p:column style="width:20%;white-space:normal;" styleClass="column-align-center" >
 			                         <f:facet name="header">
 							            <h:outputText value="#{lbl['lbl.ct.tel']}"/>
-					               		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.sc.telephone.no.tooltip']}"/>
 					               	</f:facet>
 			                         <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                       <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
-				                             label="#{lbl['lbl.ct.tel']}" maxlength="100"
+				                             label="#{lbl['lbl.ct.tel']}" maxlength="20"
 				                             disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
 				                         </c:if>
 							   	                      <c:if test="#{panelBackingBean.managedBean.viewContract}">
