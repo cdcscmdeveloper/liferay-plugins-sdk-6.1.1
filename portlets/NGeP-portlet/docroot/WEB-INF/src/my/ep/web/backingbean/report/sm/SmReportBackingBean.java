@@ -330,5 +330,37 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 
 		return paymentTypeMethodList;
 	}
+	
+	/**
+	 * retrieveProcessingOfficerList - will retrieve processing officer list.
+	 * 
+	 * @return the processingOfficerList
+	 */
+	public List<SelectItem> retrieveProcessingOfficerList() {
+		log.info("ReportBackingBean-retrieveProcessingOfficerList");
+		//rptGenBean.retrieveStatesByZoneName(this.smZone);
+
+		List<SelectItem> processingOfficerList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+/*			List<Object[]> regStatusList = reportSO
+					.retrieveProcessingOfficerList(this.getSmZone());*/
+			List<Object[]> regStatusList = reportSO
+					.retrieveProcessingOfficerList(null);
+			if (CollectionUtils.isNotEmpty(regStatusList)) {
+				for (Object[] object : regStatusList) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setValue(object[1].toString());
+					selectItem.setLabel(object[0].toString());
+					processingOfficerList.add(selectItem);
+				}
+			}
+
+		}
+		return processingOfficerList;
+	}
 
 }
