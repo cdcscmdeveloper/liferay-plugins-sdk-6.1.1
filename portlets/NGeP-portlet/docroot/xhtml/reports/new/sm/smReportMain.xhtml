@@ -103,6 +103,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_046_comp_dir_owner_mngmnt_equi_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfDirOwnCeoCompanyRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_047_dir_own_ceo_more_one_comp_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfCompSortAlphaRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_048_comp_sorted_alphabet_rpt.xhtml"></ui:include>
 				</c:if>

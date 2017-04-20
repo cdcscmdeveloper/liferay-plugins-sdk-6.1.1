@@ -10,14 +10,15 @@
 		<cc:attribute name="bBean" required="true" default="" />
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
+		<cc:attribute name="showAll" default="true" />
 	</cc:interface>
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.supplierType}"
-			style="width:300px;" required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}">
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="all"></f:selectItem>
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="J"></f:selectItem>
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="K"></f:selectItem>
+			style="width:300px;" required="#{cc.attrs.required}">
+			<f:selectItems value="#{cc.attrs.bBean.retrieveSuppType(cc.attrs.showAll)}"/>
+			<p:ajax event="change" listener="#{cc.attrs.bBean.onChangeSuppType}" 
+				process="@this" partialSubmit="true" update="@form" />
 		</p:selectOneMenu>
 	</cc:implementation>
 </ui:composition>
