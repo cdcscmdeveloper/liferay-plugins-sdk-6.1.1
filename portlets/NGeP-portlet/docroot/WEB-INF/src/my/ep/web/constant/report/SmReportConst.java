@@ -40,6 +40,10 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_RECEIPT_NO = "PRECEIPTNO";
 	public static final String PARAM_REPORT_TYPE = "PREPORTTYPE";
 	public static final String PARAM_RPT_TYPE = "PTYPE";
+	public static final String PARAM_CODE = "PKOD";
+	public static final String PARAM_USER_NAME = "PUSERNAME";
+	public static final String PARAM_IDENT_NO = "PIDENNO";
+	public static final String PARAM_DATE_TYPE = "PDATE";
 	
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -126,6 +130,12 @@ public class SmReportConst implements Serializable {
 	public static final String PAYMENT_MOF = "M";
 	public static final String PAYMENT_PROCESSING = "P";
 	public static final String PAYMENT_SOFTC_CERT = "S";
+	
+	public static final String CLASSIFICATION_CODE_1 = "H0171403";
+	public static final String CLASSIFICATION_CODE_2 = "L1121109";
+	public static final String SOFTCERT_REQ_DATE = "R";
+	public static final String SOFTCERT_EXP_DATE = "E";
+	public static final String SOFTCERT_RENEW_DATE = "N";
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;
@@ -453,5 +463,25 @@ public class SmReportConst implements Serializable {
 
 	public String getPaymentSoftcCert() {
 		return PAYMENT_SOFTC_CERT;
+	}
+
+	public String getClassificationCode1() {
+		return CLASSIFICATION_CODE_1;
+	}
+
+	public String getClassificationCode2() {
+		return CLASSIFICATION_CODE_2;
+	}
+
+	public String getSoftcertReqDate() {
+		return SOFTCERT_REQ_DATE;
+	}
+
+	public String getSoftcertExpDate() {
+		return SOFTCERT_EXP_DATE;
+	}
+
+	public String getSoftcertRenewDate() {
+		return SOFTCERT_RENEW_DATE;
 	}
 }
