@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -48,6 +49,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -437,6 +440,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().getFulfilmentOrder().setFactored(false);
 					}
 				}
+				getEspkbCommitmentNo();
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
 				getManagedBean().setContractRequest(Boolean.TRUE);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
@@ -1172,6 +1176,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setDocMaintainRemarks(true);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 				getManagedBean().setDocMaintainRemarks(true);
+				getEspkbCommitmentNo();
 				flBB.getManagedBean().setHideRemarks(true);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -1536,5 +1541,32 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 		return url;
 
+	}
+	
+	private void getEspkbCommitmentNo() {
+		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		if(!gfmasEnable.equalsIgnoreCase("true")){//isEspkb
+			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+					|| getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				getManagedBean().setShowCommitmentNo(true);
+				ContractResDTO resDTO = contractSO.retrieveAgencyCommitmentNo(reqDTO);
+				if(resDTO.getCommitmentNo() == null){//cater for migrated data if did not patch commitmentNo
+					getManagedBean().setEspkbCommitmentNo("K"+String.format("%1$08d", getManagedBean().getFlRequest().getCtContract().getContractId().longValue())+String.format("%1$08d", getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().longValue()));
+				}else{
+					getManagedBean().setEspkbCommitmentNo(resDTO.getCommitmentNo());
+				}
+				
+			}else{
+				getManagedBean().setShowCommitmentNo(false);
+			}
+			
+		}else{
+			getManagedBean().setShowCommitmentNo(false);
+		}
 	}
 }
