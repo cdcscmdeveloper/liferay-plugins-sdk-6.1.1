@@ -2008,7 +2008,12 @@ public class OrganisationBackingBean extends
 				&& pmDivision.getDivisionId() !=null){
 			return PmCommonUtil.retrievePmDistrictListByDivisionId(pmDivision.getDivisionId());					
 		}else {
-			return PmCommonUtil.retrievePmDistrictList(stateId);
+			if(getManagedBean().getOfficeAddress().getPmState() != null && getManagedBean().getOfficeAddress().getPmState().getAdoptDivision()){
+				return null;
+			}else{
+				return PmCommonUtil.retrievePmDistrictList(stateId);
+			}
+			
 		}
 		
 	}
