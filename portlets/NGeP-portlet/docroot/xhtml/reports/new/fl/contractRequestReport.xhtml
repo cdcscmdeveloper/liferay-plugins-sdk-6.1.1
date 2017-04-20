@@ -60,23 +60,20 @@
 			</td>
 			<td>
 				<p:inputText maxlength="20"
-					value="#{reportBackingBean.flContractNo}"
-					style="margin-top:5px;width:290px;">
+					value="#{reportBackingBean.flContractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
 			
 			<td>
-				<td><p:outputLabel style="width:190px;"
-					value="#{lbl['lbl.rpt.physicalcontractno']}" /></td>
+				<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}" />
 			</td>
 
 			<td>
 				
 				<p:inputText maxlength="30" id="flphycontractId"
 					label="#{lbl['lbl.rpt.physicalcontractno']}"
-					value="#{reportBackingBean.flPhysicalContractNo}"
-					style="margin-top:5px;width:268px;">
+					value="#{reportBackingBean.flPhysicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true"
 						update="@([id$=Msg])" />
 						
@@ -93,12 +90,10 @@
 		</tr>
 		
 		<tr>
-			<td><p:outputLabel style="width:190px;"
-					value="#{lbl['lbl.rpt.loaphysicalno']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.loaphysicalno']}" /></td>
 			<td><p:inputText maxlength="100" id="flphyloaId"
 					label="#{lbl['lbl.rpt.loaphysicalno']}"
-					value="#{reportBackingBean.flLoaPhysicalNo}"
-					style="margin-top:5px;width:268px;">
+					value="#{reportBackingBean.flLoaPhysicalNo}">
 					<p:ajax event="blur" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:inputText>&#160;<p:graphicImage id="flphyloa"
@@ -110,13 +105,11 @@
 					display="icon" /></td>
 		
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"
-						style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"/>
 			</td>
 			<td>
 				<p:inputText maxlength="35"
-					value="#{reportBackingBean.flContractRequestNo}"
-					style="margin-top:5px;width:290px;">
+					value="#{reportBackingBean.flContractRequestNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -124,23 +117,77 @@
 		</tr>
 		
 		<tr>
-			<td><p:outputLabel style="width:190px;"
-					value="#{lbl['lbl.rpt.loanno']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.loanno']}" /></td>
 			<td></td>
 		
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"
-						style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"/>
 			</td>
 			<td>
 				<p:inputText maxlength="35"
-					value="#{reportBackingBean.flContractRequestNo}"
-					style="margin-top:5px;width:290px;">
+					value="#{reportBackingBean.flContractRequestNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
 							
 		</tr>
 		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.requisitionerScreen']}"
+					style="margin-top:5px;width:190px;" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}"
+					style="margin-top:5px;width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItems
+						value="#{reportBackingBean.rolecodeRquisitionerList}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>		
+		</tr>
+		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:190px;" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{reportBackingBean.flGroupOne}"
+					style="margin-top:5px;width:300px;">
+
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+			<td colspan="2"></td>
+		</tr>
+	
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.cntrReqCrtdDtFrm']}"/></td>
+			<td><p:calendar showOn="button" navigator="true"
+				display="inline" readonlyInput="true"
+				value="#{reportBackingBean.toDate}" size="9"
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				partialSubmit="true" process="@form"/></td>
+			<td colspan="2"></td>	
+		</tr>	
 	</table>
 </ui:composition>
