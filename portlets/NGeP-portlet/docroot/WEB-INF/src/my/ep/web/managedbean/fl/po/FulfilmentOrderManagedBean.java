@@ -138,6 +138,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
     private IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel = new PendingFlPagingDataModel();
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
+	private boolean showCommitmentNo;
+	private String espkbCommitmentNo;
     
     /**
 	 * @return the pendingDoDataModel
@@ -1274,6 +1276,22 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setPrevHideRemarks(boolean prevHideRemarks) {
 		this.prevHideRemarks = prevHideRemarks;
+	}
+
+	public boolean isShowCommitmentNo() {
+		return showCommitmentNo;
+	}
+
+	public void setShowCommitmentNo(boolean showCommitmentNo) {
+		this.showCommitmentNo = showCommitmentNo;
+	}
+
+	public String getEspkbCommitmentNo() {
+		return espkbCommitmentNo;
+	}
+
+	public void setEspkbCommitmentNo(String espkbCommitmentNo) {
+		this.espkbCommitmentNo = espkbCommitmentNo;
 	}
 
 }

@@ -90,6 +90,12 @@
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory)}" /></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ct.agency.comitment.no']}" rendered="#{flOrderBB.managedBean.showCommitmentNo}"/></td>
+				<td><p:inputText id="espkbCommNo" size="30" disabled="true" rendered="#{flOrderBB.managedBean.showCommitmentNo}"
+						value="#{flOrderBB.managedBean.espkbCommitmentNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.commitment.no']}" rendered="#{flOrderBB.managedBean.showCommitmentNo}"/></td>
+			</tr>
+			<tr>
 				<td style="width: 142px;"><p:outputLabel rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 						value="#{lbl['lbl.fl.delivery.period']}" /></td>
 				<td><table style="width: 80%">
