@@ -2002,16 +2002,21 @@ public class OrganisationBackingBean extends
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
-	public List<PmDistrict> getDistrictList(Long stateId,PmDivision pmDivision) {
+	public List<PmDistrict> getDistrictList(PmState state,PmDivision pmDivision) {
 		log.info("getDistrictList");
 		if(pmDivision != null 
 				&& pmDivision.getDivisionId() !=null){
 			return PmCommonUtil.retrievePmDistrictListByDivisionId(pmDivision.getDivisionId());					
 		}else {
-			if(getManagedBean().getOfficeAddress().getPmState() != null && getManagedBean().getOfficeAddress().getPmState().getAdoptDivision()){
+			//return null for SARAWAK
+			if(state != null && state.getAdoptDivision()){
 				return null;
 			}else{
-				return PmCommonUtil.retrievePmDistrictList(stateId);
+				if(state != null && state.getStateId() != null){
+					return PmCommonUtil.retrievePmDistrictList(state.getStateId());
+				}else{
+					return null;
+				}
 			}
 			
 		}
