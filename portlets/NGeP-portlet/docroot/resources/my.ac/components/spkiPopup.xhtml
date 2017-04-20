@@ -40,11 +40,10 @@
 		<p:remoteCommand name="resetQuestion"
 			id="resetQuestion"
 			action="#{spkiBackingBean.clearInput}"
-			update=":form"></p:remoteCommand>
+			update="spkiPanel"></p:remoteCommand>
 
 
-		<p:dialog header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg"
-			onHide="resetQuestion();" resizable="false"
+		<p:dialog id="spki_dlg_id" header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg" onShow="resetQuestion();" resizable="false"
 			modal="true">
 
 			<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}"
