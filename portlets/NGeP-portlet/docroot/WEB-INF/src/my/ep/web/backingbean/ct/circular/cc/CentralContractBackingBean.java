@@ -670,8 +670,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		        	for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
 		        		if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
 		        				|| contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
-		        			getManagedBean().setSelectedTabIndex(0);
-		        			throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
+		        			getManagedBean().setSelectedTabIndex(0);		        			
+		        			throw new EpException(MessageConst.ERROR_100022,
+		        					new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.contact.person", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		        		}
 			       
 		        		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
