@@ -467,14 +467,22 @@ public class FinancialOrgBackingBean extends
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
-	public List<PmDistrict> getDistrictList(Long stateId) {
-		log.info("getDistrictList");
+	public List<PmDistrict> getDistrictList(PmState state) {
 		log.info("getDistrictList");
 		if(getManagedBean().getPmAddress().getPmDivision() != null 
 				&& getManagedBean().getPmAddress().getPmDivision().getDivisionId() !=null){
 			return PmCommonUtil.retrievePmDistrictListByDivisionId(getManagedBean().getPmAddress().getPmDivision().getDivisionId());					
 		}else {
-				return PmCommonUtil.retrievePmDistrictList(stateId);
+			if(state != null && state.getAdoptDivision()){
+				return null;
+			}else{
+				if(state != null && state.getStateId() != null){
+					return PmCommonUtil.retrievePmDistrictList(state.getStateId());
+				}else{
+					return null;
+				}				
+			}
+			
 		}
 	
 	}

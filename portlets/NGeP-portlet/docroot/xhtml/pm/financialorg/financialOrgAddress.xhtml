@@ -105,7 +105,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems 
-							value="#{financialOrgBackingBean.getDistrictList(financialOrgBackingBean.managedBean.pmAddress.pmState.stateId)}"
+							value="#{financialOrgBackingBean.getDistrictList(financialOrgBackingBean.managedBean.pmAddress.pmState)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
 						 <p:ajax event="change" update="facDistrict,facCity" 
