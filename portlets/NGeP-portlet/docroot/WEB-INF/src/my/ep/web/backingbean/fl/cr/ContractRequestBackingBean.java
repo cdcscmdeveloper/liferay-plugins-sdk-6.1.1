@@ -1241,10 +1241,38 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 		
+		getEspkbCommitmentNo();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage.xhtml");
 	}
 
+	private void getEspkbCommitmentNo() {
+		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		if(!gfmasEnable.equalsIgnoreCase("true")){//isEspkb
+			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+					|| getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				getManagedBean().setShowCommitmentNo(true);
+				ContractResDTO resDTO = contractSO.retrieveAgencyCommitmentNo(reqDTO);
+				if(resDTO.getCommitmentNo() == null){//cater for migrated data if did not patch commitmentNo
+					getManagedBean().setEspkbCommitmentNo("K"+String.format("%1$08d", getManagedBean().getFlRequest().getCtContract().getContractId().longValue())+String.format("%1$08d", getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().longValue()));
+				}else{
+					getManagedBean().setEspkbCommitmentNo(resDTO.getCommitmentNo());
+				}
+				
+			}else{
+				getManagedBean().setShowCommitmentNo(false);
+			}
+			
+		}else{
+			getManagedBean().setShowCommitmentNo(false);
+		}
+	}
+	
 	/**
 	 * Sets the fl supplier dtl.
 	 *
@@ -3182,6 +3210,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 		initializeApproverGroup();
 		initializeDelAddr();
+		getEspkbCommitmentNo();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
@@ -5524,5 +5553,4 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	
 	}
-	
 }

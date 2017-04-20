@@ -42,7 +42,7 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or contractRequestBackingBean.isApprover() or !bpmTasklistBackingBean.managedBean.claim}"
-						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice" readonly="true"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice,:form:espkbCommNo" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
@@ -125,6 +125,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
 				<td><p:inputText size="30" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.procurementTypeCategory)}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ct.agency.comitment.no']}" rendered="#{contractRequestBackingBean.managedBean.showCommitmentNo}"/></td>
+				<td><p:inputText id="espkbCommNo" size="30" disabled="true" rendered="#{contractRequestBackingBean.managedBean.showCommitmentNo}"
+						value="#{contractRequestBackingBean.managedBean.espkbCommitmentNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.commitment.no']}" rendered="#{contractRequestBackingBean.managedBean.showCommitmentNo}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 142px;"><p:outputLabel rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
