@@ -97,8 +97,8 @@
 
 			<h:outputText value="#{question.clQuantity}"
 				rendered="#{isQuestionTypeItem and isPriceTypeAllStandard and (empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone)}">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+				<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
 			</h:outputText>
 			<ui:param name="tierQtyTooltip"
 				value="#{(isQuestionTypeItem and !empty templateSpecBean.specMaster.tplSpecZone and templateSpecBean.specMaster.qtyByZone)? 'lbl.tpl.spec.zone.tier.qty.tooltip':'lbl.tpl.spec.content.tier.dtls.tooltip'}" />
