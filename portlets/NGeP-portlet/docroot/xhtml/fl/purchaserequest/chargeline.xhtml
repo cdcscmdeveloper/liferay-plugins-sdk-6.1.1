@@ -9,6 +9,12 @@
 	<p:panel header="#{lbl['lbl.fl.charge.assignment']}" id="chargeAss" toggleable="true" styleClass="prChargeLinePnlClass">
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.assignment']}" escape="false" rendered="#{!purchaseRequestBackingBean.managedBean.espkb}"/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.espkb.assignment']}" escape="false" rendered="#{purchaseRequestBackingBean.managedBean.espkb}"/>
+	<br></br>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.complete1']}" escape="false"/>&#160;
+	<p:graphicImage value="/css/images/design/ico-check.png" />&#160;
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.complete2']}" escape="false"/>&#160;
+	<p:graphicImage value="/css/images/design/ico-reject.png" />&#160;
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.complete3']}" escape="false"/>
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			styleClass="chargeLineChange"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedNode}"
