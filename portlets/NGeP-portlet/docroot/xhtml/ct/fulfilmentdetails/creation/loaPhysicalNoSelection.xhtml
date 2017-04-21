@@ -22,6 +22,8 @@
 		       		<p:ajax event="change"  process="@this" listener="#{contractDetailsBackingBean.changeLoaContractVer()}" update=":form" 
 	               	onstart="blockViewWidget.show()" oncomplete="blockViewWidget.hide()"></p:ajax>
 		       	</p:selectOneMenu>
+		       	<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no.selection']}" />
 			</td>
 		</tr>
 		</table>
