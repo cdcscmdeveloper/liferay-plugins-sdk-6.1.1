@@ -636,13 +636,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Initialized personnel information step
 	 */
 	private void initStep3PersonnelInfo() {
-		// personnelInfoFormViewOnly
+		List<SmPersonnel> deletedPersonnels = new ArrayList<SmPersonnel>();
+		
 		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
 			getManagedBean().getSmAppl().setSmPersonnels(
 					new ArrayList<SmPersonnel>());
 		} else {
 			for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
+
+				if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+					deletedPersonnels.add(smPersonnel);
+				}
+
 				if (smPersonnel.getRoleName() != null
 						&& StringUtils.isNotBlank(smPersonnel.getRoleName())) {
 					// read value rolename from properties
@@ -703,6 +710,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
 				.getSmAppl());
+		getManagedBean().getSmAppl().getSmPersonnels()
+				.removeAll(deletedPersonnels);
 	}
 
 	/**
