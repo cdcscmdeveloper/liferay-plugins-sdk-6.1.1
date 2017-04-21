@@ -1208,7 +1208,7 @@ public class SimpleQuoteBackingBean extends
 					prodTpl.setCtPanelItem(ctPanelItem);
 				}
 				prodTpl.setTplSpecQuestions(productQuestions);
-				prodTpl.setBrandNew(Boolean.FALSE);
+//				prodTpl.setBrandNew(Boolean.FALSE);
 				productTemplateSpecBean.setSpecMaster(prodTpl);
 				getManagedBean().setProductTemplateSpecBean(
 						productTemplateSpecBean);
