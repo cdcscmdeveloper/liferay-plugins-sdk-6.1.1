@@ -1711,6 +1711,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param e the e
 	 */
 	public void retrieveDistrictList(AjaxBehaviorEvent e) {
+		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDistrict() != null){
+			getManagedBean().setDistrictList(null);
+			getManagedBean().getFlManualAddress().getFlAddress().getPmDistrict().setDistrictId(null);
+		}
+		if(getManagedBean().getFlManualAddress().getFlAddress().getPmCity() != null){
+			getManagedBean().setCityList(null);
+			getManagedBean().getFlManualAddress().getFlAddress().getPmCity().setCityId(null);
+		}
 		Long divisionId = (Long) e.getComponent().getAttributes().get("value");
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setDivisionId(divisionId);
