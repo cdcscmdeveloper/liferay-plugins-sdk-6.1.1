@@ -4812,6 +4812,7 @@ public class SmCommonUtil {
 			reqDTO.setSupplierType(supplierType);
 			reqDTO.setApplicationType(applType);
 			reqDTO.setCategoryType(categoryType);
+			reqDTO.setByWeightage(true);
 
 			List<PmUser> poList = SmServiceLookup.getUserSO()
 					.retrievePOUserListByRoleZone(reqDTO).getUserList();
