@@ -24,10 +24,10 @@
 						items="#{poJobWeightBackingBean.managedBean.jobWeightList}"
 						var="jobWeight">
 						<tr>
-							<td><p:outputLabel
+							<td width="20%"><p:outputLabel
 									value="#{poJobWeightBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobWeight.weightType.parameterCode)}" />
 								<p:outputLabel value="*" styleClass="mandatory" /></td>
-							<td><p:inputText
+							<td width="80%"><p:inputText
 									label="#{poJobWeightBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobWeight.weightType.parameterCode)}"
 									size="5" value="#{jobWeight.weightValue}" maxlength="1"
 									required="#{!empty param['disableValidation']}">
