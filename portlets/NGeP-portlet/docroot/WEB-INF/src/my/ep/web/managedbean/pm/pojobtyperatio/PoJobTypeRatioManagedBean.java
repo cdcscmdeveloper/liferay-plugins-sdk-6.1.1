@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.pm.pojobtyperatio;
 
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -25,7 +24,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
  * Managed Bean for Po Type Ratio
@@ -219,6 +217,7 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IPoJobTypeRatioSO.class);
 				PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
+				reqDTO.setSearchBean(searchBean);
 				PoJobTypeRatioResDTO resDTO = jobTypeRatioSO.retrieveJobTypeRatioList(reqDTO);
 				if(resDTO != null && resDTO.isSuccessful() && resDTO.getResultBean() != null){
 					return resDTO.getResultBean();
