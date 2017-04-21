@@ -56,7 +56,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}" style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"/>
 			</td>
 			<td>
 				<p:inputText maxlength="20"
@@ -118,32 +118,48 @@
 		
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.loanno']}" /></td>
-			<td></td>
-		
+			<td><p:inputText maxlength="20" value="#{reportBackingBean.flSst}">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"/>
 			</td>
 			<td>
-				<p:inputText maxlength="35"
-					value="#{reportBackingBean.flContractRequestNo}">
-					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText>
+				<ac:lov id="flSupplierName" readonly="true"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+					headerText="#{lbl['lbl.rpt.supplierScreen']}" update="@form" 
+					value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					postUpdateListener="#{reportBackingBean.onSupplierNameChangeForFLLOV()}"
+					saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+				
 			</td>
 							
 		</tr>
 		
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.requisitionerScreen']}"
-					style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.rpt.requisitionerScreen']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}"
-					style="margin-top:5px;width:300px;">
+				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
 						value="#{reportBackingBean.rolecodeRquisitionerList}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+			
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.status']}"/>
+			</td>
+			
+			<td>
+				<p:selectOneMenu value="#{reportBackingBean.flStatus}">
+					<f:selectItems
+						value="#{reportBackingBean.docTypeStatusItemsList}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:selectOneMenu>
@@ -152,11 +168,10 @@
 		
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.rpt.group']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flGroupOne}"
-					style="margin-top:5px;width:300px;">
+				<p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
