@@ -290,7 +290,7 @@
 								itemLabel="#{divisionList.divisionName}" />
 							<p:ajax event="change"
 								listener="#{purchaseRequestBackingBean.retrieveDistrictList}"
-								update="manDistrict" />
+								update="manDistrict,manCity" />
 						</p:selectOneMenu>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.manual.addr']}"/></td>
 					<td><p:message for="manDivison" display="icon" /></td>
