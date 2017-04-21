@@ -190,6 +190,10 @@
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfUsers}">
 					<ui:include src="/xhtml/reports/new/sm/SM_060_users_softcert_req.xhtml"></ui:include>
 				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smDeletePendingAppl}">
+					<ui:include src="/xhtml/reports/new/sm/SM_056_request_delete_appl_rpt.xhtml"></ui:include>
+				</c:if>
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>

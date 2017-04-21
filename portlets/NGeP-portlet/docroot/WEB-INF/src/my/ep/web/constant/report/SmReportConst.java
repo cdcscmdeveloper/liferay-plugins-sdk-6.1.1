@@ -46,6 +46,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_USER_NAME = "PUSERNAME";
 	public static final String PARAM_IDENT_NO = "PIDENNO";
 	public static final String PARAM_DATE_TYPE = "PDATE";
+	public static final String PARAM_PROC_OFFICER = "PPROOFFICERNAME";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -141,6 +142,9 @@ public class SmReportConst implements Serializable {
 	public static final String SOFTCERT_REQ_DATE = "R";
 	public static final String SOFTCERT_EXP_DATE = "E";
 	public static final String SOFTCERT_RENEW_DATE = "N";
+	
+	public static final String REQUEST_BY_SUPP = "Requested By Supplier";
+	public static final String AUTO_BY_SYS = "Auto Cancelled by System";
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;
@@ -488,5 +492,13 @@ public class SmReportConst implements Serializable {
 
 	public String getSoftcertRenewDate() {
 		return SOFTCERT_RENEW_DATE;
+	}
+
+	public String getRequestBySupp() {
+		return REQUEST_BY_SUPP;
+	}
+
+	public String getAutoBySys() {
+		return AUTO_BY_SYS;
 	}
 }
