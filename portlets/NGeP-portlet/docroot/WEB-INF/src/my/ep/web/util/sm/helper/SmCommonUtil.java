@@ -4870,7 +4870,7 @@ public class SmCommonUtil {
 				}
 			}
 
-			if (catTypeNull) {
+			if(!catTypeNull){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("categoryType",
 								SearchOperator.OPERATOR_EQUALS.value(),
