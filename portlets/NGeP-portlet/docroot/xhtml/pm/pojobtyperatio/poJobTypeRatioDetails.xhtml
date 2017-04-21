@@ -36,10 +36,10 @@
 			<p:outputPanel id="jobTypeRatioCrtOpId">
 				<table width="100%">
 					<tr>
-						<td><p:outputLabel
+						<td width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.poworkload.supptype']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu id="suppTypeList"
+						<td width="70%"><p:selectOneMenu id="suppTypeList"
 								label="#{lbl['lbl.pm.poworkload.supptype']}"
 								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.supplierType}"
 								disabled="#{not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
@@ -57,7 +57,7 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td width="20%"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.pm.poworkload.appltype']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="appTypeList"
@@ -102,7 +102,7 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td width="35%"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
 						<td>
