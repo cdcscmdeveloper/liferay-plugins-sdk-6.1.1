@@ -12,14 +12,14 @@ import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.managedbean.report.sm.CompDirOwnerMngEquiRptManagedBean;
+import my.ep.web.managedbean.report.sm.CompSortedAlphabetRptManagedBean;
 
 import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "compSortedAlphabetRptBB")
 @ViewScoped
 public class CompSortedAlphabetRptBackingBean extends
-		SmReportBackingBean<CompDirOwnerMngEquiRptManagedBean> {
+		SmReportBackingBean<CompSortedAlphabetRptManagedBean> {
 
 	/**
 	 * 

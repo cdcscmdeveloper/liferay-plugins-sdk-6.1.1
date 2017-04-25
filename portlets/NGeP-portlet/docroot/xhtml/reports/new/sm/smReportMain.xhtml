@@ -111,6 +111,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_048_comp_sorted_alphabet_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smStatisticsCompanytypeCapRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_049_stat_comp_type_cap_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfPerMoreCompanyRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_050_list_pers_more_comp_rpt.xhtml"></ui:include>
 				</c:if>
@@ -125,6 +129,10 @@
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smPersonBranchBank}">
 					<ui:include src="/xhtml/reports/new/sm/SM_058_supp_cont_pers_bank_branch_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smThreshold}">
+					<ui:include src="/xhtml/reports/new/sm/SM_059_threshold_or_supp_trans_rpt.xhtml"></ui:include>
 				</c:if>
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smDailyAppSubmitted}">
