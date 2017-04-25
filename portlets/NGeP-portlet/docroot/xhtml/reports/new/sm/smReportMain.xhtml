@@ -194,6 +194,10 @@
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smDeletePendingAppl}">
 					<ui:include src="/xhtml/reports/new/sm/SM_056_request_delete_appl_rpt.xhtml"></ui:include>
 				</c:if>
+
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfMofCancellationRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_051_delete_mof_acc_rpt.xhtml"></ui:include>
+				</c:if>
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
