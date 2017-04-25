@@ -361,6 +361,7 @@
 		</category>
 		<category name="category.ep.lg">
 			<portlet id="forgotLoginId"></portlet>
+			<portlet id="forgotLoginPassword"></portlet>
 		</category>
 		<!-- SOA - START -->
 		<category name="category.ep.soa">

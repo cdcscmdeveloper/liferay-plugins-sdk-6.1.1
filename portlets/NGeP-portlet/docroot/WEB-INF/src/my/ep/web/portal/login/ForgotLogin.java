@@ -40,6 +40,7 @@ public class ForgotLogin {
 	
 	private final static Logger log = Logger.getLogger(ForgotLogin.class.getName());
 	private String emailAddress;
+	private String userId;
 	
 	public ForgotLogin() {
 	}
@@ -48,6 +49,13 @@ public class ForgotLogin {
 		log.info("cancelbtnaction");
 		FacesContext.getCurrentInstance().getExternalContext().redirect(
 				 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
+	}
+	
+	public String forgotLoginPassword() {
+		log.info("User ID: " + this.userId);
+		
+		
+    	return null;
 	}
 	
 	public String forgotLoginId() {
@@ -153,5 +161,19 @@ public class ForgotLogin {
 	 */
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}	
 }
