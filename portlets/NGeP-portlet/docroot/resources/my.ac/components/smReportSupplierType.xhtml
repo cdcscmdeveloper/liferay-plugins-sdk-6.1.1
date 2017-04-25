@@ -11,12 +11,17 @@
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="showAll" default="true" />
+		<cc:attribute name="allValue" default=""/>
 	</cc:interface>
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.supplierType}"
 			style="width:300px;" required="#{cc.attrs.required}">
-			<f:selectItems value="#{cc.attrs.bBean.retrieveSuppType(cc.attrs.showAll)}"/>
+			<c:if test="#{cc.attrs.showAll}">
+				<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{cc.attrs.allValue}"></f:selectItem>
+			</c:if>
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="#{SupplierMgmtConst.suppTypeConsultant}"></f:selectItem>
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="#{SupplierMgmtConst.suppTypeContractor}"></f:selectItem>
 			<p:ajax event="change" listener="#{cc.attrs.bBean.onChangeSuppType}" 
 				process="@this" partialSubmit="true" update="@form" />
 		</p:selectOneMenu>
