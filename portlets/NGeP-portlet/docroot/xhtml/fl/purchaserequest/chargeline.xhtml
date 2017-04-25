@@ -348,9 +348,9 @@
 		<p:panel id="glAccountPanel" header="#{lbl['lbl.pm.gl.account.search.location']}" toggleable="true" >
 		<table style="width:100%">
 			<tr>
-				<td width="30%"><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.type']}"></p:outputLabel></td>
+				<td width="30%"><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.type']}" ></p:outputLabel></td>
 				<td width="30%">
-					<p:selectOneMenu id="somAccType" style="width:205px"
+					<p:selectOneMenu id="somAccType" style="width:205px" rendered="#{!purchaseRequestBackingBean.managedBean.espkb}"
 							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -364,13 +364,14 @@
 								oncomplete="blockWidget.hide()" 
 								update="somAccClass,somGoCode" />
 						</p:selectOneMenu>	
+						<p:inputText value="0" rendered="#{purchaseRequestBackingBean.managedBean.espkb}" size="50" disabled="true"/>
 						</td>	
 				<td width="40%">&#160;</td>			
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.class']}"></p:outputLabel></td>
 				<td>
-					<p:selectOneMenu id="somAccClass" 
+					<p:selectOneMenu id="somAccClass" rendered="#{!purchaseRequestBackingBean.managedBean.espkb}"
 							style="width:205px" 
 							disabled="#{empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType}"
 							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccClass}">
@@ -381,14 +382,15 @@
 								update="@this,somGoCode" 
 								onstart="blockWidget.show()" 
 								oncomplete="blockWidget.hide()" />
-						</p:selectOneMenu>				
+						</p:selectOneMenu>	
+						<p:inputText value="00" rendered="#{purchaseRequestBackingBean.managedBean.espkb}" size="50" disabled="true"/>			
 						</td>
 						<td>&#160;</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.go.search.gen.obj.code']}"></p:outputLabel></td>
 				<td>
-					<p:selectOneMenu id="somGoCode"  style="width:205px" 
+					<p:selectOneMenu id="somGoCode"  style="width:205px" rendered="#{!purchaseRequestBackingBean.managedBean.espkb}"
 							disabled="#{empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType 
 							or empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccClass}"
 							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedGenObjCode}">
@@ -397,6 +399,7 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@this" />
 						</p:selectOneMenu>	
+						<p:inputText value="#{lbl['lbl.txt.na']}" rendered="#{purchaseRequestBackingBean.managedBean.espkb}" size="50" disabled="true"/>
 				</td>	
 				<td>&#160;</td>		
 			</tr>
