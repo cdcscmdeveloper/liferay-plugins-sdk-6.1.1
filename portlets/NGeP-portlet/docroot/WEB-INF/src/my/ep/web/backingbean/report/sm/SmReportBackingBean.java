@@ -161,9 +161,44 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	public void onChangeApplProgressStatus() {
 
 	}
-	
+
 	public void onChangeSuppType() {
 
+	}
+
+	public void onChangeBussType() {
+		getManagedBean().setCapitalLabel(StringUtils.EMPTY);
+		if (StringUtils.isNotEmpty(getManagedBean().getBussType())) {
+			if (getManagedBean().getBussType().equals("C")
+					|| getManagedBean().getBussType().equals("D")
+					|| getManagedBean().getBussType().equals("E")
+					|| getManagedBean().getBussType().equals("F")
+					|| getManagedBean().getBussType().equals("G")
+					|| getManagedBean().getBussType().equals("H")) {
+				getManagedBean().setCapitalLabel(
+						SmCommonUtil.getMessage("lbl.rpt.accumulatedcapital",
+								null));
+			} else if (getManagedBean().getBussType().equals("I")
+					|| getManagedBean().getBussType().equals("J")
+					|| getManagedBean().getBussType().equals("B")) {
+				getManagedBean().setCapitalLabel(
+						SmCommonUtil.getMessage("lbl.rpt.paidUpCapitalFrm",
+								null));
+			} else if (getManagedBean().getBussType().equals("K")) {
+				getManagedBean().setCapitalLabel(
+						SmCommonUtil.getMessage("lbl.rpt.accumulatedshare",
+								null));
+			}
+		} else {
+			getManagedBean().setCapitalLabel(
+					SmCommonUtil.getMessage("lbl.rpt.paidaccumulatedshare",
+							null));
+		}
+
+		if (StringUtils.isBlank(getManagedBean().getCapitalLabel())) {
+			getManagedBean().setCapitalShareFrom(StringUtils.EMPTY);
+			getManagedBean().setCapitalShareTo(StringUtils.EMPTY);
+		}
 	}
 
 	public void reportOnChange() {
@@ -259,7 +294,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	 * @return the registrationStatusList
 	 */
 	public List<SelectItem> retrieveRegStatusList() {
-		log.info("ReportBackingBean-retrieveRegStatusList");
 		List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -279,6 +313,27 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 		}
 		return registrationStatusList;
+	}
+
+	public void initBusinesTypeList() {
+		getManagedBean().setBussTypeList(new ArrayList<SelectItem>());
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> retrieveConsultantList = reportSO
+					.getConsultantBusCompanyData(getFacesScopes()
+							.getUserLocale().getLanguage());
+			if (CollectionUtils.isNotEmpty(retrieveConsultantList)) {
+				for (Object[] object : retrieveConsultantList) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setValue(object[1].toString());
+					selectItem.setLabel(object[0].toString());
+					getManagedBean().getBussTypeList().add(selectItem);
+				}
+			}
+		}
 	}
 
 	public List<SelectItem> retrieveApplStatus() {
@@ -352,7 +407,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 
 		return paymentTypeMethodList;
 	}
-	
+
 	/**
 	 * retrieveProcessingOfficerList - will retrieve processing officer list.
 	 * 
@@ -365,8 +420,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 
-/*			List<Object[]> regStatusList = reportSO
-					.retrieveProcessingOfficerList(this.getSmZone());*/
+			/*
+			 * List<Object[]> regStatusList = reportSO
+			 * .retrieveProcessingOfficerList(this.getSmZone());
+			 */
 			List<Object[]> regStatusList = reportSO
 					.retrieveProcessingOfficerList(null);
 			if (CollectionUtils.isNotEmpty(regStatusList)) {

@@ -37,10 +37,15 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String reportType;
 	private String paymentType;
 	private String identificationNo;
+	private String bussType;
+	private String capitalLabel;
+	private String capitalShareFrom;
+	private String capitalShareTo;
 	
 	private List<SelectItem> applStatusList;
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
+	private List<SelectItem> bussTypeList;
 	private List<String> yearList;
 	
 	private List<String> selectedPaymentTypes;
@@ -291,5 +296,45 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setDateExpFrom(Date dateExpFrom) {
 		this.dateExpFrom = dateExpFrom;
+	}
+
+	public String getBussType() {
+		return bussType;
+	}
+
+	public void setBussType(String bussType) {
+		this.bussType = bussType;
+	}
+
+	public String getCapitalLabel() {
+		return capitalLabel;
+	}
+
+	public void setCapitalLabel(String capitalLabel) {
+		this.capitalLabel = capitalLabel;
+	}
+
+	public List<SelectItem> getBussTypeList() {
+		return bussTypeList;
+	}
+
+	public void setBussTypeList(List<SelectItem> bussTypeList) {
+		this.bussTypeList = bussTypeList;
+	}
+
+	public String getCapitalShareFrom() {
+		return capitalShareFrom;
+	}
+
+	public void setCapitalShareFrom(String capitalShareFrom) {
+		this.capitalShareFrom = capitalShareFrom;
+	}
+
+	public String getCapitalShareTo() {
+		return capitalShareTo;
+	}
+
+	public void setCapitalShareTo(String capitalShareTo) {
+		this.capitalShareTo = capitalShareTo;
 	}
 }
