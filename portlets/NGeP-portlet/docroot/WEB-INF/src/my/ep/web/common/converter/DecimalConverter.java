@@ -69,6 +69,10 @@ public class DecimalConverter extends NumberConverter {
 					}
 				}
 			}
+			
+			if (maxFractionDigits == 0) {
+				isIntegerOnly = true;
+			}
 
 			BigDecimal minValue = getMinValue(component, isIntegerOnly,
 					maxFractionDigits);
