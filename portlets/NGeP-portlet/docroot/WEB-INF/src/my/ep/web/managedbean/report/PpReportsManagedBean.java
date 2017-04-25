@@ -16,6 +16,7 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	private PmOrgProfile selectedKumpulanPTJ;
 	private PmOrgProfile selectedPTJ;
 	private boolean disableOrgFields;
+	private boolean disableMinistryField;
 	private String selectedYear;
 	
 	public PpReportsManagedBean(){}
@@ -116,5 +117,19 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	 */
 	public void setSelectedYear(String selectedYear) {
 		this.selectedYear = selectedYear;
+	}
+
+	/**
+	 * @return the disableMinistryField
+	 */
+	public boolean isDisableMinistryField() {
+		return disableMinistryField;
+	}
+
+	/**
+	 * @param disableMinistryField the disableMinistryField to set
+	 */
+	public void setDisableMinistryField(boolean disableMinistryField) {
+		this.disableMinistryField = disableMinistryField;
 	}
 }
