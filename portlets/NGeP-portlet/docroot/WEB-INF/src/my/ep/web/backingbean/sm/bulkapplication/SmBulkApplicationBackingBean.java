@@ -641,12 +641,20 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setCreateDate(worklistItemVO.getCreateDate());
 				bulkApplicationVO.setExpirationDate(worklistItemVO
 						.getExpirationDate());
-				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
 				bulkApplicationVO.setTitle(worklistItemVO.getTitle());
 				bulkApplicationVO.setAppl(appl);
 				if (poRev != null) {
 					bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
 							.getChangedBy()));
+					bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
+					bulkApplicationVO
+							.setPoRecommendation(!StringUtils.isBlank(poRev
+									.getRecommendation())
+									&& poRev.getRecommendation().equals(
+											"APPROVE") ? SmCommonUtil
+									.getMessage("lbl.sm.bulk.approve", null)
+									: SmCommonUtil.getMessage(
+											"lbl.sm.bulk.reject", null));
 				}
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
@@ -699,6 +707,8 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setPaymentReqd(getPaymentMode(appl));
 				bulkApplicationVO
 						.setPendingApproveCategories(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setApprovedCategories(new ArrayList<SmSupplierCategory>());
 				for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0
@@ -707,6 +717,8 @@ public class SmBulkApplicationBackingBean extends
 											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 						bulkApplicationVO.getPendingApproveCategories()
 								.add(cat);
+					} else {
+						bulkApplicationVO.getApprovedCategories().add(cat);
 					}
 				}
 			}
