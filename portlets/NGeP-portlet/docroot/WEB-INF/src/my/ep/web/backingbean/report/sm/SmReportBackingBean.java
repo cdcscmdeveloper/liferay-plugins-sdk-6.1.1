@@ -359,9 +359,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	 * @return the processingOfficerList
 	 */
 	public List<SelectItem> retrieveProcessingOfficerList() {
-		log.info("ReportBackingBean-retrieveProcessingOfficerList");
-		//rptGenBean.retrieveStatesByZoneName(this.smZone);
-
 		List<SelectItem> processingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
