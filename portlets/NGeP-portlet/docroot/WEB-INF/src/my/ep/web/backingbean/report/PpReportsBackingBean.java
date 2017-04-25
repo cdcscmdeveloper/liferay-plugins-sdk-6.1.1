@@ -87,6 +87,7 @@ public class PpReportsBackingBean extends
 		getManagedBean().setSelectedPTJ(null);
 		getManagedBean().setDisableOrgFields(false);
 		getManagedBean().setSelectedYear(null);
+		getManagedBean().setDisableMinistryField(false);
 	}
 
 	/**
@@ -117,6 +118,7 @@ public class PpReportsBackingBean extends
 						RoleCode.PLAN_VERFICATION_OFFICER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PLAN_OFFICER.value())) {
 			getManagedBean().setDisableOrgFields(true);
+			getManagedBean().setDisableMinistryField(true);
 			getManagedBean().setSelectedMinistry(
 					retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 			getManagedBean().setSelectedPegawaiPengawal(
@@ -125,6 +127,10 @@ public class PpReportsBackingBean extends
 			getManagedBean().setSelectedKumpulanPTJ(
 					retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
 			getManagedBean().setSelectedPTJ(pmOrgProfile);
+		}else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			getManagedBean().setSelectedMinistry(
+					pmOrgProfile);
+			getManagedBean().setDisableMinistryField(true);
 		}
 	}
 

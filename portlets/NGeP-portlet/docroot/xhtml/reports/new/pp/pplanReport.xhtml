@@ -11,7 +11,7 @@
 			<td width="20%"><p:outputLabel value="#{lbl['lbl.pp.ministry']}" /></td>
 			<td colspan="2"><ac:lov id="lovPpMinistry"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					disabled="#{ppReportsBackingBean.managedBean.disableOrgFields}"
+					disabled="#{ppReportsBackingBean.managedBean.disableMinistryField}"
 					readonly="true" headerText="#{lbl['lbl.pp.ministry']}"
 					value="#{ppReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 					saveObject="ppReportsBackingBean.managedBean.selectedMinistry"
