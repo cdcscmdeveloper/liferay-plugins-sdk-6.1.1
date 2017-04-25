@@ -290,9 +290,12 @@
                  rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true" 
                   selection="#{ctBackingBean.managedBean.agencySelected}" >
                   <ac:paginator for="tableAgency"/>
-                  <p:ajax event="toggleSelect" process="@this" update=":form:agySlectBtnId"/> 
+              	    <p:ajax event="toggleSelect" process="@this" update=":form:agySlectBtnId"/> 
                     <p:ajax event="rowSelectCheckbox" process="@this" update=":form:agySlectBtnId"/>
                     <p:ajax event="rowUnselectCheckbox" process="@this" update=":form:agySlectBtnId"/>
+                    <p:ajax event="rowUnselect" process="@this" update=":form:agySlectBtnId"/>
+					<p:ajax event="rowSelect" process="@this" update=":form:agySlectBtnId"/>
+								
                   <p:column selectionMode="multiple" style="width:5%;"/>
                     <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
                        	#{pmVar.orgCode}
