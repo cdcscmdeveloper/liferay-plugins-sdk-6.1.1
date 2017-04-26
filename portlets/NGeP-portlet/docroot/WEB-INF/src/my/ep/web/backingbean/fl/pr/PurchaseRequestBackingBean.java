@@ -3823,6 +3823,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			renewSesionObject();
+			initializePRBeans();
 			try {
 				resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			} catch (EpException e) {
