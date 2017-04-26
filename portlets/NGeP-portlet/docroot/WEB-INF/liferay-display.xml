@@ -286,6 +286,7 @@
 		<portlet id="ppReports"></portlet>
 		<portlet id="qtReports"></portlet>
 		<portlet id="ppReports"></portlet>
+		<portlet id="dpReports"></portlet>
 	</category>
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>
