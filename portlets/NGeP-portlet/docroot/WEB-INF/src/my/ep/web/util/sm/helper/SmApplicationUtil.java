@@ -9233,7 +9233,7 @@ public class SmApplicationUtil {
 						} else if (tot.getStaffCategory().equals(
 								SupplierManagementConst.STAFF_TYPE_SEMIPROF)) {
 							sb.append(SmCommonUtil.getMessage(
-									"lbl.sm.staffinfo.semipro",
+									"lbl.sm.staffinfo.semiprof",
 									new String[] { count + ". " }));
 						} else {
 							sb.append(SmCommonUtil.getMessage(
