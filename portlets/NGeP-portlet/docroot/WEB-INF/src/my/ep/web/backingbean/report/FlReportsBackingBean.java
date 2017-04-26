@@ -32,7 +32,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.constant.report.FlReportsConst;
+import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.PpReportConst;
 import my.ep.web.constant.report.ReportConst;
@@ -129,8 +129,8 @@ public class FlReportsBackingBean extends ReportBaseBackingBean<FlReportsManaged
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();	
 		
-		map.put(FlReportsConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-		map.put(FlReportsConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
+		map.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		map.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
 		
 		
 		return constructParameterString(map);
