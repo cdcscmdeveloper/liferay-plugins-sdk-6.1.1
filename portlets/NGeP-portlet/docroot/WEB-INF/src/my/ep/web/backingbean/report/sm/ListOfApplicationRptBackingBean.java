@@ -35,18 +35,35 @@ public class ListOfApplicationRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
-				.getSupplierType());
-		params.put(SmReportConst.PARAM_APPL_NO, getManagedBean().getApplNo());
-		params.put(SmReportConst.PARAM_APPL_STATUS, getManagedBean()
-				.getApplStatus());
-		params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
-		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
-		params.put(SmReportConst.PARAM_SUPP_DOC_MODE, getManagedBean()
-				.getSuppDocMode());
-		params.put(SmReportConst.PARAM_SUPP_DOC_STATUS, getManagedBean()
-				.getSuppDocStatus());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
+		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
+			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
+					.getSupplierType());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getApplNo())) {
+			params.put(SmReportConst.PARAM_APPL_NO, getManagedBean()
+					.getApplNo());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getApplStatus())) {
+			params.put(SmReportConst.PARAM_APPL_STATUS, getManagedBean()
+					.getApplStatus());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getEpNo())) {
+			params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getRegNo())) {
+			params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getSuppDocMode())) {
+			params.put(SmReportConst.PARAM_SUPP_DOC_MODE, getManagedBean()
+					.getSuppDocMode());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getSuppDocStatus())) {
+			params.put(SmReportConst.PARAM_SUPP_DOC_STATUS, getManagedBean()
+					.getSuppDocStatus());
+		}
 		generateSmReport(params);
 	}
 
