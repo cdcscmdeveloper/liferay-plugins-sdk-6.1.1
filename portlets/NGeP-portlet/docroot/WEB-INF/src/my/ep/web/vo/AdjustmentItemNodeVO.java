@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
-import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 
 
 /**
