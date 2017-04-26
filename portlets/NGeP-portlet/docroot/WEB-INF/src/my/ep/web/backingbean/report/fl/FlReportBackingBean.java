@@ -32,7 +32,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
-import my.ep.web.constant.report.FlReportsConst;
+import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.PpReportConst;
 import my.ep.web.constant.report.ReportConst;
@@ -47,7 +47,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
  */
 @ManagedBean(name = "flReportBackingBean")
 @SessionScoped
-public class FlReportBackingBean extends ReportBaseBackingBean<FlReportManagedBean> {
+public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBaseBackingBean<T> {
 
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_FLREPORT = "/xhtml/reports/new/fl/flreportsmain.xhtml";
@@ -134,8 +134,8 @@ public class FlReportBackingBean extends ReportBaseBackingBean<FlReportManagedBe
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();	
 		
-		map.put(FlReportsConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-		map.put(FlReportsConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
+		map.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		map.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
 		
 		
 		return constructParameterString(map);
