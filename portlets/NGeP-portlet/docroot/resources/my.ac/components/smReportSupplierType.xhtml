@@ -16,7 +16,7 @@
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.supplierType}"
-			style="width:300px;" required="#{cc.attrs.required}">
+			style="width:300px;" required="#{cc.attrs.required}" label="#{lbl['lbl.rpt.supplierType']}">
 			<c:if test="#{cc.attrs.showAll}">
 				<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{cc.attrs.allValue}"></f:selectItem>
 			</c:if>
