@@ -2,7 +2,7 @@ package my.ep.web.constant.report;
 
 import java.io.Serializable;
 
-public class FlReportsConst implements Serializable {
+public class FlReportConst implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -15,7 +15,14 @@ public class FlReportsConst implements Serializable {
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_USER_ID = "PUSER";
 	
-	public FlReportsConst(){}
+	// Ministry Const
+	
+	// Central Contract Const
+	
+	
+	// Purchase Order Const
+	
+	public FlReportConst(){}
 
 
 }
