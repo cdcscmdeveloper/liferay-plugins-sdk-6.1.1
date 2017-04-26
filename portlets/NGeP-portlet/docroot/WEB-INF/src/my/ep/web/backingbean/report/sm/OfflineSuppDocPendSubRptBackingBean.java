@@ -35,7 +35,9 @@ public class OfflineSuppDocPendSubRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
 		params.put(SmReportConst.PARAM_APPL_NO, getManagedBean().getApplNo());
 		params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
