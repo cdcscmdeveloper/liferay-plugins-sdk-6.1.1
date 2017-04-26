@@ -6,13 +6,11 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang.StringUtils;
-
-import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
-import my.ep.exception.EpException;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.CompDirOwnerMngEquiRptManagedBean;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "compDirOwnerMngEquiRptBB")
 @ViewScoped
@@ -29,10 +27,6 @@ public class CompDirOwnerMngEquiRptBackingBean extends
 	}
 
 	public void generateReport() {
-		if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom())
-				|| StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
-			throw new EpException(MessageConst.ERROR_REPORT_780035);
-		}
 		validateMofRegNo();
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(
@@ -43,16 +37,29 @@ public class CompDirOwnerMngEquiRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
-				.getSupplierType());
-		params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getCompanyName());
-		params.put(SmReportConst.PARAM_ROLE, getManagedBean().getRole());
-		params.put(SmReportConst.PARAM_MOF_REG_NO_FROM, getManagedBean()
-				.getMofRegNoFrom());
-		params.put(SmReportConst.PARAM_MOF_REG_NO_TO, getManagedBean()
-				.getMofRegNoTo());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
+		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
+			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
+					.getSupplierType());
+		}
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getRole())) {
+			params.put(SmReportConst.PARAM_ROLE, getManagedBean().getRole());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getMofRegNoFrom())) {
+			params.put(SmReportConst.PARAM_MOF_REG_NO_FROM, getManagedBean()
+					.getMofRegNoFrom());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getMofRegNoTo())) {
+			params.put(SmReportConst.PARAM_MOF_REG_NO_TO, getManagedBean()
+					.getMofRegNoTo());
+		}
 
 		generateSmReport(params);
 	}
