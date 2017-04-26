@@ -14,15 +14,14 @@
 			</td>
 		
 			<td class="tdContent">
-				<ac:smReportZoneList bBean="#{listOfApplicationRptBB}" required="true" />
+				<ac:smReportZoneList bBean="#{listOfApplicationRptBB}" required="true" showItemAll="true"/>
 			</td>
 			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportSupplierType bBean="#{listOfApplicationRptBB}" required="true" />
+				<ac:smReportSupplierType bBean="#{listOfApplicationRptBB}" />
 			</td>
 		</tr>
 		<tr>
@@ -70,7 +69,6 @@
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.supportingDocumentMode']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 		
 			<td class="tdContent">
@@ -97,8 +95,7 @@
 		</tr>
 		<tr>
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.application.submissiondatefrom']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.rpt.application.submissiondatefrom']}" />
 			</td>
 			<td class="tdContent">
 				<ac:smReportDateFromTo bBean="#{listOfApplicationRptBB}" />
