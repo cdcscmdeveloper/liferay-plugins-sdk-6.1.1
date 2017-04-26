@@ -36,8 +36,11 @@ public class DailyRegApplRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
 		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
 
@@ -46,8 +49,11 @@ public class DailyRegApplRptBackingBean extends
 
 	public void resetSearch() {
 		getManagedBean().setRegType(SmReportConst.SM_REG_TYPE_BASIC);
-		getManagedBean().getSelectedOrgProfile().getSmSupplier()
-				.setCompanyName(StringUtils.EMPTY);
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			getManagedBean().getSelectedOrgProfile().getSmSupplier()
+					.setCompanyName(StringUtils.EMPTY);
+		}
 		getManagedBean().setRegNo(StringUtils.EMPTY);
 		setDefaultDateFromAndDateTo();
 	}
