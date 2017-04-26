@@ -1,3 +1,6 @@
+/*
+ *  Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.report.fl;
 
 import javax.faces.bean.ManagedBean;
@@ -5,7 +8,12 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
-
+/**
+ * Managed Bean for FlReport.
+ *
+ * @author KK LIM
+ * @since 26/4/2017
+ */
 @ManagedBean(name = "flReportManagedBean")
 @SessionScoped
 public class FlReportManagedBean extends ReportBaseManagedBean{

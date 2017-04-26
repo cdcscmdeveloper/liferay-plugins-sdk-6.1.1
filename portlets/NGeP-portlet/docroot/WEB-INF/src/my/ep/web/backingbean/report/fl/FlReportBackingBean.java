@@ -1,5 +1,5 @@
 /*
- * 
+ *  Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.report.fl;
 
@@ -39,7 +39,12 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
+/**
+ * Backing Bean for FlReport.
+ *
+ * @author KK LIM
+ * @since 26/4/2017
+ */
 @ManagedBean(name = "flReportBackingBean")
 @SessionScoped
 public class FlReportBackingBean extends ReportBaseBackingBean<FlReportManagedBean> {
