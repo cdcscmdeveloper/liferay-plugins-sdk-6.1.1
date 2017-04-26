@@ -3,6 +3,8 @@
  */
 package my.ep.web.vo;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
@@ -15,8 +17,10 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
  * @since 17/8/2015
  *
  */
-public class AdjustmentItemNodeVO  {
+public class AdjustmentItemNodeVO implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private int level;
 	
 	private FlAdjustmentItem flAdjustmentItem;
