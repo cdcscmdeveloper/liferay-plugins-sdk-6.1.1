@@ -1718,7 +1718,7 @@ public class QTDocumentsBackingBean extends
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setScQt(qt);
 			reqDTO.setSpecType(QTConstants.FINANCIAL_DOC_TYPE);
-			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
+			SpecificationResDTO resDto = specSO.retrieveCheckListsForReports(reqDTO);
 			financeSpecList = resDto.getFinancialCheckLists();
 			for (ScQtCheckList qtCheckList : financeSpecList) {
 				if (qtCheckList.getDefinationType().getParameterCode()
@@ -1779,7 +1779,7 @@ public class QTDocumentsBackingBean extends
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				reqDTO.setScQt(qt);
 				reqDTO.setSpecType(QTConstants.TECHNICAL_DOC_TYPE);
-				SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
+				SpecificationResDTO resDto = specSO.retrieveCheckListsForReports(reqDTO);
 				techSpecList = resDto.getTechnicalCheckList();
 				for (ScQtCheckList qtCheckList : techSpecList) {
 					if (qtCheckList
