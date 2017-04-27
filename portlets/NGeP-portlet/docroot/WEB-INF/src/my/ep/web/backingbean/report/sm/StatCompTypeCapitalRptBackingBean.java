@@ -1,20 +1,16 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang.StringUtils;
-
-import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
-import my.ep.exception.EpException;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.StatCompTypeCapitalRptManagedBean;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "statCompTypeCapitalRptBB")
 @ViewScoped
@@ -29,13 +25,10 @@ public class StatCompTypeCapitalRptBackingBean extends
 	public StatCompTypeCapitalRptBackingBean() {
 		setDefaultDateFromAndDateTo();
 		initBusinesTypeList();
+		onChangeBussType();
 	}
 
 	public void generateReport() {
-		if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom())
-				|| StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
-			throw new EpException(MessageConst.ERROR_REPORT_780035);
-		}
 		validateMofRegNo();
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(
@@ -46,7 +39,9 @@ public class StatCompTypeCapitalRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
 		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 				.getSupplierType());
 		params.put(SmReportConst.PARAM_BUSS_TYPE, getManagedBean()
