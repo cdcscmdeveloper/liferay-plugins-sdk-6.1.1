@@ -1,0 +1,114 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<table style="margin-top: 10px; width: 100%;">
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.rpt.rptCategory']}" id="reportCategory"
+						value="#{flReportBB.managedBean.reportCategory}"
+						required="true">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems
+							value="#{flReportBB.managedBean.reportCategoryList}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{flReportBB.retrieveSubModuleReportCategoryList(flReportBB.managedBean.reportCategory)}"
+							process="@this" partialSubmit="true" update="@all" />
+					</p:selectOneMenu>
+				</td>
+			</tr> 
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
+						id="somReportName"
+						value="#{flReportBB.managedBean.reportCode}"
+						required="true" style="margin-top:5px;width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems
+							value="#{flReportBB.managedBean.reportList}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{flReportBB.onChangeReportName()}"
+							process="@this" partialSubmit="true" update="@form" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		<p:panel id="flRptSearchCriteriaPnl"
+			header="#{flReportBB.managedBean.reportName}"
+			rendered="#{not empty flReportBB.managedBean.reportCode}"
+			toggleable="true">
+			<!-- Validation Message -->
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			<c:choose>
+				<c:when
+					test="#{'FL_001' eq flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/contractRequestReport.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl018ContractReq == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL018_contractRequest.xhtml"></ui:include>
+				</c:when>
+				<c:otherwise>
+        			ERROR!
+    
+				</c:otherwise>
+			</c:choose>
+			
+			<p:commandButton 
+					id="generateBtnId"
+					value="#{lbl['lbl.btn.generate']}"
+					process="@form"   
+					update="@form" 
+					action="#{flReportBB.generateFlReport()}">
+			</p:commandButton>
+			<p:commandButton 
+					id="resetBtnId"
+					value="#{lbl['lbl.btn.reset']}"
+					process="@this"   
+					update="@form" 
+					action="#{flReportBB.resetAction()}">
+			</p:commandButton>
+		</p:panel>
+		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+			width="500px" resizable="false" styleClass="pop_up_top">
+			<h:outputText escape="false" style="float:left;margin-left:5px;"
+				value="#{flReportBB.managedBean.popUpMsg}">
+			</h:outputText>
+			<br />
+			<div style="float:right;">
+				<table style="width:100%">
+					<tr>
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+								onclick="confirmationId.hide();" />
+							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+								action="#{flReportBB.redirect()}">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</div>
+		</p:dialog>
+
+		<ac:lovPopup />
+
+	</ui:define>
+	
+
+</ui:composition>
