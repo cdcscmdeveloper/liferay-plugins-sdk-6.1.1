@@ -25,55 +25,55 @@ public class CtReportConst implements Serializable {
 	/**
 	 * @return the ctListOfContractMcRptVal
 	 */
-	public static String getCtListOfContractMcRptVal() {
+	public String getCtListOfContractMcRptVal() {
 		return CT_LIST_OF_CONTRACT_MC_RPT_VAL;
 	}
 	
 	/**
 	 * @return the ctContractMonitoringRptVal
 	 */
-	public static String getCtContractMonitoringRptVal() {
+	public String getCtContractMonitoringRptVal() {
 		return CT_CONTRACT_MONITORING_RPT_VAL;
 	}
 	
 	/**
 	 * @return the ctListOfCircularCqRptVal
 	 */
-	public static String getCtListOfCircularCqRptVal() {
+	public String getCtListOfCircularCqRptVal() {
 		return CT_LIST_OF_CIRCULAR_CQ_RPT_VAL;
 	}
 	
 	/**
 	 * @return the ctFulfilmentStatusRptVal
 	 */
-	public static String getCtFulfilmentStatusRptVal() {
+	public String getCtFulfilmentStatusRptVal() {
 		return CT_FULFILMENT_STATUS_RPT_VAL;
 	}
 	
 	/**
 	 * @return the ctStatementOfOrderCcRptVal
 	 */
-	public static String getCtStatementOfOrderCcRptVal() {
+	public String getCtStatementOfOrderCcRptVal() {
 		return CT_STATEMENT_OF_ORDER_CC_RPT_VAL;
 	}
 	
 	/**
 	 * @return the ctListOfContractCcRptVal
 	 */
-	public static String getCtListOfContractCcRptVal() {
+	public String getCtListOfContractCcRptVal() {
 		return CT_LIST_OF_CONTRACT_CC_RPT_VAL;
 	}
 	
 	/**
 	 * @return the ctListOfCircularPqRptVal
 	 */
-	public static String getCtListOfCircularPqRptVal() {
+	public String getCtListOfCircularPqRptVal() {
 		return CT_LIST_OF_CIRCULAR_PQ_RPT_VAL;
 	}
 	/**
 	 * @return the ctStatementOfOrderPqRptVal
 	 */
-	public static String getCtStatementOfOrderPqRptVal() {
+	public String getCtStatementOfOrderPqRptVal() {
 		return CT_STATEMENT_OF_ORDER_PQ_RPT_VAL;
 	}
 	
