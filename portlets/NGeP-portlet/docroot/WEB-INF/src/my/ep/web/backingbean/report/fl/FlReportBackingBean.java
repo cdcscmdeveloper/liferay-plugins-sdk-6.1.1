@@ -228,53 +228,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		getManagedBean().setSelectedPTJ(null);
 	}
 
-	public List<String> generateCommonYearList() {
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
-
-		Date currentDate = new Date();
-		Integer year = null;
-		String yearFrom = outputDateFormat.format(currentDate).substring(6, 10);
-		if (yearFrom != null) {
-			year = Integer.parseInt(yearFrom);
-		}
-		List<String> yearList = new ArrayList<String>();
-		if (year != null) {
-			year = year + 1;
-			for (int i = year - 7; i <= year; i++) {
-				yearList.add(Integer.toString(i));
-			}
-		}
-		return yearList;
-	}
-
-	public void generatePpReport() {
-		IRPTRequestSO rptRequestSO = null;
-		
-		if(StringUtils.isBlank(getManagedBean().getSelectedYear())){
-			throw new EpException(MessageConst.ERROR_REPORT_780030);
-		}
-		
-		try {
-			rptRequestSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IRPTRequestSO.class);
-			RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
-			reqDTO.setParametersMap(constructParamMap());
-			reqDTO.setDefaultOutputType(getManagedBean().getDefaultOutputType());
-			reqDTO.setTempAccess(getManagedBean().isTempAccess());
-			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
-			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId()
-					.toString() : "");
-			RequestContext.getCurrentInstance()
-					.execute("confirmationId.show()");
-		} catch (Exception e) {
-			throw new EpException(e.getMessage());
-		} finally {
-			rptRequestSO = null;
-		}
-	}
-
 	private LinkedHashMap<String, String> constructParamMap() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		if (getManagedBean().getSelectedMinistry() != null) {
