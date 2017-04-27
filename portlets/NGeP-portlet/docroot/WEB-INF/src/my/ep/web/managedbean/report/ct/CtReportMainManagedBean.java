@@ -8,7 +8,7 @@ import javax.faces.bean.SessionScoped;
  * 
  * @author Nancy Ang
  */
-@ManagedBean(name = "ctReportManagedBean")
+@ManagedBean(name = "ctReportMB")
 @SessionScoped
 public class CtReportMainManagedBean extends CtReportManagedBean {
 	

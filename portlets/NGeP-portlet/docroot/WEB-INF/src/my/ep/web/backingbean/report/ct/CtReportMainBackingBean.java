@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Nancy Ang
  */
-@ManagedBean(name = "ctReportBackingBean")
+@ManagedBean(name = "ctReportBB")
 @ViewScoped
 public class CtReportMainBackingBean extends CtReportBackingBean<CtReportMainManagedBean> {
 	
