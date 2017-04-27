@@ -11,11 +11,11 @@
 	<ui:define name="contentSection">
 		<p:messages id="ctReportMsgId" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
-
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" styleClass="required" />
+					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
 					<p:selectOneMenu
@@ -34,7 +34,8 @@
 			</tr> 
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" styleClass="required" />
+					<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
 					<p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
@@ -51,12 +52,12 @@
 					</p:selectOneMenu>
 				</td>
 			</tr>
-		</table>
+		</table>	
 
 		<p:outputPanel id="ctReportSearchCriteriaPanel">
 			<p:panel header="#{ctReportBackingBean.managedBean.reportTitle}"
 				rendered="#{!empty ctReportBackingBean.managedBean.reportCode}">
-				
+				<!-- 
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal}">
 					<ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
 				</c:if>
@@ -82,7 +83,7 @@
 				</c:if>				
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
 					<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
-				</c:if>
+				</c:if> -->
 			</p:panel>
 		</p:outputPanel>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
