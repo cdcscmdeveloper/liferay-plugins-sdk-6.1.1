@@ -14,15 +14,14 @@
 			</td>
 		
 			<td class="tdContent">
-				<ac:smReportZoneList bBean="#{compSortedAlphabetRptBB}" required="true" />
+				<ac:smReportZoneList bBean="#{compSortedAlphabetRptBB}" showItemAll="true" />
 			</td>
 			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportSupplierType bBean="#{compSortedAlphabetRptBB}" required="true" />
+				<ac:smReportSupplierType bBean="#{compSortedAlphabetRptBB}" />
 			</td>
 		</tr>
 		<tr>
@@ -71,8 +70,7 @@
 				<ac:smReportDateFromTo bBean="#{compSortedAlphabetRptBB}" />
 			</td>
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.mofaccountenddatefrom']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.rpt.mofaccountenddatefrom']}" />
 			</td>
 			<td class="tdContent">
 				<table style="width: 100%;">
