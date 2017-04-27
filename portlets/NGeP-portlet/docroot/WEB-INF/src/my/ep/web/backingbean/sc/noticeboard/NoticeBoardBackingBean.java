@@ -822,6 +822,9 @@ public class NoticeBoardBackingBean extends
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale())));
 							
+		} else {
+			managedBean.setCompanyName(smSupplier.getCompanyName());
+			managedBean.setValidMofNo(true);
 		}
 		//managedBean.setActiveTabIndex(0);
 		//managedBean.setSelectedZoneTabIndex(0);
