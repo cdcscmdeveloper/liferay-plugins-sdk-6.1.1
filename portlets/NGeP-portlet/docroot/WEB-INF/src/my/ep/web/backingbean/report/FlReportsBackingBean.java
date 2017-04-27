@@ -68,6 +68,12 @@ public class FlReportsBackingBean extends ReportBaseBackingBean<FlReportsManaged
 		return facesScopes;
 	}
 	
+	public void retrieveReportListByCategory(String reportCategory) {
+		retrieveReportListByModuleCodeAndSubModule(
+				ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase(),
+				reportCategory);
+	}
+	
 	public void onChangeReportName(){
 
 		log.info("onChangeReportName");	
