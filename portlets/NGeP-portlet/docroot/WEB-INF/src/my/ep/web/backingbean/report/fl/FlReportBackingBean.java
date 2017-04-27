@@ -3,15 +3,8 @@
  */
 package my.ep.web.backingbean.report.fl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.collections.MapUtils;
@@ -22,8 +15,6 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -45,28 +36,14 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "flReportBackingBean")
-@SessionScoped
-public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBaseBackingBean<T> {
+public abstract class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBaseBackingBean<T>  {
 
 	private static final long serialVersionUID = 1L;
-	private static final String NAV_TO_FLREPORT = "/xhtml/reports/fl/flreportsmain.xhtml";
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(FlReportBackingBean.class);
 
-	public void preRenderView() {
-		log.info("preRenderView");
-		this.renewSesionObject();
-		
-		retrieveReportCategoryListByModuleCode(ModuleCodeConst.ORDER_FULFILLMENT
-				.toUpperCase());
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_FLREPORT);
-	}
 	
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
