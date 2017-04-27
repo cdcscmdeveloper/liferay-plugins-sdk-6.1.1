@@ -66,6 +66,58 @@
 					test="#{FlReportConst.fl018ContractReq == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL018_contractRequest.xhtml"></ui:include>
 				</c:when>
+				<c:when
+					test="#{FlReportConst.fl019ContractOrder == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL019_contractOrder.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl020DeliveryOrder == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL020_deliveryOrder.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl021FulfilmentReceivedNote == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL021_fulfilmentReceivedNote.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl022LateDelivery == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL022_lateDelivery.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl025Invoice == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL025_invoice.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl026PaymentMatch == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL026_paymentMatch.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl027ContractReqRejection == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL027_contractRequestRejection.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl028PurchaseOrderCanCellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL028_purchaseOrderCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl029DeliveryOrderCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL029_deliveryOrderCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl030FulfilmentReceivedNoteCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL030_fulfilmentReceivedNoteCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl031InvoiceCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL031_invoiceCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl051StopInstByPtj == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL051_stopInstByPtj.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl052StopInstBySupplier == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL054_stopInstBySupplier.xhtml"></ui:include>
+				</c:when>
 				<c:otherwise>
         			ERROR!
     
