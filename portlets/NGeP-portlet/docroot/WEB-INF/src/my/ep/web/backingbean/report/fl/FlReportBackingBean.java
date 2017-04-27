@@ -50,7 +50,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBaseBackingBean<T> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String NAV_TO_FLREPORT = "/xhtml/reports/new/fl/flreportsmain.xhtml";
+	private static final String NAV_TO_FLREPORT = "/xhtml/reports/fl/flreportsmain.xhtml";
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
