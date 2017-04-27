@@ -42,7 +42,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private PmTaskReassignmentVO taskReassignmentVO;
 	private String backURL;
 	private boolean disableForTaskAssignment;
-	private boolean isModulePostUpdate;
+	private boolean isCommitteeUpdate;
 	private List<Integer> statusIds;
 	private boolean isRemarkRequired;
 	private String remarks;
@@ -275,20 +275,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the isModulePostUpdate
-	 */
-	public boolean isModulePostUpdate() {
-		return isModulePostUpdate;
-	}
-
-	/**
-	 * @param isModulePostUpdate the isModulePostUpdate to set
-	 */
-	public void setModulePostUpdate(boolean isModulePostUpdate) {
-		this.isModulePostUpdate = isModulePostUpdate;
-	}
-
-	/**
 	 * @return the statusIds
 	 */
 	public List<Integer> getStatusIds() {
@@ -328,6 +314,20 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	/**
+	 * @return the isCommitteeUpdate
+	 */
+	public boolean isCommitteeUpdate() {
+		return isCommitteeUpdate;
+	}
+
+	/**
+	 * @param isCommitteeUpdate the isCommitteeUpdate to set
+	 */
+	public void setCommitteeUpdate(boolean isCommitteeUpdate) {
+		this.isCommitteeUpdate = isCommitteeUpdate;
 	}
 
 	
