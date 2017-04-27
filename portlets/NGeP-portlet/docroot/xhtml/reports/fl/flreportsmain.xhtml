@@ -25,7 +25,7 @@
 						<f:selectItems
 							value="#{flReportsBackingBean.managedBean.reportCategoryList}"></f:selectItems>
 						<p:ajax event="change"
-							listener="#{flReportsBackingBean.retrieveSubModuleReportCategoryList(flReportsBackingBean.managedBean.reportCategory)}"
+							listener="#{flReportsBackingBean.retrieveReportListByCategory(flReportsBackingBean.managedBean.reportCategory)}"
 							process="@this" partialSubmit="true" update="@all" />
 					</p:selectOneMenu>
 				</td>
