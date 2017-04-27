@@ -83,7 +83,8 @@ public class OrgProfileSearchBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+		//Internal Auditor (report) same authorization as Ministry Admin 
+		if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
 			getManagedBean().setMinistryProfileId(pmOrgProfile.getOrgProfileId());
 			getManagedBean().setDisabledMinistry(true);
 		} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {

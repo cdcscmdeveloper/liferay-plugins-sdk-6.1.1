@@ -485,6 +485,16 @@ public class PmReportsBackingBean extends
 				sb.append("|orgTypeCode.parameterId^");
 				sb.append(getManagedBean().getSelectedOrgType()
 						.getParameterId());
+				sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
+						getManagedBean().getSelectedOrgType().getParameterCode(),
+						getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+						//Internal Auditor (report) same authorization as Ministry Admin
+						getFacesScopes().hasRoleUser(
+								RoleCode.MINISTRY_ADMIN.value()) ||
+								getFacesScopes().hasRoleUser(
+										RoleCode.AUDITOR_INTERNAL.value()), getFacesScopes()
+								.hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
 			}
 		} else if (PmReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL
 				.equals(getManagedBean().getReportCode())) {
@@ -497,8 +507,11 @@ public class PmReportsBackingBean extends
 			sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
 					getManagedBean().getSelectedOrgType().getParameterCode(),
 					getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+					//Internal Auditor (report) same authorization as Ministry Admin
 					getFacesScopes().hasRoleUser(
-							RoleCode.MINISTRY_ADMIN.value()), getFacesScopes()
+							RoleCode.MINISTRY_ADMIN.value()) ||
+							getFacesScopes().hasRoleUser(
+									RoleCode.AUDITOR_INTERNAL.value()), getFacesScopes()
 							.hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
 					getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
 		}
@@ -689,13 +702,17 @@ public class PmReportsBackingBean extends
 						.getOrgProfileId());
 			}else{
 				sb.append("|pmUserOrgs.pmOrgProfile.");
-				sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
+				String authorization = OrgProfileUtil.retrieveAuthorizationLovSb(
 						getManagedBean().getSelectedOrgType().getParameterCode(),
 						getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
 						getFacesScopes().hasRoleUser(
-								RoleCode.MINISTRY_ADMIN.value()), getFacesScopes()
+								RoleCode.MINISTRY_ADMIN.value()) ||
+								getFacesScopes().hasRoleUser(
+										RoleCode.AUDITOR_INTERNAL.value()), getFacesScopes()
 								.hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
-						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
+						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()));
+				//remove the "|"
+				sb.append(authorization.substring(1));
 			}
 		}
 		return sb.toString();
