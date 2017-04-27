@@ -14,15 +14,14 @@
 			</td>
 		
 			<td class="tdContent">
-				<ac:smReportZoneList bBean="#{statCompTypeCapitalRptBB}" required="true" />
+				<ac:smReportZoneList bBean="#{statCompTypeCapitalRptBB}" showItemAll="true" />
 			</td>
 			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportSupplierType bBean="#{statCompTypeCapitalRptBB}" required="true" />
+				<ac:smReportSupplierType bBean="#{statCompTypeCapitalRptBB}" allValue="all" />
 			</td>
 		</tr>
 		<tr>

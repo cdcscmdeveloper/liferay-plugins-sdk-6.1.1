@@ -41,8 +41,11 @@ public class CompanyAddrListRptBackingBean extends
 
 	public void resetSearch() {
 		getManagedBean().setSupplierType("all");
-		getManagedBean().getSelectedOrgProfile().getSmSupplier()
-				.setCompanyName(StringUtils.EMPTY);
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			getManagedBean().getSelectedOrgProfile().getSmSupplier()
+					.setCompanyName(StringUtils.EMPTY);
+		}
 		getManagedBean().setApplStatus(StringUtils.EMPTY);
 		getManagedBean().setApplType(StringUtils.EMPTY);
 		getManagedBean().setSuppDocMode(StringUtils.EMPTY);
