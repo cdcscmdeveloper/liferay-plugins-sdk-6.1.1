@@ -13,7 +13,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportSupplierType bBean="#{companyAddrListRptBB}" required="true"/>
+				<ac:smReportSupplierType bBean="#{companyAddrListRptBB}" allValue="all"/>
 			</td>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
@@ -31,7 +31,18 @@
 			</td>
 		
 			<td class="tdContent">
-				<ac:smReportApplStatus bBean="#{companyAddrListRptBB}" required="true" />
+				<p:selectOneMenu label="#{lbl['lbl.rpt.applStatus']}"  
+					value="#{companyAddrListRptBB.managedBean.applStatus}" style="width:300px;" 
+					required="true">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+						itemValue=""></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.approve']}"
+						itemValue="Approved"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.reject']}"
+						itemValue="Rejected"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
+				</p:selectOneMenu>
 			</td>
 			
 			<td class="tdTitle">
@@ -60,7 +71,12 @@
 				<ac:smReportSuppDocMode bBean="#{companyAddrListRptBB}" required="true" showItemAll="true"/>
 			</td>
 			
-			<td colspan="2"></td>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.approvaldatefrom']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportDateFromTo bBean="#{companyAddrListRptBB}" />
+			</td>
 		</tr>
 	</table>
 	
