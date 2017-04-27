@@ -722,7 +722,15 @@ public class SmBulkApplicationBackingBean extends
 					}
 				}
 			}
+
+			// return by applStatus
+			if (!StringUtils.isBlank(getManagedBean().getApplStatus())
+					&& !getManagedBean().getApplStatus().equals(
+							poRev.getRecommendation())) {
+				bulkApplicationVO = null;
+			}
 		}
+
 		return bulkApplicationVO;
 	}
 
