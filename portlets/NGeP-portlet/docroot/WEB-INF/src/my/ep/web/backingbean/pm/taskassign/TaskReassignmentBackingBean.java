@@ -1177,7 +1177,7 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setSelectedTask(item);
 			resetAvailableUser();
 			this.getManagedBean().setTaskReassignmentVO(null);
-			this.getManagedBean().setModulePostUpdate(false);
+			this.getManagedBean().setCommitteeUpdate(false);
 			this.getManagedBean().setRemarks(null);
 			if(ProfileManagementConst.TASK_REASSIGN_REMARKS_CT.contains(item.getDocStatus().longValue())
 					|| ProfileManagementConst.TASK_REASSIGN_REMARKS_S2.contains(item.getDocStatus().longValue())){
@@ -1298,6 +1298,9 @@ public class TaskReassignmentBackingBean extends
 			if (resDTO != null && resDTO.getOrgProfileId() != null) {
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setDocId(resDTO.getDocId());
+				if(StringUtils.isNotBlank(resDTO.getRoleCode())){
+				   vo.setRoleList(new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())));
+				}
 			}
 		}catch(Exception e){
 			throw new EpException("unable to get task reassignment details from Procurement Plan Module.");
@@ -1568,7 +1571,7 @@ public class TaskReassignmentBackingBean extends
 					.getUserId());
 			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
 					.getUser());
-			reqDTO.setModulePostUpdate(getManagedBean().isModulePostUpdate());	
+			reqDTO.setCommitteeUpdate(getManagedBean().isCommitteeUpdate());	
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setRemark(getManagedBean().getRemarks());
 			reqDTO.setTaskRoleCode(vo.getRoleList() !=null ? vo.getRoleList().get(0) : null);
@@ -1839,7 +1842,7 @@ public class TaskReassignmentBackingBean extends
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 				
 			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
-			getManagedBean().setModulePostUpdate(true);		
+			getManagedBean().setCommitteeUpdate(true);		
 					
 			isSearched = true;
 			break;
