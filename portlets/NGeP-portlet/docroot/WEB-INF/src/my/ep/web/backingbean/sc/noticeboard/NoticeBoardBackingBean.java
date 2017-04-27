@@ -813,7 +813,10 @@ public class NoticeBoardBackingBean extends
 		retriveBsvDetails(qtId);
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
-		if (smSupplier == null || null == managedBean.getMofNumber()) {
+		if (smSupplier != null && null != managedBean.getMofNumber()) {
+			managedBean.setCompanyName(smSupplier.getCompanyName());
+			managedBean.setValidMofNo(true);
+		} else {
 			managedBean.setValidMofNo(false);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -822,9 +825,6 @@ public class NoticeBoardBackingBean extends
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale())));
 							
-		} else {
-			managedBean.setCompanyName(smSupplier.getCompanyName());
-			managedBean.setValidMofNo(true);
 		}
 		//managedBean.setActiveTabIndex(0);
 		//managedBean.setSelectedZoneTabIndex(0);
