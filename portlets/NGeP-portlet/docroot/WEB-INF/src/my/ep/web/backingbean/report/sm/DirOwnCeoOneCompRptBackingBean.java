@@ -39,8 +39,11 @@ public class DirOwnCeoOneCompRptBackingBean extends
 		retrieveReportValueFromDb();
 		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 				.getSupplierType());
-		params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
 		params.put(SmReportConst.PARAM_IDENT_NO, getManagedBean()
 				.getIdentificationNo());
 		params.put(SmReportConst.PARAM_MOF_REG_NO_FROM, getManagedBean()
