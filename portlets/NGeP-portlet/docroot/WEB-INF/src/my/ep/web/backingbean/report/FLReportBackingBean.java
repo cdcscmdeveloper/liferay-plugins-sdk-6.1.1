@@ -21,7 +21,7 @@ import my.ep.web.constant.report.CommonMethod;
  * 
  * @Author Jangari Kondal Reddy
  */
-@ManagedBean(name = "flReportBackingBean")
+@ManagedBean(name = "flReportsBackingBean")
 @ViewScoped
 public class FLReportBackingBean extends
 		SourcingBaseBackingBean<ReportMangedBean> {
