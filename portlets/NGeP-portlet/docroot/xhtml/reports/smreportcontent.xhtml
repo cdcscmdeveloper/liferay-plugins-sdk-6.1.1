@@ -3865,7 +3865,13 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smAllRegisteredDateView}">
 						<TD class="columnGenClass">
-							*<p:outputLabel value="#{lbl['lbl.rpt.allregistereddatefrom']}" /></TD>
+							<span stype="line-height:20px, display:block">
+								<b>
+								   #{lbl['lbl.rpt.allregistereddatefrom']}
+								   <font color="red">*</font>
+								</b>
+							</span>
+						</TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smLCMOFRegisteredDateView}">
