@@ -14,9 +14,7 @@ import my.ep.web.managedbean.report.ReportBaseManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "flReportManagedBean")
-@SessionScoped
-public class FlReportManagedBean extends ReportBaseManagedBean{
+public abstract class FlReportManagedBean extends ReportBaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	private PmOrgProfile currentActiveOrg;
