@@ -12,8 +12,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportSupplierType bBean="#{listPersMoreCompRptBB}" 
-					required="true" />
+				<ac:smReportSupplierType bBean="#{listPersMoreCompRptBB}" />
 			</td>
 			
 			<td class="tdTitle">
@@ -75,6 +74,15 @@
 						process="@form" partialSubmit="true" update="@form" />
 				</p:inputText>
 			</td>
+		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.mofregistereddatefrom']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportDateFromTo bBean="#{listPersMoreCompRptBB}" />
+			</td>
+			<td colspan="2"></td>
 		</tr>
 	</table>
 	
