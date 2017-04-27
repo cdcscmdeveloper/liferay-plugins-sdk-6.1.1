@@ -2239,31 +2239,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to set the bond waiver flag value.
 	 */
 	public void chkBondWaiverAction(){
-		  if(!getManagedBean().getCtContractAmount().isBondWaived()){
-	            getManagedBean().getCtContractAmount().setBondWaived(false);
-		        if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
-		             getManagedBean().getContractVer().setBondWaiverAttachments(null);
-		        }if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
-		        	  if(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId() != null){
-		        		  Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
-						     while(attachIterator.hasNext()){
-						    	 CtAttachment  attachObject = attachIterator.next();
-						    	 if(attachObject.getDocId() != null && attachObject.getDocId().intValue() ==
-						    			 getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId().intValue()){
-						    		 continue;
-							    }else {
-							    	 attachIterator.remove();
-							    }
-						    } 
-		        	  }   
-		        	getManagedBean().setBondWaiver(true);
-		        }
-	      }	 if(getManagedBean().getCtContractAmount().isBondWaived() &&
-	    		   getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
-	    	  getManagedBean().setBondWaiver(false);
-	      }
-	}
+			if(!getManagedBean().getCtContractAmount().isBondWaived()){
+					getManagedBean().getCtContractAmount().setBondWaived(false);
+					if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
+							getManagedBean().getContractVer().setBondWaiverAttachments(null);
+					}
 			
+			} else if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
+				     if(getManagedBean().getCtContractAmount().isBondWaived() ==  getManagedBean().getCtTestBondWaiverAmount().isBondWaived()){
+							if(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId() != null){
+								Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
+								while(attachIterator.hasNext()){
+										CtAttachment  attachObject = attachIterator.next();
+										if(attachObject.getDocId() != null && attachObject.getDocId().intValue() ==
+												getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId().intValue()){
+											continue;
+										}else {
+											attachIterator.remove();
+										}
+								} 
+							}   
+							getManagedBean().setBondWaiver(true);
+					}
+				}	
+			}
 	 /**
 	 * The method used to upload bond exempted file.
 	 * 
