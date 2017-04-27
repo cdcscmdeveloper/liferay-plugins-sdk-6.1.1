@@ -29,6 +29,9 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private String maxBulkApprovalMsg;
 	private int maxBulkApprovalCount;
 	private String page;
+	private String applStatus;
+	private static final String RECOMMEND_APPROVE = "APPROVE";
+	private static final String RECOMMEND_REJECT = "REJECT";
 
 	public SmBulkApplicationManagedBean() {
 		claimTasks = new ArrayList<SmBulkApplicationVO>();
@@ -123,5 +126,21 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 	public void setUnClaimTasks(List<SmBulkApplicationVO> unClaimTasks) {
 		this.unClaimTasks = unClaimTasks;
+	}
+
+	public String getApplStatus() {
+		return applStatus;
+	}
+
+	public void setApplStatus(String applStatus) {
+		this.applStatus = applStatus;
+	}
+	
+	public String getRECOMMEND_APPROVE(){
+		return RECOMMEND_APPROVE;
+	}
+	
+	public String getRECOMMEND_REJECT(){
+		return RECOMMEND_REJECT;
 	}
 }
