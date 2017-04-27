@@ -10,6 +10,9 @@
 
 	<ui:define name="contentSection">
 
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
 		<ac:lovPopup />
@@ -105,9 +108,9 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{directPurchaseBackingBean.search}" update="resultPanel" />
+					action="#{directPurchaseBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{directPurchaseBackingBean.reset}" update=":form" />
+					action="#{directPurchaseBackingBean.reset}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result']}"
