@@ -23,7 +23,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_020_DELIVERY_ORDER = "FL_020";
 	public static final String FL_021_FULFILMENT_RECEIVED_NOTE = "FL_021";
 	public static final String FL_022_LATE_DELIVERY = "FL_022";
-	public static final String FL_025_INVOICE_REPORT = "FL_025";
+	public static final String FL_025_INVOICE = "FL_025";
 	public static final String FL_026_PAYMENT_MATCH = "FL_026";
 	public static final String FL_027_CONTRACT_REQ_REJECTION = "FL_027";
 	public static final String FL_028_PURCHASE_ORDER_CANCELLATION = "FL_028";
@@ -57,8 +57,8 @@ public class FlReportConst implements Serializable {
 		return FL_022_LATE_DELIVERY;
 	}
 
-	public String getFl025InvoiceReport() {
-		return FL_025_INVOICE_REPORT;
+	public String getFl025Invoice() {
+		return FL_025_INVOICE;
 	}
 
 	public String getFl026PaymentMatch() {

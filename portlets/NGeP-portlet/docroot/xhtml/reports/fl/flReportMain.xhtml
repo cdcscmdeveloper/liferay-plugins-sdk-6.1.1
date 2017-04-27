@@ -67,8 +67,8 @@
 					<ui:include src="/xhtml/reports/fl/cc/FL018_contractRequest.xhtml"></ui:include>
 				</c:when>
 				<c:when
-					test="#{FlReportConst.fl019ContractOrder == flReportBB.managedBean.reportCode}">
-					<ui:include src="/xhtml/reports/fl/cc/FL019_contractOrder.xhtml"></ui:include>
+					test="#{FlReportConst.fl019PurchaseOrder == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL019_purchaseOrder.xhtml"></ui:include>
 				</c:when>
 				<c:when
 					test="#{FlReportConst.fl020DeliveryOrder == flReportBB.managedBean.reportCode}">
@@ -95,7 +95,7 @@
 					<ui:include src="/xhtml/reports/fl/cc/FL027_contractRequestRejection.xhtml"></ui:include>
 				</c:when>
 				<c:when
-					test="#{FlReportConst.fl028PurchaseOrderCanCellation == flReportBB.managedBean.reportCode}">
+					test="#{FlReportConst.fl028PurchaseOrderCancellation == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL028_purchaseOrderCancellation.xhtml"></ui:include>
 				</c:when>
 				<c:when
@@ -115,7 +115,7 @@
 					<ui:include src="/xhtml/reports/fl/cc/FL051_stopInstByPtj.xhtml"></ui:include>
 				</c:when>
 				<c:when
-					test="#{FlReportConst.fl052StopInstBySupplier == flReportBB.managedBean.reportCode}">
+					test="#{FlReportConst.fl054StopInstBySupplier == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL054_stopInstBySupplier.xhtml"></ui:include>
 				</c:when>
 				<c:otherwise>
