@@ -37,59 +37,59 @@ public class FlReportConst implements Serializable {
 	
 	public FlReportConst(){}
 
-	public static String getFl018ContractReq() {
+	public String getFl018ContractReq() {
 		return FL_018_CONTRACT_REQ;
 	}
 
-	public static String getFl019PurchaseOrder() {
+	public String getFl019PurchaseOrder() {
 		return FL_019_PURCHASE_ORDER;
 	}
 
-	public static String getFl020DeliveryOrder() {
+	public String getFl020DeliveryOrder() {
 		return FL_020_DELIVERY_ORDER;
 	}
 
-	public static String getFl021FulfilmentReceivedNote() {
+	public String getFl021FulfilmentReceivedNote() {
 		return FL_021_FULFILMENT_RECEIVED_NOTE;
 	}
 
-	public static String getFl022LateDelivery() {
+	public String getFl022LateDelivery() {
 		return FL_022_LATE_DELIVERY;
 	}
 
-	public static String getFl025InvoiceReport() {
+	public String getFl025InvoiceReport() {
 		return FL_025_INVOICE_REPORT;
 	}
 
-	public static String getFl026PaymentMatch() {
+	public String getFl026PaymentMatch() {
 		return FL_026_PAYMENT_MATCH;
 	}
 
-	public static String getFl027ContractReqRejection() {
+	public String getFl027ContractReqRejection() {
 		return FL_027_CONTRACT_REQ_REJECTION;
 	}
 
-	public static String getFl028PurchaseOrderCancellation() {
+	public String getFl028PurchaseOrderCancellation() {
 		return FL_028_PURCHASE_ORDER_CANCELLATION;
 	}
 
-	public static String getFl029DeliveryOrderCancellation() {
+	public String getFl029DeliveryOrderCancellation() {
 		return FL_029_DELIVERY_ORDER_CANCELLATION;
 	}
 
-	public static String getFl030FulfilmentReceivedNoteCancellation() {
+	public String getFl030FulfilmentReceivedNoteCancellation() {
 		return FL_030_FULFILMENT_RECEIVED_NOTE_CANCELLATION;
 	}
 
-	public static String getFl031InvoiceCancellation() {
+	public String getFl031InvoiceCancellation() {
 		return FL_031_INVOICE_CANCELLATION;
 	}
 
-	public static String getFl051StopInstByPtj() {
+	public String getFl051StopInstByPtj() {
 		return FL_051_STOP_INST_BY_PTJ;
 	}
 
-	public static String getFl054StopInstBySupplier() {
+	public String getFl054StopInstBySupplier() {
 		return FL_054_STOP_INST_BY_SUPPLIER;
 	}
 
