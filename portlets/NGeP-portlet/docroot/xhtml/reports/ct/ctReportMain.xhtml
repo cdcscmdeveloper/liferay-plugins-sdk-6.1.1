@@ -13,7 +13,7 @@
 			closable="true" showSummary="false"></p:messages>
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
-				<td>
+				<td style="width:20%">
 					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
@@ -33,7 +33,7 @@
 				</td>
 			</tr> 
 			<tr>
-				<td>
+				<td style="width:20%">
 					<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
@@ -57,7 +57,7 @@
 		<p:outputPanel id="ctReportSearchCriteriaPanel">
 			<p:panel header="#{ctReportBackingBean.managedBean.reportTitle}"
 				rendered="#{!empty ctReportBackingBean.managedBean.reportCode}">
-				<!-- 
+				
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal}">
 					<ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
 				</c:if>
@@ -83,7 +83,8 @@
 				</c:if>				
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
 					<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
-				</c:if> -->
+				</c:if>
+				
 			</p:panel>
 		</p:outputPanel>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
