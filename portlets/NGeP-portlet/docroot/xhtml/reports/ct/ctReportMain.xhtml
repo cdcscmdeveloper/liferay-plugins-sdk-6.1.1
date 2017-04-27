@@ -27,7 +27,7 @@
 						<f:selectItems
 							value="#{ctReportBackingBean.managedBean.reportCategoryList}"></f:selectItems>
 						<p:ajax event="change"
-							listener="#{ctReportBackingBean.retrieveSubModuleReportCategoryList(ctReportBackingBean.managedBean.reportCategory)}"
+							listener="#{ctReportBackingBean.retrieveReportListByCategory(ctReportBackingBean.managedBean.reportCategory)}"
 							process="@this" partialSubmit="true" update="@all" />
 					</p:selectOneMenu>
 				</td>
@@ -57,52 +57,52 @@
 			<p:panel header="#{ctReportBackingBean.managedBean.reportTitle}"
 				rendered="#{!empty ctReportBackingBean.managedBean.reportCode}">
 				
-				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctListOfContractMcRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT003_listOfContract.xhtml"></ui:include>
-				</c:if>
-				
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT006_contractMonitoringReport.xhtml"></ui:include>
+					<ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
 				</c:if>
-				
-				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctListOfCircularCqRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT016_listOfCircular.xhtml"></ui:include>
-				</c:if>
-				
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctFulfilmentStatusRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT018_fulfilmentStatusReport.xhtml"></ui:include>
-				</c:if>
-				
-				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctStatementOfOrderCcRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT021_statementOfOrderReport.xhtml"></ui:include>
-				</c:if>
-				
+					<ui:include src="/xhtml/reports/ct/mc/CT018_fulfilmentStatusReport.xhtml"></ui:include>
+				</c:if>		
+				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctListOfContractMcRptVal}">
+					<ui:include src="/xhtml/reports/ct/mc/CT003_listOfContract.xhtml"></ui:include>
+				</c:if>							
+								
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctListOfContractCcRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT022_listOfContract.xhtml"></ui:include>
+					<ui:include src="/xhtml/reports/ct/cc/CT022_listOfContract.xhtml"></ui:include>
 				</c:if>
-				
+				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctStatementOfOrderCcRptVal}">
+					<ui:include src="/xhtml/reports/ct/cc/CT021_statementOfOrderReport.xhtml"></ui:include>
+				</c:if>
+				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctListOfCircularCqRptVal}">
+					<ui:include src="/xhtml/reports/ct/cc/CT016_listOfCircular.xhtml"></ui:include>
+				</c:if>
+												
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctListOfCircularPqRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT023_listOfCircular.xhtml"></ui:include>
-				</c:if>
-				
+					<ui:include src="/xhtml/reports/ct/panel/CT023_listOfCircular.xhtml"></ui:include>
+				</c:if>				
 				<c:if test="#{ctReportBackingBean.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
-					<ui:include src="/xhtml/reports/ct/CT024_statementOfOrderReport.xhtml"></ui:include>
+					<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
 				</c:if>
-				
-				<p:commandButton
-					id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
-					process="@form" update="@form" 
-					action="#{ctReportBackingBean.generateCtReport()}">
-				</p:commandButton>
-				<p:commandButton 
-					id="resetBtnId"	value="#{lbl['lbl.btn.reset']}"
-					process="@this" update="@form" 
-					action="#{ctReportBackingBean.resetAction()}">
-				</p:commandButton>
 			</p:panel>
 		</p:outputPanel>
-		<ui:include
-			src="/xhtml/reports/ct/common/confirmationDialog.xhtml"></ui:include>
+		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+			width="500px" resizable="false" styleClass="pop_up_top">
+			<h:outputText escape="false" style="float:left;margin-left:5px;"
+				value="#{ctReportBackingBean.managedBean.popUpMsg}">
+			</h:outputText>
+			<br />
+			<div style="float:right;">
+				<table style="width:100%">
+					<tr>
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+								onclick="confirmationId.hide();" />
+							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+								action="#{ctReportBackingBean.redirect()}">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</div>
+		</p:dialog>
 		<ac:lovPopup />
 	</ui:define>
 </ui:composition>
