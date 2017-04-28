@@ -22,5 +22,33 @@ import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
 public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	
+	private String quotationNumner;
+	private String quotationId;
+	/**
+	 * @return the quotationNumner
+	 */
+	public String getQuotationNumner() {
+		return quotationNumner;
+	}
+	/**
+	 * @param quotationNumner the quotationNumner to set
+	 */
+	public void setQuotationNumner(String quotationNumner) {
+		this.quotationNumner = quotationNumner;
+	}
+	/**
+	 * @return the quotationId
+	 */
+	public String getQuotationId() {
+		return quotationId;
+	}
+	/**
+	 * @param quotationId the quotationId to set
+	 */
+	public void setQuotationId(String quotationId) {
+		this.quotationId = quotationId;
+	}
+	
 
 }
