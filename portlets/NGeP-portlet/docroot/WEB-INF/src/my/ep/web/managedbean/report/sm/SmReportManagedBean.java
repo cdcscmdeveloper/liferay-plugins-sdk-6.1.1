@@ -1,9 +1,12 @@
 package my.ep.web.managedbean.report.sm;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang3.StringUtils;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
@@ -41,14 +44,16 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String capitalLabel;
 	private String capitalShareFrom;
 	private String capitalShareTo;
-	
+
 	private List<SelectItem> applStatusList;
 	private List<SelectItem> stateLst;
 	private List<SelectItem> districtLst;
 	private List<SelectItem> bussTypeList;
 	private List<String> yearList;
-	
+
 	private List<String> selectedPaymentTypes;
+
+	private String currYear;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -336,5 +341,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setCapitalShareTo(String capitalShareTo) {
 		this.capitalShareTo = capitalShareTo;
+	}
+
+	public String getCurrYear() {
+		if (StringUtils.isBlank(currYear)) {
+			return Calendar.getInstance().get(Calendar.YEAR) + "";
+		} else {
+			return currYear;
+		}
 	}
 }
