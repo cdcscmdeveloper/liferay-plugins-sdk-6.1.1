@@ -23,10 +23,7 @@ public class GstRegSupplierRptBackingBean extends
 	private static final long serialVersionUID = 4204281795015981972L;
 
 	public GstRegSupplierRptBackingBean() {
-		if (getManagedBean().getDateFrom() == null
-				|| getManagedBean().getDateTo() == null) {
-			setDefaultDateFromAndDateTo();
-		}
+		setDefaultDateFromAndDateTo();
 	}
 
 	public void generateReport() {
@@ -39,17 +36,29 @@ public class GstRegSupplierRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
-				.getSupplierType());
-		params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getCompanyName());
-		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
+		if (StringUtils.isBlank(getManagedBean().getSupplierType())) {
+			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
+					.getSupplierType());
+		}
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
+			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
+					.getRegType());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getGstRegStatus())) {
+			params.put(SmReportConst.PARAM_GST_STATUS, getManagedBean()
+					.getGstRegStatus());
+		}
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
 		params.put(SmReportConst.PARAM_GST_REG_NO, getManagedBean()
 				.getGstRegNo());
-		params.put(SmReportConst.PARAM_GST_STATUS, getManagedBean()
-				.getGstRegStatus());
 
 		generateSmReport(params);
 	}
