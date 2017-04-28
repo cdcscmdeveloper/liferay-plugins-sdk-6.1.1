@@ -29,15 +29,25 @@ public class ThresholdOrSuppTransRptBackingBean extends
 				getManagedBean().getYearTo());
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		params.put(SmReportConst.PARAM_YEAR_FROM, getManagedBean().getYear());
-		params.put(SmReportConst.PARAM_YEAR_TO, getManagedBean().getYearTo());
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
-				.getSupplierType());
-		params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		params.put(SmReportConst.PARAM_FROM_YEAR, getManagedBean().getYear());
+		params.put(SmReportConst.PARAM_TO_YEAR, getManagedBean().getYearTo());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
+		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
+			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
+					.getSupplierType());
+		}
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
+			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
+					.getRegType());
+		}
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
-		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
 
 		generateSmReport(params);
