@@ -30,6 +30,8 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_PAYMENT_TYPE1 = "PPAYTYPE1";
 	public static final String PARAM_PAYMENT_TYPE2 = "PPAYTYPE2";
 	public static final String PARAM_PAYMENT_TYPE3 = "PPAYTYPE3";
+	public static final String PARAM_FROM_YEAR = "PFROMYEAR";
+	public static final String PARAM_TO_YEAR = "PTOYEAR";
 	public static final String PARAM_YEAR_FROM = "PYEARFROM";
 	public static final String PARAM_YEAR_TO = "PYEARTO";
 	public static final String PARAM_SUPP_DOC_MODE = "PSUPPDOCMODE";
