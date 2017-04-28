@@ -11,6 +11,7 @@
 package my.ep.web.backingbean.report.qt;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -37,7 +38,7 @@ QtReportBackingBean<QtReportMainManagedBean> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(QtReportMainBackingBean.class);
-	private static final String REPORT_MAIN = "/xhtml/reports/new/sc/qt/qtReportMain.xhtml";
+	private static final String REPORT_MAIN = "/xhtml/reports/sc/qt/qtReportMain.xhtml";
 
 	public void preRender() {
 		renewSesionObject();
@@ -47,6 +48,24 @@ QtReportBackingBean<QtReportMainManagedBean> implements Serializable{
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, REPORT_MAIN);
+	}
+
+	@Override
+	public void generateReport( LinkedHashMap<String, String> params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resetSearch() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public LinkedHashMap<String, String> getparams() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
