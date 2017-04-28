@@ -35,13 +35,23 @@ public class SuppContPersBankBranchRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
-				.getSupplierType());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
-		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
-		params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
+			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
+					.getSupplierType());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
+			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
+					.getRegType());
+		}
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
 		generateSmReport(params);
 	}
 
