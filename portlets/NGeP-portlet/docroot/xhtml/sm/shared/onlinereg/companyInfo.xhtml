@@ -114,7 +114,7 @@
 						label="#{lbl['lbl.sm.nationality']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryId}"
 						style="width:80%"
-						disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
+						disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
@@ -138,7 +138,7 @@
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
 						style="width:200px" disabled="true">
 						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-						<p:ajax event="change" update="pnlIdentType,pnlIdentLabel"
+						<p:ajax event="change" update="pnlIdentType,pnlCompInfo"
 							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
 					</p:selectOneMenu>
 					
@@ -191,10 +191,23 @@
 						</c:when>
 
 						<c:otherwise>
-							<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
-							<p:tooltip id="ictt" for="icti">
-								<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.ic']}" />
-							</p:tooltip>
+							
+							<c:choose>
+								<c:when test="#{registrationBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+									<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />	
+									<p:tooltip id="ictt" for="icti">
+										<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.ic']}" />
+									</p:tooltip>
+								</c:when>
+								
+								<ui:remove>
+								<c:otherwise>
+									<p:tooltip id="ictt" for="icti">
+										<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.icpassport']}" />
+									</p:tooltip>
+								</c:otherwise>
+								</ui:remove>							
+							</c:choose>
 						</c:otherwise>
 					</c:choose> 
 					<p:message id="txtIdNumberMsg" for="txtIdNumber" display="icon" />
