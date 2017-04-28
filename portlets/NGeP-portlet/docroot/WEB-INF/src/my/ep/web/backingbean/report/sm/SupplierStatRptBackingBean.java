@@ -29,10 +29,7 @@ public class SupplierStatRptBackingBean extends
 
 	public SupplierStatRptBackingBean() {
 		onChangeZone();
-		if (getManagedBean().getDateFrom() == null
-				|| getManagedBean().getDateTo() == null) {
-			setDefaultDateFromAndDateTo();
-		}
+		setDefaultDateFromAndDateTo();
 	}
 
 	public void onChangeZone() {
@@ -59,9 +56,16 @@ public class SupplierStatRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_STATE, getManagedBean().getState());
-		params.put(SmReportConst.PARAM_DISTRICT, getManagedBean().getDistrict());
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
+		if (!StringUtils.isBlank(getManagedBean().getState())) {
+			params.put(SmReportConst.PARAM_STATE, getManagedBean().getState());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getDistrict())) {
+			params.put(SmReportConst.PARAM_DISTRICT, getManagedBean()
+					.getDistrict());
+		}
 
 		generateSmReport(params);
 	}
