@@ -20,6 +20,7 @@ import java.io.Serializable;
 public class QtReportConst implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	//Report code
 	public static final String SC_QUOT_TENDER_OR_RPT_VAL = "SC_038";
 	public static final String SC_SUMMRY_SRC_OR_RPT_VAL = "SC_039";
 	public static final String SC_BRIF_SITE_VISIT_OR_RPT_VAL = "SC_040";
@@ -35,6 +36,16 @@ public class QtReportConst implements Serializable {
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
+	
+	
+	//Report parameterKey
+	public static final String PARAM_KEY_REPORT ="report";
+	public static final String PARAM_USER_ID ="PUSER";
+	public static final String PARAM_REPORT_CODE ="PREPORTID";
+	public static final String QUOTATION_TENDER_ID ="qtid";
+	public static final String QUOTATION_TENDER_ESTIMATED_AMOUNT ="PESTAMT";
+	
+	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
 	 */
