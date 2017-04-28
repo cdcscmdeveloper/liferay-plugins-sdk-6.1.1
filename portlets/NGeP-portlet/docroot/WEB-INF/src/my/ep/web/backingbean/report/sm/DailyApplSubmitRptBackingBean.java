@@ -1,24 +1,16 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-
-import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constants.CommonConstants;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DailyApplSubmitRptManagedBean;
-import my.ep.web.util.FacesScopes;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "dailyApplSubmitRptBB")
 @ViewScoped
@@ -45,10 +37,17 @@ public class DailyApplSubmitRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
-		params.put(SmReportConst.PARAM_STATE, getManagedBean().getState());
-		params.put(SmReportConst.PARAM_APPL_STATUS, getManagedBean()
-				.getApplStatus());
+		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
+			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
+					.getRegType());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getState())) {
+			params.put(SmReportConst.PARAM_STATE, getManagedBean().getState());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getApplStatus())) {
+			params.put(SmReportConst.PARAM_APPL_STATUS, getManagedBean()
+					.getApplStatus());
+		}
 
 		generateSmReport(params);
 	}
