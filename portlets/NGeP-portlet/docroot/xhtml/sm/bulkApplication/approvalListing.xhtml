@@ -6,8 +6,29 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">		
 		
-		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}"
-			toggleable="true" id="unClaimPanelId">
+		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}" toggleable="true" id="unClaimPanelId">
+			
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.application.status']}" /></td>
+					<td>
+						<p:selectOneMenu style="width: 250px;margin-bottom: 5px;"
+							id="applStatusId" label="#{lbl['lbl.sm.application.status']}"
+							value="#{bulkApplicationBackingBean.managedBean.applStatus}">
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.button.recommend.to.approve']}" 
+								itemValue="#{bulkApplicationBackingBean.managedBean.RECOMMEND_APPROVE}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.button.recommend.to.reject']}" 
+								itemValue="#{bulkApplicationBackingBean.managedBean.RECOMMEND_REJECT}" />
+							<p:ajax event="change" process="@this" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{bulkApplicationBackingBean.refreshTaskList}"
+								update="@form" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table><br />
+			
 			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" 
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 				var="unclaim" rowIndexVar="index" 
