@@ -53,6 +53,7 @@ import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1807,6 +1808,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
 		List<PmState> stateLs = retrievePmStateList(countryId);
 		List<SelectItem> stateSelectLs = new ArrayList<SelectItem>();
+		PmState state = new PmState();
 		
 		if(this.getManagedBean().getBusinessStateLs() == null){
 			this.getManagedBean().setBusinessStateLs(new ArrayList<SelectItem>());
@@ -1826,28 +1828,29 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 				}
 
-				for(PmState state : stateLs){
-					if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
-							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
-						if(state.getStateName().equalsIgnoreCase("SARAWAK")){
-							stateSelectLs.add(convertToStateSelectItem(state));
-							this.getManagedBean().getSmBusinessAdd().setPmState(state);
-							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
-							log.info("----SAEAWAK BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
-							break;
-						}
-					}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-						if(state.getStateName().equalsIgnoreCase("SABAH")){
-							stateSelectLs.add(convertToStateSelectItem(state));
-							this.getManagedBean().getSmBusinessAdd().setPmState(state);
-							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
-							this.getManagedBean().setBusinessCityLs(null);
-							log.info("----SABAH BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
-							break;
-						}
+				//for(PmState state : stateLs){
+				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+					List<PmState> sarawakLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SARAWAK, 
+							SupplierManagementConst.COUNTRY_MALAYSIA_CODE);				
+					if(sarawakLs.size() > 0){
+						stateSelectLs = EntityHelper.convertListToSelectItem(sarawakLs,"stateName", "stateId");
+						state = sarawakLs.get(0);
+						this.getManagedBean().getSmBusinessAdd().setPmState(state);
+						this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
+					}
+				}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+					List<PmState> sabahLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SABAH, 
+							SupplierManagementConst.COUNTRY_MALAYSIA_CODE);	
+					if(sabahLs.size() > 0){
+						stateSelectLs = EntityHelper.convertListToSelectItem(sabahLs,"stateName", "stateId");
+						state = sabahLs.get(0);
+						this.getManagedBean().getSmBusinessAdd().setPmState(state);
+						this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
 					}
 				}
+				//}
 				
 				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
 					getManagedBean().setBusinessCityLs(null);
@@ -1857,11 +1860,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) ||
 					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
-				for(PmState state : stateLs){
-					if(!state.getStateName().equalsIgnoreCase("SABAH") && !state.getStateName().equalsIgnoreCase("SARAWAK")){
-						stateSelectLs.add(convertToStateSelectItem(state));
-					}
-				}
+				List<PmState> sabahLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG, 
+						SupplierManagementConst.COUNTRY_MALAYSIA_CODE);	
+				stateSelectLs  = EntityHelper.convertListToSelectItem(sabahLs,"stateName", "stateId");
+			
 				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
 					getManagedBean().setSabahSarawakType(false);
 					getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
@@ -1877,9 +1879,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		if(stateSelectLs.size() < 1){
-			for(PmState state : stateLs){
-				stateSelectLs.add(convertToStateSelectItem(state));
-			}
+			stateSelectLs = EntityHelper.convertListToSelectItem(stateLs,"stateName", "stateId");
 		}
 		this.getManagedBean().setBusinessStateLs(stateSelectLs);
 		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
@@ -2720,15 +2720,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				postcode = getManagedBean().getSmPermenantAdd().getPostcode();
 			}
 			
-			if(smPersonnel.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-				if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
-					SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), 
-							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
-				}else{
-					SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), 
-							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
-				}
-			}
 			//validate IC with MyIdentity
 			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
 					postcode, null);
