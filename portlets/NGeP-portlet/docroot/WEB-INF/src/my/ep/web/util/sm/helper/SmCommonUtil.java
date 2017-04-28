@@ -4897,5 +4897,15 @@ public class SmCommonUtil {
 			throw new EpException(MessageConst.ERROR_721119);
 		}
 	}
+	
+	public List<PmState> retrieveStateByZone(String zoneName, String countryCode){
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setCountryCode(countryCode);
+		reqDTO.setZoneName(zoneName);
+		List<PmState> stateList = SmServiceLookup.getStateSO().retriveStatesListByCountryCodeWithZoneName(reqDTO).getStateList();
+		
+		return stateList;
 
+	}
+	
 }
