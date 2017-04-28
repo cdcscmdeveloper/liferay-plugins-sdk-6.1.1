@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
@@ -24,6 +25,7 @@ public class SuppPerformRptBackingBean extends
 	private static final long serialVersionUID = -7400800649761552705L;
 
 	public SuppPerformRptBackingBean() {
+		getManagedBean().setYearList(getCommonYearList());
 		setDefaultDateFromAndDateTo();
 		onChangeRegType();
 	}
@@ -47,10 +49,15 @@ public class SuppPerformRptBackingBean extends
 			}
 		}
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
-		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
+		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
+			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
+					.getRegType());
+		}
 		params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
 		params.put(SmReportConst.PARAM_YEAR_FROM, getManagedBean().getYear());
 		params.put(SmReportConst.PARAM_YEAR_TO, getManagedBean().getYearTo());
+		params.put(SmReportConst.PARAM_YEAR,
+				Calendar.getInstance().get(Calendar.YEAR) + "");
 		generateSmReport(params);
 	}
 
