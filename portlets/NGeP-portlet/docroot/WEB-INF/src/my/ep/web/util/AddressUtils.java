@@ -195,6 +195,7 @@ public class AddressUtils {
 			}
 			if (StringUtils.isNotBlank(
 					scAddress.getAddress2())) {
+				address.append(System.getProperty("line.separator"));
 				address.append(scAddress.getAddress2());
 				address.append(separator);
 			}
@@ -213,6 +214,7 @@ public class AddressUtils {
 			if (scAddress.getPmDistrict() != null && 
 					StringUtils.isNotBlank(
 						scAddress.getPmDistrict().getDistrictName())) {
+				address.append(System.getProperty("line.separator"));
 				address.append(scAddress.getPmDistrict().getDistrictName());
 				address.append(separator);
 			}
