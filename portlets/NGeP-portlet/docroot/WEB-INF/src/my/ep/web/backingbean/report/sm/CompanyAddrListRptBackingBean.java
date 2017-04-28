@@ -1,10 +1,12 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.constants.CommonConstants;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.CompanyAddrListRptManagedBean;
 
@@ -20,17 +22,30 @@ public class CompanyAddrListRptBackingBean extends
 	 */
 	private static final long serialVersionUID = -7852663429473244581L;
 
+	public CompanyAddrListRptBackingBean() {
+		setDefaultDateFromAndDateTo();
+	}
+
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		SimpleDateFormat df = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
 		retrieveReportValueFromDb();
+		params.put(SmReportConst.PARAM_DATE_FROM,
+				df.format(getManagedBean().getDateFrom()));
+		params.put(SmReportConst.PARAM_DATE_TO,
+				df.format(getManagedBean().getDateTo()));
 		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 				.getSupplierType());
-		params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
-				.getApplType());
+		if (!StringUtils.isBlank(getManagedBean().getApplType())) {
+			params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
+					.getApplType());
+		}
 		params.put(SmReportConst.PARAM_APPL_STATUS, getManagedBean()
 				.getApplStatus());
 		params.put(SmReportConst.PARAM_SUPP_DOC_MODE, getManagedBean()
-				.getSuppDocMode());
+				.getSuppDocMode() == null ? StringUtils.EMPTY
+				: getManagedBean().getSuppDocMode());
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
@@ -40,6 +55,7 @@ public class CompanyAddrListRptBackingBean extends
 	}
 
 	public void resetSearch() {
+		setDefaultDateFromAndDateTo();
 		getManagedBean().setSupplierType("all");
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
