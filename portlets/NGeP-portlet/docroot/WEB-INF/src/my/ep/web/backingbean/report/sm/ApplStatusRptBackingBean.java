@@ -23,10 +23,7 @@ public class ApplStatusRptBackingBean extends
 	private static final long serialVersionUID = -3440385149367317737L;
 
 	public ApplStatusRptBackingBean() {
-		if (getManagedBean().getDateFrom() == null
-				|| getManagedBean().getDateTo() == null) {
-			setDefaultDateFromAndDateTo();
-		}
+		setDefaultDateFromAndDateTo();
 	}
 
 	public void generateReport() {
@@ -42,8 +39,10 @@ public class ApplStatusRptBackingBean extends
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		params.put(SmReportConst.PARAM_APPL_NO, getManagedBean().getApplNo());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
-		params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
-				.getApplType());
+		if (!StringUtils.isBlank(getManagedBean().getApplType())) {
+			params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
+					.getApplType());
+		}
 
 		generateSmReport(params);
 	}
