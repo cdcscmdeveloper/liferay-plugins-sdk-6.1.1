@@ -20,6 +20,8 @@ public class ThresholdValueRptBackingBean extends
 
 	public ThresholdValueRptBackingBean() {
 		getManagedBean().setYearList(getCommonYearList());
+		getManagedBean().setYear(getManagedBean().getCurrYear());
+		getManagedBean().setYearTo(getManagedBean().getCurrYear());
 	}
 
 	public void generateReport() {
@@ -29,15 +31,15 @@ public class ThresholdValueRptBackingBean extends
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 
-		params.put(SmReportConst.PARAM_YEAR_FROM, getManagedBean().getYear());
-		params.put(SmReportConst.PARAM_YEAR_TO, getManagedBean().getYearTo());
+		params.put(SmReportConst.PARAM_FROM_YEAR, getManagedBean().getYear());
+		params.put(SmReportConst.PARAM_TO_YEAR, getManagedBean().getYearTo());
 
 		generateSmReport(params);
 	}
 
 	public void resetSearch() {
-		getManagedBean().setYear(null);
-		getManagedBean().setYearTo(null);
+		getManagedBean().setYear(getManagedBean().getCurrYear());
+		getManagedBean().setYearTo(getManagedBean().getCurrYear());
 	}
 
 }
