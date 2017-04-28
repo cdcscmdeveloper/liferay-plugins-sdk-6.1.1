@@ -1550,23 +1550,18 @@ public class LOADetailBackingBean extends
 		String supplierAddress = "";
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
-			supplierAddress = supplierAddress.replaceAll("\r\n", "");
-			//supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
 		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
-			String[] address = supplierAddress.split(",");
+			String[] address = supplierAddress.split("\r\n");
 			supplierAddressTable = new StringBuilder();
 			supplierAddressTable.append("<table border='0' cellspacing='0' cellpadding='0' width='100%'>");
 			for (String suppAddr : address) {
 				supplierAddressTable.append("<tr><td>");
 				supplierAddressTable.append(suppAddr);
-				supplierAddressTable.append(",");
 				supplierAddressTable.append("</td></tr>");
 			}
-			int lastIndex = supplierAddressTable.lastIndexOf(",");
-			supplierAddressTable.deleteCharAt(lastIndex);
 			supplierAddressTable.append("</table>");
 		}
 		context.put("supplierAddressTable", supplierAddressTable);
