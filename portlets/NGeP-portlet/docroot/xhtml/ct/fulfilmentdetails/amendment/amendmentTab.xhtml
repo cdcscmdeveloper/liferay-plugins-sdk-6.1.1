@@ -96,25 +96,32 @@
 	 
 	    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.agency']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
+			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange
+			and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
+			 and amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AG')}" update=":form" />
 	      
 			 
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			 rendered="#{(amendmentBackingBean.managedBean.ackFA eq null and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
-		     ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange)) or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null) }"
+			 rendered="#{amendmentBackingBean.managedBean.ackFA eq null and 
+			((ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or  ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) 
+			or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}"
 			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
 				
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
 		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
-		    rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
+		    rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and 
+		    ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
+		    and amendmentBackingBean.managedBean.ackFA eq null}"
 			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'DE')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled 
-			and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
+			and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange
+			and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
+		    and amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SC')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
