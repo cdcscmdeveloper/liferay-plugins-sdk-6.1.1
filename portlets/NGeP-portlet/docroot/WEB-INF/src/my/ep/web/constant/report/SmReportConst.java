@@ -50,8 +50,12 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_DATE_TYPE = "PDATE";
 	public static final String PARAM_PROC_OFFICER = "PPROOFFICERNAME";
 	public static final String PARAM_CANCEL_BY  = "PCANCELBY";
+	public static final String PARAM_CAT_L1 = "PCATEGORYCODE";
+	public static final String PARAM_CAT_L2 = "PSUBCATEGORYCODE";
+	public static final String PARAM_CAT_L3 = "PSUBCATEGORYDIVISION";
 	public static final String PARAM_BUSS_TYPE = "PBUSTYPE";
-	
+	public static final String PARAM_REG_STATUS = "PREGSTATUS";
+
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";
