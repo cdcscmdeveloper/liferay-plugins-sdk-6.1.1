@@ -2458,6 +2458,17 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get Liferay Portal Login Page
+	 * 
+	 * @return String
+	 */
+	public static String getPortalLoginPage() {
+		String retVal = getBasePortalUrl() + "/" + "ssologin";
+		log.info(">>>>>>>>>LOG IN URL:" + retVal + "<<<<<<<<<<<");
+		return retVal;
+	}
+
+	/**
 	 * Get application portal base URL from properties
 	 * 
 	 * @return String
@@ -4871,7 +4882,7 @@ public class SmCommonUtil {
 				}
 			}
 
-			if(!catTypeNull){
+			if (!catTypeNull) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("categoryType",
 								SearchOperator.OPERATOR_EQUALS.value(),
@@ -4897,15 +4908,17 @@ public class SmCommonUtil {
 			throw new EpException(MessageConst.ERROR_721119);
 		}
 	}
-	
-	public List<PmState> retrieveStateByZone(String zoneName, String countryCode){
+
+	public List<PmState> retrieveStateByZone(String zoneName, String countryCode) {
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryCode(countryCode);
 		reqDTO.setZoneName(zoneName);
-		List<PmState> stateList = SmServiceLookup.getStateSO().retriveStatesListByCountryCodeWithZoneName(reqDTO).getStateList();
-		
+		List<PmState> stateList = SmServiceLookup.getStateSO()
+				.retriveStatesListByCountryCodeWithZoneName(reqDTO)
+				.getStateList();
+
 		return stateList;
 
 	}
-	
+
 }
