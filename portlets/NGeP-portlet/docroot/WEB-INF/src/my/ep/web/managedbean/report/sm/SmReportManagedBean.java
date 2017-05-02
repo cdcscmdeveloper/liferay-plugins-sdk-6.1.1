@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
+import my.ep.web.vo.CategoryRptVO;
 
 public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private static final long serialVersionUID = 1L;
@@ -52,6 +53,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<String> yearList;
 
 	private List<String> selectedPaymentTypes;
+	private List<CategoryRptVO> categoryLs;
+	private List<CategoryRptVO> selectedCategoryLs;
 
 	private String currYear;
 
@@ -303,6 +306,22 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.dateExpFrom = dateExpFrom;
 	}
 
+	public List<CategoryRptVO> getCategoryLs() {
+		return categoryLs;
+	}
+
+	public void setCategoryLs(List<CategoryRptVO> categoryLs) {
+		this.categoryLs = categoryLs;
+	}
+
+	public List<CategoryRptVO> getSelectedCategoryLs() {
+		return selectedCategoryLs;
+	}
+
+	public void setSelectedCategoryLs(List<CategoryRptVO> selectedCategoryLs) {
+		this.selectedCategoryLs = selectedCategoryLs;
+	}
+	
 	public String getBussType() {
 		return bussType;
 	}
