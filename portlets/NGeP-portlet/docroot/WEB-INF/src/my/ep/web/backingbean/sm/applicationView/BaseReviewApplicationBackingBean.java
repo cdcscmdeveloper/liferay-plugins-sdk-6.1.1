@@ -637,7 +637,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	private void initStep3PersonnelInfo() {
 		List<SmPersonnel> deletedPersonnels = new ArrayList<SmPersonnel>();
-		
+
 		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
 			getManagedBean().getSmAppl().setSmPersonnels(
 					new ArrayList<SmPersonnel>());
@@ -1959,7 +1959,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
 				|| sc.hasRoleUser(RoleCode.FL_USER.value())
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 			getManagedBean().setSupplierUser(true);
 			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
