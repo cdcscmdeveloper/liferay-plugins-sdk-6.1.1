@@ -23,7 +23,8 @@
 			
 			<p:column style="width:2%" selectionMode="multiple" />
 			
-			<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+			<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">.
+				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:selectOneMenu required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.projDtls.mainCat']}" 
 					id="catCodeLvl1" value="#{cat.catLvl1}"
 					style="width: 460px;margin-bottom: 5px;">
@@ -33,7 +34,6 @@
 						itemValue="#{catL1.categoryL1Id}" />
 					<p:ajax event="change" process="@this" update="catCodeLvl2,catCodeLvl3" />
 				</p:selectOneMenu>
-				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
