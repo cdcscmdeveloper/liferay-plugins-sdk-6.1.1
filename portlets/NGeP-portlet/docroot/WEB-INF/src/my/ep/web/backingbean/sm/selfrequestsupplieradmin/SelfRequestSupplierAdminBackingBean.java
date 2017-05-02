@@ -311,7 +311,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 					else {
 						getManagedBean().setDisabledNextBtn(true);
 						fullMsg.append(SmCommonUtil.getMessage(
-								"lbl.sm.selfrequest.msg.click.login", null));
+								"lbl.sm.selfrequest.msg.click.login",
+								new String[] { SmCommonUtil
+										.getPortalLoginPage() }));
 					}
 				}
 			}
