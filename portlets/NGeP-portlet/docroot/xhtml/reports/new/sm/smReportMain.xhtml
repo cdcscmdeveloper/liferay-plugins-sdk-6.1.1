@@ -195,6 +195,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_073_collection_classification_code_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCategoryOverlappingRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_076_category_overlap_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfUsers}">
 					<ui:include src="/xhtml/reports/new/sm/SM_060_users_softcert_req.xhtml"></ui:include>
 				</c:if>
