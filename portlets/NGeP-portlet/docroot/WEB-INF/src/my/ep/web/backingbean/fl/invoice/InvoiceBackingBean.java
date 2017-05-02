@@ -1894,6 +1894,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			
 			Map<String, TreeNode> lvl1TaxMapTree = new HashMap<String, TreeNode>();
 			Map<String, TreeNode> lvl2TaxMapTree = new HashMap<String, TreeNode>();
+			Map<String, TreeNode> lvl2OosMapTree = new HashMap<String, TreeNode>();
 			Map<String, InvoiceChargeLineVO> lvl3TaxMap = null;
 			Map<String, InvoiceChargeLineVO> lvl3OosMap = null;
 			Map<String, TreeNode> lvl1OOSMap = new HashMap<String, TreeNode>();
@@ -2000,7 +2001,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 									chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 									chargeLineLv3.setLevel(3);
 									chargeLineLv3.setFlInvoiceItem(invItemLv3);
-									new DefaultTreeNode(chargeLineLv3, lvl2TaxMapTree.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()));
+									new DefaultTreeNode(chargeLineLv3, lvl2OosMapTree.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()));
 									lvl3OosMap.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(), chargeLineLv3);
 									grandTotalOosAmt = grandTotalOosAmt.add(invItemLv3.getInvAmt());	
 								}
@@ -2018,7 +2019,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						chargeLineLv2.setLevel(2);
 						chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
 						lv2OosTreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
-						lvl2TaxMapTree.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv2OosTreeNode);
+						lvl2OosMapTree.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv2OosTreeNode);
 						if(lvl3OosMap == null){
 							lvl3OosMap = new HashMap<String, InvoiceChargeLineVO>();
 						}else{
