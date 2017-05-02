@@ -39,7 +39,7 @@ public class GstRegSupplierRptBackingBean extends
 		params.put(SmReportConst.PARAM_ZONE,
 				getManagedBean().getZone() == null ? StringUtils.EMPTY
 						: getManagedBean().getZone());
-		if (StringUtils.isBlank(getManagedBean().getSupplierType())) {
+		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 					.getSupplierType());
 		}
