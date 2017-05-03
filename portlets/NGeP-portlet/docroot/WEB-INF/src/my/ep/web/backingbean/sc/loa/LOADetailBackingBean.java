@@ -1551,6 +1551,7 @@ public class LOADetailBackingBean extends
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
+		log.info("supplierAddress" + supplierAddress);
 		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
@@ -1564,6 +1565,7 @@ public class LOADetailBackingBean extends
 			}
 			supplierAddressTable.append("</table>");
 		}
+		log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
 		
 

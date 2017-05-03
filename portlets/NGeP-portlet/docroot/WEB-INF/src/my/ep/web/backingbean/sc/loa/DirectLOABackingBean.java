@@ -7087,7 +7087,7 @@ public class DirectLOABackingBean extends
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
-		
+		log.info("supplierAddress" + supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
 			String[] address = supplierAddress.split("\r\n");
@@ -7100,6 +7100,7 @@ public class DirectLOABackingBean extends
 			}
 			supplierAddressTable.append("</table>");
 		}
+		log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
 
 		String headerTitle = "";
