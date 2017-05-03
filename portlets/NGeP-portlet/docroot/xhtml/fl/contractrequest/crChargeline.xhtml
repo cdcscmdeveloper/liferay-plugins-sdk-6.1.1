@@ -355,7 +355,7 @@
 					<p:selectOneMenu id="somAccType" style="width:205px" rendered="#{!contractRequestBackingBean.managedBean.espkb}"
 							value="#{contractRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
+								itemValue="#{null}"/>
 							<f:selectItems
 								value="#{contractRequestBackingBean.retrieveAccountType()}"
 								var="parameter" itemLabel="#{parameter.codeName}"
@@ -392,7 +392,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.go.search.gen.obj.code']}"></p:outputLabel></td>
 				<td>
-					<p:selectOneMenu id="somGoCode"  style="width:205px" rendered="#{!contractRequestBackingBean.managedBean.espkb}" 
+					<p:selectOneMenu id="somGoCode"  style="width:205px"
 							disabled="#{empty contractRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType 
 							or empty contractRequestBackingBean.managedBean.glAccountSearchBean.selectedAccClass}"
 							value="#{contractRequestBackingBean.managedBean.glAccountSearchBean.selectedGenObjCode}">
@@ -401,13 +401,13 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@this" />
 						</p:selectOneMenu>	
-						<p:inputText value="#{lbl['lbl.txt.na']}" rendered="#{contractRequestBackingBean.managedBean.espkb}" size="50" disabled="true"/>
 				</td>	
 				<td>&#160;</td>		
 			</tr>
 		
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']} / #{lbl['lbl.fl.gosodo']}"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']} / #{lbl['lbl.fl.gosodo']}" rendered="#{!contractRequestBackingBean.managedBean.espkb}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.glaccount.desc.espkb']}" rendered="#{contractRequestBackingBean.managedBean.espkb}"/></td>
 				<td><p:inputText
 						value="#{contractRequestBackingBean.managedBean.glAccountSearchBean.accountName}"
 						size="50"
