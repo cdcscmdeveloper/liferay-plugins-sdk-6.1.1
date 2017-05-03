@@ -3939,7 +3939,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	public SelectItem[] retrieveGoCodeList() {
 		log.info("retrieveGoCodeList");
-		SelectItem[] items = null;		
+		SelectItem[] items = null;	
+		if(getManagedBean().isEspkb()){
+			getManagedBean().getGlAccountSearchBean().setSelectedAccClass("00");
+			getManagedBean().getGlAccountSearchBean().setSelectedAccType("0");
+		}
 		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccClass())) {
 			IObjectSO objectSO = null;
 			try {
@@ -4005,7 +4009,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				log.debug("pageChangeListener");
 			}
 			IGlAccountSO glAccountSO;
-
 			try {
 				//ISearchBean<PmGlAccount> searchBeanData = getSearchBeanData(searchBean);
 				GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
