@@ -2902,6 +2902,7 @@ public class LOIDetailBackingBean extends
 			} else {
 				supplierAddress = "&lt;&lt;Address&gt;&gt;";
 			}
+			log.info("supplierAddress" + supplierAddress);
 			//context.put("supplierAddress", supplierAddress);
 			StringBuilder supplierAddressTable = null;
 			if(StringUtils.isNotBlank(supplierAddress)){
@@ -2915,6 +2916,7 @@ public class LOIDetailBackingBean extends
 				}
 				supplierAddressTable.append("</table>");
 			}
+			log.info("SupplierAddressTable" + supplierAddressTable);
 			context.put("supplierAddressTable", supplierAddressTable);
 
 			String title = scLoiLoa.getTitle();
