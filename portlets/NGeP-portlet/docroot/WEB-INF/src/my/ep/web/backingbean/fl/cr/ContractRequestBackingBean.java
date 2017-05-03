@@ -5294,8 +5294,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public List<PmParameterDesc> retrieveAccountType() {
 		log.info("retrieveAccountType");
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
-				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
+			return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
 	}
 	
 	public void onChangeAccType(){
@@ -5357,7 +5357,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public SelectItem[] retrieveGoCodeList() {
 		log.info("retrieveGoCodeList");
-		SelectItem[] items = null;		
+		SelectItem[] items = null;
+		if(getManagedBean().isEspkb()){
+			getManagedBean().getGlAccountSearchBean().setSelectedAccClass("00");
+			getManagedBean().getGlAccountSearchBean().setSelectedAccType("0");
+		}
 		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccClass())) {
 			IObjectSO objectSO = null;
 			try {
@@ -5423,7 +5427,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				log.debug("pageChangeListener");
 			}
 			IGlAccountSO glAccountSO;
-
 			try {
 				//ISearchBean<PmGlAccount> searchBeanData = getSearchBeanData(searchBean);
 				GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();

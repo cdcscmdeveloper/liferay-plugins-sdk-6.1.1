@@ -390,7 +390,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.go.search.gen.obj.code']}"></p:outputLabel></td>
 				<td>
-					<p:selectOneMenu id="somGoCode"  style="width:205px" rendered="#{!purchaseRequestBackingBean.managedBean.espkb}"
+					<p:selectOneMenu id="somGoCode"  style="width:205px" 
 							disabled="#{empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType 
 							or empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccClass}"
 							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedGenObjCode}">
@@ -399,13 +399,13 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@this" />
 						</p:selectOneMenu>	
-						<p:inputText value="#{lbl['lbl.txt.na']}" rendered="#{purchaseRequestBackingBean.managedBean.espkb}" size="50" disabled="true"/>
 				</td>	
 				<td>&#160;</td>		
 			</tr>
 		
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']}"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']} / #{lbl['lbl.fl.gosodo']}" rendered="#{!purchaseRequestBackingBean.managedBean.espkb}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.glaccount.desc.espkb']}" rendered="#{purchaseRequestBackingBean.managedBean.espkb}"/> </td>
 				<td><p:inputText
 						value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.accountName}"
 						size="50" /></td>
