@@ -1466,6 +1466,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
 			
 			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+			prBB.initializePRBeans();
 			prBB.getManagedBean().setSubmitButtonStatus(false);
 			prBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
 			

@@ -759,6 +759,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FacesContext fc = FacesContext.getCurrentInstance();
 			
 			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+			prBB.initializePRBeans();
 			prBB.getManagedBean().setSubmitButtonStatus(false);
 			prBB.getManagedBean().setDocProcess(getManagedBean().getStopInstr().getFlRequest().getDocType());
 			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
