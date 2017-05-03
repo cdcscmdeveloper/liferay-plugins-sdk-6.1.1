@@ -2906,7 +2906,7 @@ public class LOIDetailBackingBean extends
 			//context.put("supplierAddress", supplierAddress);
 			StringBuilder supplierAddressTable = null;
 			if(StringUtils.isNotBlank(supplierAddress)){
-				String[] address = supplierAddress.split("\r\n");
+				String[] address = supplierAddress.split(System.getProperty("line.separator"));
 				supplierAddressTable = new StringBuilder();
 				supplierAddressTable.append("<table border='0' cellspacing='0' cellpadding='0' width='100%'>");
 				for (String suppAddr : address) {
