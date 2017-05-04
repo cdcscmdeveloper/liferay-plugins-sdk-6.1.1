@@ -1557,13 +1557,10 @@ public class LOADetailBackingBean extends
 		if(StringUtils.isNotBlank(supplierAddress)){
 			String[] address = supplierAddress.split(System.getProperty("line.separator"));
 			supplierAddressTable = new StringBuilder();
-			supplierAddressTable.append("<table border='0' cellspacing='0' cellpadding='0' width='100%'>");
 			for (String suppAddr : address) {
-				supplierAddressTable.append("<tr><td>");
 				supplierAddressTable.append(suppAddr);
-				supplierAddressTable.append("</td></tr>");
+				supplierAddressTable.append("<br />");
 			}
-			supplierAddressTable.append("</table>");
 		}
 		log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
