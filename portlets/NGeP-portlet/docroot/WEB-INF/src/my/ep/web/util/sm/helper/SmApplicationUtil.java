@@ -7433,6 +7433,7 @@ public class SmApplicationUtil {
 									doc.setPmDocument(docCurr.getPmDocument());
 									doc.setFileName(docCurr.getFileName());
 									doc.setFilePath(docCurr.getFilePath());
+									doc.setSmGstSupplier(br.getGst());
 									br.getGst().getSmGstSupplierDocs().add(doc);
 								}
 							}
