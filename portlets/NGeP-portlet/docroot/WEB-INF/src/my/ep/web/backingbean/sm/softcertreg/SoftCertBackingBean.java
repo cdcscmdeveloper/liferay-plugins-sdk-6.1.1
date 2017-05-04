@@ -430,7 +430,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						if (name.endsWith(",")) {
 							name = name.substring(0, name.length() - 1);
 						}
-						params = new String[] { name };
+						params = new String[] {
+								name,
+								SmCommonUtil
+										.getBasePortalAppUrlFromProperties()
+										+ "task-list" };
 					}
 				}
 				renewSesionObject();
