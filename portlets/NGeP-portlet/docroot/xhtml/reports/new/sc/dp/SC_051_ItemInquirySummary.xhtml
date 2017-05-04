@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<table>
+	<table style="width: 100%;">
 		<tr>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.supp.name']}" /></td>
@@ -35,10 +35,13 @@
 					value="#{itemInquirySummaryRptBackingBean.managedBean.docNo}">
 				</p:inputText></td>
 		</tr>
+	</table>
+	
+	<table style="width: 100%;">
 		<tr>
-			<td><p:outputLabel
+			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.rpt.createdDt']}" /></td>
-			<td><p:calendar showOn="button" navigator="true"
+			<td width="15%"><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true" size="9"
 					value="#{itemInquirySummaryRptBackingBean.managedBean.dateFrom}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -47,7 +50,7 @@
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@this" />
 				</p:calendar></td>
-			<td><p:outputLabel
+			<td width="1%"><p:outputLabel
 					value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
 			<td><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
