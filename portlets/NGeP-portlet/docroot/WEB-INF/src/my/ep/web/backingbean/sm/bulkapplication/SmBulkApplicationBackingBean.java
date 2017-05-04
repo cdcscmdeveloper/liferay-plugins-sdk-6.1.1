@@ -622,7 +622,7 @@ public class SmBulkApplicationBackingBean extends
 							SupplierManagementConst.SECTION_REV_ROLE_PO,
 							appl.getSmApplSectionReviews(), "roleType");
 
-			if (appl != null) {
+			if (appl != null && poRev != null) {
 				String companyName = appl.getSmSupplier().getCompanyName();
 				StringBuilder sb = new StringBuilder();
 				sb.append(ResourceBundleUtils.getMessage(
@@ -643,19 +643,16 @@ public class SmBulkApplicationBackingBean extends
 						.getExpirationDate());
 				bulkApplicationVO.setTitle(worklistItemVO.getTitle());
 				bulkApplicationVO.setAppl(appl);
-				if (poRev != null) {
-					bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
-							.getChangedBy()));
-					bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
-					bulkApplicationVO
-							.setPoRecommendation(!StringUtils.isBlank(poRev
-									.getRecommendation())
-									&& poRev.getRecommendation().equals(
-											"APPROVE") ? SmCommonUtil
-									.getMessage("lbl.sm.bulk.approve", null)
-									: SmCommonUtil.getMessage(
-											"lbl.sm.bulk.reject", null));
-				}
+				bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
+						.getChangedBy()));
+				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
+				bulkApplicationVO
+						.setPoRecommendation(!StringUtils.isBlank(poRev
+								.getRecommendation())
+								&& poRev.getRecommendation().equals("APPROVE") ? SmCommonUtil
+								.getMessage("lbl.sm.bulk.approve", null)
+								: SmCommonUtil.getMessage("lbl.sm.bulk.reject",
+										null));
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
 								appl.getSupplierType(), appl.getApplType()));
@@ -721,13 +718,13 @@ public class SmBulkApplicationBackingBean extends
 						bulkApplicationVO.getApprovedCategories().add(cat);
 					}
 				}
-			}
 
-			// return by applStatus
-			if (!StringUtils.isBlank(getManagedBean().getApplStatus())
-					&& !getManagedBean().getApplStatus().equals(
-							poRev.getRecommendation())) {
-				bulkApplicationVO = null;
+				// return by applStatus
+				if (!StringUtils.isBlank(getManagedBean().getApplStatus())
+						&& !getManagedBean().getApplStatus().equals(
+								poRev.getRecommendation())) {
+					bulkApplicationVO = null;
+				}
 			}
 		}
 
