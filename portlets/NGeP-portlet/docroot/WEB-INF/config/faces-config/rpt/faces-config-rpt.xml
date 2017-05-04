@@ -39,4 +39,11 @@
 		<managed-bean-class>my.ep.web.constant.report.CtReportConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+		<description>Dp Report Constants</description>
+		<managed-bean-name>DpReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.DpReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
