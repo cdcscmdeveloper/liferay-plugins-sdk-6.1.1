@@ -23,6 +23,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -885,6 +886,21 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
+				
+				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
+					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+							ParameterConst.CONTRACT_TYPE_MINISTRY);
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				
+				if(fc.hasRoleUser(RoleCode.BPK_CCA.value())){
+					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+							ParameterConst.CONTRACT_TYPE_CENTRAL);
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);		
+				}
+				
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
