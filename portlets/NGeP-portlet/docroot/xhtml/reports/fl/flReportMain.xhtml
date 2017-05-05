@@ -58,10 +58,20 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 			<c:choose>
+				
+				<!-- Ministry Contract -->
+				
 				<c:when
 					test="#{FlReportConst.fl001ContractReq == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/mc/FL001_contractRequest.xhtml"></ui:include>
 				</c:when>
+				<c:when
+					test="#{FlReportConst.fl002PurchaseOrder == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL002_purchaseOrder.xhtml"></ui:include>
+				</c:when>
+				
+				<!-- Others -->
+				
 				<c:when
 					test="#{FlReportConst.fl018ContractReq == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL018_contractRequest.xhtml"></ui:include>
