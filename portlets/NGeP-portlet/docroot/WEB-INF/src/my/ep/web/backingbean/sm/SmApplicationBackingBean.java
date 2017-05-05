@@ -5707,6 +5707,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new sm staff experience object
 	 */
 	public void addShrHldrJobFunction() {
+		assignValReqdToTrue();
 		SmApplicationUtil.addNewPersonnelChildObject(getManagedBean(),
 				getManagedBean().getSelectedShareHolder(),
 				new SmStaffExperience(), "selectedJobFunction",
@@ -5722,6 +5723,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		SmApplicationUtil.assignSelShrHldrJobFunc(exp, getManagedBean());
+		assignValReqdToTrue();
 	}
 
 	/**
@@ -5730,6 +5732,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateJobFunctions() {
 		SmApplicationUtil.addOrUpdateJobFunctions(getManagedBean());
+		assignValReqdToFalse();
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
 	}
 
@@ -5772,6 +5775,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder(),
 				new SmRelatedCompany(), "selectedRelatedCompany",
 				"equiRelCompInfo");
+		assignValReqdToTrue();
 	}
 
 	/**
@@ -5783,6 +5787,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		SmApplicationUtil.assignSelShrHldrRelatedCompany(com, getManagedBean());
+		assignValReqdToTrue();
 	}
 
 	/**
@@ -5792,6 +5797,7 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateRelatedCompanies() {
 		SmApplicationUtil.addOrUpdateRelatedCompanies(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
+		assignValReqdToFalse();
 	}
 
 	/**
@@ -5841,6 +5847,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		SmApplicationUtil.assignSelShrHldrAcademics(aca, getManagedBean());
+		assignValReqdToTrue();
 	}
 
 	/**
@@ -5872,6 +5879,7 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateShrHldrAcademic() {
 		SmApplicationUtil.addOrUpdateShrHldrAcademic(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
+		assignValReqdToFalse();
 	}
 
 	/**
@@ -5898,6 +5906,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		SmApplicationUtil.assignSelShrHldrProfBody(asb, getManagedBean());
+		assignValReqdToTrue();
 	}
 
 	/**
@@ -5919,6 +5928,7 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateShrHldrProfBody() {
 		SmApplicationUtil.addOrUpdateShrHldrProfBody(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
+		assignValReqdToFalse();
 	}
 
 	/**
