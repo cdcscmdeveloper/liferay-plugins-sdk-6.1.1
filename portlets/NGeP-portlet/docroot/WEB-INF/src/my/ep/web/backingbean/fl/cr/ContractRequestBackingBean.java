@@ -1269,7 +1269,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().setEspkbCommitmentNo(resDTO.getCommitmentNo());
 				}
 				
-			}else{
+			}else if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+					&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
+					|| getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				getManagedBean().setShowCommitmentNo(true);
+				ContractResDTO resDTO = contractSO.retrieveAgencyCommitmentNo(reqDTO);
+				if(resDTO.getCommitmentNo() == null){//cater for migrated data if did not patch commitmentNo
+					getManagedBean().setEspkbCommitmentNo("K"+String.format("%1$08d", getManagedBean().getFlRequest().getCtContract().getContractId().longValue())+String.format("%1$08d", getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().longValue()));
+				}else{
+					getManagedBean().setEspkbCommitmentNo(resDTO.getCommitmentNo());
+				}
+			}
+			else{
 				getManagedBean().setShowCommitmentNo(false);
 			}
 			
