@@ -595,21 +595,19 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
 			TreeNode lv2TreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
 			for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
-				if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
-					if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode())) {
-						InvoiceChargeLineVO sameInvItemObj = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode());
-						sameInvItemObj.getFlInvoiceItem().setTotalReceivedQty(sameInvItemObj.getFlInvoiceItem().getTotalReceivedQty().add(invItemLv3.getReceivedQty()));
-						sameInvItemObj.getFlInvoiceItem().setTotalReceivedAmt(sameInvItemObj.getFlInvoiceItem().getTotalReceivedAmt().add(invItemLv3.getReceivedAmt()));
-						lvl3TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(),sameInvItemObj);
-					}else{
-						InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
-						chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
-						chargeLineLv3.setLevel(3);
-						invItemLv3.setTotalReceivedQty(invItemLv3.getReceivedQty());
-						invItemLv3.setTotalReceivedAmt(invItemLv3.getReceivedAmt());
-						chargeLineLv3.setFlInvoiceItem(invItemLv3);
-						lvl3TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(),chargeLineLv3);
-					}
+				if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode())) {
+					InvoiceChargeLineVO sameInvItemObj = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode());
+					sameInvItemObj.getFlInvoiceItem().setTotalReceivedQty(sameInvItemObj.getFlInvoiceItem().getTotalReceivedQty().add(invItemLv3.getReceivedQty()));
+					sameInvItemObj.getFlInvoiceItem().setTotalReceivedAmt(sameInvItemObj.getFlInvoiceItem().getTotalReceivedAmt().add(invItemLv3.getReceivedAmt()));
+					lvl3TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(),sameInvItemObj);
+				}else{
+					InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
+					chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
+					chargeLineLv3.setLevel(3);
+					invItemLv3.setTotalReceivedQty(invItemLv3.getReceivedQty());
+					invItemLv3.setTotalReceivedAmt(invItemLv3.getReceivedAmt());
+					chargeLineLv3.setFlInvoiceItem(invItemLv3);
+					lvl3TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(),chargeLineLv3);
 				}
 			}
 			for(Entry<String, InvoiceChargeLineVO> entrySet : lvl3TaxMap.entrySet()){
