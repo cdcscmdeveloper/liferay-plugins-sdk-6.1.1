@@ -252,7 +252,18 @@ public class QTBriefingSiteVisitBackingBean extends
 					}
 
 				}
+				Long dbStateId = this.getManagedBean().getBsvDBStateId();
+				if(dbStateId != null && !stateId.equals(dbStateId)){
+					ScAddress address = this.getManagedBean().getQtBriefing().getAddress();
+					if(address.getPmDistrict()!= null){
+						address.setPmDistrict(new PmDistrict());
+					}
+					if(address.getPmCity()!= null){
+						address.setPmCity(new PmCity());
+					}
+				}
 			}
+			
 
 		}
 
@@ -836,15 +847,17 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvIndex(index);
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		this.getManagedBean().setBsvType(bsvType);
+		this.getManagedBean().setBsvDBStateId(null);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.show();");
 		retrievePmStateList();
-		
+		ScAddress currentAddress = bsvDtl.getAddress();
+		this.getManagedBean().setBsvDBStateId(currentAddress.getPmState().getStateId());
 		if (super.isQTStatusInBetween(getManagedBean().getCurrentStatusId(), 
 				QTStatusConst.QT_PENDING_PUBLICATION, 
 				QTStatusConst.QT_BRIEFING_SITE_VISIT)){
 			
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
-			ScAddress currentAddress = bsvDtl.getAddress();
+			
 			ScAddress tempPmAddress = new ScAddress();
 			PmStatus currentBsvStatus = bsvDtl.getBsvStatus();
 			try {				
@@ -862,7 +875,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				// PmState
 				tempPmAddress.setPmState(new PmState());
 				tempPmAddress.getPmState().setStateId(currentAddress.getPmState().getStateId());
-
+                 
 				// PmDivision
 				tempPmAddress.setPmDivision(new PmDivision());
 				tempPmAddress.getPmDivision().setDivisionId(currentAddress.getPmDivision().getDivisionId());
