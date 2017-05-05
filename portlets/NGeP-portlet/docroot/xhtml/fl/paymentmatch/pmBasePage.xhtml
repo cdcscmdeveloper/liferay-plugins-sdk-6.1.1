@@ -77,7 +77,7 @@
 					</td>		
 				</c:if>
 				<h:panelGroup id="printButtonPm"
-					rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId != FulfilmentStatusCont.paPendingPaymentMatch}">
+					rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId == FulfilmentStatusCont.paSubmitted}">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypePaymentAdvice,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo,flDocumentManagedBean.taxable)}" />
