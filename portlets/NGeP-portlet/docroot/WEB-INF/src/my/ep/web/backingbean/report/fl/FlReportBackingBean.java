@@ -205,12 +205,21 @@ public abstract class FlReportBackingBean<T extends FlReportManagedBean> extends
 		return sb.toString();
 	}
 	
+	public void onChangePegawaiPengawal(BaseEntity entity) {
+		getManagedBean().setSelectedKumpulanPTJ(null);
+		getManagedBean().setSelectedPTJ(null);
+	}
+	
 	public void onChangeMinistry(BaseEntity entity) {
 		getManagedBean().setSelectedPegawaiPengawal(null);
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
 	}
 
+	public void onChangeJabatan(BaseEntity entity) {
+		getManagedBean().setSelectedPTJ(null);
+	}
+	
 	private LinkedHashMap<String, String> constructParamMap() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		if (getManagedBean().getSelectedMinistry() != null) {
