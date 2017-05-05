@@ -70,6 +70,7 @@
 				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}">
 
+					<ui:include src="SC_043_Financial_Table.xhtml"></ui:include>
 				</c:if>
 
 				<c:if
@@ -84,12 +85,12 @@
 
 				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL}">
-
+                   <ui:include src="SC_046_Proposal_Product.xhtml"></ui:include>
 				</c:if>
 
 				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL}">
-
+                            <ui:include src="SC_047_Proposal_Service.xhtml"></ui:include>
 				</c:if>
 
 				<c:if
