@@ -59,8 +59,8 @@
 			</p:blockUI>
 			<c:choose>
 				<c:when
-					test="#{'FL_001' eq flReportBB.managedBean.reportCode}">
-					<ui:include src="/xhtml/reports/fl/contractRequestReport.xhtml"></ui:include>
+					test="#{FlReportConst.fl001ContractReq == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL001_contractRequest.xhtml"></ui:include>
 				</c:when>
 				<c:when
 					test="#{FlReportConst.fl018ContractReq == flReportBB.managedBean.reportCode}">
