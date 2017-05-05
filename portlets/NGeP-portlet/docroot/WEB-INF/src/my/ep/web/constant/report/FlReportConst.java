@@ -16,6 +16,7 @@ public class FlReportConst implements Serializable {
 	public static final String PARAM_USER_ID = "PUSER";
 	
 	// Ministry Const
+	public static final String FL_001_CONTRACT_REQ = "FL_001";
 	
 	// Central Contract Const
 	public static final String FL_018_CONTRACT_REQ = "FL_018";
@@ -37,6 +38,10 @@ public class FlReportConst implements Serializable {
 	
 	public FlReportConst(){}
 
+	public String getFl001ContractReq() {
+		return FL_001_CONTRACT_REQ;
+	}
+	
 	public String getFl018ContractReq() {
 		return FL_018_CONTRACT_REQ;
 	}

@@ -13,10 +13,10 @@
 				<ac:lov id="lovFlMinistry"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
-					value="#{flReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedMinistry"	
-					postUpdateListener="flReportsBackingBean.onChangeMinistry" 
-					conditionField="#{flReportsBackingBean.constructMinistryConditionFields()}" />
+					value="#{flReportBB.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+					saveObject="flReportBB.managedBean.selectedMinistry"	
+					postUpdateListener="flReportBB.onChangeMinistry" 
+					conditionField="#{flReportBB.constructMinistryConditionFields()}" />
 			</td>
 		</tr>
 		<tr>
@@ -25,11 +25,11 @@
 			<td colspan="3"><ac:lov id="lovPpPegaWaiPengawal"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.pp.pegawai.pengawal']}" readonly="true"
-					disabled="#{flReportsBackingBean.managedBean.selectedMinistry==null or flReportsBackingBean.managedBean.disableOrgFields}"
-					value="#{flReportsBackingBean.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedPegawaiPengawal"
-					postUpdateListener="flReportsBackingBean.onChangePegawaiPengawal"
-					conditionField="#{flReportsBackingBean.constructPegwaiPengawalConditionFields()}" /></td>
+					disabled="#{flReportBB.managedBean.selectedMinistry==null or flReportBB.managedBean.disableOrgFields}"
+					value="#{flReportBB.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
+					saveObject="flReportBB.managedBean.selectedPegawaiPengawal"
+					postUpdateListener="flReportBB.onChangePegawaiPengawal"
+					conditionField="#{flReportBB.constructPegwaiPengawalConditionFields()}" /></td>
 
 		</tr>
 		<tr>
@@ -37,11 +37,11 @@
 			<td colspan="3"><ac:lov id="lovPpKumpulanPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.pp.kumpulan.ptj']}" readonly="true"
-					disabled="#{flReportsBackingBean.managedBean.selectedPegawaiPengawal==null or flReportsBackingBean.managedBean.disableOrgFields}"
-					value="#{flReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedKumpulanPTJ"
-					conditionField="#{flReportsBackingBean.constructKumpulanPTJConditionFields()}"
-					postUpdateListener="flReportsBackingBean.onChangeJabatan" /></td>
+					disabled="#{flReportBB.managedBean.selectedPegawaiPengawal==null or flReportBB.managedBean.disableOrgFields}"
+					value="#{flReportBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+					saveObject="flReportBB.managedBean.selectedKumpulanPTJ"
+					conditionField="#{flReportBB.constructKumpulanPTJConditionFields()}"
+					postUpdateListener="flReportBB.onChangeJabatan" /></td>
 
 		</tr>
 		<tr>
@@ -49,10 +49,10 @@
 			<td colspan="3"><ac:lov id="lovPpPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
 					headerText="#{lbl['lbl.pp.ptj']}" update="@form"
-					disabled="#{flReportsBackingBean.managedBean.selectedKumpulanPTJ==null or flReportsBackingBean.managedBean.disableOrgFields}"
-					value="#{flReportsBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedPTJ"
-					conditionField="#{flReportsBackingBean.constructPTJConditionFields()}" /></td>
+					disabled="#{flReportBB.managedBean.selectedKumpulanPTJ==null or flReportBB.managedBean.disableOrgFields}"
+					value="#{flReportBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+					saveObject="flReportBB.managedBean.selectedPTJ"
+					conditionField="#{flReportBB.constructPTJConditionFields()}" /></td>
 		</tr>
 		<tr>
 			<td>
