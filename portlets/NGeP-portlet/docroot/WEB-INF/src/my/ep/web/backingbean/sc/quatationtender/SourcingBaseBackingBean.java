@@ -116,6 +116,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -2497,6 +2498,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								new String[] { getParameterDesc(
 										deductionType.getParameterType(),
 										deductionType.getParameterCode()) });
+					}
+					for(ScQtDeductionClause clause : deduction.getScQtDeductionClauses()) {
+						if(StringUtils.isBlank(clause.getClauseDesc())) {
+							throw new EpException(MessageConst.ERROR_760451,
+									new String[] { getParameterDesc(
+											deductionType.getParameterType(),
+											deductionType.getParameterCode()) });
+						}
 					}
 				}
 
