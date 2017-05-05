@@ -11,6 +11,7 @@
 
 package my.ep.web.managedbean.report.qt;
 
+import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
 /**
@@ -25,6 +26,7 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	
 	private String quotationNumner;
 	private String quotationId;
+	private ScReportFieldsSearchBean scReportSearchBean=null;
 	/**
 	 * @return the quotationNumner
 	 */
@@ -48,6 +50,18 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	 */
 	public void setQuotationId(String quotationId) {
 		this.quotationId = quotationId;
+	}
+	/**
+	 * @return the scReportSearchBean
+	 */
+	public ScReportFieldsSearchBean getScReportSearchBean() {
+		return scReportSearchBean;
+	}
+	/**
+	 * @param scReportSearchBean the scReportSearchBean to set
+	 */
+	public void setScReportSearchBean(ScReportFieldsSearchBean scReportSearchBean) {
+		this.scReportSearchBean = scReportSearchBean;
 	}
 	
 

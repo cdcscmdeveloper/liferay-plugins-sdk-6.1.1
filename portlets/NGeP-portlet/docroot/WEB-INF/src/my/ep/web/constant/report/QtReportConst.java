@@ -20,6 +20,11 @@ import java.io.Serializable;
 public class QtReportConst implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	public static final String URL_RPT_DATE_ANOTHER_FORMAT = "dd-MMM-yyyy";
+	public static final String EMPTY_VAL = "";
+	public static final String ZERO_VAL = "0";
+	public static final String ONE_VAL = "1";
+	
 	//Report code
 	public static final String SC_QUOT_TENDER_OR_RPT_VAL = "SC_038";
 	public static final String SC_SUMMRY_SRC_OR_RPT_VAL = "SC_039";
@@ -44,6 +49,12 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_REPORT_CODE ="PREPORTID";
 	public static final String QUOTATION_TENDER_ID ="qtid";
 	public static final String QUOTATION_TENDER_ESTIMATED_AMOUNT ="PESTAMT";
+	public static final String PARAM_CREAT_FRM_DT_EQ = "CREAFRDT";
+	public static final String PARAM_CREAT_TO_DT_EQ = "CREATODT";
+	public static final String PARAM_PUB_FRM_DT_EQ = "PUBFRDT";
+	public static final String PARAM_PUB_TO_DT_EQ = "PUBTODT";
+	public static final String PARAM_PROCURE_METHOD_EQ = "PM";
+	public static final String PARAM_PROCURE_STATUS_EQ = "STATUS";
 	
 	
 	/**
