@@ -1558,6 +1558,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private boolean isPtjPresent = true;
     
     private List<ScQtContactPerson> toBeRemovalContactPersonList;
+    private Long bsvDBStateId;
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -9833,6 +9834,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setToBeRemovalContactPersonList(
 			List<ScQtContactPerson> toBeRemovalContactPersonList) {
 		this.toBeRemovalContactPersonList = toBeRemovalContactPersonList;
+	}
+
+	public Long getBsvDBStateId() {
+		return bsvDBStateId;
+	}
+
+	public void setBsvDBStateId(Long bsvDBStateId) {
+		this.bsvDBStateId = bsvDBStateId;
 	}
 
 	
