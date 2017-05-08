@@ -118,7 +118,8 @@
 							partialSubmit="true" process="@this"
 							update="@([id$=procureAllChk],[id$=quotationChk],[id$=tenderChk])" />
 					</p:selectManyCheckbox>
-
+<ui:param name="quNumEnabelDisable" value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL}"></ui:param>
+<c:if test="#{quNumEnabelDisable}">
 					<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"
 						style="margin-top:5px;width:100px;" />
 					<p:inputText id="rptQuotation"
@@ -128,7 +129,7 @@
 							listener="#{cc.attrs.bBean.quotationNumberValidation()}"
 							update="@form" />
 					</p:inputText>
-
+</c:if>
 					<p:outputLabel value="#{lbl['lbl.rpt.status']}"
 						style="margin-top:5px;width:160px;" />
 					<p:selectOneMenu
