@@ -297,7 +297,7 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteOverlapCatDialog.show();");
 	}
-	
+
 	public void onViewOverlapCategory() {
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
@@ -6564,6 +6564,8 @@ public class SmApplicationBackingBean extends
 	public String submitSmApplToBpm(String applType) {
 
 		validateNoChangesBeenMadeToApplication();
+		SmApplicationUtil
+				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
 
 		// try {
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
@@ -7598,6 +7600,10 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil
 				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
 						.getSmAppl().getSmPersonnels());
+
+		SmApplicationUtil
+				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
+
 		log.info(" **** After retrieve ***"
 				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"

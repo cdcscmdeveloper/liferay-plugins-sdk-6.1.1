@@ -2608,6 +2608,16 @@ public class SmApplicationUtil {
 				managedBean.getSmAppl());
 	}
 
+	public static void validateOverlapCategoryJustificationAndSuppDocs(
+			SmApplicationManagedBean bean) {
+		checkOverLappingCategories(bean);
+		if (bean.isOverLappedCategoryExists()
+				&& EntityHelper.isCollectionEmpty(bean.getSmAppl()
+						.getSmCategoryOverlapDocs())) {
+			throw new EpException(MessageConst.ERROR_722654);
+		}
+	}
+
 	public static SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 		SmOverlapCategoryVO retVal = null;
 		if (smAppl != null
