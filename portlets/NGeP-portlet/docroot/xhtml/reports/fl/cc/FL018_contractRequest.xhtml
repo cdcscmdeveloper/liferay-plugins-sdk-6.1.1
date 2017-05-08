@@ -8,72 +8,66 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.ministry']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 			<td colspan="3">
-				<ac:lov id="lovFlMinistry"
-					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
-					value="#{flReportBB.managedBean.selectedMinistry.pmOrgValidity.orgName}"
-					saveObject="flReportBB.managedBean.selectedMinistry"	
-					postUpdateListener="flReportBB.onChangeMinistry" 
-					conditionField="#{flReportBB.constructMinistryConditionFields()}" />
+					<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
+							headerText="#{lbl['lbl.fl.ministry']}" 
+							value="#{crRptBB.managedBean.ministry.orgName}"
+							postUpdateListener="crRptBB.resetPtjGroupProfile()"
+							update=":form:searchPtj"
+							saveObject="crRptBB.managedBean.ministry"
+							conditionField="#{crRptBB.getMinistryCondition()}"
+							>
+						</ac:lov>
 			</td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}"></p:outputLabel>
+			<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}"></p:outputLabel></td>
+			<td colspan="3">
+					<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
+							headerText="#{lbl['lbl.fl.jabatan']}" 
+							value="#{crRptBB.managedBean.ptjGroup.orgName}"
+							postUpdateListener="crRptBB.resetPtjProfile()"
+							update=":form:searchPtj"
+							saveObject="crRptBB.managedBean.ptjGroup"
+							conditionField="#{crRptBB.constuctConditionFieldsForPTJGroup()}"
+							>
+						</ac:lov>
 			</td>
-			<td colspan="3"><ac:lov id="lovPpPegaWaiPengawal"
-					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					headerText="#{lbl['lbl.pp.pegawai.pengawal']}" readonly="true"
-					disabled="#{flReportBB.managedBean.selectedMinistry==null or flReportBB.managedBean.disableOrgFields}"
-					value="#{flReportBB.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
-					saveObject="flReportBB.managedBean.selectedPegawaiPengawal"
-					postUpdateListener="flReportBB.onChangePegawaiPengawal"
-					conditionField="#{flReportBB.constructPegwaiPengawalConditionFields()}" /></td>
 
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}"></p:outputLabel></td>
-			<td colspan="3"><ac:lov id="lovPpKumpulanPTJ"
-					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					headerText="#{lbl['lbl.pp.kumpulan.ptj']}" readonly="true"
-					disabled="#{flReportBB.managedBean.selectedPegawaiPengawal==null or flReportBB.managedBean.disableOrgFields}"
-					value="#{flReportBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
-					saveObject="flReportBB.managedBean.selectedKumpulanPTJ"
-					conditionField="#{flReportBB.constructKumpulanPTJConditionFields()}"
-					postUpdateListener="flReportBB.onChangeJabatan" /></td>
-
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.ptj']}"></p:outputLabel></td>
-			<td colspan="3"><ac:lov id="lovPpPTJ"
-					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
-					headerText="#{lbl['lbl.pp.ptj']}" update="@form"
-					disabled="#{flReportBB.managedBean.selectedKumpulanPTJ==null or flReportBB.managedBean.disableOrgFields}"
-					value="#{flReportBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
-					saveObject="flReportBB.managedBean.selectedPTJ"
-					conditionField="#{flReportBB.constructPTJConditionFields()}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel></td>
+			<td colspan="3">
+					<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
+							headerText="#{lbl['lbl.fl.ptj']}"
+							value="#{crRptBB.managedBean.ptj.orgName}"
+							saveObject="crRptBB.managedBean.ptj"	
+							conditionField="#{crRptBB.getPTJCondition()}"
+							>			
+						</ac:lov>
+			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.contract.no']}"/>
 			</td>
 			<td>
 				<p:inputText maxlength="20"
-					value="#{reportBackingBean.flContractNo}">
+					value="#{crRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
 			
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}" />
+				<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" />
 			</td>
 
 			<td>
 				
 				<p:inputText maxlength="30" id="flphycontractId"
-					label="#{lbl['lbl.rpt.physicalcontractno']}"
-					value="#{reportBackingBean.flPhysicalContractNo}">
+					label="#{lbl['lbl.fl.physical.contract.no']}"
+					value="#{crRptBB.managedBean.physicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true"
 						update="@([id$=Msg])" />
 						
@@ -90,10 +84,10 @@
 		</tr>
 		
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.loaphysicalno']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
 			<td><p:inputText maxlength="100" id="flphyloaId"
-					label="#{lbl['lbl.rpt.loaphysicalno']}"
-					value="#{reportBackingBean.flLoaPhysicalNo}">
+					label="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"
+					value="#{crRptBB.managedBean.pysicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:inputText>&#160;<p:graphicImage id="flphyloa"
@@ -105,11 +99,11 @@
 					display="icon" /></td>
 		
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.contract.req.no']}"/>
 			</td>
 			<td>
 				<p:inputText maxlength="35"
-					value="#{reportBackingBean.flContractRequestNo}">
+					value="#{crRptBB.managedBean.contractRequestNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -117,13 +111,13 @@
 		</tr>
 		
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.loanno']}" /></td>
-			<td><p:inputText maxlength="20" value="#{reportBackingBean.flSst}">
+			<td><p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" /></td>
+			<td><p:inputText maxlength="20" value="#{crRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}"/>
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
@@ -139,7 +133,7 @@
 		
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.requisitionerScreen']}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}"/>
 			</td>
 			<td>
 				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}">
@@ -153,7 +147,7 @@
 			</td>
 			
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.status']}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}"/>
 			</td>
 			
 			<td>

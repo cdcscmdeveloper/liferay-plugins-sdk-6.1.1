@@ -17,7 +17,7 @@ import my.ep.web.managedbean.report.fl.cc.ContractRequestRptManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "crRptBackingBean")
+@ManagedBean(name = "crRptBB")
 @SessionScoped
 public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractRequestRptManagedBean> {
 
@@ -27,7 +27,11 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 	private static final Logger log = EpLogger
 			.getLogger(ContractRequestRptBackingBean.class);
 
-	
+	public ContractRequestRptBackingBean() {
+		if(getManagedBean().getMinistry() == null){
+			defaultPtjAndMinistryValues();
+		}
+	}
 	
 	
 }
