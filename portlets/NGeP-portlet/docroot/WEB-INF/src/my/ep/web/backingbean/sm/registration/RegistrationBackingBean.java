@@ -2707,6 +2707,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setIdentificationNo(null);
 			personnel.setIdentificationTypeId(null);
 		}
+		
+		personnelNationalityOnChange();
 	}
 	
 	private void validateNewIC(SmPersonnel smPersonnel){

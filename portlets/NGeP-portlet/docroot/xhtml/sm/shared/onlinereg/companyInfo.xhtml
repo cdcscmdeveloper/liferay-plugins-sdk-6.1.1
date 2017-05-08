@@ -181,32 +181,28 @@
 							</p:inputText>
 						</c:otherwise>
 					</c:choose> &#160; 
+					<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
 					<c:choose>
 						<c:when
 							test="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryCode eq ParameterConst.countryUnknownCode}">
-							<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
 							<p:tooltip id="ictt" for="icti">
 								<p:outputLabel escape="false" value="#{lbl['tt.sm.mykas']}" />
 							</p:tooltip>
 						</c:when>
 
 						<c:otherwise>
-							
 							<c:choose>
 								<c:when test="#{registrationBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
-									<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />	
 									<p:tooltip id="ictt" for="icti">
 										<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.ic']}" />
 									</p:tooltip>
 								</c:when>
 								
-								<ui:remove>
 								<c:otherwise>
 									<p:tooltip id="ictt" for="icti">
-										<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.icpassport']}" />
+										<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.passport']}" />
 									</p:tooltip>
-								</c:otherwise>
-								</ui:remove>							
+								</c:otherwise>						
 							</c:choose>
 						</c:otherwise>
 					</c:choose> 
