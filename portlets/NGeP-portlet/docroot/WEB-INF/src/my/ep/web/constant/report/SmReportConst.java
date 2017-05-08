@@ -55,6 +55,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_CAT_L3 = "PSUBCATEGORYDIVISION";
 	public static final String PARAM_BUSS_TYPE = "PBUSTYPE";
 	public static final String PARAM_REG_STATUS = "PREGSTATUS";
+	public static final String PARAM_SV_STATUS = "PSITESTATUS";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -153,6 +154,9 @@ public class SmReportConst implements Serializable {
 	
 	public static final String REQUEST_BY_SUPP = "Requested By Supplier";
 	public static final String AUTO_BY_SYS = "Auto Cancelled by System";
+	
+	public static final String PENDING_SV_STATUS = "Pending Prepare Site Visit Report";
+	public static final String SV_COMPLETED_STATUS = "Site Visit Report Completed";
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;
@@ -508,5 +512,13 @@ public class SmReportConst implements Serializable {
 
 	public String getAutoBySys() {
 		return AUTO_BY_SYS;
+	}
+
+	public String getPendingSvStatus() {
+		return PENDING_SV_STATUS;
+	}
+
+	public String getSvCompletedStatus() {
+		return SV_COMPLETED_STATUS;
 	}
 }
