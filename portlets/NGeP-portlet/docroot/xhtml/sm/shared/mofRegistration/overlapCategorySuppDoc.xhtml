@@ -33,7 +33,17 @@
 			</tr>
 			<tr>
 				<td>
-					<h:outputText styleClass="warning" value="#{backingBean.managedBean.overLappedCategoryMsg}" escape="false"/>
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{backingBean.onViewOverlapCategory()}"
+						process="@this"
+						partialSubmit="true" update=":form">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
+					</p:commandLink>
+					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/><br />
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.upload.doc']}" escape="false"/>
 				</td>
 			</tr>
 		</table>
@@ -138,6 +148,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteOverlapCatDialog.hide();" />
 			</div>
 		</p:confirmDialog>
+		
+		<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" />
 		
 	</c:if>
 	

@@ -2589,6 +2589,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
 				.getSmAppl());
+
 		managedBean.setOverLappedCategoryExists(false);
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
@@ -2600,6 +2601,8 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryMsg());
 			managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
 					.getOverLappedCategoryRemarks());
+			managedBean.setOverlapCategoryVOList(overlapCategoryVO
+					.getOverlapCategoryVOList());
 		}
 		initOverlapCategoryDocs(managedBean.isOverLappedCategoryExists(),
 				managedBean.getSmAppl());
@@ -7016,7 +7019,7 @@ public class SmApplicationUtil {
 				reqSO = null;
 			}
 			long dayBal = DateUtils.getDaysDifference(new Date(),
-					smAppl.getDraftExpiryDate())+ 1;
+					smAppl.getDraftExpiryDate()) + 1;
 			String[] dayLeftParam = { dayBal + "" };
 			Date saveDate = smAppl.getApplSaveDate() == null ? smAppl
 					.getChangedDate() : smAppl.getApplSaveDate();
@@ -9103,8 +9106,8 @@ public class SmApplicationUtil {
 	public static PmStatusDesc getCurrRegStatusDesc(SmAppl appl) {
 		PmStatusDesc retVal = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		
-		try{
+
+		try {
 			if (appl != null
 					&& appl.getSmSupplier() != null
 					&& appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
@@ -9121,10 +9124,10 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-		}catch(Exception ex){
-			
+		} catch (Exception ex) {
+
 		}
-		
+
 		return retVal;
 	}
 

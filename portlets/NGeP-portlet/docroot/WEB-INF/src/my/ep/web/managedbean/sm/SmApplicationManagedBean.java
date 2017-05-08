@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -502,6 +503,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal gstAmount;
 	private String gstPercentageLabels;
 	private List<PmReasonDesc> selectedPmReasonDescs;
+	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	private String searchRejectReason;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
 
@@ -3926,5 +3928,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAuthVO(SmAuthorizedPersonnelCountVO authVO) {
 		this.authVO = authVO;
+	}
+
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
+		return overlapCategoryVOList;
+	}
+
+	public void setOverlapCategoryVOList(
+			List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+		this.overlapCategoryVOList = overlapCategoryVOList;
 	}
 }
