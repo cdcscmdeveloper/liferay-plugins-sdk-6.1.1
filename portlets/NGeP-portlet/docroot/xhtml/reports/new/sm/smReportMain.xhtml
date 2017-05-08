@@ -75,6 +75,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_012_daily_reg_appl_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smSupplStatByCategoryRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_014_supp_stat_category_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smTotNumDailyApplRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_015_total_daily_appl_rpt.xhtml"></ui:include>
 				</c:if>
@@ -97,6 +101,10 @@
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfflineSuppDocRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_043_offline_supp_doc_pend_sub_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfCompanySuptypeRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_045_comp_supp_type_reg_status_rpt.xhtml"></ui:include>
 				</c:if>
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfCompDirOwnCeoRptVal}">
