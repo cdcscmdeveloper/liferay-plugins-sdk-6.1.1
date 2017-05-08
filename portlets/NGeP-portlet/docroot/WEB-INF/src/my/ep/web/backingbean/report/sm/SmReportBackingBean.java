@@ -10,11 +10,6 @@ import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
@@ -24,6 +19,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -32,6 +28,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -44,6 +41,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.CategoryRptVO;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		extends ReportBaseBackingBean<T> {
@@ -375,6 +377,26 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return SmCommonUtil.getDistrictList(stateId);
 	}
 
+	public List<SelectItem> retrieveRegistrationStatusList() {
+		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO)
+				.getStatusDescList();
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		SelectItem item = null;
+		for (PmStatusDesc sd : descList) {
+			if (sd.getPmStatus() != null
+					&& !StringUtils.isBlank(sd.getStatusName())) {
+				item = new SelectItem();
+				item.setLabel(sd.getStatusName());
+				item.setValue(sd.getPmStatus().getStatusId());
+				items.add(item);
+			}
+		}
+		return items;
+	}
+
 	public void addSelectedPaymentTypeParam(LinkedHashMap<String, String> params) {
 		if (getManagedBean().getSelectedPaymentTypes().size() > 0) {
 			for (String paymentType : getManagedBean()
@@ -446,7 +468,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		return processingOfficerList;
 	}
-	
+
 	/**
 	 * Retriev category list by supplier type.
 	 * 
@@ -458,30 +480,30 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		log.info("ReportBackingBean-retrievCategoryListBySupplierType");
 
 		// to clear the category drop down value
-/*		for (SmSupplierCategory cat : this.getSelectedCatList()) {
-			cat.setPmCategoryL1(new PmCategoryL1());
-			cat.setPmCategoryL2(new PmCategoryL2());
-			cat.setPmCategoryL3(new PmCategoryL3());
-		}*/
+		/*
+		 * for (SmSupplierCategory cat : this.getSelectedCatList()) {
+		 * cat.setPmCategoryL1(new PmCategoryL1()); cat.setPmCategoryL2(new
+		 * PmCategoryL2()); cat.setPmCategoryL3(new PmCategoryL3()); }
+		 */
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
 						ICategoryCodeSO.class);
 		CategoryCodeResDTO catCodeResDTO = new CategoryCodeResDTO();
-		if(StringUtils.isNotBlank(getManagedBean().getSupplierType())){
+		if (StringUtils.isNotBlank(getManagedBean().getSupplierType())) {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			if(StringUtils.isNotBlank(getManagedBean().getSupplierType())){
+			if (StringUtils.isNotBlank(getManagedBean().getSupplierType())) {
 				reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
 			}
-			
+
 			catCodeResDTO = reqSO.retrieveCategoryL1ListBySupplierType(reqDTO);
 
-		}else{
+		} else {
 			catCodeResDTO = reqSO.retrieveCategoryL1List();
 		}
-		
+
 		return catCodeResDTO.getCategoryL1List();
 	}
-	
+
 	/**
 	 * retrieve Lvl2 Category list.
 	 * 
@@ -490,19 +512,21 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	 * @return the categoryL2List
 	 */
 	public List<PmCategoryL2> retrieveL2CategoryLs(Long categoryL1Id) {
-		if(categoryL1Id != null){
+		if (categoryL1Id != null) {
 			ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-					.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+					.getInstance().getServiceObject(
+							ReportConst.PM_MODULE_SER_OBJ,
 							ICategoryCodeSO.class);
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			reqDTO.setCategoryL1Id(categoryL1Id);
-			CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
+			CategoryCodeResDTO resDTO = reqSO
+					.retrieveCategoryL2ListByL1Id(reqDTO);
 			return resDTO.getCategoryL2List();
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * retrieve Lvl2 Category list.
 	 * 
@@ -511,58 +535,67 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	 * @return the categoryL3List
 	 */
 	public List<PmCategoryL3> retrieveL3CategoryLs(Long categoryL2Id) {
-		if(categoryL2Id != null){
+		if (categoryL2Id != null) {
 			ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-					.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+					.getInstance().getServiceObject(
+							ReportConst.PM_MODULE_SER_OBJ,
 							ICategoryCodeSO.class);
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			reqDTO.setCategoryL2Id(categoryL2Id);
-			CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+			CategoryCodeResDTO resDTO = reqSO
+					.retrieveCategoryL3ListByL2Id(reqDTO);
 			return resDTO.getCategoryL3List();
 		}
-		
+
 		return null;
 	}
-	
-	public void addCategory(){
-		if(getManagedBean().getCategoryLs() == null){
+
+	public void addCategory() {
+		if (getManagedBean().getCategoryLs() == null) {
 			getManagedBean().setCategoryLs(new ArrayList<CategoryRptVO>());
 		}
-		
-		if(getManagedBean().getSelectedCategoryLs() != null){
-			getManagedBean().setSelectedCategoryLs(new ArrayList<CategoryRptVO>());
+
+		if (getManagedBean().getSelectedCategoryLs() != null) {
+			getManagedBean().setSelectedCategoryLs(
+					new ArrayList<CategoryRptVO>());
 		}
-		
+
 		getManagedBean().getCategoryLs().add(new CategoryRptVO());
 	}
 
-	public void removeCategory(){
-		if(getManagedBean().getSelectedCategoryLs().size() > 0){
-			getManagedBean().getCategoryLs().removeAll(getManagedBean().getSelectedCategoryLs());
+	public void removeCategory() {
+		if (getManagedBean().getSelectedCategoryLs().size() > 0) {
+			getManagedBean().getCategoryLs().removeAll(
+					getManagedBean().getSelectedCategoryLs());
 		}
 	}
-	
-	public void addCategoryParam(LinkedHashMap<String, String> params){
+
+	public void addCategoryParam(LinkedHashMap<String, String> params) {
 		List<String> lvl1Ls = new ArrayList<String>();
 		List<String> lvl2Ls = new ArrayList<String>();
 		List<String> lvl3Ls = new ArrayList<String>();
-		
-		if(getManagedBean().getCategoryLs() != null && getManagedBean().getCategoryLs().size() > 0){
-			for(CategoryRptVO catVO : getManagedBean().getCategoryLs()){
-				if(catVO.getCatLvl1() == null){
+
+		if (getManagedBean().getCategoryLs() != null
+				&& getManagedBean().getCategoryLs().size() > 0) {
+			for (CategoryRptVO catVO : getManagedBean().getCategoryLs()) {
+				if (catVO.getCatLvl1() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780047);
 				}
-				
+
 				lvl1Ls.add(catVO.getCatLvl1().toString());
-				lvl2Ls.add(catVO.getCatLvl2() == null ? "null" : catVO.getCatLvl2().toString());
-				lvl3Ls.add(catVO.getCatLvl3() == null ? "null" : catVO.getCatLvl3().toString());
+				lvl2Ls.add(catVO.getCatLvl2() == null ? "null" : catVO
+						.getCatLvl2().toString());
+				lvl3Ls.add(catVO.getCatLvl3() == null ? "null" : catVO
+						.getCatLvl3().toString());
 			}
 
-			params.put(SmReportConst.PARAM_CAT_L1, StringUtils.join(lvl1Ls, ","));
-			params.put(SmReportConst.PARAM_CAT_L2, StringUtils.join(lvl2Ls, ","));
-			params.put(SmReportConst.PARAM_CAT_L3, StringUtils.join(lvl3Ls, ","));
+			params.put(SmReportConst.PARAM_CAT_L1,
+					StringUtils.join(lvl1Ls, ","));
+			params.put(SmReportConst.PARAM_CAT_L2,
+					StringUtils.join(lvl2Ls, ","));
+			params.put(SmReportConst.PARAM_CAT_L3,
+					StringUtils.join(lvl3Ls, ","));
 		}
 	}
-	
-	
+
 }

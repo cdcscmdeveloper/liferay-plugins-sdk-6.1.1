@@ -45,6 +45,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String capitalLabel;
 	private String capitalShareFrom;
 	private String capitalShareTo;
+	private Long regStatus;
+	private List<SelectItem> regStatusLs;
 
 	private List<SelectItem> applStatusList;
 	private List<SelectItem> stateLst;
@@ -368,5 +370,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		} else {
 			return currYear;
 		}
+	}
+
+	public Long getRegStatus() {
+		return regStatus;
+	}
+
+	public void setRegStatus(Long regStatus) {
+		this.regStatus = regStatus;
+	}
+
+	public List<SelectItem> getRegStatusLs() {
+		return regStatusLs;
+	}
+
+	public void setRegStatusLs(List<SelectItem> regStatusLs) {
+		this.regStatusLs = regStatusLs;
 	}
 }
