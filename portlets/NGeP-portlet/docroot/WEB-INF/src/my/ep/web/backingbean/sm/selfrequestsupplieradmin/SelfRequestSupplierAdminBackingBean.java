@@ -21,6 +21,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
@@ -157,16 +158,16 @@ public class SelfRequestSupplierAdminBackingBean extends
 					.add(getManagedBean().getSelectedAdminPermAddr());
 		}
 
+		boolean isSoftcertCatlogueReqd = (getManagedBean().getSupplier()
+				.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT) || (getManagedBean()
+				.getSupplier().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !getManagedBean()
+				.getSupplier().getSmAppl().getSmCompanyBasic().isWithFederal())) ? false
+				: true;
+
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
-		// to set the softcert Flag all supplier type will mark to
-		// "SOFT_CERT_PENDING_REQ", except supplier type is "Consultant"
-		if (!getManagedBean().getSupplier().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			getManagedBean().getSelectedAdmin().setSoftcertFlg(
-					SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-		} else {
-			getManagedBean().getSelectedAdmin().setSoftcertFlg(0);
-		}
+		reqDTO.setSoftcertCatalogueReqd(isSoftcertCatlogueReqd);
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setBaseUrl(SmCommonUtil.getBasePortalUrl());
