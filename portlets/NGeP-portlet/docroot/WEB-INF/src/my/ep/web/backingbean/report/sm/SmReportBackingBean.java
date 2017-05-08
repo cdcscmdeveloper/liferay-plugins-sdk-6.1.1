@@ -598,4 +598,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 
+	public void resetCategory(){
+		getManagedBean().setSelectedCategoryLs(null);
+		getManagedBean().setCategoryLs(null);
+	}
 }
