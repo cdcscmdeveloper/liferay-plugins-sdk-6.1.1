@@ -32,7 +32,6 @@ public class FlReportMainBackingBean extends FlReportBackingBean<FlReportMainMan
 	public void preRenderView() {
 		log.info("preRenderView");
 		this.renewSesionObject();
-		
 		retrieveReportCategoryListByModuleCode(ModuleCodeConst.ORDER_FULFILLMENT
 				.toUpperCase());
 		
@@ -40,5 +39,6 @@ public class FlReportMainBackingBean extends FlReportBackingBean<FlReportMainMan
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_FLREPORT);
 	}
+	
 	
 }
