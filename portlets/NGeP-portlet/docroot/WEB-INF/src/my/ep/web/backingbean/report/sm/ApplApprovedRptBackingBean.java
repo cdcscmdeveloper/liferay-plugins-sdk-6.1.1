@@ -29,12 +29,6 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		retrieveReportValueFromDb();
 		
-		log.info("Date From>>>>>>" + getManagedBean().getDateFrom());
-		log.info("Date To>>>>>>" + getManagedBean().getDateTo());
-		log.info("Mof No>>>>>>" + getManagedBean().getMofNo());
-		log.info("Org Profile>>>>>>" + getManagedBean().getSelectedOrgProfile());
-		log.info("Zone>>>>>>" + getManagedBean().getZone());
-		
 		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
