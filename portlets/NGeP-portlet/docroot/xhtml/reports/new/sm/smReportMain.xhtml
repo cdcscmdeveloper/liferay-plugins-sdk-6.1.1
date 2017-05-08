@@ -60,7 +60,7 @@
 				</c:if>
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRegCompanyInMofRptVal}">
-					<ui:include src="/xhtml/reports/new/sm/SM_001_profile_of_reg_company.xhtml"></ui:include>
+					<ui:include src="/xhtml/reports/new/sm/SM_001_profile_of_reg_company_rpt.xhtml"></ui:include>
 				</c:if>
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smTotNumYearlyApplRptVal}">
@@ -217,6 +217,26 @@
 
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smListOfMofCancellationRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_051_delete_mof_acc_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCatStaticByStateRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_004_category_stat_state_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smCatStaticByYearRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_003_category_stat_year_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplPendSiteVisitRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_008_appl_pending_site_visit_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smSiteVisitApplRequireRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_029_appl_require_site_visit_rpt.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smSiteVisitApplPerformedRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_031_site_visit_status_rpt.xhtml"></ui:include>
 				</c:if>
 			</p:panel>
 		</p:outputPanel>
