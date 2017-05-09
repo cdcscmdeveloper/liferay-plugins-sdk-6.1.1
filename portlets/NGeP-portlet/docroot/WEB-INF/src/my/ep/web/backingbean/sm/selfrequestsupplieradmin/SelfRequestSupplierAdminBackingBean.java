@@ -30,6 +30,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "selfRequestSupplierAdminBackingBean")
@@ -41,6 +42,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 4774616656344235966L;
+	private static Logger log = Logger
+			.getLogger(SelfRequestSupplierAdminBackingBean.class);
 
 	private static final String COMPANY_VALIDATION_PAGE = "1";
 	private static final String SUPP_ADMIN_PERSONNEL_PAGE = "2";
@@ -165,6 +168,11 @@ public class SelfRequestSupplierAdminBackingBean extends
 				.getSupplier().getSmAppl().getSmCompanyBasic().isWithFederal())) ? false
 				: true;
 
+		log.info(">>>>>>>>>>>>>>>>>>SELF REQUEST IS SOFTCERT CATALOGUE REQD ("
+				+ isSoftcertCatlogueReqd + ")FOR SUPPLIER:"
+				+ getManagedBean().getSupplier().getCompanyName()
+				+ "<<<<<<<<<<<<<<<<<<<");
+		
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
 		reqDTO.setSoftcertCatalogueReqd(isSoftcertCatlogueReqd);
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
