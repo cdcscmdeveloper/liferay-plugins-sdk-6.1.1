@@ -35,9 +35,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+
+import com.sun.faces.util.CollectionsUtils;
 
 @ManagedBean(name = "pmGoSearchBackingBean")
 @ViewScoped
@@ -82,14 +85,21 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		getManagedBean().setSelectedAccClass(null);
 		getManagedBean().setSelectedAccType(null);
 		getManagedBean().setSelectedGenObjCode(null);
+		retrieveAccountType();
+		retrieveAccountClass();
 		getPmGoDataModel().resetData();
 	}
 	
 	
 	public List<PmParameterDesc> retrieveAccountType() {
 		log.info("retrieveAccountType");
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+		List<PmParameterDesc> accountTypeList = ParameterHelper.getInstance().getParameterDescListBySearchBean(
 				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
+		if(CollectionUtils.isNotEmpty(accountTypeList) && accountTypeList.size() == 1){
+			getManagedBean().setAccTypeDisabled(true);
+			getManagedBean().setSelectedAccType(accountTypeList.get(0).getCodeName());
+		}
+		return accountTypeList;
 	}
 
 	public SelectItem[] retrieveAccountClass() {
@@ -125,6 +135,11 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 				for (String object : list) {
 					items[i++] = new SelectItem(object,
 							object);
+				}
+				
+				if(CollectionUtils.isNotEmpty(list) && list.size() == 1){
+					getManagedBean().setAccClassDisabled(true);
+					getManagedBean().setSelectedAccClass(list.get(0));
 				}
 			} catch (Exception e) {
 				throw new EpException(e.getMessage());
