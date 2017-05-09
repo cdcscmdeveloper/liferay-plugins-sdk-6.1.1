@@ -97,7 +97,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							                  <h:outputText value="#{lbl['lbl.ct.item.type']}" styleClass="required"/>
 							             </f:facet>
 							             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-						                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:110px;">
+						                    <p:selectOneMenu value="#{panelItemsVar.itemTypeId}" style="width:110px;">
 									           <f:selectItems value="#{panelBackingBean.itemTypeValues}"/>
 									           <p:ajax  process="@this"/>
 									         </p:selectOneMenu>
