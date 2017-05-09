@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+ */
 package my.ep.web.backingbean.report.dp;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +28,12 @@ import my.ep.web.managedbean.report.dp.ItemInquiryDetailRptManagedBean;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+/**
+ * The Class ItemInquiryDetailRptBackingBean.
+ *
+ * @author AnJie
+ * @since 03.05.2017
+ */
 @ManagedBean(name = "itemInquiryDetailRptBackingBean")
 @ViewScoped
 public class ItemInquiryDetailRptBackingBean extends DpReportBackingBean<ItemInquiryDetailRptManagedBean>{
@@ -62,10 +78,10 @@ public class ItemInquiryDetailRptBackingBean extends DpReportBackingBean<ItemInq
 		
 		retrieveReportValueFromDb();
 		if (getManagedBean().getDateFrom() != null) {
-			params.put(DpReportConst.PARAM_PI_FROM_DATE, df.format(getManagedBean().getDateFrom()));
+			params.put(DpReportConst.PARAM_CREATED_FROM_DATE, df.format(getManagedBean().getDateFrom()));
 		}
 		if (getManagedBean().getDateTo() != null) {
-			params.put(DpReportConst.PARAM_PI_TO_DATE, df.format(getManagedBean().getDateTo()));
+			params.put(DpReportConst.PARAM_CREATED_TO_DATE, df.format(getManagedBean().getDateTo()));
 		}
 		if (getManagedBean().getStatus() != null) {
 			params.put(DpReportConst.PARAM_STATUS, getManagedBean().getStatus().toString());
