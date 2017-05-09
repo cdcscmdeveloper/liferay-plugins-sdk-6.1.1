@@ -2640,6 +2640,7 @@ public class SmApplicationUtil {
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
 			reqDTO.setApplId(smAppl.getApplId());
+			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -2822,6 +2823,7 @@ public class SmApplicationUtil {
 					}
 					voSubTmp.setRegNo(arr[7] + "");
 					voSubTmp.setApplNo(arr[8] + "");
+					voSubTmp.setApplStatus(arr[21] + "");
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setApplNo(voSubTmp.getApplNo());
 					SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
