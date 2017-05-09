@@ -64,9 +64,12 @@
 			value="#{lbl['lbl.instruction.mandatory']}" />
 
 		<ui:param name="qtNumEnabelDisable"
-			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL}"></ui:param>
+			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL and qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}"></ui:param>
 		<ui:param name="statusEnabelDisable"
 			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRAPOSAL_SUB_LST_OR_RPT_VAL}"></ui:param>
+				<ui:param name="publishDateEnableDisable"
+			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}"></ui:param>
+			
 
 		<table style="width: 100%;">
 			<tr>
@@ -190,7 +193,7 @@
 			</TR>
 		</TABLE>
 
-
+<c:if test="#{publishDateEnableDisable}">
 		<TABLE style="width: 100%;">
 			<TR>
 				<TD class="columnGenClass"><p:outputLabel
@@ -212,5 +215,6 @@
 					</p:calendar></TD>
 			</TR>
 		</TABLE>
+		</c:if>
 	</cc:implementation>
 </ui:component>
