@@ -24,6 +24,8 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private String update;
 	private boolean isLazy;
 	private Long kptjId;
+	private boolean accTypeDisabled;
+	private boolean accClassDisabled;
 	
 	public PmGoSearchManagedBean(){
 		
@@ -167,6 +169,34 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	 */
 	public void setKptjId(Long kptjId) {
 		this.kptjId = kptjId;
+	}
+
+	/**
+	 * @return the accTypeDisabled
+	 */
+	public boolean isAccTypeDisabled() {
+		return accTypeDisabled;
+	}
+
+	/**
+	 * @param accTypeDisabled the accTypeDisabled to set
+	 */
+	public void setAccTypeDisabled(boolean accTypeDisabled) {
+		this.accTypeDisabled = accTypeDisabled;
+	}
+
+	/**
+	 * @return the accClassDisabled
+	 */
+	public boolean isAccClassDisabled() {
+		return accClassDisabled;
+	}
+
+	/**
+	 * @param accClassDisabled the accClassDisabled to set
+	 */
+	public void setAccClassDisabled(boolean accClassDisabled) {
+		this.accClassDisabled = accClassDisabled;
 	}
 	
 	
