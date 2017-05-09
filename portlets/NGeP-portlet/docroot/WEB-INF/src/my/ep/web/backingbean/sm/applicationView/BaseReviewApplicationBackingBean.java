@@ -1960,7 +1960,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				|| sc.hasRoleUser(RoleCode.FL_USER.value())
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
-				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+				|| sc.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+				|| sc.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
 			getManagedBean().setSupplierUser(true);
 			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
