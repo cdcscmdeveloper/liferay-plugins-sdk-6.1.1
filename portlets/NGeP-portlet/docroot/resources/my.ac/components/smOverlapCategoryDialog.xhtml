@@ -9,7 +9,7 @@
 
 	<cc:interface>
 		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.success.dialog.header']}"/>
-		<cc:attribute name="dialogWidth" default="1200px" />
+		<cc:attribute name="dialogWidth" default="1400px" />
 		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 	</cc:interface>
@@ -65,6 +65,10 @@
 					
 					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.applno']}">
 						<h:outputText value="#{voSub.applNo}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.application.status']}">
+						<h:outputText value="#{voSub.applStatus}" />
 					</p:column>
 					
 				</p:dataTable>
