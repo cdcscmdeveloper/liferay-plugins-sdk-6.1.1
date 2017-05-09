@@ -2824,23 +2824,6 @@ public class SmApplicationUtil {
 					voSubTmp.setRegNo(arr[7] + "");
 					voSubTmp.setApplNo(arr[8] + "");
 					voSubTmp.setApplStatus(arr[21] + "");
-					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-					reqDTO.setApplNo(voSubTmp.getApplNo());
-					SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
-							.retrieveSmApplWithChildByApplNo(reqDTO)
-							.getSmAppl();
-					if (smAppl != null && smAppl.getPmStatus() != null
-							&& smAppl.getPmStatus().getPmStatusDescs() != null) {
-						String applStatus = StringUtils.EMPTY;
-						for (PmStatusDesc pd : smAppl.getPmStatus()
-								.getPmStatusDescs()) {
-							if (pd.getLanguageCode().equals(language)) {
-								applStatus = pd.getStatusName();
-								break;
-							}
-						}
-						voSubTmp.setApplStatus(applStatus);
-					}
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
