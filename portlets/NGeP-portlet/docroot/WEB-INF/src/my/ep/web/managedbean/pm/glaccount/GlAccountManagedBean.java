@@ -31,6 +31,9 @@ public class GlAccountManagedBean extends BaseManagedBean {
 	private String glAccountCode;
 
 	private String glAccountName;
+	
+	private boolean accTypeDisabled;
+	private boolean accClassDisabled;
 
 	private Long status;
 
@@ -128,6 +131,34 @@ public class GlAccountManagedBean extends BaseManagedBean {
 	 */
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	/**
+	 * @return the accTypeDisabled
+	 */
+	public boolean isAccTypeDisabled() {
+		return accTypeDisabled;
+	}
+
+	/**
+	 * @param accTypeDisabled the accTypeDisabled to set
+	 */
+	public void setAccTypeDisabled(boolean accTypeDisabled) {
+		this.accTypeDisabled = accTypeDisabled;
+	}
+
+	/**
+	 * @return the accClassDisabled
+	 */
+	public boolean isAccClassDisabled() {
+		return accClassDisabled;
+	}
+
+	/**
+	 * @param accClassDisabled the accClassDisabled to set
+	 */
+	public void setAccClassDisabled(boolean accClassDisabled) {
+		this.accClassDisabled = accClassDisabled;
 	}
 
 }
