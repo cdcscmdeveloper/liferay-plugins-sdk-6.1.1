@@ -780,7 +780,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 
-				if(panelItem.getItemType() == null || panelItem.getItemType().getParameterId()==null) {
+				if(panelItem.getItemTypeId() == null) {
 					getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.type", 
