@@ -26,16 +26,31 @@ public class DpReportConst implements Serializable {
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_REPORT_ID = "PREPORTID";
-	public static final String PARAM_FROM_DATE = "PFROMDATE";
-	public static final String PARAM_TO_DATE = "PTOMDATE";
+	public static final String PARAM_CREATED_FROM_DATE = "CREAFRDT";
+	public static final String PARAM_CREATED_TO_DATE = "CREATODT";
 	public static final String PARAM_STATUS = "STATUS";
+	public static final String PARAM_SUPPLIER = "SUPP";
 	
 	// SC_050 Item Inquiry Details Report Param
 	public static final String PARAM_GROUP = "PGROUP";
-	public static final String PARAM_SUPPLIER = "SUPP";
+	
 	public static final String PARAM_PI_NO = "PINO";
-	public static final String PARAM_PI_FROM_DATE = "CREAFRDT";
-	public static final String PARAM_PI_TO_DATE = "CREATODT";
+	
+	// SC_069 LOA Report Param
+	public static final String PARAM_SQ_TYPE = "SQTYPE";
+	public static final String PARAM_LOA_NUM = "LOANUM";
+	public static final String PARAM_SQ_NO = "QUOTENO";
+	
+	// SC_067 PID Detail Report Param
+	public static final String PARAM_PID_NO = "PIDNO";
+	public static final String PARAM_CONTRACT_TYPE = "CONTYPE";
+	public static final String PARAM_CONTRACT_NO = "CONNO";
+	public static final String PARAM_CONTRACT_NAME = "CONNM";
+	
+	// SC_056 SC_058 RN Detail / Summary Report Param
+	public static final String PARAM_RN_NO = "RQNO";
+	public static final String PARAM_PROCUREMENT_TYPE = "PROTYPE";
+	
 	// DP Report Code
 	public static final String DP_ITEM_INQUIRY_DETAIL_RPT_VAL = "SC_050";
 	public static final String DP_ITEM_INQUIRY_SUMMURY_RPT_VAL = "SC_051";
