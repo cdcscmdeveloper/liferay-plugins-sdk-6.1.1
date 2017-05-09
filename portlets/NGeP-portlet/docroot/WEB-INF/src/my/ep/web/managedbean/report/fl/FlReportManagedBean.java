@@ -3,8 +3,7 @@
  */
 package my.ep.web.managedbean.report.fl;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import java.util.Date;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
@@ -37,6 +36,9 @@ public abstract class FlReportManagedBean extends ReportBaseManagedBean{
 	private String physicalLoaNo;
 	private String purchaseOrderNo;
 	private String pkpNo;
+	
+	private Date fromDate;
+	private Date toDate;
 	
 	public FlReportManagedBean(){}
 
@@ -218,5 +220,21 @@ public abstract class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setPkpNo(String pkpNo) {
 		this.pkpNo = pkpNo;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
 }
