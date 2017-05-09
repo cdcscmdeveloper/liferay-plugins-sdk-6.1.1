@@ -11,11 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.StreamedContent;
-
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -48,6 +43,11 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "sdoReviewBackingBean")
 @RequestScoped
@@ -214,13 +214,17 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
 				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
 				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
-			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
-				setPOJobRoleWeigtage(reqDTO);
+			if(!getManagedBean().getSmAppl().isResubmit()) {
+				String poLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(
+						getManagedBean().getZoneCode(), "UPS_PO", getManagedBean()
+								.getSmAppl().getSupplierType(), getManagedBean()
+								.getSmAppl().getApplType(), getManagedBean()
+								.getSmAppl().getApplCategoryType());
+				((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poLoginIds);				
 			}
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
-			
+			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(resAction);
 			//reqDTO.setSmRemark(smRmk);
@@ -494,32 +498,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				this.receiveStatusChange(doc);
 			}
 		}
-	}
-	
-	private void setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
-		if(!getManagedBean().getSmAppl().isResubmit()) {
-			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
-					.getSmAppl().getSupplierType(), getManagedBean()
-					.getSmAppl().getApplType(), getManagedBean()
-					.getSmAppl().getApplCategoryType());
-			reqDTO.setPmUser(poUser);
-			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
-			
-			Integer jobRatioWeight = SmCommonUtil.getInstance().retrievePoJobTypeWeight(getManagedBean()
-					.getSmAppl().getSupplierType(), getManagedBean()
-					.getSmAppl().getApplType(), getManagedBean()
-					.getSmAppl().getApplCategoryType());
-			long accumelatedWeight = poUser.getPmPoWeightage().getAccumulatedWeight() + jobRatioWeight;
-			long newWeight = poUser.getPmPoWeightage().getNewWeight() + jobRatioWeight;
-			poUser.getPmPoWeightage().setAccumulatedWeight(accumelatedWeight);
-			poUser.getPmPoWeightage().setNewWeight(newWeight);
-
-			reqDTO.setPmUser(poUser);
-		}
-		
-		/*if(reqDTO != null){
-			throw new EpException("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		}*/
 	}
 
 }
