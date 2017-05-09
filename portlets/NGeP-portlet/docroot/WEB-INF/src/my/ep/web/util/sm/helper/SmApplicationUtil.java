@@ -2762,7 +2762,6 @@ public class SmApplicationUtil {
 		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
 
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
-			String language = new FacesScopes().getUserLocale().getLanguage();
 			SmBulkApplOverlapCatVO voTmp = null;
 			SmBulkApplOverlapCatVO voSubTmp = null;
 			SmBulkApplOverlapCatVO voSubRemove = null;
