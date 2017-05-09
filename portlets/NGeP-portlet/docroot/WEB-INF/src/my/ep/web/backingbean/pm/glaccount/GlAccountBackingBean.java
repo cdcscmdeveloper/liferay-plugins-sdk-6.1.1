@@ -38,6 +38,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -233,8 +234,13 @@ public class GlAccountBackingBean extends
 	
 	public List<PmParameterDesc> retrieveAccountType() {
 		log.info("retrieveAccountType");
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+		List<PmParameterDesc> accountTypeList = ParameterHelper.getInstance().getParameterDescListBySearchBean(
 				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
+		if(CollectionUtils.isNotEmpty(accountTypeList) && accountTypeList.size() == 1){
+			getManagedBean().setAccTypeDisabled(true);
+			getManagedBean().getGlAccountSearchBean().setSelectedAccType(accountTypeList.get(0).getCodeName());
+		}
+		return accountTypeList;
 	}
 
 	public SelectItem[] retrieveAccountClass() {
@@ -271,6 +277,12 @@ public class GlAccountBackingBean extends
 					items[i++] = new SelectItem(object,
 							object);
 				}
+				
+				if(CollectionUtils.isNotEmpty(list) && list.size() == 1){
+					getManagedBean().setAccClassDisabled(true);
+					getManagedBean().getGlAccountSearchBean().setSelectedAccClass(list.get(0));
+				}
+				
 			} catch (Exception e) {
 				throw new EpException(e.getMessage());
 			} finally {

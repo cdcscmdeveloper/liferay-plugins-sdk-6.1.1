@@ -13,7 +13,8 @@
 				<td width="30%"><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.type']}"></p:outputLabel></td>
 				<td width="30%">
 					<p:selectOneMenu id="somAccType" style="width:205px"
-							value="#{glAccountBackingBean.managedBean.glAccountSearchBean.selectedAccType}">
+							value="#{glAccountBackingBean.managedBean.glAccountSearchBean.selectedAccType}"
+							disabled="#{glAccountBackingBean.managedBean.accTypeDisabled}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems
@@ -34,7 +35,7 @@
 				<td>
 					<p:selectOneMenu id="somAccClass" 
 							style="width:205px" 
-							disabled="#{empty glAccountBackingBean.managedBean.glAccountSearchBean.selectedAccType}"
+							disabled="#{glAccountBackingBean.managedBean.accClassDisabled}"
 							value="#{glAccountBackingBean.managedBean.glAccountSearchBean.selectedAccClass}">
 							<f:selectItems
 								value="#{glAccountBackingBean.retrieveAccountClass()}" />
