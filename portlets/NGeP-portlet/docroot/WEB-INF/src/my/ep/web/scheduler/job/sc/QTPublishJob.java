@@ -59,7 +59,7 @@ public class QTPublishJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		debugLogger("Start execute ");
+		debugLogger("Start execute from QTPublishJob @"+DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
 
@@ -96,7 +96,7 @@ public class QTPublishJob implements Job {
 			proposalSO = null;
 			noticeBoardSO = null;
 		}
-
+		debugLogger("end execute from QTPublishJob @"+DateUtils.getCurrentDate());
 	}
 
 	private void insertSuppliersAndSendNotification(Long qtId) {
