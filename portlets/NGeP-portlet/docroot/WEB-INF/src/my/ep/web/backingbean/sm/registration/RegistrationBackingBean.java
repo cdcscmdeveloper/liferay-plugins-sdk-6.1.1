@@ -2610,17 +2610,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 			personnel.setPmCountry(country);
-		}else{
-			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			personnel.setPmCountry(defaultNationality);
-			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
-			reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+			
+			//owner.setNationality(country);
+			PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+			personnel.setIdentificationTypeId(identObj.getParameterId());
+			personnel.setIdentificationType(identObj);
 		}
-		
-		//owner.setNationality(country);
-		PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
-		personnel.setIdentificationTypeId(identObj.getParameterId());
-		personnel.setIdentificationType(identObj);
+
 	}
 
 	private void checkMaxBankAccount(){
@@ -2715,16 +2711,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//Validate IC Length
 		PmParameter personnelIDType = ParameterHelper.getInstance().getPmParameterById(smPersonnel.getIdentificationTypeId());
 		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-			String postcode = null;
 			this.validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
 		
 			if(!smPersonnel.getPmCountry().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
-				postcode = getManagedBean().getSmPermenantAdd().getPostcode();
+				SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
+						getManagedBean().getSmPermenantAdd().getPostcode(), null);
+			}else{
+				SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
+						getManagedBean().getSmPermenantAdd().getPostcode(), my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
 			}
-			
-			//validate IC with MyIdentity
-			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
-					postcode, null);
 		}
 		
 	}
