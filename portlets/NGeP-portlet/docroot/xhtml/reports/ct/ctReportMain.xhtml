@@ -53,13 +53,12 @@
 				</td>
 			</tr>
 		</table>	
-
-		<p:outputPanel id="ctReportSearchCriteriaPanel">
-			<p:panel header="#{ctReportBB.managedBean.reportTitle}"
-				rendered="#{!empty ctReportBB.managedBean.reportCode}">
-				
+	
+			<p:panel id="ctReportSearchCriteriaPanel"
+			     header="#{ctReportBB.managedBean.reportTitle}"
+				rendered="#{!empty ctReportBB.managedBean.reportCode}" toggleable="true">
 				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal}">
-					<ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
+				     <ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
 				</c:if>
 				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctFulfilmentStatusRptVal}">
 					<ui:include src="/xhtml/reports/ct/mc/CT018_fulfilmentStatusReport.xhtml"></ui:include>
@@ -85,8 +84,23 @@
 					<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
 				</c:if>
 				
+				
+				<p:commandButton 
+					id="generateBtnId"
+					value="#{lbl['lbl.btn.generate']}"
+					process="@form"   
+					update="@form" 
+					action="#{ctReportBB.generateCTReport()}">
+			</p:commandButton>
+			<p:commandButton 
+					id="resetBtnId"
+					value="#{lbl['lbl.btn.reset']}"
+					process="@this"   
+					update="@form" 
+					action="#{ctReportBB.resetAction()}">
+			</p:commandButton>
+				
 			</p:panel>
-		</p:outputPanel>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
 			width="500px" resizable="false" styleClass="pop_up_top">
 			<h:outputText escape="false" style="float:left;margin-left:5px;"
