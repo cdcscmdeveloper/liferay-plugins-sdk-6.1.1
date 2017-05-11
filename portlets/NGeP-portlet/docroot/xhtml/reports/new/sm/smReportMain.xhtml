@@ -235,6 +235,10 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_029_appl_require_site_visit_rpt.xhtml"></ui:include>
 				</c:if>
 				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smSiteVisitApplOfficerRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_030_svo_site_visit_loc_rpt.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smSiteVisitApplPerformedRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_031_site_visit_status_rpt.xhtml"></ui:include>
 				</c:if>
