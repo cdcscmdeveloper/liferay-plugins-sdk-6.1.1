@@ -1,10 +1,16 @@
 package my.ep.web.backingbean.report.ct;
 
+import java.text.SimpleDateFormat;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ct.CtReportMainManagedBean;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,7 +27,7 @@ public class CtReportMainBackingBean extends CtReportBackingBean<CtReportMainMan
 	
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CtReportMainBackingBean.class);
-	private static final String NAV_TO_CT_REPORT_MAIN = "/xhtml/reports/ct/ctReportMain.xhtml";
+	private static final String NAV_TO_CT_REPORT_MAIN = "/xhtml/reports/ct/ctReportMain.xhtml?faces-redirect=true";
 
 	/**
 	 * The method used to retrieve the information and render it on screen.
@@ -56,6 +62,17 @@ public class CtReportMainBackingBean extends CtReportBackingBean<CtReportMainMan
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
+	}
+	
+	/**
+	 * generateCTReport - Generate CONTRACT MANAGEMENT module reports.
+	 */
+	public void generateCTReport() {
+		log.info("ReportBackingBean-generateCTReport");
+	}
+	
+	public void resetAction(){
+		
 	}
 
 }
