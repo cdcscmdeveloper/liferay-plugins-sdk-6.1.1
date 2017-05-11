@@ -56,7 +56,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
-import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -155,7 +154,6 @@ import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
-import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -6958,8 +6956,9 @@ public class SmApplicationBackingBean extends
 																.getUserLocale())));
 			}
 		}
-		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean(),
-				"SUPPLIER_DECLARE");
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
+				.getSmAppl().getSmApplSupportDocs(), getManagedBean()
+				.getSmAppl(), "SUPPLIER_DECLARE");
 		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
 	}
 
@@ -6968,7 +6967,8 @@ public class SmApplicationBackingBean extends
 	 * list
 	 */
 	public void printSupplierRespondPoInquiry() {
-		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean(),
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
+				.getMissinDocs(), getManagedBean().getSmAppl(),
 				"SUPPIER_RESPOND_PO");
 		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
 	}
