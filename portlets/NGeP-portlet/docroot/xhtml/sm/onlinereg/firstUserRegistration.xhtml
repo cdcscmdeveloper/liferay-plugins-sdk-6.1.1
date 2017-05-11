@@ -225,7 +225,7 @@
 					</td>
 					<td class="tdContent">
 						<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" 
-								disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
+								disabled="true"
 								label="#{lbl['lbl.sm.identificationtype']}" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
 								<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
 								<p:ajax event="change" update="txtIdNumber,pnlUsrInfo"
