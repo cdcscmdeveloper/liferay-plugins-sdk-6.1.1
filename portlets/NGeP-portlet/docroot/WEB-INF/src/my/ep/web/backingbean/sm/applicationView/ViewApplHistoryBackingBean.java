@@ -41,6 +41,10 @@ import org.apache.commons.lang3.StringUtils;
 public class ViewApplHistoryBackingBean extends
 		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 103650277810238429L;
 	public static VirtualCertBackingBean virtualCertInstance;
 	public static CommonApplBackingBean commonApplInstance;
 	public static PmTrackingDiaryBackingBean trackinDiaryInstance;
