@@ -23,6 +23,22 @@
 		}
 	</script>
 	
+	<p:dialog id="docCheckListDlg" widgetVar="docCheckListDlg" modal="true"
+		dynamic="true" resizable="false" width="900px"
+		height="700px" styleClass="pop_up_top" 
+		header="#{lbl['lbl.sm.printchecklist.header']}">
+		<p:media value="#{viewSmApplBackingBean.getOfflineSuppDocCheckList()}" 
+			width="100%" height="700px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td" >
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
+						onclick="docCheckListDlg.hide()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:dialog>
+	
 	<div id="printArea">
 	<p:panel
 		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{viewSmApplBackingBean.managedBean.smAppl.applNo}"
@@ -41,12 +57,23 @@
 		<table style="width: 100%;">
 
 			<tr>
-				<td><p:outputLabel style="float:left"
-						value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> <p:outputLabel
-						style="float:left" value="#{lbl['lbl.sm.suppDoc.offline.note2']}" />
-					<br /> <p:outputLabel style="float:left"
-						value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br /></td>
-
+				<td>
+					<h:outputText style="float:left"
+						value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> 
+					<h:outputText style="float:left"
+						value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br />
+				</td>
+				<ui:remove>
+				<td>
+					<div align="right">
+						<p:commandLink action="#{viewSmApplBackingBean.printDocCheckList}" update="@form"
+						   onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this">
+							<p:graphicImage value="/css/images/design/print.png"
+										style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
+						</p:commandLink>
+					</div>
+				</td>
+				</ui:remove>
 			</tr>
 
 		</table>
