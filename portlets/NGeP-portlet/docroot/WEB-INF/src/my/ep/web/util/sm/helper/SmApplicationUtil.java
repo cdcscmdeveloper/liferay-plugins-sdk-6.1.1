@@ -8685,12 +8685,8 @@ public class SmApplicationUtil {
 	 *            responseType
 	 */
 	public static void generateOfflineSuppDocChecklistPdf(
-			SmApplicationManagedBean bean, String responseType) {
+			List<SmApplSupportDoc> docList, SmAppl smAppl, String responseType) {
 		try {
-			SmAppl smAppl = bean.getSmAppl();
-			List<SmApplSupportDoc> docList = responseType
-					.equals("SUPPIER_RESPOND_PO") ? bean.getMissinDocs()
-					: smAppl.getSmApplSupportDocs();
 			String tmpPath = null;
 			String tmpFolder = SmCommonUtil
 					.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH);

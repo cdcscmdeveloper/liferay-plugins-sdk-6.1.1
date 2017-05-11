@@ -32,6 +32,7 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
+import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -2665,5 +2666,31 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		return categoryFacilityVOList;
+	}
+
+	/**
+	 * Generate Offline Supporting Document Stream Content
+	 * 
+	 * @return StreamedContent
+	 */
+	public StreamedContent getOfflineSuppDocCheckList() {
+		StreamedContent retVal = null;
+		try {
+			retVal = SmCommonUtil
+					.getPdfFileStreamContentByActualPath(SmCommonUtil
+							.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH)
+							+ getManagedBean().getSmAppl().getApplNo()
+							+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX);
+		} catch (IOException e) {
+			throw new EpException(e.getMessage());
+		}
+		return retVal;
+	}
+
+	public void printDocCheckList() {
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
+				.getSmAppl().getSmApplSupportDocs(), getManagedBean()
+				.getSmAppl(), "SUPPLIER_DECLARE");
+		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
 	}
 }
