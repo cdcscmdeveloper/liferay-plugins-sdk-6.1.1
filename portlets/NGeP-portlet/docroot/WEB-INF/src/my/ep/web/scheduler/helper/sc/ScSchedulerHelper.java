@@ -12,6 +12,7 @@ import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleScheduleBuilder;
 import org.quartz.SimpleTrigger;
 import org.quartz.TriggerBuilder;
 
@@ -25,14 +26,14 @@ import org.quartz.TriggerBuilder;
 public class ScSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(ScSchedulerHelper.class);
 	private static ScSchedulerHelper instance;
-	
+
 	/**
 	 * Get singleton of ScSchedulerHelper.
 	 * 
 	 * @return ScSchedulerHelper singleton
 	 */
-	public static ScSchedulerHelper getInstance(){
-		if (instance == null){
+	public static ScSchedulerHelper getInstance() {
+		if (instance == null) {
 			instance = new ScSchedulerHelper();
 		}
 		return instance;
@@ -42,7 +43,7 @@ public class ScSchedulerHelper {
 	 * sSchedule QT Publishing Job
 	 * 
 	 * @param scQt
-	 * 		the ScQt instance
+	 *            the ScQt instance
 	 * @throws SchedulerException
 	 */
 	public void scheduleSimpleQTPublishingJob(ScQt scQt)
@@ -53,14 +54,22 @@ public class ScSchedulerHelper {
 		JobDetail job = JobBuilder
 				.newJob(QTPublishJob.class)
 				.withIdentity(jobKey.getName(), jobKey.getGroup())
-				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA, scQt.getQtId()).build();
+				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA,
+						scQt.getQtId()).build();
 		// define a simple trigger that runs at specific time (publish time)
+		/*
+		 * SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder .newTrigger()
+		 * .withIdentity(jobKey.getName(), jobKey.getGroup())
+		 * .startAt(scQt.getPublishDate()) .forJob(jobKey) .build();
+		 */
 		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
 				.newTrigger()
 				.withIdentity(jobKey.getName(), jobKey.getGroup())
 				.startAt(scQt.getPublishDate())
-				.forJob(jobKey)
-				.build();
+				.withSchedule(
+						SimpleScheduleBuilder.simpleSchedule()
+								.withMisfireHandlingInstructionIgnoreMisfires())
+				.forJob(jobKey).build();
 
 		// Tell quartz to schedule the job using our trigger
 		EpSchedulerHelper.getScheduler().scheduleJob(job, trigger);
@@ -70,50 +79,60 @@ public class ScSchedulerHelper {
 	 * Schedule QT Closing Job
 	 * 
 	 * @param scQt
-	 * 		the ScQt instance
+	 *            the ScQt instance
 	 * @throws SchedulerException
 	 */
-	public void scheduleSimpleQTClosingJob(ScQt scQt)
-			throws SchedulerException {
+	public void scheduleSimpleQTClosingJob(ScQt scQt) throws SchedulerException {
 		JobKey jobKey = getQTClosingJobKey(scQt);
 
 		// define the job and tie it to our QTPublishJob class
 		JobDetail job = JobBuilder
 				.newJob(QTProposalCloseJob.class)
 				.withIdentity(jobKey.getName(), jobKey.getGroup())
-				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA, scQt.getQtId()).build();
+				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA,
+						scQt.getQtId()).build();
 		// define a simple trigger that runs at specific time (closing time)
+		/*
+		 * SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder .newTrigger()
+		 * .withIdentity(jobKey.getName(), jobKey.getGroup())
+		 * .startAt(scQt.getClosingDate()) .forJob(jobKey).build();
+		 */
 		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
 				.newTrigger()
 				.withIdentity(jobKey.getName(), jobKey.getGroup())
 				.startAt(scQt.getClosingDate())
+				.withSchedule(
+						SimpleScheduleBuilder.simpleSchedule()
+								.withMisfireHandlingInstructionIgnoreMisfires())
 				.forJob(jobKey).build();
 
 		// Tell quartz to schedule the job using our trigger
 		EpSchedulerHelper.getScheduler().scheduleJob(job, trigger);
 	}
-	
+
 	/**
 	 * Get QT Publishing JobKey by QT No.
 	 * 
 	 * @param scQt
-	 * 		the ScQt instance
-	 * @return	the JobKey
+	 *            the ScQt instance
+	 * @return the JobKey
 	 */
 	public JobKey getQTPublishingJobKey(ScQt scQt) {
-		return new JobKey(SchedulerConstants.QT_PUBLISH_SIMPLE_JOB + scQt.getQtNo(), 
+		return new JobKey(SchedulerConstants.QT_PUBLISH_SIMPLE_JOB
+				+ scQt.getQtNo(),
 				SchedulerConstants.QT_PUBLISH_SIMPLE_JOB_GROUP);
 	}
-	
+
 	/**
 	 * Get QT Closing JobKey by QT No.
 	 * 
 	 * @param scQt
-	 * 		the ScQt instance
-	 * @return	the JobKey
+	 *            the ScQt instance
+	 * @return the JobKey
 	 */
 	public JobKey getQTClosingJobKey(ScQt scQt) {
-		return new JobKey(SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB + scQt.getQtNo(), 
+		return new JobKey(SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB
+				+ scQt.getQtNo(),
 				SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP);
 	}
 }
