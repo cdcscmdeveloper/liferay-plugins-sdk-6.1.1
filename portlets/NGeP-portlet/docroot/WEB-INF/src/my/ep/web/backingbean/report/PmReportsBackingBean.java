@@ -711,8 +711,11 @@ public class PmReportsBackingBean extends
 										RoleCode.AUDITOR_INTERNAL.value()), getFacesScopes()
 								.hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
 						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()));
-				//remove the "|"
-				sb.append(authorization.substring(1));
+				if(StringUtils.isNotBlank(authorization)){
+					//remove the "|"
+					sb.append(authorization.substring(1));
+				}
+				
 			}
 		}
 		return sb.toString();
