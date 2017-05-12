@@ -8,7 +8,7 @@
 
 	<cc:interface>
 		<cc:attribute name="bBean" required="true" default="" />
-		<cc:attribute name="scReportMainBean" required="true" default="" />
+		<cc:attribute name="reportMainBean" required="true" default="" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -17,10 +17,10 @@
 		<ui:param name="paramValues" value="#{cc.attrs.bBean.getparams()}"></ui:param>
 			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
 				 action="#{cc.attrs.bBean.generateReport(paramValues)}" update="rptConfirmationDlgId">
-				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.scReportMainBean.managedBean.reportCode}" />
-				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportName}" value="#{cc.attrs.scReportMainBean.managedBean.reportName}" />
-				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.defaultOutputType}" value="#{cc.attrs.scReportMainBean.managedBean.defaultOutputType}" />
-				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.tempAccess}" value="#{cc.attrs.scReportMainBean.managedBean.tempAccess}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.reportMainBean.managedBean.reportCode}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportName}" value="#{cc.attrs.reportMainBean.managedBean.reportName}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.defaultOutputType}" value="#{cc.attrs.reportMainBean.managedBean.defaultOutputType}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.tempAccess}" value="#{cc.attrs.reportMainBean.managedBean.tempAccess}" />
 			</p:commandButton>
 
 			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" update=":form" 
