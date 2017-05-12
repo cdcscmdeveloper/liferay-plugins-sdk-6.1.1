@@ -66,7 +66,8 @@ public class QTPublishSchedulingJob implements Job {
 				for (ScQt qtToPublish : publisingQts) {
 					try{
 						if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
-							reSchedulePublicationForPublishFailQt(qtToPublish);
+							log.info("QT supposed to reschedule is :"+qtToPublish.getQtNo());
+							//reSchedulePublicationForPublishFailQt(qtToPublish);
 						}else{
 							ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
 							log.info("Simple Job was Built to Publish QT with No: "+qtToPublish.getQtNo());
