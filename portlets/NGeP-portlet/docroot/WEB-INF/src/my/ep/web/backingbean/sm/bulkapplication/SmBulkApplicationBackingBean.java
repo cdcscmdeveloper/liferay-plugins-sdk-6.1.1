@@ -375,6 +375,9 @@ public class SmBulkApplicationBackingBean extends
 	public void refreshTaskList() {
 		getManagedBean().setClaimTasks(new ArrayList<SmBulkApplicationVO>());
 		getManagedBean().setUnClaimTasks(new ArrayList<SmBulkApplicationVO>());
+		getManagedBean().setSelectedTasks(new ArrayList<SmBulkApplicationVO>());
+		getManagedBean().setSelectedUnclaimTasks(
+				new ArrayList<SmBulkApplicationVO>());
 		if (!StringUtils.isBlank(getManagedBean().getApplStatus())) {
 			initTasks(BpmConstants.ASSIGNMENT_MY, getManagedBean()
 					.getClaimTasks(), true);
@@ -537,6 +540,7 @@ public class SmBulkApplicationBackingBean extends
 
 	private void setSelectedRejectedResonsToVO() {
 		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
+			vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 			vo.setReasonDescList(getManagedBean().getReasonDescList());
 		}
 	}
