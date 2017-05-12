@@ -22,6 +22,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -173,7 +174,6 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void rejectBulkApplication() {
-		validateTotalSelectedApplication();
 		setSelectedRejectedResonsToVO();
 		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
 	}
@@ -375,10 +375,12 @@ public class SmBulkApplicationBackingBean extends
 	public void refreshTaskList() {
 		getManagedBean().setClaimTasks(new ArrayList<SmBulkApplicationVO>());
 		getManagedBean().setUnClaimTasks(new ArrayList<SmBulkApplicationVO>());
-		initTasks(BpmConstants.ASSIGNMENT_MY, getManagedBean().getClaimTasks(),
-				true);
-		initTasks(BpmConstants.ASSIGNMENT_GROUP, getManagedBean()
-				.getUnClaimTasks(), false);
+		if (!StringUtils.isBlank(getManagedBean().getApplStatus())) {
+			initTasks(BpmConstants.ASSIGNMENT_MY, getManagedBean()
+					.getClaimTasks(), true);
+			initTasks(BpmConstants.ASSIGNMENT_GROUP, getManagedBean()
+					.getUnClaimTasks(), false);
+		}
 		this.getManagedBean().setFailedSubmittedList(null);
 	}
 
@@ -677,6 +679,10 @@ public class SmBulkApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 					for (SmSupplierCategory cat : appl
 							.getSmSupplierCategories()) {
+						if (getManagedBean().getApplStatus().equals(
+								getManagedBean().getRECOMMEND_REJECT())) {
+							cat.setApprvrDecFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						}
 						if (cat.isOverLapCategory()
 								&& (cat.getRecordStatusFlg()
 										.compareTo(
