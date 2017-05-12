@@ -3856,10 +3856,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		int countChargelineLimit = 0;
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
-				if(fulfilmentItemMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()+ " "+itemAddr.getGstUnitPrice())==null) {
-					countChargelineLimit = countChargelineLimit + 1;
-					fulfilmentItemMap.put(itemAddr.getScRequestItem().getRequestNoteItemId()+ " "+itemAddr.getGstUnitPrice(), countChargelineLimit);
-				} 
+				if(itemAddr.getOrderedAmt().doubleValue() > 0 && itemAddr.getOrderedQty().doubleValue() > 0){
+					if(fulfilmentItemMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()+ " "+itemAddr.getGstUnitPrice())==null) {
+						countChargelineLimit = countChargelineLimit + 1;
+						fulfilmentItemMap.put(itemAddr.getScRequestItem().getRequestNoteItemId()+ " "+itemAddr.getGstUnitPrice(), countChargelineLimit);
+					} 
+				}
 			}
 		}
 		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
