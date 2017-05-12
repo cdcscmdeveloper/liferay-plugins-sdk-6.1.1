@@ -209,7 +209,8 @@
 					<td>
 						<p:inputText size="53" maxlength="255" value="#{stopInstrBB.managedBean.stopInstr.reasonDesc}" id="otherId" 
 							disabled="#{stopInstrBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView 
-								or stopInstrBB.managedBean.taskName eq 'Review SD'}" />
+								or stopInstrBB.managedBean.taskName eq 'Review SD'}" >
+								<p:ajax update="@this"></p:ajax></p:inputText>
 					</td>
 				</tr>
 			</table>
