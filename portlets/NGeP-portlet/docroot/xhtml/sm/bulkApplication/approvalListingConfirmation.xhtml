@@ -8,10 +8,12 @@
 	
 	<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false" />
 	
-	<p:panel header="#{lbl['lbl.sm.bulk.application.list']}"
-			toggleable="true" id="resultPanelId">
+	<p:panel header="#{bulkApplicationBackingBean.managedBean.applStatus eq bulkApplicationBackingBean.managedBean.RECOMMEND_REJECT ? 
+		lbl['lbl.sm.bulk.application.rejection.list.confirm'] : lbl['lbl.sm.bulk.application.approval.list.confirm']}" toggleable="true" id="resultPanelId">
 			
-			<h:outputText styleClass="instruction" value="#{bulkApplicationBackingBean.managedBean.maxBulkApprovalMsg}"/>
+			<h:outputText rendered="#{not empty bulkApplicationBackingBean.managedBean.applStatus and 
+				bulkApplicationBackingBean.managedBean.applStatus eq bulkApplicationBackingBean.managedBean.RECOMMEND_APPROVE}"
+				styleClass="instruction" value="#{bulkApplicationBackingBean.managedBean.maxBulkApprovalMsg}"/>
 			
 			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" 
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
@@ -94,6 +96,8 @@
 		<div align="right" >
 			<p:commandButton
 				value="#{lbl['lbl.btn.approve']}"
+				rendered="#{bulkApplicationBackingBean.managedBean.applStatus eq 
+				bulkApplicationBackingBean.managedBean.RECOMMEND_APPROVE}"
 				id="approveBtnId" update="@form" onstart="blockWidget.show()"
 				oncomplete="blockWidget.hide()" process="@this"
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
