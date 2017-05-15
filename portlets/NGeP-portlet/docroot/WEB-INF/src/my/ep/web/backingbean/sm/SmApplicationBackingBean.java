@@ -593,7 +593,12 @@ public class SmApplicationBackingBean extends
 				mofResDto = SmApplicationUtil.retriveApplicationById(appl
 						.getApplId().intValue());
 				appl = mofResDto.getSmAppl();
-				supplierProfile = SmApplicationUtil.getCurrentSupplier();
+				SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+				suppSearchReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+						.getSupplierId());
+				supplierProfile = SmServiceLookup.getSupplierSearchSO()
+						.retriveSupplierInfoById(suppSearchReqDTO)
+						.getSmSupplier();
 			}
 		} finally {
 		}
