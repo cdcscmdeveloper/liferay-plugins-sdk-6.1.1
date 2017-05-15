@@ -24,20 +24,20 @@ import my.ep.web.managedbean.report.ReportBaseManagedBean;
 public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
-	private String quotationNumner;
+	private String quotationNumber;
 	private String quotationId;
 	private ScReportFieldsSearchBean scReportSearchBean=null;
 	/**
 	 * @return the quotationNumner
 	 */
-	public String getQuotationNumner() {
-		return quotationNumner;
+	public String getQuotationNumber() {
+		return quotationNumber;
 	}
 	/**
 	 * @param quotationNumner the quotationNumner to set
 	 */
-	public void setQuotationNumner(String quotationNumner) {
-		this.quotationNumner = quotationNumner;
+	public void setQuotationNumber(String quotationNumber) {
+		this.quotationNumber = quotationNumber;
 	}
 	/**
 	 * @return the quotationId

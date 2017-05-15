@@ -85,7 +85,7 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 	@Override
 	public void resetSearch() {
 		// TODO Auto-generated method stub
-		this.getManagedBean().setQuotationNumner(null);
+		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
 		ScReportFieldsSearchBean reportFileSearchBean=this.getManagedBean().getScReportSearchBean();
 		reportFileSearchBean=new ScReportFieldsSearchBean();
@@ -142,7 +142,7 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 				 params.put(QtReportConst.PARAM_PROCURE_METHOD_EQ, procureMethod.toString());
 			}
 		}
-		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumner())) {
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
 			//quotationNumberValidation();
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}
