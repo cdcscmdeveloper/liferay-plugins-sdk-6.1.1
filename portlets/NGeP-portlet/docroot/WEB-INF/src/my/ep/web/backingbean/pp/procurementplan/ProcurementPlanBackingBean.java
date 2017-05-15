@@ -20,6 +20,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
@@ -605,7 +606,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 						calculatePpGrandTotal();
 					}
-					updatePlanYearControl(getManagedBean().getSelectedPlan().getPlanYear());					
+					updatePlanYearControl();					
 					
 				}else{
 					throw new EpException(MessageConst.ERROR_730001);
@@ -2791,10 +2792,41 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return String (date in string)
 	 */
 	public String getMinDate(){
-		log.info("getMinDate");
+		log.info("getMinDate");		
 		Date today = new Date();
 		String dateStr = "";
-		dateStr = DateUtils.dateToString("dd/MM/yyyy", today);		
+		Calendar c1 = Calendar.getInstance();
+		String	year	=	String.valueOf(c1.get(Calendar.YEAR));
+		if(getManagedBean().getSelectedPlan().getPlanYear() != null){
+			if(year.equals(getManagedBean().getSelectedPlan().getPlanYear().toString())){
+				dateStr = DateUtils.dateToString("dd/MM/yyyy", today);	
+			}else{
+				Calendar c2 = new GregorianCalendar(
+						getManagedBean().getSelectedPlan().getPlanYear().intValue(),Calendar.JANUARY,1);
+				dateStr = DateUtils.dateToString("dd/MM/yyyy", c2.getTime());	
+			}
+		}else{
+			dateStr = DateUtils.dateToString("dd/MM/yyyy", today);	
+		}
+		
+			
+		return dateStr;
+	}
+	
+	/**
+	 * generate max date 
+	 * @return String (date in string)
+	 */
+	public String getMaxDate(){
+		log.info("getMaxDate");
+		String dateStr = "";
+		if(getManagedBean().getSelectedPlan().getPlanYear() != null){		
+			Calendar c2 = new GregorianCalendar(
+					getManagedBean().getSelectedPlan().getPlanYear().intValue(),Calendar.DECEMBER,31);
+			dateStr = DateUtils.dateToString("dd/MM/yyyy", c2.getTime());
+		}
+		
+			
 		return dateStr;
 	}
 	
@@ -3028,31 +3060,65 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return procurementCatTypeList;
 	}
 	
+	public void verifyPlanYearControl(ValueChangeEvent event){		
+		if(getManagedBean().getSelectedPlan().isBrandNew() 
+				&& ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode()) &&
+				CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())) {
+			log.info("New: "+event.getNewValue()+", Old: "+event.getOldValue());
+			getManagedBean().setOldYearValue(Long.valueOf(event.getOldValue().toString()));			
+			RequestContext.getCurrentInstance().execute("planYearChangeId.show();");
+		}
+	}
+	
 	/**
 	 * to default the invitation date options for procurement item
 	 * @param planYear
 	 */
-	public void updatePlanYearControl(Long planYear){
+	public void updatePlanYearControl(){
 		log.info("updatePlanYearControl");
-		if(planYear!=null){
-			if(planYear == Calendar.getInstance().get(Calendar.YEAR)){ 
-				//this year
-				this.getManagedBean().setInvitationYear("");
-			}else{ 
-				//next year
-				this.getManagedBean().setInvitationYear("c+0:c+0");
-				//c+1:c+0 2017
-				//c+0:c+0
-				//c+1:c+1 2016, 2017
-				//"" 2015(current)
+		if(getManagedBean().getSelectedPlan().isBrandNew() && ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
+			if(CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())){
+				for(PpProcurementItem ppItem : getManagedBean().getSelectedPlan().getPpProcurementItems()){
+					if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
+						//current year
+						ppItem.setInvitationDate(new Date());
+					}else{ 
+						System.out.println("next year ");
+						//next year
+						int nextYear = Calendar.getInstance().get(Calendar.YEAR);
+						Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);						
+						ppItem.setInvitationDate(date.getTime());
+					}
+					getManagedBean().setOldYearValue(null);
+				}
+				
 			}
-		}else{
-			this.getManagedBean().setInvitationYear("");
 		}
 		
-		log.info("updatePlanYearControl " + this.getManagedBean().getInvitationYear());
+//		if(planYear!=null){
+//			if(planYear == Calendar.getInstance().get(Calendar.YEAR)){ 
+//				//this year
+//				this.getManagedBean().setInvitationYear("");
+//			}else{ 
+//				//next year
+//				this.getManagedBean().setInvitationYear("c+0:c+0");
+//				//c+1:c+0 2017
+//				//c+0:c+0
+//				//c+1:c+1 2016, 2017
+//				//"" 2015(current)
+//			}
+//		}else{
+//			this.getManagedBean().setInvitationYear("");
+//		}
+//		
+//		log.info("updatePlanYearControl " + this.getManagedBean().getInvitationYear());
 		
 	}
+	
+	public void cancelPlanYearUpdate(){	
+		getManagedBean().getSelectedPlan().setPlanYear(getManagedBean().getOldYearValue());	
+	}
+	
 	/* Procurement Related ------------------- END ---------------------------*/
 	/* --------------------------------------------------------- Item Level - START -----------------------------------------------------------------*/
 	
