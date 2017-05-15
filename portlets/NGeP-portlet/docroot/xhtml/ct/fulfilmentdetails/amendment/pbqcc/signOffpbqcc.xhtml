@@ -190,7 +190,7 @@
         <p:calendar value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofMeetingDate}"
         	size="25" id="mofMeetingDate" navigator="true"
  			maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-  		  	mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+  		  	mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
             readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
             disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}">
         </p:calendar>
