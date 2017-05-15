@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.report;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -368,6 +369,8 @@ public class PmReportsBackingBean extends
 	// Item Code, Date From, Date To
 	private void constructExemptionCommonFieldsToMap(
 			LinkedHashMap<String, String> map) {
+		dateValidation(getManagedBean().getFromDate(), getManagedBean().getToDate());
+		
 		if (getManagedBean().getSelectedUnspscItem() != null) {
 			map.put(PmReportConst.PARAM_PM_ITEM_CODE, getManagedBean()
 					.getSelectedUnspscItem().getUnspscCode());
@@ -753,5 +756,24 @@ public class PmReportsBackingBean extends
 		} else {
 			getManagedBean().setDisabledOrgFields(false);
 		}
+	}
+	
+	private void dateValidation(Date dateFrom, Date dateTo){
+
+		if (dateFrom == null || dateTo == null) {
+			throw new EpException(MessageConst.ERROR_715050);
+		}
+
+		if ((dateFrom != null) && (dateTo != null)) {
+			if (dateFrom.after(dateTo)) {
+				throw new EpException(MessageConst.ERROR_REPORT_780008);
+			}
+		}
+		if ((dateFrom != null) && (dateTo != null)) {
+			if (dateTo.after(dateFrom)) {
+				checkOneYearDifferent(dateFrom,dateTo);
+			}
+		}
+
 	}
 }

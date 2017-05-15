@@ -52,7 +52,9 @@
 	<table style="width: 100%;">
 		<tr>
 			<td width="15%"><p:outputLabel
-					value="#{lbl['lbl.rpt.effDateFrom']}" /></td>
+					value="#{lbl['lbl.rpt.effDateFrom']}" />
+					<p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td width="15%"><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true" size="9"
 					value="#{pmReportsBackingBean.managedBean.fromDate}"
@@ -62,8 +64,10 @@
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@this" />
 				</p:calendar></td>
-			<td width="1%"><p:outputLabel
-					value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
+			<td width="4%"><p:outputLabel
+					value="#{lbl['lbl.rpt.dtRangeTo']}" />
+					<p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{pmReportsBackingBean.managedBean.toDate}" size="9"
