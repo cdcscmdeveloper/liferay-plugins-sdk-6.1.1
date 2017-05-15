@@ -1,16 +1,10 @@
 package my.ep.web.backingbean.report.ct;
 
-import java.text.SimpleDateFormat;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constants.CommonConstants;
-import my.ep.exception.EpException;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ct.CtReportMainManagedBean;
 
 import org.apache.commons.lang.StringUtils;
@@ -65,10 +59,10 @@ public class CtReportMainBackingBean extends CtReportBackingBean<CtReportMainMan
 	}
 	
 	/**
-	 * generateCTReport - Generate CONTRACT MANAGEMENT module reports.
+	 * generateCtReport - Generate CONTRACT MANAGEMENT module reports.
 	 */
-	public void generateCTReport() {
-		log.info("ReportBackingBean-generateCTReport");
+	public void generateCtReport() {
+		log.info("ReportBackingBean-generateCtReport");
 	}
 	
 	public void resetAction(){

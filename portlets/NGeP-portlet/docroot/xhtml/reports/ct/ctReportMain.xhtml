@@ -54,53 +54,60 @@
 			</tr>
 		</table>	
 	
-			<p:panel id="ctReportSearchCriteriaPanel"
-			     header="#{ctReportBB.managedBean.reportTitle}"
-				rendered="#{!empty ctReportBB.managedBean.reportCode}" toggleable="true">
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal}">
-				     <ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
-				</c:if>
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctFulfilmentStatusRptVal}">
-					<ui:include src="/xhtml/reports/ct/mc/CT018_fulfilmentStatusReport.xhtml"></ui:include>
-				</c:if>		
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractMcRptVal}">
-					<ui:include src="/xhtml/reports/ct/mc/CT003_listOfContract.xhtml"></ui:include>
-				</c:if>							
-								
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractCcRptVal}">
-					<ui:include src="/xhtml/reports/ct/cc/CT022_listOfContract.xhtml"></ui:include>
-				</c:if>
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderCcRptVal}">
-					<ui:include src="/xhtml/reports/ct/cc/CT021_statementOfOrderReport.xhtml"></ui:include>
-				</c:if>
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfCircularCqRptVal}">
-					<ui:include src="/xhtml/reports/ct/cc/CT016_listOfCircular.xhtml"></ui:include>
-				</c:if>
-												
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfCircularPqRptVal}">
-					<ui:include src="/xhtml/reports/ct/panel/CT023_listOfCircular.xhtml"></ui:include>
-				</c:if>				
-				<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
-					<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
-				</c:if>
+		<p:panel id="ctReportSearchCriteriaPanel"
+			header="#{ctReportBB.managedBean.reportTitle}"
+			rendered="#{!empty ctReportBB.managedBean.reportCode}" toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.instruction.mandatory']}" escape="false"/><br/>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
 				
-				
-				<p:commandButton 
-					id="generateBtnId"
-					value="#{lbl['lbl.btn.generate']}"
-					process="@form"   
-					update="@form" 
-					action="#{ctReportBB.generateCTReport()}">
-			</p:commandButton>
-			<p:commandButton 
-					id="resetBtnId"
-					value="#{lbl['lbl.btn.reset']}"
-					process="@this"   
-					update="@form" 
-					action="#{ctReportBB.resetAction()}">
-			</p:commandButton>
-				
-			</p:panel>
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal}">
+			     <ui:include src="/xhtml/reports/ct/mc/CT006_contractMonitoringReport.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctFulfilmentStatusRptVal}">
+				<ui:include src="/xhtml/reports/ct/mc/CT018_fulfilmentStatusReport.xhtml"></ui:include>
+			</c:if>		
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractMcRptVal}">
+				<ui:include src="/xhtml/reports/ct/mc/CT003_listOfContract.xhtml"></ui:include>
+			</c:if>							
+							
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractCcRptVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT022_listOfContract.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderCcRptVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT021_statementOfOrderReport.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfCircularCqRptVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT016_listOfCircular.xhtml"></ui:include>
+			</c:if>
+											
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfCircularPqRptVal}">
+				<ui:include src="/xhtml/reports/ct/panel/CT023_listOfCircular.xhtml"></ui:include>
+			</c:if>				
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
+				<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
+			</c:if>			
+			<br/><br/>
+			<p:outputPanel id="btnOp">
+				<div align="right" style="width: 100%">
+					<p:commandButton 
+						id="generateBtnId"
+						value="#{lbl['lbl.btn.generate']}"
+						process="@form"   
+						update="@form" 
+						action="#{ctReportBB.generateCtReport()}">
+					</p:commandButton>
+					<p:commandButton 
+						id="resetBtnId"
+						value="#{lbl['lbl.btn.reset']}"
+						process="@this"   
+						update="@form" 
+						action="#{ctReportBB.resetAction()}">
+					</p:commandButton>
+				</div>
+			</p:outputPanel>						
+		</p:panel>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
 			width="500px" resizable="false" styleClass="pop_up_top">
 			<h:outputText escape="false" style="float:left;margin-left:5px;"
