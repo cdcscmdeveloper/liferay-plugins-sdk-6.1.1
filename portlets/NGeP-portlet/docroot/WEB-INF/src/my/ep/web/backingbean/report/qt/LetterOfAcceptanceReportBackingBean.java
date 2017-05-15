@@ -77,7 +77,7 @@ QtReportBackingBean< LetterOfAcceptanceReportManagedBean> implements Serializabl
 
 	@Override
 	public void resetSearch() {
-		this.getManagedBean().setQuotationNumner(null);
+		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
 		ScReportFieldsSearchBean reportFileSearchBean=this.getManagedBean().getScReportSearchBean();
 		reportFileSearchBean=new ScReportFieldsSearchBean();

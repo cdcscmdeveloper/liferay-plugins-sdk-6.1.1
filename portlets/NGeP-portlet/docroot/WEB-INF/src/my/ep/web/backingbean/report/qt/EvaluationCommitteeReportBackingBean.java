@@ -54,7 +54,7 @@ QtReportBackingBean<EvaluationCommitteeReportManagedBean> implements Serializabl
 	
 	public void resetSearch(){
 		log.info("EvaluationCommitteeReportBackingBean resetSearch executed");
-		this.getManagedBean().setQuotationNumner(null);
+		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
 	}
 

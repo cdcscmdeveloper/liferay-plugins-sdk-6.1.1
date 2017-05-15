@@ -54,7 +54,7 @@ QtReportBackingBean<BriefingPaperReportManagedBean> implements Serializable{
 	
 	public void resetSearch(){
 		log.info("BriefingPaperReportBackingBean resetSearch executed");
-		this.getManagedBean().setQuotationNumner(null);
+		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
 	}
 
