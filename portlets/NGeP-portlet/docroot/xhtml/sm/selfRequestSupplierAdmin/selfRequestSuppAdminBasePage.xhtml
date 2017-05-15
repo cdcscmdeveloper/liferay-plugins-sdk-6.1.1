@@ -20,6 +20,8 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
+		<ac:httpsRedirectScript />
+		
 		<p:outputPanel id="companyValidationPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '1'}">
 			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminCompanyValidation.xhtml" />
 		</p:outputPanel>
