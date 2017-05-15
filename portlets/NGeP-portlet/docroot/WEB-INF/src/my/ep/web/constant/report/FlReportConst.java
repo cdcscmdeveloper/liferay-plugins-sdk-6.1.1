@@ -43,7 +43,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_COTRACT_ORDER = " PCONO=";
 	public static final String FL_RPT_COTRACT_REQUEST = " PCRNO=";
 	public static final String FL_RPT_PURCHASE_ORDER = " PPONO=";
-	public static final String FL_RPT_TREASURY_CIRCULAR = " PKPNO=";
+	public static final String FL_RPT_TREASURY_CIRCULAR = " PKPNO=";//Physical Treasury Circular (1PP) No.
 	public static final String FL_RPT_FULLFILLEMENT_RECEIVE = " FRNNO=";
 	public static final String FL_RPT_COTRACT_TYPE = " PCONTYPE=";
 	public static final String FL_RPT_DELI_ADDR = " PDOADD=";
@@ -65,8 +65,8 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PEGAWAI_PENGAWAI = " PFPP=";
 	public static final String FL_RPT_KUMPULAN = " PFJA=";
 	public static final String FL_RPT_PTJ_NAME = " PPTJ=";
-	public static final String FL_RPT_SST_NO = " PLOA=";
-	public static final String FL_RPT_CONTRACT_NAME = " PCONTRACTNO=";
+	public static final String FL_RPT_SST_NO = " PLOA=";//loa no
+	public static final String FL_RPT_CONTRACT_REQ_NO = " PCONTRACTNO=";
 	public static final String FL_RPT_CC_PANEL_NAME = " PPKPNAME=";//panel name
 	public static final String FL_RPT_REPORT_ID = " PREPORTID=";
 	public static final String FL_RPT_USER_ID = " PUSER=";
