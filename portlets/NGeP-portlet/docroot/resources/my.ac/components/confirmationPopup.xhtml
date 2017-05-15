@@ -14,6 +14,7 @@
 		<!-- <cc:attribute name="postSignAction" method-signature="void action()" /> -->
 		<cc:attribute name="widget" default="" />
 		<cc:attribute name="okAction" required="true" default="" />
+		<cc:attribute name="cancelAction" default="" />
 		<cc:attribute name="width" default="400" />
 		<cc:attribute name="height" default="200" />
 		<cc:attribute name="resetInput" default="" />
@@ -63,8 +64,21 @@
 						</p:commandButton>
 				    </c:otherwise>
 				</c:choose>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-					oncomplete="#{cc.attrs.widget}.hide();" />
+				<c:choose>
+				    <c:when test="#{not empty cc.attrs.cancelAction}">
+				    	<p:commandButton value="#{lbl['lbl.btn.no']}"
+				    		partialSubmit="true" 
+				    		onstart="confirmPopupBlockWidget.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.cancelAction)}"
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}"
+						/>
+				    </c:when>
+				    <c:otherwise>
+				    	<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+							oncomplete="#{cc.attrs.widget}.hide();" />
+				    </c:otherwise>
+				    </c:choose>
+				
 			</div>
 			</h:panelGroup>
 		</p:dialog>
