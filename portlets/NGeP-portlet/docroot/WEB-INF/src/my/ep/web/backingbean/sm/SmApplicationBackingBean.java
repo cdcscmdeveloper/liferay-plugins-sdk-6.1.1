@@ -593,7 +593,7 @@ public class SmApplicationBackingBean extends
 				mofResDto = SmApplicationUtil.retriveApplicationById(appl
 						.getApplId().intValue());
 				appl = mofResDto.getSmAppl();
-				supplierProfile = mofResDto.getSmSupplier();
+				supplierProfile = SmApplicationUtil.getCurrentSupplier();
 			}
 		} finally {
 		}
@@ -8443,6 +8443,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedBank().setForHqFlg(1);
 		} else if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("B")) {
+			reqDTO.setServiceTypeList(Arrays.asList(
+					ParameterConst.BANK_SERVICES_PAYMENT_BANK,
+					ParameterConst.BANK_SERVICES_REGISTRATION));
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
 			getManagedBean().getSelectedBank().setForHqFlg(1);
 		} else {
