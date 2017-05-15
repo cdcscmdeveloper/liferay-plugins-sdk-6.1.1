@@ -82,8 +82,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public void quotationNumberValidation() {
 		log.info("ReportBackingBean-quotationNumberValidation"
-				+ this.getManagedBean().getQuotationNumner());
-		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumner())) {
+				+ this.getManagedBean().getQuotationNumber());
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
 			specialCharValidation();
 		} else {
 			this.getManagedBean().setQuotationId(null);
@@ -95,19 +95,19 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public void specialCharValidation() {
 		log.info("ReportBackingBean-specialCharValidation"
-				+ this.getManagedBean().getQuotationNumner());
+				+ this.getManagedBean().getQuotationNumber());
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
 		Matcher match;
 
-		match = pattern.matcher(this.getManagedBean().getQuotationNumner());
+		match = pattern.matcher(this.getManagedBean().getQuotationNumber());
 
 		if (match.matches()) {
 
 			getQuotationNumber();
 
 		} else {
-			this.getManagedBean().setQuotationNumner(null);
+			this.getManagedBean().setQuotationNumber(null);
 			this.getManagedBean().setQuotationId(null);
 			throw new EpException(MessageConst.ERROR_REPORT_780006);
 		}
@@ -120,11 +120,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public void getQuotationNumber() {
 		log.info("ReportBackingBean-getQuotationNumber"
-				+ this.getManagedBean().getQuotationNumner());
+				+ this.getManagedBean().getQuotationNumber());
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		// log.info("QtNo="+this.getScQuotationNo());
-		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumner())) {
-			tenderReqDTO.setQtTndrNo(this.getManagedBean().getQuotationNumner()
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
+			tenderReqDTO.setQtTndrNo(this.getManagedBean().getQuotationNumber()
 					.toUpperCase());
 			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -138,12 +138,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 					this.getManagedBean().setQuotationId(
 							scqt.getQtId().toString());
 				} else {
-					this.getManagedBean().setQuotationNumner(null);
+					this.getManagedBean().setQuotationNumber(null);
 					this.getManagedBean().setQuotationId(null);
 					throw new EpException(MessageConst.ERROR_REPORT_780005);
 				}
 			} else {
-				this.getManagedBean().setQuotationNumner(null);
+				this.getManagedBean().setQuotationNumber(null);
 				this.getManagedBean().setQuotationId(null);
 				throw new EpException(MessageConst.ERROR_REPORT_780005);
 			}

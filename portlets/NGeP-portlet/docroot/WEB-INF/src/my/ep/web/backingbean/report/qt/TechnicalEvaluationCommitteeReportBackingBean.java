@@ -48,7 +48,7 @@ QtReportBackingBean<TechnicalEvaluationCommitteeReportManagedBean> implements Se
 	
 	public void resetSearch(){
 		log.info("TechnicalEvaluationCommitteeReportBackingBean resetSearch executed");
-		this.getManagedBean().setQuotationNumner(null);
+		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
 	}
 
