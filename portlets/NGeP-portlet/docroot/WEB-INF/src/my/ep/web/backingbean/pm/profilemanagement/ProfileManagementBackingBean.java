@@ -108,10 +108,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.portal.kernel.cache.CacheRegistryUtil;
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
-import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
-
 /**
  * Backing Bean for User Profiles (Management)
  * 
@@ -1248,19 +1244,13 @@ public class ProfileManagementBackingBean extends
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770167);
 				} else {
-					//check if user group user is active
-					PmUserGroup userGroup = retrieveUserActiveUserGroup(this.getManagedBean()
-							.getSelectedUser().getUserId());
-						
-					if(userGroup != null){
+					if(isActiveUserGroupUser() != null){
 						// revert it to active
 						this.getManagedBean()
 								.getSelectedUserOrg()
 								.setRecordStatusFlg(
 										DbValueConst.RECORD_STATUS_ACTIVE);
-
-						throw new EpException(MessageConst.ERROR_770202, new
-								 String[]{userGroup.getGroupCode(),userGroup.getGroupName()});
+						throw new EpException(MessageConst.ERROR_770202,isActiveUserGroupUser());
 					}else{
 						this.getManagedBean().getSelectedUserOrg()
 						.setExpDateDisplay(null);
@@ -1839,14 +1829,23 @@ public class ProfileManagementBackingBean extends
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770168);
+				}else if((RoleCode.FL_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode()) 
+						|| RoleCode.RN_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode()))
+						&& isActiveUserGroupUser() != null){
+					//check for FL Approver and RN Approver only
+					// revert it to active
+					pmUserRole
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					throw new EpException(MessageConst.ERROR_770202,isActiveUserGroupUser());
 				} else {
-
 					if (!pmUserRole.isModified()) {
 						pmUserRole.setModified(true);
 					} else {
 						pmUserRole.setModified(false);
 					}
 				}
+				
+				
 				
 				
 				if(getManagedBean().getSelectedReceivingAddrTypes() != null &&
@@ -5346,4 +5345,18 @@ public class ProfileManagementBackingBean extends
 	public int getOthers() {
 		return OTHERS;
 	}
+	
+	private String[] isActiveUserGroupUser(){
+		String[] errorParams = null;
+		//check if user group user is active
+		PmUserGroup userGroup = retrieveUserActiveUserGroup(this.getManagedBean()
+				.getSelectedUser().getUserId());
+			
+		if(userGroup != null){
+			errorParams = new String[]{userGroup.getGroupCode(),userGroup.getGroupName()};		
+		}
+		
+		return errorParams;
+	}
+	
 }
