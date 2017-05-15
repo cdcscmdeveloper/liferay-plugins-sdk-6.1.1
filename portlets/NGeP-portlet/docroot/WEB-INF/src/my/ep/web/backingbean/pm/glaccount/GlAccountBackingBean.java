@@ -99,8 +99,8 @@ public class GlAccountBackingBean extends
 	    this.getManagedBean().setGlAccountName(new String());
 	    this.getManagedBean().setStatus(null);*/
 	    this.getManagedBean().setGlAccountSearchBean(new GlAccountSearchBean());
-	    retrieveAccountType();
-	    retrieveAccountClass();
+//	    retrieveAccountType();
+//	    retrieveAccountClass();
 		searchGlAccount = new SearchGlAccountPagingDataModel();
 	}
 
