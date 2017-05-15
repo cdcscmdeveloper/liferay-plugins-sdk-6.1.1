@@ -76,8 +76,7 @@
 									value="3" />
 							</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}"
-								update="@form"
-								disabled="#{!isAfterSupplierResponseStatus or !isPendingVerification}">
+								update="@form">
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="4" />
