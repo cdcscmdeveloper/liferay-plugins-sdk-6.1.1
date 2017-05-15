@@ -30,8 +30,10 @@
 		   <h:panelGrid columns="2">
              <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}"
           		disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
-          		readonlyInput="true" navigator="true"
-                id="calItem1" size="12" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
+          		readonlyInput="true" navigator="true"  id="calItem1" size="12" showOn="button" 
+          		mindate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+                maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+                pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
 		      <p:message for="calItem1" display="icon"/>
 		   </h:panelGrid>
 		  
@@ -76,6 +78,8 @@
                 <p:calendar id="calItem3"  readonlyInput="true" navigator="true"
                     disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                     value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="12"
+                    mindate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+                    maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}"
                      showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                     <p:ajax event="dateSelect" update=":form:calItem4" process="@this" />
                 </p:calendar>
@@ -92,7 +96,8 @@
              <p:calendar id="calItem4"  readonlyInput="true" navigator="true"
                  disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
-          		 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="12" 
+          		 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  
+          		 maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}" size="12" 
                  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                  <f:attribute name="startDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" />
                  <f:validator validatorId="primeDateRangeValidator" />
@@ -106,6 +111,8 @@
               <p:calendar id="calItem6" size="12"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
                 disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                 showOn="button" readonlyInput="true" navigator="true"
+                 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  
+          		 maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
                  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
 		         <p:message for="calItem6" display="icon"/>
 		    </h:panelGrid>
@@ -124,7 +131,10 @@
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar  id="calItem7" readonlyInput="true" navigator="true"
           		  disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
-          		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="12" 
+          		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  
+          		  mindate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+                  maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+          		  size="12" 
           		  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                   <p:ajax event="dateSelect" update=":form:calItem8" process="@this" />
              </p:calendar>
@@ -136,6 +146,8 @@
               <p:calendar id="calItem9" size="12"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
                   disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                   showOn="button" readonlyInput="true" navigator="true"
+                  mindate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+                  maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}"
                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>		
                    <p:message for="calItem9" display="icon"/>  
 		     </h:panelGrid>
@@ -146,6 +158,7 @@
                  disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}" navigator="true"
                  mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="12" 
+                  maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}"
           		showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
           		 <f:attribute name="startDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" />
                  <f:validator validatorId="primeDateRangeValidator" />
