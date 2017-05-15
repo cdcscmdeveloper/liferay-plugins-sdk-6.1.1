@@ -105,6 +105,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isDisabledKumpulanPTJLov = false;
 	private boolean isDisabledPTJLov = false;	
 	private boolean isTrackingDiary;
+	private Long oldYearValue;
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -1043,6 +1044,20 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setTrackingDiary(boolean isTrackingDiary) {
 		this.isTrackingDiary = isTrackingDiary;
+	}
+
+	/**
+	 * @return the oldYearValue
+	 */
+	public Long getOldYearValue() {
+		return oldYearValue;
+	}
+
+	/**
+	 * @param oldYearValue the oldYearValue to set
+	 */
+	public void setOldYearValue(Long oldYearValue) {
+		this.oldYearValue = oldYearValue;
 	}
 
 

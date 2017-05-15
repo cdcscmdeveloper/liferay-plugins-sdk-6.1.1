@@ -82,10 +82,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					required="#{!empty param['disableValidation']}"
 					label="#{lbl['lbl.pp.plan.year']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
+					valueChangeListener="#{pPlanBackingBean.verifyPlanYearControl}"
 					>
 					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(pPlanBackingBean.managedBean.selectedPlan.brandNew)}"/>
-					<p:ajax event="change" listener="#{pPlanBackingBean.updatePlanYearControl(pPlanBackingBean.managedBean.selectedPlan.planYear)}" 
+					<p:ajax event="change"  
 						update=":form:pPlanDet, :form:pPlanActor,:form:pPlanHeader"/>
+					<p:ajax event="valueChange" immediate="true" process="@this" update=":form:pPlanDet, :form:pPlanActor,:form:pPlanHeader"/>
 				</p:selectOneMenu>
 				&#160;&#160;   
                 <p:graphicImage id="giPlanYear" value="/css/images/design/tooltips.png" />
@@ -94,4 +96,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</td>
 		</tr>
 	</table>
+	<ac:confirmationPopup id="planYearChangeId"
+			widget="planYearChangeId"
+			okProcess="@form"
+			okAction="pPlanBackingBean.updatePlanYearControl()"
+			cancelAction="pPlanBackingBean.cancelPlanYearUpdate()"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pp.plan.year.change']}" 
+			update=":form:pPlanDet,:form:pPlanHeader" />	
 </ui:composition>
