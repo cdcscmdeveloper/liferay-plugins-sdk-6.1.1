@@ -6,6 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:include src="loaInstructionHeader.xhtml" />
+	
 	<ui:param name="isDocTypeQuotation"
 		value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
 	<ui:param name="isDocTypePurchaseRequest"
