@@ -2551,7 +2551,8 @@ public class SmApplicationBackingBean extends
 			}
 			rqDto.setCertBodyIds(certIds);
 		}
-
+		
+		log.info(">>>>>>>>START SET SECTION EDITOR<<<<<<<<<<");
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true);
 		rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
 				.getSupplierType());
@@ -2570,6 +2571,17 @@ public class SmApplicationBackingBean extends
 		rqDto.setForeigner(SmApplicationUtil
 				.isCompanyHasForeignPersonnel(getManagedBean().getSmAppl()
 						.getSmPersonnels()));
+		log.info("SUPP TYPE:"+getManagedBean().getSmAppl()
+				.getSupplierType());
+		log.info("BUSS TYPE:"+getManagedBean().getSmAppl().getSmSupplier()
+				.getBusinessType());
+		log.info("EDIT COMP BASIC:"+rqDto.isCompanyInfoChanged());
+		log.info("EDIT ASSOC:"+rqDto.isAsscProjChanged());
+		log.info("EDIT EQUITY:"+rqDto.isCapitalEquityChanged());
+		log.info("EDIT PERSONNEL BRANCH:"+rqDto.isPersonnelBranchChanged());
+		log.info("EDIT BANK:"+rqDto.isBankInfoChanged());
+		log.info("EDIT FOREIGNER:"+rqDto.isForeigner());
+		log.info(">>>>>>>>END SET SECTION EDITOR<<<<<<<<<<");
 
 		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
 				.getSmAppl());
