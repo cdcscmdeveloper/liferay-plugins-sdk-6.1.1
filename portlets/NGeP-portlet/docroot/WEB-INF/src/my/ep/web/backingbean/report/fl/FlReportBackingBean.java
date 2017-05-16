@@ -129,24 +129,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	/**
-	 * Construct ministry condition fields.
-	 * 
-	 * @return the string
-	 */
-	public String constructMinistryConditionFields() {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append("orgTypeCode.parameterCode^");
-		sb.append(OrganizationType.MINISTRY.value());
-		sb.append("|recordStatus^1");
-		return sb.toString();
-	}
-	/**
 	 * Get Ministry condition for construct the LOV listing
 	 * @return String
 	 */
 	public String getMinistryCondition() {
-		String condition = "";getManagedBean().getMinistry();
+		String condition = "";
 		if(hasGovernmentUserRole()) {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
@@ -181,9 +168,37 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * @return String
 	 */
 	public String constuctConditionFieldsForPTJGroup() {	
-		String condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
-				this.getManagedBean().getMinistry().getOrgProfileId();
+		String condition = "";
+		if(getManagedBean().getMinistry() != null){
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
+					this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+		
 		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId()+"";
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			PmOrgProfile kumpulanPtj = null;
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+				if(kumpulanPtj!=null) {
+					kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
+				}
+			}
+			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
+		}else if(hasAuditGenUserRole() && condition.trim().length() > 0){
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
 			
@@ -216,9 +231,33 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * @return String
 	 */
 	public String getPTJCondition() {
-		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value())+
-				"^"+this.getManagedBean().getPtjGroup().getOrgProfileId();
+		String condition = "";
+		if(getManagedBean().getPtjGroup() != null){
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value())+
+					"^"+this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+		
 		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			String ptjList = orgProfile.getOrgProfileId()+"";
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
+			}
+			condition = condition + "|orgProfileId^"+ptjList+"^9";
+		}else if(hasAuditGenUserRole() && condition.trim().length() > 0){
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
 			
@@ -272,7 +311,23 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()))
 			return true;		
 		else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value()))
-			return true;		
+			return true;
+		else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()))
+			return true;
+		else
+			return false;		
+	}
+	
+	/**
+	 * Check is it login user is Government User
+	 * 
+	 * @return true, if user is Government User
+	 */
+	protected boolean hasAuditGenUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()))
+			return true;
+		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()))
+			return true;
 		else
 			return false;		
 	}
