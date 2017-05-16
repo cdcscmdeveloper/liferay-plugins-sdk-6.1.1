@@ -14,7 +14,7 @@
 							headerText="#{lbl['lbl.fl.ministry']}" 
 							value="#{crRptBB.managedBean.ministry.orgName}"
 							postUpdateListener="crRptBB.resetPtjGroupProfile()"
-							update=":form:searchPtj"
+							update=":form:searchPtj,:form:searchJabatan"
 							saveObject="crRptBB.managedBean.ministry"
 							conditionField="#{crRptBB.getMinistryCondition()}"
 							>
