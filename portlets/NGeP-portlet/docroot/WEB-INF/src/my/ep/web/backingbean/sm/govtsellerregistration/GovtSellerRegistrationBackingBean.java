@@ -2,6 +2,8 @@ package my.ep.web.backingbean.sm.govtsellerregistration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1403,6 +1405,9 @@ public class GovtSellerRegistrationBackingBean extends
 				} else if (!bk.isSelected() && bk.getForHqFlg() == 1) {
 					bk.setForHqFlg(0);
 				}
+
+				// remove not selected branch
+				bk.getSmSupplierBranchBanks().removeAll(toRemoveBranchBankList);
 			}
 		}
 	}
@@ -1477,8 +1482,10 @@ public class GovtSellerRegistrationBackingBean extends
 										.getSmSupplierBranch().getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							brBnk.getSmSupplierBranch().setSelected(true);
-							bk.getBranches().add(brBnk.getSmSupplierBranch());
+							SmSupplierBranch brDb = (SmSupplierBranch) SerializationUtils
+									.clone(brBnk.getSmSupplierBranch());
+							brDb.setSelected(true);
+							bk.getBranches().add(brDb);
 						}
 						brTmp = null;
 					}
@@ -1494,10 +1501,10 @@ public class GovtSellerRegistrationBackingBean extends
 										brMain.getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							brMain.setSelected(false);
-							bk.getBranches().add(
-									(SmSupplierBranch) SerializationUtils
-											.clone(brMain));
+							SmSupplierBranch brNew = (SmSupplierBranch) SerializationUtils
+									.clone(brMain);
+							brNew.setSelected(false);
+							bk.getBranches().add(brNew);
 						}
 						brTmp = null;
 					}
@@ -1519,7 +1526,7 @@ public class GovtSellerRegistrationBackingBean extends
 
 				// remove SmSupplierBranchBank if not exist in supplierBranch
 				// from appl
-				if(bk.getSmSupplierBranchBanks()!=null){
+				if (bk.getSmSupplierBranchBanks() != null) {
 					Iterator<SmSupplierBranchBank> brBkIt = bk
 							.getSmSupplierBranchBanks().iterator();
 					while (brBkIt.hasNext()) {
@@ -1535,6 +1542,19 @@ public class GovtSellerRegistrationBackingBean extends
 						}
 					}
 				}
+
+				// sort branches by branch name
+				Collections.sort(bk.getBranches(),
+						new Comparator<SmSupplierBranch>() {
+							@Override
+							public int compare(final SmSupplierBranch s1,
+									final SmSupplierBranch s2) {
+								String str1 = s1.getBranchName();
+								String str2 = s2.getBranchName();
+
+								return (str2.compareTo(str1));
+							}
+						});
 			}
 
 		}
