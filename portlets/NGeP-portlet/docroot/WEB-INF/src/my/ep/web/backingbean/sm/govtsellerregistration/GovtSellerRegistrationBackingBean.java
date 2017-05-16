@@ -1519,18 +1519,20 @@ public class GovtSellerRegistrationBackingBean extends
 
 				// remove SmSupplierBranchBank if not exist in supplierBranch
 				// from appl
-				Iterator<SmSupplierBranchBank> brBkIt = bk
-						.getSmSupplierBranchBanks().iterator();
-				while (brBkIt.hasNext()) {
-					SmSupplierBranchBank brBkTmp = brBkIt.next();
-					brTmp = (SmSupplierBranch) EntityHelper
-							.getEntityBySinglePropertyFromList(brBkTmp
-									.getSmSupplierBranch().getBranchCode(),
-									getManagedBean().getSmAppl()
-											.getSmSupplierBranches(),
-									"branchCode");
-					if (brTmp == null) {
-						brBkIt.remove();
+				if(bk.getSmSupplierBranchBanks()!=null){
+					Iterator<SmSupplierBranchBank> brBkIt = bk
+							.getSmSupplierBranchBanks().iterator();
+					while (brBkIt.hasNext()) {
+						SmSupplierBranchBank brBkTmp = brBkIt.next();
+						brTmp = (SmSupplierBranch) EntityHelper
+								.getEntityBySinglePropertyFromList(brBkTmp
+										.getSmSupplierBranch().getBranchCode(),
+										getManagedBean().getSmAppl()
+												.getSmSupplierBranches(),
+										"branchCode");
+						if (brTmp == null) {
+							brBkIt.remove();
+						}
 					}
 				}
 			}
