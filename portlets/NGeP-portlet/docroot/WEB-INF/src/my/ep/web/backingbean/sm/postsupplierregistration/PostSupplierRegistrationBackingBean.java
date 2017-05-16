@@ -857,6 +857,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
 								path = SOFT_CERT_PATH;
 							}
+							path = SOFT_CERT_PATH;
 							//getManagedBean().setFlowStatus(7);
 						}
 						getManagedBean().setFlowStatus(7);
