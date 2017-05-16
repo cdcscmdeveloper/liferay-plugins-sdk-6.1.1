@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.ReportBaseManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-public abstract class FlReportManagedBean extends ReportBaseManagedBean{
+public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	private PmOrgProfile currentActiveOrg;
@@ -23,6 +23,7 @@ public abstract class FlReportManagedBean extends ReportBaseManagedBean{
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
 	private PmOrgProfile ptjGroup;
+	private PmOrgProfile selectedOrgProfile;
 	
 	private boolean disableOrgFields;
 	
@@ -236,5 +237,13 @@ public abstract class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+
+	public PmOrgProfile getSelectedOrgProfile() {
+		return selectedOrgProfile;
+	}
+
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
 	}
 }
