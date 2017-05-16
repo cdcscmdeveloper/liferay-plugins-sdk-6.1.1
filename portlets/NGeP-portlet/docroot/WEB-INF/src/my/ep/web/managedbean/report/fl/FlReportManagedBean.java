@@ -17,9 +17,6 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	private PmOrgProfile currentActiveOrg;
-	private PmOrgProfile selectedMinistry;
-	private PmOrgProfile selectedKumpulanPTJ;
-	private PmOrgProfile selectedPTJ;
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
 	private PmOrgProfile ptjGroup;
@@ -42,48 +39,6 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private Date toDate;
 	
 	public FlReportManagedBean(){}
-
-	/**
-	 * @return the selectedMinistry
-	 */
-	public PmOrgProfile getSelectedMinistry() {
-		return selectedMinistry;
-	}
-
-	/**
-	 * @param selectedMinistry the selectedMinistry to set
-	 */
-	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
-		this.selectedMinistry = selectedMinistry;
-	}
-
-	/**
-	 * @return the selectedKumpulanPTJ
-	 */
-	public PmOrgProfile getSelectedKumpulanPTJ() {
-		return selectedKumpulanPTJ;
-	}
-
-	/**
-	 * @param selectedKumpulanPTJ the selectedKumpulanPTJ to set
-	 */
-	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
-		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
-	}
-
-	/**
-	 * @return the selectedPTJ
-	 */
-	public PmOrgProfile getSelectedPTJ() {
-		return selectedPTJ;
-	}
-
-	/**
-	 * @param selectedPTJ the selectedPTJ to set
-	 */
-	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
-		this.selectedPTJ = selectedPTJ;
-	}
 
 	/**
 	 * @return the currentActiveOrg
