@@ -52,6 +52,15 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
 		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
+		if(getManagedBean().getMinistry() != null){
+			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgName());
+		}
+		if (getManagedBean().getPtjGroup() != null) {
+			params.put(FlReportConst.FL_RPT_KUMPULAN, getManagedBean().getPtjGroup().getOrgName());
+		}
+		if (getManagedBean().getPtj() != null) {
+			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgName());
+		}
 		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_NO, getManagedBean().getContractNo());
 		}
@@ -66,9 +75,6 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getContractRequestNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_REQ_NO, getManagedBean().getContractRequestNo());
-		}
-		if (StringUtils.isNotBlank(getManagedBean().getLoaNo())) {
-			params.put(FlReportConst.FL_RPT_SST_NO, getManagedBean().getLoaNo());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getLoaNo())) {
 			params.put(FlReportConst.FL_RPT_SST_NO, getManagedBean().getLoaNo());
