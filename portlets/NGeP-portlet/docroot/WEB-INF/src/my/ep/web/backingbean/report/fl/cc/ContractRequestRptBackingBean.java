@@ -49,7 +49,9 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		log.info("********Report Code*************" + getManagedBean().getReportCode());
 		
 		retrieveReportValueFromDb();
-		
+		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
+		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
+		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
 		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_NO, getManagedBean().getContractNo());
 		}
@@ -75,9 +77,6 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 			params.put(FlReportConst.FL_RPT_TREASURY_CIRCULAR, getManagedBean().getPkpNo());
 		}
 		
-		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
-		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
-
 		generateFlReport(params);
 		
 	}
