@@ -222,4 +222,32 @@
 				</p:calendar></td>
 		</tr>
 	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{crRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{crRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+		</p:commandButton>
+	</div>
+		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+			width="500px" resizable="false" styleClass="pop_up_top">
+			<h:outputText escape="false" style="float:left;margin-left:5px;"
+				value="#{flReportBB.managedBean.popUpMsg}">
+			</h:outputText>
+			<br />
+			<div style="float:right;">
+				<table style="width:100%">
+					<tr>
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+								onclick="confirmationId.hide();" />
+							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+								action="#{flReportBB.redirect()}">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</div>
+		</p:dialog>
 </ui:composition>

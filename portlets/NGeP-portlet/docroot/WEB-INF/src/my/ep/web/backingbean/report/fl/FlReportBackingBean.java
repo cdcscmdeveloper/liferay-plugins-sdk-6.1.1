@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.report.fl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.faces.model.SelectItem;
@@ -46,7 +48,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
  * @author KK LIM
  * @since 26/4/2017
  */
-public abstract class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBaseBackingBean<T>  {
+public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBaseBackingBean<T>  {
 
 	private static final long serialVersionUID = 1L;
 
@@ -87,13 +89,13 @@ public abstract class FlReportBackingBean<T extends FlReportManagedBean> extends
 //		}
 	}
 	
-	public void generateFlReport(){
+	public void generateFlReport(LinkedHashMap<String, String> params){
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);		
 		
 		RPTRequestResDTO resDTO = rptRequestSO.generateReport(
-				constructFlParamStrings(), 
+				constructFlParamStrings(params), 
 				getManagedBean().getReportCode(), 
 				null, 
 				getFacesScopes().getUserSessionBean().getUserId(), 
@@ -123,9 +125,7 @@ public abstract class FlReportBackingBean<T extends FlReportManagedBean> extends
 		return PmCommonUtil.getPmZoneListOptions();
 	}
 	
-	private String constructFlParamStrings(){
-		
-		LinkedHashMap<String, String> map = new LinkedHashMap<>();	
+	private String constructFlParamStrings(LinkedHashMap<String, String> map){
 		
 		map.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 		map.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
@@ -436,6 +436,18 @@ public abstract class FlReportBackingBean<T extends FlReportManagedBean> extends
 			}
 		}
 	}
+	
+	public void setDefaultDateFromAndDateTo() {
+		if (getManagedBean().getFromDate() == null
+				|| getManagedBean().getToDate() == null) {
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
+			getManagedBean().setFromDate(fromDate.getTime());
+			getManagedBean().setToDate(new Date());
+		}
+	}
+	
+	
 	
 	
 }
