@@ -83,7 +83,7 @@
 			</td>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
 			<td>
-				<p:selectOneMenu value="#{ctReportBB.managedBean.procurementMethod}" style="width:300px">
+				<p:selectOneMenu value="#{ctReportBB.managedBean.procurementMode}" style="width:300px">
 					<f:selectItems value="#{ctReportBB.getProcurementModeDropdownValues()}" />
 					<p:ajax event="change" partialSubmit="true" />
 				</p:selectOneMenu>
