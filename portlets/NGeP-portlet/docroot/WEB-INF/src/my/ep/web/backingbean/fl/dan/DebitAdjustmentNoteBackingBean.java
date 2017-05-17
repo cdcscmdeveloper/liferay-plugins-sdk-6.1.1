@@ -561,8 +561,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * Gpki sign action.
 	 *
 	 * @param outcome the outcome
+	 * @throws ParseException 
 	 */
-	public String gpkiSignAction(String outcome){
+	public String gpkiSignAction(String outcome) throws ParseException{
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -584,6 +585,8 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
+		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			return submitAction(outcome);
 		}
 		return null; 
 		
