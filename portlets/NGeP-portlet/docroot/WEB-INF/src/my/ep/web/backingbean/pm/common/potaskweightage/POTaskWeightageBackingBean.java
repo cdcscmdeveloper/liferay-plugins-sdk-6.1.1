@@ -1,9 +1,8 @@
 package my.ep.web.backingbean.pm.common.potaskweightage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -12,15 +11,17 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.poroletask.IPoRoleTaskSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.PmTrackingDairyVO;
+import my.ep.dto.pm.common.poroletask.PoRoleTaskReqDTO;
+import my.ep.dto.pm.common.poroletask.PoRoleTaskResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -55,6 +56,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		renewSesionObject();
 		
 		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
+		getManagedBean().setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 		if(activeOrg.size() > 0){
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
@@ -64,6 +66,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 			
 			retrievePOUsers();
 		}
+		
 		prepareApplSelectionList();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PO_TASK_WEIGHTAGE_MAIN);
@@ -72,106 +75,42 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 	public String editUser(PmUser poUser){
 		log.info("**********editUser**********");
 		getManagedBean().setSelectedUser(poUser);
+		getManagedBean().setExistingRoleTaskMap(new HashMap<Long,PmPoRoleTask>());
 		
-		if(getManagedBean().getSelectedRoleTask() == null){
-			getManagedBean().setSelectedRoleTask(new PmPoRoleTask());
+		if(poUser.getPmPoRoleTasks().size() > 0){
+			for(PmPoRoleTask roleTask : poUser.getPmPoRoleTasks()){
+				PmPoRoleTask currentRoleTask = (PmPoRoleTask)roleTask.cloneEntity(); 
+				getManagedBean().getExistingRoleTaskMap().put(currentRoleTask.getPoRoleTaskdId(), currentRoleTask);
+			}
 		}
-		
-		//getExistingTaskSet();
-		
+		log.info("**********getExistingRoleTaskLs**********" + getManagedBean().getExistingRoleTaskMap().size());
 		return PO_TASK_WEIGHTAGE_DTL;
 	}
 	
-	public void editRoleTask(PmPoRoleTask roleTask){
-		//setExistingTask();
-		PmPoRoleTask currentRoleTask = (PmPoRoleTask)roleTask.cloneEntity();  
-		getManagedBean().setSelectedRoleTask(currentRoleTask);
-		getManagedBean().setExistingRoleTask(roleTask);
-		
+	public void deleteRoleTask(PmPoRoleTask roleTask){
+		getManagedBean().getSelectedUser().getPmPoRoleTasks().remove(roleTask);
 	}
 	
 	public void addRoleTask(){
 		PmPoRoleTask roleTask = new PmPoRoleTask();
 		roleTask.setPmUser(getManagedBean().getSelectedUser());
 		roleTask.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-		getManagedBean().setSelectedRoleTask(roleTask);
-	}
-	
-/*	public void saveRoleTask(){
-		PmUser usr = getManagedBean().getSelectedUser();
-		updateUser(usr);
-		
-		RequestContext.getCurrentInstance().execute("roleTaskDlg.hide();");
-		String msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_770127, 
-				new String[] {SmCommonUtil.getMessage("lbl.pm.po.task", null)});
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null,msg));
-	}*/
-	
-	public void saveRoleTask(){
-		PmUser usr = getManagedBean().getSelectedUser();
-		PmPoRoleTask selectedRoleTask = getManagedBean().getSelectedRoleTask();
-		//String msg = null;
-		String selectedRoleTaskStr = selectedRoleTask.getSupplierType() + selectedRoleTask.getApplType() + selectedRoleTask.getCategoryType();
-		if(selectedRoleTask.getPoRoleTaskdId() == null){
-			checkDuplicateRoleTask(selectedRoleTaskStr);
-			if(usr.getPmPoRoleTasks() == null){
-				usr.setPmPoRoleTasks(new ArrayList<PmPoRoleTask>());
+		if(getManagedBean().getSelectedUser().getPmPoRoleTasks().size() > 0){
+			List<String> rlTaskStrLs = new ArrayList<String>(); 
+			for(PmPoRoleTask rt : getManagedBean().getSelectedUser().getPmPoRoleTasks()){
+				String str = rt.getSupplierType() + rt.getApplType() + rt.getCategoryType();
+				if(rlTaskStrLs.contains(str)){
+					String lbl = "lbl.pm.po.task.role.task";
+					String desc = SmCommonUtil.getMessage(lbl, null);
+					throw new EpException(MessageConst.ERROR_700027, new String[] {desc});
+				}else{
+					rlTaskStrLs.add(str);
+				}
 			}
-			usr.getPmPoRoleTasks().add(getManagedBean().getSelectedRoleTask());
-				
-/*			updateUser(usr);*/
-			addRoleTask();
-			clearRoleTask();
-			//RequestContext.getCurrentInstance().execute("roleTaskDlg.hide();");
-				
-			/*msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_770127, 
-					new String[] {SmCommonUtil.getMessage("lbl.pm.po.task", null)});*/
-		}else{
-			PmPoRoleTask currentRoleTask = getManagedBean().getExistingRoleTask();
-			if(!compareUpdateRoleTask()){
-				checkDuplicateRoleTask(selectedRoleTaskStr);
-				currentRoleTask.setApplType(selectedRoleTask.getApplType());
-				currentRoleTask.setSupplierType(selectedRoleTask.getSupplierType());
-				currentRoleTask.setCategoryType(selectedRoleTask.getCategoryType());
-				currentRoleTask.setRecordStatusFlg(selectedRoleTask.getRecordStatusFlg());
-				
-				//updateUser(usr);
-			}else{
-				currentRoleTask.setRecordStatusFlg(selectedRoleTask.getRecordStatusFlg());
-			}
-			
-			//RequestContext.getCurrentInstance().execute("roleTaskDlg.hide();");
-/*			msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_770127, 
-					new String[] {SmCommonUtil.getMessage("lbl.pm.po.task", null)});*/
 		}
 		
-		RequestContext.getCurrentInstance().execute("roleTaskDlg.hide();");
-		
-		/*if(msg != null){
-			RequestContext.getCurrentInstance().update("roleTaskPnl");
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,msg));
-		}*/
+		getManagedBean().getSelectedUser().getPmPoRoleTasks().add(roleTask);
 	}
-	
-	
-	
-	/*public void deleteRoleTask(){
-		if(getManagedBean().getSelectedRoleTasks().size() > 0){
-			getManagedBean().getSelectedUser().getPmPoRoleTasks().removeAll(getManagedBean().getSelectedRoleTasks());
-			updateUser(getManagedBean().getSelectedUser());
-		}
-	}*/
-	
-	public void clearRoleTask(){
-		PmPoRoleTask roleTask = getManagedBean().getSelectedRoleTask();
-		roleTask.setRecordStatusFlg(null);
-		roleTask.setApplType(null);
-		roleTask.setCategoryType(null);
-		roleTask.setApplType(null);
-	}
-	
 	
 	public String getApplDesc(String applType){
 		String label = "lbl.pm.po.task.appltype_" + applType;
@@ -211,7 +150,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 	}
 
 	public void retrievePOUsers(){
-		UserReqDTO reqDTO = new UserReqDTO();
+		PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
 		reqDTO.setRoleCode(getManagedBean().getRoleCode());
 		reqDTO.setZoneCode(getManagedBean().getZoneCode());
 		
@@ -223,15 +162,16 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 			reqDTO.setIdentificationNo(getManagedBean().getIdentificationNo());
 		}
 		
+		reqDTO.setRecordStatus(getManagedBean().getRecordStatus());
 		//reqDTO.setByWeightage(true);
 		/*	reqDTO.setSupplierType("K");
 			reqDTO.setApplicationType("A");
 			reqDTO.setCategoryType("N");*/
 		
 		
-		IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserResDTO resDTO = reqSO.retrievePOUserListByRoleZone(reqDTO);
+		IPoRoleTaskSO reqSO = (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
+		PoRoleTaskResDTO resDTO = reqSO.retrievePOUserListByRoleZone(reqDTO);
 		
 		if (resDTO.isSuccessful()) {
 			log.info("POTaskWeightage user size>>>>>" + resDTO.getUserList().size());
@@ -262,19 +202,40 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		PmUser selectedUser = getManagedBean().getSelectedUser();
 		
 		//set to new weightage
-		selectedUser.getPmPoWeightage().setNewWeight(selectedUser.getPmPoWeightage().getWeightEnter());
 		
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setPmUser(selectedUser);
-		IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserResDTO resDTO = reqSO.updateUser(reqDTO);
 		
+		PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
+		//contructTrackingDiary(reqDTO);
+		
+		//selectedUser.getPmPoWeightage().setNewWeight(selectedUser.getPmPoWeightage().getWeightEnter());
+		log.info("BB newWeight>>>>" +selectedUser.getPmPoWeightage().getNewWeight());
+		log.info("BB getWeightEnter>>>>" +selectedUser.getPmPoWeightage().getWeightEnter());
+		reqDTO.setPoUser(selectedUser);
+		reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setExistingRoleTaskMap(getManagedBean().getExistingRoleTaskMap());
+		
+		IPoRoleTaskSO reqSO = (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
+		PoRoleTaskResDTO resDTO = reqSO.updateRoleTask(reqDTO);
+		
+		if(resDTO.getUser() != null){
+			PmUser user = resDTO.getUser();
+			if(resDTO.getUser().getPmPoWeightage() == null){
+				PmPoWeightage weightage = new PmPoWeightage();
+				weightage.setPmUser(user);
+				user.setPmPoWeightage(weightage);
+			}else{
+				PmPoWeightage usrWeightage = user.getPmPoWeightage();
+				user.getPmPoWeightage().setWeightEnter(usrWeightage.getNewWeight());
+			}
+		}
+	
+		editUser(resDTO.getUser());
 		//getManagedBean().setSelectedUser(resDTO.getPmUser());
 		//RequestContext.getCurrentInstance().update("pnlPoRoleTask");
 		
-		String msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_770127, 
-					new String[] {SmCommonUtil.getMessage("lbl.pm.po.task", null)});
+		String msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_100002,null);
 		
 		FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,msg));
@@ -285,32 +246,27 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		getManagedBean().getSelectedUser().getPmPoWeightage().setWeightEnter(getManagedBean().getSelectedUser().getPmPoWeightage().getNewWeight());
 	}
 	
-	public void supplierTypeOnChange(){
-		PmPoRoleTask roleTask = getManagedBean().getSelectedRoleTask();
+	public void supplierTypeOnChange(PmPoRoleTask roleTask){
 		roleTask.setApplType(null);
 		roleTask.setCategoryType(null);
 	}
 	
-	public void applTypeOnChange(){
-		PmPoRoleTask roleTask = getManagedBean().getSelectedRoleTask();
+	public void applTypeOnChange(PmPoRoleTask roleTask){
 		roleTask.setCategoryType(null);
 	}
 	
-	public List<PmParameterDesc> applTypeDropDown(){
+	public List<PmParameterDesc> applTypeDropDown(PmPoRoleTask roleTask){
 		List<PmParameterDesc> applTypeLs = new ArrayList<PmParameterDesc>();
 		
-		if(StringUtils.isNotBlank(getManagedBean().getSelectedRoleTask().getSupplierType())){
+		if(StringUtils.isNotBlank(roleTask.getSupplierType())){
 			for(PmParameterDesc pmDesc : getManagedBean().getApplTypeSelection()){
 				String parameterCode = pmDesc.getPmParameter().getParameterCode();
-				if(getManagedBean().getSelectedRoleTask().
-						getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
-					if(!parameterCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
-							!parameterCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)){
+				if(roleTask.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
+					if(!ProfileManagementConst.CONTRACTOR_EXCLUDE_APPL_LIST.contains(parameterCode)){
 						applTypeLs.add(pmDesc);
 					}
 				}else{
-					if(!parameterCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
-							!parameterCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)){
+					if(!ProfileManagementConst.CONSULTANT_EXCLUDE_APPL_LIST.contains(parameterCode)){
 						applTypeLs.add(pmDesc);
 					}
 				}
@@ -323,8 +279,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 
 	}
 	
-	public boolean disabledCategory(){
-		PmPoRoleTask roleTask = getManagedBean().getSelectedRoleTask();
+	public boolean disabledCategory(PmPoRoleTask roleTask){
 		if(StringUtils.isNotBlank(roleTask.getSupplierType()) && 
 				StringUtils.isNotBlank(roleTask.getApplType())){
 			if(roleTask.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
@@ -345,92 +300,50 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		return false;
 	}
 	
-	
-	/*public void savePOWeightage(){
-		if(getManagedBean().getUserLs().size() > 0){
-			List<PmUser> userChangeLs = new ArrayList<PmUser>();
-			
-			for(PmUser user : getManagedBean().getUserLs()){
-				if(user.getPmPoWeightage().getNewWeight() != 
-						user.getPmPoWeightage().getWeightEnter()){
-					userChangeLs.add(user);
-				}
-			}
-			
-			log.info("******change List*********" + userChangeLs.size());
-			if(userChangeLs.size() > 0){
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserLs(userChangeLs);
-				IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserResDTO  resDTO = reqSO.updateUserLs(reqDTO);
-				
-				if(resDTO.isSuccessful()){
-					String msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_770127, 
-							new String[] {SmCommonUtil.getMessage("lbl.pm.po.task.weightage ", null)});
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,msg));
-				}
-			}
-		}
-	}*/
-	
-/*	public void resetPOWeightage(){
-		if(getManagedBean().getUserLs().size() > 0){
-			for(PmUser user : getManagedBean().getUserLs()){
-				user.getPmPoWeightage().setNewWeight(user.getPmPoWeightage().getWeightEnter());
-			}
-		}
-	}*/
-	
-	private boolean compareUpdateRoleTask(){
-		PmPoRoleTask existing = getManagedBean().getExistingRoleTask();
-		PmPoRoleTask selected = getManagedBean().getSelectedRoleTask();
+	public void contructTrackingDiary(UserReqDTO reqDTO){
+		PmUser user = getManagedBean().getSelectedUser();
+		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 		
-		if(existing.getPoRoleTaskdId().longValue() == selected.getPoRoleTaskdId().longValue()){
-			if(existing.getApplType().equalsIgnoreCase(selected.getApplType()) && 
-					existing.getSupplierType().equalsIgnoreCase(selected.getSupplierType())){
+		if(user.getPmPoWeightage().getNewWeight() != user.getPmPoWeightage().getWeightEnter()){
+			reqDTO.getTrackDairyVOs().add(
+					PmCommonUtil.assignTrackingDairyForRoleTask(user.getPmPoWeightage(),
+							 PmCommonUtil.getActionDesc(MessageConst.TD_81605, 
+									 new String[]{user.getUserName(),
+											 Long.toString(user.getPmPoWeightage().getNewWeight()), 
+											 Long.toString(user.getPmPoWeightage().getWeightEnter())}),
+							 				user.getPmPoWeightage().getRecordStatusFlg().longValue()));
+			
+		}
+		
+		if(user.getPmPoRoleTasks().size() > 0){
+			for(PmPoRoleTask roleTask : user.getPmPoRoleTasks()){
+				String msgId = null;
+				boolean isModified = false;
 				
-/*				if(existing.getCategoryType() == null && selected.getCategoryType() == null){
-					return true;
-				}*/
-				
-				if(StringUtils.isNotBlank(existing.getCategoryType()) && StringUtils.isNotBlank(selected.getCategoryType())){
-					if(existing.getCategoryType().equalsIgnoreCase(selected.getCategoryType())){
-						return true;
-					}
+				if(roleTask.isBrandNew()){
+					msgId = MessageConst.TD_81604;
+					isModified = true;
 				}else{
-					if(existing.getCategoryType() == null && selected.getCategoryType() == null){
-						return true;
+					PmPoRoleTask exRT = getManagedBean().getExistingRoleTaskMap().get(roleTask.getPoRoleTaskdId());
+					
+					if(exRT.getRecordStatusFlg() != roleTask.getRecordStatusFlg()){
+						if(roleTask.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+							msgId = MessageConst.TD_81607;
+						}else{
+							msgId = MessageConst.TD_81606;
+						}
+						isModified = true;
 					}
+				}
+
+				String[] desc = new String[]{user.getUserName(), roleTask.getSupplierType(), 
+						 roleTask.getApplType(), roleTask.getCategoryType() != null ? roleTask.getCategoryType() : "-"};
+				if(isModified){
+					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForRoleTask(roleTask,
+							 PmCommonUtil.getActionDesc(msgId,  desc),roleTask.getRecordStatusFlg().longValue()));
 				}
 			}
 		}
-		
-		return false;
 	}
-	
-	private Set<String> getExistingTaskSet(){
-		Set<String> roleExist = new HashSet<String>();
-		if(getManagedBean().getSelectedUser().getPmPoRoleTasks().size() > 0){
-			for(PmPoRoleTask roleTask : getManagedBean().getSelectedUser().getPmPoRoleTasks()){
-				String roleTaskStr = roleTask.getSupplierType() + roleTask.getApplType() + roleTask.getCategoryType();
-				roleExist.add(roleTaskStr);
-			}
-		
-		}
-		
-		return roleExist;
-	}
-	
-	
-	private void checkDuplicateRoleTask(String taskRoleStr){
-		Set<String> roleTaskSet = getExistingTaskSet();
-		
-		if(roleTaskSet.contains(taskRoleStr)){
-			String lbl = "lbl.pm.po.task.role.task";
-			String desc = SmCommonUtil.getMessage(lbl, null);
-			throw new EpException(MessageConst.ERROR_700027, new String[] {desc});
-		}
-	}
+
 }
