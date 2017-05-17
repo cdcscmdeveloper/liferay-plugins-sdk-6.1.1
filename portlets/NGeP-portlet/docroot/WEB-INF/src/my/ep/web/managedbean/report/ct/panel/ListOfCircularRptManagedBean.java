@@ -2,7 +2,7 @@ package my.ep.web.managedbean.report.ct.panel;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import my.ep.web.managedbean.report.ct.CtReportManagedBean;
+import my.ep.web.managedbean.report.ct.CtReportBaseManagedBean;
 
 /**
  * The Class ListOfCircularRptManagedBean.
@@ -11,7 +11,7 @@ import my.ep.web.managedbean.report.ct.CtReportManagedBean;
  */
 @ManagedBean(name = "listOfCircularRptMB")
 @SessionScoped
-public class ListOfCircularRptManagedBean extends CtReportManagedBean {
+public class ListOfCircularRptManagedBean extends CtReportBaseManagedBean {
 	
 	private static final long serialVersionUID = 1L;
 
