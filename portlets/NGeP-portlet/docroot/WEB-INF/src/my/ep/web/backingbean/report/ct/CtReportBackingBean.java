@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.report.ct;
 
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -121,7 +123,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setLoaNo(null);
 		getManagedBean().setLoaPhysicalNo(null);
 		getManagedBean().setAgreement(null);
-		getManagedBean().setProcurementMethod(null);
+		getManagedBean().setProcurementMode(null);
 		getManagedBean().setStatus(null);
 		getManagedBean().setFromDate(null);
 		getManagedBean().setToDate(null);
@@ -136,6 +138,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	
 	private LinkedHashMap<String, String> constructParamMap() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		
 		if (getManagedBean().getSelectedMinistry() != null) {
 			map.put(CtReportConst.PARAM_KEY_MINISTRY, getManagedBean()
@@ -149,22 +152,44 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			map.put(CtReportConst.PARAM_KEY_PTJ, getManagedBean()
 					.getSelectedPTJ().getOrgProfileId().toString());
 		}		
-		if (getManagedBean().getContractNo() != null) {
+		if (StringUtils.isNotEmpty(getManagedBean().getContractNo())) {
 			map.put(CtReportConst.PARAM_KEY_CONTRACT_NO, getManagedBean()
 					.getContractNo());
 		}		
-		if (getManagedBean().getContractPhysicalNo() != null) {
+		if (StringUtils.isNotEmpty(getManagedBean().getContractPhysicalNo())) {
 			map.put(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO, getManagedBean()
 					.getContractPhysicalNo());
 		}		
-		if (getManagedBean().getLoaNo() != null) {
+		if (StringUtils.isNotEmpty(getManagedBean().getLoaNo())) {
 			map.put(CtReportConst.PARAM_KEY_LOA_NO, getManagedBean()
 					.getLoaNo());
 		}		
-		if (getManagedBean().getLoaPhysicalNo() != null) {
+		if (StringUtils.isNotEmpty(getManagedBean().getLoaPhysicalNo())) {
 			map.put(CtReportConst.PARAM_KEY_LOA_PHYSICAL_NO, getManagedBean()
 					.getLoaPhysicalNo());
-		}		
+		}
+		if (StringUtils.isNotEmpty(getManagedBean().getAgreement())) {
+			map.put(CtReportConst.PARAM_KEY_AGREEMENT, getManagedBean()
+					.getAgreement());
+		}
+		if (getManagedBean().getProcurementMode() != null) {
+			map.put(CtReportConst.PARAM_KEY_PROCUREMENT_MODE, getManagedBean()
+					.getProcurementMode().toString());
+		}
+		if (StringUtils.isNotEmpty(getManagedBean().getStatus())) {
+			map.put(CtReportConst.PARAM_KEY_STATUS, getManagedBean()
+					.getStatus());
+		}
+		if (getManagedBean().getFromDate() != null
+				&& StringUtils.isNotEmpty(getManagedBean().getFromDate().toString())) {
+			map.put(CtReportConst.PARAM_KEY_FROM_DATE, df.format(
+					getManagedBean().getFromDate()));
+		}
+		if (getManagedBean().getToDate() != null
+				&& StringUtils.isNotEmpty(getManagedBean().getToDate().toString())) {
+			map.put(CtReportConst.PARAM_KEY_TO_DATE, df.format(
+					getManagedBean().getToDate()));
+		}
 		
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
