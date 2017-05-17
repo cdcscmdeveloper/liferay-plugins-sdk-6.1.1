@@ -146,8 +146,8 @@
 			test="#{isZonal and (isBsvRequired or isSampleReq)}">
 			<ui:include src="nbZones.xhtml" />
 		</c:if>
-
-
+		
+        <p:spacer height="30px" />
 		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
 			toggleable="true">
 			<p:dataTable var="contactPerson" style="width:100%"
@@ -176,6 +176,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<p:spacer height="30px" />
 		<ui:include src="/xhtml/sc/noticeboard/qtdetails/nbDocumentList.xhtml"></ui:include>
 
 	</ui:define>
