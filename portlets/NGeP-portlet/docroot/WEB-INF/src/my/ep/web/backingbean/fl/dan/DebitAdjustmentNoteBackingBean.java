@@ -73,6 +73,8 @@ import my.ep.web.vo.AdjustmentItemNodeVO;
 @RequestScoped
 public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<DebitAdjustmentNoteManagedBean> {
 	
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
 	
@@ -376,6 +378,12 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			
+			reqDTO.setInvoice(resDTO.getInvoice());
+			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+			invBB.getManagedBean().setTaxable(resDTO.isTaxable());
+			invBB.getManagedBean().setTaxInvoice(resDTO.isTaxable());
+			
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
