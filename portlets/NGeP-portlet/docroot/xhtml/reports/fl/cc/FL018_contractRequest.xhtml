@@ -12,9 +12,10 @@
 			<td colspan="3">
 					<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
 							headerText="#{lbl['lbl.fl.ministry']}" 
+							disabled="#{crRptBB.disableMinistryLov()}"
 							value="#{crRptBB.managedBean.ministry.orgName}"
 							postUpdateListener="crRptBB.resetPtjGroupProfile()"
-							update=":form:searchPtj,:form:searchJabatan"
+							update=":form:searchPtj,:form"
 							saveObject="crRptBB.managedBean.ministry"
 							conditionField="#{crRptBB.getMinistryCondition()}"
 							>
@@ -26,9 +27,10 @@
 			<td colspan="3">
 					<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
 							headerText="#{lbl['lbl.fl.jabatan']}" 
+							disabled="#{crRptBB.disablePtjGroupLov()}"
 							value="#{crRptBB.managedBean.ptjGroup.orgName}"
 							postUpdateListener="crRptBB.resetPtjProfile()"
-							update=":form:searchPtj"
+							update=":form:searchPtj,:form"
 							saveObject="crRptBB.managedBean.ptjGroup"
 							conditionField="#{crRptBB.constuctConditionFieldsForPTJGroup()}"
 							>
@@ -41,6 +43,7 @@
 			<td colspan="3">
 					<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
 							headerText="#{lbl['lbl.fl.ptj']}"
+							disabled="#{crRptBB.disablePtjLov()}"
 							value="#{crRptBB.managedBean.ptj.orgName}"
 							saveObject="crRptBB.managedBean.ptj"	
 							conditionField="#{crRptBB.getPTJCondition()}"
