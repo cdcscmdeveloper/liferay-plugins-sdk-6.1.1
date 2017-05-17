@@ -16,7 +16,7 @@
 			<p:commandButton id="backBtn"  style="left;"
 				action="#{poTaskWeightageBB.returnToPoUserMain}" value="#{lbl['lbl.btn.back']}"/>
 				
-			<p:commandButton id="btnSave" style="float:right;"
+			<p:commandButton id="btnSave" style="float:right;" update="@form"
 				action="#{poTaskWeightageBB.updateUser()}" value="#{lbl['lbl.btn.save']}"/>
 	</div>
 	<div style="clear: both;"></div>
@@ -55,9 +55,10 @@
 				</td>
 			
 				<td class="tdContent">
-					<p:inputText  value="#{poTaskWeightageBB.managedBean.selectedUser.pmPoWeightage.weightEnter}" />
-					<p:commandButton id="btnReset" update="pnlPoRoleTask" action="#{poTaskWeightageBB.resetWeightage}" 
-					value="#{lbl['lbl.btn.reset']}"/>
+					<p:inputText  value="#{poTaskWeightageBB.managedBean.selectedUser.pmPoWeightage.weightEnter}" id="weightId" />
+					<p:commandLink id="btnRoleTaskDel" action="#{poTaskWeightageBB.resetWeightage}" update="weightId">
+							<p:graphicImage value="/css/images/design/btn_reset.png" title="#{lbl['lbl.btn.reset']}" />
+					</p:commandLink>
 				</td>
 			</tr>
 		</table>
@@ -67,37 +68,74 @@
 		 	<ac:paginator for="poRoleTaskDtTbl" />
 			
 			<p:column headerText="Supplier Type">
-				<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,roleTask.supplierType)}" />
+				<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,roleTask.supplierType)}" rendered="#{!roleTask.brandNew}" />
+				<p:selectOneMenu  value="#{roleTask.supplierType}" rendered="#{roleTask.brandNew}"
+					label = "#{lbl['lbl.pm.po.task.supplier.type']}"
+					required="#{!empty param['disableRTValidation']}">
+						<p:ajax event="change" listener="#{poTaskWeightageBB.supplierTypeOnChange(roleTask)}" update="poRoleTaskDtTbl" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="#{SupplierManagementConst.SUPP_TYPE_CONTRACTOR}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="#{SupplierManagementConst.SUPP_TYPE_CONSULTANT}"></f:selectItem>
+				</p:selectOneMenu>
 			</p:column>
 			
 			<p:column headerText="ApplicationType Type">
-				<h:outputText value="#{poTaskWeightageBB.getApplDesc(roleTask.applType)}" />
+				<h:outputText value="#{poTaskWeightageBB.getApplDesc(roleTask.applType)}" rendered="#{!roleTask.brandNew}" />
+				
+				<p:selectOneMenu  value="#{roleTask.applType}" rendered="#{roleTask.brandNew}"
+					disabled="#{empty roleTask.supplierType}" required="#{!empty param['disableRTValidation']}" label="#{lbl['lbl.pm.po.task.appl.type']}" >
+						<p:ajax event="change" listener="#{poTaskWeightageBB.applTypeOnChange(roleTask)}" 
+							update="poRoleTaskDtTbl" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{poTaskWeightageBB.applTypeDropDown(roleTask)}" var="applTypeCode" 
+						itemLabel="#{poTaskWeightageBB.getApplDesc(applTypeCode.pmParameter.parameterCode)}" 
+						itemValue="#{applTypeCode.pmParameter.parameterCode}"></f:selectItems>
+				</p:selectOneMenu>
 			</p:column>
 			
 			<p:column headerText="Category Type">
-				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty roleTask.categoryType}" />
-				<h:outputText value="#{roleTask.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}" 
-				rendered="#{!empty roleTask.categoryType}"/>
+					<p:selectOneMenu value="#{roleTask.categoryType}" rendered="#{roleTask.brandNew}"
+						disabled="#{poTaskWeightageBB.disabledCategory(roleTask)}"
+						label="#{lbl['lbl.pm.po.task.category.type']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.norm']}"
+							itemValue="#{SupplierManagementConst.smApplCategoryTypeNormal}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.spl']}"
+							itemValue="#{SupplierManagementConst.smApplCategoryTypeSpecial}"></f:selectItem>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{lbl['lbl.txt.na']}"
+						rendered="#{empty roleTask.categoryType and !roleTask.brandNew}" />
+					<h:outputText
+						value="#{roleTask.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}"
+						rendered="#{!empty roleTask.categoryType and !roleTask.brandNew}" />
 			</p:column>
 			
 			<p:column headerText="Record Status">
-				<h:outputText value="#{(roleTask.recordStatusFlg==DbValueConst.recordStatusActive) ? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']} " />
+				<p:selectOneMenu value="#{roleTask.recordStatusFlg}"
+					required="#{!empty param['disableRTValidation']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.active']}" itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.txt.inactive']}" itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
+				</p:selectOneMenu>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
-			<p:commandLink id="btnRoleTaskEdit" oncomplete="roleTaskDlg.show();" update=":#{p:component('roleTaskDlgId')}"
-					action="#{poTaskWeightageBB.editRoleTask(roleTask)}" process="@this">
-					<p:graphicImage value="/css/images/design/edit.png" />
+			<p:commandLink id="btnRoleTaskDel" action="#{poTaskWeightageBB.deleteRoleTask(roleTask)}" 
+				update="poRoleTaskDtTbl" rendered="#{roleTask.brandNew}">
+					<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 			</p:commandLink>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	<br />
 	<div style="text-align: right;">
-			<p:commandButton id="btnAdd" update="roleTaskDlgId" process="@this" 
-				action="#{poTaskWeightageBB.addRoleTask}" value="#{lbl['lbl.btn.add']}" oncomplete="roleTaskDlg.show();" />
+			<p:commandButton id="btnAdd" action="#{poTaskWeightageBB.addRoleTask}" value="#{lbl['lbl.btn.add']}" update="poRoleTaskDtTbl">
+				<f:param name="disableRTValidation" value="true" />
+			</p:commandButton>
 	</div>
 	
+	
+	<ui:remove>
 	<p:dialog  header="#{lbl['lbl.pm.po.task.new.role.task.assignment']}" widgetVar="roleTaskDlg" id="roleTaskDlgId"
 		modal="true" width="500" dynamic="true" minHeight="500">
 		<p:messages id="roleTaskDlgMessages" showDetail="true" autoUpdate="#{!empty param['disableRTValidation']}" closable="true" showSummary="false" />
@@ -191,5 +229,7 @@
 			<p:commandButton id="btnCancel" onclick="roleTaskDlg.hide();" value="#{lbl['lbl.btn.cancel']}"/>
 		</div>
 	</p:dialog>
+	</ui:remove>
+	 
 	</ui:define>
 </ui:composition>

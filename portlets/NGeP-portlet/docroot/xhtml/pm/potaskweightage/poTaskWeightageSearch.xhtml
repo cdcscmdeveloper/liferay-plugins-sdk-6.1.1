@@ -26,6 +26,21 @@
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
+			
+			<tr>
+				<th width="15%">
+				<p:outputLabel value="#{lbl['lbl.pm.po.task.user.name']}" /></th>
+				<td width="25%">
+					<p:selectOneMenu value="#{poTaskWeightageBB.managedBean.recordStatus}" style="width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.active']}" 
+						itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.txt.inactive']}" 
+						itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
 		</table>
 		
 		<div style="text-align: right;">
