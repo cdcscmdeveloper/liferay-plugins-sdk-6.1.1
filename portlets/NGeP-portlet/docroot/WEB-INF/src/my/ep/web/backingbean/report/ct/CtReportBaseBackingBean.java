@@ -6,11 +6,15 @@ package my.ep.web.backingbean.report.ct;
 
 import java.util.LinkedHashMap;
 
+import javax.faces.model.SelectItem;
+
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -42,6 +46,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	 * 
 	 * @param params  the map of param key and value
 	 */
+	
 	public void generateCtReport(LinkedHashMap<String, String> params) {
 		log.info("generateCtReport");
 		
@@ -141,5 +146,22 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	 */
 	public void onChangeKumpulanPTJ(BaseEntity entity) {
 		getManagedBean().setSelectedPTJ(null);
+	}
+	
+	/**
+	 * Gets the procurement mode dropdown values.
+	 * 
+	 * @return the procurement mode dropdown values
+	 */
+	public SelectItem[] getProcurementModeDropdownValues() {
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, null);
+		
+		if (items != null && items.length > 0) {
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		}		
+		return items;
 	}
 }
