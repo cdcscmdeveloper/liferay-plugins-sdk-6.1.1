@@ -114,6 +114,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
+import my.ep.dto.pm.common.poroletask.PoRoleTaskReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -4817,15 +4818,16 @@ public class SmCommonUtil {
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
 
-			UserReqDTO reqDTO = new UserReqDTO();
+			PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
 			reqDTO.setZoneCode(pmZone.getZoneCode());
 			reqDTO.setRoleCode(RoleCode.UPS_PO.value());
 			reqDTO.setSupplierType(supplierType);
 			reqDTO.setApplicationType(applType);
 			reqDTO.setCategoryType(categoryType);
+			reqDTO.setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 			reqDTO.setByWeightage(true);
 
-			List<PmUser> poList = SmServiceLookup.getUserSO()
+			List<PmUser> poList = SmServiceLookup.getPoRoleTaskSO()
 					.retrievePOUserListByRoleZone(reqDTO).getUserList();
 			if (poList.size() > 0) {
 				return poList.get(0);
@@ -4833,7 +4835,6 @@ public class SmCommonUtil {
 				throw new EpException(MessageConst.ERROR_721117);
 			}
 		} else {
-			log.info("***retrievePOWithLowestWeightage****" + activeOrg.size());
 			throw new EpException(MessageConst.ERROR_721118);
 		}
 	}
