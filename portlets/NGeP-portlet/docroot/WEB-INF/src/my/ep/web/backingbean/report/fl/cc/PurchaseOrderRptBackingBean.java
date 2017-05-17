@@ -16,7 +16,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
-import my.ep.web.managedbean.report.fl.cc.ContractRequestRptManagedBean;
 import my.ep.web.managedbean.report.fl.cc.PurchaseOrderRptManagedBean;
 /**
  * Backing Bean for ContractRequestRpt.
