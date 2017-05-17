@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class CtReportConst implements Serializable {
 
-	private static final long serialVersionUID = 1L;	
+	private static final long serialVersionUID = 1L;
 
 	// Report Code
 	public static final String CT_LIST_OF_CONTRACT_MC_RPT_VAL = "CT_003";
@@ -16,12 +16,30 @@ public class CtReportConst implements Serializable {
 	public static final String CT_LIST_OF_CIRCULAR_PQ_RPT_VAL = "CT_023";
 	public static final String CT_STATEMENT_OF_ORDER_PQ_RPT_VAL = "CT_024";
 	
-	// Param Key
-	public static final String PARAM_CC_MINISTRY = "PMINIS";
-	public static final String PARAM_CC_PEGAWAI_PEGAWAL = "PFPP";
-	public static final String PARAM_CC_KUMPULAN_PTJ = "PFJA";
-	public static final String PARAM_CC_PTJ = "PPTJ";
-	
+	// Report Parameter Key
+	public static final String PARAM_KEY_REPORT = "report";
+	public static final String PARAM_KEY_REPORT_ID = "PREPORTID";
+	public static final String PARAM_KEY_USER_ID = "PUSER";
+	public static final String PARAM_KEY_MINISTRY = "PMINIS";
+	public static final String PARAM_KEY_PEGAWAI_PEGAWAL = "PFPP";
+	public static final String PARAM_KEY_KUMPULAN_PTJ = "PFJA";
+	public static final String PARAM_KEY_PTJ = "PPTJ";
+	public static final String PARAM_KEY_CONTRACT_NO = "PCONTRACTNO";
+	public static final String PARAM_KEY_PHYSICAL_CONTRACT_NO = "PPHYSICALCONTRACTNO";
+	public static final String PARAM_KEY_LOA_NO = "PLOANO";
+	public static final String PARAM_KEY_LOA_PHYSICAL_NO = "PLOAPHYSICALNO";
+	public static final String PARAM_KEY_AGREEMENT = "PAGREEMENT";
+	public static final String PARAM_KEY_PROCUREMENT_MODE = "PPROCUREMENTMODE";
+	public static final String PARAM_KEY_STATUS = "PSTATUS";
+	public static final String PARAM_KEY_FROM_DATE = "PFROMDATE";
+	public static final String PARAM_KEY_TO_DATE = "PTODATE";
+	public static final String PARAM_KEY_SUPPLIER_NAME = "PSUPPLIERNAME";
+	public static final String PARAM_KEY_CIRCULAR_NO = "PCIRCULARNO";
+	public static final String PARAM_KEY_CIRCULAR_NAME = "PCIRCULARNAME";
+	public static final String PARAM_KEY_CIRCULAR_FROM_DATE = "PCIRCEFFFROMDATE";
+	public static final String PARAM_KEY_CIRCULAR_TO_DATE = "PCIRCEFFTODATE";
+	public static final String PARAM_KEY_ITEM_NAME = "PITEMNAME";
+
 	/**
 	 * @return the ctListOfContractMcRptVal
 	 */
