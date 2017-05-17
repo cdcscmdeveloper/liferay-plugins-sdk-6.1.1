@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pm.common.potaskweightage;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -20,12 +21,12 @@ public class POTaskWeightageManagedBean extends BaseManagedBean{
 	private String roleCode;
 	private String zoneCode;
 	private PmUser selectedUser;
-	private PmPoRoleTask selectedRoleTask;
 	private List<PmParameterDesc> applTypeSelection;
-	private PmPoRoleTask existingRoleTask;
 	private List<PmUser> userLs;
 	private String userName;
 	private String identificationNo;
+	private int recordStatus;
+	private Map<Long,PmPoRoleTask> existingRoleTaskMap;
 
 	public String getRoleCode() {
 		return roleCode;
@@ -59,22 +60,6 @@ public class POTaskWeightageManagedBean extends BaseManagedBean{
 		this.applTypeSelection = applTypeSelection;
 	}
 
-	public PmPoRoleTask getSelectedRoleTask() {
-		return selectedRoleTask;
-	}
-
-	public void setSelectedRoleTask(PmPoRoleTask selectedRoleTask) {
-		this.selectedRoleTask = selectedRoleTask;
-	}
-
-	public PmPoRoleTask getExistingRoleTask() {
-		return existingRoleTask;
-	}
-
-	public void setExistingRoleTask(PmPoRoleTask existingRoleTask) {
-		this.existingRoleTask = existingRoleTask;
-	}
-
 	public List<PmUser> getUserLs() {
 		return userLs;
 	}
@@ -99,4 +84,19 @@ public class POTaskWeightageManagedBean extends BaseManagedBean{
 		this.identificationNo = identificationNo;
 	}
 
+	public int getRecordStatus() {
+		return recordStatus;
+	}
+
+	public void setRecordStatus(int recordStatus) {
+		this.recordStatus = recordStatus;
+	}
+
+	public Map<Long, PmPoRoleTask> getExistingRoleTaskMap() {
+		return existingRoleTaskMap;
+	}
+
+	public void setExistingRoleTaskMap(Map<Long, PmPoRoleTask> existingRoleTaskMap) {
+		this.existingRoleTaskMap = existingRoleTaskMap;
+	}
 }

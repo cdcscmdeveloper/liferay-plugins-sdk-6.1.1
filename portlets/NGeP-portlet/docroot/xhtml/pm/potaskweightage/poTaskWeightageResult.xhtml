@@ -27,23 +27,27 @@
 				</p:column>
 
 				<ui:param name="roleTaskLs" value="#{poUser.pmPoRoleTasks}"></ui:param>
-				<p:column headerText="#{lbl['lbl.pm.po.task.supplier.type']}">
+				<p:column headerText="#{lbl['lbl.pm.po.task.supplier.type']}&lt;br/&gt;">
 					<ui:repeat var="suppType" value="#{roleTaskLs}">
-						<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,suppType.supplierType)}" /><br />
+						<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,suppType.supplierType)}&lt;br/&gt;" 
+						escape="false" rendered="#{suppType.recordStatusFlg == DbValueConst.recordStatusActive}" />
 					</ui:repeat>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.pm.po.task.appl.type']}">
 					<ui:repeat var="applType" value="#{roleTaskLs}">
-						<h:outputText value="#{poTaskWeightageBB.getApplDesc(applType.applType)}" /><br />
+						<h:outputText value="#{poTaskWeightageBB.getApplDesc(applType.applType)}&lt;br/&gt;" escape="false"
+							rendered="#{applType.recordStatusFlg == DbValueConst.recordStatusActive}" />
 					</ui:repeat>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.pm.po.task.category.type']}">
 					<ui:repeat var="category" value="#{roleTaskLs}">
-					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty category.categoryType}" />
-					<h:outputText value="#{category.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}" 
-					rendered="#{!empty category.categoryType}"/><br />
+					<h:outputText value="#{lbl['lbl.txt.na']}&lt;br/&gt;" escape="false"
+					rendered="#{(empty category.categoryType) and (category.recordStatusFlg == DbValueConst.recordStatusActive)}" />
+					<h:outputText escape="false"
+					value="#{category.categoryType == SupplierManagementConst.smApplCategoryTypeSpecial ? lbl['lbl.pm.po.task.category.special'] : lbl['lbl.pm.po.task.category.normal']}&lt;br/&gt;" 
+					rendered="#{(!empty category.categoryType) and (category.recordStatusFlg == DbValueConst.recordStatusActive)}"/>
 					</ui:repeat>
 				</p:column>
 				
