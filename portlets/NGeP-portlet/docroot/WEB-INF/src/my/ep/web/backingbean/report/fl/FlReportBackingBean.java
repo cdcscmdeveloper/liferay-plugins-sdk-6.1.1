@@ -199,29 +199,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			}
 			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
 		}else if(hasAuditGenUserRole() && condition.trim().length() > 0){
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
-			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
-			
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-			PmOrgProfile orgProfile = null;
-			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
-				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
-			}
-			String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId()+"";
-			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
-			ptjReqDTO.setDeepLevel(true);
-			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
-			PmOrgProfile kumpulanPtj = null;
-			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
-				kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
-				if(kumpulanPtj!=null) {
-					kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
-				}
-			}
-			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
+			return condition;
 		}
 		return condition;
 	}
@@ -258,25 +236,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			}
 			condition = condition + "|orgProfileId^"+ptjList+"^9";
 		}else if(hasAuditGenUserRole() && condition.trim().length() > 0){
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
-			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
-			
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-			PmOrgProfile orgProfile = null;
-			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
-				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
-			}
-			String ptjList = orgProfile.getOrgProfileId()+"";
-			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
-			ptjReqDTO.setDeepLevel(true);
-			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
-			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
-				ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
-			}
-			condition = condition + "|orgProfileId^"+ptjList+"^9";
+			return condition;
 		}
 		return condition;
 	}
@@ -401,7 +361,43 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 	}
 	
+	/**
+	  * The method used to disable the ministry Lov
+	  * if login user is FL User
+	  * or internal auditor.
+	  * 
+	  * @return true, if login user is FL User/internal auditor
+	  *         false, if login user is not User/internal auditor
+	*/	
+	public boolean disableMinistryLov() {
+		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) );
+	}
 	
+	/**
+	  * The method used to disable the ptj Lov
+	  * if login user is FL User
+	  * or ministry is null.
+	  * 
+	  * @return true, if login user is FL User/ministry is null
+	  *         false, if login user is not User/ministry is null
+	*/	
+	
+	public boolean disablePtjLov() {
+		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null );
+	}
+	
+	/**
+	  * The method used to disable the ptj Lov
+	  * if login user is FL User
+	  * or ministry is null.
+	  * 
+	  * @return true, if login user is FL User/ministry is null
+	  *         false, if login user is not User/ministry is null
+	*/	
+	
+	public boolean disablePtjGroupLov() {
+		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null );
+	}
 	
 	
 }
