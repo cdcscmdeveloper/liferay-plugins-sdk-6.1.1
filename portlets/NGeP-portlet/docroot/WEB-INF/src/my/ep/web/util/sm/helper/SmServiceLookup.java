@@ -15,6 +15,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.common.myidentity.IDiMyidentitySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.poroletask.IPoRoleTaskSO;
 import my.ep.biz.service.pm.common.poworkload.IPoWorkloadSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -601,5 +602,15 @@ public class SmServiceLookup {
 	public static IPoWorkloadSO getPoWorkloadSO() {
 		return (IPoWorkloadSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPoWorkloadSO.class);
+	}
+	
+	/**
+	 * Get IPoRoleTaskSO
+	 * 
+	 * @return IPoRoleTaskSO
+	 */
+	public static IPoRoleTaskSO getPoRoleTaskSO() {
+		return (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
 	}
 }
