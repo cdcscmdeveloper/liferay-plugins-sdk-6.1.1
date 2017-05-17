@@ -25,7 +25,7 @@
 			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRejectReasons}">
 				<tr height="20"><td>&#160;</td></tr>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+					<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
 					<td style="word-wrap: break-word;" colspan="5">
 						<h:outputText value="#{viewSmApplBackingBean.getApplicationRejectionReason()}" 
 						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
