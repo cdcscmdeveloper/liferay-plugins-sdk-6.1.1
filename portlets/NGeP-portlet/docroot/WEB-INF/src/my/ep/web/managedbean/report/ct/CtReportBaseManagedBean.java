@@ -28,8 +28,8 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	private String contractPhysicalNo;
 	private String loaNo;
 	private String loaPhysicalNo;
-	private String agreement;	
-	private String procurementMethod;
+	private String agreement;
+	private Long procurementMode;
 	private String status;
 	private Date fromDate;	
 	private Date toDate;
@@ -166,16 +166,16 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 		this.agreement = agreement;
 	}
 	/**
-	 * @return the procurementMethod
+	 * @return the procurementMode
 	 */
-	public String getProcurementMethod() {
-		return procurementMethod;
+	public Long getProcurementMode() {
+		return procurementMode;
 	}
 	/**
-	 * @param procurementMethod the procurementMethod to set
+	 * @param procurementMode the procurementMode to set
 	 */
-	public void setProcurementMethod(String procurementMethod) {
-		this.procurementMethod = procurementMethod;
+	public void setProcurementMode(Long procurementMode) {
+		this.procurementMode = procurementMode;
 	}
 	/**
 	 * @return the status
