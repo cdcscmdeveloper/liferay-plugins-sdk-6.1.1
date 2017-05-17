@@ -21,7 +21,7 @@ public class CtReportConst implements Serializable {
 	public static final String PARAM_KEY_REPORT_ID = "PREPORTID";
 	public static final String PARAM_KEY_USER_ID = "PUSER";
 	public static final String PARAM_KEY_MINISTRY = "PMINIS";
-	public static final String PARAM_KEY_PEGAWAI_PEGAWAL = "PFPP";
+//	public static final String PARAM_KEY_PEGAWAI_PEGAWAL = "PFPP";
 	public static final String PARAM_KEY_KUMPULAN_PTJ = "PFJA";
 	public static final String PARAM_KEY_PTJ = "PPTJ";
 	public static final String PARAM_KEY_CONTRACT_NO = "PCONTRACTNO";
