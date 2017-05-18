@@ -1475,6 +1475,18 @@ public class TaskReassignmentBackingBean extends
 		
 		return vo;
 	}
+	
+	private PmTaskReassignmentVO retrieveSMTaskReassignmentDetail(
+			WorklistItemVO task) {
+		log.info("retrieveSMTaskReassignmentDetail");
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
+		if(ProfileManagementConst.TASK_REASSIGN_SM_PO.contains(task.getDocStatus().longValue())){
+			vo.setRoleList(new ArrayList<String>(Arrays.asList(RoleCode.UPS_PO.value())));
+		}
+		
+		return vo;
+	}
+
 
 	/**
 	 * retrieve available roles by status id
@@ -1710,7 +1722,8 @@ public class TaskReassignmentBackingBean extends
 							vo = retrievePMTaskReassignmentDetail(task);
 						}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
 								.equalsIgnoreCase(moduleCode)) {
-							vo = new PmTaskReassignmentVO();
+							vo = retrieveSMTaskReassignmentDetail(task);
+							
 						}
 					}
 					
