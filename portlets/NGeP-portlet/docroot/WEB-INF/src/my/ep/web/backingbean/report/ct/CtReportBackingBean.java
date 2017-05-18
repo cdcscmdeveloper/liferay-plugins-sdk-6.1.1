@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.CtReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.MapUtils;
@@ -66,12 +67,14 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 * The method used to retrieve the report value from database.
 	 */
 	public void onChangeReportName() {
-		resetAction();
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
-		}
-		
+		}		
 		setCurrentActiveOrg();
+		
+		// set default date value
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
 	}
 	
 	/**
@@ -109,34 +112,14 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					pmOrgProfile);
 			getManagedBean().setDisableMinistryField(true);
 		}
-	} 
-	
-	public void resetAction() {
-		getManagedBean().setCurrentActiveOrg(null);
-		getManagedBean().setDisableMinistryField(false);
-		getManagedBean().setDisableOrgField(false);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
-		getManagedBean().setContractNo(null);
-		getManagedBean().setContractPhysicalNo(null);
-		getManagedBean().setLoaNo(null);
-		getManagedBean().setLoaPhysicalNo(null);
-		getManagedBean().setAgreement(null);
-		getManagedBean().setProcurementMode(null);
-		getManagedBean().setStatus(null);
-		getManagedBean().setFromDate(null);
-		getManagedBean().setToDate(null);
 	}
 	
 	/**
 	 * This method use to generate CT report.
 	 */
 	public void generateCtReport() {
-		generateCtReport(constructParamMap());
-	}
-	
-	private LinkedHashMap<String, String> constructParamMap() {
+		log.info("generateCtReport");
+		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		
@@ -199,11 +182,30 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					.getReportCode());
 			map.put(CtReportConst.PARAM_KEY_USER_ID, getFacesScopes()
 					.getUserSessionBean().getUserId().toString());
-
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
-		}
-		
-		return map;
+		}		
+		generateCtReport(map);
+	}
+	
+	/**
+	 * The method used to reset the search criteria for report.
+	 */
+	public void resetAction() {
+		getManagedBean().setCurrentActiveOrg(null);
+		getManagedBean().setDisableMinistryField(false);
+		getManagedBean().setDisableOrgField(false);
+		getManagedBean().setSelectedMinistry(null);
+		getManagedBean().setSelectedKumpulanPTJ(null);
+		getManagedBean().setSelectedPTJ(null);
+		getManagedBean().setContractNo(null);
+		getManagedBean().setContractPhysicalNo(null);
+		getManagedBean().setLoaNo(null);
+		getManagedBean().setLoaPhysicalNo(null);
+		getManagedBean().setAgreement(null);
+		getManagedBean().setProcurementMode(null);
+		getManagedBean().setStatus(null);
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
 	}
 }
