@@ -74,7 +74,7 @@
 				
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="white-space: normal;">
-					<p:commandButton value="#{lbl['lbl.btn.assign']}"
+					<p:commandButton value="#{lbl['lbl.btn.assign']}" disabled="#{readOnlyTask}"
 					action="#{requestNoteBackingBean.assignProductCode(requestNoteDtl)}"/>
 				</p:column>
 			</p:dataTable>

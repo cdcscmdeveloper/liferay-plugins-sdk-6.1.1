@@ -16,29 +16,33 @@
 			rendered="#{isViewOnly}" />
 
 	</div>
-	<h:panelGroup
-		rendered="#{!isViewOnly}">
-		<div>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					rendered="#{!isPidExpired}"
-					action="#{requestNoteBackingBean.saveCodificationAction('Save')}"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					process="@this" />
+	
+	<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">
+		<ui:define name="outComeSection">
+			<h:panelGroup rendered="#{!isViewOnly}">
+				<div>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.save']}"
+							rendered="#{!isPidExpired}"
+							action="#{requestNoteBackingBean.saveCodificationAction('Save')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							process="@this" />
 
-				<ui:repeat var="bpmAction"
-					value="#{requestNoteBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel"
-						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
+						<ui:repeat var="bpmAction"
+							value="#{requestNoteBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
 
-					<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-						onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-						process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-						update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-						actionListener="#{requestNoteBackingBean.submitCodificationAction(bpmAction)}" />
-				</ui:repeat>
-			</div>
-		</div>
-	</h:panelGroup>
+							<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
+								onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+								process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
+								update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
+								actionListener="#{requestNoteBackingBean.submitCodificationAction(bpmAction)}" />
+						</ui:repeat>
+					</div>
+				</div>
+			</h:panelGroup>
+		</ui:define>
+	</ui:decorate>
 </ui:composition>
