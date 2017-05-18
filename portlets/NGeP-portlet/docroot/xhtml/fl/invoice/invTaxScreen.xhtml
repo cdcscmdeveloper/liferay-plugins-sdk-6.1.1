@@ -91,7 +91,7 @@
 			</p:column>
 			</p:treeTable>
 			
-			<p:dataTable value="#{invoiceBackingBean.emptyTableList}" rendered="#{invoiceBackingBean.managedBean.taxInvoice and empty invoiceBackingBean.managedBean.taxSectionItemRoot}">
+			<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" value="#{invoiceBackingBean.emptyTableList}" rendered="#{invoiceBackingBean.managedBean.taxInvoice and empty invoiceBackingBean.managedBean.taxSectionItemRoot}">
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center;width:20%;" >
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
