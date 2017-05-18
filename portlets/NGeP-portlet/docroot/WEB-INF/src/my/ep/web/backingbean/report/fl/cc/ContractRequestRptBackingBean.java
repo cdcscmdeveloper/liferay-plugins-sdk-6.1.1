@@ -53,13 +53,13 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
 		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
 		if(getManagedBean().getMinistry() != null){
-			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgName());
+			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
 		if (getManagedBean().getPtjGroup() != null) {
-			params.put(FlReportConst.FL_RPT_KUMPULAN, getManagedBean().getPtjGroup().getOrgName());
+			params.put(FlReportConst.FL_RPT_KUMPULAN, getManagedBean().getPtjGroup().getOrgProfileId().toString());
 		}
 		if (getManagedBean().getPtj() != null) {
-			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgName());
+			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgProfileId().toString());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_NO, getManagedBean().getContractNo());
