@@ -89,6 +89,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean isProcCategoryMedicine;
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
+	private boolean uploadedKertasDoc;
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -579,6 +580,14 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setFinalizationPengreysonremarks(
 			List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks) {
 		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
+	}
+
+	public boolean isUploadedKertasDoc() {
+		return uploadedKertasDoc;
+	}
+
+	public void setUploadedKertasDoc(boolean uploadedKertasDoc) {
+		this.uploadedKertasDoc = uploadedKertasDoc;
 	}
 
 	
