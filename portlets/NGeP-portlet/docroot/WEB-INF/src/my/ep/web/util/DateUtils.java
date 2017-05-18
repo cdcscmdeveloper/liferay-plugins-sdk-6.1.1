@@ -533,4 +533,14 @@ public class DateUtils {
 		return calendar.get(Calendar.HOUR_OF_DAY);
 	}
 	
+	/**
+	 * Retrieve first date of the year
+	 */
+	public static Date getFirstDateOfTheYear() {
+		 Calendar calendar = Calendar.getInstance();
+		 calendar.set(calendar.get(Calendar.YEAR), 00, 01, 0, 00, 0); //first day of the year
+		 calendar.set(Calendar.MILLISECOND, 0);
+		 
+		 return calendar.getTime();
+	}
 }
