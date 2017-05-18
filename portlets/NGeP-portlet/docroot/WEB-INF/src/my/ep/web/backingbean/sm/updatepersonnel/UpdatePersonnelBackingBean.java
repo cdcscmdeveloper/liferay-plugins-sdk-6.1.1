@@ -74,7 +74,8 @@ public class UpdatePersonnelBackingBean extends
 						.getSmAppl());
 		init();
 		getManagedBean().setUpdatePersonnelPage(true);
-		SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "", null);
+		SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "", null,
+				null);
 	}
 
 	/**
