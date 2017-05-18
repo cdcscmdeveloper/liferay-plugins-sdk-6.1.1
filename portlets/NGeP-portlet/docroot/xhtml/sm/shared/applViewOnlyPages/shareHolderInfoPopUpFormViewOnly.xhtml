@@ -106,21 +106,23 @@
 									listener="#{viewSmApplBackingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
 							</p:selectOneRadio></td>
 					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
-						<td><p:selectOneMenu id="smPersnEpRole"
-								label="#{lbl['lbl.sm.userprofile.eprole']}"
-								value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"
-								style="width: 207px;margin: 5px 0px 5px 0px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems value="#{viewSmApplBackingBean.managedBean.ePRoleList}" />
-								<p:ajax event="change" update="@form" process="@this" 
-									listener="#{viewSmApplBackingBean.assignShareHolderPrivilegeByEpRole}" 
-									partialSubmit="true"/>
-							</p:selectOneMenu>
-							<p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
-							showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
+					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.ePRoleList}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+							<td><p:selectOneMenu id="smPersnEpRole"
+									label="#{lbl['lbl.sm.userprofile.eprole']}"
+									value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"
+									style="width: 207px;margin: 5px 0px 5px 0px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems value="#{viewSmApplBackingBean.managedBean.ePRoleList}" />
+									<p:ajax event="change" update="@form" process="@this" 
+										listener="#{viewSmApplBackingBean.assignShareHolderPrivilegeByEpRole}" 
+										partialSubmit="true"/>
+								</p:selectOneMenu>
+								<p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
+								showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+					</p:outputPanel>
 				</c:when>
 				<c:otherwise>
 					<tr>
