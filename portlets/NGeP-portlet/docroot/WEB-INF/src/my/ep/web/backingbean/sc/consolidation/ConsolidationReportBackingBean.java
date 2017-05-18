@@ -97,8 +97,7 @@ import org.primefaces.model.MenuModel;
 public class ConsolidationReportBackingBean extends 
 					SourcingBaseBackingBean<ConsolidationReportManagedBean> {
 
-	private static final Logger log = EpLogger
-			.getLogger(ConsolidationReportBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(ConsolidationReportBackingBean.class);
 	
 	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
@@ -1039,6 +1038,10 @@ public class ConsolidationReportBackingBean extends
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
 		}
+		if(!this.getManagedBean().isUploadedKertasDoc()){
+			navigateToBriefingPaperTab();
+			throw new EpException(MessageConst.ERROR_760452);
+		}
 	}
 	
 	private void validateDORanking(TplSpecZoneDtl specZoneDtl, List<ScQtRecommend> items) {
@@ -1712,6 +1715,31 @@ public class ConsolidationReportBackingBean extends
 		
 	}
 	
+	public void handleKertasFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		
+		debugLogger("handleKertasFileUpload");
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReport scQtFinalizationReport 
+					= this.getManagedBean().getSelectedFinalizationReport();
+			ScQtFinalizationReportAttachment reportAttachment 
+					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportAttachment();
+				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				reportAttachment.setFileName(event.getFile().getFileName());
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+				setUserDetails(reportAttachment);
+				populateAttachmentDetails(reportAttachment);
+			}
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			this.getManagedBean().setUploadedKertasDoc(true);
+		}
+	}
 	private void initializeFinalizationUlasanRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
