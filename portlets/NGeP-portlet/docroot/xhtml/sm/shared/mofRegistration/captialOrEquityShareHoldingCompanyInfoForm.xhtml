@@ -62,7 +62,10 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
-					<h:outputText value="#{equiBean.shareAmt}" />
+					<h:outputText value="#{equiBean.shareAmt}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrPerc']}">
 					<h:outputText value="#{equiBean.sharePercentage}" />
