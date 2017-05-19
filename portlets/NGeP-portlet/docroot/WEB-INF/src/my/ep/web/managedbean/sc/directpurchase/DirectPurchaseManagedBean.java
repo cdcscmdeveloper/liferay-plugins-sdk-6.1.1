@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.directpurchase;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,13 +16,16 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -31,6 +35,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -112,6 +117,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				log.debug("pageChangeListener");
 			}
 			try {
+				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
 				if(null == getSearchDocumentType()){ 
 					throw new EpException(MessageConst.ERROR_740023);
 				}
@@ -196,8 +203,32 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					}
 				}
 				
-				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
+				if(!isGovernment()) {
+					// Filter By - supplierId
+					ISupplierSearchSO supplierSearchSO = null;
+					try {
+						supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+
+						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+						supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+						List<SmSupplier> smSuppliers = supplierSearchSO
+								.retriveSupplierProfiles(supplierSearchReqDTO)
+								.getResultBean().getResultList();
+						
+						if (CollectionUtils.isNotEmpty(smSuppliers)) {
+							List<Long> supplierIds = new ArrayList<Long>();
+							for (SmSupplier smSupplier : smSuppliers) {
+								supplierIds.add(smSupplier.getSupplierId());
+							}
+							reqDTO.setSupplierIds(supplierIds);
+						}
+
+					} finally {
+						supplierSearchSO = null;
+					}
+				}
+				
 				reqDTO.setSourcingDocSearchBean(searchBean);
 				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 				return resDTO.getSourcingDocSearchResultBean();
