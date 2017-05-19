@@ -1329,16 +1329,21 @@ public class ConsolidationReportBackingBean extends
 		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 		
 		String estimatedAmountStr = null;
-		IQTDetailSO qtDetailSO = null;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
-			estimatedAmountStr = estimatedAmount.toPlainString();
-		} finally {
-			qtDetailSO = null;
-		}		
-
+		
+		if (qt.getEstimatedAmount() != null) {
+			estimatedAmountStr = qt.getEstimatedAmount().toString();
+		} else {
+			IQTDetailSO qtDetailSO = null;
+			try {
+				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				BigDecimal estimatedAmount = qtDetailSO
+						.getdecryptedEstAmount(qtId);
+				estimatedAmountStr = estimatedAmount.toPlainString();
+			} finally {
+				qtDetailSO = null;
+			}
+		}
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
@@ -1723,6 +1728,16 @@ public class ConsolidationReportBackingBean extends
 			ScAttachment scAttachment = null;
 			ScQtFinalizationReport scQtFinalizationReport 
 					= this.getManagedBean().getSelectedFinalizationReport();
+			if (scQtFinalizationReport == null) {
+				List<ScQtFinalizationReport> reports = this.getManagedBean()
+						.getFinalizationReports();
+				for (ScQtFinalizationReport report : reports) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+							.equals(report.getPmDocument().getDocDefinitionKey())) {
+						scQtFinalizationReport = report;
+					}
+				}
+			}
 			ScQtFinalizationReportAttachment reportAttachment 
 					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
 			if (null == reportAttachment) {
