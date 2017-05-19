@@ -38,44 +38,44 @@ public class FlReportConst implements Serializable {
 	// Purchase Order Const
 	
 	
-	public static final String FL_RPT_FROM_DATE = " PFROMDATE=";
-	public static final String FL_RPT_TO_DATE = " PTODATE=";
-	public static final String FL_RPT_COTRACT_ORDER = " PCONO=";
-	public static final String FL_RPT_COTRACT_REQUEST = " PCRNO=";
-	public static final String FL_RPT_PURCHASE_ORDER = " PPONO=";
-	public static final String FL_RPT_TREASURY_CIRCULAR = " PKPNO=";//Physical Treasury Circular (1PP) No.
-	public static final String FL_RPT_FULLFILLEMENT_RECEIVE = " FRNNO=";
-	public static final String FL_RPT_COTRACT_TYPE = " PCONTYPE=";
-	public static final String FL_RPT_DELI_ADDR = " PDOADD=";
-	public static final String FL_RPT_DELI_ORD_NO = " PDONO=";
-	public static final String FL_RPT_SUP_DELI_ORD_NO = " PSUPPDONO=";
-	public static final String FL_RPT_PKP_NO = " PPKPNO=";
-	public static final String FL_RPT_FL_RPT_REC_NOTE = " PFRNNO=";
-	public static final String FL_RPT_FL_RPT_REC_OFF = " PRECOFF=";
-	public static final String FL_RPT_STATUS = " PSTATUS=";
-	public static final String FL_RPT_APPROVER_NAME = " PAPPROVER=";
-	public static final String FL_RPT_REQUI_NAME = " PREQUEST=";
-	public static final String FL_RPT_ACKNOWLEDGE_NAME = " PACKOFF=";
-	public static final String FL_RPT_PAYMENT_NAME = " PPAYOFF=";
-	public static final String FL_RPT_PHY_CONTRACT_NO = " PPHYCON=";
-	public static final String FL_RPT_PHY_LOA_NO = " PPHYLOA=";
-	public static final String FL_RPT_CONTRACT_NO = " PCRNO=";	
-	public static final String FL_RPT_SUPPL_NAME = " PSUPP=";
-	public static final String FL_RPT_MINISTRY = " PMINIS=";
-	public static final String FL_RPT_PEGAWAI_PENGAWAI = " PFPP=";
-	public static final String FL_RPT_KUMPULAN = " PFJA=";
-	public static final String FL_RPT_PTJ_NAME = " PPTJ=";
-	public static final String FL_RPT_SST_NO = " PLOA=";//loa no
-	public static final String FL_RPT_CONTRACT_REQ_NO = " PCONTRACTNO=";
-	public static final String FL_RPT_CC_PANEL_NAME = " PPKPNAME=";//panel name
-	public static final String FL_RPT_REPORT_ID = " PREPORTID=";
-	public static final String FL_RPT_USER_ID = " PUSER=";
-	public static final String FL_RPT_STOP_INSTR_NO = " PSINO=";
-	public static final String FL_RPT_INV_NO = " PINVNO=";
-	public static final String FL_RPT_SUPPL_INV_NO = " PSUPPINVNO=";
-	public static final String FL_RPT_PAYMENT_ADV_NO = " PPANO=";
-	public static final String FL_RPT_ITM_NAME = " PITEM=";
-	public static final String FL_RPT_DOC_TYPE = " PDOCTYPE=";
+	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
+	public static final String FL_RPT_TO_DATE = "PTODATE";
+	public static final String FL_RPT_COTRACT_ORDER = "PCONO";
+	public static final String FL_RPT_COTRACT_REQUEST = "PCRNO";
+	public static final String FL_RPT_PURCHASE_ORDER = "PPONO";
+	public static final String FL_RPT_TREASURY_CIRCULAR = "PKPNO";//Physical Treasury Circular (1PP) No.
+	public static final String FL_RPT_FULLFILLEMENT_RECEIVE = "FRNNO";
+	public static final String FL_RPT_COTRACT_TYPE = "PCONTYPE";
+	public static final String FL_RPT_DELI_ADDR = "PDOADD";
+	public static final String FL_RPT_DELI_ORD_NO = "PDONO";
+	public static final String FL_RPT_SUP_DELI_ORD_NO = "PSUPPDONO";
+	public static final String FL_RPT_PKP_NO = "PPKPNO";
+	public static final String FL_RPT_FRN_NO = "PFRNNO";
+	public static final String FL_RPT_REC_OFF = "PRECOFF";
+	public static final String FL_RPT_STATUS = "PSTATUS";
+	public static final String FL_RPT_APPROVER_NAME = "PAPPROVER";
+	public static final String FL_RPT_REQUI_NAME = "PREQUEST";
+	public static final String FL_RPT_ACKNOWLEDGE_NAME = "PACKOFF";
+	public static final String FL_RPT_PAYMENT_NAME = "PPAYOFF";
+	public static final String FL_RPT_PHY_CONTRACT_NO = "PPHYCON";
+	public static final String FL_RPT_PHY_LOA_NO = "PPHYLOA";
+	public static final String FL_RPT_CONTRACT_NO = "PCRNO";	
+	public static final String FL_RPT_SUPPL_NAME = "PSUPP";
+	public static final String FL_RPT_MINISTRY = "PMINIS";
+	public static final String FL_RPT_PEGAWAI_PENGAWAI = "PFPP";
+	public static final String FL_RPT_KUMPULAN = "PFJA";
+	public static final String FL_RPT_PTJ_NAME = "PPTJ";
+	public static final String FL_RPT_SST_NO = "PLOA";//loa no
+	public static final String FL_RPT_CONTRACT_REQ_NO = "PCONTRACTNO";
+	public static final String FL_RPT_CC_PANEL_NAME = "PPKPNAME";//panel name
+	public static final String FL_RPT_REPORT_ID = "PREPORTID";
+	public static final String FL_RPT_USER_ID = "PUSER";
+	public static final String FL_RPT_STOP_INSTR_NO = "PSINO";
+	public static final String FL_RPT_INV_NO = "PINVNO";
+	public static final String FL_RPT_SUPPL_INV_NO = "PSUPPINVNO";
+	public static final String FL_RPT_PAYMENT_ADV_NO = "PPANO";
+	public static final String FL_RPT_ITM_NAME = "PITEM";
+	public static final String FL_RPT_DOC_TYPE = "PDOCTYPE";
 	
 	public FlReportConst(){}
 
