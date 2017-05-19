@@ -45,6 +45,8 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	private String reportTitle;
 	
+	private String reportUrl;
+	
 	/**
 	 * @return the reportCategoryList
 	 */
@@ -189,10 +191,7 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 		this.reportTitle = reportTitle;
 	}
 	
-	
-	
-	
-	
-	
-
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }
