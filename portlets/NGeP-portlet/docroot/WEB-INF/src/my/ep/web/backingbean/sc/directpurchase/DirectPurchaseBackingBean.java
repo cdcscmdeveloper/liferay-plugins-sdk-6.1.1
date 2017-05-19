@@ -128,25 +128,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		return Boolean.FALSE;
 	}
-
-	/**
-	 * Checks if is supplier.
-	 *
-	 * @return true, if is supplier
-	 */
-	public boolean isSupplier() {
-		if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier and govt seller
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
-
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
 	
 	/**
 	 * Gets the document types.
