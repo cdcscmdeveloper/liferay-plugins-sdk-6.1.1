@@ -52,6 +52,8 @@ public class PPReportBackingBean extends
 			rptGenBean.setPpPegaWaiPengawalView(true);
 			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
+			rptGenBean.setPpProcurementMethodView(true);
+			rptGenBean.setPpItemStatus(true);
 			// rptGenBean.setPpMinistryView(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
@@ -61,6 +63,9 @@ public class PPReportBackingBean extends
 			rptGenBean.setPpPegaWaiPengawalView(true);
 			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
+			rptGenBean.setPpProcurementMethodView(true);
+			rptGenBean.setPpProcurementCatView(true);
+			rptGenBean.setPpItemStatus(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.PP_PROCUREMENT_BKP_LEVEL_RPT_VAL:
@@ -69,6 +74,7 @@ public class PPReportBackingBean extends
 			rptGenBean.setPpPegaWaiPengawalView(true);
 			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
+			rptGenBean.setPpItemStatus(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.PP_EXPENDITURE_PLAN_PTJ_LEVEL_RPT_VAL:
@@ -77,6 +83,7 @@ public class PPReportBackingBean extends
 			rptGenBean.setPpPegaWaiPengawalView(true);
 			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
+			rptGenBean.setPpItemStatus(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.PP_EXPEND_MINISTRY_BY_VOT_PTJ_LEVEL_RPT_VAL:

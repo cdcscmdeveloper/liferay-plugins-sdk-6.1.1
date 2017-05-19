@@ -116,6 +116,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -144,6 +145,8 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pp.common.PpCommonUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -1147,6 +1150,10 @@ public class ReportBackingBean extends
 
 	/** The pp ptj. */
 	private String ppPTJ;
+	
+	private Long procurementCatId;
+	private Long procurementTypeId;
+	private Integer ppItemtatus;
 
 	/** The lng state id. */
 	private long[] lngStateId;
@@ -17659,6 +17666,23 @@ public class ReportBackingBean extends
 				rptGenBean.setPpYearVar(ReportConst.AMP_SM_YEAR_EQ
 						+ "\"" + this.getPpYear()+ "\"" );
 			}
+			
+			if (this.getProcurementCatId() != null) {
+				rptGenBean.setPpProcurementCatVar(ReportConst.PARAM_PP_CATEGORY
+						+ "\"" + this.getProcurementCatId()+ "\"" );
+			}
+			
+			if(this.getProcurementTypeId() != null){
+				rptGenBean.setPpProcurementMethodVar(ReportConst.PARAM_PP_METHOD
+						+ "\"" + this.getProcurementTypeId()+ "\"" );
+			}
+			
+			if(this.getPpItemtatus() != null){
+				rptGenBean.setPpItemStatusVar(ReportConst.PARAM_PP_STATUS
+						+ "\"" + this.getPpItemtatus()+ "\"" );
+			}
+			
+			
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if (StringUtils.isNotEmpty(rptGenBean.getUrlReportJSPName())) {
 				setConstructedparamConstrString(ReportConst.AMP_REPORT_NAME
@@ -17669,7 +17693,10 @@ public class ReportBackingBean extends
 						+ rptGenBean.getPpKumpulanVar()
 						+ rptGenBean.getPpYearVar()
 						+ rptGenBean.getReportValueIdVar()
-						+ rptGenBean.getUserIdVar());
+						+ rptGenBean.getUserIdVar()	
+						+ rptGenBean.getPpProcurementCatVar()
+						+ rptGenBean.getPpProcurementMethodVar()
+						+ rptGenBean.getPpItemStatusVar());
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
@@ -18328,6 +18355,9 @@ public class ReportBackingBean extends
 			this.setPpMinistry(null);
 			this.setPpPTJ(null);
 			this.setPpYear(null);
+			this.setProcurementCatId(null);
+			this.setProcurementTypeId(null);
+			this.setPpItemtatus(null);
 			this.setMinistryName(null);
 			this.setPmServiceType(null);
 			this.setPmBusinessRegNo(null);
@@ -20559,5 +20589,77 @@ public class ReportBackingBean extends
 	
 	public String getMessage() {
 		return message;
+	}
+
+	/**
+	 * @return the procurementCatId
+	 */
+	public Long getProcurementCatId() {
+		return procurementCatId;
+	}
+
+	/**
+	 * @param procurementCatId the procurementCatId to set
+	 */
+	public void setProcurementCatId(Long procurementCatId) {
+		this.procurementCatId = procurementCatId;
+	}
+
+	/**
+	 * @return the procurementTypeId
+	 */
+	public Long getProcurementTypeId() {
+		return procurementTypeId;
+	}
+
+	/**
+	 * @param procurementTypeId the procurementTypeId to set
+	 */
+	public void setProcurementTypeId(Long procurementTypeId) {
+		this.procurementTypeId = procurementTypeId;
+	}
+
+	/**
+	 * @return the ppItemtatus
+	 */
+	public Integer getPpItemtatus() {
+		return ppItemtatus;
+	}
+
+	/**
+	 * @param ppItemtatus the ppItemtatus to set
+	 */
+	public void setPpItemtatus(Integer ppItemtatus) {
+		this.ppItemtatus = ppItemtatus;
+	}
+	
+	/**
+	 *  get Procurement Cat options 
+	 * @return List<PmProcurementCatType>
+	 */
+	public List<PmProcurementCatType> getProcurementCategoryOptions() {
+		log.info("getProcurementCategoryOptions");
+		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		return PpCommonUtil.retrieveProcurementCatTypeList(languageCode);
+	}
+	
+	/**
+	 * get Procurement Type options by cat id
+	 * @return List<PmProcurementCatType>
+	 */
+	public List<PmProcurementCatType> getProcurementTypeOptions(Long procurementCatId) {
+		log.info("getProcurementTypeOptions");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		if(procurementCatId!=null && procurementCatId>0L){			
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatId(languageCode, procurementCatId);
+		}else{
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeList(languageCode,null);
+		}
+		return procurementCatTypeList;
+	}
+	
+	public static SelectItem[] getActiveAndInactiveStatusOptions() {
+		return PmCommonUtil.getRecordStatusOptions();
 	}
 }
