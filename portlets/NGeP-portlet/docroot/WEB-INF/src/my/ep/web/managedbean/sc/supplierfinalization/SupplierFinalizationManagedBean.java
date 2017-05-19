@@ -225,6 +225,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<Object[]> shortlistedCommonSuppliers;
 	private ScQtEvaluationResultDtl preferenceMarginDtls;
 	private List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks;
+	private boolean renderjustificationTextbox;
+	
 	
 	/**
 	 * @return the activeIndex
@@ -2017,6 +2019,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setFinalizationPengreysonremarks(
 			List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks) {
 		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
+	}
+
+	/**
+	 * @return the renderjustificationTextbox
+	 */
+	public boolean isRenderjustificationTextbox() {
+		return renderjustificationTextbox;
+	}
+
+	/**
+	 * @param renderjustificationTextbox the renderjustificationTextbox to set
+	 */
+	public void setRenderjustificationTextbox(boolean renderjustificationTextbox) {
+		this.renderjustificationTextbox = renderjustificationTextbox;
 	}
 
 
