@@ -865,9 +865,9 @@ public class ReportConst implements Serializable{
 
 	
 	//PP
-	public static final String PARAM_PP_STATUS = "PSTAT";
-	public static final String PARAM_PP_METHOD = "PMET";
-	public static final String PARAM_PP_CATEGORY = "PCATS";
+	public static final String PARAM_PP_STATUS = " PSTAT=";
+	public static final String PARAM_PP_METHOD = " PMET=";
+	public static final String PARAM_PP_CATEGORY = " PCATS=";
 	
 	public static final String FEDERAL_GOVT = "1";
 	public static final String OTHERS = "2";
