@@ -269,6 +269,9 @@ public class FlReportsBackingBean extends ReportBaseBackingBean<FlReportsManaged
 					.toString() : "");
 			RequestContext.getCurrentInstance()
 					.execute("confirmationId.show()");
+			
+			this.getManagedBean().setReportUrl(resDTO.getReportUrl());
+			
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		} finally {
