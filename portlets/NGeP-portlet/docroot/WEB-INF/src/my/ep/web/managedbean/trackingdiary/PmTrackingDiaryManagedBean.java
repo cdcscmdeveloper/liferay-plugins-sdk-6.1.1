@@ -1067,7 +1067,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				
 				if (isFilterBySupplier()) {
-					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser();
+					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
 						reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
 					}	
@@ -1122,7 +1122,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 	}
 
-	private PmOrgProfile getOrgProfileByLoginUser() {
+	private PmOrgProfile getOrgProfileByLoginUser(boolean isSupplier) {
 		PmOrgProfile pmOrgProfile = null;
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
 		
@@ -1133,6 +1133,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				reqDTO.setUserId(userId);
 				userSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				reqDTO.setSupplierUser(isSupplier);
 				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
 				if (resDTO.getUserOrgList() != null
