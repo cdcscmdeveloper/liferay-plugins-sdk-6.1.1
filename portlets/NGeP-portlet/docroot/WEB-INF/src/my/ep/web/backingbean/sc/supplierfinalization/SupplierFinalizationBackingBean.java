@@ -251,8 +251,8 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setPreparationTabIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
-			getManagedBean().setEndorsementReportActiveIndex(tabIndex++);
-			getManagedBean().setCommEndorsementTabIndex(tabIndex);		
+			getManagedBean().setCommEndorsementTabIndex(tabIndex++);
+			getManagedBean().setEndorsementReportActiveIndex(tabIndex);
 		}
 		
 		// Dynamically creating main tab menu
@@ -325,10 +325,10 @@ public class SupplierFinalizationBackingBean extends
 				navigateToSupplierFinalizationTab();
 				break;
 			case 3:
-				navigateToEndorsementReportTab();	
+				navigateToCommitteeEndorsementStatusTab();
 				break;
 			case 4:
-				navigateToCommitteeEndorsementStatusTab();
+				navigateToEndorsementReportTab();	
 				break;
 		}
 	}
@@ -2069,6 +2069,11 @@ public class SupplierFinalizationBackingBean extends
 					endorsementReports.add(report);
 					++endorsementReportCount;
 				}
+				/*if (scQtFinalization.isUploadedKertasTaklimat()) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+						report.setTempReportAttachment(report.getScQtFinalizationReportAttachment());
+					}
+				}*/
 			}
 			if (coverReport != null && 
 					getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -2080,10 +2085,10 @@ public class SupplierFinalizationBackingBean extends
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
 				if (endorsementReportCount < totalFinalizationRounds) {
-					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
+					/*String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-				 			+ SPACE + "(" + totalFinalizationRounds + ")";
-					addFinalizationReport(reportTitle);
+				 			+ SPACE + "(" + totalFinalizationRounds + ")";*/
+				//	addFinalizationReport(reportTitle);
 					// Sort the reports as per the last updated date (in ascending order)
 					Collections.sort(finalizationReports, 
 										new Comparator<ScQtFinalizationReport>() {
@@ -3000,6 +3005,10 @@ public class SupplierFinalizationBackingBean extends
 					}
 					/******End******/
 				}
+				if(scQtFinalization.getJustfication() == null){
+					scQtFinalization.setJustfication(new PmParameter());
+				}
+				
 				
 			}
 		} finally {
@@ -4268,7 +4277,7 @@ public class SupplierFinalizationBackingBean extends
 		if (!isBPKUser) {
 			menuItem = new MenuItem();
 			menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.committee.endorsement.report",
+							"lbl.sc.committee.endorsement.finalization",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
@@ -4280,7 +4289,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			menuItem = new MenuItem();
 			menuItem.setValue(ResourceBundleUtils.getMessage(
-								"lbl.sc.committee.endorsement.finalization",
+								"lbl.sc.committee.endorsement.report",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:20%;");
@@ -6636,6 +6645,58 @@ public class SupplierFinalizationBackingBean extends
 		
 	}
 	return evaluationResultDtls;
+	}
+	
+	
+	public void justficationChange(AjaxBehaviorEvent event) {
+
+		Long parameterId = (Long) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().setRenderjustificationTextbox(false);
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			PmParameter parameter = resDTO.getPmParameter();
+			this.getManagedBean().getScQtFinalization().setJustfication(parameter);
+			if("OTH".equalsIgnoreCase(parameter.getParameterCode())){
+				this.getManagedBean().setRenderjustificationTextbox(true);
+			}
+
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
+	public void handleKertasFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		
+		debugLogger("handleKertasFileUpload");
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReport scQtFinalizationReport 
+					= this.getManagedBean().getSelectedFinalizationReport();
+			if (scQtFinalizationReport == null) {
+				List<ScQtFinalizationReport> reports = this.getManagedBean().getDocumentList();
+				for (ScQtFinalizationReport report : reports) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+							.equals(report.getPmDocument().getDocDefinitionKey())) {
+						scQtFinalizationReport = report;
+					}
+				}
+			}
+			ScQtFinalizationReportAttachment reportAttachment 
+					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			// set uploaded file name into actual attachment
+			reportAttachment.setFileName(event.getFile().getFileName());
+			populateAttachmentDetails(reportAttachment);
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			//this.getManagedBean().setUploadedKertasDoc(true);
+		}
 	}
 	
 }
