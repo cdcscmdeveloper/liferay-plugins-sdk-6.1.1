@@ -2069,11 +2069,11 @@ public class SupplierFinalizationBackingBean extends
 					endorsementReports.add(report);
 					++endorsementReportCount;
 				}
-				/*if (scQtFinalization.isUploadedKertasTaklimat()) {
+				if (scQtFinalization.isBriefingPaperUploaded()) {
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 						report.setTempReportAttachment(report.getScQtFinalizationReportAttachment());
 					}
-				}*/
+				}
 			}
 			if (coverReport != null && 
 					getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -6695,7 +6695,7 @@ public class SupplierFinalizationBackingBean extends
 			populateAttachmentDetails(reportAttachment);
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
-			//this.getManagedBean().setUploadedKertasDoc(true);
+			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
 		}
 	}
 	
