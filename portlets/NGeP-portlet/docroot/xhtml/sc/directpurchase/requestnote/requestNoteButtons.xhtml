@@ -54,7 +54,7 @@
 
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 			style="float:right;"
-			action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId)}"
+			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
 			immediate="true" 
 			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
 	</div>
