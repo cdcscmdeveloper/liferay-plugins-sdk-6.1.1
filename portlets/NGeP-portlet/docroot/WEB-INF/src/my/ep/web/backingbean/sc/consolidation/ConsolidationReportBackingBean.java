@@ -661,7 +661,7 @@ public class ConsolidationReportBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		int zoneActiveIndex = getManagedBean().getZoneActiveIndex();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
-
+		boolean isUploadedKertasDoc = getManagedBean().isUploadedKertasDoc();
 		renewSesionObject();
 
 		getManagedBean().setQtId(qtId);
@@ -675,6 +675,7 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setZoneActiveIndex(
 				selectedZone != null ? selectedZone.getZoneTabIndex() : 0);
+		getManagedBean().setUploadedKertasDoc(isUploadedKertasDoc);
 
 		loadInitialData();
 
