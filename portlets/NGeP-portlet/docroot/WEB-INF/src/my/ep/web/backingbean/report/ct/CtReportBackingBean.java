@@ -2,7 +2,6 @@ package my.ep.web.backingbean.report.ct;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -12,13 +11,9 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.CtReportManagedBean;
 import my.ep.web.util.DateUtils;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +31,12 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CtReportBackingBean.class);
 	private static final String NAV_TO_CT_REPORT_MAIN = "/xhtml/reports/ct/ctReportMain.xhtml";
+	
+	public CtReportBackingBean() {
+		// set default date value
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+	}
 	
 	/**
 	 * The method used to retrieve the information and render it on screen.
@@ -61,57 +62,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		retrieveReportListByModuleCodeAndSubModule(
 				ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase(),
 				reportCategory);
-	}
-	
-	/**
-	 * The method used to retrieve the report value from database.
-	 */
-	public void onChangeReportName() {
-		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
-			retrieveReportValueFromDb();
-		}		
-		setCurrentActiveOrg();
-		
-		// set default date value
-		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
-		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
-	}
-	
-	/**
-	 * retrieve and set the current active org
-	 */
-	private void setCurrentActiveOrg() {
-		log.info("setCurrentActiveOrg");
-		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
-			throw new EpException(MessageConst.ERROR_770149);
-		}
-		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes()
-						.getUserSessionBean().getUserId(), false);
-
-		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);
-		}
-
-		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-			getManagedBean().setDisableOrgField(true);
-			getManagedBean().setDisableMinistryField(true);
-			getManagedBean().setSelectedMinistry(
-					retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedKumpulanPTJ(
-					retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedPTJ(pmOrgProfile);
-		} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			getManagedBean().setSelectedMinistry(
-					pmOrgProfile);
-			getManagedBean().setDisableMinistryField(true);
-		}
 	}
 	
 	/**
@@ -163,10 +113,10 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			map.put(CtReportConst.PARAM_KEY_STATUS, getManagedBean()
 					.getStatus());
 		}
-		if (getManagedBean().getFromDate() != null
-				&& StringUtils.isNotEmpty(getManagedBean().getFromDate().toString())) {
+		if (getManagedBean().getfromDate() != null
+				&& StringUtils.isNotEmpty(getManagedBean().getfromDate().toString())) {
 			map.put(CtReportConst.PARAM_KEY_FROM_DATE, df.format(
-					getManagedBean().getFromDate()));
+					getManagedBean().getfromDate()));
 		}
 		if (getManagedBean().getToDate() != null
 				&& StringUtils.isNotEmpty(getManagedBean().getToDate().toString())) {
