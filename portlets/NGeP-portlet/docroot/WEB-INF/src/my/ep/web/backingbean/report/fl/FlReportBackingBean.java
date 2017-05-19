@@ -21,6 +21,7 @@ import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -65,7 +66,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void onChangeReportName(){
 
 		log.info("onChangeReportName");	
-		
 		resetAction();
 		
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
@@ -87,14 +87,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);		
-		
-		RPTRequestResDTO resDTO = rptRequestSO.generateReport(
-				constructFlParamStrings(params), 
-				getManagedBean().getReportCode(), 
-				null, 
-				getFacesScopes().getUserSessionBean().getUserId(), 
-				false, 
-				getManagedBean().isTempAccess());	
+		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
+		reqDTO.setDefaultOutputType(this.getManagedBean()
+				.getDefaultOutputType());
+		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
+		params.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		params.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
+		reqDTO.setParametersMap(params);
+		RPTRequestResDTO resDTO=null;
+		try {
+			resDTO = rptRequestSO.generateReport(reqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 		RequestContext.getCurrentInstance().execute("confirmationId.show()");
 		
