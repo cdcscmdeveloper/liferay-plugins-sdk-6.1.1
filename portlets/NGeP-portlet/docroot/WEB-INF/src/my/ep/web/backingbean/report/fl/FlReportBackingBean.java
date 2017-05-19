@@ -90,7 +90,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
 		params.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 		params.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
-
+		params.put(FlReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
 		reqDTO.setDefaultOutputType(this.getManagedBean()
 				.getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
