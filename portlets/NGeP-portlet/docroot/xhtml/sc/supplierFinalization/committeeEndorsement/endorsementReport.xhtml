@@ -18,7 +18,7 @@
 		<tr>
 			<td style="float:left;width: 12%;"><p:outputLabel value="#{lbl['lbl.sc.sf.with.conditions']}" />
 			</td>
-			<td style="float:left;width: 88%;">
+			<td style="float:left;">
 				<table>
 					<tr>
 							<td><p:selectOneRadio id="withConditionsId" required="true"
@@ -50,7 +50,8 @@
 								<tr>
 									<td style="float:right;margin-left: 55px;"><p:inputTextarea
 											id="withConditionTxtId" value="#{finalization.termsText}"
-											cols="80" rows="3" onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"/> 
+											cols="80" rows="3" onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"
+											label="#{lbl['lbl.sc.sf.with.conditions.as.below']}"/> 
 											<p:message id="withConditionTxtMsgId" for="withConditionTxtId"
 											display="icon" /></td>
 								</tr>
@@ -77,7 +78,7 @@
 				<td style="margin-left: 55px;"><p:selectOneMenu id="justificationDDId" 
 						value="#{finalization.justfication.parameterId}"
 						style="width: 300px;margin-bottom: 5px;"
-						label="#{lbl['lbl.sc.sf.justification.selection']}">
+						label="#{lbl['lbl.sc.sf.justification.selection']}" disabled="#{!readOnly}">
 						<f:selectItems
 							value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.finalizationSupplierJustification)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -93,7 +94,8 @@
 					<tr>
 						<td style="float:right;margin-left: 55px;"><p:inputTextarea id="justificationTxtId"
 								value="#{finalization.justficationText}" cols="80" rows="3"
-								onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"/> <p:message
+								onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"
+								label="#{lbl['lbl.sc.sf.justification']}"/> <p:message
 								id="justificationTxtMsgId" for="justificationTxtId"
 								display="icon" /></td>
 								<td></td>
