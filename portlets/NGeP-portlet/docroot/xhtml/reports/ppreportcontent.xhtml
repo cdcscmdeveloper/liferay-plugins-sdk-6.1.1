@@ -157,11 +157,63 @@
 		</table>
 
 		<table style="width: 100%;">
+			<c:if test="#{ppReportBackingBean.managedBean.rptGenBean.ppProcurementMethodView
+			or ppReportBackingBean.managedBean.rptGenBean.ppProcurementCatView}">
+			<tr>
+				<c:if test="#{ppReportBackingBean.managedBean.rptGenBean.ppProcurementCatView}">
+					<td width="15%"><p:outputLabel value="#{lbl['lbl.pp.category']}"></p:outputLabel>
+					</td>
+					<td width="35%"><p:selectOneMenu id="somCategory"
+							label="#{lbl['lbl.pp.category']}"
+							value="#{reportBackingBean.procurementCatId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{reportBackingBean.getProcurementCategoryOptions()}"
+								var="obj" itemValue="#{obj.procurementCat.parameterId}"
+								itemLabel="#{reportBackingBean.getParameterDesc(obj.procurementCat)}" />
+							<p:ajax event="change" update="somProcurementMethod" />
+						</p:selectOneMenu></td>
+				</c:if>
+				<td width="15%"><p:outputLabel
+						value="#{lbl['lbl.pp.procurement.method']}"></p:outputLabel></td>
+				<td width="35%"><p:selectOneMenu id="somProcurementMethod"
+						disabled="#{ppReportBackingBean.managedBean.rptGenBean.ppProcurementMethodView
+						and ppReportBackingBean.managedBean.rptGenBean.ppProcurementCatView and reportBackingBean.procurementCatId==null}"
+						label="#{lbl['lbl.pp.procurement.method']}"
+						value="#{reportBackingBean.procurementTypeId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{reportBackingBean.getProcurementTypeOptions(reportBackingBean.procurementCatId)}"
+							var="obj" itemValue="#{obj.procurementType.parameterId}"
+							itemLabel="#{reportBackingBean.getParameterDesc(obj.procurementType)}" />
+						<p:ajax event="change" process="@this" />
+					</p:selectOneMenu></td>
+				<c:if test="#{not ppReportBackingBean.managedBean.rptGenBean.ppProcurementCatView and ppReportBackingBean.managedBean.rptGenBean.ppProcurementMethodView}">
+					<td width="50%" colspan="2"></td>
+				</c:if>
+			</tr>
+		</c:if>
+		<tr>
+			<td width="15%"><p:outputLabel
+					value="#{ppReportBackingBean.managedBean.rptGenBean.ppProcurementCatView or ppReportBackingBean.managedBean.rptGenBean.ppProcurementCatView
+					 ? lbl['lbl.pp.ppitem.status'] :  lbl['lbl.pp.epitem.status']}" /></td>
+			<td><p:selectOneMenu id="ppSearchStatus"
+					value="#{reportBackingBean.ppItemtatus}">
+					<f:selectItems
+						value="#{reportBackingBean.getActiveAndInactiveStatusOptions()}" />
+				</p:selectOneMenu></td>
+
+		</tr>
+		</table>
+		<table style="width: 100%;">
+		
 			<tr>
 				<td width="100%"><h:panelGrid id="ppReportCriteria" columns="4"
 						style="width:43%;">
 						<c:if
-							test="#{ctReportBackingBean.managedBean.rptGenBean.ppYearView}">
+							test="#{ppReportBackingBean.managedBean.rptGenBean.ppYearView}">
 							<p:column>
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
