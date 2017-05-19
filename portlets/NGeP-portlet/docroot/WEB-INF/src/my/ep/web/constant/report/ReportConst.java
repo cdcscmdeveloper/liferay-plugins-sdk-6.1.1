@@ -863,6 +863,12 @@ public class ReportConst implements Serializable{
 	public static final String AMP_PM_SUPP_ZONE_EQ = " PSUPPZONE=";
 	public static final String AMP_PM_SUPP_PROFILE_STATUS_EQ = " PPRSTAT=";
 
+	
+	//PP
+	public static final String PARAM_PP_STATUS = "PSTAT";
+	public static final String PARAM_PP_METHOD = "PMET";
+	public static final String PARAM_PP_CATEGORY = "PCATS";
+	
 	public static final String FEDERAL_GOVT = "1";
 	public static final String OTHERS = "2";
 

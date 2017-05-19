@@ -3963,6 +3963,10 @@ public class ReportsGenerateBean implements Serializable {
 
 	/** The pp ptj view. */
 	protected boolean ppPTJView = false;
+	
+	protected boolean ppProcurementMethodView = false;
+	protected boolean ppProcurementCatView = false;
+	protected boolean ppItemStatus = false;
 
 	/** The dummy value. */
 	protected boolean dummyValue = false;
@@ -4666,6 +4670,12 @@ public class ReportsGenerateBean implements Serializable {
 
 	/** The pp ptj var. */
 	protected String ppPTJVar = ReportConst.EMPTY_VAL;
+	
+	protected String ppProcurementCatVar = ReportConst.EMPTY_VAL;
+	
+	protected String ppProcurementMethodVar = ReportConst.EMPTY_VAL;
+	
+	protected String ppItemStatusVar = ReportConst.EMPTY_VAL;
 	// PM
 	/** The pm service type var. */
 	protected String pmServiceTypeVar = ReportConst.EMPTY_VAL;
@@ -21506,6 +21516,90 @@ public class ReportsGenerateBean implements Serializable {
 	 */
 	public void setCtAgreementExtraView(boolean ctAgreementExtraView) {
 		this.ctAgreementExtraView = ctAgreementExtraView;
+	}
+
+	/**
+	 * @return the ppProcurementMethodView
+	 */
+	public boolean isPpProcurementMethodView() {
+		return ppProcurementMethodView;
+	}
+
+	/**
+	 * @param ppProcurementMethodView the ppProcurementMethodView to set
+	 */
+	public void setPpProcurementMethodView(boolean ppProcurementMethodView) {
+		this.ppProcurementMethodView = ppProcurementMethodView;
+	}
+
+	/**
+	 * @return the ppProcurementCatView
+	 */
+	public boolean isPpProcurementCatView() {
+		return ppProcurementCatView;
+	}
+
+	/**
+	 * @param ppProcurementCatView the ppProcurementCatView to set
+	 */
+	public void setPpProcurementCatView(boolean ppProcurementCatView) {
+		this.ppProcurementCatView = ppProcurementCatView;
+	}
+
+	/**
+	 * @return the ppItemStatus
+	 */
+	public boolean isPpItemStatus() {
+		return ppItemStatus;
+	}
+
+	/**
+	 * @param ppItemStatus the ppItemStatus to set
+	 */
+	public void setPpItemStatus(boolean ppItemStatus) {
+		this.ppItemStatus = ppItemStatus;
+	}
+
+	/**
+	 * @return the ppProcurementCatVar
+	 */
+	public String getPpProcurementCatVar() {
+		return ppProcurementCatVar;
+	}
+
+	/**
+	 * @param ppProcurementCatVar the ppProcurementCatVar to set
+	 */
+	public void setPpProcurementCatVar(String ppProcurementCatVar) {
+		this.ppProcurementCatVar = ppProcurementCatVar;
+	}
+
+	/**
+	 * @return the ppProcurementMethodVar
+	 */
+	public String getPpProcurementMethodVar() {
+		return ppProcurementMethodVar;
+	}
+
+	/**
+	 * @param ppProcurementMethodVar the ppProcurementMethodVar to set
+	 */
+	public void setPpProcurementMethodVar(String ppProcurementMethodVar) {
+		this.ppProcurementMethodVar = ppProcurementMethodVar;
+	}
+
+	/**
+	 * @return the ppItemStatusVar
+	 */
+	public String getPpItemStatusVar() {
+		return ppItemStatusVar;
+	}
+
+	/**
+	 * @param ppItemStatusVar the ppItemStatusVar to set
+	 */
+	public void setPpItemStatusVar(String ppItemStatusVar) {
+		this.ppItemStatusVar = ppItemStatusVar;
 	}
 
 }
