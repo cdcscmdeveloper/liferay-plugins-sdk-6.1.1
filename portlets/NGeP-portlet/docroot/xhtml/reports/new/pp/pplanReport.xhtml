@@ -73,7 +73,7 @@
 							<f:selectItems
 								value="#{ppReportsBackingBean.getProcurementCategoryOptions()}"
 								var="obj" itemValue="#{obj.procurementCat.parameterId}"
-								itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}" />
+								itemLabel="#{ppReportsBackingBean.getParameterDesc(obj.procurementCat)}" />
 							<p:ajax event="change" update="somProcurementMethod" />
 						</p:selectOneMenu></td>
 				</c:if>
