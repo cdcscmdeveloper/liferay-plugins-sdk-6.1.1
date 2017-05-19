@@ -9,6 +9,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -36,6 +38,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.PpReportsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pp.common.PpCommonUtil;
 
 @ManagedBean(name = "ppReportsBackingBean")
 @ViewScoped
@@ -88,6 +91,9 @@ public class PpReportsBackingBean extends
 		getManagedBean().setDisableOrgFields(false);
 		getManagedBean().setSelectedYear(null);
 		getManagedBean().setDisableMinistryField(false);
+		getManagedBean().setProcurementCatId(null);
+		getManagedBean().setProcurementTypeId(null);
+		getManagedBean().setStatus(null);
 	}
 
 	/**
@@ -303,6 +309,21 @@ public class PpReportsBackingBean extends
 					.getSelectedYear());
 		}
 		
+		if(getManagedBean().getProcurementCatId() != null){
+			map.put(PpReportConst.PARAM_PP_CATEGORY, getManagedBean()
+					.getProcurementCatId().toString());
+		}
+		
+		if(getManagedBean().getProcurementTypeId() != null){
+			map.put(PpReportConst.PARAM_PP_METHOD, getManagedBean()
+					.getProcurementTypeId().toString());
+		}
+		
+		if(getManagedBean().getStatus() != null){
+			map.put(PpReportConst.PARAM_PP_STATUS, getManagedBean()
+					.getStatus().toString());
+		}
+		
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
 			map.put(PmReportConst.PARAM_KEY_REPORT, getManagedBean()
@@ -317,5 +338,35 @@ public class PpReportsBackingBean extends
 		}
 		
 		return map;
+	}
+	
+	/**
+	 *  get Procurement Cat options 
+	 * @return List<PmProcurementCatType>
+	 */
+	public List<PmProcurementCatType> getProcurementCategoryOptions() {
+		log.info("getProcurementCategoryOptions");
+		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		return PpCommonUtil.retrieveProcurementCatTypeList(languageCode);
+	}
+	
+	/**
+	 * get Procurement Type options by cat id
+	 * @return List<PmProcurementCatType>
+	 */
+	public List<PmProcurementCatType> getProcurementTypeOptions(Long procurementCatId) {
+		log.info("getProcurementTypeOptions");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		if(procurementCatId!=null && procurementCatId>0L){			
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatId(languageCode, procurementCatId);
+		}else{
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeList(languageCode,null);
+		}
+		return procurementCatTypeList;
+	}
+	
+	public static SelectItem[] getActiveAndInactiveStatusOptions() {
+		return PmCommonUtil.getRecordStatusOptions();
 	}
 }

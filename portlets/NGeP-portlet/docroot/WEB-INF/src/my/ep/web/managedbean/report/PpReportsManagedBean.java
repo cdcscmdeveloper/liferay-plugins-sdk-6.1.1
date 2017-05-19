@@ -18,6 +18,9 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	private boolean disableOrgFields;
 	private boolean disableMinistryField;
 	private String selectedYear;
+	private Long procurementCatId;
+	private Long procurementTypeId;
+	private Integer status;
 	
 	public PpReportsManagedBean(){}
 
@@ -131,5 +134,47 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	 */
 	public void setDisableMinistryField(boolean disableMinistryField) {
 		this.disableMinistryField = disableMinistryField;
+	}
+
+	/**
+	 * @return the procurementCatId
+	 */
+	public Long getProcurementCatId() {
+		return procurementCatId;
+	}
+
+	/**
+	 * @param procurementCatId the procurementCatId to set
+	 */
+	public void setProcurementCatId(Long procurementCatId) {
+		this.procurementCatId = procurementCatId;
+	}
+
+	/**
+	 * @return the procurementTypeId
+	 */
+	public Long getProcurementTypeId() {
+		return procurementTypeId;
+	}
+
+	/**
+	 * @param procurementTypeId the procurementTypeId to set
+	 */
+	public void setProcurementTypeId(Long procurementTypeId) {
+		this.procurementTypeId = procurementTypeId;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

@@ -679,23 +679,37 @@ public class PpCommonUtil implements Serializable{
 	public static List<PmProcurementCatType> retrieveProcurementTypeListByCatId(
 			String langugageCode, Long procurementCatId) {
 		log.info("retrieveProcurementTypeListByCatId");
-		String locale = "";
-		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
 		if (procurementCatId == null) {
 			throw new EpException(MessageConst.ERROR_730026);
-		}
+		}		
+		return retrieveProcurementTypeList(langugageCode, procurementCatId);
+	}
+	
+	/**
+	 * Retrieve Procurement Type List BY  Language Code
+	 * 
+	 * @param langugageCode
+	 * @return List<PmProcurementCatType>
+	 */
+	public static List<PmProcurementCatType> retrieveProcurementTypeList(
+			String langugageCode,Long procurementCatId) {
+		log.info("retrieveProcurementTypeList");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		String locale = "";
 		if (langugageCode == null) {
 			locale = new FacesScopes().getUserLocale().getLanguage();
 		} else {
 			locale = langugageCode;
 		}
-
+		
 		IProcurementCatTypeSO reqSO = null;
 		try {
 			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
 			ProcurementCatTypeResDTO resDTO = new ProcurementCatTypeResDTO();
+			if(procurementCatId != null){
+				reqDTO.setProcurementCatId(procurementCatId);
+			}
 			reqDTO.setLanguageCode(locale);
-			reqDTO.setProcurementCatId(procurementCatId);
 			reqSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProcurementCatTypeSO.class);
