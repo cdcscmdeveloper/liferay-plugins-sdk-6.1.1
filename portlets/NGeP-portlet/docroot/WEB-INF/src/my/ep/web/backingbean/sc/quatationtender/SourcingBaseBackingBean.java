@@ -2789,6 +2789,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	/**
+	 * Checks if is supplier.
+	 *
+	 * @return true, if is supplier
+	 */
+	public boolean isSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		if(facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier and govt seller
+				|| facesScopes.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
+				|| facesScopes.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
+
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	/**
 	 * Enable drop down for ProcumentMethod if true
 	 * 
 	 * @param scQt
