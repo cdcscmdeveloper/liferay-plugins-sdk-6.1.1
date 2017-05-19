@@ -589,6 +589,7 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setOutcome(getManagedBean().getOutcome());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
 			
 			SuppFinalizationResDTO resDTO 
 					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
@@ -661,7 +662,6 @@ public class ConsolidationReportBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		int zoneActiveIndex = getManagedBean().getZoneActiveIndex();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
-		boolean isUploadedKertasDoc = getManagedBean().isUploadedKertasDoc();
 		renewSesionObject();
 
 		getManagedBean().setQtId(qtId);
@@ -675,7 +675,6 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setZoneActiveIndex(
 				selectedZone != null ? selectedZone.getZoneTabIndex() : 0);
-		getManagedBean().setUploadedKertasDoc(isUploadedKertasDoc);
 
 		loadInitialData();
 
@@ -1039,7 +1038,7 @@ public class ConsolidationReportBackingBean extends
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
 		}
-		if(!this.getManagedBean().isUploadedKertasDoc()){
+		if(!scQtFinalization.isBriefingPaperUploaded()){
 			navigateToBriefingPaperTab();
 			throw new EpException(MessageConst.ERROR_760452);
 		}
@@ -1753,7 +1752,7 @@ public class ConsolidationReportBackingBean extends
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
-			this.getManagedBean().setUploadedKertasDoc(true);
+			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
 		}
 	}
 	private void initializeFinalizationUlasanRemarks() {
