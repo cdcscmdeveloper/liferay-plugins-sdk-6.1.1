@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "poRptManagedBean")
+@ManagedBean(name = "doRptManagedBean")
 @SessionScoped
 public class DeliveryOrderRptManagedBean extends FlReportManagedBean{
 
