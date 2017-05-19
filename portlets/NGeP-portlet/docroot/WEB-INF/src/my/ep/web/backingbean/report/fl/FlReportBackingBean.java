@@ -84,15 +84,12 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	public void generateFlReport(LinkedHashMap<String, String> params){
-		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IRPTRequestSO.class);		
+		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestSO.class);		
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
 		params.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 		params.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
 		params.put(FlReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
-		reqDTO.setDefaultOutputType(this.getManagedBean()
-				.getDefaultOutputType());
+		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
 		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
