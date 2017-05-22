@@ -16,6 +16,7 @@ import my.ep.exception.EpException;
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.cc.StatementOfOrderRptManagedBean;
+import my.ep.web.util.DateUtils;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -26,12 +27,18 @@ import org.apache.log4j.Logger;
  * 
  * @author Nancy Ang
  */
-@ManagedBean(name = "statementOfOrderRptBB")
+@ManagedBean(name = "ccStatementOfOrderRptBB")
 @ViewScoped
 public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<StatementOfOrderRptManagedBean> {
 	
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(StatementOfOrderRptBackingBean.class);
+	
+	public StatementOfOrderRptBackingBean() {
+		// set default date value
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+	}
 	
 	/**
 	 * This method use to generate CT report.
@@ -129,7 +136,7 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 		getManagedBean().setAgreement(null);
 		getManagedBean().setProcurementMode(null);
 		getManagedBean().setStatus(null);
-		getManagedBean().setFromDate(null);
-		getManagedBean().setToDate(null);
-	}	
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+	}
 }
