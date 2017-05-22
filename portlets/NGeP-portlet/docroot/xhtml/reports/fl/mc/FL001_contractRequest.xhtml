@@ -230,11 +230,6 @@
 			<f:setPropertyActionListener target="#{crMcRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		
-		<p:commandButton 
-			value="#{lbl['lbl.rpt.generate']}" process="@form"
-			update="@form" action="#{crMcRptBB.generateReport()}">
-		</p:commandButton>
-		
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
 			process="@this" update="@form" action="#{flReportBB.resetAction()}">
 		</p:commandButton>
