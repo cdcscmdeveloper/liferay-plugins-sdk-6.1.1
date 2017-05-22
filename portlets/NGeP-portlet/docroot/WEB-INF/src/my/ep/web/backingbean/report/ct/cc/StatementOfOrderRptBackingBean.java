@@ -49,6 +49,7 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		
+		retrieveReportValueFromDb();
 		if (getManagedBean().getSelectedMinistry() != null) {
 			map.put(CtReportConst.PARAM_KEY_MINISTRY, getManagedBean()
 					.getSelectedMinistry().getOrgProfileId().toString());
