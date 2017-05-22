@@ -17,6 +17,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
@@ -67,7 +68,7 @@ public class QTPublishSchedulingJob implements Job {
 					try{
 						if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
 							log.info("QT supposed to reschedule is :"+qtToPublish.getQtNo());
-							//reSchedulePublicationForPublishFailQt(qtToPublish);
+							reSchedulePublicationForPublishFailQt(qtToPublish);
 						}else{
 							ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
 							log.info("Simple Job was Built to Publish QT with No: "+qtToPublish.getQtNo());
@@ -80,7 +81,7 @@ public class QTPublishSchedulingJob implements Job {
 				}
 			}
 		} catch (Exception e) {
-			log.info("$$$$$ QT Publish Job run failed at " + new Date());
+			log.info("$$$$$ QT Publish Scheduleing Job run failed at " + new Date());
 			log.error(e.getLocalizedMessage());
 		} finally {
 			noticeBoardSO = null;
@@ -96,6 +97,7 @@ public class QTPublishSchedulingJob implements Job {
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		reqDTO.setQtId(qt.getQtId());
 		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+		reqDTO.setJobType(SourcingConstants.JOB_TYPE_PUBLISH);
 		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
 		if(resDTO.isSuccessful()){
 			log.info("Work flow status updated for publish failed QT with id"+qt.getQtId());
