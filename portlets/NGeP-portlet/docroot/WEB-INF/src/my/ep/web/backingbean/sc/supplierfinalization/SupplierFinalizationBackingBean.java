@@ -169,6 +169,7 @@ public class SupplierFinalizationBackingBean extends
 	
 	private static final Long DEFAULT_ITEM = 0L;
 	private static final Long DEFAULT_ZONE = 0L;
+	private static final String JUSTIFICATION_OTHERS = "OTH";
 			
 	/**
 	 * Default constructor
@@ -481,8 +482,14 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().getEndorsementReportActiveIndex());
 		ScQtFinalization scQtFinalization = this.getManagedBean()
 				.getScQtFinalization();
-		if (scQtFinalization.getJustfication() == null) {
+		PmParameter justificationParam = scQtFinalization.getJustfication();
+		if (justificationParam == null) {
 			scQtFinalization.setJustfication(new PmParameter());
+		} else {
+			if (justificationParam.getParameterId() != null
+					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getParameterCode())) {
+				this.getManagedBean().setRenderjustificationTextbox(true);
+			}
 		}
 		
 		try {
@@ -1150,6 +1157,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isSecretaryUser = this.getManagedBean().isSecretaryUser();
 		Boolean isInitialSelectionItemized = 
 				this.getManagedBean().isInitialSelectionItemized();
+		boolean isRenderjustificationTextbox = this.getManagedBean().isRenderjustificationTextbox();
 
 		renewSesionObject();
 
@@ -1164,7 +1172,7 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setSecretaryUser(isSecretaryUser);
 		getManagedBean().setInitialSelectionItemized(
 						   isInitialSelectionItemized);
-
+        getManagedBean().setRenderjustificationTextbox(isRenderjustificationTextbox);
 		loadInitialData(qtId);
 
 		onTabMenuChangeAction();
@@ -6692,7 +6700,7 @@ public class SupplierFinalizationBackingBean extends
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			PmParameter parameter = resDTO.getPmParameter();
 			this.getManagedBean().getScQtFinalization().setJustfication(parameter);
-			if("OTH".equalsIgnoreCase(parameter.getParameterCode())){
+			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(parameter.getParameterCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
 			}
 
