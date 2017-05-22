@@ -71,6 +71,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 			RequestContext.getCurrentInstance().execute(
 					"confirmationId.show()");
+			getManagedBean().setReportUrl(resDTO.getReportUrl());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
