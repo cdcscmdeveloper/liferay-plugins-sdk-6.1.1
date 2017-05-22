@@ -5,32 +5,23 @@
 package my.ep.web.backingbean.report.ct;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.rpt.IRPTRequestSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
-import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ct.CtReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -48,55 +39,6 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
-	}
-	
-	/**
-	 * The method used to retrieve the report value from database.
-	 */
-	public void onChangeReportName() {
-		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
-			retrieveReportValueFromDb();
-		}
-		if (!getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_LIST_OF_CIRCULAR_PQ_RPT_VAL)
-				&& !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_STATEMENT_OF_ORDER_PQ_RPT_VAL))
-		setCurrentActiveOrg();
-	}
-	
-	/**
-	 * retrieve and set the current active org
-	 */
-	private void setCurrentActiveOrg() {
-		log.info("setCurrentActiveOrg");
-		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
-			throw new EpException(MessageConst.ERROR_770149);
-		}
-		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes()
-						.getUserSessionBean().getUserId(), false);
-
-		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);
-		}
-
-		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-			getManagedBean().setDisableOrgField(true);
-			getManagedBean().setDisableMinistryField(true);
-			getManagedBean().setSelectedMinistry(
-					retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedKumpulanPTJ(
-					retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedPTJ(pmOrgProfile);
-		} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			getManagedBean().setSelectedMinistry(
-					pmOrgProfile);
-			getManagedBean().setDisableMinistryField(true);
-		}
 	}
 	
 	/**
