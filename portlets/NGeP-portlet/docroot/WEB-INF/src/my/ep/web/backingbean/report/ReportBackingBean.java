@@ -14330,10 +14330,6 @@ public class ReportBackingBean extends
 		
 		if (StringUtils.isNotEmpty(this.getReportValue()) && (this
 				.getReportValue().toString()
-				.equals(ReportConst.SM_PERSON_BRANCH_BANK)
-				||
-				this
-				.getReportValue().toString()
 				.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||
 				this
 				.getReportValue().toString()
