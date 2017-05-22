@@ -18,6 +18,7 @@ public class FlReportConst implements Serializable {
 	// Ministry Const
 	public static final String FL_001_CONTRACT_REQ = "FL_001";
 	public static final String FL_002_PURCHASE_ORDER = "FL_002";
+	public static final String FL_003_DELIVERY_ORDER = "FL_003";
 	
 	// Central Contract Const
 	public static final String FL_018_CONTRACT_REQ = "FL_018";
@@ -85,6 +86,10 @@ public class FlReportConst implements Serializable {
 
 	public String getFl002PurchaseOrder() {
 		return FL_002_PURCHASE_ORDER;
+	}
+	
+	public String getFl003DeliveryOrder() {
+		return FL_003_DELIVERY_ORDER;
 	}
 	
 	public String getFl018ContractReq() {
