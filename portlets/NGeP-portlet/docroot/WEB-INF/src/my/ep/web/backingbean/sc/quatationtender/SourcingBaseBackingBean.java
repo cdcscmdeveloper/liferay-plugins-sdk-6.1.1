@@ -2781,7 +2781,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (orgResDto.getStateStatusId() != null) {
 					isPtjAddressTypePresent = true;
 				}
-			} finally {
+			} catch(Exception e){
+				//14648-No need to throw exception at time of page loading.
+				isPtjAddressTypePresent = false;
+			}
+			
+			finally {
 				orgProfile = null;
 			}
 		}
