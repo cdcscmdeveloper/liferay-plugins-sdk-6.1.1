@@ -10411,6 +10411,7 @@ public class SmApplicationUtil {
 
 		if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& !EntityHelper.isCollectionEmpty(bean.getePRoleList())
 				&& (bean.getSelectedShareHolder().getEpRole() == null
 						|| bean.getSelectedShareHolder().getEpRole().isEmpty() || bean
 						.getSelectedShareHolder().getEpRole()
