@@ -194,4 +194,7 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
 	}
+	public String getReportUrl() {
+		return reportUrl;
+	}
 }
