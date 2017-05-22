@@ -101,8 +101,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}	
 		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 		RequestContext.getCurrentInstance().execute("confirmationId.show()");
-		
-	
+		this.getManagedBean().setReportUrl(resDTO.getReportUrl());
 	}
 	
 	public void resetAction() {
