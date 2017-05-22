@@ -98,7 +98,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.country']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="compCountryId"
+				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="true"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
 						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}">
 						<f:selectItems var="counLs"
