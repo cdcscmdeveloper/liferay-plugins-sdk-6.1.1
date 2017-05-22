@@ -56,20 +56,20 @@ public class ScSchedulerHelper {
 				.withIdentity(jobKey.getName(), jobKey.getGroup())
 				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA,
 						scQt.getQtId()).build();
+
 		// define a simple trigger that runs at specific time (publish time)
+		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+				.withIdentity(jobKey.getName(), jobKey.getGroup())
+				.startAt(scQt.getPublishDate()).forJob(jobKey).build();
+
 		/*
 		 * SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder .newTrigger()
 		 * .withIdentity(jobKey.getName(), jobKey.getGroup())
-		 * .startAt(scQt.getPublishDate()) .forJob(jobKey) .build();
+		 * .startAt(scQt.getPublishDate()) .withSchedule(
+		 * SimpleScheduleBuilder.simpleSchedule()
+		 * .withMisfireHandlingInstructionIgnoreMisfires())
+		 * .forJob(jobKey).build();
 		 */
-		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
-				.newTrigger()
-				.withIdentity(jobKey.getName(), jobKey.getGroup())
-				.startAt(scQt.getPublishDate())
-				.withSchedule(
-						SimpleScheduleBuilder.simpleSchedule()
-								.withMisfireHandlingInstructionIgnoreMisfires())
-				.forJob(jobKey).build();
 
 		// Tell quartz to schedule the job using our trigger
 		EpSchedulerHelper.getScheduler().scheduleJob(job, trigger);
@@ -92,19 +92,19 @@ public class ScSchedulerHelper {
 				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA,
 						scQt.getQtId()).build();
 		// define a simple trigger that runs at specific time (closing time)
-		/*
-		 * SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder .newTrigger()
-		 * .withIdentity(jobKey.getName(), jobKey.getGroup())
-		 * .startAt(scQt.getClosingDate()) .forJob(jobKey).build();
-		 */
-		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
+
+		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+				.withIdentity(jobKey.getName(), jobKey.getGroup())
+				.startAt(scQt.getClosingDate()).forJob(jobKey).build();
+
+		/*SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
 				.newTrigger()
 				.withIdentity(jobKey.getName(), jobKey.getGroup())
 				.startAt(scQt.getClosingDate())
 				.withSchedule(
 						SimpleScheduleBuilder.simpleSchedule()
 								.withMisfireHandlingInstructionIgnoreMisfires())
-				.forJob(jobKey).build();
+				.forJob(jobKey).build();*/
 
 		// Tell quartz to schedule the job using our trigger
 		EpSchedulerHelper.getScheduler().scheduleJob(job, trigger);
