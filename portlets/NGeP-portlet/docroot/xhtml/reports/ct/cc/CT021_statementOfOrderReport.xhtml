@@ -142,6 +142,8 @@
 				process="@form"   
 				update="@form" 
 				action="#{ccStatementOfOrderRptBB.generateCtReport()}">
+				<f:setPropertyActionListener target="#{ccStatementOfOrderRptBB.managedBean.reportCode}"
+					value="#{ctReportBB.managedBean.reportCode}" />
 			</p:commandButton>
 			<p:commandButton 
 				id="resetBtnId"

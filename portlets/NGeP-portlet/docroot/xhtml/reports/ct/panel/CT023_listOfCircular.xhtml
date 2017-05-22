@@ -53,6 +53,8 @@
 				process="@form"   
 				update="@form" 
 				action="#{panelListOfCircularRptBB.generateCtReport()}">
+				<f:setPropertyActionListener target="#{panelListOfCircularRptBB.managedBean.reportCode}"
+					value="#{ctReportBB.managedBean.reportCode}" />
 			</p:commandButton>
 			<p:commandButton 
 				id="resetBtnId"
