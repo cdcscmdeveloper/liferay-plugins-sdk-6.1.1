@@ -887,20 +887,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				
-				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
+				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) && !fc.hasRoleUser(RoleCode.BPK_CCA.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				
-				if(fc.hasRoleUser(RoleCode.BPK_CCA.value())){
+				if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_CENTRAL);
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);		
-				}
-				
+			    	}
+			
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
