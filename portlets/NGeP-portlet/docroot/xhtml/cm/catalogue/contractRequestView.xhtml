@@ -23,7 +23,7 @@
 				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}">
 						<f:selectItems value="#{catalogueBackingBean.managedBean.availableNoList}"/>
 					</p:selectOneMenu></td>
-				<td style="text-align: right;width:12%"><p:commandButton id="navigateCR" disabled="#{empty catalogueBackingBean.managedBean.ctRequestList}"
+				<td style="text-align: right;width:12%"><p:commandButton id="navigateCR" style="white-space:nowrap;" disabled="#{empty catalogueBackingBean.managedBean.ctRequestList}"
 						value="#{lbl['lbl.cm.contract.request']}" action="#{catalogueBackingBean.navigateToCR}"/></td>
 			</tr>
 		</table>
