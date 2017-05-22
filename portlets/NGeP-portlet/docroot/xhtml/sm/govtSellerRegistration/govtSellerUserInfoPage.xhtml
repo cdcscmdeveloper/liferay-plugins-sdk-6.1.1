@@ -271,7 +271,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />	
 					</td>
 					<td id="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
-							label="#{lbl['lbl.sm.country']}"
+							label="#{lbl['lbl.sm.country']}" disabled="true"
 							value="#{bb.managedBean.smPermenantAdd.pmCountry.countryId}"
 							id="cmbPermCounrty" style="width:80%">
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
