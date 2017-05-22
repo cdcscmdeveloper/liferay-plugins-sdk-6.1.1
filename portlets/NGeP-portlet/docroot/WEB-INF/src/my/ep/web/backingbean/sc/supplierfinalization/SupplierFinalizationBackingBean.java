@@ -479,6 +479,12 @@ public class SupplierFinalizationBackingBean extends
 	public void navigateToEndorsementReportTab() {
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
+		ScQtFinalization scQtFinalization = this.getManagedBean()
+				.getScQtFinalization();
+		if (scQtFinalization.getJustfication() == null) {
+			scQtFinalization.setJustfication(new PmParameter());
+		}
+		
 		try {
 			getSuppFinalizationEndorsementReportStreamContent();
 		} catch (Exception e) {
@@ -913,6 +919,16 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO = validateInfo(2);
 			}
 			validateFinalizationReports(reqDTO);
+			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
+				if (reqDTO.getScQtFinalization().getJustfication() != null
+						&&reqDTO.getScQtFinalization().getJustfication().getParameterId() == null) {
+					throw new EpException(MessageConst.ERROR_100061,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.sf.justification.selection",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}
+			}
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -978,6 +994,7 @@ public class SupplierFinalizationBackingBean extends
 								   toBeRemovedReports);
 			}
 		}
+		
 	}
 	
 	private void reloadData(SuppFinalizationResDTO resDTO) {
@@ -1109,7 +1126,7 @@ public class SupplierFinalizationBackingBean extends
 //							this.getManagedBean().getResetSupplierList());
 					
 					break;
-	
+					
 				default :
 					reqDTO.setScQtFinalization(scQtFinalization);
 			}
@@ -1709,6 +1726,9 @@ public class SupplierFinalizationBackingBean extends
 								(totalMembersAttended - 1)) {
 					throw new EpException(MessageConst.ERROR_760265);
 				}
+				// setting false Since at time of re finalization needs to upload the document again 
+				this.getManagedBean().getScQtFinalization()
+						.setBriefingPaperUploaded(false);
 			}
 			
 			String committeeType = getManagedBean().getCommitteeType();
@@ -1787,6 +1807,20 @@ public class SupplierFinalizationBackingBean extends
 					} finally {
 						this.getManagedBean().setPrepareActiveIndex(1);
 					}
+				}
+				
+				if(!scQtFinalization.isBriefingPaperUploaded()){
+					navigateToBriefingPaperTab();
+					throw new EpException(MessageConst.ERROR_760452);
+				}
+
+				if (scQtFinalization.getJustfication() != null
+						&& scQtFinalization.getJustfication().getParameterId() == null) {
+					throw new EpException(MessageConst.ERROR_100061,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.sf.justification.selection",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
 				}
 			}
 			
@@ -3005,10 +3039,6 @@ public class SupplierFinalizationBackingBean extends
 					}
 					/******End******/
 				}
-				if(scQtFinalization.getJustfication() == null){
-					scQtFinalization.setJustfication(new PmParameter());
-				}
-				
 				
 			}
 		} finally {
@@ -6690,12 +6720,22 @@ public class SupplierFinalizationBackingBean extends
 			}
 			ScQtFinalizationReportAttachment reportAttachment 
 					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			if(reportAttachment == null){
+				reportAttachment = new ScQtFinalizationReportAttachment();
+				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				reportAttachment.setFileName(event.getFile().getFileName());
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+				//setUserDetails(reportAttachment);
+				//populateAttachmentDetails(reportAttachment);
+			}
 			// set uploaded file name into actual attachment
 			reportAttachment.setFileName(event.getFile().getFileName());
 			populateAttachmentDetails(reportAttachment);
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
+			scQtFinalizationReport.setTempReportAttachment(reportAttachment);
 		}
 	}
 	
