@@ -9,10 +9,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		
-		<p:outputLabel id="reportUrl" value="#{reportBackingBean.managedBean.reportUrl}"></p:outputLabel>
 	
 		<table style="margin-top: 10px; width: 100%;">
+			
+			<tr>
+				
+				<td colspan="2">
+					
+					<p:outputLabel id="reportUrl" value="#{flReportBB.managedBean.reportUrl}"></p:outputLabel>
+	
+				</td>
+				
+			</tr>
+			
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
@@ -71,6 +80,10 @@
 				<c:when
 					test="#{FlReportConst.fl002PurchaseOrder == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/mc/FL002_purchaseOrder.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl003DeliveryOrder == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL003_deliveryOrder.xhtml"></ui:include>
 				</c:when>
 				
 				<!-- Others -->
