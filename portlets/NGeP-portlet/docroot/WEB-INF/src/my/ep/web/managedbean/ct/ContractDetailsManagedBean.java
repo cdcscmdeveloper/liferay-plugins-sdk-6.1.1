@@ -892,13 +892,21 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);				
-				}
-				
-				if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
+				}else if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_CENTRAL);
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);		
+			    	} else if(fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && !fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
+			    		SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+								ParameterConst.CONTRACT_TYPE_MINISTRY);
+							filterBean.setCaseInsensitive(true);
+							searchBean.getDataFilterBeans().add(filterBean);			
+			    	} else if(!fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
+			    		SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+								ParameterConst.CONTRACT_TYPE_CENTRAL);
+							filterBean.setCaseInsensitive(true);
+							searchBean.getDataFilterBeans().add(filterBean);		
 			    	}
 			
 				if (getSearchPtjProfile() != null) {
