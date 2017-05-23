@@ -38,6 +38,8 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private Date fromDate;
 	private Date toDate;
 	
+	private Long statusDescId;
+	
 	public FlReportManagedBean(){}
 
 	/**
@@ -200,5 +202,13 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
 		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	public Long getStatusDescId() {
+		return statusDescId;
+	}
+
+	public void setStatusDescId(Long statusDescId) {
+		this.statusDescId = statusDescId;
 	}
 }

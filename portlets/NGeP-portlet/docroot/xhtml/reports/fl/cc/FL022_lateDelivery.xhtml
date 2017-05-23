@@ -218,7 +218,7 @@
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
 			width="500px" resizable="false" styleClass="pop_up_top">
 			<h:outputText escape="false" style="float:left;margin-left:5px;"
-				value="#{flReportBB.managedBean.popUpMsg}">
+				value="#{ldRptBB.managedBean.popUpMsg}">
 			</h:outputText>
 			<br />
 			<div style="float:right;">
@@ -227,7 +227,7 @@
 						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
 								onclick="confirmationId.hide();" />
 							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-								action="#{flReportBB.redirect()}">
+								action="#{ldRptBB.redirect()}">
 							</p:commandButton></td>
 					</tr>
 				</table>
