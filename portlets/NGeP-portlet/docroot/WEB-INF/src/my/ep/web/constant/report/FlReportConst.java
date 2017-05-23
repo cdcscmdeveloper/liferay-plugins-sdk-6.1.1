@@ -3,7 +3,7 @@ package my.ep.web.constant.report;
 import java.io.Serializable;
 
 public class FlReportConst implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
 
 	public static final String PARAM_FL_SUPP_ZONE_EQ = "PSUPPZONE";
@@ -16,9 +16,21 @@ public class FlReportConst implements Serializable {
 	public static final String PARAM_USER_ID = "PUSER";
 	
 	// Ministry Const
-	public static final String FL_001_CONTRACT_REQ = "FL_001";
+	public static final String FL_001_CONTRACT_REQUEST = "FL_001";
 	public static final String FL_002_PURCHASE_ORDER = "FL_002";
 	public static final String FL_003_DELIVERY_ORDER = "FL_003";
+	public static final String FL_004_FULLFILLMENT_RECEIVED_NOTE = "FL_004";
+	public static final String FL_005_LATE_DELIVERY = "FL_005";
+	public static final String FL_009_INVOICE = "FL_009";
+	public static final String FL_010_PAYMENT_MATCH = "FL_010";
+	public static final String FL_011_DEDUCTION = "FL_011";
+	public static final String FL_012_CONTRACT_REQUEST_REJECTION = "FL_012";
+	public static final String FL_013_PURCHASE_ORDER_CANCELLATION = "FL_013";
+	public static final String FL_014_DELIVERY_ORDER_CANCELLATION = "FL_014";
+	public static final String FL_015_FULLFILLMENT_RECEIVED_NOTE_CANCELLATION = "FL_015";
+	public static final String FL_016_INVOICE_CANCELLATION = "FL_016";
+	public static final String FL_050_STOP_INSTRUCTION_INITIATED_BY_PTJ = "FL_050";
+	public static final String FL_053_STOP_INSTRUCTION_INITIATED_BY_SUPPLIER = "FL_053";
 	
 	// Central Contract Const
 	public static final String FL_018_CONTRACT_REQ = "FL_018";
@@ -33,8 +45,8 @@ public class FlReportConst implements Serializable {
 	public static final String FL_029_DELIVERY_ORDER_CANCELLATION = "FL_029";
 	public static final String FL_030_FULFILMENT_RECEIVED_NOTE_CANCELLATION = "FL_030";
 	public static final String FL_031_INVOICE_CANCELLATION = "FL_031";
-	public static final String FL_051_STOP_INST_BY_PTJ = "FL_051";
-	public static final String FL_054_STOP_INST_BY_SUPPLIER = "FL_054";
+	public static final String FL_050_STOP_INST_BY_PTJ = "FL_050";
+	public static final String FL_053_STOP_INST_BY_SUPPLIER = "FL_053";
 	
 	// Purchase Order Const
 	
@@ -80,8 +92,8 @@ public class FlReportConst implements Serializable {
 	
 	public FlReportConst(){}
 
-	public String getFl001ContractReq() {
-		return FL_001_CONTRACT_REQ;
+	public String getFl001ContractRequest() {
+		return FL_001_CONTRACT_REQUEST;
 	}
 
 	public String getFl002PurchaseOrder() {
@@ -90,6 +102,54 @@ public class FlReportConst implements Serializable {
 	
 	public String getFl003DeliveryOrder() {
 		return FL_003_DELIVERY_ORDER;
+	}
+	
+	public String getFl004FullfillmentReceivedNote() {
+		return FL_004_FULLFILLMENT_RECEIVED_NOTE;
+	}
+	
+	public String getFl005LateDelivery(){
+		return FL_005_LATE_DELIVERY;
+	}
+	
+	public String getFl009Invoice(){
+		return FL_009_INVOICE;
+	}
+	
+	public String getFl010PaymentMatch(){
+		return FL_010_PAYMENT_MATCH;
+	}
+	
+	public String getFl011Deduction(){
+		return FL_011_DEDUCTION;
+	}
+	
+	public String getFl012ContractRequestRejection(){
+		return FL_012_CONTRACT_REQUEST_REJECTION;
+	}
+	
+	public String getFl013PurchaseOrderCancellation(){
+		return FL_013_PURCHASE_ORDER_CANCELLATION;
+	}
+	
+	public String getFl014DeliveryOrderCancellation(){
+		return FL_014_DELIVERY_ORDER_CANCELLATION;
+	}
+	
+	public String getFl015FullfillmentReceivedNoteCancellation(){
+		return FL_015_FULLFILLMENT_RECEIVED_NOTE_CANCELLATION;
+	}
+	
+	public String getFl016InvoiceCancellation(){
+		return FL_016_INVOICE_CANCELLATION;
+	}
+	
+	public String getFl050StopInstructionInitiatedByPtj(){
+		return FL_050_STOP_INSTRUCTION_INITIATED_BY_PTJ;
+	}
+	
+	public String getFl053StopInstructionInitiatedBySupplier(){
+		return FL_053_STOP_INSTRUCTION_INITIATED_BY_SUPPLIER;
 	}
 	
 	public String getFl018ContractReq() {
@@ -140,13 +200,11 @@ public class FlReportConst implements Serializable {
 		return FL_031_INVOICE_CANCELLATION;
 	}
 
-	public String getFl051StopInstByPtj() {
-		return FL_051_STOP_INST_BY_PTJ;
+	public String getFl050StopInstByPtj() {
+		return FL_050_STOP_INST_BY_PTJ;
 	}
 
-	public String getFl054StopInstBySupplier() {
-		return FL_054_STOP_INST_BY_SUPPLIER;
+	public String getFl053StopInstBySupplier() {
+		return FL_053_STOP_INST_BY_SUPPLIER;
 	}
-
-
 }
