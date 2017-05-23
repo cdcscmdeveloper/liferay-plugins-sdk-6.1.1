@@ -69,12 +69,16 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				reportCategory);
 		
 		getManagedBean().setReportCode(null);
+		getManagedBean().setReportUrl(null);
+		getManagedBean().setPopUpMsg(null);
 	}
 	
 	/**
 	 * The method used to retrieve the report value from database.
 	 */
 	public void onChangeReportName() {
+		getManagedBean().setReportUrl(null);
+		getManagedBean().setPopUpMsg(null);
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}

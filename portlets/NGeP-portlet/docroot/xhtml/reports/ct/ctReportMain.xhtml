@@ -11,7 +11,6 @@
 	<ui:define name="contentSection">
 		<p:messages id="ctReportMsgId" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
-		<p:outputLabel id="reportUrl" value="#{ctReportBB.managedBean.reportUrl}"></p:outputLabel><br/>
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
 				<td style="width:20%">
@@ -80,24 +79,6 @@
 				<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
 			</c:if>						
 		</p:panel>
-		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
-			width="500px" resizable="false" styleClass="pop_up_top">
-			<h:outputText escape="false" style="float:left;margin-left:5px;"
-				value="#{ctReportBB.managedBean.popUpMsg}">
-			</h:outputText>
-			<br />
-			<div style="float:right;">
-				<table style="width:100%">
-					<tr>
-						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
-								onclick="confirmationId.hide();" />
-							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-								action="#{ctReportBB.redirect()}">
-							</p:commandButton></td>
-					</tr>
-				</table>
-			</div>
-		</p:dialog>
 		<ac:lovPopup />
 	</ui:define>
 </ui:composition>
