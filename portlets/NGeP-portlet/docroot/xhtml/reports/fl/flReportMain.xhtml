@@ -74,7 +74,7 @@
 				<!-- Ministry Contract -->
 				
 				<c:when
-					test="#{FlReportConst.fl001ContractReq == flReportBB.managedBean.reportCode}">
+					test="#{FlReportConst.fl001ContractRequest == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/mc/FL001_contractRequest.xhtml"></ui:include>
 				</c:when>
 				<c:when
@@ -85,6 +85,55 @@
 					test="#{FlReportConst.fl003DeliveryOrder == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/mc/FL003_deliveryOrder.xhtml"></ui:include>
 				</c:when>
+				<c:when
+					test="#{FlReportConst.fl004FullfillmentReceivedNote == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL004_fullfillmentReceivedNote.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl005LateDelivery == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL005_lateDelivery.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl009Invoice == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL009_invoice.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl010PaymentMatch == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL010_paymentMatch.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl011Deduction == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL011_deduction.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl012ContractRequestRejection == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL012_contractRequestRejection.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl013PurchaseOrderCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL013_purchaseOrderCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl014DeliveryOrderCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL014_deliveryOrderCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl015FullfillmentReceivedNoteCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL015_fullfillmentReceivedNoteCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl016InvoiceCancellation == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL016_invoiceCancellation.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl050StopInstructionInitiatedByPtj == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL050_stopInstructionInitiatedByPtj.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl053StopInstructionInitiatedBySupplier == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL053_stopInstructionInitiatedBySupplier.xhtml"></ui:include>
+				</c:when>
+
 				
 				<!-- Others -->
 				
@@ -137,12 +186,12 @@
 					<ui:include src="/xhtml/reports/fl/cc/FL031_invoiceCancellation.xhtml"></ui:include>
 				</c:when>
 				<c:when
-					test="#{FlReportConst.fl051StopInstByPtj == flReportBB.managedBean.reportCode}">
-					<ui:include src="/xhtml/reports/fl/cc/FL051_stopInstByPtj.xhtml"></ui:include>
+					test="#{FlReportConst.fl050StopInstByPtj == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL050_stopInstByPtj.xhtml"></ui:include>
 				</c:when>
 				<c:when
-					test="#{FlReportConst.fl054StopInstBySupplier == flReportBB.managedBean.reportCode}">
-					<ui:include src="/xhtml/reports/fl/cc/FL054_stopInstBySupplier.xhtml"></ui:include>
+					test="#{FlReportConst.fl053StopInstBySupplier == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL053_stopInstBySupplier.xhtml"></ui:include>
 				</c:when>
 				<c:otherwise>
         			ERROR!
