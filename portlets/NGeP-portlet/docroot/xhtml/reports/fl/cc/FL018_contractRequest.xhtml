@@ -130,21 +130,20 @@
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
-					headerText="#{lbl['lbl.rpt.supplierScreen']}" update="@form" 
-					value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					postUpdateListener="#{reportBackingBean.onSupplierNameChangeForFLLOV()}"
-					saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
+					value="#{crRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="crRptBB.managedBean.selectedOrgProfile" />
 				
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+				<p:selectOneMenu value="#{crRptBB.managedBean.requisitioner}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeRquisitionerList}"></f:selectItems>
+						value="#{crRptBB.retrieveRequisitionerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:selectOneMenu>

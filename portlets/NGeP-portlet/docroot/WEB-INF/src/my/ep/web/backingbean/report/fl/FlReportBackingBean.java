@@ -52,7 +52,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			.getLogger(FlReportBackingBean.class);
 
 	
-	private FacesScopes getFacesScopes() {
+	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
@@ -120,15 +120,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	
 	public SelectItem[] getPmZoneList() {
 		return PmCommonUtil.getPmZoneListOptions();
-	}
-	
-	private String constructFlParamStrings(LinkedHashMap<String, String> map){
-		
-		map.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-		map.put(FlReportConst.PARAM_FL_REPORT_ID_EQ, getManagedBean().getReportCode());
-		
-		
-		return constructParameterString(map);
 	}
 	
 	/**
