@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "contractRequestRptManagedBean")
+@ManagedBean(name = "crRejectRptManagedBean")
 @SessionScoped
 public class ContractRequestRejectionRptManagedBean extends FlReportManagedBean{
 
