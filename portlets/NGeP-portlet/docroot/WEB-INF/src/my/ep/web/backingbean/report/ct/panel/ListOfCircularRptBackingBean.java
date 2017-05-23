@@ -49,7 +49,6 @@ public class ListOfCircularRptBackingBean extends CtReportBaseBackingBean<ListOf
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		
-		retrieveReportValueFromDb();
 		if (StringUtils.isNotEmpty(getManagedBean().getCircularNo())) {
 			map.put(CtReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean()
 					.getCircularNo());

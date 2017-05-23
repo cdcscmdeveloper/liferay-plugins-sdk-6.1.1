@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:outputText value="#{ccStatementOfOrderRptBB.managedBean.reportUrl}" /><br/><br/>
 	<table style="width: 100%;">
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ministry']}" /></td>
@@ -142,8 +143,10 @@
 				process="@form"   
 				update="@form" 
 				action="#{ccStatementOfOrderRptBB.generateCtReport()}">
-				<f:setPropertyActionListener target="#{ccStatementOfOrderRptBB.managedBean.reportCode}"
-					value="#{ctReportBB.managedBean.reportCode}" />
+				<f:setPropertyActionListener target="#{ccStatementOfOrderRptBB.managedBean.reportCode}" value="#{ctReportBB.managedBean.reportCode}" />
+				<f:setPropertyActionListener target="#{ccStatementOfOrderRptBB.managedBean.reportName}" value="#{ctReportBB.managedBean.reportName}" />
+				<f:setPropertyActionListener target="#{ccStatementOfOrderRptBB.managedBean.defaultOutputType}" value="#{ctReportBB.managedBean.defaultOutputType}" />
+				<f:setPropertyActionListener target="#{ccStatementOfOrderRptBB.managedBean.tempAccess}" value="#{ctReportBB.managedBean.tempAccess}" />
 			</p:commandButton>
 			<p:commandButton 
 				id="resetBtnId"
@@ -154,4 +157,22 @@
 			</p:commandButton>
 		</div>
 	</p:outputPanel>
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{ccStatementOfOrderRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float:right;">
+			<table style="width:100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" />
+						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{ccStatementOfOrderRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
 </ui:composition>
