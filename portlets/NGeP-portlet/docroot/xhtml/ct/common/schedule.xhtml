@@ -113,7 +113,7 @@
 								     	<h:outputText value="#{lbl['lbl.ct.fulfilment.type.schedule']}" styleClass="required"/>
 						               	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.schedule.type']}"/>
 						              </f:facet>
-				                      <p:selectOneMenu  value="#{payScheduleObj.fulfilmentTypeId}"
+				                      <p:selectOneMenu  value="#{payScheduleObj.fulfilmentTypeId}" style="width:180px;" 
 				               		       id="scheduleTypeid"  rendered="#{!ctBackingBean.managedBean.viewContract}"
 				               		       disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}"> 
 		                                   <f:selectItems value="#{ctBackingBean.getScheduleTypeDropDown()}"/>
