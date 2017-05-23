@@ -105,7 +105,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	public void resetAction() {
-
+		
 	}
 	
 	/**
@@ -402,5 +402,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null );
 	}
 	
-	
+	public SelectItem[]  getStatusDropDownValues(String docType){
+		return getStatusDropdownValues(ModuleCodeConst.ORDER_FULFILLMENT, docType);
+	}
 }

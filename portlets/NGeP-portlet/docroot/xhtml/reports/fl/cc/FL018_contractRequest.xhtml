@@ -168,18 +168,18 @@
 			</td>
 			
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flStatus}">
-					<f:selectItems
-						value="#{reportBackingBean.docTypeStatusItemsList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true"
-						update="@([id$=Msg])" />
-				</p:selectOneMenu>
+				<p:selectOneMenu id="statusId"
+								value="#{crRptBB.managedBean.statusDescId}"
+								style="width: 314px;">
+								<f:selectItems
+									value="#{crRptBB.getStatusDropDownValues('CR')}" />
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
+							</p:selectOneMenu>
 			</td>	
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
-
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
@@ -229,7 +229,7 @@
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
 			width="500px" resizable="false" styleClass="pop_up_top">
 			<h:outputText escape="false" style="float:left;margin-left:5px;"
-				value="#{flReportBB.managedBean.popUpMsg}">
+				value="#{crRptBB.managedBean.popUpMsg}">
 			</h:outputText>
 			<br />
 			<div style="float:right;">
@@ -238,7 +238,7 @@
 						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
 								onclick="confirmationId.hide();" />
 							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-								action="#{flReportBB.redirect()}">
+								action="#{crRptBB.redirect()}">
 							</p:commandButton></td>
 					</tr>
 				</table>
