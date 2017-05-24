@@ -158,8 +158,9 @@
 								headerText="#{lbl['lbl.sc.sq.business.nature']}" buttonLabel="#{lbl['lbl.btn.add']}"
 								selectionMode="multiple"
 								saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
+								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
 								conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
-								update="@form" />
+								update=":form:suppCriteria" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId"
 							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
 								process="@this,byBusNatureDtl" partialSubmit="true"
@@ -208,8 +209,9 @@
 							<ac:lov id="supplier" lovId="SM_SUPPLIER_SQ"
 								postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 								headerText="#{lbl['lbl.sc.supplier.list']}" buttonLabel="#{lbl['lbl.btn.add']}"
-								selectionMode="multiple" update="@form"
+								selectionMode="multiple" update=":form:suppCriteria"
 								saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
+								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
 								conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSuppliercriteriaSupplierListDeleteBtnId"
 							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedSupplierList}"
@@ -262,7 +264,8 @@
 								headerText="#{lbl['lbl.sc.simple.quote.government.seller']}"
 								buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 								saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
-								conditionField="#{simpleQuoteBackingBean.govtSellerCriteria}" update="@form" />
+								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
+								conditionField="#{simpleQuoteBackingBean.govtSellerCriteria}" update=":form:suppCriteria" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSuppliercriteriaAgencyDeleteBtnId"
 							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
 								process="@this,govtSellerId" partialSubmit="true"

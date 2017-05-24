@@ -219,6 +219,7 @@ public class LovBackingBean implements Serializable {
 		String postUpdateListener = facesScopes.getParameter("postUpdateListener");
 		String postUpdateListenerWithIndex = facesScopes.getParameter("postUpdateListenerWithIndex");
 		String selectionMode = facesScopes.getParameter("selectionMode");
+		String autoUpdateValue = facesScopes.getParameter("autoUpdateValue");
 		
 		debugLogger("headerText: " + headerText);
 		debugLogger("saveObject: " + saveObject);
@@ -227,6 +228,7 @@ public class LovBackingBean implements Serializable {
 		debugLogger("clientId: " + clientId);
 		debugLogger("update: " + update);
 		debugLogger("postUpdateListener: " + postUpdateListener);
+		debugLogger("autoUpdateValue: " + autoUpdateValue);
 
 //		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
 //			
@@ -243,6 +245,7 @@ public class LovBackingBean implements Serializable {
 			lovBean.setPostUpdateListener(postUpdateListener);
 			lovBean.setPostUpdateListenerWithIndex(postUpdateListenerWithIndex);
 			lovBean.setSelectionMode(selectionMode);
+			lovBean.setAutoUpdateValue(autoUpdateValue);
 			
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
 			if(lovBean.getSelectionMode().equals("single")) {
@@ -561,7 +564,6 @@ public class LovBackingBean implements Serializable {
 				
 	
 				this.resetAction();
-				this.setLovBean(new LovBean());
 	
 			}
 		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
@@ -591,11 +593,35 @@ public class LovBackingBean implements Serializable {
 				}
 	
 				this.resetAction();
-				this.setLovBean(new LovBean());
 	
 			}
 		}
 		
+	}
+	
+	/**
+	 * set Auto Update Value
+	 * 
+	 */
+	public void setAutoUpdateValue() {
+		String autoUpdateValue = this.getLovBean().getAutoUpdateValue();
+		
+		if (StringUtils.isNotBlank(autoUpdateValue)) {
+			String enableAutoUpdate = (String)FacesContext.getCurrentInstance()
+					.getExternalContext().getRequestParameterMap().get("enableAutoUpdate");
+			
+			if (StringUtils.isNotBlank(enableAutoUpdate)) {
+				if(!FacesScopes.isValueReference(autoUpdateValue)) {
+					autoUpdateValue = "#{" + autoUpdateValue + "}";
+				}
+				
+				FacesContext context = FacesContext.getCurrentInstance();
+				ValueExpression autoUpdateVE = context.getApplication().getExpressionFactory()
+						.createValueExpression(context.getELContext(),
+								autoUpdateValue, Boolean.class);
+				autoUpdateVE.setValue(context.getELContext(), Boolean.valueOf(enableAutoUpdate));	
+			}
+		}
 	}
 	
 	public boolean isSelectButtonDisable() {
