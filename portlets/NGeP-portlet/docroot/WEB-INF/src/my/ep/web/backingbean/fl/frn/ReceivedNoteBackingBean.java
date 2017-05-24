@@ -117,6 +117,8 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 @ManagedBean(name = "receivedNoteBackingBean")
 @RequestScoped
 public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedNoteManagedBean> {
+
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
 	private String className="@(.myFrnEvalClassName)";
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
@@ -906,6 +908,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 			 
+			boolean isFactoredSelected=resDTO.getFlOrder().isFactored();
+			if(isFactoredSelected){
+				orderBackingBean.getManagedBean().setFactoringCheck("true");
+			} else {
+				orderBackingBean.getManagedBean().setFactoringCheck("false");
+			}
+			
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				return NAV_PO;
 			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
