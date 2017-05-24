@@ -46,7 +46,8 @@ public class ListOfCircularRptBackingBean extends CtReportBaseBackingBean<ListOf
 	@Override
 	public void resetSearch() {
 		log.info("resetSearch: ccListOfCircularRptBB");
-		
+		getManagedBean().setPopUpMsg(null);
+		getManagedBean().setReportUrl(null);
 		getManagedBean().setCurrentActiveOrg(null);
 		getManagedBean().setDisableMinistryField(false);
 		getManagedBean().setDisableOrgField(false);
