@@ -1594,7 +1594,7 @@ public class TemplateSpecBackingBean extends
 		List<TplSpecZoneQty> tplSpecZoneQties = selectedSpecQuestion.getTplSpecZoneQties();
 		
 		// update original Qty
-		if (tplSpecZoneQties != null && tplSpecZoneQties.size() > 0) {
+		if (CollectionUtils.isNotEmpty(tplSpecZoneQties) && oriSpecQuestion != null && CollectionUtils.isNotEmpty(oriSpecQuestion.getTplSpecZoneQties())) {
 			for (TplSpecZoneQty specZoneQty : tplSpecZoneQties) {
 				/*if (!specZoneQty.isBrandNew()) {
 					specZoneQty.setDeleted(true);	
