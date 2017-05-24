@@ -415,8 +415,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				getManagedBean().setRequisitionerList(new ArrayList<SelectItem>());
 			}
 			if ((CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList()))
-					&& (getManagedBean().getHighRoleCodeList().contains(FlReportConst.ROLE_CODE_REQUISITIONER))) {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,FlReportConst.ROLE_CODE_REQUISITIONER);
+					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,RoleCode.REQUISITIONER.value());
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -426,7 +426,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					}
 				}
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,FlReportConst.ROLE_CODE_REQUISITIONER,ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.REQUISITIONER.value(),ptjGroupId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -454,18 +454,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				getManagedBean().setApproverList(new ArrayList<SelectItem>());
 			}
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
-					&& (getManagedBean().getHighRoleCodeList().contains(FlReportConst.ROLE_CODE_FL_APPROVER))) {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,FlReportConst.ROLE_CODE_FL_APPROVER);
-				if (CollectionUtils.isNotEmpty(rlcdLst)) {
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						getManagedBean().getApproverList().add(selectItem);
-					}
-				}
+					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
+				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,FlReportConst.ROLE_CODE_FL_APPROVER, ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.FL_APPROVER.value(), ptjGroupId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -493,18 +485,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				getManagedBean().setReceivingOfficerList(new ArrayList<SelectItem>());
 			}
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
-					&& (getManagedBean().getHighRoleCodeList().contains(FlReportConst.ROLE_CODE_RECEIVING_OFFICER))) {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,FlReportConst.ROLE_CODE_RECEIVING_OFFICER);
-				if (CollectionUtils.isNotEmpty(rlcdLst)) {
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						getManagedBean().getReceivingOfficerList().add(selectItem);
-					}
-				}
+					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
+				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,FlReportConst.ROLE_CODE_RECEIVING_OFFICER, ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.RECEIVING_OFFICER.value(), ptjGroupId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -514,6 +498,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					}
 				}
 			}
+//			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
+//					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.RECEIVING_OFFICER.value()))) {
+//				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(userId,RoleCode.RECEIVING_OFFICER.value());
+//				getManagedBean().getReceivingOfficerList().clear();
+//				if (CollectionUtils.isNotEmpty(recoffLst)) {
+//					for (Object[] object : recoffLst) {
+//						SelectItem selectItem = new SelectItem();
+//						selectItem.setLabel(object[0].toString());
+//						selectItem.setValue(object[1]);
+//						getManagedBean().getReceivingOfficerList().add(selectItem);
+//					}
+//				}
+//			}
 		}
 		return getManagedBean().getReceivingOfficerList();
 	} 
@@ -532,18 +529,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				getManagedBean().setAcknowledgeOfficerList(new ArrayList<SelectItem>());
 			}
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
-					&& (getManagedBean().getHighRoleCodeList().contains(FlReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER))) {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,FlReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER);
-				if (CollectionUtils.isNotEmpty(rlcdLst)) {
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						getManagedBean().getAcknowledgeOfficerList().add(selectItem);
-					}
-				}
+					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
+				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,FlReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER, ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.ACKNOWLEDGE_OFFICER.value(), ptjGroupId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -553,7 +542,64 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					}
 				}
 			}
+//			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
+//					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.ACKNOWLEDGE_OFFICER.value()))) {
+//				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(userId,RoleCode.ACKNOWLEDGE_OFFICER.value());
+//				getManagedBean().getAcknowledgeOfficerList().clear();
+//				if (CollectionUtils.isNotEmpty(recoffLst)) {
+//					for (Object[] object : recoffLst) {
+//						SelectItem selectItem = new SelectItem();
+//						selectItem.setLabel(object[0].toString());
+//						selectItem.setValue(object[1]);
+//						getManagedBean().getAcknowledgeOfficerList().add(selectItem);
+//					}
+//				}
+//			}
 		}
 		return getManagedBean().getAcknowledgeOfficerList();
+	} 
+	
+	public List<SelectItem> getPayOfficerList(Long userId,Long ptjGroupId){
+		if (null != userId) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
+			if (CollectionUtils.isNotEmpty(ptLst)) {
+				for (int i = 0; i < ptLst.size(); i++) {
+					getManagedBean().getHighRoleCodeList().add(ptLst.get(i));
+				}
+			}
+
+			if(getManagedBean().getPayOfficerList().isEmpty() || getManagedBean().getPayOfficerList() == null){
+				getManagedBean().setPayOfficerList(new ArrayList<SelectItem>());
+			}
+			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
+					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
+				return null;
+			}else {
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.PAY_OFFICER.value(), ptjGroupId);
+				if (CollectionUtils.isNotEmpty(rlcdLst)) {
+					for (Object[] object : rlcdLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						getManagedBean().getPayOfficerList().add(selectItem);
+					}
+				}
+			}
+//			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
+//					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.PAY_OFFICER.value()))) {
+//				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(userId,RoleCode.PAY_OFFICER.value());
+//				getManagedBean().getPayOfficerList().clear();
+//				if (CollectionUtils.isNotEmpty(recoffLst)) {
+//					for (Object[] object : recoffLst) {
+//						SelectItem selectItem = new SelectItem();
+//						selectItem.setLabel(object[0].toString());
+//						selectItem.setValue(object[1]);
+//						getManagedBean().getPayOfficerList().add(selectItem);
+//					}
+//				}
+//			}
+		}
+		return getManagedBean().getPayOfficerList();
 	} 
 }
