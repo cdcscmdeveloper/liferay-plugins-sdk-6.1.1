@@ -41,10 +41,35 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 	}
 	
 	/**
-	 * This method use to generate CT report.
+	 * The method used to reset the search criteria for report.
 	 */
-	public void generateCtReport() {
-		log.info("generateCtReport");
+	@Override
+	public void resetSearch() {
+		log.info("resetSearch: ccStatementOfOrderRptBB");
+		
+		getManagedBean().setCurrentActiveOrg(null);
+		getManagedBean().setDisableMinistryField(false);
+		getManagedBean().setDisableOrgField(false);
+		getManagedBean().setSelectedMinistry(null);
+		getManagedBean().setSelectedKumpulanPTJ(null);
+		getManagedBean().setSelectedPTJ(null);
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setContractNo(null);
+		getManagedBean().setContractPhysicalNo(null);
+		getManagedBean().setLoaNo(null);
+		getManagedBean().setLoaPhysicalNo(null);
+		getManagedBean().setAgreement(null);
+		getManagedBean().setProcurementMode(null);
+		getManagedBean().setStatus(null);
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+	}
+
+	/**
+	 * The method used to construct the parameter.
+	 */
+	@Override
+	public LinkedHashMap<String, String> getparams() {
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -114,29 +139,7 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 					.getUserSessionBean().getUserId().toString());
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
-		}		
-		generateCtReport(map);
-	}
-	
-	/**
-	 * The method used to reset the search criteria for report.
-	 */
-	public void resetAction() {
-		getManagedBean().setCurrentActiveOrg(null);
-		getManagedBean().setDisableMinistryField(false);
-		getManagedBean().setDisableOrgField(false);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
-		getManagedBean().setSelectedSupplier(null);
-		getManagedBean().setContractNo(null);
-		getManagedBean().setContractPhysicalNo(null);
-		getManagedBean().setLoaNo(null);
-		getManagedBean().setLoaPhysicalNo(null);
-		getManagedBean().setAgreement(null);
-		getManagedBean().setProcurementMode(null);
-		getManagedBean().setStatus(null);
-		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
-		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+		}
+		return map;
 	}
 }

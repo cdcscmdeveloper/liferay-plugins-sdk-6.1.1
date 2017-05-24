@@ -39,12 +39,25 @@ public class ListOfCircularRptBackingBean extends CtReportBaseBackingBean<ListOf
 		getManagedBean().setCircularEffFromDate(DateUtils.getFirstDateOfTheYear());
 		getManagedBean().setCircularEffToDate(DateUtils.getCurrentDateWithoutTime());
 	}
-	
+
 	/**
-	 * This method use to generate CT report.
+	 * The method used to reset the search criteria for report.
 	 */
-	public void generateCtReport() {
-		log.info("generateCtReport");
+	@Override
+	public void resetSearch() {
+		log.info("resetSearch: panelListOfCircularRptBB");
+		
+		getManagedBean().setCircularNo(null);
+		getManagedBean().setCircularName(null);
+		getManagedBean().setCircularEffFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setCircularEffToDate(DateUtils.getCurrentDateWithoutTime());
+	}
+
+	/**
+	 * The method used to construct the parameter.
+	 */
+	@Override
+	public LinkedHashMap<String, String> getparams() {
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -79,17 +92,6 @@ public class ListOfCircularRptBackingBean extends CtReportBaseBackingBean<ListOf
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}		
-		generateCtReport(map);
-	}
-	
-	/**
-	 * The method used to reset the search criteria for report.
-	 */
-	public void resetAction() {
-		getManagedBean().setCircularNo(null);
-		getManagedBean().setCircularName(null);
-		getManagedBean().setCircularEffFromDate(null);
-		getManagedBean().setCircularEffToDate(null);
-	}
-	
+		return map;
+	}	
 }
