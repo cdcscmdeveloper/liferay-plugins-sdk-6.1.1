@@ -1003,7 +1003,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FacesContext fc = FacesContext.getCurrentInstance();
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
-				orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);				
+				orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);	
+				
+				boolean isFactoredSelected=resDTO.getFlOrder().isFactored();
+				if(isFactoredSelected){
+					orderBackingBean.getManagedBean().setFactoringCheck("true");
+				} else {
+					orderBackingBean.getManagedBean().setFactoringCheck("false");
+				}
+				
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 					return NAV_PO;
 				}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
