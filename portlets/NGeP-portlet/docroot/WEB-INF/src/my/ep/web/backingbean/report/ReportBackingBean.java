@@ -20655,7 +20655,13 @@ public class ReportBackingBean extends
 		return procurementCatTypeList;
 	}
 	
-	public static SelectItem[] getActiveAndInactiveStatusOptions() {
+	public SelectItem[] getActiveAndInactiveStatusOptions() {
 		return PmCommonUtil.getRecordStatusOptions();
 	}
+	
+	public void onChangeProcurementMethod(){
+		procurementTypeId = null;
+		
+	}
+	
 }
