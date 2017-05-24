@@ -54,6 +54,7 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private List<SelectItem> approverList = new ArrayList<SelectItem>();
 	private List<SelectItem> receivingOfficerList = new ArrayList<SelectItem>();
 	private List<SelectItem> acknowledgeOfficerList = new ArrayList<SelectItem>();
+	private List<SelectItem> payOfficerList = new ArrayList<SelectItem>();
 	
 	
 	public FlReportManagedBean(){}
@@ -308,5 +309,13 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setAcknowledgeOfficer(String acknowledgeOfficer) {
 		this.acknowledgeOfficer = acknowledgeOfficer;
+	}
+
+	public List<SelectItem> getPayOfficerList() {
+		return payOfficerList;
+	}
+
+	public void setPayOfficerList(List<SelectItem> payOfficerList) {
+		this.payOfficerList = payOfficerList;
 	}
 }
