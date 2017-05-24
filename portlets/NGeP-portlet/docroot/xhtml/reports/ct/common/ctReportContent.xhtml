@@ -126,40 +126,7 @@
 		</tr>
 	</table>
 	<br/>
-	<p:outputPanel id="btnOp">
-		<div align="right" style="width: 100%">
-			<p:commandButton 
-				id="generateBtnId"
-				value="#{lbl['lbl.btn.generate']}"
-				process="@form"   
-				update="@form" 
-				action="#{ctReportBB.generateCtReport()}">
-			</p:commandButton>
-			<p:commandButton 
-				id="resetBtnId"
-				value="#{lbl['lbl.btn.reset']}"
-				process="@this"   
-				update="@form" 
-				action="#{ctReportBB.resetAction()}">
-			</p:commandButton>
-		</div>
-	</p:outputPanel>
-	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
-		width="500px" resizable="false" styleClass="pop_up_top">
-		<h:outputText escape="false" style="float:left;margin-left:5px;"
-			value="#{ctReportBB.managedBean.popUpMsg}">
-		</h:outputText>
-		<br />
-		<div style="float:right;">
-			<table style="width:100%">
-				<tr>
-					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
-							onclick="confirmationId.hide();" />
-						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-							action="#{ctReportBB.redirect()}">
-						</p:commandButton></td>
-				</tr>
-			</table>
-		</div>
-	</p:dialog>
+	<ac:generateReport bBean="#{ctReportBB}"
+		reportMainBean="#{ctReportBB}">
+	</ac:generateReport>
 </ui:composition>

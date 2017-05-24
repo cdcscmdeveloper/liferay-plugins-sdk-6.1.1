@@ -40,7 +40,11 @@
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
 			<td>
 				<p:selectOneMenu value="#{panelStatementOfOrderRptBB.managedBean.procurementMode}" style="width:300px">
-					<f:selectItems value="#{panelStatementOfOrderRptBB.getProcurementModeDropdownValues()}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.panel.dp']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.panel.qt']}" itemValue="2"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.panel.dn']}" itemValue="3"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" />
 					<p:ajax event="change" partialSubmit="true" />
 				</p:selectOneMenu>
 			</td>
@@ -91,44 +95,7 @@
 		</tr>
 	</table>
 	<br/>
-	<p:outputPanel id="btnOp">
-		<div align="right" style="width: 100%">
-			<p:commandButton 
-				id="generateBtnId"
-				value="#{lbl['lbl.btn.generate']}"
-				process="@form"   
-				update="@form" 
-				action="#{panelStatementOfOrderRptBB.generateCtReport()}">
-				<f:setPropertyActionListener target="#{panelStatementOfOrderRptBB.managedBean.reportCode}" value="#{ctReportBB.managedBean.reportCode}" />
-				<f:setPropertyActionListener target="#{panelStatementOfOrderRptBB.managedBean.reportName}" value="#{ctReportBB.managedBean.reportName}" />
-				<f:setPropertyActionListener target="#{panelStatementOfOrderRptBB.managedBean.defaultOutputType}" value="#{ctReportBB.managedBean.defaultOutputType}" />
-				<f:setPropertyActionListener target="#{panelStatementOfOrderRptBB.managedBean.tempAccess}" value="#{ctReportBB.managedBean.tempAccess}" />
-			</p:commandButton>
-			<p:commandButton 
-				id="resetBtnId"
-				value="#{lbl['lbl.btn.reset']}"
-				process="@this"   
-				update="@form" 
-				action="#{panelStatementOfOrderRptBB.resetAction()}">
-			</p:commandButton>
-		</div>
-	</p:outputPanel>
-	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
-		width="500px" resizable="false" styleClass="pop_up_top">
-		<h:outputText escape="false" style="float:left;margin-left:5px;"
-			value="#{panelStatementOfOrderRptBB.managedBean.popUpMsg}">
-		</h:outputText>
-		<br />
-		<div style="float:right;">
-			<table style="width:100%">
-				<tr>
-					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
-							onclick="confirmationId.hide();" />
-						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-							action="#{panelStatementOfOrderRptBB.redirect()}">
-						</p:commandButton></td>
-				</tr>
-			</table>
-		</div>
-	</p:dialog>
+	<ac:generateReport bBean="#{panelStatementOfOrderRptBB}"
+		reportMainBean="#{ctReportBB}">
+	</ac:generateReport>
 </ui:composition>

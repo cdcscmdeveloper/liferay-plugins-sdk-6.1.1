@@ -41,10 +41,28 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 	}
 	
 	/**
-	 * This method use to generate CT report.
+	 * The method used to reset the search criteria for report.
 	 */
-	public void generateCtReport() {
-		log.info("generateCtReport");
+	@Override
+	public void resetSearch() {
+		log.info("resetSearch: panelStatementOfOrderRptBB");
+		
+		getManagedBean().setCircularNo(null);
+		getManagedBean().setCircularName(null);
+		getManagedBean().setCircularEffFromDate(null);
+		getManagedBean().setCircularEffToDate(null);
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setItemName(null);
+		getManagedBean().setProcurementMode(null);
+		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());		
+	}
+
+	/**
+	 * The method used to construct the parameter.
+	 */
+	@Override
+	public LinkedHashMap<String, String> getparams() {
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -100,23 +118,7 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 					.getUserSessionBean().getUserId().toString());
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
-		}		
-		generateCtReport(map);
-	}
-	
-	/**
-	 * The method used to reset the search criteria for report.
-	 */
-	public void resetAction() {
-		getManagedBean().setCircularNo(null);
-		getManagedBean().setCircularName(null);
-		getManagedBean().setCircularEffFromDate(null);
-		getManagedBean().setCircularEffToDate(null);
-		getManagedBean().setSelectedSupplier(null);
-		getManagedBean().setItemName(null);
-		getManagedBean().setProcurementMode(null);
-		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
-		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
-	}
-	
+		}
+		return map;
+	}	
 }
