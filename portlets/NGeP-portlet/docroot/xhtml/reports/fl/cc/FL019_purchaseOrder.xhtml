@@ -115,16 +115,15 @@
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
-					headerText="#{lbl['lbl.rpt.supplierScreen']}" update="@form" 
-					value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					postUpdateListener="#{reportBackingBean.onSupplierNameChangeForFLLOV()}"
-					saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
+					value="#{poRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="poRptBB.managedBean.selectedOrgProfile" />
 				
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.approver.name']}"/>
 			</td>
-			<td><p:selectOneMenu value="#{crRptBB.managedBean.approver}">
+			<td><p:selectOneMenu value="#{poRptBB.managedBean.approver}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems

@@ -106,10 +106,9 @@
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
-					headerText="#{lbl['lbl.rpt.supplierScreen']}" update="@form" 
-					value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					postUpdateListener="#{reportBackingBean.onSupplierNameChangeForFLLOV()}"
-					saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
+					value="#{poCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="poCancelRptBB.managedBean.selectedOrgProfile" />
 			</td>
 		</tr>
 		<tr>
