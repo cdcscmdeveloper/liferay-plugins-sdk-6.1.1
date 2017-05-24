@@ -134,19 +134,13 @@
 			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
 			<td><p:outputLabel
 					value="#{lbl['lbl.fl.doc.maintain.doc.status']}" /></td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flStatus}">
-					<f:selectItems value="#{reportBackingBean.docTypeStatusItemsList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu></td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
-			<td colspan="2"><p:calendar showOn="button" navigator="true"
-					display="inline" readonlyInput="true"
-					value="#{siSupplierRptBB.managedBean.fromDate}" size="9"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					partialSubmit="true" process="@form" /></td>
-
+			<td><p:selectOneMenu id="statusId"
+								value="#{siSupplierRptBB.managedBean.statusDescId}"
+								style="width: 314px;">
+								<f:selectItems
+									value="#{siSupplierRptBB.getStatusDropDownValues('SI')}" />
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
+							</p:selectOneMenu></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
@@ -168,6 +162,15 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
+			<td colspan="2"><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{siSupplierRptBB.managedBean.fromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form" /></td>
+
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" /></td>

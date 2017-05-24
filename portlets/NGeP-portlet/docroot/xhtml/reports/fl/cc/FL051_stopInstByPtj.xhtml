@@ -111,9 +111,24 @@
 			</td>
 		</tr>
 		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.approver.name']}"/>
+			</td>
+			<td><p:selectOneMenu value="#{siPtjRptBB.managedBean.approver}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItems
+						value="#{siPtjRptBB.retrieveApproverList()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
+				</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"></p:outputLabel> </td>
 			<td><p:inputText value="#{siPtjRptBB.managedBean.purchaseOrderNo}">
 			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
+			
+		</tr>
+		
+		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.physical.treasury.circular']}"/>
 			</td>
@@ -125,22 +140,9 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
 			</td>
-			
-		</tr>
-		
-		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}"></p:outputLabel> </td>
 			<td><p:inputText value="#{siPtjRptBB.managedBean.siNo}">
 			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
-			<td colspan="2"><p:calendar showOn="button" navigator="true"
-					display="inline" readonlyInput="true"
-					value="#{siPtjRptBB.managedBean.fromDate}" size="9"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					partialSubmit="true" process="@form" /></td>
-
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
@@ -162,6 +164,15 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
+			<td colspan="2"><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{siPtjRptBB.managedBean.fromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form" /></td>
+
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" /></td>
