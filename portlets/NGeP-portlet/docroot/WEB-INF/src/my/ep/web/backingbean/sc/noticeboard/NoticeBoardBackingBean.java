@@ -2117,6 +2117,8 @@ public class NoticeBoardBackingBean extends
 					zoneItem.setUpdate("@this");
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
+					//14672 - fixed the issue of zone tab missing 
+					zoneItem.setTransient(true);
 					zoneItem
 					.setOncomplete("bsvZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : "
 							+ zoneTabIndex + "}]);");
