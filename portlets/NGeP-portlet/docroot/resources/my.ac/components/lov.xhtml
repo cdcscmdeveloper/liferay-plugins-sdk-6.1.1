@@ -27,6 +27,7 @@
 	<cc:attribute name="buttonLabel" default="" />
 	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
 	<cc:attribute name="tooltip" default="" />
+	<cc:attribute name="autoUpdateValue" default="" />
 	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'multiple' ? 'lovBtn' : (cc.attrs.uiMode eq 'button' ? 'lovSingleBtn' : 'lovLink')}" />
 </cc:interface>
 
@@ -72,6 +73,7 @@
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 			<f:param name="postUpdateListenerWithIndex" value="#{cc.attrs.postUpdateListenerWithIndex}" />
+			<f:param name="autoUpdateValue" value="#{cc.attrs.autoUpdateValue}" />
 			
 			<cc:insertChildren />
 			
@@ -99,6 +101,7 @@
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 			<f:param name="postUpdateListenerWithIndex" value="#{cc.attrs.postUpdateListenerWithIndex}" />
+			<f:param name="autoUpdateValue" value="#{cc.attrs.autoUpdateValue}" />
 			
 			<cc:insertChildren />
 			
@@ -125,6 +128,7 @@
 			<f:param name="update" 			value="#{cc.attrs.update}" />
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			<f:param name="autoUpdateValue" value="#{cc.attrs.autoUpdateValue}" />
 			
 			<cc:insertChildren />
 			
