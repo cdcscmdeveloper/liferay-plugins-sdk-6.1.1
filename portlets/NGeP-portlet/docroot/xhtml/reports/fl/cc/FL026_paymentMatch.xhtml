@@ -101,15 +101,14 @@
 				</p:inputText></td>
 			<td><p:outputLabel value="#{lbl['lbl.txt.paymentMatchOfficer']}"
 								style="margin-top:5px;width:191px;" /></td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flPaymentofficer}"
-								style="margin-top:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItems
-									value="#{reportBackingBean.rolecodePayOfficerList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu></td>
+			<td><p:selectOneMenu value="#{pmRptBB.managedBean.payOfficer}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItems
+						value="#{pmRptBB.retrievePayOfficerList()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
+				</p:selectOneMenu></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}"></p:outputLabel> </td>

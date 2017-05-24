@@ -107,24 +107,22 @@
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
-					headerText="#{lbl['lbl.rpt.supplierScreen']}" update="@form" 
-					value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					postUpdateListener="#{reportBackingBean.onSupplierNameChangeForFLLOV()}"
-					saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
+					value="#{frnCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="frnCancelRptBB.managedBean.selectedOrgProfile" />
 			</td>
 		</tr>
 		
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}"
 								style="margin-top:5px;width:191px;" /></td>
-			<td><p:selectOneMenu
-					value="#{reportBackingBean.flRecievingOfficer}"
-					style="margin-top:5px;width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+			<td><p:selectOneMenu value="#{frnCancelRptBB.managedBean.receivingOfficer}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeRecievingOfficerList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+						value="#{frnCancelRptBB.retrieveReceivingOfficerList()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.frn.no']}"></p:outputLabel> </td>
 			<td><p:inputText value="#{frnCancelRptBB.managedBean.frnNo}">
@@ -134,14 +132,13 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.acknowledgeOfficer']}"
 					style="margin-top:5px;width:191px;" /></td>
-			<td><p:selectOneMenu
-					value="#{reportBackingBean.flAcknowledgeOfficer}"
-					style="margin-top:5px;width:300px;">
+			<td><p:selectOneMenu value="#{frnCancelRptBB.managedBean.acknowledgeOfficer}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeAcknowledgeOfficerList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+						value="#{frnCancelRptBB.retrieveAcknowledgeOfficerList()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"></p:outputLabel>
 			</td>
