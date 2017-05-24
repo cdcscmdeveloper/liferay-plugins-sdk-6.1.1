@@ -66,15 +66,15 @@
 					</td>
 					<td width="30%"><p:selectOneMenu id="somCategory"
 							label="#{lbl['lbl.pp.category']}"
-							value="#{ppReportsBackingBean.managedBean.procurementCatId}"
-							required="#{!empty param['disableValidation']}">
+							value="#{ppReportsBackingBean.managedBean.procurementCatId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
 								itemValue="#{null}" />
 							<f:selectItems
 								value="#{ppReportsBackingBean.getProcurementCategoryOptions()}"
 								var="obj" itemValue="#{obj.procurementCat.parameterId}"
 								itemLabel="#{ppReportsBackingBean.getParameterDesc(obj.procurementCat)}" />
-							<p:ajax event="change" update="somProcurementMethod" />
+							<p:ajax event="change" update="somProcurementMethod" 
+							listener="#{ppReportsBackingBean.onChangeProcurementMethod}"/>
 						</p:selectOneMenu></td>
 				</c:if>
 				<td width="20%"><p:outputLabel
@@ -82,8 +82,7 @@
 				<td width="30%"><p:selectOneMenu id="somProcurementMethod"
 						disabled="#{isPPDtlReport and ppReportsBackingBean.managedBean.procurementCatId==null}"
 						label="#{lbl['lbl.pp.procurement.method']}"
-						value="#{ppReportsBackingBean.managedBean.procurementTypeId}"
-						required="#{!empty param['disableValidation']}">
+						value="#{ppReportsBackingBean.managedBean.procurementTypeId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
 							itemValue="#{null}" />
 						<f:selectItems

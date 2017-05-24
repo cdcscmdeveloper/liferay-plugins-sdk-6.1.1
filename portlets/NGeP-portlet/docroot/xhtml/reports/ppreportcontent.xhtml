@@ -172,7 +172,8 @@
 								value="#{reportBackingBean.getProcurementCategoryOptions()}"
 								var="obj" itemValue="#{obj.procurementCat.parameterId}"
 								itemLabel="#{reportBackingBean.getParameterDesc(obj.procurementCat)}" />
-							<p:ajax event="change" update="somProcurementMethod" />
+							<p:ajax event="change" update="somProcurementMethod"
+								listener="#{reportBackingBean.onChangeProcurementMethod}" />
 						</p:selectOneMenu></td>
 				</c:if>
 				<td width="15%"><p:outputLabel
