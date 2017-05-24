@@ -35,6 +35,9 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CtReportBaseBackingBean.class);
 	
+	public abstract void resetSearch();
+
+	public abstract LinkedHashMap<String, String> getparams();
 	
 	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -47,8 +50,8 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	 * @param params  the map of param key and value
 	 */
 	
-	public void generateCtReport(LinkedHashMap<String, String> params) {
-		log.info("generateCtReport");
+	public void generateReport(LinkedHashMap<String, String> params) {
+		log.info("generateReport");
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -70,7 +73,8 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 			RequestContext.getCurrentInstance().execute(
-					"confirmationId.show()");
+					"rptConfirmationDlg.show()");
+			
 			getManagedBean().setReportUrl("(To be removed)Report URL: "+resDTO.getReportUrl());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
