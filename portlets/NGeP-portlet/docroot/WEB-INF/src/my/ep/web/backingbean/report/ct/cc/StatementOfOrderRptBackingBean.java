@@ -46,7 +46,8 @@ public class StatementOfOrderRptBackingBean extends CtReportBaseBackingBean<Stat
 	@Override
 	public void resetSearch() {
 		log.info("resetSearch: ccStatementOfOrderRptBB");
-		
+		getManagedBean().setPopUpMsg(null);
+		getManagedBean().setReportUrl(null);
 		getManagedBean().setCurrentActiveOrg(null);
 		getManagedBean().setDisableMinistryField(false);
 		getManagedBean().setDisableOrgField(false);

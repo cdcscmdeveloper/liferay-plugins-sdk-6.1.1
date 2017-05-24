@@ -46,7 +46,8 @@ public class ListOfCircularRptBackingBean extends CtReportBaseBackingBean<ListOf
 	@Override
 	public void resetSearch() {
 		log.info("resetSearch: panelListOfCircularRptBB");
-		
+		getManagedBean().setPopUpMsg(null);
+		getManagedBean().setReportUrl(null);
 		getManagedBean().setCircularNo(null);
 		getManagedBean().setCircularName(null);
 		getManagedBean().setCircularEffFromDate(DateUtils.getFirstDateOfTheYear());
