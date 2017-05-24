@@ -14,9 +14,13 @@
 
 <cc:implementation>
 	<p:remoteCommand name="updateSearchDialog" update="searchPanel lovTitle resultPanel" partialSubmit="true" process="@this resultPanel" oncomplete="lovPopup.show();" />
-	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAction}" process="@this" />
+	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAll}" process="@this" />
+	<p:remoteCommand name="lovPopsetAutoUpdateValue" partialSubmit="true" process="@this" update="@this" action="#{lovBackingBean.setAutoUpdateValue()}" />
 	
-	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" onHide="resetAllData();" resizable="false">
+	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" 
+		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
+		onHide="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
+		resizable="false">
 	
 		<f:facet name="header">
 			<h:panelGroup id="lovTitle">#{lbl['lbl.lov.listing']} - #{lovBackingBean.lovBean.title} </h:panelGroup>
@@ -139,14 +143,13 @@
 					partialSubmit="true"  styleClass="BtnSpacing"/>	
 			   <p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				  partialSubmit="true" process="@this" update="@this"
-				  action="#{lovBackingBean.resetAll()}"
+				  action="#{lovBackingBean.resetAction()}"
 				  oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
 			</TD>
 			</tr></table>
 			
 		</h:panelGroup>
 		</p:panel>
-		<p:ajax event="close" listener="#{lovBackingBean.resetAll()}"/>
 	</p:dialog>
 	
 	<p:defaultCommand target="lovSearchBtn" scope="searchPanel"></p:defaultCommand>

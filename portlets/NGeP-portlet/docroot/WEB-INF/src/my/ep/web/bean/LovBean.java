@@ -24,6 +24,7 @@ public class LovBean implements Serializable {
 	private String postUpdateListenerWithIndex;
 	private String selectionMode;
 	private int saveObjectIndex;
+	private String autoUpdateValue;
 	
 
 	public String getLovId() {
@@ -115,6 +116,20 @@ public class LovBean implements Serializable {
 	}
 	public void setSaveObjectIndex(int saveObjectIndex) {
 		this.saveObjectIndex = saveObjectIndex;
+	}
+	
+	/**
+	 * @return the autoUpdateValue
+	 */
+	public String getAutoUpdateValue() {
+		return autoUpdateValue;
+	}
+	
+	/**
+	 * @param autoUpdateValue the autoUpdateValue to set
+	 */
+	public void setAutoUpdateValue(String autoUpdateValue) {
+		this.autoUpdateValue = autoUpdateValue;
 	}
 	
 	
