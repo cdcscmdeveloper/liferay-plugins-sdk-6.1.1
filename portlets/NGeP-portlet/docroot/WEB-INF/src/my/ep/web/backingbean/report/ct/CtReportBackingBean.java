@@ -15,6 +15,8 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.pm.RoleCode;
+import my.ep.web.backingbean.report.ct.cc.ListOfCircularRptBackingBean;
+import my.ep.web.backingbean.report.ct.cc.StatementOfOrderRptBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.CtReportManagedBean;
 import my.ep.web.util.DateUtils;
@@ -69,16 +71,14 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				reportCategory);
 		
 		getManagedBean().setReportCode(null);
-		getManagedBean().setReportUrl(null);
-		getManagedBean().setPopUpMsg(null);
+		clearAllSearchCriteria();
 	}
 	
 	/**
 	 * The method used to retrieve the report value from database.
 	 */
 	public void onChangeReportName() {
-		getManagedBean().setReportUrl(null);
-		getManagedBean().setPopUpMsg(null);
+		clearAllSearchCriteria();
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
@@ -86,6 +86,26 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				&& !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_STATEMENT_OF_ORDER_PQ_RPT_VAL)) {
 			setCurrentActiveOrg();
 		}
+	}
+	
+	private void clearAllSearchCriteria() {
+		StatementOfOrderRptBackingBean ccStatementOfOrderRptBB = new StatementOfOrderRptBackingBean();
+		ListOfCircularRptBackingBean ccListOfCircularRptBB = new ListOfCircularRptBackingBean();		
+		my.ep.web.backingbean.report.ct.panel.StatementOfOrderRptBackingBean panelStatementOfOrderRptBB = 
+				new my.ep.web.backingbean.report.ct.panel.StatementOfOrderRptBackingBean();
+		my.ep.web.backingbean.report.ct.panel.ListOfCircularRptBackingBean panelListOfCircularRptBB = 
+				new my.ep.web.backingbean.report.ct.panel.ListOfCircularRptBackingBean();		
+		
+		// reset common search criteria
+		resetSearch();
+		// reset ccStatementOfOrderRptBB search criteria
+		ccStatementOfOrderRptBB.resetSearch();
+		// reset ccListOfCircularRptBB search criteria
+		ccListOfCircularRptBB.resetSearch();
+		// reset panelStatementOfOrderRptBB search criteria
+		panelStatementOfOrderRptBB.resetSearch();
+		// reset panelListOfCircularRptBB search criteria
+		panelListOfCircularRptBB.resetSearch();
 	}
 	
 	/**
@@ -130,8 +150,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 */
 	@Override
 	public void resetSearch() {
-		log.info("resetSearch: ctReportBB");
-		
+		log.info("resetSearch: ctReportBB");		
+		getManagedBean().setPopUpMsg(null);
+		getManagedBean().setReportUrl(null);
 		getManagedBean().setCurrentActiveOrg(null);
 		getManagedBean().setDisableMinistryField(false);
 		getManagedBean().setDisableOrgField(false);
