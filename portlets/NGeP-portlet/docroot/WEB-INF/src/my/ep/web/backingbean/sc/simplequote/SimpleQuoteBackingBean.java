@@ -6697,16 +6697,16 @@ public class SimpleQuoteBackingBean extends
 			BigDecimal maxDays = BigDecimal.ZERO, minHours = BigDecimal.ZERO;
 			BigDecimal minMinutes = BigDecimal.ZERO, maxMinutes = BigDecimal.ZERO;
 			PmConfigRuleValue ruleValue = getDurationRuleValue();
-			int maxiDays = maxDays.intValue() + 1;
+			int maxiDays = 0;
 			if (ruleValue != null) {
 				minMinutes = ruleValue.getFromValue();
 				maxMinutes = ruleValue.getToValue();
 				minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
 				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
 			}
-			/*if(minHours.compareTo(BigDecimal.valueOf(0.25)) > 0) {
-				maxiDays = maxiDays + 1;
-			}*/
+			if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
+				maxiDays = maxiDays + maxDays.intValue();
+			}
 			getManagedBean().setMaxDate(DateUtils.addDays(startDate, maxiDays));
 			if (endDate != null && startDate != null) {
 				if (endDate.before(startDate)
