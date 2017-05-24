@@ -9,7 +9,7 @@
 
 	<cc:interface>
 		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.success.dialog.header']}"/>
-		<cc:attribute name="dialogWidth" default="1400px" />
+		<cc:attribute name="dialogWidth" default="1100px" />
 		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 	</cc:interface>
@@ -20,7 +20,7 @@
 		widgetVar="overlapCategoryDialog" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}">
 		
 		<p:dataTable id="overlapMainDtId" var="vo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{cc.attrs.voList}" rowKey="#{vo}" rowIndexVar="index">
+			value="#{cc.attrs.voList}" rowKey="#{vo}" rowIndexVar="index" >
 			<ac:paginator for="overlapMainDtId" />
 
 			<p:column headerText="#{lbl['lbl.sm.overlapping.category']}">
@@ -34,7 +34,8 @@
 						<h:outputText value="#{index + 1}" />
 					</p:column>
 		
-					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.name']}">
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.name']}" 
+						style="width : 15% !important;white-space: normal !important;">
 						<h:outputText value="#{voSub.personnelName}" />
 					</p:column>
 		
@@ -42,12 +43,13 @@
 						<h:outputText value="#{voSub.identificationNo}" />
 					</p:column>
 		
-					<p:column style="width : 20% !important;white-space: normal !important;"
+					<p:column style="width : 15% !important;white-space: normal !important;"
 						headerText="#{lbl['lbl.sm.overlapped.category.personnel.rolename']}" >
 						<h:outputText value="#{voSub.role}" />
 					</p:column>
 		
-					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.compname']}">
+					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.compname']}" 
+						style="width : 15% !important;white-space: normal !important;">
 						<h:outputText value="#{voSub.companyName}" />
 					</p:column>
 					
@@ -67,7 +69,8 @@
 						<h:outputText value="#{voSub.applNo}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sm.application.status']}">
+					<p:column headerText="#{lbl['lbl.sm.application.status']}" 
+						style="width : 10% !important;white-space: normal !important;">
 						<h:outputText value="#{voSub.applStatus}" />
 					</p:column>
 					
