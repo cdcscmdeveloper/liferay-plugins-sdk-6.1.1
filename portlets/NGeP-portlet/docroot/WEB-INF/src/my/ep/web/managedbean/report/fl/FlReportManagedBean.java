@@ -43,6 +43,7 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private String approver;
 	private String receivingOfficer;
 	private String acknowledgeOfficer;
+	private String payOfficer;
 	
 	private Date fromDate;
 	private Date toDate;
@@ -317,5 +318,13 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setPayOfficerList(List<SelectItem> payOfficerList) {
 		this.payOfficerList = payOfficerList;
+	}
+
+	public String getPayOfficer() {
+		return payOfficer;
+	}
+
+	public void setPayOfficer(String payOfficer) {
+		this.payOfficer = payOfficer;
 	}
 }
