@@ -109,11 +109,11 @@
 				<p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+				<p:selectOneMenu value="#{crRejectRptBB.managedBean.requisitioner}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeRquisitionerList}"></f:selectItems>
+						value="#{crRejectRptBB.retrieveRequisitionerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:selectOneMenu>
@@ -124,12 +124,13 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.approver.name']}"/>
 			</td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flApproverName}"
-					style="margin-top:5px;width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+			<td><p:selectOneMenu value="#{crRejectRptBB.managedBean.approver}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItems value="#{reportBackingBean.rolecodeApproverList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					<f:selectItems
+						value="#{crRejectRptBB.retrieveApproverList()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.contract.req.no']}" /></td>
 			<td><p:inputText maxlength="35"

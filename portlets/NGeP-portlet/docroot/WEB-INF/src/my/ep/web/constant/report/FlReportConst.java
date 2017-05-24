@@ -45,8 +45,8 @@ public class FlReportConst implements Serializable {
 	public static final String FL_029_DELIVERY_ORDER_CANCELLATION = "FL_029";
 	public static final String FL_030_FULFILMENT_RECEIVED_NOTE_CANCELLATION = "FL_030";
 	public static final String FL_031_INVOICE_CANCELLATION = "FL_031";
-	public static final String FL_050_STOP_INST_BY_PTJ = "FL_050";
-	public static final String FL_053_STOP_INST_BY_SUPPLIER = "FL_053";
+	public static final String FL_051_STOP_INST_BY_PTJ = "FL_051";
+	public static final String FL_054_STOP_INST_BY_SUPPLIER = "FL_054";
 	
 	// Purchase Order Const
 	
@@ -90,19 +90,6 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_ITM_NAME = "PITEM";
 	public static final String FL_RPT_DOC_TYPE = "PDOCTYPE";
 	public static final String FL_RPT_GROUP_BY = "PGROUP"; 
-	
-	//ROLE CODE
-	public static final String ROLE_CODE_REQUISITIONER = "REQUISITIONER";
-	public static final String ROLE_CODE_FL_APPROVER = "FL_APPROVER";
-	public static final String ROLE_CODE_RECEIVING_OFFICER = "RECEIVING_OFFICER";
-	public static final String ROLE_CODE_ACKNOWLEDGE_OFFICER = "ACKNOWLEDGE_OFFICER";
-	public static final String ROLE_CODE_PAY_OFFICER = "PAY_OFFICER";
-	public static final String ROLE_CODE_FULFILMENT_APPROVER = "FULFILMENT_APPROVER";
-
-	public static final String ROLE_CODE_MOF_SUPPLIER_ADMIN = "MOF_SUPPLIER_ADMIN";
-	public static final String ROLE_CODE_MOF_SUPPLIER_USER = "MOF_SUPPLIER_USER";
-	public static final String ROLE_CODE_BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
-	public static final String ROLE_CODE_BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
 	
 	public FlReportConst(){}
 
@@ -214,11 +201,12 @@ public class FlReportConst implements Serializable {
 		return FL_031_INVOICE_CANCELLATION;
 	}
 
-	public String getFl050StopInstByPtj() {
-		return FL_050_STOP_INST_BY_PTJ;
+	public String getFl051StopInstByPtj() {
+		return FL_051_STOP_INST_BY_PTJ;
 	}
 
-	public String getFl053StopInstBySupplier() {
-		return FL_053_STOP_INST_BY_SUPPLIER;
+	public String getFl054StopInstBySupplier() {
+		return FL_054_STOP_INST_BY_SUPPLIER;
 	}
-}
+
+ }

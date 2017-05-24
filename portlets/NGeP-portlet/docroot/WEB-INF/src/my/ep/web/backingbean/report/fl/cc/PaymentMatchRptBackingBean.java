@@ -5,9 +5,11 @@ package my.ep.web.backingbean.report.fl.cc;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -96,5 +98,11 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 		
 	}
 	
+	public List<SelectItem> retrievePayOfficerList(){
+		if(getManagedBean().getPtjGroup() != null){
+			return getPayOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+		}
+		return null;
+	}
 	
 }
