@@ -3,7 +3,11 @@
  */
 package my.ep.web.managedbean.report.fl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
@@ -34,11 +38,23 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private String physicalLoaNo;
 	private String purchaseOrderNo;
 	private String pkpNo;
+	private String group;
+	private String requisitioner;
+	private String approver;
+	private String receivingOfficer;
+	private String acknowledgeOfficer;
 	
 	private Date fromDate;
 	private Date toDate;
 	
 	private Long statusDescId;
+	
+	private List<String> highRoleCodeList = new ArrayList<String>();
+	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
+	private List<SelectItem> approverList = new ArrayList<SelectItem>();
+	private List<SelectItem> receivingOfficerList = new ArrayList<SelectItem>();
+	private List<SelectItem> acknowledgeOfficerList = new ArrayList<SelectItem>();
+	
 	
 	public FlReportManagedBean(){}
 
@@ -210,5 +226,87 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setStatusDescId(Long statusDescId) {
 		this.statusDescId = statusDescId;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	
+	public List<String> getHighRoleCodeList() {
+		if(highRoleCodeList == null){
+			setHighRoleCodeList(new ArrayList<String>());
+		}
+		return highRoleCodeList;
+	}
+	public void setHighRoleCodeList(List<String> highRoleCodeList) {
+		this.highRoleCodeList = highRoleCodeList;
+	}
+
+	public List<SelectItem> getRequisitionerList() {
+		return requisitionerList;
+	}
+
+	public void setRequisitionerList(List<SelectItem> requisitionerList) {
+		this.requisitionerList = requisitionerList;
+	}
+
+	public String getRequisitioner() {
+		return requisitioner;
+	}
+
+	public void setRequisitioner(String requisitioner) {
+		this.requisitioner = requisitioner;
+	}
+
+	public List<SelectItem> getApproverList() {
+		return approverList;
+	}
+
+	public void setApproverList(List<SelectItem> approverList) {
+		this.approverList = approverList;
+	}
+
+	public List<SelectItem> getReceivingOfficerList() {
+		return receivingOfficerList;
+	}
+
+	public void setReceivingOfficerList(List<SelectItem> receivingOfficerList) {
+		this.receivingOfficerList = receivingOfficerList;
+	}
+
+	public List<SelectItem> getAcknowledgeOfficerList() {
+		return acknowledgeOfficerList;
+	}
+
+	public void setAcknowledgeOfficerList(List<SelectItem> acknowledgeOfficerList) {
+		this.acknowledgeOfficerList = acknowledgeOfficerList;
+	}
+
+	public String getApprover() {
+		return approver;
+	}
+
+	public void setApprover(String approver) {
+		this.approver = approver;
+	}
+
+	public String getReceivingOfficer() {
+		return receivingOfficer;
+	}
+
+	public void setReceivingOfficer(String receivingOfficer) {
+		this.receivingOfficer = receivingOfficer;
+	}
+
+	public String getAcknowledgeOfficer() {
+		return acknowledgeOfficer;
+	}
+
+	public void setAcknowledgeOfficer(String acknowledgeOfficer) {
+		this.acknowledgeOfficer = acknowledgeOfficer;
 	}
 }

@@ -124,12 +124,13 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.approver.name']}"/>
 			</td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flApproverName}"
-					style="margin-top:5px;width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+			<td><p:selectOneMenu value="#{crRptBB.managedBean.approver}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItems value="#{reportBackingBean.rolecodeApproverList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					<f:selectItems
+						value="#{poRptBB.retrieveApproverList()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true"
+						update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>
 		

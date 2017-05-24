@@ -98,49 +98,17 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		if(getManagedBean().getRequisitioner() != null){
 			params.put(FlReportConst.FL_RPT_REQUI_NAME, getManagedBean().getRequisitioner());
 		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
 		generateFlReport(params);
 	}
 	
 	public List<SelectItem> retrieveRequisitionerList(){
-		Long userId = getFacesScopes().getUserSessionBean().getUserId();
-		if (null != userId) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IPMReportSO.class);
-			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
-			if (CollectionUtils.isNotEmpty(ptLst)) {
-				for (int i = 0; i < ptLst.size(); i++) {
-					getManagedBean().getHighRoleCodeList().add(ptLst.get(i));
-				}
-			}
+		if(getManagedBean().getPtjGroup() != null){
+			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
 		}
-		if(getManagedBean().getRequisitionerList().isEmpty() || getManagedBean().getRequisitionerList() == null){
-			getManagedBean().setRequisitionerList(new ArrayList<SelectItem>());
-		}
-		if (null != userId) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IPMReportSO.class);
-			if ((CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList()))
-					&& (getManagedBean().getHighRoleCodeList().contains(ReportConst.ROLE_CODE_REQUISITIONER))) {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,ReportConst.ROLE_CODE_REQUISITIONER);
-				if (CollectionUtils.isNotEmpty(rlcdLst)) {
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						getManagedBean().getRequisitionerList().add(selectItem);
-					}
-				}
-			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,ReportConst.ROLE_CODE_REQUISITIONER,getManagedBean().getPtjGroup().getOrgProfileId());
-				if (CollectionUtils.isNotEmpty(rlcdLst)) {
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						getManagedBean().getRequisitionerList().add(selectItem);
-					}
-				}
-			}
-		}
-		return getManagedBean().getRequisitionerList();
+		return null;
 	}
 	
 }
