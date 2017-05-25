@@ -116,32 +116,37 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
-		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes()
-						.getUserSessionBean().getUserId(), false);
-
-		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);
-		}
-
-		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-			getManagedBean().setDisableOrgField(true);
-			getManagedBean().setDisableMinistryField(true);
-			getManagedBean().setSelectedMinistry(
-					retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedKumpulanPTJ(
-					retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedPTJ(pmOrgProfile);
-		} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			getManagedBean().setSelectedMinistry(
-					pmOrgProfile);
-			getManagedBean().setDisableMinistryField(true);
+		if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			List<PmUserOrg> userOrgList = PmCommonUtil
+					.retrieveActiveOrgWithoutRole(getFacesScopes()
+							.getUserSessionBean().getUserId(), false);
+	
+			if (userOrgList == null || userOrgList.isEmpty()) {
+				throw new EpException(MessageConst.ERROR_770105);
+			}
+	
+			PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+	
+			if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				getManagedBean().setDisableOrgField(true);
+				getManagedBean().setDisableMinistryField(true);
+				getManagedBean().setSelectedMinistry(
+						retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+				getManagedBean().setSelectedKumpulanPTJ(
+						retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+				getManagedBean().setSelectedPTJ(pmOrgProfile);
+			} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+				getManagedBean().setSelectedMinistry(
+						pmOrgProfile);
+				getManagedBean().setDisableMinistryField(true);
+			}
 		}
 	}
 	
@@ -153,7 +158,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		log.info("resetSearch: ctReportBB");		
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
-		getManagedBean().setCurrentActiveOrg(null);
 		getManagedBean().setDisableMinistryField(false);
 		getManagedBean().setDisableOrgField(false);
 		getManagedBean().setSelectedMinistry(null);
