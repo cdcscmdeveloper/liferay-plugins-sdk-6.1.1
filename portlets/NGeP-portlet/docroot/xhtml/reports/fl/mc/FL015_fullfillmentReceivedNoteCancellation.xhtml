@@ -103,7 +103,7 @@
 			</td>
 		</tr>
 	
-		<tr>
+				<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}" />
 			</td>
@@ -114,8 +114,116 @@
 					value="#{crRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="crRptBB.managedBean.selectedOrgProfile" />
 			</td>
-			
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}"
+								style="margin-top:5px;width:191px;" />
+			</td>
+			<td>
+				<p:selectOneMenu
+					value="#{reportBackingBean.flRecievingOfficer}"
+					style="margin-top:5px;width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItems
+						value="#{reportBackingBean.rolecodeRecievingOfficerList}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
 		</tr>
 		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}" style="margin-top:5px;width:191px;" />
+			</td>
+			<td>
+				<p:inputText maxlength="20"
+					value="#{reportBackingBean.flRecNoteNo}"
+					style="margin-top:5px;width:290px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+			</td>				
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.acknowledgeOfficer']}"
+					style="margin-top:5px;width:191px;" />
+			</td>
+			<td>
+				<p:selectOneMenu
+					value="#{reportBackingBean.flAcknowledgeOfficer}"
+					style="margin-top:5px;width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItems
+						value="#{reportBackingBean.rolecodeAcknowledgeOfficerList}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"/> 
+			</td>
+			<td>
+				<p:inputText value="#{poRptBB.managedBean.purchaseOrderNo}"/>
+			</td>
+			<td colspan="2"></td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+			<td>
+				<p:outputLabel
+					value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+			</td>
+			<td>
+				<p:selectOneMenu id="statusId"
+					value="#{crRptBB.managedBean.statusDescId}" style="width: 314px;">
+					<f:selectItems value="#{crRptBB.getStatusDropDownValues('CR')}" />
+					<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"/>
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{crRptBB.managedBean.fromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form" />
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{crRptBB.managedBean.toDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+				</p:calendar>
+			</td>
+		</tr>
 	</table>
 </ui:composition>
