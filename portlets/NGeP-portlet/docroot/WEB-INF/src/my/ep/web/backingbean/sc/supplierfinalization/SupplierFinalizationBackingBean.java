@@ -67,6 +67,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -6758,6 +6759,15 @@ public class SupplierFinalizationBackingBean extends
 		if(!isWithTerms){
 			scQtFinalization.setTermsText(null);
 		}
+	}
+	
+	public void deleteKertasAttachment(BaseEntity delEntity) {
+
+		ScQtFinalizationReport scQtFinalizationReport = this.getManagedBean()
+				.getSelectedFinalizationReport();
+		scQtFinalizationReport.setTempReportAttachment(null);
+		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
+				
 	}
 	
 }
