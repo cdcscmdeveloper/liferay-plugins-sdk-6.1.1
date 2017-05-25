@@ -380,6 +380,8 @@ public class SupplierFinalizationBackingBean extends
 					scQtFinalization.getScQtRecommends());
 		}
 		
+		this.getManagedBean().setJustification(
+				scQtFinalization.getJustification());
 		decisionEvent(null);
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
@@ -480,11 +482,9 @@ public class SupplierFinalizationBackingBean extends
 	public void navigateToEndorsementReportTab() {
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
-		ScQtFinalization scQtFinalization = this.getManagedBean()
-				.getScQtFinalization();
-		PmParameter justificationParam = scQtFinalization.getJustfication();
+		PmParameter justificationParam = this.getManagedBean().getJustification();
 		if (justificationParam == null) {
-			scQtFinalization.setJustfication(new PmParameter());
+			this.getManagedBean().setJustification(new PmParameter());
 		} else {
 			if (justificationParam.getParameterId() != null
 					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getParameterCode())) {
@@ -927,8 +927,8 @@ public class SupplierFinalizationBackingBean extends
 			}
 			validateFinalizationReports(reqDTO);
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
-				if (reqDTO.getScQtFinalization().getJustfication() != null
-						&&reqDTO.getScQtFinalization().getJustfication().getParameterId() == null) {
+				if (this.getManagedBean().getJustification() == null
+						||this.getManagedBean().getJustification().getParameterId() == null) {
 					throw new EpException(MessageConst.ERROR_100061,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.sf.justification.selection",
@@ -1734,9 +1734,7 @@ public class SupplierFinalizationBackingBean extends
 								(totalMembersAttended - 1)) {
 					throw new EpException(MessageConst.ERROR_760265);
 				}
-				// setting false Since at time of re finalization needs to upload the document again 
-				this.getManagedBean().getScQtFinalization()
-						.setBriefingPaperUploaded(false);
+				
 			}
 			
 			String committeeType = getManagedBean().getCommitteeType();
@@ -1822,8 +1820,8 @@ public class SupplierFinalizationBackingBean extends
 					throw new EpException(MessageConst.ERROR_760452);
 				}
 
-				if (scQtFinalization.getJustfication() != null
-						&& scQtFinalization.getJustfication().getParameterId() == null) {
+				if (this.getManagedBean().getJustification() == null
+						|| this.getManagedBean().getJustification().getParameterId() == null) {
 					throw new EpException(MessageConst.ERROR_100061,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.sf.justification.selection",
@@ -6686,7 +6684,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	
-	public void justficationChange(AjaxBehaviorEvent event) {
+	public void justificationChange(AjaxBehaviorEvent event) {
 
 		Long parameterId = (Long) event.getComponent().getAttributes()
 				.get("value");
@@ -6699,7 +6697,8 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			PmParameter parameter = resDTO.getPmParameter();
-			this.getManagedBean().getScQtFinalization().setJustfication(parameter);
+			this.getManagedBean().getScQtFinalization().setJustification(parameter);
+			this.getManagedBean().setJustification(parameter);
 			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(parameter.getParameterCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
 			}
