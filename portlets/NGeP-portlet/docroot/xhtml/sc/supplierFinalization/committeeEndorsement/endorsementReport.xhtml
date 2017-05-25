@@ -76,14 +76,14 @@
 						value="*" styleClass="mandatory" /></td>
 
 				<td style="margin-left: 55px;"><p:selectOneMenu id="justificationDDId" 
-						value="#{finalization.justfication.parameterId}"
+						value="#{suppFinalizationBackingBean.managedBean.justification.parameterId}"
 						style="width: 300px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.sf.justification.selection']}" disabled="#{!readOnly}">
 						<f:selectItems
 							value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.finalizationSupplierJustification)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="panelWithJustificationTxtId"
-							listener="#{suppFinalizationBackingBean.justficationChange}" disabled="#{!readOnly}"/>
+							listener="#{suppFinalizationBackingBean.justificationChange}" disabled="#{!readOnly}"/>
 					</p:selectOneMenu> <p:message id="justificationDDMsgId" for="justificationDDId" display="icon" /></td>
 					</tr>
 			</table>
@@ -93,7 +93,7 @@
 				<table>
 					<tr>
 						<td style="float:right;margin-left: 55px;"><p:inputTextarea id="justificationTxtId"
-								value="#{finalization.justficationText}" cols="80" rows="3"
+								value="#{finalization.justificationText}" cols="80" rows="3"
 								onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"
 								label="#{lbl['lbl.sc.sf.justification']}"/> <p:message
 								id="justificationTxtMsgId" for="justificationTxtId"
