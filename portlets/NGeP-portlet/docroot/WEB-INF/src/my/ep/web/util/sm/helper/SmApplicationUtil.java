@@ -2606,43 +2606,40 @@ public class SmApplicationUtil {
 		}
 		initOverlapCategoryDocs(managedBean.isOverLappedCategoryExists(),
 				managedBean.getSmAppl());
+		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
+				overlapCategoryVO);
 	}
 
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
 			SmApplicationManagedBean bean) {
 		checkOverLappingCategories(bean);
-		if (bean.isOverLappedCategoryExists()
-				&& EntityHelper.isCollectionEmpty(bean.getSmAppl()
-						.getSmCategoryOverlapDocs())) {
-			throw new EpException(MessageConst.ERROR_722654);
+		if (bean.isOverLappedCategoryExists()) {
+			if (EntityHelper.isCollectionEmpty(bean.getSmAppl()
+					.getSmCategoryOverlapDocs())) {
+				throw new EpException(MessageConst.ERROR_722654);
+			} else {
+				for (SmCategoryOverlapDoc doc : bean.getSmAppl()
+						.getSmCategoryOverlapDocs()) {
+					if (doc.getPmDocument() == null
+							|| StringUtils.isBlank(doc.getFileName())) {
+						throw new EpException(MessageConst.ERROR_722654);
+					}
+				}
+			}
 		}
 	}
 
 	public static SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 		SmOverlapCategoryVO retVal = null;
-		if (smAppl != null
-				&& !EntityHelper.isCollectionEmpty(smAppl
-						.getSmSupplierCategories())) {
-			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if (cat.isOverLapCategory()
-						&& (cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
-								.getRecordStatusFlg()
-								.compareTo(
-										SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
-					retVal = new SmOverlapCategoryVO();
-					retVal.setOverLappedCategoryExist(true);
-					break;
-				}
-			}
-		}
-		if (retVal != null && retVal.isOverLappedCategoryExist()) {
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
-			reqDTO.setApplId(smAppl.getApplId());
-			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
-					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+		reqDTO.setApplId(smAppl.getApplId());
+		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
+				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+		if (!EntityHelper.isCollectionEmpty(resultList)) {
+			retVal = new SmOverlapCategoryVO();
+			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
 					"lbl.sm.category.overlappingMsg", null)
 					+ "<br />"
@@ -2660,6 +2657,32 @@ public class SmApplicationUtil {
 					resultList, smAppl.getSupplierType()));
 		}
 		return retVal;
+	}
+
+	private static void resetAddedCategoryOverlapStatus(SmAppl appl,
+			SmOverlapCategoryVO vo) {
+		for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+					|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
+				cat.setOverLapCategory(false);
+				if (vo != null && vo.getOverlapCategoryVOList() != null
+						&& cat.getPmCategoryL1() != null
+						&& cat.getPmCategoryL2() != null
+						&& cat.getPmCategoryL3() != null) {
+					String catcode = cat.getPmCategoryL1().getCategoryL1Code()
+							+ cat.getPmCategoryL2().getCategoryL2Code()
+							+ cat.getPmCategoryL3().getCategoryL3Code();
+					for (SmBulkApplOverlapCatVO bulkVO : vo
+							.getOverlapCategoryVOList()) {
+						if (!StringUtils.isBlank(bulkVO.getCategoryCode())
+								&& !StringUtils.isBlank(catcode)
+								&& catcode.equals(bulkVO.getCategoryCode())) {
+							cat.setOverLapCategory(true);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
