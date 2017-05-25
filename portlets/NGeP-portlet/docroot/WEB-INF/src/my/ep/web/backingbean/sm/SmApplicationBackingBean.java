@@ -227,6 +227,27 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public void validateEmail(FacesContext context, UIComponent component,
+			Object value) {
+		Map<String, String> params = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		if (params.containsKey("disableValidate")) {
+			return;
+		}
+		UIInput emailInput = (UIInput) component.getParent().findComponent(
+				"equiEmail");
+		String emailVal = (emailInput != null && emailInput.getValue() != null) ? emailInput
+				.getValue().toString() : "";
+
+		if (!StringUtils.isBlank(emailVal) && !isValidEmail(emailVal)) {
+			String msg = SmCommonUtil.getMessage("lbl.sm.person.email", null)
+					+ " - "
+					+ SmCommonUtil.getMessage("lbl.sm.invalidEmail", null);
+			throw new ValidatorException(new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Email Error", msg));
+		}
+	}
+
 	/**
 	 * Renew session object by application type.
 	 * 
@@ -2551,7 +2572,7 @@ public class SmApplicationBackingBean extends
 			}
 			rqDto.setCertBodyIds(certIds);
 		}
-		
+
 		log.info(">>>>>>>>START SET SECTION EDITOR<<<<<<<<<<");
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true);
 		rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
@@ -2571,16 +2592,16 @@ public class SmApplicationBackingBean extends
 		rqDto.setForeigner(SmApplicationUtil
 				.isCompanyHasForeignPersonnel(getManagedBean().getSmAppl()
 						.getSmPersonnels()));
-		log.info("SUPP TYPE:"+getManagedBean().getSmAppl()
-				.getSupplierType());
-		log.info("BUSS TYPE:"+getManagedBean().getSmAppl().getSmSupplier()
-				.getBusinessType());
-		log.info("EDIT COMP BASIC:"+rqDto.isCompanyInfoChanged());
-		log.info("EDIT ASSOC:"+rqDto.isAsscProjChanged());
-		log.info("EDIT EQUITY:"+rqDto.isCapitalEquityChanged());
-		log.info("EDIT PERSONNEL BRANCH:"+rqDto.isPersonnelBranchChanged());
-		log.info("EDIT BANK:"+rqDto.isBankInfoChanged());
-		log.info("EDIT FOREIGNER:"+rqDto.isForeigner());
+		log.info("SUPP TYPE:" + getManagedBean().getSmAppl().getSupplierType());
+		log.info("BUSS TYPE:"
+				+ getManagedBean().getSmAppl().getSmSupplier()
+						.getBusinessType());
+		log.info("EDIT COMP BASIC:" + rqDto.isCompanyInfoChanged());
+		log.info("EDIT ASSOC:" + rqDto.isAsscProjChanged());
+		log.info("EDIT EQUITY:" + rqDto.isCapitalEquityChanged());
+		log.info("EDIT PERSONNEL BRANCH:" + rqDto.isPersonnelBranchChanged());
+		log.info("EDIT BANK:" + rqDto.isBankInfoChanged());
+		log.info("EDIT FOREIGNER:" + rqDto.isForeigner());
 		log.info(">>>>>>>>END SET SECTION EDITOR<<<<<<<<<<");
 
 		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
