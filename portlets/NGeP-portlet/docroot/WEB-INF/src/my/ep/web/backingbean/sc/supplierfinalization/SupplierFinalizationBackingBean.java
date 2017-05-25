@@ -6701,6 +6701,9 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setJustification(parameter);
 			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(parameter.getParameterCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
+			} else{
+				this.getManagedBean().getScQtFinalization()
+						.setJustificationText(null);
 			}
 
 		} finally {
@@ -6743,6 +6746,17 @@ public class SupplierFinalizationBackingBean extends
 			uploadAttachment(event.getFile(), scAttachment);
 			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
 			scQtFinalizationReport.setTempReportAttachment(reportAttachment);
+		}
+	}
+	
+	public void setWithTermValue(AjaxBehaviorEvent event) {
+
+		boolean isWithTerms = (boolean) event.getComponent().getAttributes()
+				.get("value");
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		scQtFinalization.setWithTerms(isWithTerms);
+		if(!isWithTerms){
+			scQtFinalization.setTermsText(null);
 		}
 	}
 	
