@@ -1402,7 +1402,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 			
-			return  basicBusinessLs.toArray(new SelectItem[basicBusinessLs.size()]);
+			items =  basicBusinessLs.toArray(new SelectItem[basicBusinessLs.size()]);
 		}else{
 			String supplierType = this.getManagedBean().getSmAppl().getSupplierType();
 			if(supplierType != null){
@@ -1418,9 +1418,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						fs.getUserLocale()));
 			}
 		}
-		
+
 		if(!getManagedBean().getSmAppl().isBrandNew() && SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
 						.contains(getManagedBean().getSmSupp().getBusinessType())){
+			log.info("<<<<<<<<<Business Type is changeable>>>>>>>>>>");
 			items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
 			List<SelectItem> sabahSarawakBusinessLs = new ArrayList<SelectItem>();
 			
