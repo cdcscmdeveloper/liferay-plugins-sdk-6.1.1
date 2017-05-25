@@ -13,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -226,6 +227,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl preferenceMarginDtls;
 	private List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks;
 	private boolean renderjustificationTextbox;
+	private PmParameter justification;
 	
 	
 	/**
@@ -2034,6 +2036,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setRenderjustificationTextbox(boolean renderjustificationTextbox) {
 		this.renderjustificationTextbox = renderjustificationTextbox;
 	}
+
+	/**
+	 * @return the justification
+	 */
+	public PmParameter getJustification() {
+		return justification;
+	}
+
+	/**
+	 * @param justification the justification to set
+	 */
+	public void setJustification(PmParameter justification) {
+		this.justification = justification;
+	}
+
 
 
 }
