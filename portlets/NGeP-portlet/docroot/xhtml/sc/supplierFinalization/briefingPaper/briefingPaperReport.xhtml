@@ -40,7 +40,8 @@
 							popupWidgetVar="kertasTaklimUploadAttWidget"
 							attachment="#{report.tempReportAttachment}"
 							rowIndex="#{rowIndex}" 
-							readonly="#{!(isSecretaryUser)}">
+							readonly="#{!(isSecretaryUser)}"
+							deleteFileUploadListener="suppFinalizationBackingBean.deleteKertasAttachment">
 							<f:setPropertyActionListener for="actionEvent" value="#{report}"
 							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
 						<f:setPropertyActionListener for="actionEvent" value="KTR"
