@@ -1874,6 +1874,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						chargeLineLv3.setFlInvoiceItem(invItemLv3);
 						lvl3Map.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(),chargeLineLv3);
 					}
+					grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 				}
 				for(Entry<String, InvoiceChargeLineVO> entrySet : lvl3Map.entrySet()){
 					new DefaultTreeNode(entrySet.getValue(), lv2TreeNode);
