@@ -173,9 +173,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		getManagedBean().setDiMyidentity(diMyidentity);
 		getManagedBean().setMyIdentityStatusDesc(getMyIdentityStatusDesc());
 		getManagedBean().setMyIdentityResidentialStatus(getMyIdentityResidentialStatusDesc());
-		
+
 		if(diMyidentity != null){
-			PmState pmState = SmCommonUtil.getInstance().getStateById(Long.valueOf(diMyidentity.getStateCode()));
+			PmState pmState = SmCommonUtil.getInstance().
+					retrieveStateByCountryCodeAndStateCode(diMyidentity.getStateCode());
 			if(pmState != null){
 				diMyidentity.setStateDesc(pmState.getStateName());
 			}
