@@ -1224,7 +1224,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						    count++;
 						    parameterCode =  getParameterCode(deId.getDeductionType());
 						    if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && count == 2)
+						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
+						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
 							     throw new EpException(MessageConst.ERROR_100046,
 							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionId()))});
 				         }
@@ -1970,7 +1971,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    					orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
 		    					for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
 		    							if (agency.getOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-		    							    throw new EpException(MessageConst.INFO_755000, new String[]{agency.getOrgProfile().getOrgName()}); 
+		    								continue;
+		    							//    throw new EpException(MessageConst.INFO_755000, new String[]{agency.getOrgProfile().getOrgName()}); 
 		    							}
 		    					}
 	    						
