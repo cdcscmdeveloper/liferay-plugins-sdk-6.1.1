@@ -104,6 +104,7 @@ import com.liferay.portal.util.PortalUtil;
 @ViewScoped
 public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManagedBean> {	
 
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	private ContractBackingBean ctBB = null;
 	private String editorValue;
@@ -1210,7 +1211,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    			   context.put("approverDesignation", "");						
 		    		   }
 		    	   }
-		    	   setEditorValue(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context));				
+		    	   //setEditorValue(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context));
+		    	   String filePath = getManagedBean().getFileDirectory();
+		    	   File file = new File(filePath);
+		    	   file.mkdirs();
+		    	   String fileName = templateName + ".docx";
+		    	   AttachmentFormat attachmentFormat = null;
+		    	   attachmentFormat = new AttachmentDateFormat();
+		    	   filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
+
+		    	   DocumentGenerator.getInstance().generateDocFromVelocity(vmFile, context, filePath);
+		    	   downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		       }
 		}  catch (Exception e) {
 			throw new EpException(e.toString());
