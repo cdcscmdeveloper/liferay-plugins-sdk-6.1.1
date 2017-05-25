@@ -4926,5 +4926,35 @@ public class SmCommonUtil {
 		return stateList;
 
 	}
+	
+	public PmState retrieveStateByCountryCodeAndStateCode(String stateCode) {
+		if (stateCode != null) {
+			StateReqDTO reqDTO = new StateReqDTO();
+			ISearchBean<PmState> searchBean = new SearchBean<PmState>();
+			
+			SearchFilterBean countrySearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			SearchFilterBean stateSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			
+			countrySearchBean.setSearchField("pmCountry.countryCode");
+			countrySearchBean.setSearchValue(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			searchBean.getDataFilterBeans().add(countrySearchBean);
+			
+			stateSearchBean.setSearchField("stateCode");
+			stateSearchBean.setSearchValue(stateCode);
+			searchBean.getDataFilterBeans().add(stateSearchBean);
+			
+			reqDTO.setStateSearchBean(searchBean);
+			
+			List<PmState> stateList = SmServiceLookup.getStateSO().searchStateData(reqDTO).getStateResultBean().getResultList();
+			
+			if(stateList.size() > 0){
+				return stateList.get(0);
+			}
+		} 
+		
+		return null;
+	}
 
 }
