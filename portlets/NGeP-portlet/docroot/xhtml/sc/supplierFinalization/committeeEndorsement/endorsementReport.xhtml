@@ -27,7 +27,7 @@
 									<f:selectItems
 										value="#{suppFinalizationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 									<p:ajax event="change"
-										process="@this" partialSubmit="true" update="panelWithConditionsTxtId"></p:ajax>
+										process="@this" partialSubmit="true" update="panelWithConditionsTxtId" listener="#{suppFinalizationBackingBean.setWithTermValue}"></p:ajax>
 								</p:selectOneRadio> 
 								<p:message id="withConditionsMsgId" for="withConditionsId" display="icon" />
 							</td>
