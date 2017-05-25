@@ -18,7 +18,6 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 
 	private static final long serialVersionUID = 1L;	
 
-	private PmOrgProfile currentActiveOrg;
 	private boolean disableMinistryField;
 	private boolean disableOrgField;
 	private PmOrgProfile selectedMinistry;
@@ -35,18 +34,6 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	private Date toDate;
 	private PmOrgProfile selectedSupplier;
 	
-	/**
-	 * @return the currentActiveOrg
-	 */
-	public PmOrgProfile getCurrentActiveOrg() {
-		return currentActiveOrg;
-	}
-	/**
-	 * @param currentActiveOrg the currentActiveOrg to set
-	 */
-	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
-		this.currentActiveOrg = currentActiveOrg;
-	}
 	/**
 	 * @return the disableMinistryField
 	 */
