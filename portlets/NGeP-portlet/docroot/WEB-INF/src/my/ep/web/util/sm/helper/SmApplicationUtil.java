@@ -1113,7 +1113,7 @@ public class SmApplicationUtil {
 			if (bank.getSmChequeSignatories() == null
 					|| bank.getSmChequeSignatories().isEmpty()) {
 				sb.append("<br/>");
-				sb.append(++noSignatoryCount + ".) ");
+				sb.append(++noSignatoryCount + ") ");
 				sb.append(bank.getAccountNo());
 			}
 
