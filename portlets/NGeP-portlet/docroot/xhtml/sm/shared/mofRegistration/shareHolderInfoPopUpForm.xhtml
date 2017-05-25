@@ -275,13 +275,10 @@
 					<p:outputPanel id="emailInputPanelId" >
 						<p:inputText label="#{lbl['lbl.sm.person.email']}"
 							id="equiEmail" required="#{not empty backingBean.managedBean.selectedShareHolder.epRole}" maxlength="80"
-							disabled="#{backingBean.managedBean.disableIcEmail}"
-							validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
-							value="#{backingBean.managedBean.selectedShareHolder.email}"
-							size="35">
-							<f:validateRegex disabled="#{empty backingBean.managedBean.selectedShareHolder.email}" 
-								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							<p:ajax process="@this" partialSubmit="true"/>
+							disabled="#{backingBean.managedBean.disableIcEmail}" validator="#{backingBean.validateEmail}"
+							value="#{backingBean.managedBean.selectedShareHolder.email}" size="35">
+							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+							<f:param name="disableValidate" value="true" />
 						</p:inputText> 
 					</p:outputPanel>
 					&#160; <p:graphicImage id="tooltip2"

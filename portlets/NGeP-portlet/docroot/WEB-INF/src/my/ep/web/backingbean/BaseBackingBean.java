@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -2085,5 +2086,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return formattedString;
 	}
 	
+	/**
+	 * Validate email format
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
+	public boolean isValidEmail(String email) {
+		Pattern pattern = Pattern
+				.compile("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
+		return pattern.matcher(email).matches();
+	}
 	
 }
