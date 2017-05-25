@@ -58,7 +58,8 @@
 						<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
 							popupWidgetVar="kertasTaklimUploadAttWidget"
 							attachment="#{report.scQtFinalizationReportAttachment}"
-							rowIndex="#{rowIndex}">
+							rowIndex="#{rowIndex}"
+							deleteFileUploadListener="consolidationReportBackingBean.deleteKertasAttachment">
 							<f:setPropertyActionListener for="actionEvent" value="#{report}"
 							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
 						<f:setPropertyActionListener for="actionEvent" value="KTR"

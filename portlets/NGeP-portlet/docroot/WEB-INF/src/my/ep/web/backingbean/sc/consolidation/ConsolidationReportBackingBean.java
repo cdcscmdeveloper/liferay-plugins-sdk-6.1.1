@@ -40,6 +40,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -1746,7 +1747,6 @@ public class ConsolidationReportBackingBean extends
 				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
 				reportAttachment.setFileName(event.getFile().getFileName());
 				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				setUserDetails(reportAttachment);
 				populateAttachmentDetails(reportAttachment);
 			}
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
@@ -1755,6 +1755,16 @@ public class ConsolidationReportBackingBean extends
 			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
 		}
 	}
+	
+	public void deleteKertasAttachment(BaseEntity delEntity) {
+
+		ScQtFinalizationReport scQtFinalizationReport = this.getManagedBean()
+				.getSelectedFinalizationReport();
+		scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
+		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
+				
+	}
+	
 	private void initializeFinalizationUlasanRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
@@ -1803,6 +1813,5 @@ public class ConsolidationReportBackingBean extends
 			setUserDetails(scQtFinalization);
 		}
 	}
-	
 	
 }
