@@ -9918,7 +9918,7 @@
 	
 	<portlet>
 			<portlet-name>poRoleTaskWeightage</portlet-name>
-			<display-name>PO Role Task Assignment</display-name>
+			<display-name>Processing Role Task and Weightage</display-name>
 			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
@@ -9930,8 +9930,8 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>PO Role Task Assignment</title>
-				<short-title>PO Role Task Assignment</short-title>
+				<title>Processing Role Task and Weightage</title>
+				<short-title>Processing Role Task and Weightagee</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
