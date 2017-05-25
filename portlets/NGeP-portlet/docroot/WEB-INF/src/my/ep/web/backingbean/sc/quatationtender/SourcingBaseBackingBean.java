@@ -465,7 +465,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 					File file = new File(getActualFilePath(scAttachment));
 
-					zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+					zos.putNextEntry(new ZipEntry(file.getName()));
 
 					// Get the file
 					FileInputStream fis = null;
