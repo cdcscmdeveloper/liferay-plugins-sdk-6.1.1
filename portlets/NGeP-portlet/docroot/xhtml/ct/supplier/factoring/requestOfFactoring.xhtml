@@ -379,9 +379,8 @@
 					<td><p:commandButton id="notificationBtn"
 							disabled="#{supplierBackingBean.isLetterGenerated()}"
 							value="#{lbl['lbl.ct.panel.notification.factoring']}"
-							process="@this,approverpickList" update="editorDisplay"
-							actionListener="#{supplierBackingBean.previewAction()}"
-							oncomplete="factoringClauseDlg.show();" /></td>
+							process="@this,approverpickList" ajax="false" 
+							actionListener="#{supplierBackingBean.previewAction()}" /></td>
 				</tr>
 				<tr rowspan="2">
 					<h:panelGroup
