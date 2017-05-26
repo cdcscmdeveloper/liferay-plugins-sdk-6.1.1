@@ -1934,6 +1934,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		String actionDesc = "";
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
+		
+		if(smResDTO.getResultBean()==null){
+			throw new EpException("Fail to get SmSupplier");
+		}
 
 		System.out.println("getSmSupplier"
 				+ smResDTO.getResultBean().getResultList().get(0));
@@ -3280,9 +3284,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		if (this.getManagedBean().getRequestCode() != null) {
 			if (this.getManagedBean().getRequestCode().getItemType()
 					.equalsIgnoreCase("P")) {
-				return 5; // means less than (76000000)
+				return 5; // means less than (7000000)
 			} else {
-				return 4; // means greater than (76000000)
+				return 4; // means greater than (7000000)
 			}
 		}
 		return -1;
