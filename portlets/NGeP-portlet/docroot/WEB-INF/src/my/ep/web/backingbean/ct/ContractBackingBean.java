@@ -1227,7 +1227,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
 						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
 							     throw new EpException(MessageConst.ERROR_100046,
-							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionId()))});
+							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
 				         }
 				    }
 			  }
