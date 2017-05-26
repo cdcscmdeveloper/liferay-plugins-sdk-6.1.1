@@ -17,7 +17,6 @@ import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.cc.DeliveryOrderRptManagedBean;
-import my.ep.web.managedbean.report.fl.cc.LateDeliveryRptManagedBean;
 /**
  * Backing Bean for ContractRequestRpt.
  *
@@ -91,6 +90,15 @@ public class DeliveryOrderRptBackingBean extends FlReportBackingBean<DeliveryOrd
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getSupplierDoRefNo())) {
 			params.put(FlReportConst.FL_RPT_SUP_DELI_ORD_NO, getManagedBean().getSupplierDoRefNo());
+		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
 		
 		generateFlReport(params);

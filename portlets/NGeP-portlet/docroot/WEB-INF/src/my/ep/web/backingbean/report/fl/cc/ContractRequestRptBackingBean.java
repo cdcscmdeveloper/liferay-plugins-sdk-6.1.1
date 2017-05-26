@@ -4,7 +4,6 @@
 package my.ep.web.backingbean.report.fl.cc;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -12,17 +11,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.fl.cc.ContractRequestRptManagedBean;
 /**
  * Backing Bean for ContractRequestRpt.
@@ -93,7 +88,7 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
 		if(getManagedBean().getSelectedOrgProfile() != null){
-			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
 		}
 		if(getManagedBean().getRequisitioner() != null){
 			params.put(FlReportConst.FL_RPT_REQUI_NAME, getManagedBean().getRequisitioner());
@@ -110,5 +105,6 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		}
 		return null;
 	}
+	
 	
 }
