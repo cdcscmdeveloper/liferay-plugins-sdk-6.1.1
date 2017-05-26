@@ -1931,6 +1931,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
+		supplierReqDTO.setAllStatuses(true);
 		String actionDesc = "";
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
