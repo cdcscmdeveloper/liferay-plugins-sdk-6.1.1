@@ -600,18 +600,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			        if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null) {
 				          ctBackingBean.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				          ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setFileRefNo("");
-				          String contractName = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName();
-				          if (contractName != null && contractName.length() > 100) {
-					            ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setTitle(contractName.substring(0, 100));
-				          } else {
-					           ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setTitle(contractName);
-				          }
-				          if (contractName != null && contractName.length() > 200) {
-					            ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setDescription(contractName.substring(0, 200));
-				          } else {
-					          ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setDescription(contractName);
-			           	 }
-				
+				          ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setTitle(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
+				         ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setDescription(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 				          ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
 				          ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 						  if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
