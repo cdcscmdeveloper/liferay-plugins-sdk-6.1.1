@@ -93,6 +93,15 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 		if (StringUtils.isNotBlank(getManagedBean().getPaymentMatchNo())) {
 			params.put(FlReportConst.FL_RPT_PAYMENT_ADV_NO, getManagedBean().getPaymentMatchNo());
 		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
 		
 		generateFlReport(params);
 		

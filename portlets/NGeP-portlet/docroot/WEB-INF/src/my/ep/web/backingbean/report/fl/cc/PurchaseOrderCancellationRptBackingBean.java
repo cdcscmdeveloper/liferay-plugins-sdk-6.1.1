@@ -61,9 +61,6 @@ public class PurchaseOrderCancellationRptBackingBean extends FlReportBackingBean
 		if (getManagedBean().getPtj() != null) {
 			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgProfileId().toString());
 		}
-		if (StringUtils.isNotBlank(getManagedBean().getItemName())) {
-			params.put(FlReportConst.FL_RPT_ITM_NAME, getManagedBean().getItemName());
-		}
 		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_NO, getManagedBean().getContractNo());
 		}
@@ -84,6 +81,15 @@ public class PurchaseOrderCancellationRptBackingBean extends FlReportBackingBean
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getPkpNo())) {
 			params.put(FlReportConst.FL_RPT_TREASURY_CIRCULAR, getManagedBean().getPkpNo());
+		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
 		
 		generateFlReport(params);

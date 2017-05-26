@@ -88,6 +88,15 @@ public class InvoiceCancellationRptBackingBean extends FlReportBackingBean<Invoi
 		if (StringUtils.isNotBlank(getManagedBean().getInvNo())) {
 			params.put(FlReportConst.FL_RPT_INV_NO, getManagedBean().getInvNo());
 		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
 		
 		generateFlReport(params);
 		
