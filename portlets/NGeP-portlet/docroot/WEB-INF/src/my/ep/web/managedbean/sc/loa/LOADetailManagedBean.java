@@ -82,6 +82,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The contract signer user. */
 	private PmUser contractSignerUser;
 	
+	/** The supplier contract signer user. */
+	private PmUser supplierContractSignerUser;
+	
 	/** The approver user. */
 	private PmUser approverUser;
 	
@@ -111,6 +114,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The contract signer list. */
 	private List<PmUser> contractSignerList;
+	
+	/** The supplier contract signer list. */
+	private List<PmUser> supplierContractSignerList;
 	
 	/** The branchs list. */
 	private List<SmSupplierBranch> branchsList;
@@ -482,6 +488,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the supplierContractSignerUser
+	 */
+	public PmUser getSupplierContractSignerUser() {
+		return supplierContractSignerUser;
+	}
+
+	/**
+	 * @param supplierContractSignerUser the supplierContractSignerUser to set
+	 */
+	public void setSupplierContractSignerUser(PmUser supplierContractSignerUser) {
+		this.supplierContractSignerUser = supplierContractSignerUser;
+	}
+
+	/**
 	 * Gets the approver user.
 	 *
 	 * @return the approverUser
@@ -624,6 +644,21 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setContractSignerList(List<PmUser> contractSignerList) {
 		this.contractSignerList = contractSignerList;
+	}
+
+	/**
+	 * @return the supplierContractSignerList
+	 */
+	public List<PmUser> getSupplierContractSignerList() {
+		return supplierContractSignerList;
+	}
+
+	/**
+	 * @param supplierContractSignerList the supplierContractSignerList to set
+	 */
+	public void setSupplierContractSignerList(
+			List<PmUser> supplierContractSignerList) {
+		this.supplierContractSignerList = supplierContractSignerList;
 	}
 
 	/**
