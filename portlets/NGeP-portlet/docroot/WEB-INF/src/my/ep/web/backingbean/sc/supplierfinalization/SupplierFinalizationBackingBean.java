@@ -2400,9 +2400,10 @@ public class SupplierFinalizationBackingBean extends
 			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
 			ScAttachment attachment = (ScAttachment) reportAttachment;
 			StringBuilder filename = new StringBuilder();
-			// replace white space due to firefox
-			filename.append(scQtFinalizationReport.getTitle().replaceAll("\\s",
-					"_"));
+			// replace white space due to firefox 
+			filename.append(scQtFinalizationReport.getTitle()
+					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
+					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
 			
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".pdf");

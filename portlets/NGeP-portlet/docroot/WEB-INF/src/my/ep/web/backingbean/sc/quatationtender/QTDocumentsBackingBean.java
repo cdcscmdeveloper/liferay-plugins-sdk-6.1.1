@@ -166,7 +166,7 @@ public class QTDocumentsBackingBean extends
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 				  SourcingConstants.MALAYSIA_COUNTRY_CODE);
-	private static final String  UNDER_SCORE = "_";
+	
 	
 	/**
 	 * Debug logger.
@@ -514,7 +514,7 @@ public class QTDocumentsBackingBean extends
 			uploadAttachment(event.getFile(), scAttachment);
 			String fileName = scAttachment.getFileName();
 			if (indexOfReport >= 0 && fileName != null) {
-				scQtDocReportAttachment.setFileName(indexOfReport + UNDER_SCORE
+				scQtDocReportAttachment.setFileName(indexOfReport + SourcingConstants.UNDER_SCORE
 						+ fileName);
 			}
 			selectedScQtDocReport
@@ -1131,10 +1131,12 @@ public class QTDocumentsBackingBean extends
 			scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt().getQtNo());
 			StringBuilder filename = new StringBuilder();
 			if(prefixFileName !=null){
-				filename.append(prefixFileName).append(UNDER_SCORE);
+				filename.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
 			}
 			// replace white space due to firefox
-			filename.append(scQtDocReport.getTitle().replaceAll("\\s", UNDER_SCORE));
+			filename.append(scQtDocReport.getTitle()
+					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
+					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
 
 			if (SourcingConstants.DOC_DEF_KEY_SUPP_OFFER_STATEMENT
 					.equals(docDefinitionKey)) {
@@ -1232,7 +1234,7 @@ public class QTDocumentsBackingBean extends
 					.equals(docDefinitionKey)) {
 				StringBuilder fileName = new StringBuilder();
 				if(prefixFileName != null){
-					fileName.append(prefixFileName).append(UNDER_SCORE);
+					fileName.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
 				}
 				fileName.append(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);
 				scQtDocReportAttachment.setFileName(fileName.toString());
@@ -1257,7 +1259,7 @@ public class QTDocumentsBackingBean extends
 						.equals(docDefinitionKey)) {
 					StringBuilder fileName = new StringBuilder();
 					if (prefixFileName != null) {
-						fileName.append(prefixFileName).append(UNDER_SCORE);
+						fileName.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
 					}
 					fileName.append(SourcingConstants.DOCNAME_QT_SYARAT_AM);
 					
@@ -1460,7 +1462,7 @@ public class QTDocumentsBackingBean extends
 											.setScQtDocReport(scQtDocReport);
 									StringBuilder fileName = new StringBuilder();
 									if(prefixFileName != null){
-										fileName.append(prefixFileName).append(UNDER_SCORE);
+										fileName.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
 									}
 									fileName.append(attachment.getFileName());
 											
@@ -2200,7 +2202,7 @@ public class QTDocumentsBackingBean extends
 		
 		StringBuilder fileName = new StringBuilder();
 		if(prefixFileName != null){
-			fileName.append(prefixFileName).append(UNDER_SCORE);
+			fileName.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
 		}
 		fileName.append(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT);
 		attachment.setFileName(fileName.toString());
