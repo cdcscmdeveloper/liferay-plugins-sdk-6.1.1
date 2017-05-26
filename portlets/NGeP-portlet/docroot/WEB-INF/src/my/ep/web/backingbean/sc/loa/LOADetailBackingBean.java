@@ -41,6 +41,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -70,6 +71,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -391,7 +393,6 @@ public class LOADetailBackingBean extends
 											MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
 				}
 			}
-			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			
 			if(scLoa.isBondReq()){
 				scLoa = calcBondAmount(scLoa, Boolean.FALSE);
@@ -443,6 +444,8 @@ public class LOADetailBackingBean extends
 			
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(scQt);
+			
+			prepareSupplierSignerInfo();
 			
 			return QTConstants.SUPPLIER_LOA_PAGE;
 
@@ -1383,6 +1386,12 @@ public class LOADetailBackingBean extends
 							ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 			} 
+			/*StringBuilder sb = new StringBuilder();
+			if(StringUtils.isNotBlank(scLoaReport.getTitle())) {
+				sb.append(scLoaReport.getTitle()).append('_');
+			}
+			sb.append(scLoaReportAttachmentGenerated.getFileName());
+			scLoaReportAttachmentGenerated.setPrefixFileName(sb.toString());*/
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 	        
@@ -3004,7 +3013,6 @@ public class LOADetailBackingBean extends
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
-			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
 		}  else{
 			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))){
@@ -3213,7 +3221,7 @@ public class LOADetailBackingBean extends
 			userSO = null;
 		}
 	}
-
+	
 	/**
 	 * Contract eff date changed.
 	 *  calculate Completion Expiry Date based on Completion Period.
@@ -3272,6 +3280,27 @@ public class LOADetailBackingBean extends
 					if(contractSigner.getUserId().equals(user.getUserId())){
 						getManagedBean().getScLoa().setLoaSignerDesig(user.getDesignation());
 					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Supplier Contract signer event.
+	 */
+	public void supplierContractSignerEvent() {
+		debugLogger("supplierContractSignerEvent");
+		PmUser supplierContractSigner = getManagedBean().getSupplierContractSignerUser();
+		if (supplierContractSigner != null) {
+			if (getManagedBean().getSupplierContractSignerList() != null
+					&& getManagedBean().getSupplierContractSignerList().size() > 0) {
+				List<PmUser> supplierContractSignerList = getManagedBean()
+						.getSupplierContractSignerList();
+				for (PmUser user : supplierContractSignerList) {
+					if (user.getUserId().equals(supplierContractSigner.getUserId())) {
+						getManagedBean().getScLoa().setAckBy(user);
+						break;
+					} 
 				}
 			}
 		}
@@ -5246,6 +5275,35 @@ public class LOADetailBackingBean extends
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 		getManagedBean().setContractSignerList(userResDTO.getUserList());
 		getManagedBean().setContractSignerUser(contractSignerUser);
+	}
+	
+	/**
+	 * Prepare Supplier Contract signer info.
+	 */
+	private void prepareSupplierSignerInfo() {
+
+		ScLoa scLoa = getManagedBean().getScLoa();
+
+		// Supplier Contract Signer
+		PmUser supplierContractSignerUser = scLoa.getAckBy();
+		if (supplierContractSignerUser == null) {
+			supplierContractSignerUser = new FacesScopes().getUserSessionBean();
+		}
+
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+		supplierReqDTO.setSupplierId(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+		supplierReqDTO.setAuthorized(true);
+		List<SmPersonnel> personnels = supplierSearchSO.retrieveContractSigners(supplierReqDTO).getPersonnels();
+		List<PmUser> supplierSigners = new ArrayList<PmUser>();
+		for(SmPersonnel personnel : personnels) {
+			supplierSigners.add(personnel.getPmUser());
+		}
+		getManagedBean().setSupplierContractSignerList(supplierSigners);
+		getManagedBean().setSupplierContractSignerUser(supplierContractSignerUser);
+		
+		scLoa.setAckBy(supplierContractSignerUser);
 	}
 	
 	/**
