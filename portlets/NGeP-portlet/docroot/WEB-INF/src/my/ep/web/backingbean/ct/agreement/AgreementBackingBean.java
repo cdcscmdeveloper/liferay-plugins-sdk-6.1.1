@@ -2121,11 +2121,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		try {
 		    int i = 1;
-		    if(getManagedBean().getOfficerProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
+		    if(getManagedBean().getMinistryProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
 		         IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setParentOrgProfileId(getManagedBean().getOfficerProfileId());
+				reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
 				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 				
@@ -2152,7 +2152,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * to set value null
 	 */
 	public void settingMinistryListener(){
-		getManagedBean().setOfficerProfileId(null);
 		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjProfileId(null);
 		getManagedBean().setButtonHideActive(false);
@@ -2181,11 +2180,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetSignerAgencyDetails() {
-		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 		getManagedBean().setOfficerProfileId(null);
 		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjProfileId(null);
 		getManagedBean().setAgencySignerDropDown(true);
+		getManagedBean().setButtonHideActive(false);
 	}
 
 	/**
