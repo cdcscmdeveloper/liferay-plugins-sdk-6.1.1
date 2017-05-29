@@ -4843,6 +4843,45 @@ public class SmCommonUtil {
 			throw new EpException(MessageConst.ERROR_721118);
 		}
 	}
+	
+	/**
+	 * Retrieve PO By loginId, supplierType, applType, categoryType
+	 * 
+	 * @param String
+	 *            loginId, String supplierType, String applType, String
+	 *            categoryType
+	 * @return PmUser
+	 */
+	public PmUser retrievePOByUserIdAndJobTask(String loginId, String supplierType,
+			String applType, String categoryType) {
+		PmUser pmUser = PmCommonUtil.retrieveUserByLoginId(loginId);
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser
+				.getUserId());
+		if (activeOrg.size() > 0) {
+			PmUserOrg userOrg = activeOrg.get(0);
+			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
+
+			PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
+			reqDTO.setZoneCode(pmZone.getZoneCode());
+			reqDTO.setRoleCode(RoleCode.UPS_PO.value());
+			reqDTO.setSupplierType(supplierType);
+			reqDTO.setApplicationType(applType);
+			reqDTO.setCategoryType(categoryType);
+			reqDTO.setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
+			reqDTO.setUserName(pmUser.getUserName());
+			//reqDTO.setByWeightage(true);
+
+			List<PmUser> poList = SmServiceLookup.getPoRoleTaskSO()
+					.retrievePOUserListByRoleZone(reqDTO).getUserList();
+			if (poList.size() > 0) {
+				return poList.get(0);
+			} else {
+				return retrievePOWithLowestWeightage(supplierType,applType,categoryType);
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_721118);
+		}
+	}
 
 	/**
 	 * Retrieve PO Job Weight Ratio
@@ -4900,6 +4939,10 @@ public class SmCommonUtil {
 			}
 		}
 
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),DbValueConst.RECORD_STATUS_ACTIVE));
+		
 		reqDTO.setSearchBean(searchBean);
 		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate
 				.getInstance().getServiceObject(
