@@ -2956,13 +2956,17 @@ public class SmApplicationUtil {
 
 	public static void validateCategoriesDecision(
 			SmApplicationManagedBean managedBean) {
-		boolean isCatApproveExist = false;
+		boolean isAtLeastOneCatApproved = false;
+		boolean isPendingApprovedCatExist = false;
+		
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0
 					|| cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+				
+				isPendingApprovedCatExist = true;
 
 				if (managedBean.isPoUser() && cat.getPoDecFlg() == null) {
 					throw new EpException(MessageConst.ERROR_722558,
@@ -2980,7 +2984,7 @@ public class SmApplicationUtil {
 							|| (managedBean.isApproverUser()
 									&& cat.getApprvrDecFlg() != null && cat
 									.getApprvrDecFlg() == 1)) {
-						isCatApproveExist = true;
+						isAtLeastOneCatApproved = true;
 					}
 				}
 
@@ -2988,7 +2992,7 @@ public class SmApplicationUtil {
 		}
 
 		// no category at all approved
-		if (!isCatApproveExist) {
+		if (isPendingApprovedCatExist && !isAtLeastOneCatApproved) {
 			throw new EpException(MessageConst.ERROR_722655);
 		}
 	}
