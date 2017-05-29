@@ -6519,8 +6519,10 @@ public class DirectLOABackingBean extends
 							.getSpecTemplateSpecBean());
 			BigDecimal totalSpecEstimatedAmt = prodAmount.add(servAmount);
 			if (contractAmt.compareTo(totalSpecEstimatedAmt) < 0) {
-				throw new EpException(MessageConst.ERROR_700115, new String[] {
-						totalSpecEstimatedAmt.toString(), contractAmt.toString() });
+			DecimalFormat df = new DecimalFormat("###,###.##");
+			throw new EpException(MessageConst.ERROR_700115, new String[] {
+			df.format(totalSpecEstimatedAmt).toString(),
+					df.format(contractAmt).toString() });
 			}
 		}
 	}
