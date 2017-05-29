@@ -30,20 +30,21 @@
 		
 		
 		<table style="width: 100%">
-			<tr>
-				<td><u><b><h:outputText value="#{cc.attrs.addressTitle}" /></b></u></td>
-				<td>
-					<p:outputPanel rendered="#{cc.attrs.showTick}">
+			<tr><td><u><b><h:outputText value="#{cc.attrs.addressTitle}" /></b></u></td></tr>
+			<p:outputPanel rendered="#{cc.attrs.showTick}">
+				<tr>
+					<td></td>
+					<td style="float: left;">
 						<p:selectBooleanCheckbox
 							value="#{cc.attrs.addrObj.sameAsPerm}">
 							<p:ajax event="change" partialSubmit="true" process="@this"
 								update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
 								oncomplete="blockWidget.hide()"/>
-						</p:selectBooleanCheckbox>&#160;&#160;
-						<h:outputText value="#{cc.attrs.tickLabel}" />
-					</p:outputPanel>&#160;
-				</td>
-			</tr>
+						</p:selectBooleanCheckbox>
+						<p:outputLabel value="#{cc.attrs.tickLabel}" />
+					</td>
+				</tr>
+			</p:outputPanel>
 			<p:outputPanel rendered="#{cc.attrs.addrObj.sameAsPerm}">
 				<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderDuplicatAddrPanelForm.xhtml" />
 			</p:outputPanel>
