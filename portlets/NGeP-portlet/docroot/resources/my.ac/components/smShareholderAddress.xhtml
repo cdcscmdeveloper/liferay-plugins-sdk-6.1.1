@@ -21,6 +21,9 @@
 		<cc:attribute name="cityId" required="true"/>
 		<cc:attribute name="postCodeId" required="true"/>
 		<cc:attribute name="addressType" required="true"/>
+		<cc:attribute name="stateItems" required="true"/>
+		<cc:attribute name="districtItems" required="true"/>
+		<cc:attribute name="cityItems" required="true"/>
 	</cc:interface>
 
 	<cc:implementation>
@@ -142,7 +145,7 @@
 							id="#{cc.attrs.stateId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
-							<f:selectItems value="#{cc.attrs.bBean.managedBean.shrHldrMailStates}" />
+							<f:selectItems value="#{cc.attrs.stateItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
@@ -169,7 +172,7 @@
 							value="#{cc.attrs.addrObj.smAddress.districtId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
-							<f:selectItems value="#{cc.attrs.bBean.managedBean.shrHldrMailDistricts}" />
+							<f:selectItems value="#{cc.attrs.districtItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeDistrict(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.cityId}" />
@@ -194,7 +197,7 @@
 							value="#{cc.attrs.addrObj.smAddress.cityId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
-							<f:selectItems  value="#{cc.attrs.bBean.managedBean.shrHldrMailCities}" />
+							<f:selectItems  value="#{cc.attrs.cityItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeCity(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.cityId}" />
