@@ -521,6 +521,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					.getSmAppl().getApplType(), getManagedBean()
 					.getSmAppl().getApplCategoryType());
 			setPOWeightage(poUser);
+			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
 			
 			log.info("is resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
 			log.info("is resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
