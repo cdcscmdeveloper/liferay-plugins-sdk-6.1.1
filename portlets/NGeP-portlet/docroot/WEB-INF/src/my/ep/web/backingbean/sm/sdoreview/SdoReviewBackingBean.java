@@ -499,7 +499,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	
 	private void setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
 		if(!getManagedBean().getSmAppl().isResubmit()) {
-			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
+			log.info("<<<<<<<<<<not resubmit>>>>>>>>>>");
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 					.getSmAppl().getSupplierType(), getManagedBean()
 					.getSmAppl().getApplType(), getManagedBean()
@@ -509,12 +509,12 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			
 			setPOWeightage(poUser);
 			
-			log.info("is resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
-			log.info("is resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
-			log.info("is resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
+			log.info("not resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
+			log.info("not resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
+			log.info("not resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
 			reqDTO.setPmUser(poUser);
 		}else{
-			log.info("<<<<<<<<<<Not resubmit>>>>>>>>>>");
+			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
 			String loginId = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers().trim();
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOByUserIdAndJobTask(loginId, 
 					getManagedBean().getSmAppl().getSupplierType(), getManagedBean()
@@ -522,9 +522,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					.getSmAppl().getApplCategoryType());
 			setPOWeightage(poUser);
 			
-			log.info("not resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
-			log.info("not resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
-			log.info("not resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
+			log.info("is resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
+			log.info("is resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
+			log.info("is resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
 			reqDTO.setPmUser(poUser);
 		}
 		
