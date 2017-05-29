@@ -72,14 +72,14 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PAYMENT_NAME = "PPAYOFF";
 	public static final String FL_RPT_PHY_CONTRACT_NO = "PPHYCON";
 	public static final String FL_RPT_PHY_LOA_NO = "PPHYLOA";
-	public static final String FL_RPT_CONTRACT_NO = "PCRNO";	
+	public static final String FL_RPT_CONTRACT_NO = "PCONTRACTNO";	
 	public static final String FL_RPT_SUPPL_NAME = "PSUPP";
 	public static final String FL_RPT_MINISTRY = "PMINIS";
 	public static final String FL_RPT_PEGAWAI_PENGAWAI = "PFPP";
 	public static final String FL_RPT_KUMPULAN = "PFJA";
 	public static final String FL_RPT_PTJ_NAME = "PPTJ";
 	public static final String FL_RPT_SST_NO = "PLOA";//loa no
-	public static final String FL_RPT_CONTRACT_REQ_NO = "PCONTRACTNO";
+	public static final String FL_RPT_CONTRACT_REQ_NO = "PCRNO";
 	public static final String FL_RPT_CC_PANEL_NAME = "PPKPNAME";//panel name
 	public static final String FL_RPT_REPORT_ID = "PREPORTID";
 	public static final String FL_RPT_USER_ID = "PUSER";
