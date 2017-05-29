@@ -9,7 +9,7 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td valign="top"><p:outputPanel id="permAddrPan"
+			<td><p:outputPanel id="permAddrPan"
 					layout="block">
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 
@@ -27,7 +27,7 @@
 					addressType="#{SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL}"/>
 					
 				</p:outputPanel></td>
-			<td valign="top"><p:outputPanel id="mailAddrPan"
+			<td><p:outputPanel id="mailAddrPan"
 					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
 					layout="block">
 					
@@ -48,7 +48,7 @@
 				</p:outputPanel></td>
 		</tr>
 		<tr>
-			<td valign="top"><p:outputPanel id="resiAddrPan"
+			<td><p:outputPanel id="resiAddrPan"
 					layout="block"
 					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					
@@ -67,7 +67,7 @@
 					addressType="#{SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL}"/>
 					
 				</p:outputPanel></td>
-			<td valign="top"><p:outputPanel id="offcAddrPan" layout="block"
+			<td><p:outputPanel id="offcAddrPan" layout="block"
 					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 

@@ -31,6 +31,9 @@
 		
 		<table style="width: 100%">
 			<tr><td><u><b><h:outputText value="#{cc.attrs.addressTitle}" /></b></u></td></tr>
+			<p:outputPanel rendered="#{!cc.attrs.showTick}">
+				<tr><td colspan="2">&#160;</td></tr>
+			</p:outputPanel>
 			<p:outputPanel rendered="#{cc.attrs.showTick}">
 				<tr>
 					<td></td>
