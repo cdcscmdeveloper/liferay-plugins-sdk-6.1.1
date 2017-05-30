@@ -1386,12 +1386,9 @@ public class LOADetailBackingBean extends
 							ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 			} 
-			/*StringBuilder sb = new StringBuilder();
-			if(StringUtils.isNotBlank(scLoaReport.getTitle())) {
-				sb.append(scLoaReport.getTitle()).append('_');
-			}
-			sb.append(scLoaReportAttachmentGenerated.getFileName());
-			scLoaReportAttachmentGenerated.setPrefixFileName(sb.toString());*/
+			String prefixName = scLoaReport.getTitle().replaceAll(
+					SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE);
+			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 	        
@@ -1685,7 +1682,7 @@ public class LOADetailBackingBean extends
 		context.put("qtNo", qtNo);
 		
 		// JadualHarga
-		 formJadualHarga(context, scLoa);
+		formJadualHarga(context, scLoa);
 		
 		// Specification
 		formSpecification(context, scLoa);

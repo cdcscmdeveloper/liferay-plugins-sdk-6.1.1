@@ -3713,6 +3713,12 @@ public class LOIDetailBackingBean extends
 				scLoiReportAttachment = generateDocumentAttachment(scLoiReport);
 				scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
 			}
+			StringBuilder sb = new StringBuilder();
+			if(StringUtils.isNotBlank(scLoiReport.getTitle())) {
+				sb.append(scLoiReport.getTitle()).append('_');
+			}
+			sb.append(scLoiReportAttachment.getFileName());
+			scLoiReportAttachment.setTempFileName(sb.toString());
 			scAttachments.add(scLoiReportAttachment);
 		}
 		downloadAllFiles("NGeP-LOI-Report", scAttachments);
