@@ -8,6 +8,11 @@
 
 	<table style="width: 100%;">
 		<tr>
+			<td colspan="4">
+				<h:outputText value="#{mcPoRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
 			</td>
@@ -15,12 +20,12 @@
 				<ac:lov id="searchMinistry"
 					lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ministry']}"
-					disabled="#{crRptBB.disableMinistryLov()}"
-					value="#{crRptBB.managedBean.ministry.orgName}"
-					postUpdateListener="crRptBB.resetPtjGroupProfile()"
+					disabled="#{mcPoRptBB.disableMinistryLov()}"
+					value="#{mcPoRptBB.managedBean.ministry.orgName}"
+					postUpdateListener="mcPoRptBB.resetPtjGroupProfile()"
 					update=":form:searchPtj,:form"
-					saveObject="crRptBB.managedBean.ministry"
-					conditionField="#{crRptBB.getMinistryCondition()}">
+					saveObject="mcPoRptBB.managedBean.ministry"
+					conditionField="#{mcPoRptBB.getMinistryCondition()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -32,12 +37,12 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{crRptBB.disablePtjGroupLov()}"
-					value="#{crRptBB.managedBean.ptjGroup.orgName}"
-					postUpdateListener="crRptBB.resetPtjProfile()"
+					disabled="#{mcPoRptBB.disablePtjGroupLov()}"
+					value="#{mcPoRptBB.managedBean.ptjGroup.orgName}"
+					postUpdateListener="mcPoRptBB.resetPtjProfile()"
 					update=":form:searchPtj,:form"
-					saveObject="crRptBB.managedBean.ptjGroup"
-					conditionField="#{crRptBB.constuctConditionFieldsForPTJGroup()}">
+					saveObject="mcPoRptBB.managedBean.ptjGroup"
+					conditionField="#{mcPoRptBB.constuctConditionFieldsForPTJGroup()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -49,20 +54,19 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{crRptBB.disablePtjLov()}"
-					value="#{crRptBB.managedBean.ptj.orgName}"
-					saveObject="crRptBB.managedBean.ptj"
-					conditionField="#{crRptBB.getPTJCondition()}">
+					disabled="#{mcPoRptBB.disablePtjLov()}"
+					value="#{mcPoRptBB.managedBean.ptj.orgName}"
+					saveObject="mcPoRptBB.managedBean.ptj"
+					conditionField="#{mcPoRptBB.getPTJCondition()}">
 				</ac:lov>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.fl.item.name']}" />
 			</td>
 			<td>
-				<p:inputText value="#{reportBackingBean.flItemName}"
-					style="margin-top:5px;width:290px;">
+				<p:inputText value="#{mcPoRptBB.managedBean.itemName}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -71,7 +75,7 @@
 			</td>
 			<td>
 				<p:inputText maxlength="20"
-					value="#{crRptBB.managedBean.contractNo}">
+					value="#{mcPoRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -83,7 +87,7 @@
 			<td>
 				<p:inputText maxlength="30" id="flphycontractId"
 					label="#{lbl['lbl.fl.physical.contract.no']}"
-					value="#{crRptBB.managedBean.physicalContractNo}">
+					value="#{mcPoRptBB.managedBean.physicalContractNo}">
 				
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 
@@ -98,7 +102,7 @@
 			<td>
 				<p:inputText maxlength="100" id="flphyloaId"
 					label="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"
-					value="#{crRptBB.managedBean.physicalLoaNo}">
+					value="#{mcPoRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
 				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}" /> 
@@ -111,7 +115,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
 			</td>
 			<td>
-				<p:inputText maxlength="20" value="#{crRptBB.managedBean.loaNo}">
+				<p:inputText maxlength="20" value="#{mcPoRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -122,8 +126,8 @@
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
-					value="#{crRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					saveObject="crRptBB.managedBean.selectedOrgProfile" />
+					value="#{mcPoRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="mcPoRptBB.managedBean.selectedOrgProfile" />
 			</td>
 		</tr>
 		<tr>
@@ -131,7 +135,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.approver.name']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{crRptBB.managedBean.approver}">
+				<p:selectOneMenu value="#{mcPoRptBB.managedBean.approver}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
@@ -145,7 +149,7 @@
 				</p:outputLabel> 
 			</td>
 			<td>
-				<p:inputText value="#{poRptBB.managedBean.purchaseOrderNo}">
+				<p:inputText value="#{mcPoRptBB.managedBean.purchaseOrderNo}">
 				<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> 
 			</td>
 		</tr>
@@ -178,8 +182,8 @@
 			</td>
 			<td>
 				<p:selectOneMenu id="statusId"
-					value="#{crRptBB.managedBean.statusDescId}" style="width: 314px;">
-					<f:selectItems value="#{crRptBB.getStatusDropDownValues('CR')}" />
+					value="#{mcPoRptBB.managedBean.statusDescId}" style="width: 314px;">
+					<f:selectItems value="#{mcPoRptBB.getStatusDropDownValues('CO')}" />
 					<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"/>
 				</p:selectOneMenu>
 			</td>
@@ -191,7 +195,7 @@
 			<td>
 				<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
-					value="#{crRptBB.managedBean.fromDate}" size="9"
+					value="#{mcPoRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form" />
 			</td>
@@ -201,11 +205,39 @@
 			<td>
 				<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
-					value="#{crRptBB.managedBean.toDate}" size="9"
+					value="#{mcPoRptBB.managedBean.toDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form">
 				</p:calendar>
 			</td>
 		</tr>
 	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{mcPoRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{mcPoRptBB.managedBean.reportCode}" value="#{mcPoRptBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+		</p:commandButton>
+	</div>
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{mcPoRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float:right;">
+			<table style="width:100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" />
+						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{mcPoRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
 </ui:composition>
