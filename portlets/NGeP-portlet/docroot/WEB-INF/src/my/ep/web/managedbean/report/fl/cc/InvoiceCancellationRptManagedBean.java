@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "invRptManagedBean")
+@ManagedBean(name = "invCancelRptManagedBean")
 @SessionScoped
 public class InvoiceCancellationRptManagedBean extends FlReportManagedBean{
 
