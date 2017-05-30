@@ -9,8 +9,8 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputPanel id="permAddrPan"
-					layout="block">
+			<td valign="top" width="50%">
+				<p:outputPanel id="permAddrPan" layout="block">
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 
 					addressTitle="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode == SupplierManagementConst.NEW_IC 
@@ -48,8 +48,8 @@
 				</p:outputPanel></td>
 		</tr>
 		<tr>
-			<td><p:outputPanel id="resiAddrPan"
-					layout="block"
+			<td valign="top" width="50%">
+				<p:outputPanel id="resiAddrPan" layout="block"
 					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 
