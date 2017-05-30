@@ -3797,6 +3797,12 @@ public class DirectLOABackingBean extends
 							ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 			} 
+			StringBuilder sb = new StringBuilder();
+			if(StringUtils.isNotBlank(scLoaReport.getTitle())) {
+				sb.append(scLoaReport.getTitle()).append('_');
+			}
+			sb.append(scLoaReportAttachmentGenerated.getFileName());
+			scLoaReportAttachmentGenerated.setTempFileName(sb.toString());
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 
