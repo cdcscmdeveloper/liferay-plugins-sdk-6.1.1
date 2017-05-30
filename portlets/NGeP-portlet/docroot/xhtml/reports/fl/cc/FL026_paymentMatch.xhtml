@@ -151,7 +151,7 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td colspan="2"><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+			<td colspan="2"><p:selectOneMenu value="#{pmRptBB.managedBean.group}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
@@ -165,8 +165,12 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.paymentofficername']}"
+						itemValue="#{lbl['lbl.rpt.paymentofficername']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+						itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>

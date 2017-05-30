@@ -70,7 +70,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void onChangeReportName(){
 
 		log.info("onChangeReportName");	
-		resetAction();
 		
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
