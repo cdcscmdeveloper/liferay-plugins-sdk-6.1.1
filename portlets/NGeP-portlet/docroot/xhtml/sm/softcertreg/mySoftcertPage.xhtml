@@ -45,23 +45,23 @@
 		
 		<p:spacer height="2px;" />
 		<div align="right">
-			<h:commandLink disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
+			<h:commandLink disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"
 				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
-					disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"/>
+					disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"/>
 			</h:commandLink>
-			<h:commandLink disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
+			<h:commandLink disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"
 				action="#{softCertBackingBean.changePin}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.change.pin']}" 
-					disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"/>
+					disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"/>
 			</h:commandLink>
-			<h:commandLink disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
+			<h:commandLink disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"
 				action="#{softCertBackingBean.resetPin}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.reset.pin']}" 
-					disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"/>
+					disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"/>
 			</h:commandLink>
 		</div>
 	</p:panel>
