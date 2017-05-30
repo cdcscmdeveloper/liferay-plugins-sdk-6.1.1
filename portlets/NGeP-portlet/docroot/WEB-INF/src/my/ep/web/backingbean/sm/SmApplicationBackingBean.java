@@ -2358,7 +2358,7 @@ public class SmApplicationBackingBean extends
 					rej.setSmAppl(getManagedBean().getSmAppl());
 					resList.add(rej);
 					log.info("Reason Id === " + resId);
-					sb.append(++count).append(".)");
+					sb.append(++count).append(". ");
 					sb.append(desc.getReasonDesc());
 					sb.append("\n");
 				}
