@@ -152,7 +152,7 @@
 				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
 			</td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+			<td><p:selectOneMenu value="#{crRejectRptBB.managedBean.group}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
@@ -160,14 +160,19 @@
 						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
 						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+						itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>

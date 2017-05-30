@@ -142,7 +142,7 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td colspan="2"><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+			<td colspan="2"><p:selectOneMenu value="#{doCancelRptBB.managedBean.group}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
@@ -150,14 +150,16 @@
 						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
 						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+						itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>\
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>

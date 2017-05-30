@@ -187,12 +187,17 @@
 						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+						itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+						itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>
@@ -222,7 +227,7 @@
 			<f:setPropertyActionListener target="#{crRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+			process="@this" update="@form" action="#{crRptBB.resetAction()}">
 		</p:commandButton>
 	</div>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
