@@ -13,10 +13,10 @@
 				<ac:lov id="lovFlMinistry"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
-					value="#{flReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedMinistry"	
-					postUpdateListener="flReportsBackingBean.onChangeMinistry" 
-					conditionField="#{flReportsBackingBean.constructMinistryConditionFields()}" />
+					value="#{mcLdRptBB.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+					saveObject="mcLdRptBB.managedBean.selectedMinistry"	
+					postUpdateListener="mcLdRptBB.onChangeMinistry" 
+					conditionField="#{mcLdRptBB.constructMinistryConditionFields()}" />
 			</td>
 		</tr>
 		<tr>
@@ -25,11 +25,11 @@
 			<td colspan="3"><ac:lov id="lovPpPegaWaiPengawal"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.pp.pegawai.pengawal']}" readonly="true"
-					disabled="#{flReportsBackingBean.managedBean.selectedMinistry==null or flReportsBackingBean.managedBean.disableOrgFields}"
-					value="#{flReportsBackingBean.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedPegawaiPengawal"
-					postUpdateListener="flReportsBackingBean.onChangePegawaiPengawal"
-					conditionField="#{flReportsBackingBean.constructPegwaiPengawalConditionFields()}" /></td>
+					disabled="#{mcLdRptBB.managedBean.selectedMinistry==null or mcLdRptBB.managedBean.disableOrgFields}"
+					value="#{mcLdRptBB.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
+					saveObject="mcLdRptBB.managedBean.selectedPegawaiPengawal"
+					postUpdateListener="mcLdRptBB.onChangePegawaiPengawal"
+					conditionField="#{mcLdRptBB.constructPegwaiPengawalConditionFields()}" /></td>
 
 		</tr>
 		<tr>
@@ -37,11 +37,11 @@
 			<td colspan="3"><ac:lov id="lovPpKumpulanPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.pp.kumpulan.ptj']}" readonly="true"
-					disabled="#{flReportsBackingBean.managedBean.selectedPegawaiPengawal==null or flReportsBackingBean.managedBean.disableOrgFields}"
-					value="#{flReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedKumpulanPTJ"
-					conditionField="#{flReportsBackingBean.constructKumpulanPTJConditionFields()}"
-					postUpdateListener="flReportsBackingBean.onChangeJabatan" /></td>
+					disabled="#{mcLdRptBB.managedBean.selectedPegawaiPengawal==null or mcLdRptBB.managedBean.disableOrgFields}"
+					value="#{mcLdRptBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+					saveObject="mcLdRptBB.managedBean.selectedKumpulanPTJ"
+					conditionField="#{mcLdRptBB.constructKumpulanPTJConditionFields()}"
+					postUpdateListener="mcLdRptBB.onChangeJabatan" /></td>
 
 		</tr>
 		<tr>
@@ -49,10 +49,10 @@
 			<td colspan="3"><ac:lov id="lovPpPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
 					headerText="#{lbl['lbl.pp.ptj']}" update="@form"
-					disabled="#{flReportsBackingBean.managedBean.selectedKumpulanPTJ==null or flReportsBackingBean.managedBean.disableOrgFields}"
-					value="#{flReportsBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
-					saveObject="flReportsBackingBean.managedBean.selectedPTJ"
-					conditionField="#{flReportsBackingBean.constructPTJConditionFields()}" /></td>
+					disabled="#{mcLdRptBB.managedBean.selectedKumpulanPTJ==null or mcLdRptBB.managedBean.disableOrgFields}"
+					value="#{mcLdRptBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+					saveObject="mcLdRptBB.managedBean.selectedPTJ"
+					conditionField="#{mcLdRptBB.constructPTJConditionFields()}" /></td>
 		</tr>
 		<tr>
 			<td>
@@ -60,7 +60,7 @@
 			</td>
 			<td>
 				<p:inputText maxlength="20"
-					value="#{crRptBB.managedBean.contractNo}">
+					value="#{mcLdRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -70,7 +70,7 @@
 			<td>
 				<p:inputText maxlength="30" id="flphycontractId"
 					label="#{lbl['lbl.fl.physical.contract.no']}"
-					value="#{crRptBB.managedBean.physicalContractNo}">
+					value="#{mcLdRptBB.managedBean.physicalContractNo}">
 				
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 
@@ -87,7 +87,7 @@
 			<td>
 				<p:inputText maxlength="100" id="flphyloaId"
 					label="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"
-					value="#{crRptBB.managedBean.physicalLoaNo}">
+					value="#{mcLdRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
 				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}" /> 
@@ -97,7 +97,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
 			</td>
 			<td>
-				<p:inputText maxlength="20" value="#{crRptBB.managedBean.loaNo}">
+				<p:inputText maxlength="20" value="#{mcLdRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -110,8 +110,8 @@
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
-					value="#{crRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					saveObject="crRptBB.managedBean.selectedOrgProfile" />
+					value="#{mcLdRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="mcLdRptBB.managedBean.selectedOrgProfile" />
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}"
@@ -149,7 +149,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{poRptBB.managedBean.purchaseOrderNo}"/>
+				<p:inputText value="#{mcLdRptBB.managedBean.purchaseOrderNo}"/>
 			</td>
 		</tr>
 		
@@ -158,7 +158,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.frn.do.no']}"/>
 			</td>
 			<td>
-				<p:inputText value="#{ldRptBB.managedBean.deliveryOrderNo}">
+				<p:inputText value="#{mcLdRptBB.managedBean.deliveryOrderNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -166,9 +166,10 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierDeliveryOrderNo']}" />
 			</td>
 			<td>
-				<p:inputText maxlength="30"
-					value="#{reportBackingBean.flSupplierDeliveryOrderNo}"
-					style="margin-top:5px;width:290px;">
+				<p:outputLabel value="#{lbl['lbl.fl.do.supp.do.no']}"></p:outputLabel>
+			</td>
+			<td>
+				<p:inputText value="#{mcLdRptBB.managedBean.supplierDoRefNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -206,7 +207,7 @@
 			<td> 
 				<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
-					value="#{crRptBB.managedBean.fromDate}" size="9"
+					value="#{mcLdRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form" />
 			</td>
@@ -216,11 +217,72 @@
 			<td>
 				<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
-					value="#{crRptBB.managedBean.toDate}" size="9"
+					value="#{mcLdRptBB.managedBean.toDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form">
 				</p:calendar>
 			</td>
 		</tr>	
 	</table>
+	
+		
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{mcLdRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{mcLdRptBB.managedBean.reportCode}" value="#{mcLdRptBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+		</p:commandButton>
+	</div>
+	
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{mcLdRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float:right;">
+			<table style="width:100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" />
+						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{mcLdRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
+	
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{mcLdRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{mcLdRptBB.managedBean.reportCode}" value="#{mcLdRptBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+		</p:commandButton>
+	</div>
+
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{mcLdRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float:right;">
+			<table style="width:100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" />
+						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{mcLdRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
 </ui:composition>

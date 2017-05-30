@@ -5,9 +5,11 @@ package my.ep.web.backingbean.report.fl.mc;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -16,14 +18,14 @@ import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
-import my.ep.web.managedbean.report.fl.cc.ContractRequestRptManagedBean;
+import my.ep.web.managedbean.report.fl.mc.ContractRequestRptManagedBean;
 /**
  * Backing Bean for ContractRequestRpt.
  *
- * @author KK LIM
+ * @author Jimmy
  * @since 26/4/2017
  */
-@ManagedBean(name = "crMcRptBB")
+@ManagedBean(name = "mcCrRptBB")
 @SessionScoped
 public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractRequestRptManagedBean> {
 
@@ -52,6 +54,15 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
 		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
+		if(getManagedBean().getMinistry() != null){
+			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
+		}
+		if (getManagedBean().getPtjGroup() != null) {
+			params.put(FlReportConst.FL_RPT_KUMPULAN, getManagedBean().getPtjGroup().getOrgProfileId().toString());
+		}
+		if (getManagedBean().getPtj() != null) {
+			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgProfileId().toString());
+		}
 		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_NO, getManagedBean().getContractNo());
 		}
@@ -70,15 +81,29 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		if (StringUtils.isNotBlank(getManagedBean().getLoaNo())) {
 			params.put(FlReportConst.FL_RPT_SST_NO, getManagedBean().getLoaNo());
 		}
-		if (StringUtils.isNotBlank(getManagedBean().getLoaNo())) {
-			params.put(FlReportConst.FL_RPT_SST_NO, getManagedBean().getLoaNo());
-		}
 		if (StringUtils.isNotBlank(getManagedBean().getPkpNo())) {
 			params.put(FlReportConst.FL_RPT_TREASURY_CIRCULAR, getManagedBean().getPkpNo());
 		}
-		
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(getManagedBean().getRequisitioner() != null){
+			params.put(FlReportConst.FL_RPT_REQUI_NAME, getManagedBean().getRequisitioner());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
 		generateFlReport(params);
-		
+	}
+	
+	public List<SelectItem> retrieveRequisitionerList(){
+		if(getManagedBean().getPtjGroup() != null){
+			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+		}
+		return null;
 	}
 	
 	
