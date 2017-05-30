@@ -720,6 +720,27 @@ public class ApprovalBackingBean extends
 				.getAction(), digiSign);
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
+			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
+					.getManagedBean().getApprovalType())) {
+				log.info("Publication Approval executed");
+				FacesContext
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								MessageUtils
+										.getMessage(
+												MessageConst.INFO_700069,
+												new String[] {
+														getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
+														qt.getQtNo() },
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes()
+														.getUserLocale())));
+			}else{
+				log.info("Other Approval executed");
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -740,6 +761,7 @@ public class ApprovalBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
+			}
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
 		return null;
