@@ -183,6 +183,65 @@
 					test="#{FlReportConst.fl054StopInstBySupplier == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL054_stopInstBySupplier.xhtml"></ui:include>
 				</c:when>
+				
+			<!-- Purchase Order -->
+				
+				<c:when
+					test="#{FlReportConst.fl034PurchaseRequest == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl034_purchaseRequest.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl035PurchaseOrder == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl035_purchaseOrder.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl038PurchaseDelivery == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl038_purchaseDelivery.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl039PurchaseFulRecNote == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl039_purchaseFulRecNote.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl040PurchaseLateDelivery == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl040_purchaseLateDelivery.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl043PurchaseInvPtj == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl043_purchaseInvPtj.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl044PurchasePaymentMatch == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl044_purchasePaymentMatch.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl045PurchaseReqRejection == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl045_purchaseReqRejection.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl046PurchaseOrderCancel == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl046_purchaseOrderCancel.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl047PurchaseDeliOrdCancel == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl047_purchaseDeliOrdCancel.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl048PurchaseFulfiNoteCancel == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl048_purchaseFulfiNoteCancel.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl049PurchaseInvoiceCancel == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl049_purchaseInvoiceCancel.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl052PurchaseStopInstrPtj == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl052_purchaseStopInstrPtj.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl055PurchaseStopInstrSupp == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl055_purchaseStopInstrSupp.xhtml"></ui:include>
+				</c:when>
 				<c:otherwise>
         			ERROR!
     
