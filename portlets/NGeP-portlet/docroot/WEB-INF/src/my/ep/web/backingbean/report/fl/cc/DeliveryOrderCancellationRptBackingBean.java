@@ -83,7 +83,7 @@ public class DeliveryOrderCancellationRptBackingBean extends FlReportBackingBean
 			params.put(FlReportConst.FL_RPT_TREASURY_CIRCULAR, getManagedBean().getPkpNo());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getDeliveryOrderNo())) {
-			params.put(FlReportConst.FL_RPT_SUP_DELI_ORD_NO, getManagedBean().getDeliveryOrderNo());
+			params.put(FlReportConst.FL_RPT_DELI_ORD_NO, getManagedBean().getDeliveryOrderNo());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getSupplierDoRefNo())) {
 			params.put(FlReportConst.FL_RPT_SUP_DELI_ORD_NO, getManagedBean().getSupplierDoRefNo());
