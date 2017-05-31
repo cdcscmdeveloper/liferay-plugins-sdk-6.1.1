@@ -75,6 +75,18 @@ public class PurStopInstPtjRptBackingBean extends FlReportBackingBean<PurStopIns
 		if (StringUtils.isNotBlank(getManagedBean().getSiNo())) {
 			params.put(FlReportConst.FL_RPT_STOP_INSTR_NO, getManagedBean().getSiNo());
 		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(getManagedBean().getApprover() != null){
+			params.put(FlReportConst.FL_RPT_APPROVER_NAME, getManagedBean().getApprover());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
 		
 		generateFlReport(params);
 		
