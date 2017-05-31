@@ -37,13 +37,12 @@
 				return this.runEnableAutoUpdate;
 			}
 		</script>
-		<p:remoteCommand name="resetQuestion"
-			id="resetQuestion"
-			action="#{spkiBackingBean.clearInput}"
-			update="spkiPanel"></p:remoteCommand>
+		<p:remoteCommand name="resetQuestion" id="resetQuestion"
+			action="#{spkiBackingBean.clearInput}" update="spkiPanel"></p:remoteCommand>
 
 
-		<p:dialog id="spki_dlg_id" header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg" onShow="resetQuestion();" resizable="false"
+		<p:dialog id="spki_dlg_id" header="#{lbl['lbl.cc.spki.title']}"
+			widgetVar="spki_dlg" onShow="resetQuestion();" resizable="false"
 			modal="true">
 
 			<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}"
@@ -57,18 +56,31 @@
 			<p:panel id="spkiPopup">
 				<span id="#{cc.clientId}"> <p:messages id="dlgMessages"
 						showDetail="true" escape="false" autoUpdate="true" closable="true" />
-					<h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
-						<h:outputLabel style="white-space: normal;"
-							value="#{cc.attrs.challengeQues1}" />
-						<p:inputText value="#{cc.attrs.challengeAns1}" />
 
-						<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-						<p:password id="password" value="#{cc.attrs.password}" />
-						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}"
-							onstart="spkiBlockWidget.show(); setRunEnableAutoUpdate(false);"
-							action="#{spkiBackingBean.spkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"
-							oncomplete="spkiBlockWidget.hide();" />
-					</h:panelGrid>
+					<h:panelGroup id="spkiPanel">
+		
+						<h:panelGrid columns="2" cellpadding="3">
+							<h:outputLabel style="white-space: normal;"
+								value="#{cc.attrs.challengeQues1}" />
+							<p:inputText value="#{cc.attrs.challengeAns1}" />
+
+							<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
+							<p:password id="password" value="#{cc.attrs.password}" />
+
+						</h:panelGrid>
+
+						<table style="width: 100%">
+							<tr>
+								<td><p:commandButton id="spkiSign"
+										value="#{lbl['lbl.btn.sign']}"
+										onstart="spkiBlockWidget.show(); setRunEnableAutoUpdate(false);"
+										action="#{spkiBackingBean.spkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"
+										oncomplete="spkiBlockWidget.hide();" /> 
+										<p:commandButton action="#{spkiBackingBean.getChallengeQuestions()}" update="spkiPopup"
+										value="#{lbl['lbl.btn.change.question']}" onclick="resetQuestion();"/></td>
+							</tr>
+						</table>
+					</h:panelGroup>
 				</span>
 			</p:panel>
 		</p:dialog>
