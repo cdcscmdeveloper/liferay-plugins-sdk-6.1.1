@@ -149,7 +149,7 @@
 								itemValue="#{pmuser.userId}" />
 							<p:ajax event="change"
 								listener="#{lOADetailBackingBean.supplierContractSignerEvent()}"
-								partialSubmit="true" process="@this" update="@this" />
+								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel" />
 						</p:selectOneMenu>
 						<p:message id="supplierContractSignerMsg" for="supplierContractSigner"
 							display="icon" />
