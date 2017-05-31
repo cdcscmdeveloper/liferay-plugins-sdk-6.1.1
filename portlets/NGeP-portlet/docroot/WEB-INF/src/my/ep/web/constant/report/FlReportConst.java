@@ -50,6 +50,20 @@ public class FlReportConst implements Serializable {
 	
 	// Purchase Order Const
 	
+	public static final String FL_034_PURCHASE_REQUEST = "FL_034";
+	public static final String FL_035_PURCHASE_ORDER = "FL_035";
+	public static final String FL_038_PURCHASE_DELIVERY = "FL_038";
+	public static final String FL_039_PURCHASE_FUL_REC_NOTE = "FL_039";
+	public static final String FL_040_PURCHASE_LATE_DELIVERY = "FL_040";
+	public static final String FL_043_PURCHASE_INV_PTJ = "FL_043";
+	public static final String FL_044_PURCHASE_PAYMENT_MATCH = "FL_044";
+	public static final String FL_045_PURCHASE_REQ_REJECTION = "FL_045";
+	public static final String FL_046_PURCHASE_ORDER_CANCEL = "FL_046";
+	public static final String FL_047_PURCHASE_DELI_ORD_CANCEL = "FL_047";
+	public static final String FL_048_PURCHASE_FULFI_NOTE_CANCEL = "FL_048";
+	public static final String FL_049_PURCHASE_INVOICE_CANCEL = "FL_049";
+	public static final String FL_052_PURCHASE_STOP_INSTR_PTJ = "FL_052";
+	public static final String FL_055_PURCHASE_STOP_INSTR_SUPP = "FL_055";
 	
 	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
 	public static final String FL_RPT_TO_DATE = "PTODATE";
@@ -90,6 +104,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_ITM_NAME = "PITEM";
 	public static final String FL_RPT_DOC_TYPE = "PDOCTYPE";
 	public static final String FL_RPT_GROUP_BY = "PGROUP"; 
+	public static final String FL_RPT_PURCHASE_REQUEST = "PPRNO";
 	
 	public FlReportConst(){}
 
@@ -208,5 +223,62 @@ public class FlReportConst implements Serializable {
 	public String getFl054StopInstBySupplier() {
 		return FL_054_STOP_INST_BY_SUPPLIER;
 	}
+		
+	public String getFl034PurchaseRequest() {
+		return FL_034_PURCHASE_REQUEST;
+	}
+
+	public String getFl035PurchaseOrder() {
+		return FL_035_PURCHASE_ORDER;
+	}
+
+	public String getFl038PurchaseDelivery() {
+		return FL_038_PURCHASE_DELIVERY;
+	}
+
+	public String getFl039PurchaseFulRecNote() {
+		return FL_039_PURCHASE_FUL_REC_NOTE;
+	}
+
+	public String getFl040PurchaseLateDelivery() {
+		return FL_040_PURCHASE_LATE_DELIVERY;
+	}
+
+	public String getFl043PurchaseInvPtj() {
+		return FL_043_PURCHASE_INV_PTJ;
+	}
+
+	public String getFl044PurchasePaymentMatch() {
+		return FL_044_PURCHASE_PAYMENT_MATCH;
+	}
+
+	public String getFl045PurchaseReqRejection() {
+		return FL_045_PURCHASE_REQ_REJECTION;
+	}
+
+	public String getFl046PurchaseOrderCancel() {
+		return FL_046_PURCHASE_ORDER_CANCEL;
+	}
+
+	public String getFl047PurchaseDeliOrdCancel() {
+		return FL_047_PURCHASE_DELI_ORD_CANCEL;
+	}
+
+	public String getFl048PurchaseFulfiNoteCancel() {
+		return FL_048_PURCHASE_FULFI_NOTE_CANCEL;
+	}
+
+	public String getFl049PurchaseInvoiceCancel() {
+		return FL_049_PURCHASE_INVOICE_CANCEL;
+	}
+
+	public String getFl052PurchaseStopInstrPtj() {
+		return FL_052_PURCHASE_STOP_INSTR_PTJ;
+	}
+
+	public String getFl055PurchaseStopInstrSupp() {
+		return FL_055_PURCHASE_STOP_INSTR_SUPP;
+	}
+
 
  }
