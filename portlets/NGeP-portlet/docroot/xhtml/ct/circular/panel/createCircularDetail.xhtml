@@ -68,7 +68,7 @@
 		         	          <p:message for="popupButtonCal1" display="icon" />
 		         	       </h:panelGrid>	
 
-				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" 
+				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required"
 				             rendered="#{(panelBackingBean.managedBean.circularVer.circularFilePath == null and !panelBackingBean.managedBean.viewContract) 
 				  or (panelBackingBean.managedBean.circularVer.circularFilePath != null and !panelBackingBean.managedBean.viewContract)
 				  or (panelBackingBean.managedBean.circularVer.circularFilePath != null and panelBackingBean.managedBean.viewContract)}" />
@@ -89,7 +89,7 @@
 			  	            </h:panelGroup>
 			 </h:panelGrid>
 		<h:panelGrid  style="width:400px; margin-left:5px" columns="2" id="panelleftsideid" columnClasses="columnWidth170">
-		              <p:outputLabel value="#{lbl['lbl.ct.panel.pm']}"/>
+		              <p:outputLabel value="#{lbl['lbl.ct.panel.pm']}" styleClass="required"/>
 			        <h:panelGrid columns="3">
 			            <p:selectBooleanCheckbox  disabled="#{panelBackingBean.managedBean.viewContract}"
 			                  value="#{panelBackingBean.managedBean.circularVer.directNego}" style="text-align:top;"  > 

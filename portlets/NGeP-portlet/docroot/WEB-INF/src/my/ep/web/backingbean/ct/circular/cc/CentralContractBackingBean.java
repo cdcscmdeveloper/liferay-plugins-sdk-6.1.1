@@ -62,7 +62,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -86,8 +85,6 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -116,7 +113,6 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -632,13 +628,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * This method used to validate central circular details
 	 */
 	public void validateCircular(String outcome) {
-		IQTAwardSO qtAwardSO = null;
-		 IContractSO contractSO = null;
+		/*IQTAwardSO qtAwardSO = null;
+		 IContractSO contractSO = null;*/
 		 try {
-		        qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
+		   /*     qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
 		        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		        getManagedBean().setAutoUpdate(true);
+		*/        getManagedBean().setAutoUpdate(true);
 	
+		        if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+		        		 && (getManagedBean().getCircularVer().getCircularFileName() == null || getManagedBean().getCircularVer().getCircularFileName().isEmpty()) ){
+		        	throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		        }
 		        //Validation for PID
 		        if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
 		        		(getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
@@ -742,11 +743,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 //		        		}
 //		        	}
 //		        }
+		 }finally{
+			 
 		 }
-		 finally {
-			 qtAwardSO = null;
-			 contractSO = null;
-	  	}
 	}
 
 	 /**

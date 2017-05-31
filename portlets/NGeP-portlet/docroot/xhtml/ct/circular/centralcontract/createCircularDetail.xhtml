@@ -83,7 +83,7 @@
 			  	  
 			  	  <f:verbatim/>	  <f:verbatim/>
 				 
-				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}"
+				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required"
 				  rendered="#{(centralContractBackingBean.managedBean.circularVer.circularFilePath == null and !centralContractBackingBean.managedBean.viewContract) 
 				  or (centralContractBackingBean.managedBean.circularVer.circularFilePath != null and !centralContractBackingBean.managedBean.viewContract)
 				  or (centralContractBackingBean.managedBean.circularVer.circularFilePath != null and centralContractBackingBean.managedBean.viewContract)}" />

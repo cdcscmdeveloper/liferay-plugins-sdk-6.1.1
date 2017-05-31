@@ -646,22 +646,28 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		getManagedBean().setAutoUpdate(true);
 
 		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-			if(!getManagedBean().getCircularVer().isDirectPurchase() 
-					&& !getManagedBean().getCircularVer().isDirectNego()
-					&& !getManagedBean().getCircularVer().isQt()){
-				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_750019);
-			}
-		}
+				if(!getManagedBean().getCircularVer().isDirectPurchase() 
+						&& !getManagedBean().getCircularVer().isDirectNego()
+						&& !getManagedBean().getCircularVer().isQt()){
+						getManagedBean().setSelectedTabIndex(0);
+						throw new EpException(MessageConst.ERROR_750019);
+				}
+			
+				if(getManagedBean().getCircularVer().getCircularFileName() == null
+					 || getManagedBean().getCircularVer().getCircularFileName().isEmpty()){
+				 		throw new EpException(MessageConst.ERROR_100022, 
+				 				new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
+				 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
 
-		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
-				&& getManagedBean().getCircularVer().isPid() && 
-				(getManagedBean().getCircularVer().getCtCircularPidReason() == null 
-				|| getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
-			getManagedBean().setSelectedTabIndex(0);
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+				if(getManagedBean().getCircularVer().isPid() && 
+						(getManagedBean().getCircularVer().getCtCircularPidReason() == null 
+						|| getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
 		}
 
 		if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
