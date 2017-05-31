@@ -16,6 +16,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -26,7 +27,6 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -101,27 +101,9 @@ public class SmBulkApplicationBackingBean extends
 		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
 
 			try {
-				// approve SME Status
-				SmApplicationUtil.setSmeStatus(bulkAppl.getAppl());
 
-				if (bulkAppl.getApprovedStatusId() != null) {
-					// approve status
-					PmStatus regStatus = SmCommonUtil.getInstance()
-							.retrievePmStatusById(
-									bulkAppl.getApprovedStatusId());
-					if (regStatus != null && regStatus.getPmRegStatus() != null) {
-						bulkAppl.getAppl().setPmStatus(regStatus);
-						bulkAppl.getAppl().setPmRegStatus(
-								regStatus.getPmRegStatus());
-						bulkAppl.getAppl()
-								.getSmSupplier()
-								.setBumi(
-										regStatus.getPmRegStatus().isBumiAppl());
-						bulkAppl.getAppl().setBumi(
-								bulkAppl.getAppl().getSmSupplier().isBumi());
-					}
-
-				}
+				SmApplicationUtil.setApplicationApproveStatus(
+						bulkAppl.getAppl(), bulkAppl.getApprovedStatusId());
 
 				// approve categories
 				SmApplicationUtil.approveApplCategories(true, false,
@@ -640,6 +622,7 @@ public class SmBulkApplicationBackingBean extends
 					sb.append(companyName);
 					sb.append(" ) ");
 				}
+
 				worklistItemVO.setTitle(sb.toString());
 				bulkApplicationVO = new SmBulkApplicationVO();
 				bulkApplicationVO.setTaskId(worklistItemVO.getTaskId());
@@ -659,6 +642,21 @@ public class SmBulkApplicationBackingBean extends
 								.getMessage("lbl.sm.bulk.approve", null)
 								: SmCommonUtil.getMessage("lbl.sm.bulk.reject",
 										null));
+				if (poRev.getPmRegStatus() != null
+						&& poRev.getPmRegStatus().getPmStatus() != null) {
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(poRev.getPmRegStatus()
+							.getPmStatus().getStatusId());
+					statusReqDTO.setLanguageCode(new FacesScopes()
+							.getUserLocale().getLanguage());
+					PmStatusDesc statusDesc = SmServiceLookup.getStatusSO()
+							.retrieveStatusDescById(statusReqDTO)
+							.getPmStatusDesc();
+					if (statusDesc != null) {
+						bulkApplicationVO.setPoRecommendStatus(statusDesc
+								.getStatusName());
+					}
+				}
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
 								appl.getSupplierType(), appl.getApplType()));

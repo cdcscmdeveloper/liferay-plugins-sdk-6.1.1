@@ -35,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -479,9 +480,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String popupAction;
 	private String rejectReasonsMsg;
 	private String applDeclarationAlertMsg;
+	private String poRecommendationDesc;
 	private SmApplInquiry poToSupplierInquiry;
 	private List<SmApplInquiry> poSupplierInquiryHistory;
 	private Long approvedStatusId;
+	private Long poRecommendStatusId;
 
 	private BigDecimal currBumiEquity;
 	private BigDecimal currNonBumiEquity;
@@ -3937,5 +3940,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setOverlapCategoryVOList(
 			List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
 		this.overlapCategoryVOList = overlapCategoryVOList;
+	}
+
+	public Long getPoRecommendStatusId() {
+		return poRecommendStatusId;
+	}
+
+	public void setPoRecommendStatusId(Long poRecommendStatusId) {
+		this.poRecommendStatusId = poRecommendStatusId;
+	}
+
+	public String getPoRecommendationDesc() {
+		return poRecommendationDesc;
+	}
+
+	public void setPoRecommendationDesc(String poRecommendationDesc) {
+		this.poRecommendationDesc = poRecommendationDesc;
 	}
 }
