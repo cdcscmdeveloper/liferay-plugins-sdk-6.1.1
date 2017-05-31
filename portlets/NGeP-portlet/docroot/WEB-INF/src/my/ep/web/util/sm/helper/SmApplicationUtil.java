@@ -117,6 +117,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -2958,14 +2959,14 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		boolean isAtLeastOneCatApproved = false;
 		boolean isPendingApprovedCatExist = false;
-		
+
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0
 					|| cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-				
+
 				isPendingApprovedCatExist = true;
 
 				if (managedBean.isPoUser() && cat.getPoDecFlg() == null) {
@@ -11542,6 +11543,44 @@ public class SmApplicationUtil {
 						.getNewCatEffectiveMonth());
 			}
 			cat.setCategoryEffDate(c.getTime());
+		}
+	}
+
+	/**
+	 * Set SME status and application registration status
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @param Long
+	 *            approveStatusId
+	 */
+	public static void setApplicationApproveStatus(SmAppl smAppl,
+			Long approveStatusId) {
+		// approve SME Status
+		SmApplicationUtil.setSmeStatus(smAppl);
+
+		SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
+				.getEntityBySinglePropertyFromList(
+						SupplierManagementConst.SECTION_REV_ROLE_PO,
+						smAppl.getSmApplSectionReviews(), "roleType");
+
+		PmRegStatus regStatus = null;
+		if (poRev != null && poRev.getPmRegStatus() != null) {
+			regStatus = poRev.getPmRegStatus();
+		} else {
+			if (approveStatusId != null) {
+				// approve status
+				PmStatus status = SmCommonUtil.getInstance()
+						.retrievePmStatusById(approveStatusId);
+				regStatus = status.getPmRegStatus();
+			}
+		}
+
+		if (regStatus != null) {
+			smAppl.setPmStatus(regStatus.getPmStatus());
+			smAppl.setPmRegStatus(regStatus);
+			smAppl.getSmSupplier().setBumi(regStatus.isBumiAppl());
+			smAppl.setBumi(smAppl.getSmSupplier().isBumi());
 		}
 	}
 
