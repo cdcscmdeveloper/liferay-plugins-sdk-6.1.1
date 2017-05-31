@@ -85,6 +85,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -144,6 +145,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -7794,24 +7796,8 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 			} else {
 
-				// set SME Status
-				SmApplicationUtil.setSmeStatus(getManagedBean().getSmAppl());
-
-				if (pmStatId != null) {
-					// Load PmRegStatus
-					PmStatus regStatus = SmCommonUtil.getInstance()
-							.retrievePmStatusById(pmStatId);
-					if (regStatus != null && regStatus.getPmRegStatus() != null) {
-						getManagedBean().getSmAppl().setPmStatus(regStatus);
-						getManagedBean().getSmAppl().setPmRegStatus(
-								regStatus.getPmRegStatus());
-						getManagedBean().getSmSupplier().setBumi(
-								regStatus.getPmRegStatus().isBumiAppl());
-						getManagedBean().getSmAppl().setBumi(
-								getManagedBean().getSmSupplier().isBumi());
-					}
-
-				}
+				SmApplicationUtil.setApplicationApproveStatus(getManagedBean()
+						.getSmAppl(), pmStatId);
 				reqDTO.setPaymentReqd(SmApplicationUtil
 						.getPaymentMode(getManagedBean().getSmAppl()));
 			}
@@ -7912,10 +7898,18 @@ public class SmApplicationBackingBean extends
 									.getRecommendation().equals("APPROVE")) {
 						statusDesc = SmCommonUtil.getMessage(
 								"lbl.sm.approval.lowercaps", null);
+						// set po recommendation registration status
+						PmStatus status = PmCommonUtil
+								.getPmStatusById(getManagedBean()
+										.getPoRecommendStatusId());
+						getManagedBean().getPoSecReview().setPmRegStatus(
+								status.getPmRegStatus());
+						setPoOrApprvrSectionReview();
 					} else {
 						statusDesc = SmCommonUtil.getMessage(
 								"lbl.sm.rejected.lowercaps", null);
 					}
+
 					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
 					successMsg = SmCommonUtil.getOutputMsgBundle(
 							MessageConst.INFO_700014,
@@ -7964,7 +7958,7 @@ public class SmApplicationBackingBean extends
 					reqDTO.setApproverLoginIds(approverLoginIds);
 				}
 
-				reqSO.submitPOorApproverReviewToBPM(reqDTO);
+				// reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -9025,6 +9019,21 @@ public class SmApplicationBackingBean extends
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						getManagedBean().setPoSecReview(rev);
+					}
+					if (rev.getPmRegStatus() != null
+							&& rev.getPmRegStatus().getPmStatus() != null) {
+						StatusReqDTO statusReqDTO = new StatusReqDTO();
+						statusReqDTO.setStatusId(rev.getPmRegStatus()
+								.getPmStatus().getStatusId());
+						statusReqDTO.setLanguageCode(new FacesScopes()
+								.getUserLocale().getLanguage());
+						PmStatusDesc statusDesc = SmServiceLookup.getStatusSO()
+								.retrieveStatusDescById(statusReqDTO)
+								.getPmStatusDesc();
+						if (statusDesc != null) {
+							getManagedBean().setPoRecommendationDesc(
+									statusDesc.getStatusName());
+						}
 					}
 				}
 			} else if (getManagedBean().isPoUser()
