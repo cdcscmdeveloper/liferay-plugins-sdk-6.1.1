@@ -71,11 +71,20 @@ public class PurchaseDeliveryRptBackingBean extends FlReportBackingBean<Purchase
 		if (StringUtils.isNotBlank(getManagedBean().getPkpNo())) {
 			params.put(FlReportConst.FL_RPT_TREASURY_CIRCULAR, getManagedBean().getPkpNo());
 		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
 		if (StringUtils.isNotBlank(getManagedBean().getDeliveryOrderNo())) {
 			params.put(FlReportConst.FL_RPT_DELI_ORD_NO, getManagedBean().getDeliveryOrderNo());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getSupplierDoRefNo())) {
 			params.put(FlReportConst.FL_RPT_SUP_DELI_ORD_NO, getManagedBean().getSupplierDoRefNo());
+		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
 		
 		generateFlReport(params);

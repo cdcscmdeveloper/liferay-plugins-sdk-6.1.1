@@ -78,6 +78,18 @@ public class PurLateDeliveryRptBackingBean extends FlReportBackingBean<PurLateDe
 		if (StringUtils.isNotBlank(getManagedBean().getSupplierDoRefNo())) {
 			params.put(FlReportConst.FL_RPT_SUP_DELI_ORD_NO, getManagedBean().getSupplierDoRefNo());
 		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(getManagedBean().getReceivingOfficer() != null){
+			params.put(FlReportConst.FL_RPT_REC_OFF, getManagedBean().getReceivingOfficer());
+		}
+		if(getManagedBean().getAcknowledgeOfficer() != null){
+			params.put(FlReportConst.FL_RPT_ACKNOWLEDGE_NAME, getManagedBean().getAcknowledgeOfficer());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
 		
 		generateFlReport(params);
 		
