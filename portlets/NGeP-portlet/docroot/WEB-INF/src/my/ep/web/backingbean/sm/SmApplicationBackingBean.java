@@ -612,16 +612,13 @@ public class SmApplicationBackingBean extends
 
 		try {
 			if (appl != null && appl.getApplId() != null) {
-				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-				mofResDto = SmApplicationUtil.retriveApplicationById(appl
-						.getApplId().intValue());
-				appl = mofResDto.getSmAppl();
-				SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
-				suppSearchReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-						.getSupplierId());
-				supplierProfile = SmServiceLookup.getSupplierSearchSO()
-						.retriveSupplierInfoById(suppSearchReqDTO)
-						.getSmSupplier();
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setApplId(appl.getApplId());
+				MofRegistrationResDTO resDTO = SmServiceLookup
+						.getMofRegistrationSO().retrieveCurrentDraftApplication(
+								reqDTO);
+				appl = resDTO.getSmAppl();
+				supplierProfile = appl.getSmSupplier();
 			}
 		} finally {
 		}
@@ -7958,7 +7955,7 @@ public class SmApplicationBackingBean extends
 					reqDTO.setApproverLoginIds(approverLoginIds);
 				}
 
-				// reqSO.submitPOorApproverReviewToBPM(reqDTO);
+				reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
