@@ -75,6 +75,21 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 		if (StringUtils.isNotBlank(getManagedBean().getPkpNo())) {
 			params.put(FlReportConst.FL_RPT_TREASURY_CIRCULAR, getManagedBean().getPkpNo());
 		}
+		if(getManagedBean().getStatusDescId() != null){
+			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
+		}
+		if(getManagedBean().getSelectedOrgProfile() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		}
+		if(getManagedBean().getReceivingOfficer() != null){
+			params.put(FlReportConst.FL_RPT_REC_OFF, getManagedBean().getReceivingOfficer());
+		}
+		if(getManagedBean().getAcknowledgeOfficer() != null){
+			params.put(FlReportConst.FL_RPT_ACKNOWLEDGE_NAME, getManagedBean().getAcknowledgeOfficer());
+		}
 		
 		generateFlReport(params);
 		
