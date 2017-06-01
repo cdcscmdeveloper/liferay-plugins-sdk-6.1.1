@@ -45,23 +45,23 @@
 		
 		<p:spacer height="2px;" />
 		<div align="right">
-			<h:commandLink disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
 				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
-					disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"/>
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
 			</h:commandLink>
-			<h:commandLink disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
 				action="#{softCertBackingBean.changePin}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.change.pin']}" 
-					disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"/>
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
 			</h:commandLink>
-			<h:commandLink disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
 				action="#{softCertBackingBean.resetPin}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.reset.pin']}" 
-					disabled="#{empty softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}"/>
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
 			</h:commandLink>
 		</div>
 	</p:panel>
