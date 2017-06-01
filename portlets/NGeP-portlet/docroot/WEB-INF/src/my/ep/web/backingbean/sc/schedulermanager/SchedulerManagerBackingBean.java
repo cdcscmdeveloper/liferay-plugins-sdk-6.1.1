@@ -62,6 +62,8 @@ public class SchedulerManagerBackingBean extends
 		JobKey tmpJobKey = null;
 		// loop jobs by group
 		try {
+			String allJob = SmCommonUtil.getMessage(
+					"lbl.quartz.select.job.all", null);
 			String jobAction = "";
 			String jobState = "";
 			Trigger trigger = null;
@@ -69,14 +71,17 @@ public class SchedulerManagerBackingBean extends
 			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
 			getManagedBean().setEpSchedulerProblemJobList(
 					new ArrayList<EpJobVO>());
-			getManagedBean().setJobGroups(
+			getManagedBean().setJobGroups(new ArrayList<String>());
+			getManagedBean().getJobGroups().add(allJob);
+			getManagedBean().getJobGroups().addAll(
 					EpSchedulerHelper.getScheduler().getJobGroupNames());
 
 			for (String groupName : EpSchedulerHelper.getScheduler()
 					.getJobGroupNames()) {
 
 				// set search by group
-				if (!StringUtils.isBlank(getManagedBean().getJobGroup())) {
+				if (!StringUtils.isBlank(getManagedBean().getJobGroup())
+						&& !getManagedBean().getJobGroup().equalsIgnoreCase(allJob)) {
 					groupName = getManagedBean().getJobGroup();
 				}
 
@@ -398,6 +403,20 @@ public class SchedulerManagerBackingBean extends
 		getManagedBean().getSelectedJobVO().setCronExpressionDescription(
 				constructExpression(getManagedBean().getSelectedJobVO()
 						.getCronExpression()));
+	}
+
+	public List<String> autoCompleteJobGroup(String query) {
+		List<String> filteredList = new ArrayList<String>();
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getJobGroups())) {
+			for (String job : getManagedBean().getJobGroups()) {
+				query = query.toUpperCase();
+				job = job.toUpperCase();
+				if (job.contains(query)) {
+					filteredList.add(job);
+				}
+			}
+		}
+		return filteredList;
 	}
 
 	private String getJobStatus(JobKey jobKey) {

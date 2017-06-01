@@ -33,16 +33,17 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.quartz.filter.by.job.group']}" /></td>
 					<td>
-						<p:selectOneMenu style="width: 250px;margin-bottom: 5px;"
-							id="jobGroupId" label="#{lbl['lbl.quartz.job.group']}"
-							value="#{schedulerManagerBB.managedBean.jobGroup}">
-							<f:selectItem itemLabel="#{lbl['lbl.quartz.select.job.all']}" itemValue="" />
-							<f:selectItems value="#{schedulerManagerBB.managedBean.jobGroups}" />
-							<p:ajax event="change" process="@this" 
+						<p:autoComplete id="jobGroupId" scrollHeight="250"
+							label="#{lbl['lbl.quartz.job.group']}" 
+							style="width: 207px;margin-bottom: 5px;"
+							value="#{schedulerManagerBB.managedBean.jobGroup}" 
+							completeMethod="#{schedulerManagerBB.autoCompleteJobGroup}"
+							dropdown="true" forceSelection="true">
+							<p:ajax event="itemSelect" process="@this" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								listener="#{schedulerManagerBB.initAllJobs}"
 								update="@form" />
-						</p:selectOneMenu>
+	                    </p:autoComplete>
 					</td>
 				</tr>
 			</table><br />
