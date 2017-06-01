@@ -223,13 +223,14 @@
                  <p:selectOneMenu id="ptjId" style="width:430px"
                       value="#{agreementBackingBean.managedBean.ptjProfileId}" >
             	   <f:selectItems value="#{agreementBackingBean.getPtjDropdown()}"/>
-            	    <p:ajax event="change"/>
+            	        <p:ajax event="change"  update=":form:selectAgencySignerId" process="@this"/>
                  </p:selectOneMenu>
                 </h:panelGrid>
                  <div class="ppRightBtn">
-       		        <p:commandButton id="selectAgencySignerId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
+       		        <p:commandButton id="selectAgencySignerId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" 
+       		        update=":form:AgSignerTable" 
 				    action="#{agreementBackingBean.addAgencySignerDetails}"  onclick="dlgAgencySigner.hide();"
-				     disabled="#{agreementBackingBean.managedBean.buttonHideActive}" />
+				     disabled="#{empty  agreementBackingBean.managedBean.ptjProfileId}" />
 				     <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" process="@this" onclick="dlgAgencySigner.hide();" />
 		       </div>
              </h:panelGroup>
