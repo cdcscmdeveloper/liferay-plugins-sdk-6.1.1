@@ -167,11 +167,6 @@ public class SelfRequestSupplierAdminBackingBean extends
 				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !getManagedBean()
 				.getSupplier().getSmAppl().getSmCompanyBasic().isWithFederal())) ? false
 				: true;
-
-		log.info(">>>>>>>>>>>>>>>>>>SELF REQUEST IS SOFTCERT CATALOGUE REQD ("
-				+ isSoftcertCatlogueReqd + ")FOR SUPPLIER:"
-				+ getManagedBean().getSupplier().getCompanyName()
-				+ "<<<<<<<<<<<<<<<<<<<");
 		
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
 		reqDTO.setSoftcertCatalogueReqd(isSoftcertCatlogueReqd);
