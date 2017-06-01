@@ -180,7 +180,7 @@ public class SmSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_CONSULTANT_PROFILE));
 
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_ASSOCIATED_COMPANY_JOB,
@@ -190,9 +190,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_ASSOCIATED_COMPANY));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_ASSOCIATED_COMPANY));*/
 
-		EpSchedulerHelper
+	/*	EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_COMPANY_OWNER_JOB,
@@ -202,9 +202,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_COMPANY_OWNER));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_COMPANY_OWNER));*/
 
-		EpSchedulerHelper
+	/*	EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_EQUITY_OWNER_JOB,
@@ -214,9 +214,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_EQUITY_OWNER));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_EQUITY_OWNER));*/
 
-		EpSchedulerHelper
+	/*	EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_BOARD_DIRECTOR_JOB,
@@ -226,9 +226,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_BOARD_DIRECTOR));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_BOARD_DIRECTOR));*/
 
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_MANAGEMENT_PERSONNEL_JOB,
@@ -238,9 +238,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_MANAGEMENT_PERSONNEL));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_MANAGEMENT_PERSONNEL));*/
 
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_AUTHORIZED_SIGNATORY_JOB,
@@ -250,9 +250,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_AUTHORIZED_SIGNATORY));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_AUTHORIZED_SIGNATORY));*/
 
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_BRANCH_COMPANY_JOB,
@@ -262,9 +262,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_BRANCH_COMPANY));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_BRANCH_COMPANY));*/
 
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_REGISTERED_CATEGORY_JOB,
@@ -274,9 +274,9 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_REGISTERED_CATEGORY));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_REGISTERED_CATEGORY));*/
 
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.EPERUNDING_GOVERNMENT_PROJECT_JOB,
@@ -287,7 +287,7 @@ public class SmSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_GOVERNMENT_PROJECT));
-
+*/
 		EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
