@@ -27,6 +27,7 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private PmOrgProfile selectedOrgProfile;
 	
 	private boolean disableOrgFields;
+	private boolean supplier;
 	
 	private String selectedYear;
 	private String contractNo;
@@ -44,6 +45,7 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private String receivingOfficer;
 	private String acknowledgeOfficer;
 	private String payOfficer;
+	private String supplierCompName;
 	
 	private Date fromDate;
 	private Date toDate;
@@ -326,5 +328,21 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setPayOfficer(String payOfficer) {
 		this.payOfficer = payOfficer;
+	}
+
+	public String getSupplierCompName() {
+		return supplierCompName;
+	}
+
+	public void setSupplierCompName(String supplierCompName) {
+		this.supplierCompName = supplierCompName;
+	}
+
+	public boolean isSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(boolean supplier) {
+		this.supplier = supplier;
 	}
 }
