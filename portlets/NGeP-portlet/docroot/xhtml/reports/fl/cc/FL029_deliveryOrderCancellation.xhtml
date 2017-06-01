@@ -105,11 +105,18 @@
 				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}"/>
 			</td>
 			<td>
+				<c:if test="#{doCancelRptBB.managedBean.supplier}">
 				<ac:lov id="flSupplierName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
 					value="#{doCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="doCancelRptBB.managedBean.selectedOrgProfile" />
+			</c:if>
+			<c:if test="#{!doCancelRptBB.managedBean.supplier}">
+			<p:inputText maxlength="100" disabled="true" 
+					value="#{doCancelRptBB.managedBean.supplierCompName}">
+				</p:inputText>
+			</c:if>
 			</td>
 		</tr>
 		<tr>
