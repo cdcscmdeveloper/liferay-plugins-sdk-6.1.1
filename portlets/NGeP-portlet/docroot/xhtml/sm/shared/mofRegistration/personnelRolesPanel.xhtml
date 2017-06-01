@@ -68,7 +68,7 @@
 								<tr>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.management}">
-											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
