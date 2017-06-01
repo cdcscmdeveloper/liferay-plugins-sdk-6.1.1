@@ -18,7 +18,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
-import my.ep.web.managedbean.report.fl.cc.FulfilmentReceivedNoteRptManagedBean;
+import my.ep.web.managedbean.report.fl.cc.FRNCancellationRptManagedBean;
 /**
  * Backing Bean for ContractRequestRpt.
  *
@@ -27,7 +27,7 @@ import my.ep.web.managedbean.report.fl.cc.FulfilmentReceivedNoteRptManagedBean;
  */
 @ManagedBean(name = "frnCancelRptBB")
 @SessionScoped
-public class FRNCancellationRptBackingBean extends FlReportBackingBean<FulfilmentReceivedNoteRptManagedBean> {
+public class FRNCancellationRptBackingBean extends FlReportBackingBean<FRNCancellationRptManagedBean> {
 
 	private static final long serialVersionUID = 1L;
 
