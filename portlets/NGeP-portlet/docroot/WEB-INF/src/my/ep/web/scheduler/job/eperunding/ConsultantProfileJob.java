@@ -30,7 +30,7 @@ public class ConsultantProfileJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createConsultantProfile();
+			eperundingServiceSO.createConsultantProfileMof();
 
 			// please add resDTO to log better
 
