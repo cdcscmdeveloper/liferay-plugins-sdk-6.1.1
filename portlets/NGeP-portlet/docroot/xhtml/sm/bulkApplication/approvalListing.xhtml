@@ -44,7 +44,8 @@
 				<p:ajax event="rowUnselectCheckbox" update="@([id$=claimBtnId])" process="@this" />
 				<p:ajax event="rowUnselect" update="@([id$=claimBtnId])" process="@this" />
 				
-				<p:column selectionMode="multiple" style="width:2% !important;" />
+				<p:column selectionMode="multiple" style="width:2% !important;" 
+					rendered="#{not empty bulkApplicationBackingBean.managedBean.unClaimTasks}"/>
 				
 				<p:column style="white-space:normal;"
 					headerText="#{lbl['lbl.sm.date.received']}">

@@ -87,14 +87,22 @@
 									disabled="true" /></td>
 
 						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.apprvrRmrk']}" /></td>
-							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputTextarea cols="52" disabled="true" rows="5"
-									style="width : auto;"
-									value="#{backingBean.managedBean.poSecReview.remarkToApprover}" /></td>
-
-						</tr>
+						<p:outputPanel rendered="#{not empty backingBean.managedBean.poRecommendationDesc}">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+								<td><p:outputLabel value="   : " /></td>
+								<td><p:inputText readonly="true" size="50" 
+									value="#{backingBean.managedBean.poRecommendationDesc}" 
+									disabled="true" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.po.apprvrRmrk']}" /></td>
+								<td><p:outputLabel value="   : " /></td>
+								<td><p:inputTextarea cols="52" disabled="true" rows="5"
+										style="width : auto;"
+										value="#{backingBean.managedBean.poSecReview.remarkToApprover}" /></td>
+							</tr>
+						</p:outputPanel>
 					</table>
 
 					<c:if
@@ -118,13 +126,6 @@
 						</TABLE>
 
 					</div>
-					<!-- <div align="center">
-			<p:splitButton value="Select Decision">
-				<p:menuitem value="Approve" onclick="approverAppDialog.show();" />
-				<p:menuitem value="Reject" onclick="approverRejDialog.show();" />
-
-			</p:splitButton>
-		</div> -->
 
 				</p:panel></td>
 		</tr>
