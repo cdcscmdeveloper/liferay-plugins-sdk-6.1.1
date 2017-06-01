@@ -38,7 +38,8 @@
 					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
 					process="@this" />
 					
-				<p:column selectionMode="multiple" style="width:2% !important;" disabledSelection="#{tasks.notAllowedToTick}"/>
+				<p:column selectionMode="multiple" style="width:2% !important;" rendered="#{not empty bulkApplicationBackingBean.managedBean.claimTasks}"
+						disabledSelection="#{tasks.notAllowedToTick}"/>
 				
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 					<h:outputText value="#{indexMain + 1}" />
@@ -52,7 +53,19 @@
 						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />&#160;
 					</p:outputPanel>
 					
-					<b><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /></b><br />
+					<table style="width: 100%">
+						<tr>
+							<td style="text-align: left;border-style: none !important;">
+								<b><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /></b>
+							</td>
+							<td style="text-align: right;border-style: none !important;">
+								<b><h:outputText value="#{lbl['lbl.rpt.rgstStatus']}" />&#160;:</b>
+								&#160;&#160;<h:outputText value="#{tasks.poRecommendStatus}" />
+							</td>
+						</tr>
+					</table>
+					
+					<br />
 					
 					<p:outputPanel rendered="#{tasks.overlappedCategory}">
 						<br /><h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>
@@ -85,7 +98,7 @@
 					</p:outputPanel>
 					
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.po.recommend']}">
+				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="white-space: normal;">
 					<h:outputText value="#{tasks.poRecommendation}" />
 				</p:column>
 			</p:dataTable>
