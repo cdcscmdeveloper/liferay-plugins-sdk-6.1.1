@@ -7,7 +7,23 @@
 
 	<br />
 	<table style="width: 100%">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 
+			<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+					id="poRecommendStatusId" required="#{backingBean.managedBean.valueReqd}"
+					value="#{backingBean.managedBean.poRecommendStatusId}"
+					style="width: 240px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems value="#{backingBean.managedBean.regStatusDescList}" var="reg"
+						itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+					<p:ajax event="change" process="@this" update="@this" />
+				</p:selectOneMenu> 
+				<p:message id="poRecommendStatusIdMsg" for="poRecommendStatusId"
+					showSummary="true" showDetail="false" display="icon" />
+			</td>
+		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 			<td><p:inputTextarea cols="70" rows="10" style="width : auto;"
@@ -18,13 +34,6 @@
 				</p:inputTextarea> <p:message id="apprRemarkIddMsg" for="apprRemarkIdd"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
-		<!-- <tr>
-			<td><p:outputLabel value="Recommendation For Approver" /></td>
-			<td><p:selectOneRadio>
-					<f:selectItem itemLabel="Approve" />
-					<f:selectItem itemLabel="Reject" />
-				</p:selectOneRadio></td>
-		</tr> -->
 
 	</table>
 </ui:composition>
