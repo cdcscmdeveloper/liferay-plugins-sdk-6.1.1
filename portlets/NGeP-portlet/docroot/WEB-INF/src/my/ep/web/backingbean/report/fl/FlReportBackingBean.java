@@ -131,6 +131,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 */
 	public String getMinistryCondition() {
 		String condition = "";
+		retrieveParameterCodeType();
 		if(hasGovernmentUserRole()) {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
@@ -601,4 +602,55 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 		return getManagedBean().getPayOfficerList();
 	} 
+	
+	/**
+	 * retrieveParameterCodeType - Retrieve parameter code type.
+	 */
+	public void retrieveParameterCodeType() {
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			String parameterCodeType = getParameterCodeTypeString();
+			if (StringUtils.isNotEmpty(parameterCodeType)
+					&& (parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ)
+							|| parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))) {
+				getManagedBean().setSupplier(false);
+			} else if (StringUtils.isNotEmpty(parameterCodeType)
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+				getManagedBean().setSupplier(true);
+				retrieveSupplierCompName();
+			} 
+		}
+	}
+	
+	/**
+	 * getParameterCodeTypeString - Gets the parameter code type string.
+	 * 
+	 * @return the parameterCodeType string
+	 */
+	public String getParameterCodeTypeString() {
+		log.info("ReportBackingBean-getParameterCodeTypeString");
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		String parameterCodeType = null;
+		if (null != userId) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+			List<Object[]> paramcodeLst = reportSO.retrieveParameterCodeByUserid(getFacesScopes().getUserSessionBean().getUserId());
+			if (CollectionUtils.isNotEmpty(paramcodeLst)) {
+				for (Object[] object : paramcodeLst) {
+					parameterCodeType = object[0].toString();
+				}
+			}
+		}
+		return parameterCodeType;
+	}
+	
+	/**
+	 * retrieveSupplierCompName - Retrieve supplier company name.
+	 */
+	private void retrieveSupplierCompName() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(getFacesScopes().getUserSessionBean().getUserId());
+		if (supplCompNameLst.size() > 0) {
+				getManagedBean().setSupplierCompName(supplCompNameLst.get(0));
+		}
+
+	}
 }
