@@ -10,10 +10,10 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 /**
  * Managed Bean for FlReport.
  *
- * @author KK LIM
+ * @author Jimmy
  * @since 26/4/2017
  */
-@ManagedBean(name = "invRptManagedBean")
+@ManagedBean(name = "mcInvCancelRptManagedBean")
 @SessionScoped
 public class InvoiceCancellationRptManagedBean extends FlReportManagedBean{
 
@@ -23,6 +23,7 @@ public class InvoiceCancellationRptManagedBean extends FlReportManagedBean{
 	
 	private String invNo;
 	private String supplierInvNo;
+	private String reportUrl;
 
 	public String getInvNo() {
 		return invNo;
@@ -35,5 +36,13 @@ public class InvoiceCancellationRptManagedBean extends FlReportManagedBean{
 	}
 	public void setSupplierInvNo(String supplierInvNo) {
 		this.supplierInvNo = supplierInvNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+	
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 }

@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "frnCancelRptManagedBean")
+@ManagedBean(name = "mcFrnCancelRptManagedBean")
 @SessionScoped
 public class FulfilmentReceivedNoteRptManagedBean extends FlReportManagedBean{
 
@@ -23,6 +23,10 @@ public class FulfilmentReceivedNoteRptManagedBean extends FlReportManagedBean{
 	
 	private String frnNo;
 
+	private String flRecNoteNo;
+	
+	private String reportUrl;
+	
 	public String getFrnNo() {
 		return frnNo;
 	}
@@ -30,5 +34,20 @@ public class FulfilmentReceivedNoteRptManagedBean extends FlReportManagedBean{
 	public void setFrnNo(String frnNo) {
 		this.frnNo = frnNo;
 	}
+	
+	public String getFlRecNoteNo() {
+		return flRecNoteNo;
+	}
 
+	public void setFlRecNoteNo(String flRecNoteNo) {
+		this.flRecNoteNo = flRecNoteNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+	
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

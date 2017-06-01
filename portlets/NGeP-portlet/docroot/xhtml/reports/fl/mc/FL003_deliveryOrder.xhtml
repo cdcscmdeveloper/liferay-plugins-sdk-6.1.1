@@ -8,6 +8,11 @@
 
 	<table style="width: 100%;">
 		<tr>
+			<td colspan="4">
+				<h:outputText value="#{mcDoRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 			<td colspan="3">
 					<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
@@ -143,7 +148,7 @@
 			</td>
 			<td>
 				<p:inputText maxlength="30"
-					value="#{mcDoRptBB.flSupplierDeliveryOrderNo}"
+					value="#{mcDoRptBB.managedBean.flSupplierDeliveryOrderNo}"
 					style="margin-top:5px;width:290px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
@@ -155,7 +160,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{mcDoRptBB.flGroupOne}">
+				<p:selectOneMenu value="#{mcDoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
@@ -209,16 +214,18 @@
 			</td>
 		</tr>
 	</table>
-		<div style="text-align: right;">
+		
+	<div style="text-align: right;">
 		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
 			process="@form" update="@form"
-			action="#{mcPoRptBB.generateReport()}">
-			<f:setPropertyActionListener target="#{mcDoRptBB.managedBean.reportCode}" value="#{mcDoRptBB.managedBean.reportCode}" />
+			action="#{mcDoRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{mcDoRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
 			process="@this" update="@form" action="#{flReportBB.resetAction()}">
 		</p:commandButton>
 	</div>
+	
 	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
 		width="500px" resizable="false" styleClass="pop_up_top">
 		<h:outputText escape="false" style="float:left;margin-left:5px;"
@@ -231,38 +238,11 @@
 					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
 							onclick="confirmationId.hide();" />
 						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-							action="#{mcPoRptBB.redirect()}">
+							action="#{mcDoRptBB.redirect()}">
 						</p:commandButton></td>
 				</tr>
 			</table>
 		</div>
 	</p:dialog>
-		<div style="text-align: right;">
-		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
-			process="@form" update="@form"
-			action="#{mcPoRptBB.generateReport()}">
-			<f:setPropertyActionListener target="#{mcDoRptBB.managedBean.reportCode}" value="#{mcDoRptBB.managedBean.reportCode}" />
-		</p:commandButton>
-		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
-		</p:commandButton>
-	</div>
-	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
-		width="500px" resizable="false" styleClass="pop_up_top">
-		<h:outputText escape="false" style="float:left;margin-left:5px;"
-			value="#{mcDoRptBB.managedBean.popUpMsg}">
-		</h:outputText>
-		<br />
-		<div style="float:right;">
-			<table style="width:100%">
-				<tr>
-					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
-							onclick="confirmationId.hide();" />
-						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-							action="#{mcPoRptBB.redirect()}">
-						</p:commandButton></td>
-				</tr>
-			</table>
-		</div>
-	</p:dialog>
+	
 </ui:composition>
