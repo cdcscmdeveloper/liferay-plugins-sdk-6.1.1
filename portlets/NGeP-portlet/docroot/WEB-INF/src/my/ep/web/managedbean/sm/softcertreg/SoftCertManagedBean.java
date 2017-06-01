@@ -58,6 +58,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private boolean renderRevokeButton;
 	private boolean allAuthSuppUserAlreadyRequested;
 	private boolean basicAppl;
+	private boolean disableButton;
 	private PmDigiSign digiSign;
 	private String gstPercentageLabel;
 
@@ -330,6 +331,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setGstPercentageLabel(String gstPercentageLabel) {
 		this.gstPercentageLabel = gstPercentageLabel;
+	}
+
+	public boolean isDisableButton() {
+		return disableButton;
+	}
+
+	public void setDisableButton(boolean disableButton) {
+		this.disableButton = disableButton;
 	}
 
 }

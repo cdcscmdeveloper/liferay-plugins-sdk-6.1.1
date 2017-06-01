@@ -880,6 +880,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		String softcertValidityDate = SmCommonUtil.getMessage(
 				"lbl.sm.no.available", null);
 		String sofcertNo = SmCommonUtil.getMessage("lbl.sm.no.available", null);
+		boolean disableButton = true;
 
 		if (smPersonnel.getPmUser() != null
 				&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
@@ -899,6 +900,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						.getCertSerialNo())) {
 					sofcertNo = softcertRequest.getPmDigiCert()
 							.getCertSerialNo();
+					disableButton = false;
 				}
 				if (softcertRequest.getPmDigiCert().getValidFrom() != null) {
 					softcertValidityDate = DateUtils.dateToString("dd/MM/yyyy",
@@ -927,6 +929,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 		smPersonnel.setSoftcertValidityDate(softcertValidityDate);
 		smPersonnel.setSoftcertNo(sofcertNo);
+		getManagedBean().setDisableButton(disableButton);
 	}
 
 	/**
