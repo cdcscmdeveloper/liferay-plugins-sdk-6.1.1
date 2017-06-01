@@ -13,12 +13,14 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "siPtjRptManagedBean")
+@ManagedBean(name = "mcSiPtjRptManagedBean")
 @SessionScoped
 public class StopInstructionByPtjRptManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
+	
 	private String siNo;
+	private String reportUrl;
 	
 	public StopInstructionByPtjRptManagedBean(){}
 	public String getSiNo() {
@@ -28,5 +30,11 @@ public class StopInstructionByPtjRptManagedBean extends FlReportManagedBean{
 		this.siNo = siNo;
 	}
 	
-
+	public String getReportUrl() {
+		return reportUrl;
+	}
+	
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

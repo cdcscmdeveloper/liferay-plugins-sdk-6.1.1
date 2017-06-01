@@ -8,51 +8,58 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.ministry']}" /></td>
+			<td colspan="4">
+				<h:outputText value="#{mcSiPtjRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
+			</td>
 			<td colspan="3">
-				<ac:lov id="lovFlMinistry"
-					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
-					value="#{mcSiPtjRptBB.managedBean.selectedMinistry.pmOrgValidity.orgName}"
-					saveObject="mcSiPtjRptBB.managedBean.selectedMinistry"	
-					postUpdateListener="mcSiPtjRptBB.onChangeMinistry" 
-					conditionField="#{mcSiPtjRptBB.constructMinistryConditionFields()}" />
+				<ac:lov id="searchMinistry"
+					lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ministry']}"
+					disabled="#{mcSiPtjRptBB.disableMinistryLov()}"
+					value="#{mcSiPtjRptBB.managedBean.ministry.orgName}"
+					postUpdateListener="mcSiPtjRptBB.resetPtjGroupProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="mcSiPtjRptBB.managedBean.ministry"
+					conditionField="#{mcSiPtjRptBB.getMinistryCondition()}">
+				</ac:lov>
 			</td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}"></p:outputLabel>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"></p:outputLabel>
 			</td>
-			<td colspan="3"><ac:lov id="lovPpPegaWaiPengawal"
-					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					headerText="#{lbl['lbl.pp.pegawai.pengawal']}" readonly="true"
-					disabled="#{mcSiPtjRptBB.managedBean.selectedMinistry==null or mcSiPtjRptBB.managedBean.disableOrgFields}"
-					value="#{mcSiPtjRptBB.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
-					saveObject="mcSiPtjRptBB.managedBean.selectedPegawaiPengawal"
-					postUpdateListener="mcSiPtjRptBB.onChangePegawaiPengawal"
-					conditionField="#{mcSiPtjRptBB.constructPegwaiPengawalConditionFields()}" /></td>
-
+			<td colspan="3">
+				<ac:lov id="searchJabatan"
+					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.jabatan']}"
+					disabled="#{mcSiPtjRptBB.disablePtjGroupLov()}"
+					value="#{mcSiPtjRptBB.managedBean.ptjGroup.orgName}"
+					postUpdateListener="mcSiPtjRptBB.resetPtjProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="mcSiPtjRptBB.managedBean.ptjGroup"
+					conditionField="#{mcSiPtjRptBB.constuctConditionFieldsForPTJGroup()}">
+				</ac:lov>
+			</td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}"></p:outputLabel></td>
-			<td colspan="3"><ac:lov id="lovPpKumpulanPTJ"
-					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-					headerText="#{lbl['lbl.pp.kumpulan.ptj']}" readonly="true"
-					disabled="#{mcSiPtjRptBB.managedBean.selectedPegawaiPengawal==null or mcSiPtjRptBB.managedBean.disableOrgFields}"
-					value="#{mcSiPtjRptBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
-					saveObject="mcSiPtjRptBB.managedBean.selectedKumpulanPTJ"
-					conditionField="#{mcSiPtjRptBB.constructKumpulanPTJConditionFields()}"
-					postUpdateListener="mcSiPtjRptBB.onChangeJabatan" /></td>
-
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pp.ptj']}"></p:outputLabel></td>
-			<td colspan="3"><ac:lov id="lovPpPTJ"
-					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
-					headerText="#{lbl['lbl.pp.ptj']}" update="@form"
-					disabled="#{mcSiPtjRptBB.managedBean.selectedKumpulanPTJ==null or mcSiPtjRptBB.managedBean.disableOrgFields}"
-					value="#{mcSiPtjRptBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
-					saveObject="mcSiPtjRptBB.managedBean.selectedPTJ"
-					conditionField="#{mcSiPtjRptBB.constructPTJConditionFields()}" /></td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchPtj"
+					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ptj']}"
+					disabled="#{mcSiPtjRptBB.disablePtjLov()}"
+					value="#{mcSiPtjRptBB.managedBean.ptj.orgName}"
+					saveObject="mcSiPtjRptBB.managedBean.ptj"
+					conditionField="#{mcSiPtjRptBB.getPTJCondition()}">
+				</ac:lov>
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -130,7 +137,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{poRptBB.managedBean.purchaseOrderNo}"/>
+				<p:inputText value="#{siPtjRptBB.managedBean.purchaseOrderNo}"/>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}"></p:outputLabel> 
@@ -145,7 +152,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+				<p:selectOneMenu value="#{siPtjRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
@@ -195,43 +202,13 @@
 		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
 			process="@form" update="@form"
 			action="#{mcSiPtjRptBB.generateReport()}">
-			<f:setPropertyActionListener target="#{mcSiPtjRptBB.managedBean.reportCode}" value="#{mcSiPtjRptBB.managedBean.reportCode}" />
+			<f:setPropertyActionListener target="#{mcSiPtjRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
 			process="@this" update="@form" action="#{flReportBB.resetAction()}">
 		</p:commandButton>
 	</div>
 	
-	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
-		width="500px" resizable="false" styleClass="pop_up_top">
-		<h:outputText escape="false" style="float:left;margin-left:5px;"
-			value="#{mcSiPtjRptBB.managedBean.popUpMsg}">
-		</h:outputText>
-		<br />
-		<div style="float:right;">
-			<table style="width:100%">
-				<tr>
-					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
-							onclick="confirmationId.hide();" />
-						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
-							action="#{mcSiPtjRptBB.redirect()}">
-						</p:commandButton></td>
-				</tr>
-			</table>
-		</div>
-	</p:dialog>
-	
-	<div style="text-align: right;">
-		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
-			process="@form" update="@form"
-			action="#{mcSiPtjRptBB.generateReport()}">
-			<f:setPropertyActionListener target="#{mcSiPtjRptBB.managedBean.reportCode}" value="#{mcSiPtjRptBB.managedBean.reportCode}" />
-		</p:commandButton>
-		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
-		</p:commandButton>
-	</div>
-
 	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
 		width="500px" resizable="false" styleClass="pop_up_top">
 		<h:outputText escape="false" style="float:left;margin-left:5px;"

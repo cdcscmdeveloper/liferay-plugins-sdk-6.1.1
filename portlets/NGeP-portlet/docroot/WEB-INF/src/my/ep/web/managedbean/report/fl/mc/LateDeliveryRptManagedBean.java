@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "ldRptManagedBean")
+@ManagedBean(name = "mcLdRptManagedBean")
 @SessionScoped
 public class LateDeliveryRptManagedBean extends FlReportManagedBean{
 
@@ -24,7 +24,8 @@ public class LateDeliveryRptManagedBean extends FlReportManagedBean{
 	private String itemName;
 	private String deliveryOrderNo;
 	private String supplierDoRefNo;
-
+	private String reportUrl;
+	
 	public String getItemName() {
 		return itemName;
 	}
@@ -48,5 +49,12 @@ public class LateDeliveryRptManagedBean extends FlReportManagedBean{
 	public void setSupplierDoRefNo(String supplierDoRefNo) {
 		this.supplierDoRefNo = supplierDoRefNo;
 	}
-
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+	
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

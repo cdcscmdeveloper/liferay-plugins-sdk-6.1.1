@@ -13,7 +13,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "poRptManagedBean")
+@ManagedBean(name = "mcPoCancelRptManagedBean")
 @SessionScoped
 public class PurchaseOrderCancellationRptManagedBean extends FlReportManagedBean{
 
@@ -22,7 +22,8 @@ public class PurchaseOrderCancellationRptManagedBean extends FlReportManagedBean
 	public PurchaseOrderCancellationRptManagedBean(){}
 	
 	private String itemName;
-
+	private String reportUrl;
+	
 	public String getItemName() {
 		return itemName;
 	}
@@ -30,5 +31,12 @@ public class PurchaseOrderCancellationRptManagedBean extends FlReportManagedBean
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
-
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+	
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

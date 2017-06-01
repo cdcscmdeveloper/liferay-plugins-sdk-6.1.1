@@ -14,16 +14,69 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author Jimmy
  * @since 26/4/2017
  */
-@ManagedBean(name = "ddRptManagedBean")
+@ManagedBean(name = "mcDdRptManagedBean")
 @SessionScoped
 public class DeductionRptManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
-	public DeductionRptManagedBean(){}
+	private PmOrgProfile selectedOrgProfile;
 	
 	private String invNo;
 	private String supplierInvNo;
 	private String paymentMatchNo;
-	private PmOrgProfile selectedOrgProfile;
+	private String flContractOrder;
+
+	private String reportUrl;
+	
+	public DeductionRptManagedBean(){}
+
+	public PmOrgProfile getSelectedOrgProfile() {
+		return selectedOrgProfile;
+	}
+
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	public String getInvNo() {
+		return invNo;
+	}
+
+	public void setInvNo(String invNo) {
+		this.invNo = invNo;
+	}
+
+	public String getSupplierInvNo() {
+		return supplierInvNo;
+	}
+
+	public void setSupplierInvNo(String supplierInvNo) {
+		this.supplierInvNo = supplierInvNo;
+	}
+
+	public String getPaymentMatchNo() {
+		return paymentMatchNo;
+	}
+
+	public void setPaymentMatchNo(String paymentMatchNo) {
+		this.paymentMatchNo = paymentMatchNo;
+	}
+
+	public String getFlContractOrder() {
+		return flContractOrder;
+	}
+
+	public void setFlContractOrder(String flContractOrder) {
+		this.flContractOrder = flContractOrder;
+	}
+
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
+	
 }
