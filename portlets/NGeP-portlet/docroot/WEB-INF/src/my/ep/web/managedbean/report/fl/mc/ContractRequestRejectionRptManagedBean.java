@@ -13,12 +13,21 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author KK LIM
  * @since 26/4/2017
  */
-@ManagedBean(name = "crRejectRptManagedBean")
+@ManagedBean(name = "mcCrRejectRptManagedBean")
 @SessionScoped
 public class ContractRequestRejectionRptManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
+	private String reportUrl;
+	
 	public ContractRequestRejectionRptManagedBean(){}
 
+	public String getReportUrl() {
+		return reportUrl;
+	}
+	
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

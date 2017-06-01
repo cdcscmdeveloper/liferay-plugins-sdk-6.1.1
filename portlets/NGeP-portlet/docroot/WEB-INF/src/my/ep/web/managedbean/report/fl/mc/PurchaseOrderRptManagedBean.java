@@ -18,7 +18,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author Jimmy
  * @since 26/4/2017
  */
-@ManagedBean(name = "mcRptManagedBean")
+@ManagedBean(name = "mcPoRptManagedBean")
 @SessionScoped
 public class PurchaseOrderRptManagedBean extends FlReportManagedBean{
 
