@@ -3287,19 +3287,29 @@ public class LOADetailBackingBean extends
 	 */
 	public void supplierContractSignerEvent() {
 		debugLogger("supplierContractSignerEvent");
-		PmUser supplierContractSigner = getManagedBean().getSupplierContractSignerUser();
-		if (supplierContractSigner != null) {
-			if (getManagedBean().getSupplierContractSignerList() != null
-					&& getManagedBean().getSupplierContractSignerList().size() > 0) {
-				List<PmUser> supplierContractSignerList = getManagedBean()
-						.getSupplierContractSignerList();
-				for (PmUser user : supplierContractSignerList) {
-					if (user.getUserId().equals(supplierContractSigner.getUserId())) {
-						getManagedBean().getScLoa().setAckBy(user);
-						break;
+		PmUser supplierContractSigner = getManagedBean().getScLoa().getAckBy();
+		IUserSO userSO = null;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			if (supplierContractSigner != null) {
+				if (getManagedBean().getSupplierContractSignerList() != null
+						&& getManagedBean().getSupplierContractSignerList().size() > 0) {
+					List<PmUser> supplierContractSignerList = getManagedBean()
+							.getSupplierContractSignerList();
+					for (PmUser user : supplierContractSignerList) {
+						if (user.getUserId().equals(supplierContractSigner.getUserId())) {
+							UserReqDTO reqDTO = new UserReqDTO();
+							reqDTO.setUserId(user.getUserId());
+							UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+							getManagedBean().getScLoa().setAckBy(resDTO.getPmUser());
+							break;
+						}
 					} 
 				}
-			}
+			} 
+		} finally {
+			userSO = null;
 		}
 	}
 	
@@ -5284,7 +5294,7 @@ public class LOADetailBackingBean extends
 		// Supplier Contract Signer
 		PmUser supplierContractSignerUser = scLoa.getAckBy();
 		if (supplierContractSignerUser == null) {
-			supplierContractSignerUser = new FacesScopes().getUserSessionBean();
+			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 		}
 
 		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
@@ -5298,9 +5308,6 @@ public class LOADetailBackingBean extends
 			supplierSigners.add(personnel.getPmUser());
 		}
 		getManagedBean().setSupplierContractSignerList(supplierSigners);
-		getManagedBean().setSupplierContractSignerUser(supplierContractSignerUser);
-		
-		scLoa.setAckBy(supplierContractSignerUser);
 	}
 	
 	/**

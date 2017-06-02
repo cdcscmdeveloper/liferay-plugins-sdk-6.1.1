@@ -136,7 +136,7 @@
 				</td>
 				<td colspan="3"><c:if test="#{isSupplierAckStatus}">
 						<p:selectOneMenu id="supplierContractSigner"
-							value="#{lOADetailBackingBean.managedBean.supplierContractSignerUser.userId}"
+							value="#{lOADetailBackingBean.managedBean.scLoa.ackBy.userId}"
 							style="width: 277px;margin-bottom:5px;"
 							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 							required="true" label="#{lbl['lbl.sc.loiloa.signer.full.name']}">
@@ -149,7 +149,7 @@
 								itemValue="#{pmuser.userId}" />
 							<p:ajax event="change"
 								listener="#{lOADetailBackingBean.supplierContractSignerEvent()}"
-								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel" />
+								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel " />
 						</p:selectOneMenu>
 						<p:message id="supplierContractSignerMsg" for="supplierContractSigner"
 							display="icon" />
