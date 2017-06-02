@@ -30,7 +30,7 @@ public class GovernmentProjectJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createGovernmentProject();
+			//eperundingServiceSO.createGovernmentProject();
 			// please add resDTO to log better
 
 		} catch (Exception e) {

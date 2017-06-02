@@ -30,7 +30,7 @@ public class EquityOwnerJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createEquiytyOwner();
+			//eperundingServiceSO.createEquiytyOwner();
 
 			// please add resDTO to log better
 

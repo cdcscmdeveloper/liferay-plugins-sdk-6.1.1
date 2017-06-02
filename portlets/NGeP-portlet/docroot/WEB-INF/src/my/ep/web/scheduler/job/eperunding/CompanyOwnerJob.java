@@ -30,7 +30,7 @@ public class CompanyOwnerJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createCompanyOwner();
+			//eperundingServiceSO.createCompanyOwner();
 			// please add resDTO to log better
 
 		} catch (Exception e) {

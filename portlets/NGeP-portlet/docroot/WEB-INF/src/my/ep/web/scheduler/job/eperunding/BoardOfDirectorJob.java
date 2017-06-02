@@ -30,7 +30,7 @@ public class BoardOfDirectorJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createBoardOfDirector();
+			//eperundingServiceSO.createBoardOfDirector();
 			// please add resDTO to log better
 
 		} catch (Exception e) {

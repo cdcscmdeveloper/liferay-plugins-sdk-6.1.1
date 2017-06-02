@@ -30,7 +30,7 @@ public class RegisteredCategoryJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createRegisteredCategory();
+			//eperundingServiceSO.createRegisteredCategory();
 			// please add resDTO to log better
 
 		} catch (Exception e) {
