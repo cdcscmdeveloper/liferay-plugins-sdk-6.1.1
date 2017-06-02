@@ -65,12 +65,15 @@ public class FlReportConst implements Serializable {
 	public static final String FL_052_PURCHASE_STOP_INSTR_PTJ = "FL_052";
 	public static final String FL_055_PURCHASE_STOP_INSTR_SUPP = "FL_055";
 	
+	// Panel Const
+	public static final String FL_033_SUMMARY = "FL_033";
+	
 	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
 	public static final String FL_RPT_TO_DATE = "PTODATE";
 	public static final String FL_RPT_COTRACT_ORDER = "PCONO";
 	public static final String FL_RPT_COTRACT_REQUEST = "PCRNO";
 	public static final String FL_RPT_PURCHASE_ORDER = "PPONO";
-	public static final String FL_RPT_TREASURY_CIRCULAR = "PKPNO";//Physical Treasury Circular (1PP) No.
+	public static final String FL_RPT_TREASURY_CIRCULAR = "PPKPNO";//Physical Treasury Circular (1PP) No.
 	public static final String FL_RPT_FULLFILLEMENT_RECEIVE = "FRNNO";
 	public static final String FL_RPT_COTRACT_TYPE = "PCONTYPE";
 	public static final String FL_RPT_DELI_ADDR = "PDOADD";
@@ -280,5 +283,7 @@ public class FlReportConst implements Serializable {
 		return FL_055_PURCHASE_STOP_INSTR_SUPP;
 	}
 
-
+	public String getFl033Summary() {
+		return FL_033_SUMMARY;
+	}
  }
