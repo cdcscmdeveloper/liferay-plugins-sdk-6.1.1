@@ -30,7 +30,7 @@ public class BranchCompanyJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createBranchCompany();
+			//eperundingServiceSO.createBranchCompany();
 
 			// please add resDTO to log better
 
