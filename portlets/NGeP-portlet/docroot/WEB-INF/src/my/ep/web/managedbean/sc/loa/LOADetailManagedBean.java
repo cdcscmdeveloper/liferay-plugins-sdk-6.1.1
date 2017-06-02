@@ -82,9 +82,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The contract signer user. */
 	private PmUser contractSignerUser;
 	
-	/** The supplier contract signer user. */
-	private PmUser supplierContractSignerUser;
-	
 	/** The approver user. */
 	private PmUser approverUser;
 	
@@ -485,20 +482,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setContractSignerUser(PmUser contractSignerUser) {
 		this.contractSignerUser = contractSignerUser;
-	}
-
-	/**
-	 * @return the supplierContractSignerUser
-	 */
-	public PmUser getSupplierContractSignerUser() {
-		return supplierContractSignerUser;
-	}
-
-	/**
-	 * @param supplierContractSignerUser the supplierContractSignerUser to set
-	 */
-	public void setSupplierContractSignerUser(PmUser supplierContractSignerUser) {
-		this.supplierContractSignerUser = supplierContractSignerUser;
 	}
 
 	/**
