@@ -122,6 +122,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	/** The contract signer list. */
 	private List<PmUser> contractSignerList;
+	
+	/** The supplier contract signer list. */
+	private List<PmUser> supplierContractSignerList;
 
 	/** The branchs list. */
 	private List<SmSupplierBranch> branchsList;
@@ -1691,6 +1694,21 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setGuidelineTooltip(String guidelineTooltip) {
 		this.guidelineTooltip = guidelineTooltip;
+	}
+
+	/**
+	 * @return the supplierContractSignerList
+	 */
+	public List<PmUser> getSupplierContractSignerList() {
+		return supplierContractSignerList;
+	}
+
+	/**
+	 * @param supplierContractSignerList the supplierContractSignerList to set
+	 */
+	public void setSupplierContractSignerList(
+			List<PmUser> supplierContractSignerList) {
+		this.supplierContractSignerList = supplierContractSignerList;
 	}
 	
 }
