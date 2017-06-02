@@ -147,7 +147,7 @@
 			</td>
 			<td>
 				<p:selectOneMenu id="statusId"
-					value="#{mcCrRptBB.managedBean.statusDescId}" style="width: 314px;">
+					value="#{mcCrRptBB.managedBean.statusDescId}">
 					<f:selectItems value="#{mcCrRptBB.getStatusDropDownValues('CR')}" />
 					<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"/>
 				</p:selectOneMenu>
@@ -171,8 +171,11 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+						itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>

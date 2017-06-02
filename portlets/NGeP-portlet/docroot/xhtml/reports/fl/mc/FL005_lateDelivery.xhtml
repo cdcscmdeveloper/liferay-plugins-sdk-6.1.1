@@ -121,12 +121,12 @@
 			</td>
 			<td>
 				<p:selectOneMenu
-					value="#{reportBackingBean.flRecievingOfficer}"
+					value="#{mcLdRptBB.managedBean.receivingOfficer}"
 					style="margin-top:5px;width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeRecievingOfficerList}"></f:selectItems>
+						value="#{mcLdRptBB.retrieveReceivingOfficerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -138,12 +138,12 @@
 			</td>
 			<td>
 				<p:selectOneMenu
-					value="#{reportBackingBean.flAcknowledgeOfficer}"
+					value="#{mcLdRptBB.managedBean.acknowledgeOfficer}"
 					style="margin-top:5px;width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeAcknowledgeOfficerList}"></f:selectItems>
+						value="#{mcLdRptBB.retrieveAcknowledgeOfficerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -163,9 +163,6 @@
 				<p:inputText value="#{mcLdRptBB.managedBean.deliveryOrderNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-			</td>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.supplierDeliveryOrderNo']}" />
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.do.supp.do.no']}"></p:outputLabel>
