@@ -30,7 +30,7 @@ public class ManagementPersonnelJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createManagementPersonnel();
+			//eperundingServiceSO.createManagementPersonnel();
 			// please add resDTO to log better
 
 		} catch (Exception e) {

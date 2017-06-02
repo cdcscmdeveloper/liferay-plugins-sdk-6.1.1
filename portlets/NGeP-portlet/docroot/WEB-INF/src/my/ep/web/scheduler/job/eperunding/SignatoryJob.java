@@ -30,7 +30,7 @@ public class SignatoryJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createAuthorizedSignatory();
+			//eperundingServiceSO.createAuthorizedSignatory();
 
 			// please add resDTO to log better
 

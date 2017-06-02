@@ -30,7 +30,7 @@ public class AssociatedCompanyJob implements Job {
 			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IEperundingServiceSO.class);
-			eperundingServiceSO.createAssociatedCompany();
+			//eperundingServiceSO.createAssociatedCompany();
 			// please add resDTO to log better
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
