@@ -41,6 +41,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -73,6 +74,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.exception.EpException;
@@ -496,7 +498,7 @@ public class DirectLOABackingBean extends
 
 			getManagedBean().setScQt(scLoa.getScQt());
 
-			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+			prepareSupplierSignerInfo();
 
 			scLoa = calcBondAmount(scLoa, true);
 			Date issueDate = scLoa.getIssueDate();
@@ -1637,6 +1639,37 @@ public class DirectLOABackingBean extends
 					}
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Supplier Contract signer event.
+	 */
+	public void supplierContractSignerEvent() {
+		debugLogger("supplierContractSignerEvent");
+		PmUser supplierContractSigner = getManagedBean().getScLoa().getAckBy();
+		IUserSO userSO = null;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			if (supplierContractSigner != null) {
+				if (getManagedBean().getSupplierContractSignerList() != null
+						&& getManagedBean().getSupplierContractSignerList().size() > 0) {
+					List<PmUser> supplierContractSignerList = getManagedBean()
+							.getSupplierContractSignerList();
+					for (PmUser user : supplierContractSignerList) {
+						if (user.getUserId().equals(supplierContractSigner.getUserId())) {
+							UserReqDTO reqDTO = new UserReqDTO();
+							reqDTO.setUserId(user.getUserId());
+							UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+							getManagedBean().getScLoa().setAckBy(resDTO.getPmUser());
+							break;
+						}
+					} 
+				}
+			} 
+		} finally {
+			userSO = null;
 		}
 	}
 
@@ -6140,6 +6173,32 @@ public class DirectLOABackingBean extends
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 		getManagedBean().setContractSignerList(userResDTO.getUserList());
 		scLoa.setContractSigner(new PmUser());
+	}
+	
+	/**
+	 * Prepare Supplier Contract signer info.
+	 */
+	private void prepareSupplierSignerInfo() {
+
+		ScLoa scLoa = getManagedBean().getScLoa();
+
+		// Supplier Contract Signer
+		PmUser supplierContractSignerUser = scLoa.getAckBy();
+		if (supplierContractSignerUser == null) {
+			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+		}
+
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+		supplierReqDTO.setSupplierId(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+		supplierReqDTO.setAuthorized(true);
+		List<SmPersonnel> personnels = supplierSearchSO.retrieveContractSigners(supplierReqDTO).getPersonnels();
+		List<PmUser> supplierSigners = new ArrayList<PmUser>();
+		for(SmPersonnel personnel : personnels) {
+			supplierSigners.add(personnel.getPmUser());
+		}
+		getManagedBean().setSupplierContractSignerList(supplierSigners);
 	}
 
 	private void updateTplSpecMasterNDetails(boolean isZonal) {

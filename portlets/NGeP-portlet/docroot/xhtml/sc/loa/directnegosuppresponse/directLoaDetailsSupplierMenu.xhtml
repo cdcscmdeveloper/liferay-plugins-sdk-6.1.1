@@ -129,6 +129,59 @@
 
 	<ui:include
 		src="/xhtml/sc/loa/directnego/directawardloaPaymentDetailsMenu.xhtml" />
+		
+	<p:panel id="supplierContractSignerPanel" header="#{lbl['lbl.sc.loiloa.contract.signer.detail']}"
+		toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.signer.full.name']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
+				</td>
+				<td colspan="3"><c:if test="#{isSupplierAckStatus}">
+						<p:selectOneMenu id="supplierContractSigner"
+							value="#{directLOABackingBean.managedBean.scLoa.ackBy.userId}"
+							style="width: 277px;margin-bottom:5px;"
+							disabled="#{directLOABackingBean.managedBean.readOnly}"
+							required="true" label="#{lbl['lbl.sc.loiloa.signer.full.name']}">
+
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{directLOABackingBean.managedBean.supplierContractSignerList}"
+								var="pmuser" itemLabel="#{pmuser.userName}"
+								itemValue="#{pmuser.userId}" />
+							<p:ajax event="change"
+								listener="#{directLOABackingBean.supplierContractSignerEvent()}"
+								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel " />
+						</p:selectOneMenu>
+						<p:message id="supplierContractSignerMsg" for="supplierContractSigner"
+							display="icon" />
+					</c:if> <c:if test="#{!isSupplierAckStatus}">
+						<p:inputText
+							value="#{ldirectLOABackingBean.managedBean.scLoa.ackBy.userName}"
+							disabled="true" size="35" />
+					</c:if></td>
+			</tr>
+			<tr>
+				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText id="supplierContractSignerIdentificationNo" size="40"
+						disabled="true"
+						value="#{directLOABackingBean.managedBean.scLoa.ackBy.identificationNo}"
+						required="true" label="#{lbl['lbl.sc.identification.no']}"
+						maxlength="15" /> <p:message id="supplierContractSignerIdentificationNoMsg"
+						for="supplierContractSignerIdentificationNo" display="icon" /></td>
+			</tr>
+			<tr>
+				<td rowspan="3" valign="top" width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.address']}" /></td>
+				<td colspan="3" rowspan="3"><p:inputTextarea id="supplierContractSignerAddr" rows="6"
+						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.scSupplierAddress)}"
+						style=" margin-bottom:5px;width: 236px;" disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supplier.witness.detail']}"
 		toggleable="true">
