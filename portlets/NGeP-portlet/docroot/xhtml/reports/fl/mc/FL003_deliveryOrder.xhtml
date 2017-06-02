@@ -58,11 +58,11 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:190px;" />
+				<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;" />
 			</td>
 			<td>
-				<p:inputText value="#{reportBackingBean.flItemName}"
-					style="margin-top:5px;width:290px;">
+				<p:inputText value="#{mcDoRptBB.managedBean.itemName}"
+					style="margin-top:5px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -147,15 +147,10 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierDeliveryOrderNo']}" />
 			</td>
 			<td>
-				<p:inputText maxlength="30"
-					value="#{mcDoRptBB.managedBean.flSupplierDeliveryOrderNo}"
-					style="margin-top:5px;width:290px;">
-					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText>
+				<p:inputText value="#{mcDoRptBB.managedBean.supplierDoRefNo}"/>
 			</td>
-			<td colspan="2"></td>
 		</tr>
-				<tr>
+		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
@@ -184,7 +179,7 @@
 			</td>
 			<td>
 				<p:selectOneMenu id="statusId"
-					value="#{mcDoRptBB.managedBean.statusDescId}" style="width: 314px;">
+					value="#{mcDoRptBB.managedBean.statusDescId}" style="">
 					<f:selectItems value="#{mcDoRptBB.getStatusDropDownValues('CR')}" />
 					<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"/>
 				</p:selectOneMenu>

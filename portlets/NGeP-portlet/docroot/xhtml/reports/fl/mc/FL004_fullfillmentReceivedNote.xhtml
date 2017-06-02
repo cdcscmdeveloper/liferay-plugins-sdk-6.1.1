@@ -58,26 +58,6 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:190px;" />
-			</td>
-			<td>
-				<p:inputText value="#{reportBackingBean.flItemName}"
-					style="margin-top:5px;width:290px;">
-					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText>
-			</td>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.contract.no']}" />
-			</td>
-			<td>
-				<p:inputText maxlength="20"
-					value="#{mcFrnRptBB.managedBean.contractNo}">
-					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText>
-			</td>
-		</tr>
-		<tr>
-			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.contract.no']}" />
 			</td>
 			<td>
@@ -141,12 +121,12 @@
 			</td>
 			<td>
 				<p:selectOneMenu
-					value="#{reportBackingBean.flRecievingOfficer}"
+					value="#{mcFrnRptBB.managedBean.receivingOfficer}"
 					style="margin-top:5px;width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeRecievingOfficerList}"></f:selectItems>
+						value="#{mcFrnRptBB.retrieveReceivingOfficerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -158,7 +138,7 @@
 			</td>
 			<td>
 				<p:inputText maxlength="20"
-					value="#{reportBackingBean.flRecNoteNo}"
+					value="#{mcFrnRptBB.managedBean.flRecNoteNo}"
 					style="margin-top:5px;width:290px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
@@ -169,12 +149,12 @@
 			</td>
 			<td>
 				<p:selectOneMenu
-					value="#{reportBackingBean.flAcknowledgeOfficer}"
+					value="#{mcFrnRptBB.managedBean.acknowledgeOfficer}"
 					style="margin-top:5px;width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
-						value="#{reportBackingBean.rolecodeAcknowledgeOfficerList}"></f:selectItems>
+						value="#{mcFrnRptBB.retrieveAcknowledgeOfficerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>

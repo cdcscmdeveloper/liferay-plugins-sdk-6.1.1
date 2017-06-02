@@ -242,6 +242,14 @@
 					test="#{FlReportConst.fl055PurchaseStopInstrSupp == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/po/Fl055_purchaseStopInstrSupp.xhtml"></ui:include>
 				</c:when>
+				
+				<!-- Panel -->
+				
+				<c:when
+					test="#{FlReportConst.fl033Summary == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/pa/Fl033_summary.xhtml"></ui:include>
+				</c:when>
+				
 				<c:otherwise>
         			ERROR!
     

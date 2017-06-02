@@ -124,7 +124,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{poRptBB.managedBean.purchaseOrderNo}"/>
+				<p:inputText value="#{mcSiSupplierRptBB.managedBean.purchaseOrderNo}"/>
 			</td>
 		</tr>
 		<tr>
@@ -132,7 +132,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{siPtjRptBB.managedBean.siNo}">
+				<p:inputText value="#{mcSiSupplierRptBB.managedBean.siNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
 			</td>
@@ -142,7 +142,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+				<p:selectOneMenu value="#{mcSiSupplierRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"

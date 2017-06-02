@@ -97,10 +97,6 @@ public class FulfilmentReceivedNoteRptBackingBean extends FlReportBackingBean<Fu
 			params.put(FlReportConst.FL_RPT_REC_OFF, getManagedBean().getReceivingOfficer());
 		}
 		
-		if(getManagedBean().getReceivingOfficer() != null){
-			params.put(FlReportConst.FL_RPT_REC_OFF, getManagedBean().getReceivingOfficer());
-		}
-		
 		if(getManagedBean().getFlRecNoteNo() != null){
 			params.put(FlReportConst.FL_RPT_FRN_NO, getManagedBean().getFlRecNoteNo());
 		}

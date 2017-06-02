@@ -10,7 +10,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 /**
  * Managed Bean for FlReport.
  *
- * @author KK LIM
+ * @author Jimmy
  * @since 26/4/2017
  */
 @ManagedBean(name = "mcPmRptManagedBean")
@@ -24,6 +24,7 @@ public class PaymentMatchRptManagedBean extends FlReportManagedBean{
 	private String invNo;
 	private String supplierInvNo;
 	private String paymentMatchNo;
+	private String paymentAdviceNo;
 	private String reportUrl;
 	
 	public String getInvNo() {
@@ -48,6 +49,14 @@ public class PaymentMatchRptManagedBean extends FlReportManagedBean{
 	
 	public void setPaymentMatchNo(String paymentMatchNo) {
 		this.paymentMatchNo = paymentMatchNo;
+	}
+	
+	public String getPaymentAdviceNo() {
+		return paymentAdviceNo;
+	}
+	
+	public void setPaymentAdviceNo(String paymentAdviceNo) {
+		this.paymentAdviceNo = paymentAdviceNo;
 	}
 	
 	public String getReportUrl() {
