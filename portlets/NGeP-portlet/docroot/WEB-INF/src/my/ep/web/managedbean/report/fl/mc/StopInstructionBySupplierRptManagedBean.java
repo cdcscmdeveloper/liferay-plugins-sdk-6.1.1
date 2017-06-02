@@ -10,7 +10,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 /**
  * Managed Bean for FlReport.
  *
- * @author KK LIM
+ * @author Jimmy
  * @since 26/4/2017
  */
 @ManagedBean(name = "mcSiSupplierRptManagedBean")
