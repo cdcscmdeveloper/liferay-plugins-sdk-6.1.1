@@ -58,6 +58,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
@@ -1288,22 +1289,32 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		UserReqDTO userReqDTO = null;
 		try{
 			if (getManagedBean().getContractAdminlist() == null) {
-				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());				
-		      	  	if (getManagedBean().getCtContract().getLoa().getContractAdmin() == null
-		         			|| !getManagedBean().getCtContract().getLoa().getContractAdmin().isRecordStatus()) {
-		      	  		userReqDTO = new UserReqDTO();
-		      	  		if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-		      	  			userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-		      	  		} else {
-		      	  			userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
-		      	  		}
-		      	  		userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-		      	  		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-		      	  		getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());
-		      	  	} else {
-		      	  		getManagedBean().getContractAdminlist().add(getManagedBean().getCtContract().getLoa().getContractAdmin());
-		      	  	}				
+				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
+				
+				String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) 
+							? RoleCode.MIN_CONTRACT_ADMIN.value() 
+								: RoleCode.BPK_CCA.value();
+							
+				CtContractVer ctContractVer =
+						(getManagedBean().getCtContract().getLatestContractVer() != null)
+							? getManagedBean().getCtContract().getLatestContractVer()
+									:   getManagedBean().getCtContract().getCurrentContractVer();				
+				CtActor ctActor = retrieveContractActor(
+						ctContractVer.getContractVerId(),
+						ctContractVer.getDocType(),
+						roleCode);
+				
+				if (ctActor != null) {
+					getManagedBean().getContractAdminlist().add(ctActor.getUser());
+				} else {
+	      	  		userReqDTO = new UserReqDTO();	      	  		
+	      	  		userReqDTO.setRoleCode(roleCode);
+	      	  		userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+	      	  		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+	      	  		getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());			
 		      }
+			}
 	    } finally {
 	    	 userSO = null;
 	    }	
