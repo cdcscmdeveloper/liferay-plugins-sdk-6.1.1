@@ -15,7 +15,7 @@
 							disabled="#{poRptBB.disableMinistryLov()}"
 							value="#{poRptBB.managedBean.ministry.orgName}"
 							postUpdateListener="poRptBB.resetPtjGroupProfile()"
-							update=":form:searchPtj,:form"
+							update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 							saveObject="poRptBB.managedBean.ministry"
 							conditionField="#{poRptBB.getMinistryCondition()}"
 							>
@@ -113,18 +113,14 @@
 				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}"/>
 			</td>
 			<td>
-			<c:if test="#{poRptBB.managedBean.supplier}">
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!poRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
 					value="#{poRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="poRptBB.managedBean.selectedOrgProfile" />
-			</c:if>
-			<c:if test="#{!poRptBB.managedBean.supplier}">
-			<p:inputText maxlength="100" disabled="true" 
+				<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{poRptBB.managedBean.supplier}"
 					value="#{poRptBB.managedBean.supplierCompName}">
 				</p:inputText>
-			</c:if>
 				
 			</td>
 			<td>
@@ -216,7 +212,7 @@
 			<f:setPropertyActionListener target="#{poRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+			process="@this" update="@form" action="#{poRptBB.resetAction()}">
 		</p:commandButton>
 	</div>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
