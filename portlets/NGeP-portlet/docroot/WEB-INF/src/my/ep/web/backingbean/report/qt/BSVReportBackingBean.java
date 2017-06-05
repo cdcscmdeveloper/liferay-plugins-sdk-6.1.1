@@ -121,7 +121,12 @@ public class BSVReportBackingBean extends QtReportBackingBean<BSVReportManagedBe
        if(null!=reportFieldBean.getScPublishToDate() && reportFieldBean.getScPublishToDate().toString() != QtReportConst.EMPTY_VAL){
     	   params.put(QtReportConst.PARAM_PUB_TO_DT_EQ, outputDateFormat.format(reportFieldBean.getScPublishToDate()));	
 		}
-		
+		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
+			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
+		}
+		if(StringUtils.isNotEmpty(reportFieldBean.getScPtj())){
+			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getScPtj());	
+		}
 		return params;
 	}
 

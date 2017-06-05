@@ -55,6 +55,8 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_PUB_TO_DT_EQ = "PUBTODT";
 	public static final String PARAM_PROCURE_METHOD_EQ = "PM";
 	public static final String PARAM_PROCURE_STATUS_EQ = "STATUS";
+	public static final String PARAM_DESK_OFFCR_EQ = "DOUSERID";
+	public static final String PARAM_PROCURE_PTJ_EQ = "ORGPROFILEID";
 	
 	
 	/**
