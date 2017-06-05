@@ -639,6 +639,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 	public void clearInput(){
 		
 		this.setChallengeAns1("");
+		this.setPassword("");
 	}
 
 
