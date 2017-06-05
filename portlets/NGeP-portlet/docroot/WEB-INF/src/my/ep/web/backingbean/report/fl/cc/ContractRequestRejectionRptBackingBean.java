@@ -117,4 +117,8 @@ public class ContractRequestRejectionRptBackingBean extends FlReportBackingBean<
 		}
 		return null;
 	}
+	
+	public void resetAction(){
+		resetSearchCriteriaValues();;
+	}
 }

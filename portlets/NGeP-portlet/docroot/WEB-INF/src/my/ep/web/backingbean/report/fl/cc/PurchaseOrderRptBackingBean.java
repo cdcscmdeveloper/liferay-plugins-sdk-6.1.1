@@ -111,4 +111,13 @@ public class PurchaseOrderRptBackingBean extends FlReportBackingBean<PurchaseOrd
 		return null;
 	}
 	
+	public void resetAction(){
+		if(getManagedBean().isSupplier()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		getManagedBean().setItemName(null);
+		resetSearchCriteriaValues();;
+	}
 }
