@@ -615,8 +615,8 @@ public class SmApplicationBackingBean extends
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 				reqDTO.setApplId(appl.getApplId());
 				MofRegistrationResDTO resDTO = SmServiceLookup
-						.getMofRegistrationSO().retrieveCurrentDraftApplication(
-								reqDTO);
+						.getMofRegistrationSO()
+						.retrieveCurrentDraftApplication(reqDTO);
 				appl = resDTO.getSmAppl();
 				supplierProfile = appl.getSmSupplier();
 			}
@@ -5652,6 +5652,54 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
+	}
+
+	public void onTickSameAsAddress(SmAddress srcAddr,
+			SmPersonnelAddress destAddr) {
+
+		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
+				|| srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null
+				|| srcAddr.getPmDistrict() == null
+				|| srcAddr.getPmDistrict().getDistrictId() == null
+				|| srcAddr.getPmCity() == null
+				|| srcAddr.getPmCity().getCityId() == null
+				|| StringUtils.isBlank(srcAddr.getPostcode())) {
+			String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
+			if (destAddr.getAddressType().equalsIgnoreCase(
+					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+				addrType = SmCommonUtil.getMessage("lbl.sm.companyaddress", null);
+			}
+			destAddr.setSameAsPerm(false);
+			throw new EpException(MessageConst.ERROR_722656,new String[]{addrType});
+		} else {
+			String panelName = StringUtils.EMPTY;
+			destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
+					srcAddr, destAddr.getSmAddress(), destAddr,
+					getManagedBean().getDefPmCountry()));
+			if (destAddr.getAddressType().equalsIgnoreCase(
+					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+				panelName = SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL;
+
+			}
+			if (destAddr.getAddressType().equalsIgnoreCase(
+					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
+				panelName = SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL;
+
+			}
+			if (destAddr.getAddressType().equalsIgnoreCase(
+					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+				panelName = SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL;
+
+			}
+			if (destAddr.getAddressType().equalsIgnoreCase(
+					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+				panelName = SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL;
+			}
+
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(), destAddr.getSmAddress(), panelName);
+		}
 	}
 
 	/**

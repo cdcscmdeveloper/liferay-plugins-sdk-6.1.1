@@ -10077,6 +10077,7 @@ public class SmApplicationUtil {
 				.isDisableAuthorizedRadio(bean.getSelectedShareHolder(),
 						bean.isValidSmUserLimit()));
 	}
+	
 
 	/**
 	 * Checks if is personnel view only.
