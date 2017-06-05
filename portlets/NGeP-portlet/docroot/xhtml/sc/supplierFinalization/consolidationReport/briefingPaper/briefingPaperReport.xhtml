@@ -49,24 +49,9 @@
 				<ui:fragment rendered="#{report.pmDocument ne null and 
 										 	consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
 										 		.contains(report.pmDocument.docDefinitionKey)}"> 
-				 
 					<p:commandButton id="download" icon="ui-icon-download" 
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false" action="#{consolidationReportBackingBean.downloadReport(report)}" />
-					<ui:fragment
-						rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey}">
-						<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
-							popupWidgetVar="kertasTaklimUploadAttWidget"
-							attachment="#{report.scQtFinalizationReportAttachment}"
-							rowIndex="#{rowIndex}"
-							deleteFileUploadListener="consolidationReportBackingBean.deleteKertasAttachment">
-							<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-						</ac:scSingleFileUploadButton>
-					</ui:fragment>
-
 				</ui:fragment>
 				<ui:fragment rendered="#{(report.pmDocument ne null and
 											!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
