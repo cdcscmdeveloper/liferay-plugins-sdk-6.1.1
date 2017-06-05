@@ -5,110 +5,21 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	 <ui:param name="finalization" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization}"/>
-     <ui:param name="readOnly" value="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 
 	<p:remoteCommand name="updateEndorsementReport" partialSubmit="true" process="@form" 
 					 update="@form" action="#{suppFinalizationBackingBean.navigateToEndorsementReportTab}" />
 					 
-<p:panel id="panelConditionsId" header="#{lbl['lbl.sc.sf.conditions']}" toggleable="true">						  
-
-	<table style="width: 100%;">
-		<tr>
-			<td style="float:left;width: 12%;"><p:outputLabel value="#{lbl['lbl.sc.sf.with.conditions']}" />
-			</td>
-			<td style="float:left;">
-				<table>
-					<tr>
-							<td><p:selectOneRadio id="withConditionsId" required="true"
-									label="#{lbl['lbl.sc.sf.with.conditions']}"
-									value="#{finalization.withTerms}" disabled="#{!readOnly}">
-									<f:selectItems
-										value="#{suppFinalizationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-									<p:ajax event="change"
-										process="@this" partialSubmit="true" update="panelWithConditionsTxtId" listener="#{suppFinalizationBackingBean.setWithTermValue}"></p:ajax>
-								</p:selectOneRadio> 
-								<p:message id="withConditionsMsgId" for="withConditionsId" display="icon" />
-							</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		</table>
-		<h:panelGroup id="panelWithConditionsTxtId">
-			<ui:fragment rendered="#{finalization.withTerms}">
-				<table style="width: 100%;">
-					<tr>
-						<td style="float:left;margin-left: 55px;"><p:outputLabel
-								value="#{lbl['lbl.sc.sf.with.conditions.as.below']}:" style="margin-bottom:5px;"/></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>
-							<table>
-								<tr>
-									<td style="float:right;margin-left: 55px;"><p:inputTextarea
-											id="withConditionTxtId" value="#{finalization.termsText}"
-											cols="80" rows="3" onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"
-											label="#{lbl['lbl.sc.sf.with.conditions.as.below']}"/> 
-											<p:message id="withConditionTxtMsgId" for="withConditionTxtId"
-											display="icon" /></td>
-								</tr>
-							</table>
-						</td>
-						<td></td>
-					</tr>
-				</table>
-			</ui:fragment>
-		</h:panelGroup>
-	</p:panel>
-	
+	<ac:scRemarkAndAttachment remarkList="#{suppFinalizationBackingBean.managedBean.finalizationEndorsementRemarks}"
+							  showAttachment="false" readonly="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"
+							  numberOfCols="80"/>	
+							
 	<ac:scRemarkAndAttachment remarkList="#{suppFinalizationBackingBean.managedBean.finalizationPengreysonremarks}"
-							  showAttachment="false" header="#{lbl['lbl.sc.recommendation']}" readonly="#{!readOnly}"
-							  numberOfCols="80"/>
+							  showAttachment="false" header="#{lbl['lbl.sc.recommendation']}" readonly="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"
+							  numberOfCols="80"/>							  
+							  			
 
-	<p:panel id="panelJustificationId" header="#{lbl['lbl.sc.sf.justification']}" toggleable="true">
-		<table style="width: 100%;">
-			<tr>
-				<td style="width:20%;margin-left:55px;"><p:outputLabel
-						value="#{lbl['lbl.sc.sf.justification.selection']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-
-				<td style="margin-left: 55px;"><p:selectOneMenu id="justificationDDId" 
-						value="#{suppFinalizationBackingBean.managedBean.justification.parameterId}"
-						style="width: 300px;margin-bottom: 5px;"
-						label="#{lbl['lbl.sc.sf.justification.selection']}" disabled="#{!readOnly}">
-						<f:selectItems
-							value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.finalizationSupplierJustification)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="panelWithJustificationTxtId"
-							listener="#{suppFinalizationBackingBean.justificationChange}" disabled="#{!readOnly}"/>
-					</p:selectOneMenu> <p:message id="justificationDDMsgId" for="justificationDDId" display="icon" /></td>
-					</tr>
-			</table>
-		<h:panelGroup id="panelWithJustificationTxtId">
-			<c:if
-				test="#{suppFinalizationBackingBean.managedBean.renderjustificationTextbox}">
-				<table>
-					<tr>
-						<td style="float:right;margin-left: 55px;"><p:inputTextarea id="justificationTxtId"
-								value="#{finalization.justificationText}" cols="80" rows="3"
-								onkeydown="limitTextArea(this,1000);" required="#{readOnly}" disabled="#{!readOnly}"
-								label="#{lbl['lbl.sc.sf.justification']}"/> <p:message
-								id="justificationTxtMsgId" for="justificationTxtId"
-								display="icon" /></td>
-								<td></td>
-					</tr>
-				</table>
-			</c:if>
-		</h:panelGroup>
-	</p:panel>
-  
-     <h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.sf.endorse.rpt.intsruction']}" escape="false" /> <br/>
 	<p:commandButton value="#{lbl['lbl.sc.btn.update.recommendation']}" update="@([id$=endorsementReportContentId])" 
-					 style="margin-left: 55px;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />							  
+					 style="margin-left: 12%;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />							  
 	<br/>
 	<br/>
 	
