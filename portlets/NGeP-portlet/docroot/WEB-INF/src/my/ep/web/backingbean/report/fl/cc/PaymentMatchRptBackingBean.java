@@ -114,4 +114,8 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 		return null;
 	}
 	
+	public void resetAction(){
+		resetSearchCriteriaValues();;
+	}
+	
 }

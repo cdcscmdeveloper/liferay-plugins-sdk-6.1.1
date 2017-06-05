@@ -102,5 +102,15 @@ public class InvoiceRptBackingBean extends FlReportBackingBean<InvoiceRptManaged
 		
 	}
 	
+	public void resetAction(){
+		if(getManagedBean().isSupplier()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		getManagedBean().setInvNo(null);
+		getManagedBean().setSupplierInvNo(null);
+		resetSearchCriteriaValues();;
+	}
 	
 }

@@ -123,4 +123,14 @@ public class FulfilmentReceivedNoteRptBackingBean extends FlReportBackingBean<Fu
 		}
 		return null;
 	}
+	
+	public void resetAction(){
+		if(getManagedBean().isSupplier()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		getManagedBean().setFrnNo(null);
+		resetSearchCriteriaValues();;
+	}
 }

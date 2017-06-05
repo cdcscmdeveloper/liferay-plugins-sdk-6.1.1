@@ -107,7 +107,24 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		this.getManagedBean().setReportUrl(resDTO.getReportUrl());
 	}
 	
-	public void resetAction() {
+	public void resetSearchCriteriaValues() {
+		 getManagedBean().setSelectedYear(null); 
+		 getManagedBean().setContractNo(null); 
+		 getManagedBean().setPhysicalContractNo(null); 
+		 getManagedBean().setContractRequestNo(null); 
+		 getManagedBean().setPanelName(null); 
+		 getManagedBean().setLoaNo(null); 
+		 getManagedBean().setPhysicalLoaNo(null); 
+		 getManagedBean().setPurchaseOrderNo(null); 
+		 getManagedBean().setPkpNo(null); 
+		 getManagedBean().setGroup(null); 
+		 getManagedBean().setRequisitioner(null); 
+		 getManagedBean().setApprover(null); 
+		 getManagedBean().setReceivingOfficer(null); 
+		 getManagedBean().setAcknowledgeOfficer(null); 
+		 getManagedBean().setPayOfficer(null); 
+		 getManagedBean().setStatusDescId(null); 
+		 getManagedBean().setSelectedOrgProfile(null);//supplier name
 		
 	}
 	
@@ -653,4 +670,5 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 
 	}
+	
 }
