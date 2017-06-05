@@ -105,18 +105,14 @@
 				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}"/>
 			</td>
 			<td>
-				<c:if test="#{frnCancelRptBB.managedBean.supplier}">
-				<ac:lov id="flSupplierName" readonly="true"
+				<ac:lov id="flSupplierName" readonly="true" rendered="#{!frnCancelRptBB.managedBean.supplier}"
 					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
 					value="#{frnCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="frnCancelRptBB.managedBean.selectedOrgProfile" />
-			</c:if>
-			<c:if test="#{!frnCancelRptBB.managedBean.supplier}">
-			<p:inputText maxlength="100" disabled="true" 
+			<p:inputText maxlength="100" disabled="true" rendered="#{frnCancelRptBB.managedBean.supplier}"
 					value="#{frnCancelRptBB.managedBean.supplierCompName}">
 				</p:inputText>
-			</c:if>
 			</td>
 		</tr>
 		
@@ -214,7 +210,7 @@
 			<f:setPropertyActionListener target="#{frnCancelRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+			process="@this" update="@form" action="#{frnCancelRptBB.resetAction()}">
 		</p:commandButton>
 	</div>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
