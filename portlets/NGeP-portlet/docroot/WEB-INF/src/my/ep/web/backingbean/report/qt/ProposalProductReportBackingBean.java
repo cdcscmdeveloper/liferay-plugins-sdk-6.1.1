@@ -141,6 +141,12 @@ QtReportBackingBean<ProposalProductReportManagedBean> implements Serializable{
 		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
 			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
 		}
+		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
+			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
+		}
+		if(StringUtils.isNotEmpty(reportFieldBean.getScPtj())){
+			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getScPtj());	
+		}
 		return params;
 	}
 
