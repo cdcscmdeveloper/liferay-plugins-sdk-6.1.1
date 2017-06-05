@@ -33,6 +33,7 @@
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 
 					addressTitle="#{lbl['lbl.sm.person.mailAddr']}" 
+					addrSameAsObj="#{backingBean.managedBean.shareHolderPermAddr.smAddress}"
 					addrObj="#{backingBean.managedBean.shareHolderMailAddr}" 
 					latestAddrObj="#{backingBean.managedBean.latestMailAddr}" 
 					addrPanelId="mailAddrPan" addrId="equiPersMailAddrLine" 
@@ -50,10 +51,13 @@
 		<tr>
 			<td valign="top" width="50%">
 				<p:outputPanel id="resiAddrPan" layout="block"
-					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
+					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner 
+					or backingBean.managedBean.selectedShareHolder.higherManagement 
+					or backingBean.managedBean.selectedShareHolder.director}">
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 
 					addressTitle="#{lbl['lbl.sm.person.resiAddr']}" 
+					addrSameAsObj="#{backingBean.managedBean.shareHolderPermAddr.smAddress}"
 					addrObj="#{backingBean.managedBean.shareHolderResdAddr}" 
 					latestAddrObj="#{backingBean.managedBean.latestResdAddr}" 
 					addrPanelId="resiAddrPan" addrId="equiPersResiAddrLine" 
@@ -68,10 +72,13 @@
 					
 				</p:outputPanel></td>
 			<td><p:outputPanel id="offcAddrPan" layout="block"
-					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
+					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner 
+					or backingBean.managedBean.selectedShareHolder.higherManagement 
+					or backingBean.managedBean.selectedShareHolder.director}">
 					
 					<ac:smShareholderAddress bBean="#{backingBean}" 
-					addressTitle="#{lbl['lbl.sm.person.offAddr']}" 
+					addressTitle="#{lbl['lbl.sm.person.offAddr']}"
+					addrSameAsObj="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress}"
 					addrObj="#{backingBean.managedBean.shareHolderOffAddr}" 
 					latestAddrObj="#{backingBean.managedBean.latestOffAddr}" 
 					addrPanelId="offcAddrPan" addrId="equiPersOffcAddrLine" 

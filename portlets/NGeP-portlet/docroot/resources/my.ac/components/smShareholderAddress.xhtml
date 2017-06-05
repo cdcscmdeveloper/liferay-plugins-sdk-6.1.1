@@ -10,6 +10,7 @@
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="showTick" default="false"/>
 		<cc:attribute name="tickLabel" default=""/>
+		<cc:attribute name="addrSameAsObj" />
 		<cc:attribute name="addrObj" required="true" />
 		<cc:attribute name="latestAddrObj" required="true" />
 		<cc:attribute name="addressTitle" required="true" />
@@ -41,6 +42,7 @@
 						<p:selectBooleanCheckbox
 							value="#{cc.attrs.addrObj.sameAsPerm}">
 							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj)}"
 								update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
 								oncomplete="blockWidget.hide()"/>
 						</p:selectBooleanCheckbox>
@@ -48,10 +50,6 @@
 					</td>
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{cc.attrs.addrObj.sameAsPerm}">
-				<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderDuplicatAddrPanelForm.xhtml" />
-			</p:outputPanel>
-			<p:outputPanel rendered="#{!cc.attrs.addrObj.sameAsPerm}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -267,7 +265,6 @@
 							</p:outputPanel>
 						</p:outputPanel></td>
 				</tr>
-			</p:outputPanel>
 		</table>
 		
 	</cc:implementation>
