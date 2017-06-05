@@ -35,18 +35,22 @@
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false" immediate="true" action="#{suppFinalizationBackingBean.downloadReport(report)}" />
 				</ui:fragment>
-				<ui:fragment rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey}">
-						<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
-							popupWidgetVar="kertasTaklimUploadAttWidget"
-							attachment="#{report.tempReportAttachment}"
-							rowIndex="#{rowIndex}" 
-							readonly="#{!(isSecretaryUser)}"
-							deleteFileUploadListener="suppFinalizationBackingBean.deleteKertasAttachment">
-							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+				<ui:fragment rendered="#{(report.pmDocument ne null and
+											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
+												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
+					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+						popupWidgetVar="briefingReportAttWidget"
+						attachment="#{report.scQtFinalizationReportAttachment}"
+						readonly="#{!(isSecretaryUser and report.selected)}"
+						rowIndex="#{rowIndex}">
+	
+						<f:setPropertyActionListener for="actionEvent" value="#{report}"
 							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
+	
 						<f:setPropertyActionListener for="actionEvent" value="KTR"
 							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
-						</ac:scSingleFileUploadButton>		
+	
+					</ac:scSingleFileUploadButton>
 				</ui:fragment>				
 			</p:column>
 		</p:dataTable>
@@ -56,6 +60,25 @@
 				action="#{suppFinalizationBackingBean.downloadAllReports}" 
 				ajax="false" immediate="true" rendered="#{!readOnlyTask}" />
 		</div>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.briefing.paper.preparation']}" toggleable="true">
+	
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td class="TableFieldLeft" width="24%">
+					<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+				</td>
+				<td class="TableFieldRight">
+						
+					<ac:scSingleFileUploadButton id="briefingPaperUploadBtnId" 
+						popupWidgetVar="briefingPaperAttWidget"
+						attachment="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}"
+						readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}"/>								
+																				
+				</td>
+			</tr>
+		</table>
 	</p:panel>
 	
 </ui:composition>
