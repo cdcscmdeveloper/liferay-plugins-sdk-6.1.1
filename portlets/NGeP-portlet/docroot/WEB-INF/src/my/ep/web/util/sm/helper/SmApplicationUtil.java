@@ -4581,7 +4581,7 @@ public class SmApplicationUtil {
 	 *            - PmCountry object
 	 * @return the sm address
 	 */
-	private static SmAddress cloneAsPermenantAddr(SmAddress srcAddr,
+	public static SmAddress cloneAsPermenantAddr(SmAddress srcAddr,
 			SmAddress desAddr, SmPersonnelAddress desPersAddr, PmCountry cntry) {
 		SmAddress smAddress = new SmAddress();
 		try {
