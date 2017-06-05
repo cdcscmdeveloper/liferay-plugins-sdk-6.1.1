@@ -27,6 +27,8 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private String quotationNumber;
 	private String quotationId;
 	private ScReportFieldsSearchBean scReportSearchBean=null;
+	private boolean isPtjEnable=Boolean.FALSE;
+	private boolean isDeskOfficerEnable=Boolean.FALSE;
 	/**
 	 * @return the quotationNumner
 	 */
@@ -62,6 +64,30 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	 */
 	public void setScReportSearchBean(ScReportFieldsSearchBean scReportSearchBean) {
 		this.scReportSearchBean = scReportSearchBean;
+	}
+	/**
+	 * @return the isPtjEnable
+	 */
+	public boolean isPtjEnable() {
+		return isPtjEnable;
+	}
+	/**
+	 * @param isPtjEnable the isPtjEnable to set
+	 */
+	public void setPtjEnable(boolean isPtjEnable) {
+		this.isPtjEnable = isPtjEnable;
+	}
+	/**
+	 * @return the isDeskOfficerEnable
+	 */
+	public boolean isDeskOfficerEnable() {
+		return isDeskOfficerEnable;
+	}
+	/**
+	 * @param isDeskOfficerEnable the isDeskOfficerEnable to set
+	 */
+	public void setDeskOfficerEnable(boolean isDeskOfficerEnable) {
+		this.isDeskOfficerEnable = isDeskOfficerEnable;
 	}
 	
 

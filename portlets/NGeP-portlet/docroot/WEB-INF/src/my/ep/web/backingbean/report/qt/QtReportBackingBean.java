@@ -26,18 +26,23 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
 import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.ResourceBundleUtils;
@@ -50,6 +55,7 @@ import my.ep.web.managedbean.report.qt.QtReportManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -74,6 +80,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	public void reportOnChange() {
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
+			this.getManagedBean().setPtjEnable(Boolean.FALSE);
+			this.getManagedBean().setDeskOfficerEnable(Boolean.FALSE);
 		}
 	}
 
@@ -488,4 +496,159 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	}
 	
 	
+	/**
+	 * retrieveDescOfficer - Retrieve desc officer, based on user id and
+	 * organization profile id.
+	 * 
+	 * @return the descOfficerList
+	 */
+	public List<SelectItem> retrieveDescOfficer() {
+		log.info("ReportBackingBean-retrieveDescOfficer");
+	List<SelectItem>	scDescOfficerList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			Long orgProfileId = null;
+			/*if (StringUtils.isNotEmpty(this.getScPtj())) {
+				orgProfileId = Long.parseLong(this.getScPtj());
+			}*/
+			List<Object[]> reqLst = reportSO.retrieveDeskOfficer( new FacesScopes().getUserSessionBean().getUserId(),
+					orgProfileId);
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scDescOfficerList.add(selectItem);
+				}
+			}
+		}
+		return scDescOfficerList;
+	}
+	
+	/**
+	 * DeskOfficer DropDown Show or Hide Based on LoginUser.
+	 * 
+	 * 
+	 * 
+	 */
+	public boolean retriveUserRoles(){
+	log.info("retriveUserRoles"+this.getManagedBean().isDeskOfficerEnable());
+	if(!this.getManagedBean().isDeskOfficerEnable()){
+	List<String> userRoles=	retriveUserrloeByUserId();
+	List<SelectItem> applovalListSize=retrieveApprovarNaikTarafSCS2();
+	if((null!=applovalListSize && applovalListSize.size()>0)||((null!=userRoles)&&userRoles.contains(ReportConst.BPK_APPROVER)||userRoles.contains(ReportConst.COMMITTEE_APPROVER)||userRoles.contains(ReportConst.PUBLICATION_APPROVER))){
+	this.getManagedBean().setDeskOfficerEnable(Boolean.TRUE);	
+	return this.getManagedBean().isDeskOfficerEnable();		
+	}
+	
+	}
+	return this.getManagedBean().isDeskOfficerEnable();	
+	}
+	
+	/**
+	 * retriveUserrloeByUserId - Retrive userrole by user id, based on module
+	 * name.
+	 * 
+	 * @param moduleName
+	 *            the module name
+	 * @return the authoriztionList
+	 */
+	public List<String> retriveUserrloeByUserId() {
+		log.info("ReportBackingBean-retriveUserrloeByUserId");
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		List<String> authoriztionList=new ArrayList<String>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			// reqDTO.setUserId((long) 240500);
+			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+			UserResDTO userResDTO = userSO
+					.retrieveUserRoleDescListByUserId(reqDTO);
+			List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+			if (CollectionUtils.isNotEmpty(roleDesc)) {
+				for (PmRoleDesc pmRoleDesc : roleDesc) {
+					pmRoleDesc.getPmRole().getRoleCode();
+					if (!authoriztionList.contains(pmRoleDesc.getPmRole()
+							.getRoleCode())) {
+						authoriztionList.add(pmRoleDesc.getPmRole()
+								.getRoleCode());
+					}
+				}
+			}
+		}
+		return authoriztionList;
+	}
+	
+	
+	/**
+	 * retrievePTJS2 - Retrieve PTJ for s2, based on user id.
+	 * 
+	 * @return the ptjList
+	 */
+	public List<SelectItem> retrievePTJList() {
+		log.info("ReportBackingBean-retrievePTJS2");
+	List<SelectItem>	scPtjList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptLst = reportSO.retrievePTJS2(new FacesScopes().getUserSessionBean().getUserId());
+			if (CollectionUtils.isNotEmpty(ptLst)) {
+				for (Object[] object : ptLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scPtjList.add(selectItem);
+				}
+			}
+		}
+		return scPtjList;
+	}
+	/**
+	 * PTJ DropDown Show or Hide Based on LoginUser.
+	 * 
+	 * 
+	 * 
+	 */
+	public boolean retrivePtjRoles(){
+		log.info("retrivePtjRoles"+this.getManagedBean().isPtjEnable());
+		if(!this.getManagedBean().isPtjEnable()){
+			List<SelectItem> applovalListSize=retrieveApprovarNaikTarafSCS2();
+			if(null!=applovalListSize && applovalListSize.size()>0){
+				log.info("applovalListSize"+applovalListSize.size());
+				this.getManagedBean().setPtjEnable(Boolean.TRUE);
+			}
+		}
+	return this.getManagedBean().isPtjEnable();
+}
+	
+	/**
+	 * retrieveApprovarNaikTarafSCS2 - Retrieve approvar naik taraf for sc s2,
+	 * based on user id.
+	 * 
+	 * @return the approverNayakTarafList
+	 */
+	private List<SelectItem> retrieveApprovarNaikTarafSCS2() {
+		log.info("ReportBackingBean-retrieveApprovarNaikTarafSCS2");
+	List<SelectItem>	approverNayakTarafList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> aprnktrfLst = reportSO
+					.retrieveApprovarNaikTarafSCS2( new FacesScopes().getUserSessionBean().getUserId());
+			if (CollectionUtils.isNotEmpty(aprnktrfLst)) {
+				for (Object[] object : aprnktrfLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					approverNayakTarafList.add(selectItem);
+				}
+			}
+		}
+		return approverNayakTarafList;
+	}
 }
