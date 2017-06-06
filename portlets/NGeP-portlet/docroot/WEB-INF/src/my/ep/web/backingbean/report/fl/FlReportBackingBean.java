@@ -108,6 +108,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	public void resetSearchCriteriaValues() {
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
 		 getManagedBean().setSelectedYear(null); 
 		 getManagedBean().setContractNo(null); 
 		 getManagedBean().setPhysicalContractNo(null); 
@@ -298,7 +303,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * 
 	 * @return true, if user is Government User
 	 */
-	protected boolean hasAuditGenUserRole() {
+	public boolean hasAuditGenUserRole() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()))
 			return true;
 		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()))
@@ -418,7 +423,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getStatusDropdownValues(ModuleCodeConst.ORDER_FULFILLMENT, docType);
 	}
 	
-	public List<SelectItem> getRequisitionerList(Long userId,Long ptjGroupId){
+	public List<SelectItem> getRequisitionerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IPMReportSO.class);
 			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
@@ -427,10 +432,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					getManagedBean().getHighRoleCodeList().add(ptLst.get(i));
 				}
 			}
-
+			
 			if(getManagedBean().getRequisitionerList().isEmpty() || getManagedBean().getRequisitionerList() == null){
 				getManagedBean().setRequisitionerList(new ArrayList<SelectItem>());
 			}
+			getManagedBean().getRequisitionerList().clear();
 			if ((CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList()))
 					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
 				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(userId,RoleCode.REQUISITIONER.value());
@@ -443,7 +449,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					}
 				}
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.REQUISITIONER.value(),ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.REQUISITIONER.value(),ptjId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -457,7 +463,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getRequisitionerList();
 	}
 	
-	public List<SelectItem> getApproverList(Long userId,Long ptjGroupId){
+	public List<SelectItem> getApproverList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
@@ -470,11 +476,12 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			if(getManagedBean().getApproverList().isEmpty() || getManagedBean().getApproverList() == null){
 				getManagedBean().setApproverList(new ArrayList<SelectItem>());
 			}
+			getManagedBean().getApproverList().clear();
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
 					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
 				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.FL_APPROVER.value(), ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.FL_APPROVER.value(), ptjId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -488,7 +495,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getApproverList();
 	}
 	
-	public List<SelectItem> getReceivingOfficerList(Long userId,Long ptjGroupId){
+	public List<SelectItem> getReceivingOfficerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
@@ -501,11 +508,12 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			if(getManagedBean().getReceivingOfficerList().isEmpty() || getManagedBean().getReceivingOfficerList() == null){
 				getManagedBean().setReceivingOfficerList(new ArrayList<SelectItem>());
 			}
+			getManagedBean().getReceivingOfficerList().clear();
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
 					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
 				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.RECEIVING_OFFICER.value(), ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.RECEIVING_OFFICER.value(), ptjId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -532,7 +540,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getReceivingOfficerList();
 	} 
 	
-	public List<SelectItem> getAcknowledgeOfficerList(Long userId,Long ptjGroupId){
+	public List<SelectItem> getAcknowledgeOfficerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
@@ -545,11 +553,12 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			if(getManagedBean().getAcknowledgeOfficerList().isEmpty() || getManagedBean().getAcknowledgeOfficerList() == null){
 				getManagedBean().setAcknowledgeOfficerList(new ArrayList<SelectItem>());
 			}
+			getManagedBean().getAcknowledgeOfficerList().clear();
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
 					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
 				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.ACKNOWLEDGE_OFFICER.value(), ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.ACKNOWLEDGE_OFFICER.value(), ptjId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
@@ -576,7 +585,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getAcknowledgeOfficerList();
 	} 
 	
-	public List<SelectItem> getPayOfficerList(Long userId,Long ptjGroupId){
+	public List<SelectItem> getPayOfficerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(userId);
@@ -589,11 +598,12 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			if(getManagedBean().getPayOfficerList().isEmpty() || getManagedBean().getPayOfficerList() == null){
 				getManagedBean().setPayOfficerList(new ArrayList<SelectItem>());
 			}
+			getManagedBean().getPayOfficerList().clear();
 			if (CollectionUtils.isNotEmpty(getManagedBean().getHighRoleCodeList())
 					&& (getManagedBean().getHighRoleCodeList().contains(RoleCode.REQUISITIONER.value()))) {
 				return null;
 			}else {
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.PAY_OFFICER.value(), ptjGroupId);
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(userId,RoleCode.PAY_OFFICER.value(), ptjId);
 				if (CollectionUtils.isNotEmpty(rlcdLst)) {
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();

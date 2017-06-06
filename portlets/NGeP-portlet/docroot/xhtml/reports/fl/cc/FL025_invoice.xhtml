@@ -30,7 +30,7 @@
 							disabled="#{invRptBB.disablePtjGroupLov()}"
 							value="#{invRptBB.managedBean.ptjGroup.orgName}"
 							postUpdateListener="invRptBB.resetPtjProfile()"
-							update=":form:searchPtj,:form"
+							update=":form:searchPtj"
 							saveObject="invRptBB.managedBean.ptjGroup"
 							conditionField="#{invRptBB.constuctConditionFieldsForPTJGroup()}"
 							>
@@ -47,6 +47,7 @@
 							value="#{invRptBB.managedBean.ptj.orgName}"
 							saveObject="invRptBB.managedBean.ptj"	
 							conditionField="#{invRptBB.getPTJCondition()}"
+							update=":form"
 							>			
 						</ac:lov>
 			</td>
