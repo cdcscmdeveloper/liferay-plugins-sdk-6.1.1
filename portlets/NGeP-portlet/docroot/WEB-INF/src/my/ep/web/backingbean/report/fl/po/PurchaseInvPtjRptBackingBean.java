@@ -91,5 +91,10 @@ public class PurchaseInvPtjRptBackingBean extends FlReportBackingBean<PurchaseIn
 		
 	}
 	
+	public void resetAction(){
+		getManagedBean().setInvNo(null);
+		getManagedBean().setSupplierInvNo(null);
+		resetSearchCriteriaValues();
+	}
 	
 }

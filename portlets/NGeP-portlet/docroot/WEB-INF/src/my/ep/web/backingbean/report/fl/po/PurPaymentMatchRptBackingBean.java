@@ -102,4 +102,12 @@ public class PurPaymentMatchRptBackingBean extends FlReportBackingBean<PurPaymen
 		return null;
 	}
 	
+	public void resetAction(){
+		getManagedBean().setInvNo(null);
+		getManagedBean().setSupplierInvNo(null);
+		getManagedBean().setPaymentMatchNo(null);
+		resetSearchCriteriaValues();
+	}
+	
+	
 }
