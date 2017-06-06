@@ -108,4 +108,10 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 		}
 		return null;
 	}
+	
+	public void resetAction(){
+		getManagedBean().setFrnNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 }
