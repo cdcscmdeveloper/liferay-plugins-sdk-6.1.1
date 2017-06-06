@@ -100,11 +100,13 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 	}
 	
 	public List<SelectItem> retrieveRequisitionerList(){
-		if(getManagedBean().getPtjGroup() != null){
-			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+		if(getManagedBean().getPtj() != null){
+			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
 	
-	
+	public void resetAction(){
+		resetSearchCriteriaValues();
+	}
 }
