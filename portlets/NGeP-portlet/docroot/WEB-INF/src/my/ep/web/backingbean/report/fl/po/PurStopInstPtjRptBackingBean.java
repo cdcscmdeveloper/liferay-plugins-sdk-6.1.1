@@ -99,4 +99,9 @@ public class PurStopInstPtjRptBackingBean extends FlReportBackingBean<PurStopIns
 		return null;
 	}
 	
+	public void resetAction(){
+		getManagedBean().setSiNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 }

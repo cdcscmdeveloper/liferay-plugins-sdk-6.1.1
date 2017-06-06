@@ -109,4 +109,9 @@ public class PurFRNCancelRptBackingBean extends FlReportBackingBean<PurFRNCancel
 		return null;
 	}
 	
+	public void resetAction(){
+		getManagedBean().setFrnNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 }
