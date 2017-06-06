@@ -120,9 +120,19 @@ public class FulfilmentReceivedNoteRptBackingBean extends FlReportBackingBean<Fu
 	}
 	
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
-		if(getManagedBean().getPtjGroup() != null){
-			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+		if(getManagedBean().getPtj() != null){
+			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
+	}
+	
+	public void resetAction(){
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		
+		resetSearchCriteriaValues();
 	}
 }

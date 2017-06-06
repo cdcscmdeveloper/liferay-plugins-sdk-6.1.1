@@ -121,5 +121,13 @@ public class DeliveryOrderCancellationRptBackingBean extends FlReportBackingBean
 		
 	}
 	
-	
+	public void resetAction(){
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		
+		resetSearchCriteriaValues();
+	}
 }

@@ -56,6 +56,7 @@
 					headerText="#{lbl['lbl.fl.ptj']}"
 					disabled="#{mcPoCancelRptBB.disablePtjLov()}"
 					value="#{mcPoCancelRptBB.managedBean.ptj.orgName}"
+					update=":form:searchPtj,:form"
 					saveObject="mcPoCancelRptBB.managedBean.ptj"
 					conditionField="#{mcPoCancelRptBB.getPTJCondition()}">
 				</ac:lov>
@@ -187,7 +188,7 @@
 			<f:setPropertyActionListener target="#{mcPoCancelRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+			process="@this" update="@form" action="#{mcPoCancelRptBB.resetAction()}">
 		</p:commandButton>
 	</div>
 

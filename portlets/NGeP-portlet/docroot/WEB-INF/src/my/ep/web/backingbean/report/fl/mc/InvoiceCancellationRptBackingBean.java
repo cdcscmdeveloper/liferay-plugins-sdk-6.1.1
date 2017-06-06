@@ -102,5 +102,13 @@ public class InvoiceCancellationRptBackingBean extends FlReportBackingBean<Invoi
 		
 	}
 	
-	
+	public void resetAction(){
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		
+		resetSearchCriteriaValues();
+	}
 }
