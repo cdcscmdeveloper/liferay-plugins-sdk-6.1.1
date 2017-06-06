@@ -2002,7 +2002,7 @@ public class SmApplicationUtil {
 				if (per.getShareAmt() == null
 						|| per.getShareAmt().compareTo(new BigDecimal(0)) == 0) {
 					sb.append("<br/>");
-					sb.append(++i + ".)");
+					sb.append(++i + ") ");
 					sb.append(per.getName());
 					validShrHldrsCap = false;
 				} else {
