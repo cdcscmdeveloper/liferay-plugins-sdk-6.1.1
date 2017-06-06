@@ -97,7 +97,7 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 	}
 	
 	public void resetAction(){
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 	
 }
