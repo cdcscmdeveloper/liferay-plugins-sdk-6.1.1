@@ -686,6 +686,37 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	public void onTickSameAsAddress(SmAddress srcAddr,
+			SmPersonnelAddress destAddr) {
+
+		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
+				|| srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null
+				|| srcAddr.getPmDistrict() == null
+				|| srcAddr.getPmDistrict().getDistrictId() == null
+				|| srcAddr.getPmCity() == null
+				|| srcAddr.getPmCity().getCityId() == null
+				|| StringUtils.isBlank(srcAddr.getPostcode())) {
+			String addrType = SmCommonUtil.getMessage(
+					"lbl.sm.permenantaddress", null);
+			destAddr.setSameAsPerm(false);
+			throw new EpException(MessageConst.ERROR_722656,
+					new String[] { addrType });
+		} else {
+			destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
+					srcAddr,
+					destAddr.getSmAddress(),
+					destAddr,
+					SmCommonUtil.getInstance().getCountryById(
+							getManagedBean().getMyCountryId())));
+			
+			updateMailAddLists(destAddr.getSmAddress()
+					.getPmCountry().getCountryId().toString(), destAddr
+					.getSmAddress().getPmState().getStateId().toString(), destAddr
+					.getSmAddress().getPmDistrict().getDistrictId().toString());
+		}
+	}
+
 	/**
 	 * Get list of country
 	 */
