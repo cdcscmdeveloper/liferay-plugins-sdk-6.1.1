@@ -2871,6 +2871,41 @@ public class LOADetailBackingBean extends
 					}
 				}
 			}
+			
+			if(StringUtils.isBlank(scLoa.getScLoiLoa().getTitle()) || StringUtils.isEmpty(scLoa.getScLoiLoa().getTitle()) ){
+				throw new EpException(
+						MessageConst.ERROR_760453);
+			}
+			
+			
+			if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+			if(null==scLoa.getProcurementTypeCatId()|| null==scLoa.getProcurementTypeCatId().getParameterId() ){
+				throw new EpException(
+						MessageConst.ERROR_760454);
+			}
+			
+			}
+			
+			if(StringUtils.isBlank(scLoa.getFileExtNo()) || StringUtils.isEmpty(scLoa.getFileExtNo())){
+				throw new EpException(
+						MessageConst.ERROR_760455);
+			}
+			
+			if(null  == scLoa.getGovtSignDate()){
+				throw new EpException(
+						MessageConst.ERROR_760456);
+			}
+			if(!ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+				if(null==scLoa.getContractType()|| null==scLoa.getContractType().getParameterId() ){
+					throw new EpException(
+							MessageConst.ERROR_760457);
+				}
+				
+				}
+			if(null==scLoa.getContractAdmin()|| null==scLoa.getContractAdmin().getUserId() ){
+				throw new EpException(
+						MessageConst.ERROR_760458);
+			}
 
 			if(null  == scLoa.getContractEffDate()){
 				throw new EpException(
