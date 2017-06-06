@@ -14,7 +14,8 @@
 					<table style="width: 100%">
 						<tr>
 							<td><u><b><h:outputText
-											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
+										value="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode == SupplierManagementConst.NEW_IC 
+										? lbl['lbl.sm.ic.address'] : lbl['lbl.sm.person.permAddr']} " /></b></u></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
