@@ -158,7 +158,7 @@
 			<f:setPropertyActionListener target="#{purFRNCancelRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
-			process="@this" update="@form" action="#{flReportBB.resetAction()}">
+			process="@this" update="@form" action="#{purFRNCancelRptBB.resetAction()}">
 		</p:commandButton>
 	</div>
 		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
