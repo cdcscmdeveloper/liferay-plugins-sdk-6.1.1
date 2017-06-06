@@ -90,5 +90,10 @@ public class PurInvoiceCancelRptBackingBean extends FlReportBackingBean<PurInvoi
 		
 	}
 	
+	public void resetAction(){
+		getManagedBean().setInvNo(null);
+		getManagedBean().setSupplierInvNo(null);
+		resetSearchCriteriaValues();
+	}
 	
 }
