@@ -105,4 +105,10 @@ public class PurchaseRequestRejectionRptBackingBean extends FlReportBackingBean<
 		}
 		return null;
 	}
+	
+	public void resetAction(){
+		getManagedBean().setPurchaseRequestNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 }

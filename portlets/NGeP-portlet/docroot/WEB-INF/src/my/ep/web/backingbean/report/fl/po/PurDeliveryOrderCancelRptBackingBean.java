@@ -90,5 +90,11 @@ public class PurDeliveryOrderCancelRptBackingBean extends FlReportBackingBean<Pu
 		
 	}
 	
+	public void resetAction(){
+		getManagedBean().setDeliveryOrderNo(null);
+		getManagedBean().setSupplierDoRefNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 	
 }
