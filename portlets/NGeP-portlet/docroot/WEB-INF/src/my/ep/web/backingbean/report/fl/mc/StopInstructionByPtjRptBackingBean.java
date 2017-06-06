@@ -106,9 +106,18 @@ public class StopInstructionByPtjRptBackingBean extends FlReportBackingBean<Stop
 	
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
 	
+	public void resetAction(){
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+		
+		resetSearchCriteriaValues();
+	}
 }
