@@ -92,6 +92,9 @@ public class PurchaseOrderCancelRptBackingBean extends FlReportBackingBean<Purch
 			}
 			return null;
 		}
-	
+		
+		public void resetAction(){
+			resetSearchCriteriaValues();
+		}
 	
 }
