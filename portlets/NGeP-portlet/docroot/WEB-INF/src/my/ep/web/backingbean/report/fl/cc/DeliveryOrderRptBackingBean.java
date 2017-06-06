@@ -106,11 +106,6 @@ public class DeliveryOrderRptBackingBean extends FlReportBackingBean<DeliveryOrd
 	}
 	
 	public void resetAction(){
-		if(getManagedBean().isSupplier()){
-			getManagedBean().setMinistry(null);
-			getManagedBean().setPtjGroup(null);
-			getManagedBean().setPtj(null);
-		}
 		getManagedBean().setItemName(null);
 		getManagedBean().setDeliveryOrderNo(null);
 		getManagedBean().setSupplierDoRefNo(null);

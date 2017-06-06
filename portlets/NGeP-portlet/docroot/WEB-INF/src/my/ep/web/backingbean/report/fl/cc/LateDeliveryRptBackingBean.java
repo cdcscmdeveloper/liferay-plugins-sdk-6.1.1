@@ -112,14 +112,14 @@ public class LateDeliveryRptBackingBean extends FlReportBackingBean<LateDelivery
 	
 	public List<SelectItem> retrieveReceivingOfficerList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
 	
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
