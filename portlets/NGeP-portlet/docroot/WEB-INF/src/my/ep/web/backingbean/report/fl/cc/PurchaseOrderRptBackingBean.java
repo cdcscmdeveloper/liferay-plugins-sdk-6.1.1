@@ -106,7 +106,7 @@ public class PurchaseOrderRptBackingBean extends FlReportBackingBean<PurchaseOrd
 	
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}

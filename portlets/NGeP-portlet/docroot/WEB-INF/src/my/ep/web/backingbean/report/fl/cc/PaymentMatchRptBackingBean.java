@@ -109,7 +109,7 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 	
 	public List<SelectItem> retrievePayOfficerList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getPayOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getPayOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}

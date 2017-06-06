@@ -106,14 +106,14 @@ public class ContractRequestRejectionRptBackingBean extends FlReportBackingBean<
 	
 	public List<SelectItem> retrieveRequisitionerList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
 	
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtjGroup() != null){
-			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
