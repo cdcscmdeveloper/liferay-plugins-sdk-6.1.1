@@ -134,9 +134,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		String complNo = resDTO.getSmComplaint().getComplaintNo();
 
 		renewSesionObject();
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Your complaint has been submitted successfully",""));
+		
+		//#14691
+//		FacesContext.getCurrentInstance().addMessage(null,
+//				new FacesMessage(FacesMessage.SEVERITY_INFO,
+//				"Your complaint has been submitted successfully",""));
 		
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 				MessageUtils.getMessage(MessageConst.INFO_723000 , new String[]{complNo}, 
