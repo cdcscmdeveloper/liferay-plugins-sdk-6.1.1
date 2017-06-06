@@ -108,4 +108,11 @@ public class PurLateDeliveryRptBackingBean extends FlReportBackingBean<PurLateDe
 		}
 		return null;
 	}
+	
+	public void resetAction(){
+		getManagedBean().setDeliveryOrderNo(null);
+		getManagedBean().setSupplierDoRefNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 }
