@@ -91,5 +91,11 @@ public class PurchaseDeliveryRptBackingBean extends FlReportBackingBean<Purchase
 		
 	}
 	
+	public void resetAction(){
+		getManagedBean().setSupplierDoRefNo(null);
+		getManagedBean().setDeliveryOrderNo(null);
+		resetSearchCriteriaValues();
+	}
+	
 	
 }
