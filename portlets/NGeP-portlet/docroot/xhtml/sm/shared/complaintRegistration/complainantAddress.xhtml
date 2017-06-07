@@ -20,7 +20,8 @@
 		<td><p:outputLabel value="#{lbl['lbl.sm.complainant.mailing.address']}" style="text-decoration: underline;font-weight: bold;"></p:outputLabel></td>
 		<td><p:selectBooleanCheckbox value="#{complaintBackingBean.managedBean.sameAddress}"
 			rendered="#{complaintBackingBean.managedBean.smComplainant.brandNew}">
-				<p:ajax event="change" update="pnlComplainant" partialSubmit="true" process="@form" />
+				<p:ajax event="change" update="pnlComplainant" partialSubmit="true" process="@form" 
+				listener="#{complaintBackingBean.onTickSameAsAddress(complaintBackingBean.managedBean.identificationAddress.smAddress,complaintBackingBean.managedBean.mailingAddress.smAddress)}"/>
 			</p:selectBooleanCheckbox>
 			<h:outputText value="#{lbl['lbl.sm.complainant.same.as.ic.address']}" 
 				rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode == SupplierManagementConst.NEW_IC and 

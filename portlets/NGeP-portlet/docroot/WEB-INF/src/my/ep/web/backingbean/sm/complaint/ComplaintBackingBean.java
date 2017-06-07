@@ -63,6 +63,7 @@ import my.ep.persistence.entity.sm.SmComplaintOffense;
 import my.ep.persistence.entity.sm.SmComplaintResponse;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
@@ -74,6 +75,7 @@ import my.ep.web.managedbean.sm.complaint.ComplaintManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmComplaintSummaryVO;
@@ -526,6 +528,33 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 	public String pendingResponseLetterView() {
 		return "pendingLetterResponse";
+	}
+	
+	public void onTickSameAsAddress(SmAddress srcAddr, SmAddress destAddr) {
+
+		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
+				|| srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null
+				|| srcAddr.getPmDistrict() == null
+				|| srcAddr.getPmDistrict().getDistrictId() == null
+				|| srcAddr.getPmCity() == null
+				|| srcAddr.getPmCity().getCityId() == null
+				|| StringUtils.isBlank(srcAddr.getPostcode())) {
+			String addrType = SmCommonUtil.getMessage(
+					"lbl.sm.complainant.same.as.ic.address", null);
+
+			if (!getManagedBean().getSmComplainant().getIdentificationType()
+					.getParameterCode()
+					.equalsIgnoreCase(SupplierManagementConst.NEW_IC)) {
+				addrType = SmCommonUtil.getMessage(
+						"lbl.sm.complainant.same.as.perm.address", null);
+			}
+			getManagedBean().setSameAddress(false);
+			throw new EpException(MessageConst.ERROR_722656,
+					new String[] { addrType });
+		} else {
+			SmApplicationUtil.getInstance().cloneAddress(destAddr, srcAddr);
+		}
 	}
 	
 	public List<SelectItem> getCountryDropDown(){
