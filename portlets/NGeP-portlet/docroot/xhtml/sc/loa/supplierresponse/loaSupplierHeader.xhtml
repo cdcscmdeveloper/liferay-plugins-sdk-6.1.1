@@ -27,16 +27,6 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText></td>
-				<td width="13%"><h:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" /></td>
-				<td class="header-info-text" width="15%"><h:outputText
-						value="#{lOADetailBackingBean.managedBean.scLoa.ackDueDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-					(#{DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(),
-					lOADetailBackingBean.managedBean.scLoa.ackDueDate)}
-					#{lbl['lbl.sc.days']})</td>
 			</tr>
 			<tr>
 				<td width="10%"><h:outputLabel

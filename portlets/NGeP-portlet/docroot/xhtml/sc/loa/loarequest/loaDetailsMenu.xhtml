@@ -15,18 +15,6 @@
 		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />		
    
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
-		<h:outputText styleClass="instruction"
-			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-			escape="false"
-			value="#{lbl['lbl.sc.mandatory.field.instruction']}" />
-		
-		<br/>
-			
-		<h:outputText styleClass="instruction"
-			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-			escape="false"
-			value="#{lbl['lbl.sc.loa.general.info.instruction']}" />
-			
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td style="width:21%;">
@@ -311,21 +299,6 @@
 				</p:calendar>
 				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.government.sign.date.tooltip']}" />
 				<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" />
-			</td>
-			<td>
-				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.ackDueDate}" size="17" disabled="true">
-					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</p:inputText>	
-				<p:spacer width="8px" />
-				<p:inputText 
-					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate): ''}"
-					disabled="true" size="6" style="text-align:right;"/>
-				#{lbl['lbl.sc.days']}
 			</td>
 		</tr>
 		<tr>

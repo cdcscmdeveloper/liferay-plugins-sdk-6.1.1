@@ -63,6 +63,12 @@
 
 			<p:column style="width:10%;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
+				<p:commandButton id="download" icon="ui-icon-download"
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{directLOABackingBean.downloadReport(scLoaReport)}"
+					rendered="#{(scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true)
+					or scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}" />
 				<ac:scSingleFileUploadButton id="dnSuppFileUploadDlgBtn"
 						rendered="#{(!directLOABackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
 						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload)}"
@@ -77,12 +83,6 @@
 							target="#{directLOABackingBean.managedBean.attachmentDocType}"
 							value="LAR" />
 					</ac:scSingleFileUploadButton>
-				<p:commandButton id="download" icon="ui-icon-download"
-					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
-					action="#{directLOABackingBean.downloadReport(scLoaReport)}"
-					rendered="#{(scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true)
-					or scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}" />
 			</p:column>
 		</p:dataTable>
 
