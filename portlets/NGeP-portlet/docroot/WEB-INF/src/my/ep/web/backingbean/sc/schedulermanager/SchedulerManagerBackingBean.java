@@ -81,7 +81,8 @@ public class SchedulerManagerBackingBean extends
 
 				// set search by group
 				if (!StringUtils.isBlank(getManagedBean().getJobGroup())
-						&& !getManagedBean().getJobGroup().equalsIgnoreCase(allJob)) {
+						&& !getManagedBean().getJobGroup().equalsIgnoreCase(
+								allJob)) {
 					groupName = getManagedBean().getJobGroup();
 				}
 
@@ -130,7 +131,9 @@ public class SchedulerManagerBackingBean extends
 				}
 
 				// break loop if search by group
-				if (!StringUtils.isBlank(getManagedBean().getJobGroup())) {
+				if (!StringUtils.isBlank(getManagedBean().getJobGroup())
+						&& !getManagedBean().getJobGroup().equalsIgnoreCase(
+								allJob)) {
 					break;
 				}
 
