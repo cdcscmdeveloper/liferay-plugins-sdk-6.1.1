@@ -68,6 +68,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	private final String paymentGatewayOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.molpay.onoff");
 
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
+	private final String cancelUrl = SmCommonUtil.getBasePortalUrl() + "/web/epapp/task-list";
+
 
 	public void preRenderApplicationPayment(){
 		CommonApplBackingBean applBackingBean = new CommonApplBackingBean();
@@ -346,6 +348,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			log.info("******merchantId********" + merchantId);
 			log.info("******VKey********" + vKey);
 			log.info("******VC********" + vc);
+			log.info("****cancelUrl******" + cancelUrl);
 			BigDecimal ttlAmt = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentAmt();
 			this.setvCode(vc);
@@ -905,5 +908,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	
 	private String getPaymentGateUrlByMerchantId(String merchantId){
 		return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";
+	}
+
+	public String getCancelUrl() {
+		return cancelUrl;
 	}
 }
