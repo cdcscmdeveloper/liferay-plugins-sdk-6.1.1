@@ -5,17 +5,19 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.sm.DisciplinaryActionConst;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.persistence.entity.pm.common.DiMyidentity;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmComplainant;
@@ -27,9 +29,13 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sm.ComplaintSearchBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmComplaintSummaryVO;
+
+import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "complaintMB")
 @SessionScoped
@@ -87,6 +93,17 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private List<SmComplaintSummaryVO> complaintSummaryLs;
 	private SmComplainantAddress identificationAddress;
 	private SmComplainantAddress mailingAddress;
+	
+	private PmCountry myCountry;
+	
+	public ComplaintManagedBean(){
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		myCountry = resDTO.getPmCountry();
+	}
 
 	public SmComplaint getSmComplaint() {
 		return smComplaint;
@@ -458,5 +475,13 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setMailingAddress(SmComplainantAddress mailingAddress) {
 		this.mailingAddress = mailingAddress;
+	}
+
+	public PmCountry getMyCountry() {
+		return myCountry;
+	}
+
+	public void setMyCountry(PmCountry myCountry) {
+		this.myCountry = myCountry;
 	}
 }

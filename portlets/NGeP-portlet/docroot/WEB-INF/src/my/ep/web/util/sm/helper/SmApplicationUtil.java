@@ -4678,13 +4678,13 @@ public class SmApplicationUtil {
 		if (srcAddr.getPmDistrict() != null
 				&& srcAddr.getPmDistrict().getDistrictId() != null) {
 			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
-					srcAddr.getDistrictId()));
+					srcAddr.getPmDistrict().getDistrictId()));
 		}
 		desAddr.setDistrictId(srcAddr.getDistrictId());
 		if (srcAddr.getPmCity() != null
 				&& srcAddr.getPmCity().getCityId() != null) {
 			desAddr.setPmCity(SmCommonUtil.getInstance().getCityById(
-					srcAddr.getCityId()));
+					srcAddr.getPmCity().getCityId()));
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
