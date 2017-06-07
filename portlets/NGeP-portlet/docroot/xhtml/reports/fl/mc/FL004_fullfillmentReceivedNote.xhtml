@@ -115,6 +115,9 @@
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcFrnRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcFrnRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{mcFrnRptBB.managedBean.supplier}"
+					value="#{mcFrnRptBB.managedBean.supplierCompName}">
+				</p:inputText>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}"
