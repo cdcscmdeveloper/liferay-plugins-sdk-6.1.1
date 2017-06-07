@@ -40,7 +40,7 @@
 					disabled="#{mcCrRejectRptBB.disablePtjGroupLov()}"
 					value="#{mcCrRejectRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcCrRejectRptBB.resetPtjProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj"
 					saveObject="mcCrRejectRptBB.managedBean.ptjGroup"
 					conditionField="#{mcCrRejectRptBB.constuctConditionFieldsForPTJGroup()}">
 				</ac:lov>
@@ -56,7 +56,7 @@
 					headerText="#{lbl['lbl.fl.ptj']}"
 					disabled="#{mcCrRejectRptBB.disablePtjLov()}"
 					value="#{mcCrRejectRptBB.managedBean.ptj.orgName}"
-					update=":form:searchPtj,:form"
+					update=":form"
 					saveObject="mcCrRejectRptBB.managedBean.ptj"
 					conditionField="#{mcCrRejectRptBB.getPTJCondition()}">
 				</ac:lov>
