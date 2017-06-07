@@ -36,10 +36,6 @@
 			postSignAction="#{directLOABackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{directLOABackingBean.enableAutoUpdate()}" />
 
-		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus}"
-			value="#{lbl['lbl.sc.loiloa.direct.loa.header.instruction']}">
-		</h:outputText>
-		
 		<h:outputText styleClass="instruction" rendered="#{isPendingVerification}"
 			value="#{lbl['lbl.sc.loiloa.loa.verify.instruction']}">
 		</h:outputText>
