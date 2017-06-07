@@ -228,7 +228,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks;
 	private boolean renderjustificationTextbox;
 	private PmParameter justification;
-	
+	private List<ScQtFinalizationReport> endorsementReports;
+	private ScQtFinalizationReport endorsementReport;
 	
 	/**
 	 * @return the activeIndex
@@ -2049,6 +2050,35 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setJustification(PmParameter justification) {
 		this.justification = justification;
+	}
+
+	/**
+	 * @return the endorsementReports
+	 */
+	public List<ScQtFinalizationReport> getEndorsementReports() {
+		return endorsementReports;
+	}
+
+	/**
+	 * @param endorsementReports the endorsementReports to set
+	 */
+	public void setEndorsementReports(
+			List<ScQtFinalizationReport> endorsementReports) {
+		this.endorsementReports = endorsementReports;
+	}
+
+	/**
+	 * @return the endorsementReport
+	 */
+	public ScQtFinalizationReport getEndorsementReport() {
+		return endorsementReport;
+	}
+
+	/**
+	 * @param endorsementReport the endorsementReport to set
+	 */
+	public void setEndorsementReport(ScQtFinalizationReport endorsementReport) {
+		this.endorsementReport = endorsementReport;
 	}
 
 
