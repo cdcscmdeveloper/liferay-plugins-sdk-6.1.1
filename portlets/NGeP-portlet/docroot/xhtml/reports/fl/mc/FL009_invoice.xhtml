@@ -23,7 +23,7 @@
 					disabled="#{mcInvRptBB.disableMinistryLov()}"
 					value="#{mcInvRptBB.managedBean.ministry.orgName}"
 					postUpdateListener="mcInvRptBB.resetPtjGroupProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 					saveObject="mcInvRptBB.managedBean.ministry"
 					conditionField="#{mcInvRptBB.getMinistryCondition()}">
 				</ac:lov>
@@ -40,7 +40,7 @@
 					disabled="#{mcInvRptBB.disablePtjGroupLov()}"
 					value="#{mcInvRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcInvRptBB.resetPtjProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj"
 					saveObject="mcInvRptBB.managedBean.ptjGroup"
 					conditionField="#{mcInvRptBB.constuctConditionFieldsForPTJGroup()}">
 				</ac:lov>
@@ -56,7 +56,7 @@
 					headerText="#{lbl['lbl.fl.ptj']}"
 					disabled="#{mcInvRptBB.disablePtjLov()}"
 					value="#{mcInvRptBB.managedBean.ptj.orgName}"
-					update=":form:searchPtj,:form"
+					update=":form"
 					saveObject="mcInvRptBB.managedBean.ptj"
 					conditionField="#{mcInvRptBB.getPTJCondition()}">
 				</ac:lov>

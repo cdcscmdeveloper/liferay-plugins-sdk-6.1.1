@@ -12,7 +12,7 @@
 				<h:outputText value="#{mcSiSupplierRptBB.managedBean.reportUrl}" /><br/><br/>
 			</td>
 		</tr>
-<tr>
+		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
 			</td>
@@ -23,7 +23,7 @@
 					disabled="#{mcSiSupplierRptBB.disableMinistryLov()}"
 					value="#{mcSiSupplierRptBB.managedBean.ministry.orgName}"
 					postUpdateListener="mcSiSupplierRptBB.resetPtjGroupProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 					saveObject="mcSiSupplierRptBB.managedBean.ministry"
 					conditionField="#{mcSiSupplierRptBB.getMinistryCondition()}">
 				</ac:lov>
@@ -40,7 +40,7 @@
 					disabled="#{mcSiSupplierRptBB.disablePtjGroupLov()}"
 					value="#{mcSiSupplierRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcSiSupplierRptBB.resetPtjProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj"
 					saveObject="mcSiSupplierRptBB.managedBean.ptjGroup"
 					conditionField="#{mcSiSupplierRptBB.constuctConditionFieldsForPTJGroup()}">
 				</ac:lov>
@@ -56,7 +56,7 @@
 					headerText="#{lbl['lbl.fl.ptj']}"
 					disabled="#{mcSiSupplierRptBB.disablePtjLov()}"
 					value="#{mcSiSupplierRptBB.managedBean.ptj.orgName}"
-					update=":form:searchPtj,:form"
+					update=":form"
 					saveObject="mcSiSupplierRptBB.managedBean.ptj"
 					conditionField="#{mcSiSupplierRptBB.getPTJCondition()}">
 				</ac:lov>
