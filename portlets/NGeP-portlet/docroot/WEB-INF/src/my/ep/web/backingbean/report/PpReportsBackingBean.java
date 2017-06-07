@@ -367,7 +367,7 @@ public class PpReportsBackingBean extends
 	}
 	
 	public static SelectItem[] getActiveAndInactiveStatusOptions() {
-		return PmCommonUtil.getRecordStatusOptions();
+		return PpCommonUtil.getStatusOptionsDefault();
 	}
 	
 	public void onChangeProcurementMethod(){
