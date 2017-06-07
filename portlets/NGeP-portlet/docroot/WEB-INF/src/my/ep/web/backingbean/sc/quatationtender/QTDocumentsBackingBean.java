@@ -1083,8 +1083,10 @@ public class QTDocumentsBackingBean extends
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			
 			if(currentStatusId != null && !isQTStatusPublished(currentStatusId)){
-				scQtDocReports.get(i).setScQtDocReportAttachment(
-						generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i + 1))));
+				attachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
+				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
+				//scQtDocReports.get(i).setScQtDocReportAttachment(
+						//generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i + 1))));
 			} else {
 				if (attachment == null) {
 					attachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
