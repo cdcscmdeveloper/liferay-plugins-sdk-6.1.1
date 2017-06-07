@@ -15,7 +15,7 @@
 							disabled="#{pdRptBB.disableMinistryLov()}"
 							value="#{pdRptBB.managedBean.ministry.orgName}"
 							postUpdateListener="pdRptBB.resetPtjGroupProfile()"
-							update=":form:searchPtj,:form"
+							update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 							saveObject="pdRptBB.managedBean.ministry"
 							conditionField="#{pdRptBB.getMinistryCondition()}"
 							>
@@ -68,10 +68,13 @@
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!pdRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
 					value="#{pdRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="pdRptBB.managedBean.selectedOrgProfile" />
+					<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{pdRptBB.managedBean.supplier}"
+						value="#{pdRptBB.managedBean.supplierCompName}">
+					</p:inputText>
 				
 			</td>
 		</tr>
