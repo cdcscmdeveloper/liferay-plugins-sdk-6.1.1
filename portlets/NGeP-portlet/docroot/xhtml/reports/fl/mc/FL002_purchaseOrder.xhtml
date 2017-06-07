@@ -129,6 +129,9 @@
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcPoRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcPoRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{mcPoRptBB.managedBean.supplier}"
+					value="#{mcPoRptBB.managedBean.supplierCompName}">
+				</p:inputText>
 			</td>
 		</tr>
 		<tr>
