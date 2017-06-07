@@ -15,7 +15,7 @@
 							disabled="#{purFRNCancelRptBB.disableMinistryLov()}"
 							value="#{purFRNCancelRptBB.managedBean.ministry.orgName}"
 							postUpdateListener="purFRNCancelRptBB.resetPtjGroupProfile()"
-							update=":form:searchPtj,:form"
+							update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 							saveObject="purFRNCancelRptBB.managedBean.ministry"
 							conditionField="#{purFRNCancelRptBB.getMinistryCondition()}"
 							>
@@ -68,10 +68,13 @@
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!purFRNCancelRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
 					value="#{purFRNCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="purFRNCancelRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{purFRNCancelRptBB.managedBean.supplier}"
+					value="#{purFRNCancelRptBB.managedBean.supplierCompName}">
+				</p:inputText>
 			</td>
 		</tr>
 		
