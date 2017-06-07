@@ -16,10 +16,10 @@
                 onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
 			<p:ajax event="select"
 				listener="#{paymentMatchBackingBean.onNodeSelect()}"
-				update="@(.chargeLineSection)" />
+				update="chargeLineTbl,@(.chargeLineSection)" />
 			<p:ajax event="unselect"
 				listener="#{paymentMatchBackingBean.onNodeUnSelect()}"
-				update="@(.chargeLineSection)" />				
+				update="chargeLineTbl,@(.chargeLineSection)" />	
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%;" >
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
