@@ -16,18 +16,6 @@
 		value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeCentral}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
-		<h:outputText styleClass="instruction"
-			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-			escape="false"
-			value="#{lbl['lbl.sc.mandatory.field.instruction']}" />
-		
-		<br/>
-			
-		<h:outputText styleClass="instruction"
-			rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-			escape="false"
-			value="#{lbl['lbl.sc.loa.general.info.instruction']}" />
-			
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			    <td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
@@ -325,7 +313,29 @@
 						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" /></td>
 			</tr>
-
+			
+			<tr>
+				<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<p:calendar id="govSignDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+						showOn="button"
+						value="#{directLOABackingBean.managedBean.scLoa.govtSignDate}"
+						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+						required="true"
+						readonlyInput="true"
+						label="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}"
+						size="31"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.government.sign.date.tooltip']}" />
+					<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
+				</td>
+			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
