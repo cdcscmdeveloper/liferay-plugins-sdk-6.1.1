@@ -120,6 +120,10 @@
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcInvRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcInvRptBB.managedBean.selectedOrgProfile" />
+					
+				<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{mcInvRptBB.managedBean.supplier}"
+					value="#{mcInvRptBB.managedBean.supplierCompName}">
+				</p:inputText>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.invoice.no']}"/> 

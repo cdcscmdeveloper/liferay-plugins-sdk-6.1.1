@@ -23,7 +23,7 @@
 					disabled="#{mcSmRptBB.disableMinistryLov()}"
 					value="#{mcSmRptBB.managedBean.ministry.orgName}"
 					postUpdateListener="mcSmRptBB.resetPtjGroupProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 					saveObject="mcSmRptBB.managedBean.ministry"
 					conditionField="#{mcSmRptBB.getMinistryCondition()}">
 				</ac:lov>
@@ -40,7 +40,7 @@
 					disabled="#{mcSmRptBB.disablePtjGroupLov()}"
 					value="#{mcSmRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcSmRptBB.resetPtjProfile()"
-					update=":form:searchPtj,:form"
+					update=":form:searchPtj"
 					saveObject="mcSmRptBB.managedBean.ptjGroup"
 					conditionField="#{mcSmRptBB.constuctConditionFieldsForPTJGroup()}">
 				</ac:lov>
@@ -56,6 +56,7 @@
 					headerText="#{lbl['lbl.fl.ptj']}"
 					disabled="#{mcSmRptBB.disablePtjLov()}"
 					value="#{mcSmRptBB.managedBean.ptj.orgName}"
+					update=":form"
 					saveObject="mcSmRptBB.managedBean.ptj"
 					conditionField="#{mcSmRptBB.getPTJCondition()}">
 				</ac:lov>
@@ -84,6 +85,9 @@
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcSmRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcSmRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText maxlength="100" disabled="true" id="supplierCompName" rendered="#{mcSmRptBB.managedBean.supplier}"
+					value="#{mcSmRptBB.managedBean.supplierCompName}">
+				</p:inputText>
 			</td>
 		</tr>	
 		<tr>
