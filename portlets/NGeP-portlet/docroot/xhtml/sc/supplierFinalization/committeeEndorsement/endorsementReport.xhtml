@@ -105,6 +105,24 @@
 		</h:panelGroup>
 	</p:panel>
 	
+	<p:panel header="#{lbl['lbl.sc.committee.endorsement.report']}" toggleable="true">
+	
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td class="TableFieldLeft" width="24%">
+					<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+				</td>
+				<td class="TableFieldRight">
+						
+					<ac:scSingleFileUploadButton id="endorseReportUploadBtnId" 
+						popupWidgetVar="endorseReportAttWidget"
+						attachment="#{suppFinalizationBackingBean.managedBean.endorsementReport.scQtFinalizationReportAttachment}"
+						readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}"/>								
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	
 	<p:panel header="#{lbl['lbl.sc.report.section']}" toggleable="true">
 		
 		<p:dataTable id="reportTbl" 
