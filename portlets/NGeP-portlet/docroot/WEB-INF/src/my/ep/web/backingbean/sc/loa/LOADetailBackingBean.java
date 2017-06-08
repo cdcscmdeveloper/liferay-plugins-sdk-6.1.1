@@ -1171,7 +1171,7 @@ public class LOADetailBackingBean extends
 		if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
 				getManagedBean().getScLoa().getPmStatus().getStatusId().
 				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-			validateLoaWitness();
+			validateLoaWitnessAndAckBy();
 		}
 
 		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
@@ -1374,7 +1374,7 @@ public class LOADetailBackingBean extends
 		for (ScLoaReport scLoaReport : scLoaReports) {
 			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
 					scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-				validateLoaWitness();
+				validateLoaWitnessAndAckBy();
 			}
 			
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
@@ -1806,6 +1806,12 @@ public class LOADetailBackingBean extends
 			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
 		}
 		context.put("govtSignDate", govtSignDate);
+		
+		String supplierSignDate = "";
+		if (scLoa.getSupplierSignDate() != null) {
+			supplierSignDate = getLocalizeDate(scLoa.getSupplierSignDate(), myLocale);
+		}
+		context.put("supplierSignDate", supplierSignDate);
 
 		// Supplier Witness
 		String supplierWitnessUser = "";
@@ -1831,6 +1837,37 @@ public class LOADetailBackingBean extends
 		context.put("supplierWitnessUser", supplierWitnessUser);
 		context.put("supplierWitnessIcNo", supplierWitnessIcNo);
 		context.put("supplierWitnessAddress", supplierWitnessAddress);
+		
+		// Supplier Signer
+		String supplierSignerUser = "";
+		String supplierSignerIcNo = "";
+		String supplierSignerAddress = "";
+
+		PmUser ackBy = scLoa.getAckBy();
+		if(ackBy !=null){
+			supplierSignerUser = ackBy.getUserName();
+			supplierSignerIcNo = ackBy.getIdentificationNo();
+		}
+		
+		if (scLoa.getScSupplierAddress() != null) {
+			supplierSignerAddress = getFullAddress(scLoa.getScSupplierAddress());
+		}
+		log.info("supplierAddress" + supplierSignerAddress);
+		//context.put("supplierAddress", supplierAddress);
+		StringBuilder supplierAddressTable = null;
+		if(StringUtils.isNotBlank(supplierSignerAddress)){
+			String[] address = supplierSignerAddress.split(System.getProperty("line.separator"));
+			supplierAddressTable = new StringBuilder();
+			for (String suppAddr : address) {
+				supplierAddressTable.append(suppAddr);
+				supplierAddressTable.append("<br />");
+			}
+		}
+		log.info("SupplierAddressTable" + supplierAddressTable);
+		
+		context.put("supplierSignerUser", supplierSignerUser);
+		context.put("supplierSignerIcNo", supplierSignerIcNo);
+		context.put("supplierSignerAddress", supplierAddressTable);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_ACKNOWLEDGEMENT_OF_LOA_RECEIPT, context,
@@ -2851,10 +2888,10 @@ public class LOADetailBackingBean extends
 					throw new EpException(MessageConst.ERROR_760436);
 				}
 			}
-
-			if (!getManagedBean().isAgreeWithTermsConditions()) {
+			//LOA CR to remove side menu
+			/*if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
-			}
+			}*/
 		}
 
 		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
@@ -5564,13 +5601,17 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Validate ScLoaWitness before download attachment of Acknowledge LOA Receipt
+	 * Validate ScLoaWitness and suppler contract signer before download attachment of Acknowledge LOA Receipt
 	 */
-	private void validateLoaWitness() {
+	private void validateLoaWitnessAndAckBy() {
 		ScLoaWitness witness = this.getManagedBean().getLoaSupplierWitness();
+		PmUser ackBy = this.getManagedBean().getScLoa().getAckBy();
 		if(witness == null || witness.getWitnessName().isEmpty() || witness.getIdentificationNo().isEmpty() ||
 				witness.getDesignation().isEmpty() || witness.getAddress().isEmpty() || 
 				witness.getPhoneNo().isEmpty() || witness.getFaxNo().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760442);
+		}
+		if(ackBy == null || ackBy.getUserName().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760442);
 		}
 	}

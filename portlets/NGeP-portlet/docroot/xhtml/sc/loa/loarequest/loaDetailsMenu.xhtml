@@ -130,7 +130,7 @@
 			</td>
 			<td rowspan="3">
 				<p:inputTextarea id="suppAddr"
-					rows="5"
+					rows="6"
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.scSupplierAddress)}"
 					style=" margin-bottom:5px;width: 236px;" disabled="true" />
 			</td>
@@ -277,28 +277,6 @@
 					maxlength="3"
 					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-			</td>
-			<td>
-				<p:calendar id="govSignDate"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-					showOn="button"
-					value="#{lOADetailBackingBean.managedBean.scLoa.govtSignDate}"
-					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
-					required="true"
-					readonlyInput="true"
-					label="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}"
-					size="31"
-					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
-					<p:ajax event="dateSelect" />
-				</p:calendar>
-				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.government.sign.date.tooltip']}" />
-				<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
 			</td>
 		</tr>
 		<tr>
