@@ -1578,7 +1578,12 @@ public class LOADetailBackingBean extends
 			headerTitle = "Pembelian Terus (Bermasa)";
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			headerTitle = "Sebut Harga / Tender";
+			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+				headerTitle = "Tender";
+			} else {
+				headerTitle = "Sebut Harga";
+			}
+			
 		}
 		context.put("headerTitle", headerTitle); 
 		context.put("subTitle", headerTitle.toLowerCase()); 
