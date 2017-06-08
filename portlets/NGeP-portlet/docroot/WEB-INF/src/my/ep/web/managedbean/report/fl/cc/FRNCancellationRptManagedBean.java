@@ -22,7 +22,8 @@ public class FRNCancellationRptManagedBean extends FlReportManagedBean{
 	public FRNCancellationRptManagedBean(){}
 	
 	private String frnNo;
-
+	private String reportUrl;
+	
 	public String getFrnNo() {
 		return frnNo;
 	}
@@ -30,5 +31,11 @@ public class FRNCancellationRptManagedBean extends FlReportManagedBean{
 	public void setFrnNo(String frnNo) {
 		this.frnNo = frnNo;
 	}
+	public String getReportUrl() {
+		return reportUrl;
+	}
 
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

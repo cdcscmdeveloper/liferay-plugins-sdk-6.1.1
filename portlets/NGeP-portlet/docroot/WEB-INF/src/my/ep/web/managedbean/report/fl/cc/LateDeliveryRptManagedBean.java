@@ -24,6 +24,7 @@ public class LateDeliveryRptManagedBean extends FlReportManagedBean{
 	private String itemName;
 	private String deliveryOrderNo;
 	private String supplierDoRefNo;
+	private String reportUrl;
 
 	public String getItemName() {
 		return itemName;
@@ -49,4 +50,11 @@ public class LateDeliveryRptManagedBean extends FlReportManagedBean{
 		this.supplierDoRefNo = supplierDoRefNo;
 	}
 
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

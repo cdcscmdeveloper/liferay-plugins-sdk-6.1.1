@@ -25,6 +25,7 @@ public class ContractRequestRptManagedBean extends FlReportManagedBean{
 	private List<String> highRoleCodeList = new ArrayList<String>();
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
 	private String requisitioner;
+	private String reportUrl;
 	public ContractRequestRptManagedBean(){}
 	
 	public List<String> getHighRoleCodeList() {
@@ -52,5 +53,11 @@ public class ContractRequestRptManagedBean extends FlReportManagedBean{
 	public void setRequisitioner(String requisitioner) {
 		this.requisitioner = requisitioner;
 	}
+	public String getReportUrl() {
+		return reportUrl;
+	}
 
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }
