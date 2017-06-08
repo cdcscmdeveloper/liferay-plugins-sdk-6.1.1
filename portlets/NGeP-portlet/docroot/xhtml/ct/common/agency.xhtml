@@ -312,7 +312,8 @@
 				     onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				        <p:commandButton id="agyAllSlectBtnId"  value="#{lbl['lbl.ct.agency.popup.selectall']}" process="@this" partialSubmit="true" 
 								update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-								disabled="#{ctBackingBean.agencyDataModel.list == null}" onclick="dlgAgency.hide();"
+								disabled="#{ctBackingBean.agencyDataModel.list == null
+									or fn:length(ctBackingBean.agencyDataModel.list) == 0}" onclick="dlgAgency.hide();"
 								action="#{ctBackingBean.addAgencyDetails('false')}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
            </div>
