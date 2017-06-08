@@ -23,7 +23,7 @@
 					disabled="#{mcSiSupplierRptBB.disableMinistryLov()}"
 					value="#{mcSiSupplierRptBB.managedBean.ministry.orgName}"
 					postUpdateListener="mcSiSupplierRptBB.resetPtjGroupProfile()"
-					update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
+					update=":form:searchPtj,:form"
 					saveObject="mcSiSupplierRptBB.managedBean.ministry"
 					conditionField="#{mcSiSupplierRptBB.getMinistryCondition()}">
 				</ac:lov>
