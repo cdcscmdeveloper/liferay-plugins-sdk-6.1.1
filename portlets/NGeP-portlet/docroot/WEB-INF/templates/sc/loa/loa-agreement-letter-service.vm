@@ -112,20 +112,18 @@ p {
 		</tr>
 		<tr>
 			<td>
+				<span class="text_family_red">*PENGARAH URUSAN/ PENGURUS / PENGERUSI</span> <br />
 				$supplierName <br />
 				$supplierAddressTable <br /> <br />
 			</td>
 		</tr>
-		
-	#if ( $gstRegFlag == 'true' )
-	<tr>
-		<td>
-			No. Pendaftaran CBP : $gstRegNo <br />
-			Tarikh Kuatkuasa Pendaftaran CBP : $gstEffectiveDate <br />
-		</td>
-	</tr>
-	#end
-
+		<tr>
+			<td>
+				No. Pen. Kew : $mofNo <br />
+				No. Pen. CBP : $gstRegNo <br />
+			</td>
+		</tr>
+	
 		<tr>
 			<td>Tuan, <br /> <br />  <span class="text_family_bold">$headerTitle Untuk : </span>
 				 $loaTitle <br />  <span class="text_family_bold"> No. *$headerTitle : </span>
