@@ -114,13 +114,9 @@ p {
 			<td>
 				<span class="text_family_red">*PENGARAH URUSAN/ PENGURUS / PENGERUSI</span> <br />
 				$supplierName <br />
-				$supplierAddressTable <br /> <br />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				No. Pen. Kew : $mofNo <br />
-				No. Pen. CBP : $gstRegNo <br />
+				$supplierAddressTable
+				(No. Pen. Kew : $mofNo) <br />
+				(No. Pen. CBP : $gstRegNo) <br />
 			</td>
 		</tr>
 		
@@ -137,8 +133,8 @@ p {
 						Kerajaan telah bersetuju menerima tawaran *$subTitle tuan
 						dengan harga sebanyak Ringgit Malaysia $overallCtAmtWording (RM
 						$overallCtAmt) yang merupakan jumlah harga kontrak bagi tempoh
-						kontrak selama $contractDuration bulan tertakluk kepada dokumen *sebut
-						harga/tender yang menjadi sebahagian daripada perolehan ini dan Surat
+						kontrak selama $contractDuration bulan tertakluk kepada dokumen $headerTitle 
+						yang menjadi sebahagian daripada perolehan ini dan Surat
 						Setuju Terima ini (selepas ini disebut sebagai "Surat ini").
 						Maklumat terperinci kontrak adalah seperti di <b><i>Lampiran A</i></b>.
 					</span>
