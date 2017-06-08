@@ -138,6 +138,8 @@ import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.format.AttachmentDefaultFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -698,8 +700,13 @@ public class LOADetailBackingBean extends
 		getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 
 		// Acknowledge Date
-		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
-		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
+		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
+				.getPmStatus().getStatusId().longValue()) ||
+				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
+						.getPmStatus().getStatusId().longValue())) {
+			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
+		}
 
 		// check whether loa from s1 or s2.
 		if(scLoa.getScLoiLoa() != null){
@@ -5577,13 +5584,26 @@ public class LOADetailBackingBean extends
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
 		pbAttachment.setFileName("Guideline.pdf");
-		populateAttachmentDetails(pbAttachment);
-		VelocityContext context = new VelocityContext();
+		
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_GUIDELINE, context,
-				new FileOutputStream(getActualFilePath(pbAttachment)));
-		downloadFile(getActualFilePath(pbAttachment));
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		pbAttachment.setFilePath(filePath.toString());
+
+		File theDir = new File(getActualFilePath(pbAttachment));
+		theDir.mkdirs();
+
+		AttachmentFormat scFormat = new AttachmentDefaultFormat();
+		String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT,
+				pbAttachment.getPrefixFileName());
+
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		pbAttachment.setFilePath(filePath.toString());
+		
 	}
 	
 	/**
