@@ -105,6 +105,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -169,7 +170,7 @@ public class SupplierFinalizationBackingBean extends
 	
 	private static final Long DEFAULT_ITEM = 0L;
 	private static final Long DEFAULT_ZONE = 0L;
-	private static final String JUSTIFICATION_OTHERS = "OTH";
+	private static final String JUSTIFICATION_OTHERS = "OTHERS";
 	
 	/**
 	 * Default constructor
@@ -482,18 +483,22 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
 		
-		PmParameter justificationParam = this.getManagedBean().getJustification();
+		PmReason justificationParam = this.getManagedBean().getJustification();
 		if (justificationParam == null) {
-			this.getManagedBean().setJustification(new PmParameter());
+			this.getManagedBean().setJustification(new PmReason());
 		} else {
-			if (justificationParam.getParameterId() != null
-					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getParameterCode())) {
+			if (justificationParam.getReasonId() != null
+					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getReasonCode())) {
 				this.getManagedBean().setRenderjustificationTextbox(true);
 			}
 		}
 		
 		try {
-			getSuppFinalizationEndorsementReportStreamContent();
+			this.getManagedBean()
+					.setJustDropdown(
+							getReasonCodeDropdownValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
+									.value()));
+			//getSuppFinalizationEndorsementReportStreamContent();
 		} catch (Exception e) {
 			log.error(e);
 		}
@@ -929,7 +934,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
 				if (this.getManagedBean().getJustification() == null
-						||this.getManagedBean().getJustification().getParameterId() == null) {
+						||this.getManagedBean().getJustification().getReasonId()== null) {
 					throw new EpException(MessageConst.ERROR_100061,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.sf.justification.selection",
@@ -991,7 +996,7 @@ public class SupplierFinalizationBackingBean extends
 						toBeRemovedReports.add(report);
 					} else {
 						finalizationReports.removeAll(this.getManagedBean().getEndorsementReports());
-						navigateToBriefingPaperTab();
+						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_760386);
 					}
 				}
@@ -1818,7 +1823,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			if (this.getManagedBean().getJustification() == null
-					|| this.getManagedBean().getJustification().getParameterId() == null) {
+					|| this.getManagedBean().getJustification().getReasonId() == null) {
 					navigateToEndorsementReportTab();
 				throw new EpException(MessageConst.ERROR_100061,
 						new String[] { ResourceBundleUtils.getMessage(
@@ -6639,32 +6644,22 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalization.setTermsText(null);
 		}
 	}
-	
+
 	public void justificationChange(AjaxBehaviorEvent event) {
 
-		Long parameterId = (Long) event.getComponent().getAttributes()
+		String reasonCode = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().setRenderjustificationTextbox(false);
-		IParameterSO parameterSO = null;
-		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			PmParameter parameter = resDTO.getPmParameter();
-			this.getManagedBean().getScQtFinalization().setJustification(parameter);
-			this.getManagedBean().setJustification(parameter);
-			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(parameter.getParameterCode())){
-				this.getManagedBean().setRenderjustificationTextbox(true);
-			} else{
-				this.getManagedBean().getScQtFinalization()
-						.setJustificationText(null);
-			}
-
-		} finally {
-			parameterSO = null;
+		PmReason reason = getReasonByCategoryAndCode(
+				ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
+		this.getManagedBean().getScQtFinalization().setJustification(reason);
+		this.getManagedBean().setJustification(reason);
+		if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
+			this.getManagedBean().setRenderjustificationTextbox(true);
+		} else {
+			this.getManagedBean().getScQtFinalization().setJustificationText(null);
 		}
+
 	}
 	
 	public void downloadEndorseReport(
