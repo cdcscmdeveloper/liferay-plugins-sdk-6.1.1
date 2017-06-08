@@ -92,6 +92,7 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 			reqDTO.setCompanyName(getCompanyName());
 			reqDTO.setRegNo(getBussRegNo());
 			reqDTO.setEpNo(getEpNo());
+			reqDTO.setSearchByMode(getCompanySearchBy());
 			return SmServiceLookup.getBlacklistDirectorSO()
 					.retrieveSupplier(reqDTO).getObjectArrResultBean();
 		}
@@ -135,6 +136,7 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 				BlacklistDirectorReqDTO reqDTO) {
 			reqDTO.setDirectorIdNo(getIdentificationNo());
 			reqDTO.setDirectorName(getName());
+			reqDTO.setSearchByMode(getDirectorSearchBy());
 			return SmServiceLookup.getBlacklistDirectorSO()
 					.retrieveDirectorOrOwner(reqDTO).getObjectArrResultBean();
 		}

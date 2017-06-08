@@ -27,6 +27,10 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class SmBlacklistDirectorBackingBean extends
 		BaseBackingBean<SmBlacklistDirectorManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4501633721105058628L;
 	public static String SEARCH_BY_COMPANY = "C";
 	public static String SEARCH_BY_DIRECTOR = "D";
 	public static String DIRECTOR_SEARCH_BY_IDNO = SupplierManagementConst.SEARCH_BY_DIR_IDNO;
