@@ -54,10 +54,6 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.declaration']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(6)}">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
-					</p:menuitem>
-					
 				</p:tabMenu>
 			</td>
 				<td width="80%" valign="top"><h:panelGroup id="menuContent">
@@ -95,11 +91,6 @@
 							<ui:include
 								src="/xhtml/sc/loa/loarequest/loaPerformanceBondMenu.xhtml" />
 						</c:if>
-
-						<h:panelGroup
-							rendered="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6}">
-							<ui:include src="loaIntegrityPactMenu.xhtml" />
-						</h:panelGroup>
 					</h:panelGroup></td>
 			</tr>
 		</table>
