@@ -20,7 +20,7 @@
 				   
 				     <h:outputLabel  id="lb2" value="#{lbl['lbl.ct.circular.panel.name']}" styleClass="required"/>
 					<h:panelGrid columns="5" id="pGrid3" >
-					    <p:inputTextarea id="circularNameTxt1" rows="5"  style="width:200px;" maxlength="500"
+					    <p:inputTextarea id="circularNameTxt1" rows="5"  style="width:200px;margin-top:2px;margin-bottom:2px;" maxlength="500"
 					        disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
 					        required="true" label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 					      <p:spacer width="5"/>
@@ -30,8 +30,8 @@
 				    </h:panelGrid>
 				    
 				    <p:outputLabel id="lbl4" value="#{lbl['lbl.ct.file.ref.no']}" />
-			    	<p:inputText id="circularRefTxt1"  style="width:200px;margin-bottom:2px;" maxlength="60"
-					     disabled="#{panelBackingBean.managedBean.viewContract}"
+			    	<p:inputTextarea id="circularRefTxt1"  style="width:200px;margin-bottom:2px;" maxlength="60"
+					     disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
 					     value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />
 					     
 				<h:outputLabel id="lbl5" value="#{lbl['lbl.ct.delivery.period']}" /> 
@@ -54,10 +54,21 @@
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   	</p:inputText>	 
 			   	
-			   	<p:outputLabel id="lbl9"  value="#{lbl['lbl.ct.circular.letter']}" rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}" />
-		         <h:commandLink id="lettterUploadId" value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-			    	styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />	
-			   	
+			   	   <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
+		         <h:panelGroup id="uploadCircularPg1">
+				   	            <p:commandButton icon="ui-icon-upload"
+				   	                   rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null
+				   	                   and !panelBackingBean.managedBean.viewContract}"
+						               update="uploadCircularPg1, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" />	
+					            <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+					                 rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}"
+						               styleClass="blue_font truncate"  action="#{panelBackingBean.downloadFile()}" />
+						         <p:commandLink  onclick="deleteAttachFile.show();"
+						              rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null
+						              and !panelBackingBean.managedBean.viewContract}">
+			   				          <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	                 </p:commandLink>				
+			  	            </h:panelGroup>
 			 </h:panelGrid>
 			 <h:panelGrid  style="width:350px; margin-left:5px" columns="2" id="pmGridId">
 			 
@@ -124,7 +135,7 @@
 				   rendered="#{panelBackingBean.managedBean.circularExtension}" 
 				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
 				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
-		    </p:calendar>
+		    </p:calendar>	 
 		 </h:panelGrid>
 		 </h:panelGrid>
 </ui:composition>
