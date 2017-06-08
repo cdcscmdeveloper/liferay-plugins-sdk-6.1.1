@@ -2194,19 +2194,20 @@ public class SupplierFinalizationBackingBean extends
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
 
-			ScQtFinalizationReport scQtFinalizationReport = this.getManagedBean()
-					.getEndorsementReport();
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReport
-					.getScQtFinalizationReportAttachment();
+			ScQtFinalization scQtFinalization = this.getManagedBean()
+					.getScQtFinalization();
+			ScQtFinalizationAttachment attachment = scQtFinalization
+					.getScQtFinalizationAttachment();
 			if (null == attachment) {
-				attachment = new ScQtFinalizationReportAttachment();
-				attachment.setScQtFinalizationReport(scQtFinalizationReport);
+				attachment = new ScQtFinalizationAttachment();
+				attachment.setScQtFinalization(scQtFinalization);
 				attachment.setDocNo(getManagedBean().getScQt().getQtNo());
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(attachment);
-				
+
+				scQtFinalization.setScQtFinalizationAttachment(attachment);
 			}
 
-			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
+			attachment
+					.setDocNo(scQtFinalization.getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
@@ -6700,5 +6701,28 @@ public class SupplierFinalizationBackingBean extends
 						return -1;
 					}
 				});
+	}
+	
+	public void handleEndorseReportUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+
+			ScQtFinalizationReport scQtFinalizationReport = this.getManagedBean()
+					.getEndorsementReport();
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReport
+					.getScQtFinalizationReportAttachment();
+			if (null == attachment) {
+				attachment = new ScQtFinalizationReportAttachment();
+				attachment.setScQtFinalizationReport(scQtFinalizationReport);
+				attachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(attachment);
+				
+			}
+
+			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+		}
 	}
 }
