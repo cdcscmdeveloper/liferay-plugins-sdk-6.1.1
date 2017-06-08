@@ -22,7 +22,8 @@ public class PurchaseOrderRptManagedBean extends FlReportManagedBean{
 	public PurchaseOrderRptManagedBean(){}
 	
 	private String itemName;
-
+	private String reportUrl;
+	
 	public String getItemName() {
 		return itemName;
 	}
@@ -30,5 +31,11 @@ public class PurchaseOrderRptManagedBean extends FlReportManagedBean{
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
+	public String getReportUrl() {
+		return reportUrl;
+	}
 
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

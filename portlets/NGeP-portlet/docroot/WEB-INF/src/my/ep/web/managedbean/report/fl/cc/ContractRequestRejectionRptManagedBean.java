@@ -21,4 +21,13 @@ public class ContractRequestRejectionRptManagedBean extends FlReportManagedBean{
 	
 	public ContractRequestRejectionRptManagedBean(){}
 
+	private String reportUrl;
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }
