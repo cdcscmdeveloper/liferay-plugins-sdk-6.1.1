@@ -23,7 +23,8 @@ public class InvoiceRptManagedBean extends FlReportManagedBean{
 	
 	private String invNo;
 	private String supplierInvNo;
-
+	private String reportUrl;
+	
 	public String getInvNo() {
 		return invNo;
 	}
@@ -35,5 +36,13 @@ public class InvoiceRptManagedBean extends FlReportManagedBean{
 	}
 	public void setSupplierInvNo(String supplierInvNo) {
 		this.supplierInvNo = supplierInvNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 }

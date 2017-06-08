@@ -19,6 +19,7 @@ public class StopInstructionBySupplierRptManagedBean extends FlReportManagedBean
 
 	private static final long serialVersionUID = 1L;
 	private String siNo;
+	private String reportUrl;
 	
 	public StopInstructionBySupplierRptManagedBean(){}
 	public String getSiNo() {
@@ -28,5 +29,11 @@ public class StopInstructionBySupplierRptManagedBean extends FlReportManagedBean
 		this.siNo = siNo;
 	}
 	
+	public String getReportUrl() {
+		return reportUrl;
+	}
 
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }
