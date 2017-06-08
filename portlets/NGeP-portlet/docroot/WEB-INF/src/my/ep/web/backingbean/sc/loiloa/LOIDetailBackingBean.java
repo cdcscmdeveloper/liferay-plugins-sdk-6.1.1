@@ -1637,10 +1637,16 @@ public class LOIDetailBackingBean extends
 			handleBranchDetailsChanged();
 		}
 
-		// Issue & Acknowledge Date
-		scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
-		scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), loaRespPeriod));
+		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
+				.getScWorkFlowStatus().getPmStatus().getStatusId()
+				.longValue()) || QTStatusConst.LOI_PENDING_REVISION.equals(scLoi
+						.getScWorkFlowStatus().getPmStatus().getStatusId()
+						.longValue())) {
+			// Issue & Acknowledge Date
+			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
+			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
+			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), loaRespPeriod));
+		}
 
 		// approvers
 		ScLoiApproval scLoiApproval = scLoi.getScLoiApproval();
@@ -1648,7 +1654,7 @@ public class LOIDetailBackingBean extends
 		if (scLoiApproval != null) {
 			approverUser = scLoiApproval.getApprover();
 
-			if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoi
+			if (!QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
 					.getScWorkFlowStatus().getPmStatus().getStatusId()
 					.longValue())) {
 				getManagedBean().setScLoiApproval(scLoi.getScLoiApproval());
