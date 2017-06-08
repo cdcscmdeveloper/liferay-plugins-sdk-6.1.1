@@ -21,7 +21,7 @@
 				  </h:panelGrid>
 			      <p:outputLabel value="#{lbl['lbl.ct.circular.panel.name']}"  styleClass="required"/>
 			      <h:panelGrid columns="5">
-			            <p:inputTextarea id="circularNameTxt"  style="width:200px;margin-bottom:2px;" maxlength="500" 
+			            <p:inputTextarea id="circularNameTxt"  style="width:200px;margin-top:2px;margin-bottom:2px;" maxlength="500" 
 					         disabled="#{panelBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.circular.panel.name']}"
 					         value="#{panelBackingBean.managedBean.circularVer.name}"  autoResize="false" rows="5"
 					         required="true"  onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" />
@@ -31,8 +31,8 @@
 				      <p:message for="circularNameTxt" display="icon" />
 			     </h:panelGrid>
 			     <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
-			     <p:inputText  style="width:200px;" disabled="#{panelBackingBean.managedBean.viewContract}"
-				     maxlength="60"  value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}"
+			     <p:inputTextarea style="width:200px;margin-bottom:2px;" disabled="#{panelBackingBean.managedBean.viewContract}"
+				     maxlength="60"  value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" autoResize="false"
 					 onkeypress="if (event.keyCode == 13) { return false; }"  />
 			      
 			      <h:outputLabel value="#{lbl['lbl.ct.delivery.period']}" /> 
@@ -128,32 +128,4 @@
 			  		  </h:panelGrid>
 		</h:panelGrid>
 	</h:panelGrid>
-	 <p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg"  resizable="false"
-  		modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-  		onShow="singleUploadListener(panelUploadWV);">
-   		<p:ajax event="close" />
-   		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
-     		sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
-    		fileUploadListener="#{panelBackingBean.fileUpload}"  multiple="false"
-       		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="panelUploadWV"
-         	invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update="uploadCircularPg"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-         	label="#{lbl['lbl.btn.choose']}" oncomplete="uploadCircularDlg.hide();" >
-      	</p:fileUpload>
-		<f:facet name="footer">
-   		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadCircularDlg.hide();" />
-   		</div>
-   		</f:facet> 
-   	</p:dialog>
-	               
-	        <p:confirmDialog id="deleteAttachFile" widgetVar="deleteAttachFile" message="#{lbl['lbl.msg.confirm.delete']}" 	
-                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-                 <div class="ppRightBtn">
-		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                   update=":form:uploadCircularPg" 
-		                   action="#{panelBackingBean.deleteAttachFile()}" oncomplete="deleteAttachFile.hide();"/>
-			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachFile.hide();" type="button" />
-		           </div>
-          </p:confirmDialog>
-        </ui:composition>
+	 </ui:composition>
