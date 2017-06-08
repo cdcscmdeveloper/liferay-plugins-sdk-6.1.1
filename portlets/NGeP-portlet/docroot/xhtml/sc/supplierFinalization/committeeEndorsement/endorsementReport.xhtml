@@ -76,11 +76,11 @@
 						value="*" styleClass="mandatory" /></td>
 
 				<td style="margin-left: 55px;"><p:selectOneMenu id="justificationDDId" 
-						value="#{suppFinalizationBackingBean.managedBean.justification.parameterId}"
+						value="#{suppFinalizationBackingBean.managedBean.justification.reasonCode}"
 						style="width: 300px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.sf.justification.selection']}" disabled="#{!readOnly}">
 						<f:selectItems
-							value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.finalizationSupplierJustification)}" />
+							value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="panelWithJustificationTxtId"
 							listener="#{suppFinalizationBackingBean.justificationChange}" disabled="#{!readOnly}"/>
@@ -105,7 +105,7 @@
 		</h:panelGroup>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sc.committee.endorsement.report']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.committee.endorsement.report']}" toggleable="true" rendered="#{readOnly}">
 	
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -148,7 +148,7 @@
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false" immediate="true"
 					action="#{suppFinalizationBackingBean.downloadEndorseReport(report)}" 
-					rendered="#{suppFinalizationBackingBean.managedBean.endorsementReport.scQtFinalizationReportAttachment ne null}" />
+					rendered="#{report.scQtFinalizationReportAttachment ne null}" />
 
 			</p:column>
 		</p:dataTable>
