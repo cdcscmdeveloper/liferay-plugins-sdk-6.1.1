@@ -1821,6 +1821,11 @@ public class SupplierFinalizationBackingBean extends
 						this.getManagedBean().setPrepareActiveIndex(1);
 					}
 				}
+			} else {
+				// need to set Keputusan report at time of Endorsement and signOff status
+				this.getManagedBean().getScQtFinalization()
+						.getScQtFinalizationReports()
+						.addAll(this.getManagedBean().getEndorsementReports());
 			}
 			if (this.getManagedBean().getJustification() == null
 					|| this.getManagedBean().getJustification().getReasonId() == null) {
@@ -1832,6 +1837,7 @@ public class SupplierFinalizationBackingBean extends
 								new FacesScopes().getUserLocale()) });
 			}
 			scQtCommittee = preparationDtlsInfo();
+			
 		}
 		
 		// Save Preparation and Supplier finalization tab(s) data 
