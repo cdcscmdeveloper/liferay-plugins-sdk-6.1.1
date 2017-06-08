@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.MessageConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -28,11 +29,11 @@ public class SmBlacklistDirectorBackingBean extends
 		BaseBackingBean<SmBlacklistDirectorManagedBean> {
 	public static String SEARCH_BY_COMPANY = "C";
 	public static String SEARCH_BY_DIRECTOR = "D";
-	public static String DIRECTOR_SEARCH_BY_IDNO = "DI";
-	public static String DIRECTOR_SEARCH_BY_NAME = "DN";
-	public static String COMPANY_SEARCH_BY_NAME = "CN";
-	public static String COMPANY_SEARCH_BY_REGNO = "CR";
-	public static String COMPANY_SEARCH_BY_EPNO = "CE";
+	public static String DIRECTOR_SEARCH_BY_IDNO = SupplierManagementConst.SEARCH_BY_DIR_IDNO;
+	public static String DIRECTOR_SEARCH_BY_NAME = SupplierManagementConst.SEARCH_BY_DIR_NAME;
+	public static String COMPANY_SEARCH_BY_NAME = SupplierManagementConst.SEARCH_BY_COMPNAME;
+	public static String COMPANY_SEARCH_BY_REGNO = SupplierManagementConst.SEARCH_BY_REGNO;
+	public static String COMPANY_SEARCH_BY_EPNO = SupplierManagementConst.SEARCH_BY_EPNO;
 	public static String SEARCH_PAGE = "S";
 	public static String VIEW_COMPANY_RESULT_PAGE = "RC";
 	public static String VIEW_DIRECTOR_RESULT_PAGE = "RD";
@@ -48,8 +49,8 @@ public class SmBlacklistDirectorBackingBean extends
 		getManagedBean().setOwnerDirectorList(new ArrayList<SmPersonnel>());
 		getManagedBean().setCompanyList(new ArrayList<SmSupplier>());
 		SmCommonUtil.setMDCUserId();
-		SmCommonUtil
-				.redirectToPage("blacklistDirectorBasePage.xhtml", "", null);
+		SmCommonUtil.redirectToPage("blacklistDirectorBasePage.xhtml", "",
+				null, null);
 	}
 
 	/**
