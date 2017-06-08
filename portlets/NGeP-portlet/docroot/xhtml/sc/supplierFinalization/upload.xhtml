@@ -18,7 +18,7 @@
 
 	<ac:scSingleFileUploadPopup widgetVar="endorseReportAttWidget"
 		fileUploadListener="suppFinalizationBackingBean.handleEndorseReportUpload"
-		update="@([id$=briefingPaperUploadBtnId])"
-		readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}" />
+		update="@([id$=endorseReportUploadBtnId],[id$=endorseReportTbl])"
+		readonly="#{!(isSecretaryUser )}" />
 
 </ui:composition>
