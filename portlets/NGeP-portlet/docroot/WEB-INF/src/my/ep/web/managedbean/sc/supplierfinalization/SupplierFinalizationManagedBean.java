@@ -10,10 +10,11 @@ import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -227,9 +228,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl preferenceMarginDtls;
 	private List<ScQtFinalizationEndorsementRecommendationRemarks> finalizationPengreysonremarks;
 	private boolean renderjustificationTextbox;
-	private PmParameter justification;
+	private PmReason justification;
 	private List<ScQtFinalizationReport> endorsementReports;
 	private ScQtFinalizationReport endorsementReport;
+	private SelectItem[] justDropdown;
 	
 	/**
 	 * @return the activeIndex
@@ -2041,14 +2043,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the justification
 	 */
-	public PmParameter getJustification() {
+	public PmReason getJustification() {
 		return justification;
 	}
 
 	/**
 	 * @param justification the justification to set
 	 */
-	public void setJustification(PmParameter justification) {
+	public void setJustification(PmReason justification) {
 		this.justification = justification;
 	}
 
@@ -2079,6 +2081,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setEndorsementReport(ScQtFinalizationReport endorsementReport) {
 		this.endorsementReport = endorsementReport;
+	}
+
+	/**
+	 * @return the justDropdown
+	 */
+	public SelectItem[] getJustDropdown() {
+		return justDropdown;
+	}
+
+	/**
+	 * @param justDropdown the justDropdown to set
+	 */
+	public void setJustDropdown(SelectItem[] justDropdown) {
+		this.justDropdown = justDropdown;
 	}
 
 
