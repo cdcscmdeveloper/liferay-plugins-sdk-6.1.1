@@ -62,23 +62,4 @@
 		</div>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sc.briefing.paper.preparation']}" toggleable="true">
-	
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<td class="TableFieldLeft" width="24%">
-					<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
-				</td>
-				<td class="TableFieldRight">
-						
-					<ac:scSingleFileUploadButton id="briefingPaperUploadBtnId" 
-						popupWidgetVar="briefingPaperAttWidget"
-						attachment="#{suppFinalizationBackingBean.managedBean.endorsementReport.scQtFinalizationReportAttachment}"
-						readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}"/>								
-																				
-				</td>
-			</tr>
-		</table>
-	</p:panel>
-	
 </ui:composition>
