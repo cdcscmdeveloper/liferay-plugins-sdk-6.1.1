@@ -88,13 +88,6 @@
 								value="5" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.sc.declaration']}" update="@form"
-							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
-							<f:setPropertyActionListener
-								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="6" />
-							<f:param name="disableValidation" value="true" />
-						</p:menuitem>
 
 					</p:tabMenu></td>
 				<td width="80%" valign="top"><h:panelGroup id="menuContent">
@@ -127,10 +120,6 @@
 							<ui:include
 								src="/xhtml/sc/loa/directnego/directawardloaPerformanceBondMenu.xhtml" />
 						</c:if>
-						<h:panelGroup
-							rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
-							<ui:include src="directLoaIntegrityPactMenu.xhtml" />
-						</h:panelGroup>
 					</h:panelGroup></td>
 			</tr>
 		</table>
