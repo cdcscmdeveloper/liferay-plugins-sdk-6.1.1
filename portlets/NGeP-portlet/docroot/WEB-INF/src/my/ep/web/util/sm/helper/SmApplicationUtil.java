@@ -4133,21 +4133,26 @@ public class SmApplicationUtil {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
 		} else {
+			List<String> consultantRegStatus = Arrays
+					.asList(new String[] {
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
+									+ "",
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN
+									+ "" });
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
 			if (!EntityHelper.isCollectionEmpty(descList)
 					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
-				List<PmStatusDesc> toRemoveList = new ArrayList<PmStatusDesc>();
+				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
 				for (PmStatusDesc statDesc : descList) {
 					if (statDesc.getPmStatus() != null
-							&& statDesc.getPmStatus().getPmRegStatus() != null
-							&& statDesc.getPmStatus().getPmRegStatus()
-									.isBumiAppl()) {
-						toRemoveList.add(statDesc);
+							&& statDesc.getPmStatus().getStatusId() != null
+							&& (consultantRegStatus.contains(statDesc
+									.getPmStatus().getStatusId().toString()))) {
+						newList.add(statDesc);
 					}
 				}
-				EntityHelper.compareAndRemoveEntityFromList(toRemoveList,
-						descList, "statusDescId");
+				descList = newList;
 			}
 		}
 		return descList;
@@ -10077,7 +10082,6 @@ public class SmApplicationUtil {
 				.isDisableAuthorizedRadio(bean.getSelectedShareHolder(),
 						bean.isValidSmUserLimit()));
 	}
-	
 
 	/**
 	 * Checks if is personnel view only.
