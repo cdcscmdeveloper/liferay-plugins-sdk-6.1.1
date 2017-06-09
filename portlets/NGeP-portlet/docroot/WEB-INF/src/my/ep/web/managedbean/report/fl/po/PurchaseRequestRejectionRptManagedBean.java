@@ -18,6 +18,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 public class PurchaseRequestRejectionRptManagedBean extends FlReportManagedBean{
 	
 	private String purchaseRequestNo;
+	private String reportUrl;
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,6 +30,14 @@ public class PurchaseRequestRejectionRptManagedBean extends FlReportManagedBean{
 
 	public void setPurchaseRequestNo(String purchaseRequestNo) {
 		this.purchaseRequestNo = purchaseRequestNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 
 }
