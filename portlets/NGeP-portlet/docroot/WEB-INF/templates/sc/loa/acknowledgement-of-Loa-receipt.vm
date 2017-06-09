@@ -85,22 +85,22 @@ p {text-align: justify;}
 		<tr>
 			<td style ="width:100px">Nama Penuh</td>
 			<td>:</td>
-			<td style="white-space: normal;"></td>
+			<td style="white-space: normal;">$supplierSignerUser</td>
 		</tr>
 		<tr>
 			<td>No. Kad Pengenalan</td>
 			<td>:</td>
-			<td></td>
+			<td>$supplierSignerIcNo</td>
 		</tr>
 		<tr valign="top">
 			<td>Alamat</td>
 			<td>:</td>
-			<td style="white-space: normal;"></td>
+			<td style="white-space: normal;">$supplierSignerAddress</td>
 		</tr>
 		<tr>
 			<td>Tarikh</td>
 			<td>:</td>
-			<td></td>
+			<td>$supplierSignDate</td>
 		</tr>
 		<tr>
 			<td colspan="3"><br />
@@ -134,7 +134,7 @@ p {text-align: justify;}
 		<tr>
 			<td>Tarikh</td>
 			<td>:</td>
-			<td></td>
+			<td>$supplierSignDate</td>
 		</tr>
 
 	</table>
