@@ -6,11 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ac:scSingleFileUploadPopup widgetVar="briefingPaperAttWidget"
-		fileUploadListener="suppFinalizationBackingBean.handleFileUpload"
-		update="@([id$=briefingPaperUploadBtnId])"
-		readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}" />
-
 	<ac:scSingleFileUploadPopup widgetVar="briefingReportAttWidget"
 		fileUploadListener="suppFinalizationBackingBean.handleReportFileUpload"
 		update="@([id$=reportTbl])" 
