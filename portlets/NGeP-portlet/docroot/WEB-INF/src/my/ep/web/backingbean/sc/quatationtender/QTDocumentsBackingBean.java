@@ -2670,8 +2670,10 @@ public class QTDocumentsBackingBean extends
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReportList();
 		for (int i = 0; i < scQtDocReports.size(); i++) {
-			scQtDocReports.get(i).setScQtDocReportAttachment(
-					generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i + 1))));
+			ScQtDocReportAttachment	attachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
+			scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
+			//scQtDocReports.get(i).setScQtDocReportAttachment(
+					//generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i + 1))));
 			
 		}
 
