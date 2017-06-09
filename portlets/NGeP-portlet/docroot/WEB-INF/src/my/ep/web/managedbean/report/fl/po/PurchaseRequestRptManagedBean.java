@@ -26,6 +26,7 @@ public class PurchaseRequestRptManagedBean extends FlReportManagedBean{
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
 	private String requisitioner;
 	private String purchaseRequestNo;
+	private String reportUrl;
 	
 	public PurchaseRequestRptManagedBean(){}
 	
@@ -61,6 +62,14 @@ public class PurchaseRequestRptManagedBean extends FlReportManagedBean{
 
 	public void setPurchaseRequestNo(String purchaseRequestNo) {
 		this.purchaseRequestNo = purchaseRequestNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 
 }

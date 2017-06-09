@@ -23,6 +23,7 @@ public class PurDeliveryOrderCancelRptManagedBean extends FlReportManagedBean{
 	
 	private String deliveryOrderNo;
 	private String supplierDoRefNo;
+	private String reportUrl;
 
 	public String getDeliveryOrderNo() {
 		return deliveryOrderNo;
@@ -38,6 +39,14 @@ public class PurDeliveryOrderCancelRptManagedBean extends FlReportManagedBean{
 
 	public void setSupplierDoRefNo(String supplierDoRefNo) {
 		this.supplierDoRefNo = supplierDoRefNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 
 }
