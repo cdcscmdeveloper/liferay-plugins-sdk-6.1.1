@@ -18,6 +18,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 public class PurchaseDeliveryRptManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
+	private String reportUrl;
 	
 	public PurchaseDeliveryRptManagedBean(){}
 	
@@ -38,6 +39,14 @@ public class PurchaseDeliveryRptManagedBean extends FlReportManagedBean{
 
 	public void setSupplierDoRefNo(String supplierDoRefNo) {
 		this.supplierDoRefNo = supplierDoRefNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 
 }
