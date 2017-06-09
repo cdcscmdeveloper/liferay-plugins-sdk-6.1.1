@@ -18,7 +18,16 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 public class PurchaseOrderCancelRptManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
+	private String reportUrl;
 	
 	public PurchaseOrderCancelRptManagedBean(){}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 	
 }

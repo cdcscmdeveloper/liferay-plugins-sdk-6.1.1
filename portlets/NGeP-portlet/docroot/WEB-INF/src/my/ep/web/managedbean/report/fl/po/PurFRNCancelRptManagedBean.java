@@ -22,13 +22,22 @@ public class PurFRNCancelRptManagedBean extends FlReportManagedBean{
 	public PurFRNCancelRptManagedBean(){}
 	
 	private String frnNo;
-
+	private String reportUrl;
+	
 	public String getFrnNo() {
 		return frnNo;
 	}
 
 	public void setFrnNo(String frnNo) {
 		this.frnNo = frnNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 
 }
