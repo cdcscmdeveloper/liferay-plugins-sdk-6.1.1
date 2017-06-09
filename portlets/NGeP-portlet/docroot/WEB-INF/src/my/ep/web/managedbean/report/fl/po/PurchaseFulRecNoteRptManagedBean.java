@@ -22,6 +22,7 @@ public class PurchaseFulRecNoteRptManagedBean extends FlReportManagedBean{
 	public PurchaseFulRecNoteRptManagedBean(){}
 	
 	private String frnNo;
+	private String reportUrl;
 
 	public String getFrnNo() {
 		return frnNo;
@@ -29,6 +30,14 @@ public class PurchaseFulRecNoteRptManagedBean extends FlReportManagedBean{
 
 	public void setFrnNo(String frnNo) {
 		this.frnNo = frnNo;
+	}
+	
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
 	}
 
 }
