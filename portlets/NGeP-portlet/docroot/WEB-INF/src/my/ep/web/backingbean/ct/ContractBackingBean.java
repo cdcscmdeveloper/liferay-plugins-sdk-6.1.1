@@ -36,6 +36,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -1184,7 +1185,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		SelectItem[] items = null;
 		 int i = 1;
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		
 		try {
 			
@@ -1608,63 +1609,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		@Override
 		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
 			try {
-				// Filter By - parameterType
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
-			
-				// Filter By - Org Type
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
-				
-				
-				// Filter By - Ministry Profile Id
-				Long ministryProfileId = getManagedBean().getMinistryProfileId();
-				if (ministryProfileId == null) {
-					ministryProfileId = 0L;
-				}
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ministryProfileId));
-				
-				
-				if (getManagedBean().getJabatanProfileId() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getJabatanProfileId()));
-				}
-				
-				Date currentDate = DateUtils.getCurrentDateWithoutTime();
-				// Filter By - Org effDate
-				searchBean.getDataFilterBeans()
-						.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
-
-				// Filter By - Org expDate
-				searchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								currentDate), new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_IS_NULL.value(), null,
-								SearchCondition.CONDITION_OR.value())));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("recordStatus",
-								SearchOperator.OPERATOR_EQUALS.value(), true));
-				
-				if (getManagedBean().getPtjCodeName() != null
-						&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
-					if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-					
-					} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-					}
-				}
+				searchBean = generateAgencySearchBean();
 				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -1680,8 +1625,111 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return null;
 		}
 	}
+	
+	private ISearchBean<PmOrgProfile> generateAgencySearchBean() {
+		ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+		// Filter By - parameterType
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+	
+		// Filter By - Org Type
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
 		
 		
+		// Filter By - Ministry Profile Id
+		Long ministryProfileId = getManagedBean().getMinistryProfileId();
+		if (ministryProfileId == null) {
+			ministryProfileId = 0L;
+		}
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+						SearchOperator.OPERATOR_EQUALS.value(),
+						ministryProfileId));
+		
+		
+		if (getManagedBean().getJabatanProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getJabatanProfileId()));
+		}
+		
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+		// Filter By - Org effDate
+		searchBean.getDataFilterBeans()
+				.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+		// Filter By - Org expDate
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchFilterBean(
+						"pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+						currentDate), new SearchFilterBean(
+						"pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_IS_NULL.value(), null,
+						SearchCondition.CONDITION_OR.value())));
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("epPtj",
+						SearchOperator.OPERATOR_EQUALS.value(), true));
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("recordStatus",
+						SearchOperator.OPERATOR_EQUALS.value(), true));
+		
+		if (getManagedBean().getPtjCodeName() != null
+				&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
+				SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+			    searchBean.getDataFilterBeans().add(filterBean);
+			
+			} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
+				SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+			    searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+		// Filter By - existing agency
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getContractVer().getCtAgencies())) {
+			List<Long> orgProfileIdList = new ArrayList<Long>();
+			for (CtAgency agency : getManagedBean().getContractVer().getCtAgencies()) {
+				orgProfileIdList.add(agency.getOrgProfile().getOrgProfileId());
+			}
+			//  sql maximum number of expressions IN is 1000, if > 1000 handle in else
+			if (orgProfileIdList.size() <= 1000) {				
+				SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
+						SearchOperator.OPERATOR_NOT_IN.value(),
+						orgProfileIdList);
+			    searchBean.getDataFilterBeans().add(filterBean);
+			} else {
+				List<List<Long>> subOrgProfileIdList = new ArrayList<List<Long>>();
+			    int count = orgProfileIdList.size();
+			    for (int i = 0; i < count; i += 1000) {
+			    	subOrgProfileIdList.add(new ArrayList<Long>(
+			        		orgProfileIdList.subList(i, Math.min(count, i + 1000)))
+			        );
+			    }
+			    SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
+						SearchOperator.OPERATOR_NOT_IN.value(),
+						subOrgProfileIdList.get(0));
+			    SearchMultiFilterBean multi = null;
+			    
+			    for (int i = 1; i < subOrgProfileIdList.size(); i++) {
+			    	SearchFilterBean subOrgProfileBean = new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							subOrgProfileIdList.get(i));
+			    	if (i == 1) {
+			    		multi = new SearchMultiFilterBean(filterBean, subOrgProfileBean);
+			    	} else {
+			    		multi = new SearchMultiFilterBean(multi, subOrgProfileBean);
+			    	}
+			    }
+			    searchBean.getDataFilterBeans().add(multi);
+			}
+		}
+		return searchBean;
+	}
 	
 	/**
 	 * The method used to add new agency's delivery address.
@@ -1889,146 +1937,121 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * list, user allow to enter the agency details. 
 	 */
 	public void addAgencyDetails(boolean selectedOnly) {
-	
 		List<CtAgency> ctAgencyList = null;
 		OrgProfileReqDTO reqDTO = null;
 		List<PmOrgProfile> orgProfileList = null;
 		Long ministryId = retrieveMinistryOrgProfile(
- 		   getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
-		    if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
-		    		ctAgencyList = new ArrayList<CtAgency>();
-			        for(PmOrgProfile pmOrgProfiles : getManagedBean().getAgencySelected()) {
-			        //	  if(pmOrgProfiles.isSelectedCheckBox()){
-			        		  //Remove if already exist, avoid duplicate
-			        		  for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
-			        			  if (agency.getOrgProfile().getOrgProfileId().equals(pmOrgProfiles.getOrgProfileId())) {
-			        				  throw new EpException(MessageConst.INFO_755000, new String[]{agency.getOrgProfile().getOrgName()}); 
-			        			  }
-			        		  }
-					
-			        		  CtAgency ctAgency = new CtAgency();
-			        		  if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
-			        			  ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
-			        		  } else {
-			        			  ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			        		  }
-			        		  ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			        		  ctAgency.setCeilingAmount(new BigDecimal(0));
-			        		  ctAgency.setChkStatus(true);
-			        		  pmOrgProfiles.setMinstryId(getManagedBean().getMinistryProfileId());
-			        		  ctAgency.setOrgProfile(pmOrgProfiles);
-			        		  ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
-			        		  ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
-			        		  
-			        		  StringBuilder str =  new StringBuilder();
-							  int len = (getManagedBean().getContractVer().getCtContract().getContractId()+pmOrgProfiles.getOrgProfileId().toString()).length();
-							  for(int i=len; i<16; i++){
-									str = str.append("0");
-								}
-								 str.append(getManagedBean().getContractVer().getCtContract().getContractId());
-								 str.append(ctAgency.getOrgProfile().getOrgProfileId());
-								ctAgency.setCommitmentNo("K"+str.toString());
-			        		  if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
-			        			  ctAgency.setAp178(true);
-			        		  }		  	
-			        		  ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
-			        		  ctAgencyList.add(ctAgency);
+				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+		if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
+			ctAgencyList = new ArrayList<CtAgency>();
+			for(PmOrgProfile pmOrgProfiles : getManagedBean().getAgencySelected()) {		
+				CtAgency ctAgency = new CtAgency();
+				if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
+					ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
+				} else {
+					ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+	    		}
+				ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				ctAgency.setCeilingAmount(new BigDecimal(0));
+				ctAgency.setChkStatus(true);
+				pmOrgProfiles.setMinstryId(getManagedBean().getMinistryProfileId());
+				ctAgency.setOrgProfile(pmOrgProfiles);
+				ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
+				ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
+    		  
+				StringBuilder str =  new StringBuilder();
+				int len = (getManagedBean().getContractVer().getCtContract().getContractId()+pmOrgProfiles.getOrgProfileId().toString()).length();
+				for(int i=len; i<16; i++){
+					str = str.append("0");
+				}
+				str.append(getManagedBean().getContractVer().getCtContract().getContractId());
+				str.append(ctAgency.getOrgProfile().getOrgProfileId());
+				ctAgency.setCommitmentNo("K"+str.toString());
+				if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
+					ctAgency.setAp178(true);
+				}		  	
+				ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
+				ctAgencyList.add(ctAgency);
 					 
-			        		  if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
-			        			  for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-			        				  CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
-			        				  itemCeilingQty.setCtAgency(ctAgency);
-			        				  itemCeilingQty.setCtContractItem(contractItem);
-			        				  itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
-			        				  itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			        				  itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			        				  contractItem.getCtItemCeilingQties().add(itemCeilingQty);
-			        			  }
-			        		  }
-			        	  }
-			        //} //getManagedBean().setOwnerOrgProfile(false);
-		    	} else {    	
-		    			boolean contractSharing = true;
-		    			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		    			try
-		    					{
-	    							ctAgencyList = new ArrayList<CtAgency>();
-	    							reqDTO = new OrgProfileReqDTO();
-	    							if(getManagedBean().getJabatanProfileId() != null){
-	    									reqDTO.setJabatanId(getManagedBean().getJabatanProfileId());
-	    									orgProfileList =  orgProfileSO.retrievePtjListByParents(reqDTO).getOrgProfileList();
-	    							} else {
-	    								reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
-	    								reqDTO.setOrgType(OrganizationType.DIVISION.value());
-	    								orgProfileList = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO).getOrgProfileList();
-	    							}
-		    			} catch (Exception e) {
-		    					e.printStackTrace();
-		    					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		    			}
+				if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
+					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
+						CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
+			        	itemCeilingQty.setCtAgency(ctAgency);
+			        	itemCeilingQty.setCtContractItem(contractItem);
+			        	itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+			        	itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			        	itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			        	contractItem.getCtItemCeilingQties().add(itemCeilingQty);
+					}
+				}
+			}
+		} else {    	
+			boolean contractSharing = true;
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			try {
+				ISearchBean<PmOrgProfile> searchBean = generateAgencySearchBean();
+				ctAgencyList = new ArrayList<CtAgency>();
+				reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileSearchBean(searchBean);
+				orgProfileList =  orgProfileSO.searchOrgProfile(reqDTO).getOrgProfileResultBean().getResultList();				
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    		}
 	
-		    			for(PmOrgProfile orgProfile : orgProfileList) {
-		    					orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
-		    					for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
-		    							if (agency.getOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-		    								continue;
-		    							//    throw new EpException(MessageConst.INFO_755000, new String[]{agency.getOrgProfile().getOrgName()}); 
-		    							}
-		    					}
-	    						
-				        		CtAgency ctAgency = new CtAgency();
-				        		orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
-				        		ctAgency.setOrgProfile(orgProfile);
-				        		ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(orgProfile.getOrgProfileId()));
-				        		ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(orgProfile.getOrgProfileId()));
+				for(PmOrgProfile orgProfile : orgProfileList) {
+					CtAgency ctAgency = new CtAgency();
+				    orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
+					ctAgency.setOrgProfile(orgProfile);
+					ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(orgProfile.getOrgProfileId()));
+					ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(orgProfile.getOrgProfileId()));
 		        	    
-				        		StringBuilder str =  new StringBuilder();
-				        		int len = (getManagedBean().getContractVer().getCtContract().getContractId()+ctAgency.getOrgProfile().getOrgProfileId().toString()).length();
-				        		for(int i=len; i<16; i++){
-				        			str = str.append("0");
-				        		}
-				        		str.append(getManagedBean().getContractVer().getCtContract().getContractId());
-				        		str.append(ctAgency.getOrgProfile().getOrgProfileId());
-				        		ctAgency.setCommitmentNo("K"+str.toString());
-		    			        if(!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)){
-		    			        		ctAgency.setAp178(true);
-		    			        }
-				        		if(contractSharing){
-				        			ctAgency.setContractSharing(contractSharing);
-				        			contractSharing = false;
-				        		}
-				        		if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
-				        			ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
-				        		} else {
-				        			ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				        		}
-				        		ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-				        		ctAgency.setCeilingAmount(new BigDecimal(0));
-				        		ctAgency.setChkStatus(true);  	
-				        		ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
-				        		ctAgencyList.add(ctAgency);
+					StringBuilder str =  new StringBuilder();
+				   	int len = (getManagedBean().getContractVer().getCtContract().getContractId()+ctAgency.getOrgProfile().getOrgProfileId().toString()).length();
+				  	for(int i=len; i<16; i++){
+				  		str = str.append("0");
+					}
+				 	str.append(getManagedBean().getContractVer().getCtContract().getContractId());
+				  	str.append(ctAgency.getOrgProfile().getOrgProfileId());
+				   	ctAgency.setCommitmentNo("K"+str.toString());
+		    		if(!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)){
+		    			ctAgency.setAp178(true);
+		    		}
+				  	if(contractSharing){
+				  		ctAgency.setContractSharing(contractSharing);
+				  		contractSharing = false;
+				  	}
+					if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
+				    	ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
+				 	} else {
+				 		ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					}
+				  	ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				  	ctAgency.setCeilingAmount(new BigDecimal(0));
+					ctAgency.setChkStatus(true);  	
+				  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
+					ctAgencyList.add(ctAgency);
 		 
-				        		if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
-				        				for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-				        						CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
-				        						itemCeilingQty.setCtAgency(ctAgency);
-				        						itemCeilingQty.setCtContractItem(contractItem);
-				        						itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
-				        						itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				        						itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-				        						contractItem.getCtItemCeilingQties().add(itemCeilingQty);
-				        				}
-				        			}
-				        		}	
-		    			}
-		    	if (ctAgencyList.size()>0) {
-		    			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
-		    			//CT_CHANGE_LOG
-		    			for(CtAgency ctAgency : ctAgencyList) {
-		    				getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
-		    			}
-		    	}
-		    	//    RequestContext.getCurrentInstance().execute("dlgAgency.hide()");
+				   	if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
+				   		for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
+				        	CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
+				        	itemCeilingQty.setCtAgency(ctAgency);
+				        	itemCeilingQty.setCtContractItem(contractItem);
+    						itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+    						itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+    						itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+    						contractItem.getCtItemCeilingQties().add(itemCeilingQty);
+        			}
+        		}
+        	}	
+		}
+		if (ctAgencyList.size()>0) {
+			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
+			//CT_CHANGE_LOG
+		 	for(CtAgency ctAgency : ctAgencyList) {
+		 		getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
+		  	}
+		}
 	}
 	
 	/**
@@ -3463,9 +3486,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 			&& !getManagedBean().isDirectPurchase()
 			&& !getManagedBean().getCtContractAmount().isBondExempted()
-			&& (!getManagedBean().isCommonView()
-				|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
-					equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) )){
+			&& !getManagedBean().isCommonView()) {
 			return  true;
 		}
 		return false;
