@@ -753,6 +753,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		setAlreadyHadFreeSoftcert();
 		setDisableFlUserRowSelection(personnels);
 		setDisableRowSelectionIfSuppTmpNotRequestSoftCert(personnels);
+		setDisableRowSelectionIfLoginUserSuppUser(personnels);
 		initDisableRevokeButton();
 	}
 
@@ -803,6 +804,32 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (per.getPersonnelId().compareTo(
 						getManagedBean().getSupplierTmpPersonnel()
 								.getPersonnelId()) != 0) {
+					per.setDisableRowSelection(true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Supplier User can only request softcert for his/her self only. Other
+	 * users will be disabled
+	 * 
+	 * @param List
+	 *            <SmPersonnel> personnels
+	 */
+	private void setDisableRowSelectionIfLoginUserSuppUser(
+			List<SmPersonnel> personnels) {
+		if (getManagedBean().getLoginUserPersonnelInfo() != null
+				&& !StringUtils.isBlank(getManagedBean()
+						.getLoginUserPersonnelInfo().getEpRole())) {
+			boolean isAdmin = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+					.contains(getManagedBean().getLoginUserPersonnelInfo()
+							.getEpRole());
+			for (SmPersonnel per : personnels) {
+				if (!isAdmin
+						&& per.getPersonnelId().compareTo(
+								getManagedBean().getLoginUserPersonnelInfo()
+										.getPersonnelId()) != 0) {
 					per.setDisableRowSelection(true);
 				}
 			}
@@ -1244,20 +1271,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void initDisableRevokeButton() {
 		if (getManagedBean().isRenderRevokeButton()) {
 			if (getManagedBean().getLoginUserPersonnelInfo() != null
-					&& (getManagedBean().getLoginUserPersonnelInfo()
-							.getEpRole()
-							.equals(RoleCode.G2G_SUPPLIER_ADMIN.value())
-							|| getManagedBean()
-									.getLoginUserPersonnelInfo()
-									.getEpRole()
-									.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
-							|| getManagedBean()
-									.getLoginUserPersonnelInfo()
-									.getEpRole()
-									.equals(RoleCode.BASIC_SUPPLIER_ADMIN
-											.value()) || getManagedBean()
-							.getLoginUserPersonnelInfo().getEpRole()
-							.equals(RoleCode.SUPPLIER_TEMP.value()))) {
+					&& (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+							.contains(getManagedBean()
+									.getLoginUserPersonnelInfo().getEpRole()))) {
 				getManagedBean().setRenderRevokeButton(true);
 			} else {
 				getManagedBean().setRenderRevokeButton(false);
