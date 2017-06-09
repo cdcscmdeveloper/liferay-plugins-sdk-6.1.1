@@ -8,17 +8,17 @@
 	<div align="left" class="header-info header-spacing">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="8%"><h:outputLabel
+				<td width="12%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
-				<td class="header-info-text" width="8%">
+				<td class="header-info-text" width="11%">
 					#{directLOABackingBean.managedBean.scLoa.loaNo}</td>
-				<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+				<td width="12%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 				</td>
-				<td class="header-info-text" width="30%">
+				<td class="header-info-text" width="35%">
 					#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}</td>
-				<td width="10%"><h:outputLabel
+				<td width="15%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.issue']}" /></td>
-				<td class="header-info-text" width="8%"><h:outputText
+				<td class="header-info-text" width="15%"><h:outputText
 						value="#{directLOABackingBean.managedBean.scLoa.issueDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -31,7 +31,7 @@
 					#{directLOABackingBean.managedBean.scQt.qtNo}</td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
-				<td class="header-info-text" colspan="5">
+				<td class="header-info-text" colspan="3">
 					#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}</td>
 			</tr>
 
