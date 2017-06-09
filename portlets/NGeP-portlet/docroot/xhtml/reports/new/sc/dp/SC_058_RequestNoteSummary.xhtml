@@ -45,22 +45,6 @@
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}"
-					style="margin-top:5px;width:160px;" /> 
-			</td>
-			<td><p:selectOneMenu
-					value="#{rnSummaryRptBackingBean.managedBean.requestNoteGroup}"
-					style="margin-top:5px;width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-						itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
-						itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-						itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu></td>
-		</tr>
 	</table>
 	
 	<table style="width: 100%;">
