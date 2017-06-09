@@ -83,10 +83,7 @@
 			  	  
 			  	  <f:verbatim/>	  <f:verbatim/>
 				 
-				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required"
-				  rendered="#{(centralContractBackingBean.managedBean.circularVer.circularFilePath == null and !centralContractBackingBean.managedBean.viewContract) 
-				  or (centralContractBackingBean.managedBean.circularVer.circularFilePath != null and !centralContractBackingBean.managedBean.viewContract)
-				  or (centralContractBackingBean.managedBean.circularVer.circularFilePath != null and centralContractBackingBean.managedBean.viewContract)}" />
+				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required"/>
 		 		<h:panelGroup id="uploadCircularPg">
 			  		<p:commandButton icon="ui-icon-upload" update="uploadCircularPg, uploadCircularDlg"
 			  		  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath == null and !centralContractBackingBean.managedBean.viewContract}"
@@ -104,33 +101,4 @@
 			 	          </p:commandLink>		
 			  		</h:panelGroup>
 			</h:panelGrid>
-			
-			 <p:confirmDialog id="circularFileId" widgetVar="deleteCircularFileDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
-                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-                 <div class="ppRightBtn">
-		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                       update=":form:uploadCircularPg" 
-		                       action="#{centralContractBackingBean.delCircularVerFile()}" oncomplete="deleteCircularFileDlg.hide();"/>
-			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteCircularFileDlg.hide();" type="button" />
-		           </div>
-          </p:confirmDialog>
-          
-	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" resizable="false"
-	    width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	    onShow="singleUploadListener(centralUploadWV);">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false"
-		     sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
-			fileUploadListener="#{centralContractBackingBean.fileUpload}"  multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="centralUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-			update="uploadCircularPg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadCircularDlg.hide();" >
-		</p:fileUpload>
-		<f:facet name="footer">
-		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadCircularDlg.hide();" />
-   		</div> 
-   		</f:facet>
-	</p:dialog>
 </ui:composition>
