@@ -1076,8 +1076,18 @@ public class SupplierFinalizationBackingBean extends
 									scQtFinalization.getReason().getReasonId() == null)) {
 							navigateToSupplierFinalizationTab();
 							throw new EpException(MessageConst.ERROR_760385);
-						}	
+						}
+						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
+						if(this.getManagedBean().getScQt().isBpkFinalizationReq()){
+							
+						if (!ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+								.equals(decisionTypeCode)
+								|| scQtFinalization.getHigherCommitte() != null) {
+							navigateToSupplierFinalizationTab();
+							throw new EpException(MessageConst.ERROR_760459);
+						}
 						
+						}
 						processSuppliersBeforeSaving();
 						
 						if (!getManagedBean().isItemize()) {
