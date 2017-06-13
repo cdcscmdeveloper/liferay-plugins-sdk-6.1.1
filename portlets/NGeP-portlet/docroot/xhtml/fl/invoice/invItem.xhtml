@@ -7,6 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.fl.item.details']}" toggleable="true" styleClass="invItemPnlClass">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary1']}" escape="false"/>&#160;
+		<p:graphicImage value="/css/images/icon-expand.png" />&#160;
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.invoice.item']}" escape="false"/>
 		<p:treeTable id="normalInvItemTbl" var="chargeLineNode"
 			rendered="#{!invoiceBackingBean.managedBean.taxInvoice and not empty invoiceBackingBean.managedBean.chargeLineItemRoot}"
 			styleClass="invItemChange"
