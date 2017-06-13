@@ -44,18 +44,6 @@ public class ItemInquiryDetailRptBackingBean extends DpReportBackingBean<ItemInq
 		generateDpReport(params);
 	}
 	
-	/**
-	 * Search status desc.
-	 *
-	 * @return the list
-	 * @throws NamingException the naming exception
-	 */
-	public SelectItem[] searchStatusDesc() throws NamingException {
-		return super.getStatusDropdownValues(
-				ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-				ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
-	}
-	
 	public void resetSearch(){
 		getManagedBean().setDateFrom(null);
 		getManagedBean().setDateTo(null);
