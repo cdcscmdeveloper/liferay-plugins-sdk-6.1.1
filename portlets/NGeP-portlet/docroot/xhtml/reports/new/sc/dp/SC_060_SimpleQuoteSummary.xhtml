@@ -12,36 +12,36 @@
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
 			<td width="35%"><p:inputText maxlength="50" size="50"
-					value="#{sqDetailRptBackingBean.managedBean.docNo}">
+					value="#{sqSummaryRptBackingBean.managedBean.docNo}">
 				</p:inputText></td>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.supp.name']}" /></td>
 			<td width="35%"><ac:lov id="dpInquirySupplierName" readonly="true" 
 								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" 
 								headerText="#{lbl['lbl.sc.supp.name']}" update="@form"
-								value="#{sqDetailRptBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-								saveObject="sqDetailRptBackingBean.managedBean.selectedOrgProfile" 
-								postUpdateListener="#{sqDetailRptBackingBean.onSupplierChange()}" /></td>
+								value="#{sqSummaryRptBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+								saveObject="sqSummaryRptBackingBean.managedBean.selectedOrgProfile" 
+								postUpdateListener="#{sqSummaryRptBackingBean.onSupplierChange()}" /></td>
 		</tr>
 		<tr>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.status']}" /></td>
 			<td width="35%"><p:selectOneMenu
-					value="#{sqDetailRptBackingBean.managedBean.status}">
+					value="#{sqSummaryRptBackingBean.managedBean.status}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems
-						value="#{sqDetailRptBackingBean.searchStatusDesc(ParameterConst.doctypeSimpleQuote)}" />
+						value="#{sqSummaryRptBackingBean.searchStatusDesc(ParameterConst.doctypeSimpleQuote)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.request.note.proc.type']}" /></td>
 			<td width="35%"><p:selectOneMenu
-					value="#{sqDetailRptBackingBean.managedBean.procurementType}">
+					value="#{sqSummaryRptBackingBean.managedBean.procurementType}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems
-						value="#{sqDetailRptBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
+						value="#{sqSummaryRptBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>
@@ -53,7 +53,7 @@
 					value="#{lbl['lbl.rpt.createdDt']}" /></td>
 			<td width="15%"><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true" size="9"
-					value="#{sqDetailRptBackingBean.managedBean.dateFrom}"
+					value="#{sqSummaryRptBackingBean.managedBean.dateFrom}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
 						update="@this" />
@@ -64,7 +64,7 @@
 					value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
 			<td><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
-					value="#{sqDetailRptBackingBean.managedBean.dateTo}" size="9"
+					value="#{sqSummaryRptBackingBean.managedBean.dateTo}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
 						update="@this" />
@@ -75,7 +75,7 @@
 		</tr>
 	</table>
 	
-	<ac:scGenerateReport bBean="#{sqDetailRptBackingBean}"
+	<ac:scGenerateReport bBean="#{sqSummaryRptBackingBean}"
 		scReportMainBean="#{dpReportBackingBean}">
 	</ac:scGenerateReport>
 	
