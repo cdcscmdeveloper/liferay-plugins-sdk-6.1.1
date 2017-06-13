@@ -21,8 +21,6 @@
 					value="#{lbl['lbl.sc.request.note.header.status']}" /></td>
 			<td width="35%"><p:selectOneMenu
 					value="#{itemInquiryDetailRptBackingBean.managedBean.status}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
 					<f:selectItems
 						value="#{itemInquiryDetailRptBackingBean.searchStatusDesc(ParameterConst.doctypePurchaseInquiry)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />

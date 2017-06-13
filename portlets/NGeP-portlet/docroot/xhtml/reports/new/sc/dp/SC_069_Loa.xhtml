@@ -50,8 +50,6 @@
 					value="#{lbl['lbl.sc.status']}" /></td>
 			<td><p:selectOneMenu
 					value="#{loaRptBackingBean.managedBean.status}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
 					<f:selectItems
 						value="#{loaRptBackingBean.searchStatusDesc(ParameterConst.doctypeLetterOfAward)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />

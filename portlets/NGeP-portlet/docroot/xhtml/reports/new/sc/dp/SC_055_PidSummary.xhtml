@@ -13,8 +13,6 @@
 					value="#{lbl['lbl.sc.status']}" /></td>
 			<td width="35%"><p:selectOneMenu
 					value="#{pidSummaryRptBackingBean.managedBean.status}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
 					<f:selectItems
 						value="#{pidSummaryRptBackingBean.searchStatusDesc(ParameterConst.doctypePurchaseInDefault)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
