@@ -343,6 +343,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Long rejectionOtherReasonId;
 	private Long deletePendingApplOtherReasonId;
 	private List<PmStatusDesc> regStatusDescList;
+	private List<PmStatusDesc> recommendRegStatusDescList;
 
 	private String currentStatus;
 	private String applRegStatus;
@@ -3956,5 +3957,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoRecommendationDesc(String poRecommendationDesc) {
 		this.poRecommendationDesc = poRecommendationDesc;
+	}
+
+	public List<PmStatusDesc> getRecommendRegStatusDescList() {
+		return recommendRegStatusDescList;
+	}
+
+	public void setRecommendRegStatusDescList(
+			List<PmStatusDesc> recommendRegStatusDescList) {
+		this.recommendRegStatusDescList = recommendRegStatusDescList;
 	}
 }
