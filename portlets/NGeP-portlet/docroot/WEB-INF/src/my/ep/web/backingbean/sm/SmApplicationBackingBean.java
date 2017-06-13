@@ -1148,6 +1148,10 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
+		getManagedBean().setRecommendRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
+						getManagedBean().getSmAppl().getSupplierType(),
+						applicationType));
 		if (getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
 				.getPmRegStatus() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean()
@@ -5665,13 +5669,16 @@ public class SmApplicationBackingBean extends
 				|| srcAddr.getPmCity() == null
 				|| srcAddr.getPmCity().getCityId() == null
 				|| StringUtils.isBlank(srcAddr.getPostcode())) {
-			String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
+			String addrType = SmCommonUtil.getMessage(
+					"lbl.sm.permenantaddress", null);
 			if (destAddr.getAddressType().equalsIgnoreCase(
 					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-				addrType = SmCommonUtil.getMessage("lbl.sm.companyaddress", null);
+				addrType = SmCommonUtil.getMessage("lbl.sm.companyaddress",
+						null);
 			}
 			destAddr.setSameAsPerm(false);
-			throw new EpException(MessageConst.ERROR_722656,new String[]{addrType});
+			throw new EpException(MessageConst.ERROR_722656,
+					new String[] { addrType });
 		} else {
 			String panelName = StringUtils.EMPTY;
 			destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
