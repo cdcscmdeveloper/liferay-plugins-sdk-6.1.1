@@ -16,7 +16,7 @@
 					value="#{backingBean.managedBean.poRecommendStatusId}"
 					style="width: 240px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems value="#{backingBean.managedBean.regStatusDescList}" var="reg"
+					<f:selectItems value="#{backingBean.managedBean.recommendRegStatusDescList}" var="reg"
 						itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
 					<p:ajax event="change" process="@this" update="@this" />
 				</p:selectOneMenu> 
