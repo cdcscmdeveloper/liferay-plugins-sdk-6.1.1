@@ -1474,8 +1474,30 @@ public class OrganisationBackingBean extends
 				}
 			}
 			getManagedBean().getSelectedAddressTypes().clear();
+			getManagedBean().setDelAddressBtn(false);
 		} else {
 			log.info("Error");
+		}
+	}
+	
+	public void onSelectDelAddressRow(){
+		if (getManagedBean().getSelectedAddressTypes().size() > 0) {
+			List<PmAddressType> exisitngAddress = new ArrayList<PmAddressType>();
+			for (PmAddressType address : getManagedBean()
+					.getSelectedAddressTypes()) {
+				if (address.isBrandNew() && address.getAddressTypeId() == null) {
+					getManagedBean().setDelAddressBtn(true);
+				}else{
+					exisitngAddress.add(address);
+				}
+			}
+			
+			if(CollectionUtils.isNotEmpty(exisitngAddress)){
+				getManagedBean().getSelectedAddressTypes().removeAll(exisitngAddress);
+				getManagedBean().setDelAddressBtn(false);
+			}
+		}else{
+			getManagedBean().setDelAddressBtn(false);
 		}
 	}
 

@@ -64,7 +64,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private PmAddressType selectedDeliveryAddress;
 	private PmAddressType deliveryAddress;
 	private List<PmAddressType> addressTypesList = new ArrayList<PmAddressType>();
-
+	private boolean delAddressBtn;
+	
 	private PmContact deliveryContactPerson;
 	private List<PmAddressType> selectedAddressTypes;
 
@@ -875,5 +876,13 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedZoneId(Long selectedZoneId) {
 		this.selectedZoneId = selectedZoneId;
+	}
+
+	public boolean isDelAddressBtn() {
+		return delAddressBtn;
+	}
+
+	public void setDelAddressBtn(boolean delAddressBtn) {
+		this.delAddressBtn = delAddressBtn;
 	}
 }

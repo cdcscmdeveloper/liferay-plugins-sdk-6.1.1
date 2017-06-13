@@ -13,6 +13,18 @@
 			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				listener="#{organisationBackingBean.onSelectDelAddressRow()}"/>
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				listener="#{organisationBackingBean.onSelectDelAddressRow()}"/>
+			<p:ajax event="rowSelectCheckbox" process="@this"
+				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				listener="#{organisationBackingBean.onSelectDelAddressRow()}" />
+			<p:ajax event="rowUnselectCheckbox" process="@this"
+				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				listener="#{organisationBackingBean.onSelectDelAddressRow()}" />				
 			<p:column selectionMode="multiple" disabledSelection="#{!address.brandNew}"
 				 style="width:2%" />
 			 <p:column headerText="#{lbl['lbl.pm.address.address']}" style="white-space:normal;">
@@ -43,7 +55,8 @@
 				actionListener="#{organisationBackingBean.addDeliveryAddr}" >
 				<p:resetInput target=":form:addressTabs:deliveryAddressPanel" />
 				</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton id="delAddressBtnId" value="#{lbl['lbl.btn.delete']}"
+				disabled="#{not organisationBackingBean.managedBean.delAddressBtn}"
 				actionListener="#{organisationBackingBean.deleteSelectedAdddress}"
 				update="@([id$=#{delAddressDeleteId}])" process="@this"
 				oncomplete="delAddressDeletePopUp.show();"
