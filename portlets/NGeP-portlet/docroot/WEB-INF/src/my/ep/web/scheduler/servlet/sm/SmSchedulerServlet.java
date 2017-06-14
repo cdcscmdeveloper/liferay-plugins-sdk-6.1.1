@@ -120,6 +120,19 @@ public class SmSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_CHECK_BASIC_ACCOUNT_EXPIRATION));
 
+		//show cause letter notification - 
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(
+						SchedulerConstants.SM_COMPLAINT_SHOWCAUSE_NOTIFICATION,
+						SchedulerConstants.SM_JOB_GROUP),
+				CheckBasicAccountExpirationJob.class,
+				SchedulerConstants.SM_COMPLAINT_SHOWCAUSE_NOTIFICATION_JOB_DESC,
+				SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_COMPLAINT_SHOW_CAUSE_NOTIFICATION));
+		
 		// 1GFMAS jobs
 		EpSchedulerHelper
 				.scheduleJob(
