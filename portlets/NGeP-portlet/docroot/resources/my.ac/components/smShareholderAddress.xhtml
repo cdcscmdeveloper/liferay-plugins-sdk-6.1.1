@@ -31,47 +31,43 @@
 		
 		
 		<table style="width: 100%">
-			<tr><td><u><b><h:outputText value="#{cc.attrs.addressTitle}" /></b></u></td></tr>
-			<p:outputPanel rendered="#{!cc.attrs.showTick}">
-				<tr><td colspan="2">&#160;</td></tr>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{cc.attrs.showTick}">
-				<tr>
-					<td></td>
-					<td style="float: left;">
-						<p:selectBooleanCheckbox
-							value="#{cc.attrs.addrObj.sameAsPerm}">
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj)}"
-								update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
-								oncomplete="blockWidget.hide()"/>
-						</p:selectBooleanCheckbox>
-						<b><h:outputText value="#{cc.attrs.tickLabel}" /></b>
-					</td>
-				</tr>
-			</p:outputPanel>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="#{cc.attrs.addrId}" maxlength="100"
-							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.address']}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
-							readonly="#{cc.attrs.addrObj.sameAsPerm}"
-							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							value="#{cc.attrs.addrObj.smAddress.address1}"
-							size="35">
-							<p:ajax process="@this" partialSubmit="true"
-								update="@this,#{cc.attrs.addrId}Msg" />
-						</p:inputText> 
-						<ac:smFieldChangeAlert 
-							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
-								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
-							oriValue="#{cc.attrs.latestAddrObj.smAddress.address1}" 
-							currValue="#{cc.attrs.addrObj.smAddress.address1}" 
-							alertValue="#{cc.attrs.latestAddrObj.smAddress.address1}"/>
-						<p:message id="#{cc.attrs.addrId}Msg"
-							for="#{cc.attrs.addrId}" showSummary="true"
-							showDetail="false" display="icon" /></td>
+			<tr><td colspan="2"><u><b><h:outputText value="#{cc.attrs.addressTitle}" /></b></u></td></tr>
+			<tr>
+				<td></td>
+				<td style="float: left;">
+					<p:selectBooleanCheckbox rendered="#{cc.attrs.showTick}"
+						value="#{cc.attrs.addrObj.sameAsPerm}">
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj)}"
+							update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()"/>
+					</p:selectBooleanCheckbox>
+					<p:outputPanel rendered="#{!cc.attrs.showTick}"><p:selectBooleanCheckbox style="display:none"/>&#160;&#160;</p:outputPanel>
+					<b><h:outputText value="#{cc.attrs.tickLabel}" /></b>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="#{cc.attrs.addrId}" maxlength="100"
+						label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.address']}"
+						required="#{!cc.attrs.addrObj.sameAsPerm}"
+						readonly="#{cc.attrs.addrObj.sameAsPerm}"
+						disabled="#{cc.attrs.addrObj.sameAsPerm}"
+						value="#{cc.attrs.addrObj.smAddress.address1}"
+						size="35">
+						<p:ajax process="@this" partialSubmit="true"
+							update="@this,#{cc.attrs.addrId}Msg" />
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
+							and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
+						oriValue="#{cc.attrs.latestAddrObj.smAddress.address1}" 
+						currValue="#{cc.attrs.addrObj.smAddress.address1}" 
+						alertValue="#{cc.attrs.latestAddrObj.smAddress.address1}"/>
+					<p:message id="#{cc.attrs.addrId}Msg"
+						for="#{cc.attrs.addrId}" showSummary="true"
+						showDetail="false" display="icon" /></td>
 				</tr>
 
 				<tr>
