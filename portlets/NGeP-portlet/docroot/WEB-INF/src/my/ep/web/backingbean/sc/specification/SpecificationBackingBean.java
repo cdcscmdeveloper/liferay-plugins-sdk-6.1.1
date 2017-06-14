@@ -6048,6 +6048,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	private ScAddress populateDeliveryAddress(PmAddressType addressType) {
 		PmAddress pmAddress = addressType.getPmAddress();
 		ScAddress scAddress = new ScAddress();
+		scAddress.setAddressName(pmAddress.getAddressName());
 		scAddress.setAddress1(pmAddress.getAddress1());
 		scAddress.setAddress2(pmAddress.getAddress2());
 		scAddress.setAddress3(pmAddress.getAddress3());
@@ -6073,9 +6074,19 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	
 	private String getDeliveryAddressString(ScAddress scAddress) {
 		String COMMA = ",";
-		StringBuilder address = new StringBuilder(scAddress.getAddress1());
+		StringBuilder address = new StringBuilder();
 		
 		String NULL_VALUE = "null";
+		if( StringUtils.isNotBlank(scAddress.getAddressName()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getAddressName())){
+			address.append(scAddress.getAddressName());
+		}else{
+			address.append("-");
+		}
+		
+		if (StringUtils.isNotBlank(
+				scAddress.getAddress1()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress1()) ) {
+			address.append(COMMA).append(scAddress.getAddress1());
+		}
 		
 		if (StringUtils.isNotBlank(
 				scAddress.getAddress2()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress2()) ) {
@@ -6085,6 +6096,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				scAddress.getAddress3()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress3())) {
 			address.append(COMMA).append(scAddress.getAddress3());
 		}
+		if (StringUtils.isNotBlank(
+				scAddress.getPostcode()) && !NULL_VALUE.equalsIgnoreCase(scAddress.getPostcode())) {
+			address.append(COMMA).append(scAddress.getPostcode());
+		}
+		if (scAddress.getPmCity() != null && scAddress.getPmCity().getCityName() !=null && scAddress.getPmCity().getCityName().length() > 0) {
+			address.append(COMMA).append(scAddress.getPmCity().getCityName());
+		}
+		if (scAddress.getPmState() != null && scAddress.getPmState().getStateName() !=null && scAddress.getPmState().getStateName().length() > 0) {
+			address.append(COMMA).append(scAddress.getPmCity().getCityName());
+		}	
 		/*if (StringUtils.isNotBlank(
 				scAddress.getAddress4())) {
 			address.append(COMMA).append(scAddress.getAddress4());
