@@ -75,7 +75,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			RequestContext.getCurrentInstance().execute(
 					"rptConfirmationDlg.show()");
 			
-			getManagedBean().setReportUrl("(To be removed)Report URL: "+resDTO.getReportUrl());
+			log.info("Report URL: "+resDTO.getReportUrl());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
