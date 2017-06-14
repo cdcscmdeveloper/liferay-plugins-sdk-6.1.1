@@ -1027,6 +1027,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 				crBB.renewSesionObject();
 				crBB = new ContractRequestBackingBean();
+				crBB.initializeCRBeans();
 				crBB.getManagedBean().setSelectedTabIndex(0);
 				crBB.getManagedBean().setDocProcess(docType);
 				crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
@@ -1084,6 +1085,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+				prBB.initializePRBeans();
 				prBB.getManagedBean().setSubmitButtonStatus(false);
 				prBB.getManagedBean().setDocProcess(docType);
 				prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
