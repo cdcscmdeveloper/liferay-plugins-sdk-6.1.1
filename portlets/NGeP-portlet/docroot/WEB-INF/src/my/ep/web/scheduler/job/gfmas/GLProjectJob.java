@@ -13,6 +13,7 @@ import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -55,7 +56,17 @@ public class GLProjectJob implements Job {
 					reqDTO.setInterfaceProjectLs(diLog.getPmInterfaceProject());
 					reqDTO.setFileName(diLog.getFileName());
 					reqDTO.setTransId(diLog.getTransId());
-					interfaceProjectSo.saveOrUpdateProjectList(reqDTO);
+					
+					EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+					String gfmasEnable = prop.getProperty("gfmas.enabled");
+
+					if(gfmasEnable.equalsIgnoreCase("true")){
+						interfaceProjectSo.saveOrUpdateProjectList(reqDTO);
+					}else{
+						interfaceProjectSo.saveOrUpdateProjectListESPKB(reqDTO);
+					}
+
+					
 				}
 			}
 			
