@@ -12656,14 +12656,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			if (CollectionUtils.isNotEmpty(scheduleList)) {
 				List<ScQtSchedule> toBeRemoveList = new ArrayList<ScQtSchedule>();
-
+                 if(null==this.getManagedBean().getToBeRemoveSchedules() || this.getManagedBean().getToBeRemoveSchedules().isEmpty()){
+                	 this.getManagedBean().setToBeRemoveSchedules(new ArrayList<ScQtSchedule>());
+                	 
+                 }
 				for (ScQtSchedule qtSchedule : scheduleList) {
 					if (null != qtSchedule.getQtScheduleId()) {
 						qtSchedule.setDeleted(true);
 						toBeRemoveList.add(qtSchedule);
 					}
 				}
-				this.getManagedBean().setToBeRemoveSchedules(toBeRemoveList);
+				this.getManagedBean().getToBeRemoveSchedules().addAll(toBeRemoveList);
 				this.getManagedBean().getQt().setScQtSchedules(null);
 			}
 			this.getManagedBean()
@@ -12674,14 +12677,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					.getProgressivePaymentList();
 			if (CollectionUtils.isNotEmpty(payments)) {
 				List<ScQtProgressivePayment> toBeRemoveList = new ArrayList<ScQtProgressivePayment>();
-
+				 if(null==this.getManagedBean().getToBeRemoveProgPayments() || this.getManagedBean().getToBeRemoveProgPayments().isEmpty()){
+                	 this.getManagedBean().setToBeRemoveProgPayments(new ArrayList<ScQtProgressivePayment>());
+                	 
+                 }
 				for (ScQtProgressivePayment payment : payments) {
 					if (null != payment.getQtPaymentId()) {
 						payment.setDeleted(true);
 						toBeRemoveList.add(payment);
 					}
 				}
-				this.getManagedBean().setToBeRemoveProgPayments(toBeRemoveList);
+				this.getManagedBean().getToBeRemoveProgPayments().addAll(toBeRemoveList);
 				this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			}
 			this.getManagedBean().setProgressivePaymentList(
