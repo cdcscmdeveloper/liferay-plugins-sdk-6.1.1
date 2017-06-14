@@ -5604,6 +5604,7 @@ public class LOADetailBackingBean extends
 		filePath.append(formatedFileName);
 		pbAttachment.setFilePath(filePath.toString());
 		
+		downloadFile(pbAttachment);
 	}
 	
 	/**
