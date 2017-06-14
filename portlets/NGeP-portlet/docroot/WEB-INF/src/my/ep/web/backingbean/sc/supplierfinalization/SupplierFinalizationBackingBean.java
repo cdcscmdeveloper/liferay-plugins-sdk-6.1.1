@@ -1078,7 +1078,8 @@ public class SupplierFinalizationBackingBean extends
 							throw new EpException(MessageConst.ERROR_760385);
 						}
 						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
-						if(this.getManagedBean().getScQt().isBpkFinalizationReq()){
+					if (!this.getManagedBean().isInitialDecisionFwdToBPK()
+							&& this.getManagedBean().getScQt().isBpkFinalizationReq()) {
 							
 						if (!ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 								.equals(decisionTypeCode)
