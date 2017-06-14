@@ -9,6 +9,7 @@ import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
 import my.ep.dto.pm.common.interfaceptj.InterfacePtjReqDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -51,7 +52,17 @@ public class GLPTJJob implements Job {
 					reqDTO.setInterfacePtjLs(diLog.getPmInterfacePtj());
 					reqDTO.setFileName(diLog.getFileName());
 					reqDTO.setTransId(diLog.getTransId());
-					interfacePtjSo.saveOrUpdateInterfacePtjList(reqDTO);
+					
+
+					EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+					String gfmasEnable = prop.getProperty("gfmas.enabled");
+
+					if(gfmasEnable.equalsIgnoreCase("true")){
+						interfacePtjSo.saveOrUpdateInterfacePtjList(reqDTO);
+					}else{
+						interfacePtjSo.saveOrUpdateInterfacePtjListESPKB(reqDTO);
+					}
+					
 				}
 			}
 			
