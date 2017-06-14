@@ -6104,7 +6104,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			address.append(COMMA).append(scAddress.getPmCity().getCityName());
 		}
 		if (scAddress.getPmState() != null && scAddress.getPmState().getStateName() !=null && scAddress.getPmState().getStateName().length() > 0) {
-			address.append(COMMA).append(scAddress.getPmCity().getCityName());
+			address.append(COMMA).append(scAddress.getPmState().getStateName());
 		}	
 		/*if (StringUtils.isNotBlank(
 				scAddress.getAddress4())) {
