@@ -42,7 +42,7 @@
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.updateToQty(rowIndex)}"
 						update="@(.fromQty)" />
-					<p:ajax event="keyup" update="errorLink" />
+					<p:ajax event="keyup" update="errorLink, cloneLink" />
 				</p:inputText>
 			</p:column>
 			<p:column>
