@@ -133,6 +133,10 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private ContractBackingBean ctBB = null;
@@ -641,6 +645,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
+				
+				if (agencyWitness.getOfficer().getUserId() == null ) {
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				      
+				}
+				
 				if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
 					getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_100022, 
@@ -2044,7 +2057,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		try {
 		    int i = 1;
-		    if(getManagedBean().isAgencySignerDropDown()) {
+		  //  if(getManagedBean().isAgencySignerDropDown()) {
 		   
 		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
@@ -2064,7 +2077,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 			return items;
-		    }
+		 //   }
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2121,7 +2134,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		try {
 		    int i = 1;
-		    if(getManagedBean().getMinistryProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
+		    if(getManagedBean().getMinistryProfileId() != null ) {
 		         IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2182,10 +2195,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	public void resetSignerAgencyDetails() {
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
-		getManagedBean().setOfficerProfileId(null);
-		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjProfileId(null);
-		getManagedBean().setAgencySignerDropDown(true);
+		getManagedBean().setJabatanProfileId(retrieveJabatanOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+		getManagedBean().setPtjProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		//getManagedBean().setAgencySignerDropDown(true);
 		getManagedBean().setButtonHideActive(false);
 	}
 
@@ -2210,7 +2222,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		try {
 		    int i = 1;
-		    if(getManagedBean().getJabatanProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
+		    if(getManagedBean().getJabatanProfileId() != null) {
 				    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 				    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2253,11 +2265,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			    	    agreementParty.setMinistryName(retrieveOrgProfileByProfileId(profileId));
 			        }
 			      
-			        if(getManagedBean().getOfficerProfileId() != null){
+			       /* if(getManagedBean().getOfficerProfileId() != null){
 			    	    profileId = getManagedBean().getOfficerProfileId();
 			    	    agreementParty.setPengawaiPengawalName(retrieveOrgProfileByProfileId(profileId));
 			         } 
-			      
+			      */
 			        if(getManagedBean().getJabatanProfileId() != null){
 			    	    profileId = getManagedBean().getJabatanProfileId();
 			    	    agreementParty.setJabatanName(retrieveOrgProfileByProfileId(profileId));
@@ -2277,9 +2289,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					   ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
 				   agreementParty.setOfficer(new PmUser());
 				   getManagedBean().getCtAgencySigner().add(agreementParty);
-				   getManagedBean().setAgencySignerDropDown(false);
+				   //getManagedBean().setAgencySignerDropDown(false);
 				   getManagedBean().setButtonHideActive(true);
-				   
 		  } catch (Exception e) {
 				e.printStackTrace();
 		  }
