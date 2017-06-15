@@ -113,8 +113,8 @@ public class FulfilmentReceivedNoteRptBackingBean extends FlReportBackingBean<Fu
 	}
 	
 	public List<SelectItem> retrieveReceivingOfficerList(){
-		if(getManagedBean().getPtjGroup() != null){
-			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+		if(getManagedBean().getPtj() != null){
+			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}

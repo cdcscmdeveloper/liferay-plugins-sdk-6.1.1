@@ -96,15 +96,15 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 	}
 	
 	public List<SelectItem> retrieveReceivingOfficerList(){
-		if(getManagedBean().getPtjGroup() != null){
+		if(getManagedBean().getPtj() != null){
 			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
 	
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
-		if(getManagedBean().getPtjGroup() != null){
-			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtjGroup().getOrgProfileId());
+		if(getManagedBean().getPtj() != null){
+			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
