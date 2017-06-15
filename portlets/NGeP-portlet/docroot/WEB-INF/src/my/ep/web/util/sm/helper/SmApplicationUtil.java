@@ -9100,8 +9100,8 @@ public class SmApplicationUtil {
 
 		String streetAddress = address.getAddress1();
 		streetAddress = checkAddressSuffix(address.getAddress1())
-				+ checkAddressSuffix(address.getAddress2())
-				+ checkAddressSuffix(address.getAddress3());
+				+ " " + checkAddressSuffix(address.getAddress2())
+				+ " " + checkAddressSuffix(address.getAddress3());
 
 		return streetAddress;
 	}
