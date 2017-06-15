@@ -423,6 +423,23 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get parameter description by parameter ID
+	 * 
+	 * @param Long
+	 *            parameterId
+	 * @return String
+	 */
+	public static String getParamDescByParameterId(Long parameterId) {
+		String retVal = StringUtils.EMPTY;
+		List<PmParameterDesc> pdList = retrieveParameterById(parameterId)
+				.getPmParameterDescs();
+		PmParameterDesc pd = (PmParameterDesc) EntityHelper
+				.getEntityBySinglePropertyFromList(new FacesScopes()
+						.getUserLocale().getLanguage(), pdList, "languageCode");
+		return pd != null ? pd.getCodeName() : retVal;
+	}
+
+	/**
 	 * Retrieve application by application no
 	 * 
 	 * @param String
@@ -3989,12 +4006,16 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70032":
-					if(supplierType != null && supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)){
-						throw new EpException(MessageConst.ERROR_MYIDENTITY_70032_G2G);
-					}else{
-						throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+					if (supplierType != null
+							&& supplierType
+									.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+						throw new EpException(
+								MessageConst.ERROR_MYIDENTITY_70032_G2G);
+					} else {
+						throw new EpException(
+								MessageConst.ERROR_MYIDENTITY_70032);
 					}
-					
+
 				case "70004":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
@@ -4843,7 +4864,7 @@ public class SmCommonUtil {
 			throw new EpException(MessageConst.ERROR_721118);
 		}
 	}
-	
+
 	/**
 	 * Retrieve PO By loginId, supplierType, applType, categoryType
 	 * 
@@ -4852,8 +4873,8 @@ public class SmCommonUtil {
 	 *            categoryType
 	 * @return PmUser
 	 */
-	public PmUser retrievePOByUserIdAndJobTask(String loginId, String supplierType,
-			String applType, String categoryType) {
+	public PmUser retrievePOByUserIdAndJobTask(String loginId,
+			String supplierType, String applType, String categoryType) {
 		PmUser pmUser = PmCommonUtil.retrieveUserByLoginId(loginId);
 		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser
 				.getUserId());
@@ -4869,14 +4890,15 @@ public class SmCommonUtil {
 			reqDTO.setCategoryType(categoryType);
 			reqDTO.setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 			reqDTO.setUserName(pmUser.getUserName());
-			//reqDTO.setByWeightage(true);
+			// reqDTO.setByWeightage(true);
 
 			List<PmUser> poList = SmServiceLookup.getPoRoleTaskSO()
 					.retrievePOUserListByRoleZone(reqDTO).getUserList();
 			if (poList.size() > 0) {
 				return poList.get(0);
 			} else {
-				return retrievePOWithLowestWeightage(supplierType,applType,categoryType);
+				return retrievePOWithLowestWeightage(supplierType, applType,
+						categoryType);
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_721118);
@@ -4941,8 +4963,9 @@ public class SmCommonUtil {
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),DbValueConst.RECORD_STATUS_ACTIVE));
-		
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+
 		reqDTO.setSearchBean(searchBean);
 		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -4969,34 +4992,37 @@ public class SmCommonUtil {
 		return stateList;
 
 	}
-	
+
 	public PmState retrieveStateByCountryCodeAndStateCode(String stateCode) {
 		if (stateCode != null) {
 			StateReqDTO reqDTO = new StateReqDTO();
 			ISearchBean<PmState> searchBean = new SearchBean<PmState>();
-			
+
 			SearchFilterBean countrySearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
 			SearchFilterBean stateSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
-			
+
 			countrySearchBean.setSearchField("pmCountry.countryCode");
-			countrySearchBean.setSearchValue(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			countrySearchBean
+					.setSearchValue(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			searchBean.getDataFilterBeans().add(countrySearchBean);
-			
+
 			stateSearchBean.setSearchField("stateCode");
 			stateSearchBean.setSearchValue(stateCode);
 			searchBean.getDataFilterBeans().add(stateSearchBean);
-			
+
 			reqDTO.setStateSearchBean(searchBean);
-			
-			List<PmState> stateList = SmServiceLookup.getStateSO().searchStateData(reqDTO).getStateResultBean().getResultList();
-			
-			if(stateList.size() > 0){
+
+			List<PmState> stateList = SmServiceLookup.getStateSO()
+					.searchStateData(reqDTO).getStateResultBean()
+					.getResultList();
+
+			if (stateList.size() > 0) {
 				return stateList.get(0);
 			}
-		} 
-		
+		}
+
 		return null;
 	}
 
