@@ -66,9 +66,8 @@
                  
                              <p:selectOneMenu id="contractSigner" style="width:180px;" value="#{agSignerVar.officer.userId}" label="#{lbl['lbl.ct.contract.signer']}">
                                  <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
-                                 <p:ajax event="change" update="@([id$=agOfId],[id$=agOfPosition])"  
-                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-                                     process="@all" listener="#{agreementBackingBean.setUserValueAgency(agSignerVar)}"/> 
+                                 <p:ajax event="change" update="agOfId,agOfPosition"  
+                                     process="@this" partialSubmit="true"  listener="#{agreementBackingBean.setUserValueAgency(agSignerVar)}"/> 
                              </p:selectOneMenu>
                          </p:column>  
         
@@ -189,50 +188,49 @@
          
            <p:dialog id="dialogAgencySigner"  header="#{lbl['lbl.ct.add.agency.signer']}" resizable="false"
                   widgetVar="dlgAgencySigner"  styleClass="pop_up_top" modal="true" width="600" height="200">
-			    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.signer']}" escape="false"/><br/><br/>
-		      <h:panelGroup  id="agencyiesSingner">
-                  <h:panelGrid columns="3">
+			    		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.signer']}" escape="false"/><br/><br/>
+		    			  <h:panelGroup  id="agencyiesSingner">
+               					   <h:panelGrid columns="3">
                
-                 <p:selectOneMenu for="ministry"  style="width:140px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="ministry" style="width:430px"
-                      value="#{agreementBackingBean.managedBean.ministryProfileId}" >
-            	   <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change"  process="@this" 
-            	       listener="#{agreementBackingBean.settingMinistryListener}"
-            	       update=":form:jabatan,:form:ptjId, :form:selectAgencySignerId" />
-                 </p:selectOneMenu>
+               									  <p:selectOneMenu id="ministry"  style="width:140px" disabled="true" >
+            	    										<f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
+                								 </p:selectOneMenu>
+                 								<p:spacer height="1"/>
+               								  <p:selectOneMenu id="ministryMenue" style="width:430px"
+                   									   value="#{agreementBackingBean.managedBean.ministryProfileId}" >
+            	 										  <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
+            	   										  <p:ajax  listener="#{agreementBackingBean.settingMinistryListener}"
+            	                                                  event="change"  process="@this"  update=":form:jabatan,:form:ptjId, :form:selectAgencySignerId" />
+                                             </p:selectOneMenu>
                  
-                 <p:selectOneMenu for="jabatan"  style="width:140px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="jabatan" style="width:430px"
-                      value="#{agreementBackingBean.managedBean.jabatanProfileId}" >
-            	   <f:selectItems value="#{agreementBackingBean.getJabatanDropdown()}"/>
-            	    <p:ajax event="change" process="@this" 
-            	        listener="#{agreementBackingBean.settingJabatanListener}" update=":form:ptjId"/>
-                 </p:selectOneMenu>
+                                           <p:selectOneMenu id="jabatan"  style="width:140px" disabled="true" >
+            	                                 <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                                           </p:selectOneMenu>
+                                         <p:spacer height="1"/>
+                                          <p:selectOneMenu id="jabatanMenu" style="width:430px"
+                                                value="#{agreementBackingBean.managedBean.jabatanProfileId}" >
+            	                                <f:selectItems value="#{agreementBackingBean.getJabatanDropdown()}"/>
+            	                                <p:ajax event="change" process="@this" 
+            	                                     listener="#{agreementBackingBean.settingJabatanListener}" update=":form:ptjId"/>
+                                            </p:selectOneMenu>
                  
-                 <p:selectOneMenu for="ptjId"  style="width:140px" disabled="true">
-            	    <f:selectItem itemLabel="PTJ" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="ptjId" style="width:430px"
-                      value="#{agreementBackingBean.managedBean.ptjProfileId}" >
-            	   <f:selectItems value="#{agreementBackingBean.getPtjDropdown()}"/>
-            	        <p:ajax event="change"  update=":form:selectAgencySignerId" process="@this"/>
-                 </p:selectOneMenu>
-                </h:panelGrid>
-                 <div class="ppRightBtn">
-       		        <p:commandButton id="selectAgencySignerId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" 
-       		        update=":form:AgSignerTable" 
-				    action="#{agreementBackingBean.addAgencySignerDetails}"  onclick="dlgAgencySigner.hide();"
-				     disabled="#{empty  agreementBackingBean.managedBean.ptjProfileId}" />
-				     <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" process="@this" onclick="dlgAgencySigner.hide();" />
-		       </div>
+                                          <p:selectOneMenu id="ptjId"  style="width:140px" disabled="true">
+            	                                 <f:selectItem itemLabel="PTJ" itemValue="null"/>
+                                          </p:selectOneMenu>
+                                          <p:spacer height="1"/>
+                                          <p:selectOneMenu id="ptjIdMenue" style="width:430px"
+                                                value="#{agreementBackingBean.managedBean.ptjProfileId}" >
+            	                               <f:selectItems value="#{agreementBackingBean.getPtjDropdown()}"/>
+            	                               <p:ajax event="change"  update=":form:selectAgencySignerId" process="@this" partialSubmit="true"/>
+                                          </p:selectOneMenu>
+                                 </h:panelGrid>
+              
+                                <div class="ppRightBtn">
+       		                          <p:commandButton id="selectAgencySignerId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" 
+       		                                update=":form:AgSignerTable" action="#{agreementBackingBean.addAgencySignerDetails}" 
+       		                                onclick="dlgAgencySigner.hide();" disabled="#{empty  agreementBackingBean.managedBean.ptjProfileId}" />
+				                      <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" process="@this" onclick="dlgAgencySigner.hide();" />
+		                     </div>
              </h:panelGroup>
 	      </p:dialog>  
 	   </p:panel>
