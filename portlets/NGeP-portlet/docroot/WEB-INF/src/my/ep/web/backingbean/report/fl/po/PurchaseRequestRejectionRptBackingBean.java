@@ -93,14 +93,14 @@ public class PurchaseRequestRejectionRptBackingBean extends FlReportBackingBean<
 	}
 	
 	public List<SelectItem> retrieveRequisitionerList(){
-		if(getManagedBean().getPtjGroup() != null){
+		if(getManagedBean().getPtj() != null){
 			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
 	}
 	
 	public List<SelectItem> retrieveApproverList(){
-		if(getManagedBean().getPtjGroup() != null){
+		if(getManagedBean().getPtj() != null){
 			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
 		}
 		return null;
