@@ -1683,6 +1683,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 	}
 	
+	public String getParamDescByParameterId(Long parameterId){
+		return SmCommonUtil.getParamDescByParameterId(parameterId);
+	}
+	
 	
 	/**
 	 * set supplier owner mask based on selected id type
