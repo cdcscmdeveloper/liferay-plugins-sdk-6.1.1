@@ -1861,10 +1861,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) ||
 					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
-				List<PmState> sabahLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG, 
+				/*List<PmState> sabahLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG, 
 						SupplierManagementConst.COUNTRY_MALAYSIA_CODE);	
-				stateSelectLs  = EntityHelper.convertListToSelectItem(sabahLs,"stateName", "stateId");
-			
+				stateSelectLs  = EntityHelper.convertListToSelectItem(sabahLs,"stateName", "stateId");*/
+				List<PmState> semenanjungLs = new ArrayList<PmState>();
+				
+				for(PmState smjState : stateLs){
+					if(!smjState.getStateCode().equalsIgnoreCase(SupplierManagementConst.SABAH_CODE) && 
+							!smjState.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+						semenanjungLs.add(smjState);
+					}
+				}
+				
+				stateSelectLs  = EntityHelper.convertListToSelectItem(semenanjungLs,"stateName", "stateId");
+				
 				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
 					getManagedBean().setSabahSarawakType(false);
 					getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
