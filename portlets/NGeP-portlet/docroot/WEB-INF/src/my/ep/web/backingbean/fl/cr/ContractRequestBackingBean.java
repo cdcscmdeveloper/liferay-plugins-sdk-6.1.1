@@ -2045,7 +2045,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					ContractItemResDTO itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
 					// Validation on service quantity without zone
 					if(itemResDTO.getCtItemMaxQuantity()!=null && itemResDTO.getCtItemMaxQuantity().getMaxQuantity()!=null) {	
-						if(flItemAddr.getOrderedQty().doubleValue() != itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
+						if(flItemAddr.getOrderedQty().doubleValue() > itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
 							flItemAddr.setOrderedQty(BigDecimal.ZERO);
 							flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 							throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
@@ -2076,7 +2076,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							// Validation on service quantity with zone
 							itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
 							if(itemResDTO.getCtItemMaxQuantity()!=null && itemResDTO.getCtItemMaxQuantity().getMaxQuantity()!=null) {	
-								if(flItemAddr.getOrderedQty().doubleValue() != itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
+								if(flItemAddr.getOrderedQty().doubleValue() > itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
 									flItemAddr.setOrderedQty(BigDecimal.ZERO);
 									flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 									throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
