@@ -157,7 +157,8 @@
 					<td class="tdContent">
 						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}"  
 							label="#{lbl['lbl.sm.nationality']}" value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}" 
-							style="width:80%" disabled="#{registrationBackingBean.managedBean.sameAsOwner}">
+							style="width:80%" disabled="#{registrationBackingBean.managedBean.sameAsOwner}" 
+							rendered="#{!registrationBackingBean.managedBean.sameAsOwner}">
 							<ui:param name="unknownCountry" value="#{registrationBackingBean.getUnknownCountry()}" />
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
@@ -168,7 +169,12 @@
 							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" process="@form"
 							update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType,pnlPersonnelAddress,pnlUsrInfo" />
 						</p:selectOneMenu>
-						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
+						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
+						
+						<h:outputText value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryName}" 
+							rendered="#{registrationBackingBean.managedBean.sameAsOwner}"/>
+						
+					</td>
 				
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" />
@@ -224,14 +230,8 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
-						<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" 
-								disabled="true"
-								label="#{lbl['lbl.sm.identificationtype']}" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
-								<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-								<p:ajax event="change" update="txtIdNumber,pnlUsrInfo"
-									listener="#{registrationBackingBean.personnelIdTypeChange}" />
-						</p:selectOneMenu>
-						<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" />
+						<h:outputText id="cmbUsrIdenType"
+							value="#{registrationBackingBean.getParamDescByParameterId(registrationBackingBean.managedBean.smPersonnel.identificationTypeId)}"/>
 					</td>
 
 					<td class="tdTitle">

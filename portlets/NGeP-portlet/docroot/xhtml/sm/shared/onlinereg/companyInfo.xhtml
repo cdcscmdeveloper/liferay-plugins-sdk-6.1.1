@@ -114,7 +114,7 @@
 						label="#{lbl['lbl.sm.nationality']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryId}"
 						style="width:80%"
-						disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC}">
+						rendered="#{registrationBackingBean.managedBean.smSuppOwner.brandNew and registrationBackingBean.managedBean.smAppl.applType ne SupplierManagementConst.ACC_BASIC}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
@@ -125,7 +125,12 @@
 						</c:if>
 						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="cmbUsrIdenType,pnlIdentType,pnlIdentLabel" />
 					</p:selectOneMenu>
-					<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
+					<p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
+					
+					<h:outputText value="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryName}"
+						rendered="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_BASIC}" />
+					
+				</td>
 			</tr>
 			
 			<tr>
@@ -134,15 +139,9 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
-					<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.identificationtype']}"
-						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
-						style="width:200px" disabled="true">
-						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-						<p:ajax event="change" update="pnlIdentType,pnlCompInfo"
-							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
-					</p:selectOneMenu>
-					
-					<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
+					<h:outputText id="cmbUsrIdenType"
+						value="#{registrationBackingBean.getParamDescByParameterId(registrationBackingBean.managedBean.smSuppOwner.identificationTypeId)}"/>
+				</td>
 
 				<td class="tdTitle">
 					<p:outputPanel id="pnlIdentLabel">
