@@ -400,7 +400,11 @@ public class SmApplicationBackingBean extends
 						.checkActiveSmApplForSupp(supplierProfile);
 				if (!SmApplicationUtil
 						.isRejectedApplValidForResubmission(rejAppl)) {
-					resubmitErrorKey = "lbl.sm.resubmitExpired";
+					if (rejAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+						resubmitErrorKey = "lbl.sm.resubmitExpired.inprogress";
+					} else {
+						resubmitErrorKey = "lbl.sm.resubmitExpired";
+					}
 					this.getManagedBean().setValidResubmit(false);
 				}
 				if (!activeExist && this.getManagedBean().isValidResubmit()) {
