@@ -1386,17 +1386,19 @@ public class LOADetailBackingBean extends
 			
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
-			if(scLoaReport.getDefinationType().getParameterCode().equals(
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
-					scLoaReport.getDefinationType().getParameterCode().equals(
-							ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
-				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
-			} 
-			String prefixName = scLoaReport.getTitle().replaceAll(
-					SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE);
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
-			scAttachments.add(scLoaReportAttachmentGenerated);
+			if(scLoaReportAttachment != null) {
+				ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+				if(scLoaReport.getDefinationType().getParameterCode().equals(
+						ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
+						scLoaReport.getDefinationType().getParameterCode().equals(
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
+					scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+				} 
+				String prefixName = scLoaReport.getTitle().replaceAll(
+						SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE);
+				scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+				scAttachments.add(scLoaReportAttachmentGenerated);
+			}
 		}
 	        
 		downloadAllFiles("NGeP-LOA-Report", scAttachments);
