@@ -48,10 +48,10 @@
 	  <div><br/></div>
 	  <div><strong>Tajuk Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractTitle</strong></div>
 	  <div><strong>No. Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractPhysicalNo</strong></div>
-	  <hr>
+	  <hr/>
 	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $agreementStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
       <div><br/></div>
-      <div>Invois ini telah dijual dan pindahmilik kepada</v>
+      <div>Invois ini telah dijual dan pindahmilik kepada</div>
       <div>$factoringCompName.</div>
       <div><br/></div>
       <div>Sila bayar terus kepada:</div>
@@ -79,7 +79,7 @@
       <div>Nama<span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierOfficerName</div>
       <div>Jawatan <span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierDesignation</div>
 	  <br/><br/><br/><br/>
-	  <hr>
+	  <hr/>
 	  <div class="break"></div> 
 	  <table>
 	  <tr><td style="padding-right:15px">i)</td><td>Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju untuk membuat bayaran seperti yang diarahkan.</td></tr>
@@ -93,13 +93,13 @@
       <div>Jawatan<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $approverDesignation</div>
       <div>Kementerian<span class="Apple-tab-span" style="white-space:pre">	</span>: $ministryName</div>      
       <div>PTJ<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $ptjName</div>
-	  <hr>
+	  <hr/>
 	  <table>
 	  <tr><td style="padding-right:15px">i)</td><td>Untuk kontrak khusus/Sebut harga/Pembelian Runcit, Jabatan/Kementerian; dan</td></tr>
 	  <tr><td style="padding-right:15px">ii)</td><td>Untuk Kontrak Pusat Kementerian Kewangan.</td></tr>
 	  </table>
 	  <div style="height:680px"/>
-	  <hr>
+	  <hr/>
 	  <div style="text-align: center; font-style: italic;">Ini adalah dokumen cetakan komputer. Tiada tandatangan diperlukan</div>
    </body>
 </html>
