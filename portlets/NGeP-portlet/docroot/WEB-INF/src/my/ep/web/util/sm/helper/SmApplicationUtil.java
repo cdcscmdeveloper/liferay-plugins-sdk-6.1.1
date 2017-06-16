@@ -825,24 +825,26 @@ public class SmApplicationUtil {
 					break;
 				}
 			}
-			if (stfCnt < 1) {
-				validCat = false;
-				throw new EpException(MessageConst.ERROR_722512,
-						new String[] { "staff" });
-			}
-			if (ownrCnt < 1) {
-				log.debug("****** No OWNER ********** ");
-				validCat = false;
-				throw new EpException(MessageConst.ERROR_722512,
-						new String[] { "equity owner" });
-			}
-			if (businessTypeVal != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT
-					&& businessTypeVal != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT
-					&& dirCnt < 1) {
-				validCat = false;
-				throw new EpException(MessageConst.ERROR_722512,
-						new String[] { "director" });
-			}
+			// if (stfCnt < 1) {
+			// validCat = false;
+			// throw new EpException(MessageConst.ERROR_722512,
+			// new String[] { "staff" });
+			// }
+			// if (ownrCnt < 1) {
+			// log.debug("****** No OWNER ********** ");
+			// validCat = false;
+			// throw new EpException(MessageConst.ERROR_722512,
+			// new String[] { "equity owner" });
+			// }
+			// if (businessTypeVal !=
+			// SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT
+			// && businessTypeVal !=
+			// SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT
+			// && dirCnt < 1) {
+			// validCat = false;
+			// throw new EpException(MessageConst.ERROR_722512,
+			// new String[] { "director" });
+			// }
 
 		}
 		if (validCat) {
@@ -1769,11 +1771,11 @@ public class SmApplicationUtil {
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 				String messageKey = MessageConst.ERROR_722592;
 				int minCount = 2;
-				
-				if(managedBean
+
+				if (managedBean
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)){
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
 					messageKey = MessageConst.ERROR_722657;
 					minCount = 1;
 				}
@@ -9126,9 +9128,9 @@ public class SmApplicationUtil {
 	private static String getBankAddress(SmAddress address) {
 
 		String streetAddress = address.getAddress1();
-		streetAddress = checkAddressSuffix(address.getAddress1())
-				+ " " + checkAddressSuffix(address.getAddress2())
-				+ " " + checkAddressSuffix(address.getAddress3());
+		streetAddress = checkAddressSuffix(address.getAddress1()) + " "
+				+ checkAddressSuffix(address.getAddress2()) + " "
+				+ checkAddressSuffix(address.getAddress3());
 
 		return streetAddress;
 	}
