@@ -160,7 +160,7 @@
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_PDF_TYPE}" widgetVar="stampedUploadWV"
-			invalidFileMessage="#{lbl['lbl.lbl.txt.upload.pdf.file']}" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}" 
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			update="upStampedPagePg"  label="#{lbl['lbl.btn.choose']}" oncomplete="upStampedPageDlg.hide();" >
 		</p:fileUpload>
