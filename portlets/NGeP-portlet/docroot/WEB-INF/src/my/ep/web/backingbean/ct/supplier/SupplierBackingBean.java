@@ -1133,7 +1133,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		       setEditorValue("");
 		       if (vmFile !=null && templateName != null) {
 		    	   UserReqDTO userReqDTO =  new UserReqDTO();
-		    	   context.put("imgUrl", getServerUrl()+ContractConst.IMAGE_PATH+ "gov.png");
+		    	   context.put("imgUrl", getServerUrl()+"NGeP-portlet/css/images/gov.png");
 		    	   
 		    	   if (getManagedBean().getFactoring().getCreatedBy() == null) {
 		    		   userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
@@ -1216,12 +1216,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	   String filePath = getManagedBean().getFileDirectory();
 		    	   File file = new File(filePath);
 		    	   file.mkdirs();
-		    	   String fileName = templateName + ".docx";
+		    	   String fileName = templateName + ".pdf";
 		    	   AttachmentFormat attachmentFormat = null;
 		    	   attachmentFormat = new AttachmentDateFormat();
 		    	   filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
 
-		    	   DocumentGenerator.getInstance().generateDocFromVelocity(vmFile, context, filePath);
+		    	   DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, new FileOutputStream(filePath));
 		    	   downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		       }
 		}  catch (Exception e) {
