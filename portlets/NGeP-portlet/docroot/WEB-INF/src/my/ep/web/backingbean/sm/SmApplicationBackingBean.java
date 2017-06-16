@@ -763,20 +763,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.getProfBodyItems());
 
 			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
-			getManagedBean()
-					.setReasonDescInitList(
-							SmApplicationUtil
-									.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
-											.value()));
-			getManagedBean().setReasonDescList(
-					getManagedBean().getReasonDescInitList());
-			getManagedBean()
-					.setRejectionOtherReasonId(
-							SmApplicationUtil
-									.retrieveOtherRejectReasonIdByParamCodeAndType(
-											ReasonCategory.SUPPLIER_REJECTION_REASON
-													.value(),
-											SupplierManagementConst.SM_REASON_CODE_OTHERS));
+
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
@@ -930,6 +917,24 @@ public class SmApplicationBackingBean extends
 		}
 		retrieveBusinessTypeList();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
+
+		getManagedBean()
+				.setReasonDescInitList(
+						SmApplicationUtil
+								.retrieveRejectReasonListByParameterCode(getManagedBean()
+										.getBusinessTypeVal()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) ? ReasonCategory.ROC_REJECTION_REASON
+										.value()
+										: ReasonCategory.SUPPLIER_REJECTION_REASON
+												.value()));
+		getManagedBean().setReasonDescList(
+				getManagedBean().getReasonDescInitList());
+		getManagedBean().setRejectionOtherReasonId(
+				SmApplicationUtil
+						.retrieveOtherRejectReasonIdByParamCodeAndType(
+								ReasonCategory.SUPPLIER_REJECTION_REASON
+										.value(),
+								SupplierManagementConst.SM_REASON_CODE_OTHERS));
 
 		if (getManagedBean().isApproverUser() || getManagedBean().isPoUser()) {
 			if (smAppl.getSmCompanyBasic() == null) {
@@ -9752,8 +9757,12 @@ public class SmApplicationBackingBean extends
 		getManagedBean()
 				.setReasonDescList(
 						SmApplicationUtil
-								.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
-										.value()));
+								.retrieveRejectReasonListByParameterCode(getManagedBean()
+										.getBusinessTypeVal()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) ? ReasonCategory.ROC_REJECTION_REASON
+										.value()
+										: ReasonCategory.SUPPLIER_REJECTION_REASON
+												.value()));
 		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 

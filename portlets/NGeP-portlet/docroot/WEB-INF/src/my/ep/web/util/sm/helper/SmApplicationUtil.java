@@ -1664,20 +1664,37 @@ public class SmApplicationUtil {
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 				&& directorCount < 2) {
-			validSave = false;
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+
+			String directorTotal = SmCommonUtil.getMessage(
+					"lbl.sm.personnel.two.lowercaps", null);
+			if (managedBean
+					.getSmSupplier()
+					.getBusinessType()
+					.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+					&& directorCount < 1) {
+				directorTotal = SmCommonUtil.getMessage(
+						"lbl.sm.personnel.one.lowercaps", null);
+				validSave = false;
+			} else if (managedBean
+					.getSmSupplier()
+					.getBusinessType()
+					.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+					&& directorCount < 2) {
+				validSave = false;
 			}
-			throw new EpException(MessageConst.ERROR_722513, new String[] {
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.comprole.director",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.two.lowercaps",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.comprole.director",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+
+			if (!validSave) {
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				throw new EpException(MessageConst.ERROR_722513, new String[] {
+						SmCommonUtil.getMessage(
+								"lbl.sm.personnel.comprole.director", null),
+						directorTotal,
+						SmCommonUtil.getMessage(
+								"lbl.sm.personnel.comprole.director", null) });
+			}
+
 		}
 		if (mgmtCount < 1) {
 			validSave = false;
@@ -1750,6 +1767,16 @@ public class SmApplicationUtil {
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))) {
 			if (currentPageType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+				String messageKey = MessageConst.ERROR_722592;
+				int minCount = 2;
+				
+				if(managedBean
+						.getBusinessTypeVal()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)){
+					messageKey = MessageConst.ERROR_722657;
+					minCount = 1;
+				}
 				int perShrCnt = 0;
 				int compShrCnt = 0;
 				if (managedBean.getSmapplShareHolders() != null) {
@@ -1759,12 +1786,12 @@ public class SmApplicationUtil {
 					compShrCnt = managedBean.getSmAppl().getSmEquityCompanies()
 							.size();
 				}
-				if (perShrCnt + compShrCnt < 2) {
+				if (perShrCnt + compShrCnt < minCount) {
 					validCount = false;
 					if (currentTab != -1) {
 						setNavigationBackToCurrentPage(currentTab, managedBean);
 					}
-					throw new EpException(MessageConst.ERROR_722592);
+					throw new EpException(messageKey);
 				}
 			}
 		} else if (managedBean.getBusinessTypeVal() != null
