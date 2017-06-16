@@ -1216,7 +1216,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	   String filePath = getManagedBean().getFileDirectory();
 		    	   File file = new File(filePath);
 		    	   file.mkdirs();
-		    	   String fileName = templateName + ".pdf";
+		    	   String fileName = templateName + ".docx";
 		    	   AttachmentFormat attachmentFormat = null;
 		    	   attachmentFormat = new AttachmentDateFormat();
 		    	   filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
