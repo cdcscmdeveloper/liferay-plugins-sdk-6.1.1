@@ -7,15 +7,18 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sm.SmTrackingDiaryConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -23,6 +26,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
@@ -35,6 +39,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
@@ -154,8 +159,36 @@ public class ViewApplHistoryBackingBean extends
 		getCommonApplInstance().preRenderView();
 	}
 
+	/**
+	 * Redirect to resubmit page
+	 */
 	public void redirectToResubmit() {
-		SmCommonUtil.redirectToExternalUrl(getManagedBean().getResubmitUrl());
+
+		// #14832 - To cater if resubmit link already expired and supplier still
+		// in progress (Supplier Temp), so will call alert popup that will
+		// redirect to clone new application and start fresh
+		if (getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+			if (!SmApplicationUtil
+					.isRejectedApplValidForResubmission(getManagedBean()
+							.getSmAppl())) {
+				RequestContext.getCurrentInstance().execute(
+						"confirmDialog.show()");
+			}
+		} else {
+			SmCommonUtil.redirectToExternalUrl(getManagedBean()
+					.getResubmitUrl());
+		}
+	}
+
+	/**
+	 * Cloning new application and redirect to New MOF application page
+	 */
+	public void redirectToReapplyNewAppl() {
+		SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+		smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+		String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
+				.get(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+		SmCommonUtil.redirectToPage(page, null, null, null);
 	}
 
 	/**

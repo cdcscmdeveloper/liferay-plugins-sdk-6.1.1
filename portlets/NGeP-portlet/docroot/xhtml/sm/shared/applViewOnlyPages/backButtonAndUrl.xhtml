@@ -33,5 +33,19 @@
 				</td>
 			</tr>
 		</table>
+		
+		<p:confirmDialog id="confirmDialog" closable="true"
+			message="#{lbl['lbl.sm.resubmit.url.expired.inprogress.msg']}"
+			header="#{lbl['lbl.sm.resubmit.url.expired.inprogress.header']}" severity="alert"
+			widgetVar="confirmDialog">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="confirmDialog.hide();" update="@form"
+					action="#{viewSmApplBackingBean.redirectToReapplyNewAppl()}" process="@this" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="confirmDialog.hide();" />
+			</div>
+	
+		</p:confirmDialog>
 	
 </ui:composition>
