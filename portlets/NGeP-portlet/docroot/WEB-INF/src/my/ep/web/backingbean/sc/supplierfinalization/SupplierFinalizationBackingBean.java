@@ -67,6 +67,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -1838,6 +1839,12 @@ public class SupplierFinalizationBackingBean extends
 						.getScQtFinalizationReports()
 						.addAll(this.getManagedBean().getEndorsementReports());
 			}
+			
+			if(!scQtFinalization.isBriefingPaperUploaded()){
+				navigateToBriefingPaperTab();
+				throw new EpException(MessageConst.ERROR_760452);
+			}
+			
 			if (this.getManagedBean().getJustification() == null
 					|| this.getManagedBean().getJustification().getReasonId() == null) {
 					navigateToEndorsementReportTab();
@@ -2126,6 +2133,11 @@ public class SupplierFinalizationBackingBean extends
 								.equals(docCategory)) {
 					endorsementReports.add(report);
 					++endorsementReportCount;
+				}
+				if (scQtFinalization.isBriefingPaperUploaded()) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+						report.setTempReportAttachment(report.getScQtFinalizationReportAttachment());
+					}
 				}
 			}
 			this.getManagedBean().setEndorsementReports(endorsementReports);
@@ -6736,5 +6748,52 @@ public class SupplierFinalizationBackingBean extends
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
+	}
+	
+	public void handleKertasFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		
+		debugLogger("handleKertasFileUpload");
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReport scQtFinalizationReport 
+					= this.getManagedBean().getSelectedFinalizationReport();
+			if (scQtFinalizationReport == null) {
+				List<ScQtFinalizationReport> reports = this.getManagedBean().getDocumentList();
+				for (ScQtFinalizationReport report : reports) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+							.equals(report.getPmDocument().getDocDefinitionKey())) {
+						scQtFinalizationReport = report;
+					}
+				}
+			}
+			ScQtFinalizationReportAttachment reportAttachment 
+					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			if(reportAttachment == null){
+				reportAttachment = new ScQtFinalizationReportAttachment();
+				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				reportAttachment.setFileName(event.getFile().getFileName());
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+				//setUserDetails(reportAttachment);
+				//populateAttachmentDetails(reportAttachment);
+			}
+			// set uploaded file name into actual attachment
+			reportAttachment.setFileName(event.getFile().getFileName());
+			populateAttachmentDetails(reportAttachment);
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
+			scQtFinalizationReport.setTempReportAttachment(reportAttachment);
+		}
+	}
+	
+	public void deleteKertasAttachment(BaseEntity delEntity) {
+
+		ScQtFinalizationReport scQtFinalizationReport = this.getManagedBean()
+				.getSelectedFinalizationReport();
+		scQtFinalizationReport.setTempReportAttachment(null);
+		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
+				
 	}
 }
