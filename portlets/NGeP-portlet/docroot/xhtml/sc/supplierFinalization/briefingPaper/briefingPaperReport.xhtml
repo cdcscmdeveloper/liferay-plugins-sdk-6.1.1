@@ -51,7 +51,21 @@
 							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
 	
 					</ac:scSingleFileUploadButton>
-				</ui:fragment>				
+				</ui:fragment>			
+				
+				<ui:fragment rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey}">
+						<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
+							popupWidgetVar="kertasTaklimUploadAttWidget"
+							attachment="#{report.tempReportAttachment}"
+							rowIndex="#{rowIndex}" 
+							readonly="#{!(isSecretaryUser)}"
+							deleteFileUploadListener="suppFinalizationBackingBean.deleteKertasAttachment">
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
+						<f:setPropertyActionListener for="actionEvent" value="KTR"
+							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
+						</ac:scSingleFileUploadButton>		
+				</ui:fragment>		
 			</p:column>
 		</p:dataTable>
 		
