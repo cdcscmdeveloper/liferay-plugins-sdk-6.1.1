@@ -12,16 +12,23 @@
 						value="#{lbl['lbl.sm.complaint.actual.meeting.date']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:calendar showOn="button" id="jkttMeetingDt" required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.complaint.actual.meeting.date']}"
-						disabled="#{jkTTViewFLag}" readonlyInput="true"
+						label="#{lbl['lbl.sm.complaint.actual.meeting.date']}" 
+						disabled="#{jkTTViewFLag}" readonlyInput="true" 
 						value="#{complaintBackingBean.managedBean.jkttReview.actualConveneDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+							<p:ajax event="dateSelect" process="@this"/>
+						</p:calendar>
+						</td>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.complaint.minute.ref.no']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}" disabled="#{jkTTViewFLag}"
-						label="#{lbl['lbl.sm.complaint.minute.ref.no']}"
-						value="#{complaintBackingBean.managedBean.jkttReview.minutesRefNo}" /></td>
+				<td class="tdContent">
+					<p:inputText required="#{!empty param['disableValidation']}" disabled="#{jkTTViewFLag}"
+						label="#{lbl['lbl.sm.complaint.minute.ref.no']}" 
+						value="#{complaintBackingBean.managedBean.jkttReview.minutesRefNo}">	
+						<p:ajax event="blur" />
+					</p:inputText>
+				</td>
 			</tr>
 
 			<tr>
@@ -30,7 +37,10 @@
 						label="#{lbl['lbl.sm.complaint.actual.meeting.date']}"
 						disabled="#{jkTTViewFLag}"
 						value="#{complaintBackingBean.managedBean.jkttReview.actualConveneDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+							<p:ajax event="dateSelect" process="@this"/>
+						</p:calendar>
+						</td>
 			</tr>
 
 			<tr>
@@ -49,9 +59,13 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.remarks']}" />
 				<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td class="tdContent" colspan="3"><p:inputTextarea disabled="#{jkTTViewFLag}" label="#{lbl['lbl.sm.remarks']}"
+				<td class="tdContent" colspan="3">
+					<p:inputTextarea disabled="#{jkTTViewFLag}" label="#{lbl['lbl.sm.remarks']}"
 						value="#{complaintBackingBean.managedBean.jkttReview.decisionRemark}"
-						rows="8" cols="100" maxlength="200" required="#{!empty param['disableValidation']}"/></td>
+						rows="8" cols="100" maxlength="200" required="#{!empty param['disableValidation']}">
+						<p:ajax event="blur" update="pnlJkttDecision" />
+					</p:inputTextarea>
+				</td>
 			</tr>
 		</table>
 		
