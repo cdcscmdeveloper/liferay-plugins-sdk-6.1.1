@@ -15,5 +15,12 @@
 		fileUploadListener="suppFinalizationBackingBean.handleEndorseReportUpload"
 		update="@([id$=endorseReportUploadBtnId],[id$=endorseReportTbl])"
 		readonly="#{!(isSecretaryUser )}" />
+		
+	<ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
+			fileUploadListener="suppFinalizationBackingBean.handleKertasFileUpload"
+			update="@([id$=reportTbl])" 
+			fileType="#{CommonConstants.FILE_UPLOAD_DOC_TYPE}" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" 
+			readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}" />
 
 </ui:composition>

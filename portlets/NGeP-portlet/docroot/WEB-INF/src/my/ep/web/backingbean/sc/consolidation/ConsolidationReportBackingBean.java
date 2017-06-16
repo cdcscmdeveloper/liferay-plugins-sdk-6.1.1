@@ -40,6 +40,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -97,8 +98,7 @@ import org.primefaces.model.MenuModel;
 public class ConsolidationReportBackingBean extends 
 					SourcingBaseBackingBean<ConsolidationReportManagedBean> {
 
-	private static final Logger log = EpLogger
-			.getLogger(ConsolidationReportBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(ConsolidationReportBackingBean.class);
 	
 	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
@@ -590,6 +590,7 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setOutcome(getManagedBean().getOutcome());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
 			
 			SuppFinalizationResDTO resDTO 
 					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
@@ -662,7 +663,6 @@ public class ConsolidationReportBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		int zoneActiveIndex = getManagedBean().getZoneActiveIndex();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
-
 		renewSesionObject();
 
 		getManagedBean().setQtId(qtId);
@@ -1039,6 +1039,10 @@ public class ConsolidationReportBackingBean extends
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
 		}
+		if(!scQtFinalization.isBriefingPaperUploaded()){
+			navigateToBriefingPaperTab();
+			throw new EpException(MessageConst.ERROR_760452);
+		}
 	}
 	
 	private void validateDORanking(TplSpecZoneDtl specZoneDtl, List<ScQtRecommend> items) {
@@ -1261,8 +1265,7 @@ public class ConsolidationReportBackingBean extends
 			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
 			StringBuilder filename = new StringBuilder();
 			// replace white space due to firefox
-			filename.append(scQtFinalizationReport.getTitle()
-					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
+			filename.append(scQtFinalizationReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
 					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
 			
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
@@ -1327,16 +1330,21 @@ public class ConsolidationReportBackingBean extends
 		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 		
 		String estimatedAmountStr = null;
-		IQTDetailSO qtDetailSO = null;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
-			estimatedAmountStr = estimatedAmount.toPlainString();
-		} finally {
-			qtDetailSO = null;
-		}		
-
+		
+		if (qt.getEstimatedAmount() != null) {
+			estimatedAmountStr = qt.getEstimatedAmount().toString();
+		} else {
+			IQTDetailSO qtDetailSO = null;
+			try {
+				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				BigDecimal estimatedAmount = qtDetailSO
+						.getdecryptedEstAmount(qtId);
+				estimatedAmountStr = estimatedAmount.toPlainString();
+			} finally {
+				qtDetailSO = null;
+			}
+		}
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
@@ -1713,6 +1721,50 @@ public class ConsolidationReportBackingBean extends
 		
 	}
 	
+	public void handleKertasFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		
+		debugLogger("handleKertasFileUpload");
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReport scQtFinalizationReport 
+					= this.getManagedBean().getSelectedFinalizationReport();
+			if (scQtFinalizationReport == null) {
+				List<ScQtFinalizationReport> reports = this.getManagedBean()
+						.getFinalizationReports();
+				for (ScQtFinalizationReport report : reports) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+							.equals(report.getPmDocument().getDocDefinitionKey())) {
+						scQtFinalizationReport = report;
+					}
+				}
+			}
+			ScQtFinalizationReportAttachment reportAttachment 
+					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportAttachment();
+				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				reportAttachment.setFileName(event.getFile().getFileName());
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+				populateAttachmentDetails(reportAttachment);
+			}
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
+		}
+	}
+	
+	public void deleteKertasAttachment(BaseEntity delEntity) {
+
+		ScQtFinalizationReport scQtFinalizationReport = this.getManagedBean()
+				.getSelectedFinalizationReport();
+		scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
+		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
+				
+	}
+	
 	private void initializeFinalizationUlasanRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
@@ -1761,6 +1813,5 @@ public class ConsolidationReportBackingBean extends
 			setUserDetails(scQtFinalization);
 		}
 	}
-	
 	
 }
