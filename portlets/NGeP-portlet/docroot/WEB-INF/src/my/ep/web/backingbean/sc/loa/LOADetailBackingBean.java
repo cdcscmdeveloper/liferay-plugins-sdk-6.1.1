@@ -2509,7 +2509,8 @@ public class LOADetailBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-
+			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -2579,7 +2580,8 @@ public class LOADetailBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-
+			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -2677,6 +2679,8 @@ public class LOADetailBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 		    resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -3369,27 +3373,44 @@ public class LOADetailBackingBean extends
 	 */
 	public void addScheduleDetails() {
 		try {
-			Integer totalFrequency = getManagedBean().getTotalFrequency();
+			//Integer totalFrequency = getManagedBean().getTotalFrequency();
 			int year = Calendar.getInstance().get(Calendar.YEAR);
 			List<ScQtSchedule> freqSchedules = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
+			if(CollectionUtils.isNotEmpty(freqSchedules)){
+			List<ScQtSchedule> scheduleList=	this.getManagedBean().getToBeRemoveFreqSchedules();
+			if(null==scheduleList){
+				scheduleList=new ArrayList<ScQtSchedule>();
+			}
 			
-			if (null == freqSchedules) {
+				for(ScQtSchedule schedules:freqSchedules){
+					if(null!=schedules.getQtScheduleId()){
+						schedules.setDeleted(true);
+						scheduleList.add(schedules);
+					}
+				}
+				this.getManagedBean().setToBeRemoveFreqSchedules(scheduleList);
+				
+			}
+			
+			/*if (null == freqSchedules) {
 				freqSchedules = new ArrayList<ScQtSchedule>();
 			}
 			
 			if(null == totalFrequency){
 				totalFrequency = new Integer(0);
-			}
-
-			if (freqSchedules.size() > totalFrequency) {
+			}*/
+			int value=	 this.getManagedBean().getTotalFrequency()!=null? this.getManagedBean().getTotalFrequency():0;
+			//this.getManagedBean().setTotalFrequency(value);
+		/*	if (freqSchedules.size() > totalFrequency) {
 				List<ScQtSchedule> localSchedules = new ArrayList<ScQtSchedule>();
 				for (int j = 0; j < totalFrequency; j++) {
 					localSchedules.add(freqSchedules.get(j));
 				}
 				this.getManagedBean().getScLoa().setScQtSchedules(localSchedules);
-			} else {
-				for (int i = freqSchedules.size(); i < totalFrequency; i++) {
+			}*/ /*else {*/
+			freqSchedules = new ArrayList<ScQtSchedule>();
+				for (int i = 0; i < value; i++) {
 					ScQtSchedule schedule = new ScQtSchedule();
 					schedule.setStartYear(String.valueOf(year));
 					schedule.setEndYear(String.valueOf(year));
@@ -3400,7 +3421,7 @@ public class LOADetailBackingBean extends
 					freqSchedules.add(schedule);
 				}
 				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedules);
-			}
+			/*}*/
 		} finally {
 		}
 	}
@@ -4153,23 +4174,43 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		List<ScQtProgressivePayment> progressivePayList = this.getManagedBean()
 				.getProgressivePaymentList();
+		if(CollectionUtils.isNotEmpty(progressivePayList)){
+			List<ScQtProgressivePayment> progressiveList=	this.getManagedBean().getToBeRemoveProgressivePayments();
+			if(null==progressiveList){
+				progressiveList=new ArrayList<ScQtProgressivePayment>();
+			}
+			
+				for(ScQtProgressivePayment payment:progressivePayList){
+					if(null!=payment.getQtPaymentId()){
+						payment.setDeleted(true);
+						progressiveList.add(payment);
+					}
+				}
+				this.getManagedBean().setToBeRemoveProgressivePayments(progressiveList);
+				
+			}
 
-		if (null == progressivePayList) {
+		/*if (null == progressivePayList) {
 			progressivePayList = new ArrayList<ScQtProgressivePayment>();
 		}
 
 		if(null == totalProgressivePayment){
 			totalProgressivePayment = new Integer(0);
-		}
-		if (progressivePayList.size() > totalProgressivePayment) {
+		}*/
+		
+		int value=	 this.getManagedBean()
+				.getTotalProgressivePayment()!=null? this.getManagedBean()
+						.getTotalProgressivePayment():0;
+	/*	if (progressivePayList.size() > totalProgressivePayment) {
 			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
 			for (int j = 0; j < totalProgressivePayment ; j++) {
 				progressiveList.add(progressivePayList.get(j));
 			}
 
 			this.getManagedBean().setProgressivePaymentList(progressiveList);
-		} else {
-			for (int i = progressivePayList.size(); i < totalProgressivePayment ; i++) {
+		} else {*/
+			progressivePayList = new ArrayList<ScQtProgressivePayment>();			
+			for (int i = 0; i < value ; i++) {
 				ScQtProgressivePayment payment = new ScQtProgressivePayment();
 				payment.setStartYear(String.valueOf(year));
 				payment.setEndYear(String.valueOf(year));
@@ -4179,7 +4220,7 @@ public class LOADetailBackingBean extends
 				progressivePayList.add(payment);
 			}
 			this.getManagedBean().setProgressivePaymentList(progressivePayList);
-		}
+		/*}*/
 
 	}
 
