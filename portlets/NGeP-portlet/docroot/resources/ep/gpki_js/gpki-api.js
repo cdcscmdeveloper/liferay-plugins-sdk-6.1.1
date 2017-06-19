@@ -67,7 +67,7 @@ runScript: function(src,callback,failedcallback){
 	var reqURLTimeout = setTimeout(function()
 	{
 		Gpki.end();	
-		Gpki.alert("Keptusan tidak diterima dalam tempoh yang ditetapkan. Sila pastikan agen anda telah diaktifkan dan cuba lagi."); 	
+		Gpki.alert("Keputusan tidak diterima dalam tempoh yang ditetapkan. Sila pastikan agen anda telah diaktifkan dan cuba lagi."); 	
 		if(jqxhr!=null){ 
 			jqxhr.abort();
 		}			
