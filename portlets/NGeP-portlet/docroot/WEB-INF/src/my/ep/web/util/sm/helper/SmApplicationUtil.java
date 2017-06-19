@@ -7465,7 +7465,7 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		if ((appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) && appl
+		if ((appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) || appl
 				.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
 			initGstSuppDocs(gst);
 		}
