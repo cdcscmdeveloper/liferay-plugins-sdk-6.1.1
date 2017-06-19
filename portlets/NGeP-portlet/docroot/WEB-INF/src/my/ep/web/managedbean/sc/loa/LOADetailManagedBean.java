@@ -261,6 +261,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
     
 	/** The is loa title. */
 	private boolean isLoaTitle = Boolean.FALSE;
+	
+	private List<ScQtSchedule> toBeRemoveFreqSchedules;
+	private List<ScQtProgressivePayment> toBeRemoveProgressivePayments;
     
     /**
      * Gets the spki backing bean.
@@ -1457,6 +1460,36 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setLoaTitle(boolean isLoaTitle) {
 		this.isLoaTitle = isLoaTitle;
+	}
+
+	/**
+	 * @return the toBeRemoveFreqSchedules
+	 */
+	public List<ScQtSchedule> getToBeRemoveFreqSchedules() {
+		return toBeRemoveFreqSchedules;
+	}
+
+	/**
+	 * @param toBeRemoveFreqSchedules the toBeRemoveFreqSchedules to set
+	 */
+	public void setToBeRemoveFreqSchedules(
+			List<ScQtSchedule> toBeRemoveFreqSchedules) {
+		this.toBeRemoveFreqSchedules = toBeRemoveFreqSchedules;
+	}
+
+	/**
+	 * @return the toBeRemoveProgressivePayments
+	 */
+	public List<ScQtProgressivePayment> getToBeRemoveProgressivePayments() {
+		return toBeRemoveProgressivePayments;
+	}
+
+	/**
+	 * @param toBeRemoveProgressivePayments the toBeRemoveProgressivePayments to set
+	 */
+	public void setToBeRemoveProgressivePayments(
+			List<ScQtProgressivePayment> toBeRemoveProgressivePayments) {
+		this.toBeRemoveProgressivePayments = toBeRemoveProgressivePayments;
 	}
 	
 	
