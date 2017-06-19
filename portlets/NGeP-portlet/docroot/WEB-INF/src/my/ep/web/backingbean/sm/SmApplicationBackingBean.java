@@ -5314,17 +5314,11 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& (getManagedBean().getSelectedShareHolder()
-						.getSmStaffAcademics() == null || getManagedBean()
-						.getSelectedShareHolder().getSmStaffAcademics()
-						.isEmpty())) {
+				&& EntityHelper.isCollectionEmpty(getManagedBean()
+						.getSelectedShareHolder().getSmStaffAcademics())) {
 
-			if (getManagedBean().getSelectedShareHolder().isProf()
-					|| getManagedBean().getSelectedShareHolder().isSemiProf()
-					|| getManagedBean().getSelectedShareHolder().isClerical()) {
-				validShrHldr = false;
-				throw new EpException(MessageConst.ERROR_722575);
-			}
+			validShrHldr = false;
+			throw new EpException(MessageConst.ERROR_722575);
 		}
 		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
