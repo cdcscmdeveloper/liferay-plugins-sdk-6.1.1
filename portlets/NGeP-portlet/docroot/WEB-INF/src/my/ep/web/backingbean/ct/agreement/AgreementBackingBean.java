@@ -645,15 +645,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-				
-				if (agencyWitness.getOfficer().getUserId() == null ) {
-					getManagedBean().setSelectedTabIndex(1);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				      
-				}
-				
 				if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
 					getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_100022, 
