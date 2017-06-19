@@ -1544,7 +1544,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
-		getManagedBean().setOwnerOrgProfile(true);
 		agencyDataModel.resetData();
 	}
 	
@@ -1552,11 +1551,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetMinistryDetails() {
-		if(retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId().equals(getManagedBean().getMinistryProfileId())){
-			   getManagedBean().setOwnerOrgProfile(true);
-		} else {
-			  getManagedBean().setOwnerOrgProfile(false);
-		}
 		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
@@ -1940,6 +1934,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAgency> ctAgencyList = null;
 		OrgProfileReqDTO reqDTO = null;
 		List<PmOrgProfile> orgProfileList = null;
+		getManagedBean().setOwnerOrgProfile(true);
 		Long ministryId = retrieveMinistryOrgProfile(
 				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 		if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
@@ -2052,6 +2047,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 		getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 		  	}
 		}
+		
+		for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()){
+	 		if(!ctAgencies.getOrgProfile().getMinstryId().equals(ministryId)){
+	 			getManagedBean().setOwnerOrgProfile(false);
+	 		}
+	 	}
 	}
 	
 	/**
