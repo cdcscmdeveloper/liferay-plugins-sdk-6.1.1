@@ -92,7 +92,7 @@
 							action="#{circularBackingBean.gotoPage('view', data.circularVerId)}">
 						</p:menuitem>
 						<p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.update']}" icon="ui-icon-update"
-							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();"
+							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" process="@all"
 							rendered="#{!circularBackingBean.managedBean.trackingDiarySearch and data.ctCircular.recordStatusFlg == 1 and
 							         ((circularBackingBean.isPanelAdmin() and (data.status.statusId == CtStatusConst.pqApproved or data.status.statusId == CtStatusConst.pqUpdateApproved
 									 or data.status.statusId == CtStatusConst.pqUpdateRejected or data.status.statusId == CtStatusConst.pqUpdateCancelled
