@@ -43,6 +43,12 @@ public class SmFieldChangeUtil {
 				&& !bean.getSmAppl().getApplType()
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			SmAppl srcAppl = null;
+			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
+			srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
+					.getSmAppl();
+			bean.setLatestApproveAppl(srcAppl);
 			if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()) {
 				mofReqDTO.setSmAppl(bean.getSmAppl());
 				SmAppl latestRejectedAppl = SmServiceLookup
@@ -53,20 +59,12 @@ public class SmFieldChangeUtil {
 						.getSerializedApplicationByFilePathName(latestRejectedAppl
 								.getSupplierSerFile());
 				if (applRevDTO == null) {
-					bean.setLatestRejectedAppl(latestRejectedAppl);
+					srcAppl = latestRejectedAppl;
 				} else {
-					bean.setLatestRejectedAppl(applRevDTO.getSmAppl());
+					srcAppl = applRevDTO.getSmAppl();
 				}
-				bean.getLatestRejectedAppl().setHqFacility(
-						SmApplicationUtil.getHqFacilityByAppl(bean
-								.getLatestRejectedAppl()));
-				setApplTableListChangeStatus(bean.getLatestRejectedAppl(),
-						bean.getSmAppl());
 			}
-			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
-			bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
-					.getSmAppl());
+			bean.setLatestAppl(srcAppl);
 			bean.getLatestAppl()
 					.setHqFacility(
 							SmApplicationUtil.getHqFacilityByAppl(bean
@@ -637,8 +635,8 @@ public class SmFieldChangeUtil {
 		} else {
 			for (SmStaffAcademic currAcad : currPersonnel.getSmStaffAcademics()) {
 				if (!isCurrExistInLatest(currAcad,
-						latestPersonnel.getSmStaffAcademics(), null, new String[] {
-								"pmEduField", "qualificationId" })) {
+						latestPersonnel.getSmStaffAcademics(), null,
+						new String[] { "pmEduField", "qualificationId" })) {
 					if (StringUtils.isBlank(currPersonnel
 							.getChangedFieldStatus())) {
 						currPersonnel.setChangedFieldStatus("U");
@@ -648,8 +646,7 @@ public class SmFieldChangeUtil {
 					SmStaffAcademic latestAcad = (SmStaffAcademic) EntityHelper
 							.getEntityByMultiplePropertiesFromList(currAcad,
 									latestPersonnel.getSmStaffAcademics(),
-									null,
-									new String[] { "qualificationId",
+									null, new String[] { "qualificationId",
 											"pmEduField" }, null);
 					if (latestAcad != null
 							&& latestAcad.getStaffAcademicId() != null) {

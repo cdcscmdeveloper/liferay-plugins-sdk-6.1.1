@@ -35,7 +35,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -104,7 +103,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private boolean showFieldChanges;
 	private SmAppl latestAppl;
-	private SmAppl latestRejectedAppl;
+	private SmAppl latestApproveAppl;
 	private SmAssociateCompany latestAssocCompany;
 	private SmAssociationBody latestProfBody;
 	private SmPersonnel latestPersonnel;
@@ -3918,14 +3917,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.supplierEditVO = supplierEditVO;
 	}
 
-	public SmAppl getLatestRejectedAppl() {
-		return latestRejectedAppl;
-	}
-
-	public void setLatestRejectedAppl(SmAppl latestRejectedAppl) {
-		this.latestRejectedAppl = latestRejectedAppl;
-	}
-
 	public SmAuthorizedPersonnelCountVO getAuthVO() {
 		return authVO;
 	}
@@ -3966,5 +3957,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setRecommendRegStatusDescList(
 			List<PmStatusDesc> recommendRegStatusDescList) {
 		this.recommendRegStatusDescList = recommendRegStatusDescList;
+	}
+
+	public SmAppl getLatestApproveAppl() {
+		return latestApproveAppl;
+	}
+
+	public void setLatestApproveAppl(SmAppl latestApproveAppl) {
+		this.latestApproveAppl = latestApproveAppl;
 	}
 }
