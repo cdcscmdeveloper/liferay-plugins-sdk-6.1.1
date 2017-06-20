@@ -49,12 +49,19 @@
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
 				   	<h:panelGroup>
-						<h:commandLink rendered="#{contentsVar.contentType.parameterCode != ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
-				   			or (contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
-				   				and agreementBackingBean.managedBean.validBondAttachment)}"
-							action="#{agreementBackingBean.clickDownloadIcon(contentsVar)}" immediate="true">
-							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
-						</h:commandLink>
+						<p:commandLink disabled="#{(contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
+				   					and !agreementBackingBean.managedBean.validBondAttachment)
+				   				or (contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeDefinedFromLoa
+				   						and agreementBackingBean.managedBean.migrationContract)}"
+							action="#{agreementBackingBean.clickDownloadIcon(contentsVar)}" ajax="false">
+							<p:graphicImage  id="downloadFileImg" value="/css/images/design/download.png">
+								<p:tooltip for="downloadFileImg">
+									<p:outputLabel escape="false" value="#{(contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeDefinedFromLoa
+				   								and agreementBackingBean.managedBean.migrationContract)
+				   							? lbl['lbl.ct.tooltip.download.migration.contract'] : lbl['lbl.txt.file.download']}"  />
+								</p:tooltip>
+							</p:graphicImage>
+						</p:commandLink>
 					 	<p:spacer width="5" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateDocument}" />
 					 	<p:commandLink rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateDocument}"
 								action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
