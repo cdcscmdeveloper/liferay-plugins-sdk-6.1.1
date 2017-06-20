@@ -328,27 +328,6 @@
 			</tr>
 
 			<tr>
-				<td></td>
-				<td class="tdContent" ></td>
-
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent"><p:selectOneMenu id="busCity"
-						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
-						style="width:80%" disabled="#{registrationBackingBean.managedBean.viewMode}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="pcity"
-							value="#{registrationBackingBean.managedBean.businessCityLs}"
-							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
-						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
-							listener="#{registrationBackingBean.onSelectCity('business')}"/>
-					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
-			</tr>
-
-			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -380,6 +359,26 @@
 						</p:outputPanel>
 					</p:outputPanel>
 				</td>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent"><p:selectOneMenu id="busCity"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
+						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
+						style="width:80%" disabled="#{registrationBackingBean.managedBean.viewMode}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="pcity"
+							value="#{registrationBackingBean.managedBean.businessCityLs}"
+							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
+							listener="#{registrationBackingBean.onSelectCity('business')}"/>
+					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td class="tdContent" ></td>
 				<td class="tdTitle">
 					<p:outputPanel id="localAuthLabelOutPanelId" 
 						rendered="#{registrationBackingBean.managedBean.smSupp.businessType eq 'D' or registrationBackingBean.managedBean.smSupp.businessType eq 'E'
