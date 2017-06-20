@@ -451,6 +451,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		} else {
 			getManagedBean().setValidBondAttachment(false);
 		}
+		
+		// Check for migrated contract
+		if (getManagedBean().getCtAgreement().getCtAmendment() == null
+				&& (getManagedBean().getCtContract().getContractNo().startsWith("Z")
+						|| getManagedBean().getCtContract().getContractNo().startsWith("M"))) {
+			getManagedBean().setMigrationContract(true);
+		} else {
+			getManagedBean().setMigrationContract(false);
+		}
 	}
 
 	/**
