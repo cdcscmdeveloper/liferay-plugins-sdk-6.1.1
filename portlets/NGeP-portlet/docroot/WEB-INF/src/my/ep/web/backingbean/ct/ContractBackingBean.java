@@ -1900,6 +1900,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
 				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
 					 getManagedBean().setOwnerOrgProfile(false);
+					 break;
 				}
 			}
 			
@@ -2051,6 +2052,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()){
 	 		if(!ctAgencies.getOrgProfile().getMinstryId().equals(ministryId)){
 	 			getManagedBean().setOwnerOrgProfile(false);
+	 			break;
 	 		}
 	 	}
 	}
@@ -2127,6 +2129,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 }
 		 getManagedBean().getContractVer().getAgencyContractSharingAttachements().setFileName(null);
 		 getManagedBean().getContractVer().getAgencyContractSharingAttachements().setFilePath(null); 
+		 Long minstryId = retrieveMinistryOrgProfile(
+	  			    getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
+				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
+					 getManagedBean().setOwnerOrgProfile(false);
+					 break;
+				}
+			}
 	}
 	    
 	/**
@@ -3483,7 +3493,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return boolean value
 	 * */
 	public boolean isPerformanceBond(){
-		if((getManagedBean().getCtContractAmount().isBondReq()
+		if(getManagedBean().getCtContractAmount() != null
+				&&(getManagedBean().getCtContractAmount().isBondReq()
 				|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 			&& !getManagedBean().isDirectPurchase()
 			&& !getManagedBean().getCtContractAmount().isBondExempted()
