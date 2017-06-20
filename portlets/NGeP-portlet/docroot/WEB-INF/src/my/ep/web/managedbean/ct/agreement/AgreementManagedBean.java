@@ -60,6 +60,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private boolean buttonHideActive = true;
 	private boolean selectAll;
+	private boolean migrationContract = false;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
 	private List<CtAgreementParty> ctSupplierWitness;
@@ -754,4 +755,18 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
+
+	/**
+	 * @return the migrationContract
+	 */
+	public boolean isMigrationContract() {
+		return migrationContract;
+	}
+
+	/**
+	 * @param migrationContract the migrationContract to set
+	 */
+	public void setMigrationContract(boolean migrationContract) {
+		this.migrationContract = migrationContract;
+	}	
 }
