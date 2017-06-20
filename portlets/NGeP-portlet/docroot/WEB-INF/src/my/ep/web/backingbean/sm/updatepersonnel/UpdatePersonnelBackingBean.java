@@ -229,7 +229,11 @@ public class UpdatePersonnelBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
-		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		getManagedBean()
+				.setSelectedShareholderIdentificationType(
+						SmCommonUtil
+								.getParamDescriptionByLanguageAndPmParameter(shareHolderBean
+										.getIdentificationType()));
 		SmApplicationUtil.assignSelShareHolder(shareHolderBean,
 				getManagedBean(), 0);
 
