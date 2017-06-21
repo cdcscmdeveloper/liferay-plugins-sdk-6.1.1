@@ -294,7 +294,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
 			finReqDTO.setFinancialOrgId(getManagedBean().getFulfilmentOrder().getPmFinancialOrgId());
 			FinancialOrgResDTO finResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finReqDTO);
-			
+			if (finResDTO.getPmFinancialOrg().getPmOrgProfiles() != null && finResDTO.getPmFinancialOrg().getPmOrgProfiles().size() > 0 ) {
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.factoringUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setOrgProfileId(finResDTO.getPmFinancialOrg().getPmOrgProfiles().get(0).getOrgProfileId());
 			UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(userReqDTO);
