@@ -130,7 +130,7 @@
 				</p:outputLabel> 
 			</td>
 			<td>
-				<p:inputText value="#{poRptBB.managedBean.purchaseOrderNo}">
+				<p:inputText value="#{mcPoCancelRptBB.managedBean.purchaseOrderNo}">
 				<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> 
 			</td>
 		</tr>
@@ -139,11 +139,12 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{poRptBB.managedBean.group}">
+				<p:selectOneMenu value="#{mcPoCancelRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+						itemDisabled="#{mcPoCancelRptBB.hasSupplierRole()}"
+      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
 						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
