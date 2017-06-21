@@ -483,7 +483,7 @@ public class SPDetailBackingBean extends
 	private ProposalReqDTO populateProposalDetailsTosave() {
 
 		ProposalReqDTO reqDTO = null;
-		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
+		
 		List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
 				.getTecCheckDetailsList();
 		List<ScQtProposalChecklist> financialChecklist = getManagedBean()
@@ -494,12 +494,6 @@ public class SPDetailBackingBean extends
 		scQtProposal.setSubmitted(true);
 		scQtProposal.setProposalSubmitBy(new FacesScopes().getUserSessionBean()
 				.getUserId());
-
-		scQtProposalChecklists.addAll(technicalChecklist);
-		scQtProposalChecklists.addAll(financialChecklist);
-		scQtProposal
-				.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
-						scQtProposalChecklists));
 
 		reqDTO = new ProposalReqDTO();
 		reqDTO.setSupplierId(getManagedBean().getSupplierId());
@@ -539,8 +533,14 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			reqDTO = populateProposalDetailsTosave();
-			this.getManagedBean().setScQtPRPExperiences(null);
+			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
+			scQtProposalChecklists.addAll(reqDTO.getTechnicalChecklist());
+			scQtProposalChecklists.addAll(reqDTO.getFinancialChecklist());
 			ScQtProposal scQtProposal = reqDTO.getScQtProposal();
+			scQtProposal
+					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
+							scQtProposalChecklists));
+			this.getManagedBean().setScQtPRPExperiences(null);
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
 			byte[] signedData = getManagedBean().getSpkiBackingBean()
