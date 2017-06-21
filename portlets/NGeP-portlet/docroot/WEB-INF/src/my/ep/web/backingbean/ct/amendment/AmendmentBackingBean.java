@@ -148,6 +148,9 @@ import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfOptions;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.convert.out.pdf.PdfConversion;
 import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
@@ -4051,26 +4054,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		UploadedFile item = event.getFile();
-		
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
-		file.mkdirs();
-		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		 
+		String fileFormat= attachmentFormat.format(item.getFileName(), null);
 		
+		filePath = filePath + "/" + fileFormat;
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 	    
 		CtAttachment attachment = new CtAttachment();
-		attachment.setFileName(item.getFileName());
-         
-		/*if(getFileExtension(item.getFileName()).equalsIgnoreCase("doc") || 
+		if(getFileExtension(item.getFileName()).equalsIgnoreCase("doc") || 
 				getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
-			convertPDFToDocFile(filePath);
-		    attachment.setFileName(getFileName(item.getFileName())+".pdf");
-		} */
-		
-		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			    String path =  file.getAbsolutePath()+ "/" + fileFormat;
+			    InputStream is = new FileInputStream(new File(path));
+				XWPFDocument document = new XWPFDocument(is);
+
+				PdfOptions options = PdfOptions.create();
+				OutputStream out = new FileOutputStream(new File(getFileName(path)+".pdf"));
+				PdfConverter.getInstance().convert(document, out, options);
+				
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
+				attachment.setFileName(getFileName(fileFormat)+".pdf");
+	            File delFile = new File(filePath);
+	            delFile.delete();
+		} else {
+			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			attachment.setFileName(item.getFileName());
+		}
+	
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -4084,6 +4100,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
 			 getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
 		}
+	}
+	
+	private String getFileExtension( String fileName) {
+	    try {
+	        return fileName.substring(fileName.lastIndexOf(".") + 1);
+	    } catch (Exception e) {
+	        return "";
+	    }
 	}
 	
 	public static String getFileName(String fileName) {
