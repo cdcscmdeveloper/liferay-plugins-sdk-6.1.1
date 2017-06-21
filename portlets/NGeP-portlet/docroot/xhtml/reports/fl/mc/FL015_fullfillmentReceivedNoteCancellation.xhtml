@@ -183,8 +183,9 @@
 				<p:selectOneMenu value="#{mcFrnCancelRptBB.managedBean.group}">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 							itemValue="#{null}"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-							itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+							itemDisabled="#{mcFrnCancelRptBB.hasSupplierRole()}"
+	      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 						<f:selectItem
 							itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 							itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
