@@ -578,9 +578,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				getManagedBean().setChargeLineItemRoot(null);
 				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-					getFactoringDtl(); 
-				}
 				
 				getManagedBean().setSelectedTabIndex(0);
 				if(getManagedBean().getInvoice().getStatus()==null) {
@@ -598,6 +595,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+						getFactoringDtl(); 
+					}
 					
 				} else {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo());
