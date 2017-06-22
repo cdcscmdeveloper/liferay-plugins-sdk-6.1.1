@@ -35,7 +35,7 @@
 							disabled="#{prRptBB.disablePtjGroupLov()}"
 							value="#{prRptBB.managedBean.ptjGroup.orgName}"
 							postUpdateListener="prRptBB.resetPtjProfile()"
-							update=":form:searchPtj"
+							update=":form:searchPtj,:form"
 							saveObject="prRptBB.managedBean.ptjGroup"
 							conditionField="#{prRptBB.constuctConditionFieldsForPTJGroup()}"
 							>
