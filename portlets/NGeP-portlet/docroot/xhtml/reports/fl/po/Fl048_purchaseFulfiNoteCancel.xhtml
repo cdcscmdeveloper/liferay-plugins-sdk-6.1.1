@@ -131,7 +131,7 @@
 			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purFRNCancelRptBB.hasSupplierRole()}"
 						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.poco.no']}"
 						itemValue="#{lbl['lbl.fl.do.poco.no']}"></f:selectItem>
