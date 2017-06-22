@@ -98,7 +98,7 @@
 					<table width="100%">
 						<ui:repeat var="suppDoc" value="#{upload.suppDocList}" varStatus="status">
 							<tr>
-								<td style="width: 5% !important;vertical-align: baseline !important;"><h:outputText value="#{status.index + 1}"  /></td>
+								<td style="width: 5% !important;vertical-align: baseline !important;"><h:outputText value="#{status.index + 1})"  /></td>
 								<td>
 									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" 
 										rendered="#{empty suppDoc.smSofcertDocFiles or empty suppDoc.smSofcertDocFiles[0].fileName}"/>
