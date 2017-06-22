@@ -2741,5 +2741,16 @@ public class PmCommonUtil implements Serializable{
 	public static Locale getMyLocale(){
 		return new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 	}
+	
+	public static List<PmUser> retrieveUserListByOrgProfileId(Long orgProfileId) {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+
+		UserResDTO resDTO = userSO.retrieveUserListByOrgProfileId(reqDTO);
+		return resDTO.getUserList();
+	}
 
 }

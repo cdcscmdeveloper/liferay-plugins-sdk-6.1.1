@@ -63,6 +63,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -982,22 +983,23 @@ public class FinancialOrgBackingBean extends
 	 * save pmOrgProfile if financial org contains factoring org
 	 * @param financialOrg
 	 */
-	public void saveFactoringDetails(PmFinancialOrg financialOrg){
+	private void saveFactoringDetails(PmFinancialOrg financialOrg){
 		log.info("saveFactoringDetails");
 		boolean orgRequired = false;
 		boolean hasFactoringOrg = false;
+		Integer factoringServiceRecordStatus = null;
 		
 		// check if Factoring Org. is required
 		for (PmFinancialSvc financialSvc : financialOrg.getPmFinancialSvcs()) {
 			//System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
 			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+				factoringServiceRecordStatus = financialSvc.getRecordStatusFlg();
 				if(financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
 					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
 						//System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
 						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						finAcc.setExpDate(new Date());
-						
 					}
 				}
 				orgRequired = true;
@@ -1011,7 +1013,7 @@ public class FinancialOrgBackingBean extends
 			// check if it is already added
 			for(PmOrgProfile pmOrgProfile : financialOrg.getPmOrgProfiles()){
 				if(pmOrgProfile.isBrandNew()){
-					if(OrganizationType.FACTORING_COMPANY.value().equalsIgnoreCase(pmOrgProfile.getOrgCode())){
+					if(OrganizationType.FACTORING_COMPANY.value().equalsIgnoreCase(pmOrgProfile.getOrgTypeCode().getParameterCode())){
 						hasFactoringOrg = true;
 						break;
 					}
@@ -1019,7 +1021,12 @@ public class FinancialOrgBackingBean extends
 			}
 			
 			if(!financialOrg.isBrandNew()){
-				if(!checkFactoringOrg(financialOrg.getFinancialOrgId())){
+				if(checkFactoringOrg(financialOrg.getFinancialOrgId())){
+					for(PmOrgProfile pmOrgProfile : financialOrg.getPmOrgProfiles()){
+						if(OrganizationType.FACTORING_COMPANY.value().equalsIgnoreCase(pmOrgProfile.getOrgTypeCode().getParameterCode())){
+							pmOrgProfile.setRecordStatusFlg(factoringServiceRecordStatus);
+						}
+					}
 					hasFactoringOrg = true;
 				}
 			}
@@ -1061,9 +1068,9 @@ public class FinancialOrgBackingBean extends
 			searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmFinancialOrg.financialOrgId",
 									SearchOperator.OPERATOR_EQUALS.value(), financialOrgId));
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("recordStatusFlg",
+//							SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 			
 
 			
@@ -1278,9 +1285,9 @@ public class FinancialOrgBackingBean extends
 //		if(tempServiceSet.size()!=tempServiceList.size()){
 //			throw new EpException(MessageConst.ERROR_775202);
 //		}
-		
+		PmFinancialOrg financialOrg = getManagedBean().getFinancialOrg();
 		boolean haveValidSvc = false;
-		for(PmFinancialSvc financialService : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+		for(PmFinancialSvc financialService : financialOrg.getPmFinancialSvcs()){
 			if(DbValueConst.RECORD_STATUS_ACTIVE == financialService.getRecordStatusFlg()){
 				haveValidSvc = true;
 				break;
@@ -1290,6 +1297,42 @@ public class FinancialOrgBackingBean extends
 		if(!haveValidSvc){
 			throw new EpException(MessageConst.ERROR_775203);
 		}
+		
+		if(!financialOrg.isBrandNew()){
+			boolean suspendOrg = false;
+			boolean userExistError = false;
+			for(PmFinancialSvc financialService : financialOrg.getPmFinancialSvcs()){
+				PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialService.getServiceTypeCode().getParameterId());
+				if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+					if(financialService.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED ){
+						suspendOrg = true;
+					}
+				}
+			}
+			
+			if(suspendOrg){
+				for(PmOrgProfile orgProfile :financialOrg.getPmOrgProfiles()){
+					if(OrganizationType.FACTORING_COMPANY.value().equalsIgnoreCase(orgProfile.getOrgTypeCode().getParameterCode())){
+						if(isUserExistInFactoringOrg(orgProfile.getOrgProfileId())){
+							userExistError = true;
+							break;
+						}
+					}
+				}
+			}
+			
+			if(userExistError){
+				for(PmFinancialSvc financialService : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+					PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialService.getServiceTypeCode().getParameterId());
+					if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+						financialService.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						break;
+					}
+				}
+				throw new EpException(MessageConst.ERROR_775213);
+			}
+		}
+		
 		
 	}
 	
@@ -1637,5 +1680,9 @@ public class FinancialOrgBackingBean extends
 		getManagedBean().setTabActiveIndex(1);
 	}
 	
+	private boolean isUserExistInFactoringOrg(Long orgProfileId){
+		List<PmUser> userList = PmCommonUtil.retrieveUserListByOrgProfileId(orgProfileId);
+		return CollectionUtils.isNotEmpty(userList) ? true : false;
+	}
 	
 }
