@@ -25,7 +25,7 @@
 		<p:outputPanel id="approveApplOutPanelId">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
-					<p:outputPanel rendered="#{not empty cc.attrs.bean.managedBean.poRecommendationDesc}">
+					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><h:outputText value="#{cc.attrs.bean.managedBean.poRecommendationDesc}"/></td>
