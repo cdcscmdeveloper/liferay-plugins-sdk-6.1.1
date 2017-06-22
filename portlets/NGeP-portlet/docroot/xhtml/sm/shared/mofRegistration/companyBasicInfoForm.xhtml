@@ -52,7 +52,13 @@
 							disabled="#{backingBean.managedBean.disabledCompanyName}"
 							readonly="#{backingBean.managedBean.disabledCompanyName}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-							size="35" /></td>
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
+							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
+					</td>
 					<td colspan="2"></td>
 				</tr>
 				<tr>
