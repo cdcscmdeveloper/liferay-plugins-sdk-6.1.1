@@ -603,8 +603,24 @@ public class SmSideMenuIconUtil {
 							&& hqPrev.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 						hqCurr = SmApplicationUtil
 								.getHqFacilityByAppl(applCurr);
-						retVal = EntityHelper.isObjectDifference(hqPrev,
-								hqCurr, null);
+
+						if (hqPrev.getOwnershipType().equals(
+								hqCurr.getOwnershipType())) {
+							if (hqCurr.getOwnershipType().equals("R")
+									&& hqPrev.getOwnershipType().equals("R")) {
+								retVal = EntityHelper.isObjectDifference(
+										hqPrev.getSmAddress(),
+										hqCurr.getSmAddress(), null);
+							}
+
+							if (!retVal) {
+								retVal = EntityHelper.isObjectDifference(
+										hqPrev, hqCurr, new String[] {"smAddress" });
+							}
+						} else {
+							retVal = true;
+						}
+
 						break;
 					}
 				}
@@ -635,7 +651,8 @@ public class SmSideMenuIconUtil {
 										new String[] { "expDate", "regNo" },
 										new String[] {}, null);
 						retVal = EntityHelper.isObjectDifference(bodyPrev,
-								bodyCurr, new String[] { "smPersonnel" });
+								bodyCurr, new String[] { "smPersonnel",
+										"recordStatusFlg" });
 						if (retVal) {
 							break;
 						}
