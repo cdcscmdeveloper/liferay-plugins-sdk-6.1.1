@@ -126,7 +126,7 @@
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purPmRptBB.hasSupplierRole()}"
 						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.txt.paymentMatchOfficer']}"
 						itemValue="#{lbl['lbl.txt.paymentMatchOfficer']}"></f:selectItem>
