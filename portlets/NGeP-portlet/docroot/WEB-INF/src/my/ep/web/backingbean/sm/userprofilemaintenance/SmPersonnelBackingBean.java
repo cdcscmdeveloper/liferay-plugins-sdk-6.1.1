@@ -306,6 +306,13 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setAccountStatus(1);
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
 		smPersonnel.setTitle(new PmSalutation());
+		PmParameter identificationType = ParameterHelper.getInstance()
+				.getParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES,
+						ParameterConst.IDENTIFICATION_TYPES_IC);
+		smPersonnel
+				.setIdentificationTypeId(identificationType.getParameterId());
+		smPersonnel.setIdentificationType(identificationType);
 
 		resDTO = SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO);
 		SmAddress mailAddress = new SmAddress();
@@ -709,10 +716,10 @@ public class SmPersonnelBackingBean extends
 					destAddr,
 					SmCommonUtil.getInstance().getCountryById(
 							getManagedBean().getMyCountryId())));
-			
-			updateMailAddLists(destAddr.getSmAddress()
-					.getPmCountry().getCountryId().toString(), destAddr
-					.getSmAddress().getPmState().getStateId().toString(), destAddr
+
+			updateMailAddLists(destAddr.getSmAddress().getPmCountry()
+					.getCountryId().toString(), destAddr.getSmAddress()
+					.getPmState().getStateId().toString(), destAddr
 					.getSmAddress().getPmDistrict().getDistrictId().toString());
 		}
 	}

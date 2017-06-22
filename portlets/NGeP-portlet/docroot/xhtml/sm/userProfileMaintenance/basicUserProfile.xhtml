@@ -104,7 +104,7 @@
 							label="#{lbl['lbl.sm.person.nationality.origin']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmCountry.countryId}"
 							style="width: 207px;margin-bottom: 5px;" required="true"
-							disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+							disabled="true">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{smPersonnelBackingBean.managedBean.countryList}" />
@@ -119,7 +119,7 @@
 					<td><p:selectOneMenu id="basicBUIdType" required="true"
 							label="#{lbl['lbl.sm.identificationtype']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationTypeId}"
-							style="width:200px" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+							style="width:200px" disabled="true">
 							<f:selectItems
 								value="#{smPersonnelBackingBean.managedBean.idTypes}" />
 							<p:ajax event="change" partialSubmit="true" process="@this"
