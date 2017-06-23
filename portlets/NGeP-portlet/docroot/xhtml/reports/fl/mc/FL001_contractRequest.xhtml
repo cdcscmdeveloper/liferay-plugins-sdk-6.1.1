@@ -113,7 +113,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
 			<td><p:inputText maxlength="20" value="#{mcCrRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
@@ -123,7 +123,7 @@
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{mcCrRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcCrRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcCrRptBB.managedBean.selectedOrgProfile" />

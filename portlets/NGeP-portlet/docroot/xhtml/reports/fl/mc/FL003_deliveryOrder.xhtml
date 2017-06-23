@@ -109,7 +109,7 @@
 		
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" />
 			</td>
 			<td>
 				<p:inputText maxlength="20" value="#{mcDoRptBB.managedBean.loaNo}">
@@ -121,7 +121,7 @@
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{mcDoRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcDoRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcDoRptBB.managedBean.selectedOrgProfile" />
