@@ -117,7 +117,7 @@
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{mcFrnCancelRptBB.managedBean.supplier}"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!mcFrnCancelRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcFrnCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcFrnCancelRptBB.managedBean.selectedOrgProfile" />
