@@ -10,6 +10,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
+
 import my.ep.biz.service.osb.ntf.INtfClientSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.EpPropertiesConst;
@@ -40,7 +42,7 @@ public class ForgotLogin {
 	
 	private final static Logger log = Logger.getLogger(ForgotLogin.class.getName());
 	private String emailAddress;
-	private String userId;
+	private String loginId;
 	
 	public ForgotLogin() {
 	}
@@ -52,8 +54,21 @@ public class ForgotLogin {
 	}
 	
 	public String forgotLoginPassword() {
-		log.info("User ID: " + this.userId);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(this.loginId);
 		
+		UserResDTO resDTO = userSO.forgotLoginPassword(reqDTO);
+		
+		if (resDTO.isSuccessful() && !StringUtils.isEmpty(resDTO.getEmailAddress())) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, 
+							MessageUtils.getMessage(MessageConst.ERROR_700122,
+									new String[] {resDTO.getEmailAddress()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
 		
     	return null;
 	}
@@ -164,16 +179,16 @@ public class ForgotLogin {
 	}
 
 	/**
-	 * @return the userId
+	 * @return the loginId
 	 */
-	public String getUserId() {
-		return userId;
+	public String getLoginId() {
+		return loginId;
 	}
 
 	/**
-	 * @param userId the userId to set
+	 * @param userId the loginId to set
 	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}	
 }
