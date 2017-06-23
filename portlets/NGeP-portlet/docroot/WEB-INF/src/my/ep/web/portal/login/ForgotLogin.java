@@ -103,7 +103,6 @@ public class ForgotLogin {
 	}
 	
 	private void sendForgotLoginIdEmail(List <PmUser> pmUserList) {
-		String templateId = "401166";
 		List<String> emailLst = new ArrayList<String>();
 		List<String> contentParaLst = new ArrayList<String>();
 		StringBuilder sbContent = new StringBuilder();
@@ -140,7 +139,7 @@ public class ForgotLogin {
 			}
 		}
 		contentParaLst.add(sbContent.toString());
-		sendNotif(templateId, emailLst, contentParaLst);
+		sendNotif(NotificationTextConst.TEMPLATE_ID_401166, emailLst, contentParaLst);
 	}
 	
 	private void sendNotif(String templateId,
