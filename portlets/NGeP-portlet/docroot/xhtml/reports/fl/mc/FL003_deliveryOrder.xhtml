@@ -20,7 +20,7 @@
 							disabled="#{mcDoRptBB.disableMinistryLov()}"
 							value="#{mcDoRptBB.managedBean.ministry.orgName}"
 							postUpdateListener="mcDoRptBB.resetPtjGroupProfile()"
-							update=":form:searchPtj,:form"
+							update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
 							saveObject="mcDoRptBB.managedBean.ministry"
 							conditionField="#{mcDoRptBB.getMinistryCondition()}"
 							>
@@ -121,7 +121,7 @@
 			</td>
 			<td>
 				<ac:lov id="flSupplierName" readonly="true"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{mcDoRptBB.managedBean.supplier}"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!mcDoRptBB.managedBean.supplier}"
 					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 					value="#{mcDoRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
 					saveObject="mcDoRptBB.managedBean.selectedOrgProfile" />
