@@ -4063,26 +4063,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		String fileFormat= attachmentFormat.format(item.getFileName(), null);
 		
 		filePath = filePath + "/" + fileFormat;
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
-	    fileOuputStream.write(item.getContents());
-	    fileOuputStream.close();
-	    
 		CtAttachment attachment = new CtAttachment();
 		if(getFileExtension(item.getFileName()).equalsIgnoreCase("doc") || 
 				getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
 			    String path =  file.getAbsolutePath()+ "/" + fileFormat;
 			    InputStream is = new FileInputStream(new File(path));
 				XWPFDocument document = new XWPFDocument(is);
-
 				PdfOptions options = PdfOptions.create();
-				OutputStream out = new FileOutputStream(new File(getFileName(path)+".pdf"));
+				OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
 				PdfConverter.getInstance().convert(document, out, options);
-				
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
 				attachment.setFileName(getFileName(fileFormat)+".pdf");
 	            File delFile = new File(filePath);
 	            delFile.delete();
 		} else {
+			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		    fileOuputStream.write(item.getContents());
+		    fileOuputStream.close();
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setFileName(item.getFileName());
 		}
