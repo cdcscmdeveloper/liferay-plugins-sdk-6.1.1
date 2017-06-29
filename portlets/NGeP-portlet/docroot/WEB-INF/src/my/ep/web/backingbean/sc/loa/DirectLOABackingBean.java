@@ -7126,7 +7126,7 @@ public class DirectLOABackingBean extends
 		debugLogger("downloadGuidelinePdf");
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
-		pbAttachment.setFileName("Guideline.pdf");
+		pbAttachment.setFileName("Guideline.docx");
 		
 		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
