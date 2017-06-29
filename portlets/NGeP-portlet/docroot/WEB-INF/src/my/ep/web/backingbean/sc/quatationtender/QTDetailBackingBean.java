@@ -5799,4 +5799,30 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
+	
+	
+	
+	/**
+	 * The method used set parent profile and reset child profile value
+	 * 
+	 * @param orgProfile
+	 * 		the PmOrgProfile instance
+	 */
+	public void SpecMaintenacepostUpdateOrgProfileListener(BaseEntity scQt) {
+		debugLogger("SpecMaintenacepostUpdateOrgProfileListener");
+		if (scQt instanceof ScQt) {
+			ScQt scqt = (ScQt)scQt;
+		IOrgProfileSO orgProfileSO = null;
+		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
+		orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		
+		OrgProfileReqDTO ptjreqDTO = new OrgProfileReqDTO();
+		ptjreqDTO.setOrgProfileId(scqt.getPmOrgProfile().getOrgProfileId());
+		PmOrgProfile orgProfileptj = orgProfileSO.retrieveOrgProfileByProfileId(
+				ptjreqDTO).getPmOrgProfile();
+		log.info("SpecMaintenacepostUpdateOrgProfileListener"+orgProfileptj);
+		qtnTenderSearchBean.setPtjProfile(orgProfileptj);
+		}
+	}
 }
