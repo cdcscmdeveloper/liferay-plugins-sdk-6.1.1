@@ -61,6 +61,14 @@
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
 							conditionField="#{qTDetailBB.getPTJCondition()}" >
 						</ac:lov>
+						<ac:lov id="searchSpecMaintenancePtj" lovId="PM_ORG_PROFILE_SPEC_MAINTENANCE"
+							size="135" readonly="true"
+							headerText="#{lbl['lbl.sc.ptj']}" 
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+							postUpdateListener="qTDetailBB.SpecMaintenacepostUpdateOrgProfileListener"
+							update="@form"
+							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.scQt"
+							conditionField="recordStatus^1" />
 					</td>
 				</tr>
 				<tr>

@@ -15,6 +15,7 @@ import java.util.Date;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 
 /**
  * The Class QtnTenderSearchBean.
@@ -77,6 +78,8 @@ public class QtnTenderSearchBean implements Serializable {
 	
 	/** The ptjProfile */
 	private PmOrgProfile ptjProfile;
+	
+	private ScQt scQt;
 	
 	/**
 	 * Instantiates a new qtn tender search bean.
@@ -378,6 +381,20 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setPtjProfile(PmOrgProfile ptjProfile) {
 		this.ptjProfile = ptjProfile;
+	}
+
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
 	}
 	
 }
