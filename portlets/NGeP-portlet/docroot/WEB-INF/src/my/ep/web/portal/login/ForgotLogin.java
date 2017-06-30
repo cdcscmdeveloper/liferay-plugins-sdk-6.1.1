@@ -45,6 +45,7 @@ public class ForgotLogin {
 	private String loginId;
 	
 	public ForgotLogin() {
+		log.info("ForgotLogin");
 	}
 	
 	public void cancelBtnAction () throws IOException {
