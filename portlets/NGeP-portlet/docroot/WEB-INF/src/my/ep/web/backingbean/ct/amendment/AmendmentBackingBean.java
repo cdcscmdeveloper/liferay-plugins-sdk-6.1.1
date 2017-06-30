@@ -148,9 +148,6 @@ import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xwpf.converter.pdf.PdfConverter;
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.convert.out.pdf.PdfConversion;
 import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
@@ -4062,24 +4059,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 
 		String fileFormat= attachmentFormat.format(item.getFileName(), null);
 		
-		filePath = filePath + "/" + fileFormat;
-		CtAttachment attachment = new CtAttachment();
-		if(getFileExtension(item.getFileName()).equalsIgnoreCase("doc") || 
-				getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
-				XWPFDocument document = new XWPFDocument(item.getInputstream());
-				PdfOptions options = PdfOptions.create();
-				OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
-				PdfConverter.getInstance().convert(document, out, options);
-				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
-				attachment.setFileName(getFileName(fileFormat)+".pdf");
-		} else {
+		   filePath = filePath + "/" + fileFormat;
+		   CtAttachment attachment = new CtAttachment();
 			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		    fileOuputStream.write(item.getContents());
 		    fileOuputStream.close();
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setFileName(item.getFileName());
-		}
-	
+		
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
