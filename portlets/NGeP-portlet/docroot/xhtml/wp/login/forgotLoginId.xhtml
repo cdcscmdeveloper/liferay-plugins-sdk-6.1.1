@@ -20,6 +20,18 @@
 		</h:panelGrid>
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}" type="submit" action="#{ForgotLogin.cancelBtnAction}" ajax="false" immediate="true" />
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" type="submit" action="#{ForgotLogin.forgotLoginId}" ajax="false" />
+		<br/>		
+		<p:commandButton value="test-#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" immediate="true" />
+		<p:commandButton value="test-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" ajax="false" />
+		<p:commandButton value="test-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" />
+		<br/>
+		<p:commandButton value="test1-#{lbl['lbl.btn.cancel']}" actionListener="#{ForgotLogin.cancelBtnAction}" immediate="true" />
+		<p:commandButton value="test1-#{lbl['lbl.btn.submit']}" actionListener="#{ForgotLogin.forgotLoginId}" ajax="false" />
+		<p:commandButton value="test1-#{lbl['lbl.btn.submit']}" actionListener="#{ForgotLogin.forgotLoginId}" />
+		<br/>
+		<p:commandButton value="test2-#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" immediate="true" />
+		<p:commandButton value="test2-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" partialSubmit="true" process="@this" />
+		<p:commandButton value="test2-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" partialSubmit="true" process="@this" update="@form" />
 	 </h:form>
  	</ui:define>
 </ui:composition>
