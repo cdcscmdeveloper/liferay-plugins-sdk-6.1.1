@@ -101,22 +101,6 @@
 			update="@([id$=reportTbl])" 
 			fileType="#{CommonConstants.FILE_UPLOAD_DOC_TYPE}" 
 			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" />
-			
-			<p:confirmDialog id="newBidPriceConfirm" width="300px"
-			message="#{lbl['lbl.sc.bidding.confirm.message']}"
-			widgetVar="newBidPriceConfirm">
-			<div align="right">
-				<p:commandButton id="confSubmit" value="#{lbl['lbl.btn.yes']}"
-					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}"
-					process="@this" oncomplete="newBidPriceConfirm.hide()"
-					update=":form:itemWiseBidListOB" />
-				<p:commandButton id="confNotSubmit" value="#{lbl['lbl.btn.no']}"
-					process="@this" onclick="newBidPriceConfirm.hide()"
-					oncomplete="rc();" />
-			</div>
-		</p:confirmDialog>
-			
-		
 	</ui:define>
 
 </ui:composition>
