@@ -18,18 +18,18 @@
 				<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 			</p:inputText>
 		</h:panelGrid>
-		<p:commandButton value="#{lbl['lbl.btn.cancel']}" type="submit" action="#{ForgotLogin.cancelBtnAction}" ajax="false" immediate="true" />
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" type="submit" action="#{ForgotLogin.forgotLoginId}" ajax="false" />
-		<br/>		
-		<p:commandButton value="test-#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" immediate="true" />
-		<p:commandButton value="test-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" ajax="false" />
+		<p:commandButton id="btnCancel" value="#{lbl['lbl.btn.cancel']}" type="submit" action="#{ForgotLogin.cancelBtnAction}" ajax="false" immediate="true" />
+		<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}" type="submit" action="#{ForgotLogin.forgotLoginId}" ajax="false" />
 		<br/>
-		<p:commandButton value="test1-#{lbl['lbl.btn.cancel']}" actionListener="#{ForgotLogin.cancelBtnAction}" immediate="true" />
-		<p:commandButton value="test1-#{lbl['lbl.btn.submit']}" actionListener="#{ForgotLogin.forgotLoginId}" ajax="false" />
+		<p:commandButton id="btnCancel11" value="redirect2-#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction1}" ajax="false" immediate="true" />
+		<p:commandButton id="btnCancel1" value="test1#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" ajax="false" immediate="true" />
+		<p:commandButton id="btnSubmit1" value="test1#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" ajax="false" />
 		<br/>
-		<p:commandButton value="test2-#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" immediate="true" />
-		<p:commandButton value="test2-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" partialSubmit="true" process="@this" />
-		<p:commandButton value="test2-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" partialSubmit="true" process="@this" update="@form" />
+		<h:commandButton id="btnCancel2" value="test2#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" immediate="true" />
+		<h:commandButton id="btnSubmit2" value="test2#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}"  />
+		<br/>
+		<p:commandButton id="btnCancel3" value="test3-#{lbl['lbl.btn.cancel']}" action="#{ForgotLogin.cancelBtnAction}" immediate="true" process="@form" update=":form" />
+		<p:commandButton id="btnSubmit3" value="test3-#{lbl['lbl.btn.submit']}" action="#{ForgotLogin.forgotLoginId}" process="@form" update=":form" />
 	 </h:form>
  	</ui:define>
 </ui:composition>
