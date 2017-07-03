@@ -1,7 +1,6 @@
 package my.ep.web.portal.login;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -39,9 +38,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name="ForgotLogin")
 @RequestScoped
-public class ForgotLogin implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class ForgotLogin {
+	
 	private final static Logger log = Logger.getLogger(ForgotLogin.class.getName());
 	private String emailAddress;
 	private String loginId;
@@ -50,16 +48,8 @@ public class ForgotLogin implements Serializable {
 		log.info("ForgotLogin");
 	}
 	
-	public void cancelBtnAction() throws IOException {
+	public void cancelBtnAction () throws IOException {
 		log.info("cancelbtnaction");
-		FacesContext.getCurrentInstance().getExternalContext().redirect(
-				 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
-	}
-	
-	public void cancelBtnAction1() throws IOException {
-		log.info("cancelbtnaction");
-		FacesContext.getCurrentInstance().getExternalContext().redirect(
-				 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
 		FacesContext.getCurrentInstance().getExternalContext().redirect(
 				 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
 	}
