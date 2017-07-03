@@ -7681,7 +7681,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Submit p oor approver review to bpm.
+	 * Submit po or approver review to bpm.
 	 * 
 	 * @param res
 	 *            - the PO or Approver resposne
