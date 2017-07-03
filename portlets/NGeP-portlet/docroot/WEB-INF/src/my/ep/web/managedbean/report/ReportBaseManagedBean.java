@@ -10,6 +10,7 @@
  */
 package my.ep.web.managedbean.report;
 
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,14 +194,53 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	}
 	
 	public void setReportUrl(String reportUrl) {
-		
-		if(ReportUtil.isShowReportUrl()){
+		if(isShowReportUrl()){
 			this.reportUrl = reportUrl;
 		}
-		
 	}
 	
 	public String getReportUrl() {
 		return reportUrl;
+	}
+	
+	public static boolean isShowReportUrl(){
+		
+		try{
+		
+			String ip = Inet4Address.getLocalHost().getHostAddress();
+			System.out.println("Jimmy ntf ip = " + ip);
+			
+			if(ip != null){
+				
+				if(ip.equals("192.168.120.15")){
+					return false;
+				} 
+				else
+				if(ip.equals("192.168.120.19")){
+					return false;
+				} 
+				else
+				if(ip.equals("192.168.62.15")){
+					return false;
+				}
+				else
+				if(ip.equals("192.168.62.18")){
+					return false;
+				}
+				else
+				if(ip.equals("192.168.63.17")){
+					return false;
+				} else {
+					// Jimmy : set this to true if you want to see the 
+					//	       report url in your local laptop.
+					return false;
+				}
+			}
+			
+		} catch (Exception ex){
+			System.err.println(ex.toString());
+		}
+		
+		return false;
 	}
 }
