@@ -2530,6 +2530,46 @@ public class SmApplicationBackingBean extends
 		return validSave;
 	}
 
+	private void validateBeforeSubmit() {
+		// validate personnel email domain
+		SmApplicationUtil
+				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
+						.getSmAppl().getSmPersonnels());
+
+		// validate overlap category supporting docs
+		SmApplicationUtil
+				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
+
+		// validate personnel
+		SmApplicationUtil.validatePersonnelBeforeSave(true, -1,
+				getManagedBean());
+
+		// validate branch
+		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
+				currentTab, true);
+
+		// validate facility
+		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
+
+		// validate machine
+		SmApplicationUtil.validateMachineDetails(true, -1, getManagedBean());
+
+		// validate equity owner count
+		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+
+		// validate equity owner amount
+		SmApplicationUtil.validateEquityOwnerAmount(getManagedBean(), -1,
+				ruleHelper);
+
+		// validate equity company amount
+		SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(), -1);
+
+		// validate paid up capital amount
+		SmApplicationUtil.validatePaidCaptialAmt(false, getManagedBean(),
+				currentTab);
+	}
+
 	/**
 	 * Retrieve and Assign supporting documents list required for application.
 	 */
@@ -6675,41 +6715,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		if (!this.getManagedBean().isPoInquiryRespond()) {
-
-			// validate personnel email domain
-			SmApplicationUtil
-					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
-							.getSmAppl().getSmPersonnels());
-
-			// validate personnel
-			SmApplicationUtil.validatePersonnelBeforeSave(true, -1,
-					getManagedBean());
-
-			// validate branch
-			SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
-					currentTab, true);
-
-			// validate facility
-			SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
-
-			// validate machine
-			SmApplicationUtil
-					.validateMachineDetails(true, -1, getManagedBean());
-
-			// validate equity owner count
-			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-
-			// validate equity owner amount
-			SmApplicationUtil.validateEquityOwnerAmount(getManagedBean(), -1,
-					ruleHelper);
-
-			// validate equity company amount
-			SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(), -1);
-
-			// validate paid up capital amount
-			SmApplicationUtil.validatePaidCaptialAmt(false, getManagedBean(),
-					currentTab);
+			validateBeforeSubmit();
 		}
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
@@ -7689,14 +7695,11 @@ public class SmApplicationBackingBean extends
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		Long pmStatId = getManagedBean().getApprovedStatusId();
 		retriveCurrentAppl();
-
-		// validate personnels email domain
-		SmApplicationUtil
-				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
-						.getSmAppl().getSmPersonnels());
-
-		SmApplicationUtil
-				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
+		
+		if(res.equalsIgnoreCase("APPROVE") || res.equalsIgnoreCase("ESCALATE")){
+			validateBeforeSubmit();
+		}
+		
 
 		log.info(" **** After retrieve ***"
 				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
