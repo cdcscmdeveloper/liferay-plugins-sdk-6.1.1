@@ -4059,13 +4059,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 
 		String fileFormat= attachmentFormat.format(item.getFileName(), null);
 		
-		   filePath = filePath + "/" + fileFormat;
-		   CtAttachment attachment = new CtAttachment();
+		filePath = filePath + "/" + fileFormat;
+		CtAttachment attachment = new CtAttachment();
+			if(getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
+			    WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(item.getInputstream());
+			    PdfSettings pdfSettings = new PdfSettings();
+			    OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
+			    PdfConversion converter = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage);
+                converter.output(out, pdfSettings);
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
+				attachment.setFileName(getFileName(fileFormat)+".pdf");
+		} else {
 			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		    fileOuputStream.write(item.getContents());
 		    fileOuputStream.close();
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setFileName(item.getFileName());
+		}
 		
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
