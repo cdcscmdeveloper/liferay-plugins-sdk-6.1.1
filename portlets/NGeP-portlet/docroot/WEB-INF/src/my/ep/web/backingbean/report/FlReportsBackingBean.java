@@ -270,7 +270,7 @@ public class FlReportsBackingBean extends ReportBaseBackingBean<FlReportsManaged
 			RequestContext.getCurrentInstance()
 					.execute("confirmationId.show()");
 			
-			this.getManagedBean().setReportUrl(resDTO.getReportUrl());
+			//this.getManagedBean().setReportUrl(resDTO.getReportUrl());
 			
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
