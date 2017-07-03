@@ -22,46 +22,6 @@ public class ReportUtil {
 	
 	String strLanguage;
 
-	public static boolean isShowReportUrl(){
-		
-		try{
-		
-			String ip = Inet4Address.getLocalHost().getHostAddress();
-			System.out.println("Jimmy ntf ip = " + ip);
-			
-			if(ip != null){
-				
-				if(ip.equals("192.168.120.15")){
-					return false;
-				} 
-				else
-				if(ip.equals("192.168.120.19")){
-					return false;
-				} 
-				else
-				if(ip.equals("192.168.62.15")){
-					return false;
-				}
-				else
-				if(ip.equals("192.168.62.18")){
-					return false;
-				}
-				else
-				if(ip.equals("192.168.63.17")){
-					return false;
-				} else {
-					// Jimmy : set this to true if you want to see the 
-					//	       report url in your local laptop.
-					return false;
-				}
-			}
-			
-		} catch (Exception ex){
-			System.err.println(ex.toString());
-		}
-		
-		return false;
-	}
 	public ReportUtil(){
 	
 	}
