@@ -1548,10 +1548,9 @@ public class SmApplicationBackingBean extends
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 
-		// for new application need to show confirm popup to save draft before
-		// proceed to next section
+		// show confirm popup to save draft before proceed to next section if
+		// still not save draft
 		if (!StringUtils.isBlank(applType)
-				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
 			RequestContext.getCurrentInstance().execute(
@@ -7695,11 +7694,10 @@ public class SmApplicationBackingBean extends
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		Long pmStatId = getManagedBean().getApprovedStatusId();
 		retriveCurrentAppl();
-		
-		if(res.equalsIgnoreCase("APPROVE") || res.equalsIgnoreCase("ESCALATE")){
+
+		if (res.equalsIgnoreCase("APPROVE") || res.equalsIgnoreCase("ESCALATE")) {
 			validateBeforeSubmit();
 		}
-		
 
 		log.info(" **** After retrieve ***"
 				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
