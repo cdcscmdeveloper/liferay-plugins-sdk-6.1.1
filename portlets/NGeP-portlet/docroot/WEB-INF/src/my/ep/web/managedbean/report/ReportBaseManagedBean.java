@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.web.backingbean.rpt.ReportUtil;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @SessionScoped
@@ -192,8 +193,13 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	}
 	
 	public void setReportUrl(String reportUrl) {
-		this.reportUrl = reportUrl;
+		
+		if(ReportUtil.isShowReportUrl()){
+			this.reportUrl = reportUrl;
+		}
+		
 	}
+	
 	public String getReportUrl() {
 		return reportUrl;
 	}
