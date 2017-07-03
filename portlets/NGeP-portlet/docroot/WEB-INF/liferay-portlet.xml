@@ -1452,6 +1452,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>forgot-login-password-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource> 
 	</portlet>
 	<portlet>
 		<portlet-name>pmProfileManagement</portlet-name>
