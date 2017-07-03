@@ -112,7 +112,7 @@
 						                   </f:facet>
 						                   <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
 							                     <p:inputText id="cperson" value="#{contactPersonsVar.name}" 
-							                            maxlength="20"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
+							                            maxlength="80"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
 							   	                        style="width:90%;" label="#{lbl['lbl.ct.contact.person.name']}" onkeypress="if (event.keyCode == 13) { return false; }"/>
 							   	           </c:if>
 							   	           <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
