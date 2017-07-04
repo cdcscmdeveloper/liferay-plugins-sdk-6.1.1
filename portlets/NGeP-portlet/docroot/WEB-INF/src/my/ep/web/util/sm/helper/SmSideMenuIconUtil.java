@@ -615,7 +615,8 @@ public class SmSideMenuIconUtil {
 
 							if (!retVal) {
 								retVal = EntityHelper.isObjectDifference(
-										hqPrev, hqCurr, new String[] {"smAddress" });
+										hqPrev, hqCurr, new String[] {
+												"smAddress", "facilityName" });
 							}
 						} else {
 							retVal = true;
