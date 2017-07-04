@@ -200,7 +200,7 @@
                    									   value="#{agreementBackingBean.managedBean.ministryProfileId}" >
             	 										  <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
             	   										  <p:ajax  listener="#{agreementBackingBean.settingMinistryListener}"
-            	                                                  event="change"  process="@this"  update=":form:jabatan,:form:ptjId, :form:selectAgencySignerId" />
+            	                                                  event="change"  process="@this"  update=":form:jabatanMenu,:form:ptjIdMenue, :form:selectAgencySignerId" />
                                              </p:selectOneMenu>
                  
                                            <p:selectOneMenu id="jabatan"  style="width:140px" disabled="true" >
@@ -211,7 +211,7 @@
                                                 value="#{agreementBackingBean.managedBean.jabatanProfileId}" >
             	                                <f:selectItems value="#{agreementBackingBean.getJabatanDropdown()}"/>
             	                                <p:ajax event="change" process="@this" 
-            	                                     listener="#{agreementBackingBean.settingJabatanListener}" update=":form:ptjId"/>
+            	                                     listener="#{agreementBackingBean.settingJabatanListener}" update=":form:ptjIdMenue, :form:selectAgencySignerId"/>
                                             </p:selectOneMenu>
                  
                                           <p:selectOneMenu id="ptjId"  style="width:140px" disabled="true">
