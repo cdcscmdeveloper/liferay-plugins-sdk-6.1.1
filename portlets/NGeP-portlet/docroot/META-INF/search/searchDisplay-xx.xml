@@ -132,7 +132,7 @@
 		<property name="pk" value="supplierId" />
 
 		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
-		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="searchMethod" value="retrieveComplaintSupplierLs" /> 
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
@@ -161,8 +161,15 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.mofno" />
-					<!-- <property name="columnWidth" value="150" /> -->
 					<property name="viewable" value="false" />
+				</bean>
+				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<property name="searchable" value="false"></property>
 				</bean>
 			</list>
 		</property>
