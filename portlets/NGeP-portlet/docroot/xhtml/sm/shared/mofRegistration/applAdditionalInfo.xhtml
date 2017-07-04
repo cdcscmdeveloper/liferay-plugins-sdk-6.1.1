@@ -6,34 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	
-	<style type="text/css">
-		.blink_text {
-
-	    animation:1s blinker linear infinite;
-	    -webkit-animation:1s blinker linear infinite;
-	    -moz-animation:1s blinker linear infinite;
-	
-	     color: red;
-	    }
-	
-	    @-moz-keyframes blinker {  
-	     0% { opacity: 1.0; }
-	     50% { opacity: 0.0; }
-	     100% { opacity: 1.0; }
-	     }
-	
-	    @-webkit-keyframes blinker {  
-	     0% { opacity: 1.0; }
-	     50% { opacity: 0.0; }
-	     100% { opacity: 1.0; }
-	     }
-	
-	    @keyframes blinker {  
-	     0% { opacity: 1.0; }
-	     50% { opacity: 0.0; }
-	     100% { opacity: 1.0; }
-	     }
-	</style>
+	<h:outputStylesheet library="ep/css" name="blinktext.css"  />
 	
 	<div align="left" class="header-info">
 		<table style="width: 100%">
