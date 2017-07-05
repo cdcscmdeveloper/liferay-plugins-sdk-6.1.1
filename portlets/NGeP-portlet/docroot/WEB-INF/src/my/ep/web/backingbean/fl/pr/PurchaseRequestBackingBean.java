@@ -1374,6 +1374,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		initializePRBeans();
+		updateDeliveryDate();
 		if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
 			checkPRThresholdPerItem();
 		}else if(getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
