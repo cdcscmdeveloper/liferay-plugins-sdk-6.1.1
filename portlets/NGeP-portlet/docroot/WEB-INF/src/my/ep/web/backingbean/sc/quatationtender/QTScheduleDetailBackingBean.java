@@ -618,6 +618,7 @@ public class QTScheduleDetailBackingBean extends
 				.set(index, this.getManagedBean().getScQtSampleSubmission());
 		retrievePmStateList();
 		RequestContext.getCurrentInstance().execute("sampledlg.show();");
+		this.getManagedBean().setRequired(Boolean.TRUE);
 		getManagedBean().setAutoUpdate(false);
 	}
 
@@ -645,6 +646,8 @@ public class QTScheduleDetailBackingBean extends
 		}
 		
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
+		this.getManagedBean().setRequired(Boolean.FALSE);
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	/**
@@ -687,5 +690,14 @@ public class QTScheduleDetailBackingBean extends
 					"Postcode is not valid, Postcode Should be limited to 5 digits.");
 		}
 
+	}
+	
+	/**
+	 * Close listener.close popup window.
+	 */
+	public void closeListener() {
+		this.getManagedBean().setRequired(Boolean.FALSE);
+		//this.getManagedBean().setZoneLocation(Boolean.FALSE);
+		this.getManagedBean().setAutoUpdate(true);
 	}
 }
