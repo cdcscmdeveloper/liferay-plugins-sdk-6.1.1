@@ -748,15 +748,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			int deliveryTerm = deliveryAddr.getDeliveryTerm();
 			if(deliveryAddr.getPmUom()!=null) {
 				if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(startDate);
-					calendar.add(Calendar.DATE, deliveryTerm);
-					deliveryAddr.setEndDate(calendar.getTime());
+					deliveryAddr.setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 				}else if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(startDate);
-					calendar.add(Calendar.MONTH, deliveryTerm);
-					deliveryAddr.setEndDate(calendar.getTime());
+					deliveryAddr.setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 				}
 			} else {
 				deliveryAddr.setEndDate(startDate);
@@ -3170,17 +3164,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.DATE, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-			getManagedBean().getFlRequest().setEndDate(calendar.getTime());
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.MONTH, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-			getManagedBean().getFlRequest().setEndDate(calendar.getTime());
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 		}
 
 		//update delivery address
@@ -3199,17 +3187,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		deliveryTerm = getManagedBean().getSelectedDelAddr().getDeliveryTerm();
 		
 		if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.DATE, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			getManagedBean().getSelectedDelAddr().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 		}else if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.MONTH, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			getManagedBean().getSelectedDelAddr().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 		}
 	}
 

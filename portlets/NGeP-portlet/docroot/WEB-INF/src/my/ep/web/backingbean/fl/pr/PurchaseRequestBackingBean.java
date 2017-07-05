@@ -423,17 +423,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			String uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
 			Calendar calendar = Calendar.getInstance();
 			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-				calendar.setTime(startDate);
-				calendar.add(Calendar.DATE, deliveryTerm);
-				getManagedBean().setMaxDate(calendar.getTime());
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-				calendar.setTime(startDate);
-				calendar.add(Calendar.MONTH, deliveryTerm);
-				getManagedBean().setMaxDate(calendar.getTime());
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_YEARS)) {
-				calendar.setTime(startDate);
-				calendar.add(Calendar.YEAR, deliveryTerm);
-				getManagedBean().setMaxDate(calendar.getTime());
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_YEARS));
 			}
 			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
 		}
@@ -2643,17 +2637,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
 		
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.DATE, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.MONTH, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 		}
 		//update delivery address
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
