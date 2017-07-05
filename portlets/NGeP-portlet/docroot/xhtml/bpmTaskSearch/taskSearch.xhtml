@@ -33,24 +33,24 @@ xmlns:p="http://primefaces.org/ui"
 	</table>
 	
 	<h:panelGroup id="resultPanel">
-	
+	asdfad
 		<p:dataTable id="dt" value="#{bpmTaskSearchBackingBean.resultList}" var="vo">
 			
-			<p:column>
+			<p:column style="min-width: 50px;white-space: pre-line;">
 				<f:facet name="header">
 					Task Id
 				</f:facet>
 				#{vo.taskId}
 			</p:column>
 
-			<p:column>
+			<p:column style="min-width: 50px;white-space: pre-line;">
 				<f:facet name="header">
 					Task Name
 				</f:facet>
 				#{vo.taskName}
 			</p:column>
 			
-			<p:column>
+			<p:column style="min-width: 50px;white-space: pre-line;">
 				<f:facet name="header">
 					Assignees
 				</f:facet>
