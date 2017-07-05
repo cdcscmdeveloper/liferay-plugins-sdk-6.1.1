@@ -1477,15 +1477,33 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));	
 
 				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
-				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+				if(reqDTO.isService()){
+					
+					userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+					UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
-				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
-					for(PmUser user :userResDTO.getUserList()){
-						System.out.println("user.getLoginId():"+user.getLoginId());
-						reqDTO.getCdcList().add(user.getLoginId());
+					if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+						for(PmUser user :userResDTO.getUserList()){
+							System.out.println("user.getLoginId():"+user.getLoginId());
+							reqDTO.getCdAdminList().add(user.getLoginId());
+						}
 					}
+				}else{
+					
+					userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
+					UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+					if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+						for(PmUser user :userResDTO.getUserList()){
+							System.out.println("user.getLoginId():"+user.getLoginId());
+							reqDTO.getCdcList().add(user.getLoginId());
+						}
+					}
+					
 				}
+				
+				
+				
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
