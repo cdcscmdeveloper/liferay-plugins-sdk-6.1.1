@@ -43,7 +43,7 @@ public class CommonUtils {
 				
 				break;
 			case CommonConstants.DATE_FORMAT_TYPE_TIME : 
-				dateFormat = CommonConstants.DEFAULT_TIME_FORMAT;
+				dateFormat = CommonConstants.DEFAULT_12HR_TIME_FORMAT;
 				
 				break;
 			case CommonConstants.DATE_FORMAT_TYPE_DATETIME : 
