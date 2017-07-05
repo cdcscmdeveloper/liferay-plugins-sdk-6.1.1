@@ -2878,14 +2878,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			// Get Specification Initiator Users
 			reqDTO = new UserReqDTO();
+			List<Long> orgProfileIds=new ArrayList<Long>();
 			reqDTO.setRoleCode(RoleCode.BIZ_OWNER.value());
-			reqDTO.setOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId());
+			orgProfileIds.add(scQt.getPmOrgProfile().getOrgProfileId());
+			orgProfileIds.add(scQt.getOwnerOrgProfile().getOrgProfileId());
+			reqDTO.setOrgProfileIds(orgProfileIds);
 			List<PmUser> boUsers = userSO.retrieveUserListByRole(reqDTO)
 					.getUserList();
 			if (boUsers != null && boUsers.size() > 0) {
 				users.addAll(boUsers);
 			}
-
+			orgProfileIds=null;
 		} finally {
 			userSO = null;
 		}
@@ -8655,7 +8658,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt
 							.getPmOrgProfile());
 					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt
-							.getPmOrgProfile());
+							.getOwnerOrgProfile());
 
 					if (ownerOrgProfileIds != null
 							&& ownerOrgProfileIds.size() > 0) {
