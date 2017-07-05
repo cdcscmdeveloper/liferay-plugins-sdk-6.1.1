@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,6 +40,8 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -62,6 +65,10 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -105,6 +112,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -127,6 +136,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -238,7 +248,7 @@ public class LOIDetailBackingBean extends
 			
 			String finalizationMethod = getFinalizationMethodByAwardType(awardDataType.getAwardType());
 			getManagedBean().setDocType(finalizationMethod);
-
+			
 			retrieveLOIList(sourceId);
 
 			// QT Proposal validity expired
@@ -1461,7 +1471,7 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSelectedTabIndex(0);
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
-
+		
 		} finally {
 		}
 
@@ -1636,18 +1646,26 @@ public class LOIDetailBackingBean extends
 			setUserDetails(scLoi);
 			handleBranchDetailsChanged();
 		}
-
+		
 		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
 				.getScWorkFlowStatus().getPmStatus().getStatusId()
 				.longValue()) || QTStatusConst.LOI_PENDING_REVISION.equals(scLoi
 						.getScWorkFlowStatus().getPmStatus().getStatusId()
 						.longValue())) {
+			
+			
 			// Issue & Acknowledge Date
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
-			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), loaRespPeriod));
+			if(scLoi.getAckDueDate() != scLoi.getIssueDate() && scLoi.getAckDueDate() != null){
+				long days = DateUtils.getDaysDifference(scLoi.getIssueDate(), scLoi.getAckDueDate());
+				scLoi.setLoiResponseDate((int) days);
+			}
+			else{
+				scLoi.setLoiResponseDate(5);
+			}
+			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
+ 			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
 		}
-
 		// approvers
 		ScLoiApproval scLoiApproval = scLoi.getScLoiApproval();
 		PmUser approverUser = null;
@@ -1708,7 +1726,7 @@ public class LOIDetailBackingBean extends
 
 		// TODO
 		scLoi.setFileExtnNo("001");
-
+		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
 		 * .getScWorkFlowStatus().getPmStatus().getStatusId())) {
@@ -1832,7 +1850,7 @@ public class LOIDetailBackingBean extends
 			
 			//pending loiloas
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
-
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setOutcome(outcome);
@@ -2048,8 +2066,8 @@ public class LOIDetailBackingBean extends
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
-			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), loaRespPeriod));
+			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
+			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
@@ -2856,12 +2874,17 @@ public class LOIDetailBackingBean extends
 		attachment.setFileName("Loi Letter.pdf");
 		try {
 			populateAttachmentDetails(attachment);
-
+			Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 			ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+			Long supplierId = smSupplier.getSupplierId();
+			Long statusId = getManagedBean().getCurrentStatusId();
 			CommonUtils commonUtils = new CommonUtils();
+			SimpleDateFormat timeSDF = new SimpleDateFormat(
+					commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_TIME));
 			SimpleDateFormat dateSDF = new SimpleDateFormat(
 					commonUtils
-					.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
+					.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 			DecimalFormat numberDF = new DecimalFormat(
 					commonUtils
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
@@ -2876,20 +2899,64 @@ public class LOIDetailBackingBean extends
 			String userName = fs.getUserSessionBean().getUserName();
 			context.put("hostUrl", hostUrl);
 			context.put("userName", userName);
-
+			
 			Date newDate = new Date();
 			String date = "";
 			if (newDate != null) {
 				date = dateSDF.format(newDate);
 			}
+			String method = "";
+			String category = "";
+			ScQt scQt = getManagedBean().getScQt();
+			PmParameter procurementMode = scQt.getProcurementMode();
+			PmParameter procurementType = scQt.getProcurementTypeCatId();
+			if(procurementMode != null 
+					&& procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
+				method = "Tender";
+			}
+			else{
+				method = "Sebut Harga";
+			}
+			if(procurementType != null 
+					&& procurementType.equals(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+				category = "Perkhidmatan";
+			}
+			else{
+				category = "Bekalan";
+			}
+			context.put("method", method);
+			context.put("category", category);
+			
+			String issueDate = "______________";
+			if (scLoi.getIssueDate() != null) {
+				issueDate = getLocalizeDate(scLoi.getIssueDate(), myLocale);
+			}
+			context.put("issueDate", issueDate);
 			context.put("date", date);
-
+			context.put("issueDate", scLoi.getIssueDate());
+			context.put("timeSDF", timeSDF);
 			context.put("dateSDF", dateSDF);
 			context.put("numberDF", numberDF);
 			context.put("amountDF", amountDF);
 
 			context.put("fileNo", scLoiLoa.getFileNo());
-
+			
+			context.put("qtNo", getManagedBean().getScQt().getQtNo());
+			
+			SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
+			if(mofAccount != null){
+				context.put("mofNo", mofAccount.getMofNo());
+			}
+			
+			SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
+			if(resDTO.getSmGstSupplier() != null){
+				SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
+				context.put("gstNo", gstSupplier.getGstRegNo());
+			}
+			else{
+				context.put("gstNo", "");
+			}
+			
 			String fileExtnNo = scLoi.getFileExtnNo();
 			if (fileExtnNo == null) {
 				fileExtnNo = "&lt;&lt;3-digits&gt;&gt;";
@@ -2997,8 +3064,9 @@ public class LOIDetailBackingBean extends
 					&& scLoi.getScNegoLocations().size() > 0) {
 				context.put("scNegoLocations", scLoi.getScNegoLocations());
 			}
-
-			/*List<ScLoiTerm> selectedNegoTerms = new ArrayList<ScLoiTerm>();
+			
+			
+			List<ScLoiTerm> selectedNegoTerms = new ArrayList<ScLoiTerm>();
 			if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
 				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
 					if (scLoiTerm.isSelectedTerm()) {
@@ -3014,9 +3082,9 @@ public class LOIDetailBackingBean extends
 					&& scLoi.getScNegoTerms().size() > 0) {
 				context.put("scNegoTerms", scLoi.getScNegoTerms());
 				context.put("Keputusan", Keputusan);
-			}*/
+			}
 
-			String ackDueDays = "7";
+			String ackDueDays = "5";
 			if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
 				ackDueDays = DateUtils.getDaysDifference(scLoi.getIssueDate(),
 						scLoi.getAckDueDate()) + "";
@@ -3038,6 +3106,17 @@ public class LOIDetailBackingBean extends
 			context.put("loiSignerDesignation", loiSignerDesignation);
 
 			context.put("isReFinalizationBidding", true);
+			
+			boolean disclaimer;
+			if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)){
+				disclaimer = true;
+			}
+			else{
+				disclaimer = false;
+			}
+			context.put("statusId", statusId);
+			context.put("hasDisclaimer", disclaimer);
+				
 
 			// online bidding
 			boolean isBiddingAward = Boolean.FALSE;
@@ -3056,6 +3135,41 @@ public class LOIDetailBackingBean extends
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Gets the mof account by supplier id.
+	 *
+	 * @param supplierId the supplier id
+	 * @return the mof account by supplier id
+	 */
+	public SmMofAccount getMofAccountBySupplierId(Long supplierId) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+		accountReqDTO.setSupplierId(supplierId);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO
+				.retrieveMofNoBySupplierId(accountReqDTO);
+		return mofAccountResDTO.getMofAccount();
+	}
+
+	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
+
+		ISupplierGstSO supplierGstSO = null;
+		try {
+			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+			gstReqDTO.setSupplierId(supplierId);
+			gstReqDTO.setBranchCode(branchCode);
+			SupplierGstResDTO gstResDTO = supplierGstSO
+					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+			return gstResDTO;
+		} finally {
+			supplierGstSO = null;
 		}
 	}
 
@@ -5211,6 +5325,20 @@ public class LOIDetailBackingBean extends
 		return isLoiLoasUpdate;
 	}
 	
+	/**
+	 * Localize date.
+	 *
+	 * @param date the date
+	 * @param locale the locale
+	 * @return the string
+	 */
+	private static String getLocalizeDate(Date date, Locale locale) { 
+		String DEFAULT_DATE_FORMAT_WITH_MONTH_NAME = "dd MMMM yyyy";
+	    SimpleDateFormat localDateFormate = new SimpleDateFormat(DEFAULT_DATE_FORMAT_WITH_MONTH_NAME, locale);       
+	    
+	    return localDateFormate.format(date);
+	}
+	
 
 	/**
 	 * Disable is loi required.
@@ -5273,7 +5401,36 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
-
+	
+	/**
+	 * AckDueDate changed
+	 */
+	public void dueDateChange(){
+		debugLogger("dueDateChange");
+		ScLoi scLoi = this.getManagedBean().getScLoi();
+		Date today = scLoi.getIssueDate();
+		int responseDay = scLoi.getLoiResponseDate();
+		Date ackDueDate = DateUtils.addDays(today, responseDay);
+		
+		scLoi.setAckDueDate(ackDueDate);
+		/*IParameterSO parameterSO = null;
+		
+		try{
+			Long parameterId = (long) scLoi.getLoiResponseDate();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			PmParameter pmParameter = resDTO.getPmParameter();
+			String responseDayStr = pmParameter.getParameterCode();
+			
+		} finally{
+			parameterSO = null;
+		}*/
+	}
 	
 	/**
 	 * The Class NegotiationRecommendationReportDTO.
