@@ -172,20 +172,41 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
-				<td><p:inputText size="38" disabled="true"
+				<td>
+				<c:if test="#{isPendingSubmissionStatus}">
+					<p:selectOneMenu id="responseDate"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.loiResponseDate}"
+						style="width: 100px;margin-bottom: 10px;"
+						label="#{lbl['lbl.sc.days']}"
+						disabled="#{!isEditableStatus}" >
+						<f:selectItems 
+							value="#{lOIDetailBackingBean.getDropdownCodeValues(ParameterTypeConst.loiResponsePeriod)}" />
+						<p:ajax event="change"
+							process="@this" partialSubmit="true" update="dueDate"
+							listener="#{lOIDetailBackingBean.dueDateChange}" /> #{lbl['lbl.sc.days']}
+					</p:selectOneMenu><ui:param name="days" value="#{lOIDetailBackingBean.retrivemessage(lOIDetailBackingBean.managedBean.scLoi.ackDueDate)}"></ui:param>
+					<ac:iconTooltip value="#{days}" /><p:inputText id="dueDate" size="38" disabled="true"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.ackDueDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <p:spacer width="10px" /> <p:inputText styleClass="ppRightBtn"
+					</p:inputText> <p:spacer width="10px" /> 
+				</c:if>
+				<c:if test="#{!isPendingSubmissionStatus or lOIDetailBackingBean.managedBean.readOnly}">
+					<p:inputText styleClass="ppRightBtn"
 						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(lOIDetailBackingBean.managedBean.scLoi.issueDate, lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
 						disabled="true" size="4" readonly="true" /> #{lbl['lbl.sc.days']}
-						<ui:param name="days" value="#{lOIDetailBackingBean.retrivemessage(lOIDetailBackingBean.managedBean.scLoi.ackDueDate)}"></ui:param>
-					<ac:iconTooltip value="#{days}" />
+					<ui:param name="days" value="#{lOIDetailBackingBean.retrivemessage(lOIDetailBackingBean.managedBean.scLoi.ackDueDate)}" />
+					<ac:iconTooltip value="#{days}" /><p:inputText size="30" disabled="true"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.ackDueDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText> <p:spacer width="10px" /> 
+				</c:if>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.appr.req']}" />
+						value="#{lbl['lbl.sc.loiloa.appr.req.field']}" />
 						<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" /></td>
 				<td><p:selectOneRadio  styleClass="commonLabel"
 						disabled="#{!isPendingSubmissionStatus or lOIDetailBackingBean.managedBean.readOnly}"
