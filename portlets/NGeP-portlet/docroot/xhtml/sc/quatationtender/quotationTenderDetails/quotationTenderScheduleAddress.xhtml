@@ -149,7 +149,7 @@
 							<td>
 								<table>
 									<tr>
-										<td><p:inputText id="samplepost" required="true"
+										<td><p:inputText id="samplepost" required="#{qTScheduleDetailBackingBean.managedBean.required}"
 												label="#{lbl['lbl.sc.post.code']}"
 												value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.postcode}"
 												size="30" maxlength="10"
@@ -177,5 +177,7 @@
 				</p:panel>
 			</c:if>
 		</c:if>
+		<p:ajax event="close"
+			listener="#{qTScheduleDetailBackingBean.closeListener}" />
 	</p:dialog>
 </ui:composition>
