@@ -8053,7 +8053,7 @@ public class SmApplicationBackingBean extends
 
 	private String getApproverListForSuccessMsg() {
 		StringBuilder bf = new StringBuilder();
-		String retVal = "";
+		String retVal = SmCommonUtil.getMessage("lb.sm.approver", null);
 		SmAddress hqAddr = getHqAddress();
 		if (hqAddr != null) {
 			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
@@ -8066,7 +8066,10 @@ public class SmApplicationBackingBean extends
 					.getReviewApplicationSO()
 					.getApproversByZoneAfterEscalate(reviewApplicationReqDTO)
 					.getUserAssignList();
-			if (!SmCommonUtil.isCollectionEmpty(approverList)) {
+			if (SmCommonUtil.isCollectionEmpty(approverList)) {
+				throw new EpException(MessageConst.ERROR_722658,
+						new String[] { zone.getZoneName() });
+			} else {
 				int i = 0;
 				for (PmUser user : approverList) {
 					i++;
