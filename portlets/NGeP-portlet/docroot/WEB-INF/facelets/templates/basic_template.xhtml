@@ -81,52 +81,79 @@
 	    	}
 	    }
 	    
+	    function changeHashOnLoad() {
+	    	window.location.href += '#';
+	    	setTimeout('changeHashAgain()', '50');
+	    }
+	    
+	    function changeHashAgain() {
+	    	window.location.href += '1';
+	    }
+	    
 	    (function (global) {
+	    	
+		    var isChrome = !!window.chrome;
+		    
+		    if(!!isChrome){
+		    	isChrome = !!window.chrome.webstore;
+		    }
+	    	
+	    	if(isChrome){
+	    		var storedHash = window.location.hash;
+	    	    window.setInterval(function () {
+	    	    	if (window.location.hash != storedHash) {
+	    	    		window.location.hash = storedHash;
+	    	    	}
+	    	    }, 50);
+	    	    window.onload=changeHashOnLoad;
+	    	}else{
+	    		if(typeof (global) === "undefined")
+		    	{
+		    		throw new Error("window is undefined");
+		    	}
 
-	    	if(typeof (global) === "undefined")
-	    	{
-	    		throw new Error("window is undefined");
+		        var _hash = "!";
+		        var noBackPlease = function () {
+		            global.location.href += "#";
+
+		    		// making sure we have the fruit available for juice....
+		    		// 50 milliseconds for just once do not cost much (^__^)
+		            global.setTimeout(function () {
+		                global.location.href += "!";
+		            }, 50);
+		        };
+		    	
+		    	// Earlier we had setInerval here....
+		        global.onhashchange = function () {
+		            if (global.location.hash !== _hash) {
+		                global.location.hash = _hash;
+		            }
+		        };
+
+		        global.onload = function () {
+		            
+		    		noBackPlease();
+
+		    		// disables backspace on page except on input fields and textarea..
+		    		document.body.onkeydown = function (e) {
+		                var elm = e.target.nodeName.toLowerCase();
+		                if (e.which === 8) {
+		                	if(elm !== 'input'){
+		                		if(elm  !== 'textarea'){
+		                			e.preventDefault();
+		                		}
+		                	}
+		                }
+		                // stopping event bubbling up the DOM tree..
+		                e.stopPropagation();
+		            };
+		    		
+		        };
 	    	}
 
-	        var _hash = "!";
-	        var noBackPlease = function () {
-	            global.location.href += "#";
-
-	    		// making sure we have the fruit available for juice....
-	    		// 50 milliseconds for just once do not cost much (^__^)
-	            global.setTimeout(function () {
-	                global.location.href += "!";
-	            }, 50);
-	        };
-	    	
-	    	// Earlier we had setInerval here....
-	        global.onhashchange = function () {
-	            if (global.location.hash !== _hash) {
-	                global.location.hash = _hash;
-	            }
-	        };
-
-	        global.onload = function () {
-	            
-	    		noBackPlease();
-
-	    		// disables backspace on page except on input fields and textarea..
-	    		document.body.onkeydown = function (e) {
-	                var elm = e.target.nodeName.toLowerCase();
-	                if (e.which === 8) {
-	                	if(elm !== 'input'){
-	                		if(elm  !== 'textarea'){
-	                			e.preventDefault();
-	                		}
-	                	}
-	                }
-	                // stopping event bubbling up the DOM tree..
-	                e.stopPropagation();
-	            };
-	    		
-	        };
-
 	    })(window);
+	    
+	    
 
 	</script>
 </h:head>
