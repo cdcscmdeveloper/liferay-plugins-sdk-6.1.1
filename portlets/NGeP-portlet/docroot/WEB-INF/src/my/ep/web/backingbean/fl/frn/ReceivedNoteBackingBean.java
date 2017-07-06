@@ -546,7 +546,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
 			item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 			if(getManagedBean().isAcknowledged()){
-				getManagedBean().setRemainingQty(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().subtract(item.getReceivedQty()));
+				getManagedBean().setRemainingQty(item.getFlDelOrderItem().getDeliveredQty().subtract(item.getReceivedQty()));
 			}else{
 				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(item));
 				getManagedBean().setRemainingQty(remainQty);
@@ -1160,7 +1160,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setDeliveredQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty());
 			getManagedBean().setDeliveredAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredAmt());
 			if(getManagedBean().isAcknowledged()){
-				getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
+				getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
 			}else{
 				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(getManagedBean().getSelectedItem()));
 				getManagedBean().setRemainingQty(remainQty);

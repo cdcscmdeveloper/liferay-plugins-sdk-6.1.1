@@ -130,18 +130,6 @@
 							value="#{lbl['lbl.fl.tooltip.frn.del.amt']}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.remaining']}" /></td>
-					<td><p:inputText id="remaingQtyTxt" style="text-align:right;"
-							value="#{receivedNoteBackingBean.managedBean.remainingQty}"
-							size="15" disabled="true" styleClass="colFloatRight" ><f:converter converterId="dynamicNumberConverter" />
-							<f:attribute name="pattern"
-								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td><td> <ac:iconTooltip
-							value="#{lbl['lbl.fl.tooltip.do.remain.qty']}" /></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.received']}" /></td>
 					<td><p:inputText id="receivedQty"
 							label="#{lbl['lbl.fl.received.qty']}" style="text-align:right;"
@@ -174,6 +162,18 @@
 						</p:inputText></td>
 					<td><ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.frn.received.amt']}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.remaining']}" /></td>
+					<td><p:inputText id="remaingQtyTxt" style="text-align:right;"
+							value="#{receivedNoteBackingBean.managedBean.remainingQty}"
+							size="15" disabled="true" styleClass="colFloatRight" ><f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td><td> <ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.do.remain.qty']}" /></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
