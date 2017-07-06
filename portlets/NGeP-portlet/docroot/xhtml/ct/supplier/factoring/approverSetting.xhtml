@@ -19,7 +19,8 @@
 					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
 					showTargetControls="true" filterMatchMode="contains"
 					converter="pmUserConverter"
-					disabled="#{supplierBackingBean.managedBean.viewOnly}">
+					disabled="#{supplierBackingBean.managedBean.viewOnly
+						or !bpmTasklistBackingBean.managedBean.claim}">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.available.approver']}"/>
