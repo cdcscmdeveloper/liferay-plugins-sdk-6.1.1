@@ -28,7 +28,7 @@
 							
 								<p:inputTextarea id="textAreaId"    cols="40"  value="#{remarkVar.remark}"    rendered="#{remarkIndex==0}" 
 									disabled="#{ctBackingBean.managedBean.viewContract
-										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}"  autoResize="false" 
+										or !bpmTasklistBackingBean.managedBean.claim}"  autoResize="false" 
 									onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 									style="width:70%;">
 							 </p:inputTextarea>
