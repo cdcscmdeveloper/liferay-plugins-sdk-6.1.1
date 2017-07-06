@@ -11,7 +11,7 @@
 				<p:commandButton oncomplete="uploadDlg.show();return false;"
 					update="lampiran, uploadDlg" value="#{lbl['lbl.txt.attach.files']}"
 					disabled="#{ctBackingBean.managedBean.viewContract
-						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+						or !bpmTasklistBackingBean.managedBean.claim}" />
 			</td>
 		</tr>
 		<tr>
