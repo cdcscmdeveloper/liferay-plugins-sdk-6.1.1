@@ -210,6 +210,15 @@ public class GovtSellerRegistrationBackingBean extends
 		reqDTO.setOrgProfileId(Long.parseLong(orgProfileId));
 		PmOrgProfile orgProfile = SmServiceLookup.getRegistrationSO()
 				.findOrgProfileById(reqDTO).getOrgProfile();
+
+		// if supplier tie to orgprofile already deleted, then set supplier in
+		// orgprofile to null so that can do new registration
+		if (orgProfile!=null && orgProfile.getSmSupplier() != null
+				&& orgProfile.getSmSupplier().getRecordStatusFlg() != null
+				&& orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			orgProfile.setSmSupplier(null);
+		}
+
 		if (orgProfile != null) {
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
@@ -1203,9 +1212,10 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 
 		// validate IC with MyIdentity
-		SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(personnel.getName(),
-				personnel.getIdentificationNo(),
-				getManagedBean().getSmPermenantAdd().getPostcode(), null, SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
+		SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(
+				personnel.getName(), personnel.getIdentificationNo(),
+				getManagedBean().getSmPermenantAdd().getPostcode(), null,
+				SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
 
 		// check if icNo already assign as supplier
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
