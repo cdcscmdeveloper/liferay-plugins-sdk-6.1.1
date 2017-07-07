@@ -19,12 +19,14 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "resendAccountActivationEmailBackingBean")
 @ViewScoped
@@ -43,13 +45,15 @@ public class ResendAccountActivationEmailBackingBean extends
 	private String companyName;
 	private String suppAdminIdentificationNo;
 	private String suppAdminEmail;
+	private String suppAdminMobileNo;
+	private String suppAdminMobileArea;
+	private String suppAdminMobileCountry;
+	private String suppAdminMobileTelcoId;
+	private String accType;
 
 	private SmPersonnel selectedPersonnel;
 
-	/**
-	 * Request to resend account activation email
-	 */
-	public void resendAccountActivationEmail() {
+	public void onClickResend() {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setRegNo(businessRegNo);
 		reqDTO.setCompanyName(companyName);
@@ -81,28 +85,26 @@ public class ResendAccountActivationEmailBackingBean extends
 
 					Calendar today = new GregorianCalendar();
 
+					if (accType.equals(SupplierManagementConst.ACC_GOVT_SELLER)
+							&& (!selectedPersonnel.getMobileArea().equals(
+									suppAdminMobileArea)
+									|| !selectedPersonnel.getMobileCountry()
+											.equals(suppAdminMobileCountry)
+									|| !selectedPersonnel.getMobileTelcoId()
+											.equals(suppAdminMobileTelcoId) || !selectedPersonnel
+									.getMobileNo().equals(suppAdminMobileNo))) {
+						throw new EpException(MessageConst.ERROR_721018);
+					}
+
 					if (selectedPersonnel.getIdentificationNo().equals(
 							suppAdminIdentificationNo)
-							&& selectedPersonnel.getRecordStatusFlg().equals(8)
+							&& selectedPersonnel
+									.getRecordStatusFlg()
+									.equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
 							&& expiredActivationDate.after(today)) {
+						RequestContext.getCurrentInstance().execute(
+								"confirmDialog.show();");
 
-						PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-						personnelReqDTO.setPortalBaseUrl(SmCommonUtil
-								.getBasePortalUrl());
-						personnelReqDTO
-								.setSmPersonnelList(new ArrayList<SmPersonnel>());
-						//reset back to new email
-						selectedPersonnel.setEmail(suppAdminEmail);
-						personnelReqDTO.getSmPersonnelList().add(
-								selectedPersonnel);
-
-						SmServiceLookup
-								.getPersonnelSO()
-								.resendPersonnelActivationEmail(personnelReqDTO);
-
-						SmCommonUtil.redirectToPage(
-								"/xhtml/sm/userProfileMaintenance/outputMsg",
-								MessageConst.INFO_721032, null);
 					} else {
 						throw new EpException(MessageConst.ERROR_721018);
 					}
@@ -113,6 +115,25 @@ public class ResendAccountActivationEmailBackingBean extends
 		} catch (Exception ex) {
 			throw new EpException(MessageConst.ERROR_721018);
 		}
+	}
+
+	/**
+	 * Request to resend account activation email
+	 */
+	public void resendAccountActivationEmail() {
+		PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+		personnelReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		personnelReqDTO.setSmPersonnelList(new ArrayList<SmPersonnel>());
+		// reset back to new email
+		selectedPersonnel.setEmail(suppAdminEmail);
+		personnelReqDTO.getSmPersonnelList().add(selectedPersonnel);
+
+		SmServiceLookup.getPersonnelSO().resendPersonnelActivationEmail(
+				personnelReqDTO);
+
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/userProfileMaintenance/outputMsg",
+				MessageConst.INFO_721032, null, null);
 	}
 
 	private SmPersonnel getAdminPersonnel(SmSupplier supplier) {
@@ -171,5 +192,45 @@ public class ResendAccountActivationEmailBackingBean extends
 
 	public void setSelectedPersonnel(SmPersonnel selectedPersonnel) {
 		this.selectedPersonnel = selectedPersonnel;
+	}
+
+	public String getAccType() {
+		return accType;
+	}
+
+	public void setAccType(String accType) {
+		this.accType = accType;
+	}
+
+	public String getSuppAdminMobileNo() {
+		return suppAdminMobileNo;
+	}
+
+	public void setSuppAdminMobileNo(String suppAdminMobileNo) {
+		this.suppAdminMobileNo = suppAdminMobileNo;
+	}
+
+	public String getSuppAdminMobileArea() {
+		return suppAdminMobileArea;
+	}
+
+	public void setSuppAdminMobileArea(String suppAdminMobileArea) {
+		this.suppAdminMobileArea = suppAdminMobileArea;
+	}
+
+	public String getSuppAdminMobileCountry() {
+		return suppAdminMobileCountry;
+	}
+
+	public void setSuppAdminMobileCountry(String suppAdminMobileCountry) {
+		this.suppAdminMobileCountry = suppAdminMobileCountry;
+	}
+
+	public String getSuppAdminMobileTelcoId() {
+		return suppAdminMobileTelcoId;
+	}
+
+	public void setSuppAdminMobileTelcoId(String suppAdminMobileTelcoId) {
+		this.suppAdminMobileTelcoId = suppAdminMobileTelcoId;
 	}
 }
