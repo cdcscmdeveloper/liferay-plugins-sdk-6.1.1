@@ -30,7 +30,13 @@
 	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	
-	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}" rendered="#{paymentBackingBean.managedBean.softcertPayment}"/>
+	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.header']}" /><br />
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.payment.reminder.msg']}" />
+	
+	<p:outputPanel rendered="#{paymentBackingBean.managedBean.softcertPayment}">
+		<br /><br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}" />
+	</p:outputPanel>
+	
 	<p:panel header="#{paymentBackingBean.managedBean.softcertPayment?lbl['lbl.sm.soft.cert']:lbl['lbl.sm.payment.item']}">
 		<p:dataTable value="#{paymentBackingBean.managedBean.newPyBillDtlLs}" var="itemLs">
 			<p:columnGroup type="header">
