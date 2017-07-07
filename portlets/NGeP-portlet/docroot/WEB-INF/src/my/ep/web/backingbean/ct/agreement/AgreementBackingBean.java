@@ -1465,12 +1465,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				context.put("contractTitle", getManagedBean().getCtContract().getContractName().toUpperCase());
 				context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				context.put("supplierRegistrationNo", getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+				String physicalContactNo = getManagedBean().getCtContract().getContractNo();
 				if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() == null
 						|| getManagedBean().getAgreementContractVer().getContractPhysicalNo().isEmpty()) {
-					context.put("physicalContactNo", getManagedBean().getCtContract().getContractNo());
+					physicalContactNo = physicalContactNo + " / " + getManagedBean().getAgreementContractVer().getCtContractValue().getLoaNo();
 				} else {
-					context.put("physicalContactNo", getManagedBean().getAgreementContractVer().getContractPhysicalNo());
+					physicalContactNo = physicalContactNo + " / " + getManagedBean().getAgreementContractVer().getContractPhysicalNo();
 				}
+				context.put("physicalContactNo", physicalContactNo);
 				context.put("contractStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 				context.put("contractEndDate", df.format(getManagedBean().getCtAgreement().getExpDate()));
 				context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");
