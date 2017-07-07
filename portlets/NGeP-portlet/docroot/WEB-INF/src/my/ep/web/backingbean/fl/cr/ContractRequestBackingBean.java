@@ -4061,7 +4061,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
 			ContractIntegrationResDTO integrationResDTO = contractIntegrationSO.retrieveScheduleByContractVerIdAndNo(integrationReqDTO);
 			if(integrationResDTO.getCtSchedule() != null){
-				if(integrationResDTO.getCtSchedule().getScheduleType().getParameterCode().equalsIgnoreCase(ParameterConst.CT_SCHEDULE_PERIODIC)){
+				if(integrationResDTO.getCtSchedule().getScheduleType().getParameterCode().equalsIgnoreCase(ParameterConst.SCHEDULE_TYPE_PERIODIC)){
 					reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 					reqDTO.setScheduleNo(flRequest.getScheduleNo());
 					reqDTO.setContractId(flRequest.getCtContract().getContractId());
