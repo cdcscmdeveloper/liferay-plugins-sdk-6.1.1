@@ -641,6 +641,63 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		this.setChallengeAns1("");
 		this.setPassword("");
 	}
+	
+	
+	public void changeChallengeQuestions() {
+		
+		try{
+			KMCClient client = getClient();
+
+			// Request service for user selected question for authentication
+
+			String loginId = new FacesScopes().getUserScreenName();
+
+			IUserSO userSO =(IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setLoginId(loginId);
+			UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+			if(resDTO.getPmUser()==null){
+				//throw new EpException("PM User is null");
+			}
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(resDTO.getPmUser().getIdentificationNo(), 1));
+			//				List<String> challs = null;
+			switch(res.getStatusCode())
+			{
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+				// show to the user to allow user answer the challenge
+				if(challs.size() == 0)
+				{
+					System.out.println("No challanges found for the user! ");
+					throw new EpException(MessageConst.ERROR_776051);
+
+
+				}else{
+					
+					setChallengeQues1(challs.get(0));
+				
+					this.setChallengeAns1("");
+					this.setPassword("");
+					
+					//RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				}
+
+				break;
+
+			default:
+				System.out.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+				//throw new EpException(res.getStatusMessage());
+				throw new EpException(MessageConst.ERROR_776062);
+			}
+
+
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			throw new EpException(ex.getMessage());
+
+		}	
+	}
 
 
 	
