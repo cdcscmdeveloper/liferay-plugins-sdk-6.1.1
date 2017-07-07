@@ -747,12 +747,14 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					         supplierAddress = supplierAddress.replaceAll("&", "&#38;");					         
 					         context.put("supplierAddress" ,supplierAddress);
 					         context.put("contractTitle",getManagedBean().getCtContract().getContractName());
-					         if(getManagedBean().getContractVer().getContractPhysicalNo()==null) {
-						          context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
+					         String contractPhysicalNo = getManagedBean().getCtContract().getContractNo();
+					         if (getManagedBean().getContractVer().getContractPhysicalNo() == null
+					        		 || getManagedBean().getContractVer().getContractPhysicalNo().isEmpty()) {
+					        	 contractPhysicalNo = contractPhysicalNo + " / " + getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 					         } else {
-						         context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
-					        }
-					
+					        	 contractPhysicalNo = contractPhysicalNo + " / " + getManagedBean().getContractVer().getContractPhysicalNo();
+					         }
+					         context.put("contractPhysicalNo", contractPhysicalNo);
 					         context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 				            //	context.put("currentDate",dateFormat.format(date));
 					         if (getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null) {
