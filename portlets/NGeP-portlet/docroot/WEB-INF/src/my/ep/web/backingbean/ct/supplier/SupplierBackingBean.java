@@ -1172,11 +1172,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	   }
 		    	   context.put("ptjAddress", ptjAddress);
 		    	   context.put("contractTitle", getManagedBean().getCtContract().getContractName());
-		    	   if (ctContractVer.getContractPhysicalNo() == null) {
-		    		   context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
-		    	   } else {
-		    		   context.put("contractPhysicalNo",ctContractVer.getContractPhysicalNo());
-		    	   }
+		    	   String contractPhysicalNo = getManagedBean().getCtContract().getContractNo();
+				   if (ctContractVer.getContractPhysicalNo() == null
+						   || ctContractVer.getContractPhysicalNo().isEmpty()) {
+					   contractPhysicalNo = contractPhysicalNo + " / " + ctContractVer.getCtContractValue().getLoaNo();
+				   } else {
+					   contractPhysicalNo = contractPhysicalNo + " / " + ctContractVer.getContractPhysicalNo();
+				   }
+				   context.put("contractPhysicalNo", contractPhysicalNo);
 		    	   context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
 		    	   context.put("agreementStartDate", df.format(getManagedBean().getFactoring().getAgreementDate()));
 		    	   context.put("factoringCompName", getFactoringCompany());
