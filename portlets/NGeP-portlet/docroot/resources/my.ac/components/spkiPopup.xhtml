@@ -76,9 +76,9 @@
 										onstart="spkiBlockWidget.show(); setRunEnableAutoUpdate(false);"
 										action="#{spkiBackingBean.spkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"
 										oncomplete="spkiBlockWidget.hide();" /> 
-										<p:commandButton action="#{spkiBackingBean.getChallengeQuestions()}" 
+										<p:commandButton action="#{spkiBackingBean.changeChallengeQuestions()}" 
 										onstart="spkiBlockWidget.show();" 
-										value="#{lbl['lbl.btn.change.question']}" onclick="resetQuestion();"
+										value="#{lbl['lbl.btn.change.question']}" update="spkiPanel"
 										oncomplete="spkiBlockWidget.hide();" /></td>
 							</tr>
 						</table>
