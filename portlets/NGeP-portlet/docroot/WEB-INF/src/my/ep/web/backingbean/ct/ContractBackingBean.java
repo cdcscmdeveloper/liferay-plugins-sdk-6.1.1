@@ -1603,12 +1603,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		@Override
 		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
 			try {
-				searchBean = generateAgencySearchBean();
-				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileSearchBean(searchBean);
+				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				if (resDTO.isSuccessful()) {
 					 return resDTO.getOrgProfileResultBean();
@@ -1620,8 +1618,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	private ISearchBean<PmOrgProfile> generateAgencySearchBean() {
-		ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+	private ISearchBean<PmOrgProfile> generateAgencySearchBean(ISearchBean<PmOrgProfile> searchBean) {
 		// Filter By - parameterType
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
 	
@@ -1985,10 +1982,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			boolean contractSharing = true;
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			try {
-				ISearchBean<PmOrgProfile> searchBean = generateAgencySearchBean();
+				ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
 				ctAgencyList = new ArrayList<CtAgency>();
 				reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileSearchBean(searchBean);
+				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				orgProfileList =  orgProfileSO.searchOrgProfile(reqDTO).getOrgProfileResultBean().getResultList();				
     		} catch (Exception e) {
     			e.printStackTrace();
