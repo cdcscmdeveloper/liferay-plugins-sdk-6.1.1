@@ -210,68 +210,73 @@ public class GovtSellerRegistrationBackingBean extends
 		reqDTO.setOrgProfileId(Long.parseLong(orgProfileId));
 		PmOrgProfile orgProfile = SmServiceLookup.getRegistrationSO()
 				.findOrgProfileById(reqDTO).getOrgProfile();
-
-		// if supplier tie to orgprofile already deleted, then set supplier in
-		// orgprofile to null so that can do new registration
-		if (orgProfile!=null && orgProfile.getSmSupplier() != null
-				&& orgProfile.getSmSupplier().getRecordStatusFlg() != null
-				&& orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
-			orgProfile.setSmSupplier(null);
-		}
-
+		SmSupplier supplier = new SmSupplier();
+		getManagedBean().setDeletedNotActivatedSupplier(false);
 		if (orgProfile != null) {
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
-				SmPersonnel activatedPersonnel = getActivatedPersonnel(orgProfile
-						.getSmSupplier().getSmAppl().getSmPersonnels());
-				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-					// Selected agency account already deactivated. Please
-					// reactivate the account
-					throw new EpException(MessageConst.ERROR_722625);
-				} else if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					if (orgProfile.getSmSupplier().getSmAppl() != null
-							&& !SmCommonUtil.isCollectionEmpty(orgProfile
-									.getSmSupplier().getSmAppl()
-									.getSmPersonnels())) {
-
-						if (activatedPersonnel != null) {
-							// Selected agency already had account. Please
-							// contact:- Sir/Madam: {0} / Mobile No.: {1}
-							throw new EpException(
-									MessageConst.ERROR_722623,
-									new String[] {
-											activatedPersonnel.getName(),
-											activatedPersonnel.getMobileFull() });
-						} else {
-							// Selected agency already had account but has not
-							// activated the account. Please activate the
-							// account using activation link that had been sent
-							// to the user's email address.
-							throw new EpException(MessageConst.ERROR_722624);
-						}
-					}
+				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+					supplier = orgProfile.getSmSupplier();
+					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
-					if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
-						if (activatedPersonnel != null) {
-							// Selected agency already had account. Please
-							// contact:- Sir/Madam: {0} / Mobile No.: {1}
-							throw new EpException(
-									MessageConst.ERROR_722623,
-									new String[] {
-											activatedPersonnel.getName(),
-											activatedPersonnel.getMobileFull() });
-						} else {
-							// Selected agency already had account but has not
-							// activated the account. Please activate the
-							// account using activation link that had been sent
-							// to the user's email address.
-							throw new EpException(MessageConst.ERROR_722624);
+					SmPersonnel activatedPersonnel = getActivatedPersonnel(orgProfile
+							.getSmSupplier().getSmAppl().getSmPersonnels());
+					if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						// Selected agency account already deactivated. Please
+						// reactivate the account
+						throw new EpException(MessageConst.ERROR_722625);
+					} else if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (orgProfile.getSmSupplier().getSmAppl() != null
+								&& !SmCommonUtil.isCollectionEmpty(orgProfile
+										.getSmSupplier().getSmAppl()
+										.getSmPersonnels())) {
+
+							if (activatedPersonnel != null) {
+								// Selected agency already had account. Please
+								// contact:- Sir/Madam: {0} / Mobile No.: {1}
+								throw new EpException(
+										MessageConst.ERROR_722623,
+										new String[] {
+												activatedPersonnel.getName(),
+												activatedPersonnel
+														.getMobileFull() });
+							} else {
+								// Selected agency already had account but has
+								// not
+								// activated the account. Please activate the
+								// account using activation link that had been
+								// sent
+								// to the user's email address.
+								throw new EpException(MessageConst.ERROR_722624);
+							}
 						}
 					} else {
-						// Unknown problem occurred. Invalid or missing data.
-						// Please
-						// contact administrator.
-						throw new EpException(MessageConst.ERROR_722505);
+						if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+							if (activatedPersonnel != null) {
+								// Selected agency already had account. Please
+								// contact:- Sir/Madam: {0} / Mobile No.: {1}
+								throw new EpException(
+										MessageConst.ERROR_722623,
+										new String[] {
+												activatedPersonnel.getName(),
+												activatedPersonnel
+														.getMobileFull() });
+							} else {
+								// Selected agency already had account but has
+								// not
+								// activated the account. Please activate the
+								// account using activation link that had been
+								// sent
+								// to the user's email address.
+								throw new EpException(MessageConst.ERROR_722624);
+							}
+						} else {
+							// Unknown problem occurred. Invalid or missing
+							// data.
+							// Please
+							// contact administrator.
+							throw new EpException(MessageConst.ERROR_722505);
+						}
 					}
 				}
 			}
@@ -281,7 +286,7 @@ public class GovtSellerRegistrationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722505);
 		}
 
-		initSupplier(orgProfile);
+		initSupplier(orgProfile, supplier);
 		initGst();
 		initBankBranches();
 		navigateToPage(SupplierManagementConst.GOVT_SELLER_ACCOUNT_INFO_PAGE);
@@ -1053,8 +1058,7 @@ public class GovtSellerRegistrationBackingBean extends
 	 * @param PmOrgProfile
 	 *            orgProfile
 	 */
-	private void initSupplier(PmOrgProfile orgProfile) {
-		SmSupplier sup = new SmSupplier();
+	private void initSupplier(PmOrgProfile orgProfile, SmSupplier sup) {
 		sup.setRegNo(orgProfile.getOrgCode());
 		sup.setBusinessType(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER);
 		sup.setCompanyName(orgProfile.getOrgName());
