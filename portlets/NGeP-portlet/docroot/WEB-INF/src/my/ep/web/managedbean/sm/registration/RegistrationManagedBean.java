@@ -112,6 +112,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private boolean hasActiveTransaction;
 	private boolean viewMode;
+	private boolean deletedNotActivatedSupplier;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -636,6 +637,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setViewMode(boolean viewMode) {
 		this.viewMode = viewMode;
+	}
+
+	public boolean isDeletedNotActivatedSupplier() {
+		return deletedNotActivatedSupplier;
+	}
+
+	public void setDeletedNotActivatedSupplier(boolean deletedNotActivatedSupplier) {
+		this.deletedNotActivatedSupplier = deletedNotActivatedSupplier;
 	}
 
 }
