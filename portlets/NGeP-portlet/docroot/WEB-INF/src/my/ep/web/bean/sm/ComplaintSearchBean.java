@@ -1,6 +1,9 @@
 package my.ep.web.bean.sm;
 
-public class ComplaintSearchBean {
+import java.io.Serializable;
+
+public class ComplaintSearchBean implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String searchBy;
 	private Long status;
 	
