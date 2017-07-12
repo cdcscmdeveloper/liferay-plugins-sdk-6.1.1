@@ -10,8 +10,22 @@
     <ui:define name="contentSection">
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false"/>
 			<div align="right">
-				<p:commandButton action="#{postSupplierRegBB.naviToDashBoard()}" value="#{lbl['lbl.sm.basic.finish']}" ajax="false"
+				<p:commandButton onclick="httpGetLogout();" value="#{lbl['lbl.sm.basic.finish']}" ajax="false"
 				rendered="#{postSupplierRegBB.roleChangeSuccess}"></p:commandButton>
+				
+<script>
+
+function httpGetLogout()
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", "/c/portal/logout", false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+</script>
+				
+				
 			</div>
 	</ui:define>
 </ui:composition>				
