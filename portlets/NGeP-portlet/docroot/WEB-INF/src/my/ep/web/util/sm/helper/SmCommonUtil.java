@@ -2905,11 +2905,8 @@ public class SmCommonUtil {
 	public static boolean isSoftcertReadyForRenewal(Long supplierId,
 			SmPersonnel personnel) {
 		boolean retVal = false;
-		if (supplierId != null
-				&& personnel != null
-				&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
-				&& personnel.getPmUser() != null
-				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+		if (supplierId != null && personnel != null
+				&& personnel.getPmUser() != null) {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(supplierId);
 			reqDTO.setUserId(personnel.getPmUser().getUserId());
@@ -4500,14 +4497,13 @@ public class SmCommonUtil {
 	 *            smAppl
 	 * @return String
 	 */
-	public static String getHtmlApplicationRejectReasons(SmAppl smAppl) {
+	public static String getHtmlApplicationRejectReasons(
+			List<SmApplRejectReason> rejectReasons) {
 		String langCode = new FacesScopes().getUserLocale().getLanguage();
 		StringBuilder sb = new StringBuilder();
 		int i = 1;
-		if (smAppl != null
-				&& !EntityHelper.isCollectionEmpty(smAppl
-						.getSmApplRejectReasons())) {
-			for (SmApplRejectReason rej : smAppl.getSmApplRejectReasons()) {
+		if (!EntityHelper.isCollectionEmpty(rejectReasons)) {
+			for (SmApplRejectReason rej : rejectReasons) {
 				if (rej.getPmReason() != null
 						&& rej.getPmReason().getPmReasonDescs() != null) {
 					try {

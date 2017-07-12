@@ -13,7 +13,6 @@ import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
@@ -168,9 +167,12 @@ public class ViewApplHistoryBackingBean extends
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
 		if (getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
-			if (!SmApplicationUtil
+			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
+				SmCommonUtil.redirectToExternalUrl(getManagedBean()
+						.getResubmitUrl());
+			} else {
 				RequestContext.getCurrentInstance().execute(
 						"confirmDialog.show()");
 			}
