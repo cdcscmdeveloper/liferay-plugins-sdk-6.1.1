@@ -933,7 +933,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void addScheduleDetails() {
 		CtSchedule ctSchedules = new CtSchedule();
-		ctSchedules.setScheduleNo(getManagedBean().getContractVer().getCtSchedules().size() + 1);
+		int number = 1;
+		if (getManagedBean().getContractVer().getCtSchedules().size() > 0) {
+			// Get the last schedule record from the list and plus 1 to the schedule no
+			number = getManagedBean().getContractVer().getCtSchedules().get(
+				getManagedBean().getContractVer().getCtSchedules().size() - 1).getScheduleNo() + 1;
+		}
+		ctSchedules.setScheduleNo(number);
 		getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
        
