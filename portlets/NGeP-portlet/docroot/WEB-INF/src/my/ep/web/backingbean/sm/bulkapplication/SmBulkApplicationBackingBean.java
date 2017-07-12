@@ -10,6 +10,10 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
@@ -47,9 +51,6 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
-import org.apache.commons.lang.StringUtils;
-import org.primefaces.context.RequestContext;
-
 @ManagedBean(name = "bulkApplicationBackingBean")
 @RequestScoped
 public class SmBulkApplicationBackingBean extends
@@ -58,6 +59,7 @@ public class SmBulkApplicationBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -2492540872306203847L;
+	public static Logger log = Logger.getLogger(SmBulkApplicationBackingBean.class);
 
 	/**
 	 * Pre-render bulk application screen
@@ -507,10 +509,13 @@ public class SmBulkApplicationBackingBean extends
 			rej.setPmReason(desc.getPmReason());
 			rej.setSmAppl(bulkVO.getAppl());
 			resList.add(rej);
-			sb.append(++count).append(".)");
+/*			sb.append(++count).append(".)");
 			sb.append(desc.getReasonDesc());
-			sb.append("\n");
+			sb.append("\n");*/
+			sb.append(desc.getPmReason().getReasonId());
+			sb.append("|");
 		}
+		log.info("bulk - setSmApplRejectionReasons>>>>>" + sb.toString());
 
 		if (!EntityHelper.isCollectionEmpty(bulkVO.getAppl()
 				.getSmApplRejectReasons())) {
