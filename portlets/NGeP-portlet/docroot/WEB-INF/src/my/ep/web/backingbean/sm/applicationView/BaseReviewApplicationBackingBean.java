@@ -2070,8 +2070,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @return String
 	 */
 	public String getApplicationRejectionReason() {
-		return SmCommonUtil.getHtmlApplicationRejectReasons(getManagedBean()
-				.getSmAppl());
+		String rejectReasons = StringUtils.EMPTY;
+		SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+		reqDTO.setSmAppl(getManagedBean().getSmAppl());
+		rejectReasons = SmCommonUtil
+				.getHtmlApplicationRejectReasons(SmServiceLookup
+						.getSmApplRevisionSO()
+						.retrieveRejectReasonsBySmAppl(reqDTO)
+						.getSmApplRejectReasons());
+		return rejectReasons;
 	}
 
 	/**
