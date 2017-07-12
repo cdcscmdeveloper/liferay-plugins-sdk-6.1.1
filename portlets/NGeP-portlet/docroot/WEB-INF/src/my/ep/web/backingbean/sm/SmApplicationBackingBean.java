@@ -2359,7 +2359,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setSmApplRejectionReasons() {
 		StringBuilder sb = new StringBuilder();
-		int count = 0;
+		//int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
 		for (Long resId : getManagedBean().getReasonId()) {
 			for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
@@ -2369,13 +2369,16 @@ public class SmApplicationBackingBean extends
 					rej.setSmAppl(getManagedBean().getSmAppl());
 					resList.add(rej);
 					log.info("Reason Id === " + resId);
-					sb.append(++count).append(". ");
-					sb.append(desc.getReasonDesc());
-					sb.append("\n");
+					//sb.append(++count).append(". ");
+					//sb.append(desc.getReasonDesc());
+					//sb.append("\n");
+					sb.append(desc.getPmReason().getReasonId());
+					sb.append("|");
 				}
 			}
 
 		}
+		
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
 				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
 						.isEmpty()) {
