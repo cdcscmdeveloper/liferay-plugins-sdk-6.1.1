@@ -89,7 +89,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
 							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getSmAppl().getOriginalAppl()));
+									.getSmAppl().getOriginalAppl().getSmApplRejectReasons()));
 		}
 
 		log.info("----------------------------------" + resDTO.getSmAppl().getSmPersonnels().size());

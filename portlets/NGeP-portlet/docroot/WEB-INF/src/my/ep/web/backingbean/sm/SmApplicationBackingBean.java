@@ -886,12 +886,14 @@ public class SmApplicationBackingBean extends
 				smAppl = resDto.getSmAppl();
 				smAppl.setResubmit(false);
 				smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-				if (smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-					if (smAppl.getSmCompanyBasic() != null) {
-						smAppl.getSmCompanyBasic().setAnnualRevenue(null);
-					}
-				}
+
+				// comment for SIR #15058
+				// if (smAppl.getApplType().equalsIgnoreCase(
+				// ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				// if (smAppl.getSmCompanyBasic() != null) {
+				// smAppl.getSmCompanyBasic().setAnnualRevenue(null);
+				// }
+				// }
 				log.info("****** After retrieve the appl is ********"
 						+ smAppl.getApplId() + " *** Num ***"
 						+ smAppl.getApplNo() + "*** Bank Size *** "
@@ -1283,7 +1285,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
 							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getSmAppl().getOriginalAppl()));
+									.getSmAppl().getOriginalAppl()
+									.getSmApplRejectReasons()));
 		}
 
 		// set payment details section only for supplier and application type is
