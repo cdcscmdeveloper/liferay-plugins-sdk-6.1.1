@@ -382,6 +382,7 @@ public class SimpleQuoteBackingBean extends
 
 			// current page url for page navigation from sq to request note
 			getManagedBean().setNewableFlag(Boolean.FALSE);
+			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
@@ -570,6 +571,7 @@ public class SimpleQuoteBackingBean extends
 							scQuote.setTitle(selectedPanelItem
 									.getScRequestItem().getItemName());
 							getManagedBean().setPanelItemFlag(Boolean.TRUE);
+							getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 							
 						} else if (selectedPanelItem.getItemCategoryId()
 								.getParameterCode()
@@ -577,6 +579,7 @@ public class SimpleQuoteBackingBean extends
 							// panel item specific
 							getManagedBean().setPanelItemFlag(Boolean.FALSE);
 							getManagedBean().setNewableFlag(Boolean.FALSE);
+							getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 						}
 
 						// for panel zone
@@ -1900,11 +1903,13 @@ public class SimpleQuoteBackingBean extends
 					.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 				// panel item general
 				getManagedBean().setNewableFlag(Boolean.TRUE);
+				getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			} else if (quotePanelItem.getItemCategoryId().getParameterCode()
 					.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 				// panel item specific
 				getManagedBean().setPanelItemFlag(Boolean.FALSE);
 				getManagedBean().setNewableFlag(Boolean.FALSE);
+				getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 			}
 		}
 
@@ -1921,6 +1926,7 @@ public class SimpleQuoteBackingBean extends
 		if(scQuote.getParentQuoteId() != null){
 			getManagedBean().setPanelItemFlag(Boolean.FALSE);
 			getManagedBean().setNewableFlag(Boolean.FALSE);
+			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setRemovableFlag(Boolean.FALSE);
 		}
 	}
@@ -4643,6 +4649,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setPanelItemFlag(Boolean.FALSE);
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setRemovableFlag(Boolean.FALSE);
+			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 		}
 		if (null == scQuote.getStartDate()) {
 			Date startDate = new Date();
@@ -6295,11 +6302,13 @@ public class SimpleQuoteBackingBean extends
 					.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 				// panel item general
 				getManagedBean().setNewableFlag(Boolean.TRUE);
+				getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			} else if (quotePanelItem.getItemCategoryId().getParameterCode()
 					.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 				// panel item specific
 				getManagedBean().setPanelItemFlag(Boolean.FALSE);
 				getManagedBean().setNewableFlag(Boolean.FALSE);
+				getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 			}
 		}
 		// duration calc
