@@ -953,6 +953,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_ESTIMATED_AMOUNT = "PESTAMT";
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
+	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
 
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
