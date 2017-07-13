@@ -9,7 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>	
+	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
@@ -35,7 +38,8 @@
 			</ac:smPanel>
 		</p:dialog>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])" id="btnSubmitCompl"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])" id="btnSubmitCompl" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			disabled="#{!complaintBackingBean.managedBean.complaintTerm}" action="#{complaintBackingBean.lodgeComplaint}">
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
