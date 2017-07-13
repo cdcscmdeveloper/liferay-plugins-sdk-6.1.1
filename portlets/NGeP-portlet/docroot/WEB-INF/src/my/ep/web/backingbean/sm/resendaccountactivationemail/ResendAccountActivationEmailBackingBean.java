@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -24,7 +25,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.ReactivateSupplierVO;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -115,6 +118,23 @@ public class ResendAccountActivationEmailBackingBean extends
 		} catch (Exception ex) {
 			throw new EpException(MessageConst.ERROR_721018);
 		}
+	}
+	
+	/**
+	 * Clear entered information on change account type
+	 * 
+	 * @param e
+	 */
+	public void onChangeAccType(AjaxBehaviorEvent e) {
+		companyName = StringUtils.EMPTY;
+		businessRegNo = StringUtils.EMPTY;
+		suppAdminEmail = StringUtils.EMPTY;
+		suppAdminIdentificationNo = StringUtils.EMPTY;
+		suppAdminMobileArea = StringUtils.EMPTY;
+		suppAdminMobileCountry = StringUtils.EMPTY;
+		suppAdminMobileNo = StringUtils.EMPTY;
+		suppAdminMobileTelcoId = StringUtils.EMPTY;
+		
 	}
 
 	/**
