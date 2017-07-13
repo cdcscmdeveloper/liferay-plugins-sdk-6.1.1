@@ -529,6 +529,11 @@
 				<h:outputText value="#{receivingOfficer.pmUser.email}" style="float:left;"/>
 			</p:column>
 		</p:dataTable>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+				oncomplete="addOfficer.hide()" partialSubmit="true">
+			</p:commandButton>
+		</div>
 	</p:dialog>
 	
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
