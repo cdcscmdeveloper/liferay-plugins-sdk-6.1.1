@@ -33,7 +33,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.govt']}" itemValue="#{SupplierManagementConst.ACC_GOVT_SELLER}" />					
-					<p:ajax event="change" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					<p:ajax event="change" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						listener="#{resendAccountActivationEmailBackingBean.onChangeAccType}" partialSubmit="true"/>
 				</p:selectOneRadio></td>
 		</tr>
 		<tr><td colspan="2" height="15">&#160;</td></tr>
