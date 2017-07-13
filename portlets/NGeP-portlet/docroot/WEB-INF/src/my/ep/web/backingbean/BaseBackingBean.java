@@ -1240,6 +1240,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		
+		if (paramMap.containsKey(ReportConst.PARAM_REPORT_OUTPUT_FORMAT)) {
+			int fromIndex = excNextUrl.indexOf(ReportConst.PARAM_REPORT_OUTPUT_FORMAT);
+			int endIndex = excNextUrl.indexOf(ReportConst.PARAM_SEPARATOR, fromIndex);
+			String excEndUrl = "";
+			if (fromIndex >= 0 && endIndex >= 0) {
+				excEndUrl = excNextUrl.substring(endIndex);
+			}
+			excNextUrl = excNextUrl.substring(0, fromIndex-1) + excEndUrl;
+		}
 
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
 		reportUrl.append(ReportConst.PARAM_SEPARATOR);
