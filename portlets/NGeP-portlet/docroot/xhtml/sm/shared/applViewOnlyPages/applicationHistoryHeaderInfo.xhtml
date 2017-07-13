@@ -8,7 +8,7 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%;table-layout:fixed;">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
 				<td class="header-info-text"><c:if
 						test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'A'}">#{lbl['lbl.sm.addnlCat.headerLbl']}</c:if>
@@ -19,7 +19,7 @@
 				</td>
 				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.applNo}</td>
-				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}</td>
 			</tr>
 			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRejectReasons}">
