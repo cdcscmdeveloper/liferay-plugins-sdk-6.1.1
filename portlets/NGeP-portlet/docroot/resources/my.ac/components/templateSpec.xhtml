@@ -15,6 +15,7 @@
 		<cc:attribute name="processValidationId" default="#{null}" />
 		<cc:attribute name="updateSpec" default="true" />
 	    <cc:attribute name="isWorkflowStatus" default="false" />
+	    <cc:attribute name="addNewSpec" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -28,6 +29,8 @@
 		<ui:param name="processValidationId" value="#{cc.attrs.processValidationId}" />
 		<ui:param name="updateSpec" value="#{cc.attrs.updateSpec}" />
 		<ui:param name="isWorkflowStatus" value="#{cc.attrs.isWorkflowStatus}" />
+		<ui:param name="addNewSpec" value="#{cc.attrs.addNewSpec}" />
+		
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 		
 	</cc:implementation>
