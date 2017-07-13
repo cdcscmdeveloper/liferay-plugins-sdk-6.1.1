@@ -84,17 +84,37 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
 		reqDTO.setEstDate(getManagedBean().getReactivateBasic()
 				.getEstablishDate());
-		getManagedBean().setSmSupplier(
-				SmServiceLookup
-						.getSupplierSearchSO()
-						.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
-								reqDTO).getSmSupplier());
+		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
+				.getAgencyName());
+
+		if (getManagedBean().getAccType().equals(
+				SupplierManagementConst.ACC_GOVT_SELLER)) {
+			getManagedBean().setSmSupplier(
+					SmServiceLookup
+							.getSupplierSearchSO()
+							.retrieveSupplierAndPersonnelsByBusRegNoAndName(
+									reqDTO).getSmSupplier());
+		} else {
+			getManagedBean()
+					.setSmSupplier(
+							SmServiceLookup
+									.getSupplierSearchSO()
+									.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
+											reqDTO).getSmSupplier());
+		}
 
 		// Company not exist
 		if (getManagedBean().getSmSupplier() == null
 				|| (getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && getManagedBean()
 						.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
-			throw new EpException(MessageConst.ERROR_722593);
+			if (getManagedBean().getAccType().equals(
+					SupplierManagementConst.ACC_GOVT_SELLER)) {
+				// Agency name does not exist for G2G
+				throw new EpException(MessageConst.ERROR_722659);
+			} else {
+				// Buss Reg No. and Established Date does not exist for Supplier
+				throw new EpException(MessageConst.ERROR_722593);
+			}
 		} else {
 			validate();
 			executeDecision();
@@ -366,6 +386,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null,
 				null);
+	}
+
+	/**
+	 * Clear entered information on change account type
+	 * 
+	 * @param e
+	 */
+	public void onChangeAccType(AjaxBehaviorEvent e) {
+		getManagedBean().setReactivateBasic(new ReactivateSupplierVO());
 	}
 
 	/**

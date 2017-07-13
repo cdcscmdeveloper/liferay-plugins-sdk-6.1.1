@@ -44,6 +44,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean showParentMsg;
 	private PmParameter identificationType;
 	private Long myCountryId;
+	private String accType;
 
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -239,6 +240,14 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 
 	public void setSalutationItems(List<SelectItem> salutationItems) {
 		this.salutationItems = salutationItems;
+	}
+
+	public String getAccType() {
+		return accType;
+	}
+
+	public void setAccType(String accType) {
+		this.accType = accType;
 	}
 
 }
