@@ -2384,7 +2384,7 @@ public class SupplierFinalizationBackingBean extends
 					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
 			
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-				filename.append(".pdf");
+				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
 				generateKertasTaklimatPdf(scQt, attachment, isDirectDownload);
 
@@ -2491,6 +2491,7 @@ public class SupplierFinalizationBackingBean extends
 		}*/
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
+		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
 		//paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
 				//StringUtils.EMPTY : pengesyoran.toString());
 
