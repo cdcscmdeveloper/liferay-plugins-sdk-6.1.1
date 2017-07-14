@@ -96,7 +96,10 @@
 				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) or isSqSpec}">
 					<ac:lovPopup />
 				</c:if>
-				
+				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical" 
+				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
+					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
+							 />
 				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
@@ -121,6 +124,7 @@
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
 					</c:if>
 					<c:if test="#{isContentTypeUpdateSpec and isSpecTypeTechnical and editable}">
+					   <ui:decorate template="specColumnQuestionViewHeader.xhtml" />
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq and editable and !isSqSpec}">
@@ -224,6 +228,7 @@
 						<ui:decorate template="specColumnScore.xhtml" />
 					</c:if>
 					<c:if test="#{isContentTypeUpdateSpec}">
+					<ui:decorate template="specColumnQuestionViewHeader.xhtml" />
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
@@ -259,7 +264,10 @@
 			
 			<c:if test="#{isContentTypeQuestionAndAnswer}">
 				<ac:lovPopup />
-				
+				<p:remoteCommand name="#{templateSpecId}addedQuestionsAndAnswers" 
+				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
+					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
+							 />
 				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

@@ -6,7 +6,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:97px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
+	<ui:define name="otherHeaderSection">
+	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+	</p:column>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+	</p:column>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
+		</f:facet>
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:125px;">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" rendered="#{isScoringReq}"/>
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.total.amount']}" />
+		</f:facet>
+		</p:column>
+	</ui:define>
+	</ui:decorate>
+	<p:column style="width:97px;" rendered="#{isSpecTypeFinancial}">
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
@@ -18,10 +39,7 @@
 			rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
 	<p:column style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
-		</f:facet>
+		
 		<f:facet name="footer">
 			<h:outputText id="totalEstAmount" 
 				styleClass="calcEstAmount" 
@@ -52,10 +70,7 @@
 		</c:if>
 	</p:column>
 	<p:column style="width:125px;">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" rendered="#{isScoringReq}"/>
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.total.amount']}" />
-		</f:facet>
+		
 		<f:facet name="footer">
 			<p:inputText style="width:113px; text-align:right;" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>

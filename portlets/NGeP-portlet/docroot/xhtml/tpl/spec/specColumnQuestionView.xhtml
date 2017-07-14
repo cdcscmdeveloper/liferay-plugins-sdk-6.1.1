@@ -7,15 +7,11 @@
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 
-	<p:column style="width: 15%;white-space: normal;"
-		headerText="#{lbl['lbl.tpl.spec.content.item']}">
+	<p:column style="width: 25%;white-space: normal;">
 		<h:outputText value="#{question.clItem}" escape="false"
 			rendered="#{!isRepeated}" /><br /><br />
 		<h:outputText value="#{question.cmItem.extensionCode}" rendered="#{!isRepeated}" />
-	</p:column>
-	<p:column style="width: 22%;white-space: normal;"
-		headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-		rendered="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}">
+		<ui:fragment rendered="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">
 			<p:inputTextarea id="specification" style="width:calc(100% - 20px);"
 				value="#{question.clSpecDetail}"
@@ -33,16 +29,18 @@
 				rendered="#{!isRepeated}"
 				style="white-space: normal;word-wrap: break-word;" />
 		</c:if>
+		</ui:fragment>
 	</p:column>
+	
 	<p:column style="width:75px;"
-		headerText="#{lbl['lbl.tpl.spec.content.fulfilment.type']}"
+		
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<h:outputText
 			value="#{templateSpecBackingBean.getParameterDesc(question.clFulfilmentTypeCode)}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
 	<p:column style="width:8%;white-space:normal;"
-		headerText="#{lbl['lbl.tpl.spec.content.uom']}">
+		>
 		<h:outputText value="#{question.clUom.uomName}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
@@ -50,8 +48,7 @@
 	<ui:insert name="answerSection" />
 
 	<c:if test="#{isItemTypeService}">
-		<p:column style="width:70px;white-space:normal;text-align:right;"
-			headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+		<p:column style="width:70px;white-space:normal;text-align:right;">
 			<h:outputText value="#{question.clUomFrequency}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber
@@ -59,21 +56,21 @@
 			</h:outputText>
 		</p:column>
 		<p:column style="width:60px;white-space:normal;text-align:right;"
-			headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+			>
 			<h:outputText value="#{question.clUomPerDay}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber pattern="0.0" />
 			</h:outputText>
 		</p:column>
 		<p:column style="width:60px;white-space:normal;text-align:right;"
-			headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+			>
 			<h:outputText value="#{question.clUomPerMonth}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber pattern="0.0" />
 			</h:outputText>
 		</p:column>
 		<p:column style="width:2%;white-space:normal;text-align:right;"
-			headerText="#{lbl['lbl.tpl.spec.content.duration.month']}"
+			
 			rendered="#{isDurationByItem}">
 			<h:outputText value="#{question.clDurationMonth}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
@@ -84,7 +81,7 @@
 	</c:if>
 
 	<p:column style="width:75px; white-space:normal;"
-		headerText="#{lbl['lbl.tpl.spec.content.price.type']}"
+		
 		rendered="#{!isItemTypeService}">
 		<h:outputText
 			value="#{templateSpecBackingBean.getParameterDesc(question.clPriceTypeCode)}"
@@ -92,8 +89,7 @@
 	</p:column>
 
 	<ui:insert name="qtySection">
-		<p:column style="width:4%;text-align:right;"
-			headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+		<p:column style="width:4%;text-align:right;">
 
 			<h:outputText value="#{question.clQuantity}"
 				rendered="#{isQuestionTypeItem and isPriceTypeAllStandard and (empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone)}">
@@ -133,13 +129,13 @@
 	</ui:insert>
 
 	<p:column style="width:100px;white-space:normal;"
-		headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}"
+		
 		rendered="#{isUpdateSpecByAnswers}">
 		<h:outputText value="#{tplSpecAnswer.answerRemark}" escape="false" />
 	</p:column>
 
 	<p:column style="width:100px;white-space:normal;"
-		headerText="#{lbl['lbl.tpl.spec.content.comment']}"
+		
 		rendered="#{isUpdateSpecByAnswers}">
 		<h:outputText value="#{tplSpecAnswer.userRemark}" escape="false" />
 	</p:column>

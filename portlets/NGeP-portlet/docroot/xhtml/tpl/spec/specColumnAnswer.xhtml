@@ -5,7 +5,43 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-	
+	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
+	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
+	<ui:define name="otherHeaderSection">
+	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and (!isSpecificationReq or isSqSpec)}" headerText="#{lbl['lbl.sc.zone']}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.sub.sequence']}" rendered="#{isSpecTypeFinancial and !isItemTypeService and isSpecificationReq and false}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:10%;" rendered="#{isSpecTypeFinancial}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}"/>
+		</f:facet>
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}" headerText="#{lbl[answerlbl]}" rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" rendered="#{!isSpecTypeFinancial}" />
+			<h:outputText value="#{lbl[answerlbl]}"/>
+		</f:facet>
+	</p:column>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:8%;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
+		</f:facet>
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:50px;text-align:right;" rendered="#{isSpecTypeFinancial and isEstCostReq and !isScoringReq}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.ranking']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.ranking.tooltip']}" />
+		</f:facet>
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.note']}" rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">	
+	</p:column>
+	</ui:define>
+	</ui:decorate>
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
@@ -46,7 +82,7 @@
 				</h:panelGroup>
 			</p:column>
 			
-			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and (!isSpecificationReq or isSqSpec)}" headerText="#{lbl['lbl.sc.zone']}">
+			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and (!isSpecificationReq or isSqSpec)}" >
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
@@ -57,7 +93,7 @@
 		</ui:define>
 	</ui:decorate>
 	
-	<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.sub.sequence']}" rendered="#{isSpecTypeFinancial and !isItemTypeService and isSpecificationReq and false}">
+	<p:column style="width:50px;text-align:right;"  rendered="#{isSpecTypeFinancial and !isItemTypeService and isSpecificationReq and false}">
 		<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.subSequence}" rendered="#{isQuestionTypeItem and isPriceTypeTariff}">
 			<f:converter converterId="dynamicNumberConverter" />
 			<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
@@ -65,10 +101,7 @@
 	</p:column>
 	
 	<p:column style="width:10%;" rendered="#{isSpecTypeFinancial}">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}"/>
-		</f:facet>
+		
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard}" />
 		</f:facet>
@@ -84,7 +117,7 @@
 		</p:inputText>
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
-	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}">
 		<h:panelGroup rendered="#{isDurationYear}">
 		<f:facet name="footer">
 			<h:outputText id="totalAmountPerYr" 
@@ -105,12 +138,9 @@
 	<h:outputText value="#{lbl['lbl.txt.na']}"/>
 	</h:panelGroup>
 	</p:column>
-	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}" headerText="#{lbl[answerlbl]}" rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" rendered="#{!isSpecTypeFinancial}" />
-			<h:outputText value="#{lbl[answerlbl]}"/>
-		</f:facet>
+	
+	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
+		
 		<f:facet name="footer">
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
@@ -151,9 +181,7 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:8%;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
-		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
-		</f:facet>
+		
 		<h:panelGroup rendered="#{!isRepeated}">
 			<h:outputText id="deliveryTerm" 
 				value="#{question.clDeliveryTerm}" 
@@ -165,15 +193,12 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:50px;text-align:right;" rendered="#{isSpecTypeFinancial and isEstCostReq and !isScoringReq}">
-		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.ranking']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.ranking.tooltip']}" />
-		</f:facet>
+		
 		<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.ranking}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</h:outputText>
 	</p:column>
-	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.note']}" rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
+	<p:column style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
 		<p:inputTextarea style="width:188px;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"/>
 	</p:column>
 </ui:composition>
