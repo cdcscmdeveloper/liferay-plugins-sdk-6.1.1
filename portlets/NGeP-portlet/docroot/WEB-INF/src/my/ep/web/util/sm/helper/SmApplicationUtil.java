@@ -166,6 +166,7 @@ import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -2820,6 +2821,8 @@ public class SmApplicationUtil {
 			SmBulkApplOverlapCatVO voSubRemove = null;
 			String catCode = StringUtils.EMPTY;
 			String isActiveAppl = StringUtils.EMPTY;
+			String applStatus = StringUtils.EMPTY;
+			String language = new FacesScopes().getUserLocale().getLanguage();
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
@@ -2834,6 +2837,24 @@ public class SmApplicationUtil {
 					voTmp.setCategoryName("(" + arr[17] + "/" + arr[18] + "/"
 							+ arr[19] + ")");
 					isAdd = true;
+				}
+
+				if (isActiveAppl.equals("1")) {
+					SmWorkflowStatus workflow = SmCommonUtil
+							.getCurrentActiveWokFlowStatus(Long
+									.parseLong(arr[22] + ""));
+					if (workflow != null
+							&& workflow.getPmStatus() != null
+							&& !EntityHelper.isCollectionEmpty(workflow
+									.getPmStatus().getPmStatusDescs())) {
+						for (PmStatusDesc desc : workflow.getPmStatus()
+								.getPmStatusDescs()) {
+							if (!StringUtils.isBlank(desc.getLanguageCode())
+									&& desc.getLanguageCode().equals(language)) {
+								applStatus = desc.getStatusName();
+							}
+						}
+					}
 				}
 
 				if (EntityHelper.isCollectionEmpty(voTmp.getOverlapInfoList())) {
@@ -2875,7 +2896,9 @@ public class SmApplicationUtil {
 					}
 					voSubTmp.setRegNo(arr[7] + "");
 					voSubTmp.setApplNo(arr[8] + "");
-					voSubTmp.setApplStatus(arr[21] + "");
+					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
+							+ ""
+							: applStatus);
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
