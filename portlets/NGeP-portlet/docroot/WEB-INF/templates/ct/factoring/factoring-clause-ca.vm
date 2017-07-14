@@ -29,14 +29,13 @@
 	  </table>
 	  <div><br/></div>
 	  <div><br/></div>
-	  <div style="text-align: center;"><strong></strong></div>
-	  <div><br/></div>
-	  <div><br/></div>
 	  <div style="width:30%; float:right">
 		  <div style="white-space:normal;">Rujukan<span class="Apple-tab-span" style="white-space:pre">	</span>: $refNo</div>
 		  <div>Tarikh<span class="Apple-tab-span" style="white-space:pre">	</span>: $currentDate</div>
 	  </div>
-	  <div><br/></div><div><br/></div>
+	  <div style="clear:both"></div>
+	  <div><br/></div>
+	  <div><br/></div>
 	  <div>Kepada:</div>
 	  <div>$ptjName</div>
 	  <div>$ministryName</div>
@@ -49,7 +48,7 @@
 	  <div><strong>Tajuk Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractTitle</strong></div>
 	  <div><strong>No. Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractPhysicalNo</strong></div>
 	  <hr/>
-	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $agreementStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
+	  <div style="text-align: justify;">Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $agreementStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
       <div><br/></div>
       <div>Invois ini telah dijual dan pindahmilik kepada</div>
       <div>$factoringCompName.</div>
@@ -60,15 +59,15 @@
       <div><br/></div>
       <div><strong>A/C No: $factoringAccountNo</strong></div>
       <div><br/></div>
-      <div>(Satu salinan Perjanjian Pemfaktoran berkenaan dimuatnaik dan dilampirkan)</div>
+      <div style="text-align: justify;">(Satu salinan Perjanjian Pemfaktoran berkenaan dimuatnaik dan dilampirkan)</div>
       <div><br/></div>
-      <div>2.<span class="Apple-tab-span" style="white-space:pre">	</span>Maka dengan ini kami, tertakluk kepada syarat-syarat mengenai pembayaran di bawah Kontrak tersebut, membuat arahan agar segala bayaran yang perlu dibuat terhadap invois-invois tersebut hendaklah terus dibayar kepada $factoringCompName, sehingga arahan ini dibatalkan oleh kami secara bertulis dengan persetujuan syarikat pemfaktoran.</div>
+      <div style="text-align: justify;">2.<span class="Apple-tab-span" style="white-space:pre">	</span>Maka dengan ini kami, tertakluk kepada syarat-syarat mengenai pembayaran di bawah Kontrak tersebut, membuat arahan agar segala bayaran yang perlu dibuat terhadap invois-invois tersebut hendaklah terus dibayar kepada $factoringCompName, sehingga arahan ini dibatalkan oleh kami secara bertulis dengan persetujuan syarikat pemfaktoran.</div>
       <div><br/></div>
-      <div>3.<span class="Apple-tab-span" style="white-space:pre">	</span>Apa-apa bayaran yang dibuat oleh Kerajaan kepada $factoringCompName di bawah arahan ini hendaklah dianggap disisi undang-undang seolah-olah bayaran itu dibuat kepada kami di bawah kontrak tersebut dan merupakan satu penyelesaian yang cukup dan sah bagi tanggungan Kerajaan terhadap bayaran di bawah kontrak itu.</div>
+      <div style="text-align: justify;">3.<span class="Apple-tab-span" style="white-space:pre">	</span>Apa-apa bayaran yang dibuat oleh Kerajaan kepada $factoringCompName di bawah arahan ini hendaklah dianggap disisi undang-undang seolah-olah bayaran itu dibuat kepada kami di bawah kontrak tersebut dan merupakan satu penyelesaian yang cukup dan sah bagi tanggungan Kerajaan terhadap bayaran di bawah kontrak itu.</div>
       <div><br/></div>
-      <div>4.<span class="Apple-tab-span" style="white-space:pre">	</span>Arahan bayaran tersebut tidaklah dengan apa juga cara memudaratkan atau menyentuh apa-apa hak Kerajaan terhadap kami di bawah kontrak tersebut.</div>
+      <div style="text-align: justify;">4.<span class="Apple-tab-span" style="white-space:pre">	</span>Arahan bayaran tersebut tidaklah dengan apa juga cara memudaratkan atau menyentuh apa-apa hak Kerajaan terhadap kami di bawah kontrak tersebut.</div>
       <div><br/></div>
-      <div>5.<span class="Apple-tab-span" style="white-space:pre">	</span>Kami dengan ini mengesahkan bahawa sebelum ini kami tidak pernah membuat arahan yang sama terhadap kontrak yang sama bagi faedah lain-lain syarikat pemfaktor atau institusi-institusi kewangan yang lain.</div>
+      <div style="text-align: justify;">5.<span class="Apple-tab-span" style="white-space:pre">	</span>Kami dengan ini mengesahkan bahawa sebelum ini kami tidak pernah membuat arahan yang sama terhadap kontrak yang sama bagi faedah lain-lain syarikat pemfaktor atau institusi-institusi kewangan yang lain.</div>
       <div><br/></div>
       <div>Sekian, terima kasih.</div>
       <div><br/></div>
@@ -83,9 +82,9 @@
 	  <hr/>
 	  <div class="break"></div> 
 	  <table>
-	  <tr><td style="padding-right:15px">i)</td><td>Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju untuk membuat bayaran seperti yang diarahkan.</td></tr>
+	  <tr><td style="padding-right:15px">i)</td><td style="text-align: justify;">Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju untuk membuat bayaran seperti yang diarahkan.</td></tr>
 	  <tr><td><br/></td></tr>
-	  <tr><td style="padding-right:15px;vertical-align:top;text-align:left">ii)</td><td>Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju supaya semua bayaran bagi Kontrak No $contractPhysicalNo dibuat terus kepada $factoringCompName A/C No. $factoringAccountNo (dengan syarat rujukan akaun ini dicatatkan di atas tiap-tiap invois, sijil akuan penerimaan dan bil-bil).</td></tr>
+	  <tr><td style="padding-right:15px;vertical-align:top;text-align:left">ii)</td><td style="text-align: justify;">Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju supaya semua bayaran bagi Kontrak No $contractPhysicalNo dibuat terus kepada $factoringCompName A/C No. $factoringAccountNo (dengan syarat rujukan akaun ini dicatatkan di atas tiap-tiap invois, sijil akuan penerimaan dan bil-bil).</td></tr>
 	  </table>
 	  <div><br/></div>
       <div><br/></div>
@@ -96,10 +95,10 @@
       <div>PTJ<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $ptjName</div>
 	  <hr/>
 	  <table>
-	  <tr><td style="padding-right:15px">i)</td><td>Untuk kontrak khusus/Sebut harga/Pembelian Runcit, Jabatan/Kementerian; dan</td></tr>
-	  <tr><td style="padding-right:15px">ii)</td><td>Untuk Kontrak Pusat Kementerian Kewangan.</td></tr>
+	  <tr><td style="padding-right:15px">i)</td><td style="text-align: justify;">Untuk kontrak khusus/Sebut harga/Pembelian Runcit, Jabatan/Kementerian; dan</td></tr>
+	  <tr><td style="padding-right:15px">ii)</td><td style="text-align: justify;">Untuk Kontrak Pusat Kementerian Kewangan.</td></tr>
 	  </table>
-	  <div style="height:650px"/>
+	  <div style="height:600px"/>
 	  <hr/>
 	  <div style="text-align: center; font-style: italic;">Ini adalah dokumen cetakan komputer. Tiada tandatangan diperlukan</div>
    </body>
