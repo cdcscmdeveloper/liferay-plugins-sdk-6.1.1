@@ -364,9 +364,9 @@ public class SmBulkApplicationBackingBean extends
 				new ArrayList<SmBulkApplicationVO>());
 		if (!StringUtils.isBlank(getManagedBean().getApplStatus())) {
 			initTasks(BpmConstants.ASSIGNMENT_MY, getManagedBean()
-					.getClaimTasks(), true);
+					.getClaimTasks());
 			initTasks(BpmConstants.ASSIGNMENT_GROUP, getManagedBean()
-					.getUnClaimTasks(), false);
+					.getUnClaimTasks());
 		}
 		this.getManagedBean().setFailedSubmittedList(null);
 	}
@@ -572,7 +572,7 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	private void initTasks(String assignmentType,
-			List<SmBulkApplicationVO> taskList, boolean isClaim) {
+			List<SmBulkApplicationVO> taskList) {
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -590,9 +590,7 @@ public class SmBulkApplicationBackingBean extends
 				for (WorklistItemVO worklistItemVO : responseDTO
 						.getWorklistVO().getWorklistItem()) {
 					bulkAppl = getBulkApplicationVO(worklistItemVO);
-					if (bulkAppl != null
-							&& ((isClaim && worklistItemVO.isClaimed()) || (!isClaim && !worklistItemVO
-									.isClaimed()))) {
+					if (bulkAppl != null) {
 						taskList.add(getBulkApplicationVO(worklistItemVO));
 					}
 				}
