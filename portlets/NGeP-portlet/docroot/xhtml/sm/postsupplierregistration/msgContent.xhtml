@@ -24,6 +24,36 @@
 			}
 		</style>
 		
+		<div align="left">
+			<table class="cTbl">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
+					<td class="header-info-text">
+						#{postSupplierRegBB.managedBean.smSupplier.epNo}</td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
+					<td class="header-info-text">
+						#{postSupplierRegBB.managedBean.smSupplier.companyName}</td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']}" /></td>
+					<td class="header-info-text">
+						#{postSupplierRegBB.managedBean.smSupplier.regNo}</td>
+				</tr>
+				<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
+						<td class="header-info-text">
+							#{lbl['lbl.sm.selfrequest.valid.registered.mof']}</td>
+					</tr>
+				</p:outputPanel>
+			</table>
+			<br />
+		</div>
+		
 		<c:choose>					
 			<!-- SELF REQUEST ADMIN -->
 			<c:when test="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
@@ -73,38 +103,6 @@
 				</p:outputPanel>
 			</c:otherwise>
 		</c:choose>
-
-		
-
-		<div align="left">
-			<table class="cTbl">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
-					<td class="header-info-text">
-						#{postSupplierRegBB.managedBean.smSupplier.epNo}</td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
-					<td class="header-info-text">
-						#{postSupplierRegBB.managedBean.smSupplier.companyName}</td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']}" /></td>
-					<td class="header-info-text">
-						#{postSupplierRegBB.managedBean.smSupplier.regNo}</td>
-				</tr>
-				<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.recordStatusFlg eq 7}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
-						<td class="header-info-text">
-							#{lbl['lbl.sm.selfrequest.valid.registered.mof']}</td>
-					</tr>
-				</p:outputPanel>
-			</table>
-			<br />
-		</div>
 		
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"
 			id="basicPanelId">
