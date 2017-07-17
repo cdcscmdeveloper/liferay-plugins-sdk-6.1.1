@@ -54,6 +54,8 @@
 			id="updateGmap"
 			name="updateGmap" 
 			action="#{gmapBackingBean.updateCoordinates}"
+			partialSubmit="true"
+			process="#{cc.attrs.id}"
 			update="@([id$=mapPanel])" 
 			oncomplete="dlg.show();" />
 		</div>
