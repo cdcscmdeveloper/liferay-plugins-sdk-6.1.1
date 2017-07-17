@@ -364,15 +364,7 @@ public class SmApplicationUtil {
 	public static boolean valiateNewCategoryAdded(
 			SmApplicationManagedBean managedBean) {
 		boolean addedNewCode = false;
-		if (managedBean.isSupplierUser()) {
-			if (managedBean.getSmAppl().getSmSupplierCategories() == null
-					|| managedBean.getSmAppl().getSmSupplierCategories()
-							.isEmpty()) {
-				addedNewCode = false;
-				throw new EpException(MessageConst.ERROR_722516);
-			}
 
-		}
 		if (!managedBean.getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
