@@ -5736,32 +5736,36 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722656,
 					new String[] { addrType });
 		} else {
-			String panelName = StringUtils.EMPTY;
-			destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
-					srcAddr, destAddr.getSmAddress(), destAddr,
-					getManagedBean().getDefPmCountry()));
-			if (destAddr.getAddressType().equalsIgnoreCase(
-					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-				panelName = SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL;
+			if(destAddr.isSameAsPerm()){
+				String panelName = StringUtils.EMPTY;
+				destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
+						srcAddr, destAddr.getSmAddress(), destAddr,
+						getManagedBean().getDefPmCountry()));
+				if (destAddr.getAddressType().equalsIgnoreCase(
+						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL;
 
-			}
-			if (destAddr.getAddressType().equalsIgnoreCase(
-					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-				panelName = SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL;
+				}
+				if (destAddr.getAddressType().equalsIgnoreCase(
+						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL;
 
-			}
-			if (destAddr.getAddressType().equalsIgnoreCase(
-					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-				panelName = SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL;
+				}
+				if (destAddr.getAddressType().equalsIgnoreCase(
+						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL;
 
-			}
-			if (destAddr.getAddressType().equalsIgnoreCase(
-					SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-				panelName = SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL;
-			}
+				}
+				if (destAddr.getAddressType().equalsIgnoreCase(
+						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL;
+				}
 
-			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-					getManagedBean(), destAddr.getSmAddress(), panelName);
+				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+						getManagedBean(), destAddr.getSmAddress(), panelName);
+			}else{
+				destAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+			}
 		}
 	}
 
