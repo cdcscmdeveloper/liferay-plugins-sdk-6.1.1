@@ -1280,21 +1280,10 @@ public class SmApplicationUtil {
 	 */
 	public static boolean validateCategoriesBeforeSave(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
-		SmAppl appl = managedBean.getSmAppl();
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
-		if (managedBean.isSupplierUser()) {
-			if (appl.getSmSupplierCategories() == null
-					|| appl.getSmSupplierCategories().isEmpty()) {
-				validSave = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(MessageConst.ERROR_722516);
-			}
-
-		}
-		if (managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				&& !managedBean.isSiteVisitAfterApproval()) {
+		
+		if (!managedBean.isSiteVisitAfterApproval()) {
 			validSave = valiateNewCategoryAdded(managedBean);
 			if (!validSave) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -1500,7 +1489,6 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		appl = null;
 		return validSave;
 	}
 
