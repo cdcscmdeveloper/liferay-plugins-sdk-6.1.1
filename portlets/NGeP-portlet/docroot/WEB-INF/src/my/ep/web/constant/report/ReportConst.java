@@ -507,6 +507,9 @@ public class ReportConst implements Serializable{
 	
 	//SM - Rejection Acknlowledgement Letter
 	public static final String SM_REJECTION_ACK_LETTER = "SM_ACK_REJECT.jsp";
+	
+	//SM - Declaration Form
+	public static final String SM_DECLARATION_FORM_REPORT = "SM_DECLARATION_FORM.jsp";
 
 	// CT Module reports start
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
