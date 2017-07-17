@@ -46,6 +46,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -2362,7 +2363,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setSmApplRejectionReasons() {
 		StringBuilder sb = new StringBuilder();
-		//int count = 0;
+		// int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
 		for (Long resId : getManagedBean().getReasonId()) {
 			for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
@@ -2372,16 +2373,16 @@ public class SmApplicationBackingBean extends
 					rej.setSmAppl(getManagedBean().getSmAppl());
 					resList.add(rej);
 					log.info("Reason Id === " + resId);
-					//sb.append(++count).append(". ");
-					//sb.append(desc.getReasonDesc());
-					//sb.append("\n");
+					// sb.append(++count).append(". ");
+					// sb.append(desc.getReasonDesc());
+					// sb.append("\n");
 					sb.append(desc.getPmReason().getReasonId());
 					sb.append("|");
 				}
 			}
 
 		}
-		
+
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
 				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
 						.isEmpty()) {
@@ -9603,16 +9604,51 @@ public class SmApplicationBackingBean extends
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		SmApplicationUtil.generateDeclarationFormPdf(getManagedBean()
-				.getSmAppl());
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (language.equals("en")) {
+			SmApplicationUtil.generateDeclarationFormPdf(getManagedBean()
+					.getSmAppl());
 
-		String fileName = SmCommonUtil
-				.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH)
-				+ File.separator
-				+ getManagedBean().getSmAppl().getApplNo()
-				+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX;
-		commonDownload(fileName, getManagedBean().getSmAppl().getApplNo()
-				+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX);
+			String fileName = SmCommonUtil
+					.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH)
+					+ File.separator
+					+ getManagedBean().getSmAppl().getApplNo()
+					+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX;
+			commonDownload(fileName, getManagedBean().getSmAppl().getApplNo()
+					+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX);
+		} else {
+			String applType = StringUtils.EMPTY;
+			if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				applType = SmCommonUtil.getMessage("lbl.sm.mofReg.headerLbl",
+						null);
+			} else if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				applType = SmCommonUtil.getMessage("lbl.sm.addnlCat.headerLbl",
+						null);
+			} else if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				applType = SmCommonUtil.getMessage("lbl.sm.bumi.headerLbl",
+						null);
+			} else if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
+				applType = SmCommonUtil.getMessage(
+						"lbl.sm.updateMof.headerLbl", null);
+			} else if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+				applType = SmCommonUtil.getMessage("lbl.sm.renewMof.headerLbl",
+						null);
+			}
+			SimpleDateFormat df = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
+			paramMap.put("PAPPTYP", applType);
+			paramMap.put("PDATE", df.format(new Date()));
+			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
+					.getCompanyName());
+			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT, paramMap);
+		}
 	}
 
 	private void printBankVerificationForm() throws Exception {
