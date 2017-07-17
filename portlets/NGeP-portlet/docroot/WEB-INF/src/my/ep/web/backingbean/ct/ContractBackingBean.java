@@ -2283,25 +2283,49 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
 							getManagedBean().getContractVer().setBondWaiverAttachments(null);
 					}
-			
+					else {
+						Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
+	            		   while(attachIterator.hasNext()){
+	            			         if(chkHistoryOfAttachment(attachIterator.next())){
+	            			        	 	continue;
+	            			         }else {
+	            			        	 attachIterator.remove();
+	            			         }
+	            		   } 
+				}   
 			} else if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
 				     if(getManagedBean().getCtContractAmount().isBondWaived() ==  getManagedBean().getCtTestBondWaiverAmount().isBondWaived()){
 							if(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId() != null){
-								Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
-								while(attachIterator.hasNext()){
-										CtAttachment  attachObject = attachIterator.next();
-										if(attachObject.getDocId() != null && attachObject.getDocId().intValue() ==
-												getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId().intValue()){
-											continue;
-										}else {
-											attachIterator.remove();
-										}
-								} 
-							}   
+									Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
+						            		   while(attachIterator.hasNext()){
+						            			         if(chkHistoryOfAttachment(attachIterator.next())){
+						            			        	 	continue;
+						            			         }else {
+						            			        	 attachIterator.remove();
+						            			         }
+						            		   } 
+									}   
 							getManagedBean().setBondWaiver(true);
 					}
 				}	
-			}
+		}
+	
+		public boolean chkHistoryOfAttachment(CtAttachment attachments){
+		 	ContractReqDTO reqDTO = new ContractReqDTO();
+		    reqDTO.setDocId(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+		    reqDTO.setDocType(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
+		    reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
+		    IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		    List<CtAttachment> attach= contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
+		    if(attach != null && attach.size() > 0){
+		        for(CtAttachment waivedAttach : attach){
+			    	  if(waivedAttach.getFilePath().equalsIgnoreCase(attachments.getFilePath())){
+			    		  	return true;
+			    	  	}
+			      }
+		    }
+			return false;
+		}
 	 /**
 	 * The method used to upload bond exempted file.
 	 * 
