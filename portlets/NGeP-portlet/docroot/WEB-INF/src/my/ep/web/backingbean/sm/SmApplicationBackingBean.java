@@ -2546,6 +2546,13 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil
 				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
 
+		// validate at least one category is added
+		boolean validNewCatAdded = SmApplicationUtil
+				.valiateNewCategoryAdded(getManagedBean());
+		if (!validNewCatAdded) {
+			throw new EpException(MessageConst.ERROR_722570);
+		}
+
 		// validate personnel
 		SmApplicationUtil.validatePersonnelBeforeSave(true, -1,
 				getManagedBean());
