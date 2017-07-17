@@ -131,13 +131,13 @@ public class SchedulerConstants {
 
 	// PHIS OUT BOUND
 	public static final String PHIS_VOT_FUND_JOB = "MASTER DATA VOT JOB";
-	public static final String PHIS_VOT_FUND_DANA_JOB = "MASTER DATA VOT DANA JOB";
-	public static final String PHIS_PROGRAM_JOB = "MASTER DATA PROGRAM JOB";
-	public static final String PHIS_PROJECT_JOB = "MASTER DATA PROJECT JOB";
+	public static final String PHIS_VOT_FUND_DANA_JOB = "MASTER DATA DANA JOB";
+	public static final String PHIS_PROGRAM_JOB = "MASTER DATA PROGRAM / AKTIVITI JOB";
+	public static final String PHIS_PROJECT_JOB = "MASTER DATA – PROJEK / SETIA / SUB SETIA / CP JOB";
 	public static final String PHIS_KOD_JOB = "MASTER DATA KOD AKAUN JOB";
 	public static final String PHIS_DELIVERY_ADDRESS_JOB = "MASTER DATA DELIVERY ADDRESS JOB";
 	public static final String PHIS_PAY_EFF_NOTIFY_JOB = "PAYMENT EFFECT NOTIFICATION JOB";
-	public static final String PHIS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
+	public static final String PHIS_MASTER_DATA_MATERIAL = "MASTER DATA – MATERIAL INFORMATION JOB";
 	public static final String PHIS_MASTER_DATA = "MATERIAL MASTER DATA JOB";
 	
 	//SPA OUT BOUND
@@ -170,13 +170,13 @@ public class SchedulerConstants {
 	public static final String GFMAS_SST_INFORMATION = "SST INFORMATION JOB";
 	public static final String GFMAS_VENDOR_OUTBOUND = "MASTER DATA VENDOR JOB(Outbound)";
 	public static final String GFMAS_VENDOR_INBOUND = "MASTER DATA VENDOR JOB(Inbound)";
-	public static final String GFMAS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
+	public static final String GFMAS_MASTER_DATA_MATERIAL = "MASTER DATA MATERIAL INFORMATION JOB";
 	public static final String GFMAS_RECEIPT_INFORMATION = "RECEIPT INFORMATION JOB";
-	public static final String GFMAS_ERR_RECEIPT_INFORMATION = "ERROR RECEIPT INFORMATION JOB";
+	public static final String GFMAS_ERR_RECEIPT_INFORMATION = "RECEIPT INFORMATION ERROR JOB";
 
 	// 1GFMAS IN BOUND
 
-	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER GL DATA JOB(Inbound)";
+	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER DATA VOT, DANA, PROGRAM AKTIVITI, PROJEK, KOD AKAUN, KPTJ, PTJ JOB (Inbound)";
 	public static final String GFMAS_INBOUND_RETRY = "RETRY MASTER DATA JOB(Inbound)";
 	public static final String GFMAS_MASTER_DATA_ERROR = "MASTER DATA ERROR FILE JOB(Inbound)";
 	public static final String GFMAS_PAYMENT_INFORMATION_INBOUND = "PAYMENT INFORMATION JOB(Inbound)";
@@ -185,19 +185,19 @@ public class SchedulerConstants {
 
 	public static final String EPERUNDING_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
 	public static final String PHIS_PM_JOB_DESC = "Job run every 5 minutes";
-	public static final String PHIS_DELIVERY_ADDRESS_JOB_DESC = "Job runs every 1 hour";
+	public static final String PHIS_DELIVERY_ADDRESS_JOB_DESC = "Job run every 5 minutes";
 	public static final String PHIS_CM_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
 	public static final String PHIS_FL_JOB_DESC = "Job runs every 1 hour";
-	public static final String PHIS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 8 AM and 8 PM";
+	public static final String PHIS_MASTERDATA_MATERIAL_JOB_DESC = "Job runs every 1 hour";
 	public static final String GFMAS_RETRY_IN_JOB_DESC = "Job run once daily 2 AM";
 	public static final String GFMAS_PM_IN_JOB_DESC = "Job run every 5 minutes";
 	public static final String GFMAS_SM_IN_JOB_DESC = "Job run every 5 minute";
-	public static final String GFMAS_SC_OUT_JOB_DESC = "Job run once daily 8 AM";
+	public static final String GFMAS_SC_OUT_JOB_DESC = "Job run once daily 9 AM and 9 PM";
 	public static final String GFMAS_FL_IN_JOB_DESC = "Job runs every 1 hour";
 	public static final String GFMAS_SM_OUT_JOB_DESC = "Job run every 5 minute";
-	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job run once daily 6 AM";
-	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 7 AM";
-	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
+	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job run once daily 12:15 AM";
+	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 1 AM";
+	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run every 5 minutes";
 	public static final String SPA_JOB_DESC = "Job run every 5 minutes";
 	public static final String SPA_JOB_DAILY_DESC = "Job run once daily after 12 AM";
 	
