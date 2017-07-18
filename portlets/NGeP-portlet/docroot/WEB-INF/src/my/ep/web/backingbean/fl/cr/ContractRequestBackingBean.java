@@ -1517,7 +1517,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					break;
 				}
 				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-				
+				reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
 				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 				BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
@@ -1570,6 +1570,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
 				}
 				if(itemMaxQty!=null) {
+					reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
 					reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
 					prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 					sumQty = requestItemQtyMap.get(requestNoteItem).add(prevSumQty);
