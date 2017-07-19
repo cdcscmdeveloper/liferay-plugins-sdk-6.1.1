@@ -5736,7 +5736,7 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722656,
 					new String[] { addrType });
 		} else {
-			if(destAddr.isSameAsPerm()){
+			if (destAddr.isSameAsPerm()) {
 				String panelName = StringUtils.EMPTY;
 				destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
 						srcAddr, destAddr.getSmAddress(), destAddr,
@@ -5761,9 +5761,10 @@ public class SmApplicationBackingBean extends
 					panelName = SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL;
 				}
 
-				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-						getManagedBean(), destAddr.getSmAddress(), panelName);
-			}else{
+				SmApplicationUtil.getInstance()
+						.assignStateDistAndCityForSelVal(getManagedBean(),
+								destAddr.getSmAddress(), panelName);
+			} else {
 				destAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 			}
 		}
@@ -9628,33 +9629,14 @@ public class SmApplicationBackingBean extends
 			commonDownload(fileName, getManagedBean().getSmAppl().getApplNo()
 					+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX);
 		} else {
-			String applType = StringUtils.EMPTY;
-			if (getManagedBean().getSmAppl().getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-				applType = SmCommonUtil.getMessage("lbl.sm.mofReg.headerLbl",
-						null);
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-				applType = SmCommonUtil.getMessage("lbl.sm.addnlCat.headerLbl",
-						null);
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				applType = SmCommonUtil.getMessage("lbl.sm.bumi.headerLbl",
-						null);
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
-				applType = SmCommonUtil.getMessage(
-						"lbl.sm.updateMof.headerLbl", null);
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-				applType = SmCommonUtil.getMessage("lbl.sm.renewMof.headerLbl",
-						null);
-			}
-			SimpleDateFormat df = new SimpleDateFormat(
-					CommonConstants.DEFAULT_DATE_FORMAT);
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
-			paramMap.put("PAPPTYP", applType);
+			paramMap.put(
+					"PAPPTYP",
+					SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(
+							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+							getManagedBean().getSmAppl().getApplType(), language)
+							.getCodeName());
 			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT, paramMap);
