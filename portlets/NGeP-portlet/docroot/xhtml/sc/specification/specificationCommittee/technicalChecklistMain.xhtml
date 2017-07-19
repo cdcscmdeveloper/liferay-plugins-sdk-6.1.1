@@ -82,20 +82,23 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 				style="width:24%;white-space: normal;">
 
-
-				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
+ 
+				<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.qtChecklistId eq null}">
+				<h:panelGroup id="technicalChecklistTitleHeader">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}"
+						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"
 						value="#{stageTwoTechnical.title}" size="35" maxlength="1000">
-						<p:ajax event="change" process="@this" partialSubmit="true"
+						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
 							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 					</p:inputText>
 					<p:message id="techChecklistId" for="techChecklistTitle"
 						display="icon"></p:message>
+							<h:outputText value="#{stageTwoTechnical.title}" rendered="#{index ne specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"></h:outputText>
+						</h:panelGroup>
 				</ui:fragment>
 
-				<ui:fragment rendered="#{stageTwoTechnical.title != null}">
+				<ui:fragment rendered="#{stageTwoTechnical.pmDocument ne null or stageTwoTechnical.qtChecklistId ne null}">
 					<h:outputText value="#{stageTwoTechnical.title}"></h:outputText>
 				</ui:fragment>
 
