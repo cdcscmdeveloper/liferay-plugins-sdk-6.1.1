@@ -9655,7 +9655,6 @@ public class SmApplicationBackingBean extends
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
 			paramMap.put("PAPPTYP", applType);
-			paramMap.put("PDATE", df.format(new Date()));
 			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT, paramMap);
