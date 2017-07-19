@@ -373,6 +373,11 @@ public class SmPersonnelBackingBean extends
 	 *            smSupplier
 	 */
 	private void initAuthorizedPersonnels(SmSupplier smSupplier) {
+		getManagedBean().setUserAddConfirmationMsg(
+				SmCommonUtil
+						.getMessage("lbl.sm.userprofile.search.userscount",
+								new String[] { getManagedBean()
+										.getMaxUserLimit() + "" }));
 		getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
@@ -410,6 +415,12 @@ public class SmPersonnelBackingBean extends
 					.getSmPersonnelList()) {
 				setPrevEpRole(smPersonnel);
 			}
+			int balanceUser = getManagedBean().getMaxUserLimit()
+					- getManagedBean().getSmPersonnelList().size();
+			getManagedBean().setUserAddConfirmationMsg(
+					SmCommonUtil.getMessage(
+							"lbl.sm.userprofile.search.userscount",
+							new String[] { balanceUser + "" }));
 		}
 
 		getManagedBean().setDeactivatePersonnel(false);
