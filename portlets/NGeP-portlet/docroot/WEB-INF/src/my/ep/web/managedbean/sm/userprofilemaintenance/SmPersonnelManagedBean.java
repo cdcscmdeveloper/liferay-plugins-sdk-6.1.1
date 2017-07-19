@@ -94,6 +94,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<WorklistItemVO> taskList;
 	private String userLimitTooltips;
 	private int maxUserLimit;
+	private String userAddConfirmationMsg;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -657,6 +658,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setMaxUserLimit(int maxUserLimit) {
 		this.maxUserLimit = maxUserLimit;
+	}
+
+	public String getUserAddConfirmationMsg() {
+		return userAddConfirmationMsg;
+	}
+
+	public void setUserAddConfirmationMsg(String userAddConfirmationMsg) {
+		this.userAddConfirmationMsg = userAddConfirmationMsg;
 	}
 
 }
