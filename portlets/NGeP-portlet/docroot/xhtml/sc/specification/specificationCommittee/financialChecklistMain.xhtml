@@ -72,20 +72,24 @@
 				style="width:24%;white-space: normal;">
 
 
-				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
+				
+				<ui:fragment rendered="#{stageTwofunctional.pmDocument ne null or stageTwofunctional.qtChecklistId ne null}">
 					<h:outputText value="#{stageTwofunctional.title}"  />
 				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
-					<p:inputText value="#{stageTwofunctional.title}" size="35"
+			<ui:fragment rendered="#{stageTwofunctional.pmDocument eq null and stageTwofunctional.qtChecklistId eq null}">
+				<h:panelGroup id="financialChecklistTitleHeader">
+					<p:inputText value="#{stageTwofunctional.title}" size="35" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1}"
 						maxlength="1000" required="true" id="finChecklistTitle"
 						label="#{lbl['lbl.sc.spec.checklist.title']}">
-						<p:ajax event="change" process="@this" partialSubmit="true"
+						<p:ajax event="change" process="@this,financialChecklistTitleHeader" partialSubmit="true"
 							update="financialCheckListtitle"
 							listener="#{specificationBackingBean.financialCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 
 					</p:inputText>
 					<p:message id="finChecklistId" for="finChecklistTitle"
 						display="icon"></p:message>
+						<h:outputText value="#{stageTwofunctional.title}" rendered="#{index ne specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1}" />
+						</h:panelGroup>
 				</ui:fragment>
 
 			</p:column>
