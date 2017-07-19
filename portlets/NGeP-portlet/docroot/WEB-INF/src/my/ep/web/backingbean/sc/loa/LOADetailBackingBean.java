@@ -1297,13 +1297,13 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
 						//scLoaReportAttachment.setFileName(filename.toString());
-					/*	generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());*/
+						generateAgreementLetterDocFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
 						//scLoaReportAttachment.setFileName(filename.toString());
-						//generateAckOfLOAReceiptPdfFromVelocity((ScAttachment) scLoaReportAttachment, scLoa);
+						generateAckOfLOAReceiptPdfFromVelocity((ScAttachment) scLoaReportAttachment, scLoa);
 					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
@@ -1386,8 +1386,9 @@ public class LOADetailBackingBean extends
 			
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			if(scLoaReportAttachment != null) {
-				ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+			
+			if(scLoaReportAttachmentGenerated != null){
 				if(scLoaReport.getDefinationType().getParameterCode().equals(
 						ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
 						scLoaReport.getDefinationType().getParameterCode().equals(
