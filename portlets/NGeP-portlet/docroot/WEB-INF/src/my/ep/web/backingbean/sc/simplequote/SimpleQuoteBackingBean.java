@@ -6760,15 +6760,21 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public String getDurationToolTip(){
 		PmConfigRuleValue ruleValue = getDurationRuleValue();
-		int maxDays = 0, minHours = 0;
+		int maxDays = 0;
+		String min = null;
 		if (ruleValue != null) {
 			int mHours = ruleValue.getFromValue().intValue();
 			int mxDays = ruleValue.getToValue().intValue();
-			 minHours = mHours/60;
-			 maxDays = (mxDays/60)/24;
+			
+			maxDays = (mxDays/60)/24;
+			if(mHours % 60 != 0){
+				min = Double.toString((double)mHours/60);
+			}else{
+				min = Integer.toString(mHours/60);
+			}
 		}
 		return getMessage(
-				"lbl.sc.sq.resp.duration.min.max", new String[] {Integer.toString(minHours), Integer.toString(maxDays)});
+				"lbl.sc.sq.resp.duration.min.max", new String[] {min, Integer.toString(maxDays)});
 	}
 	
 	/**
