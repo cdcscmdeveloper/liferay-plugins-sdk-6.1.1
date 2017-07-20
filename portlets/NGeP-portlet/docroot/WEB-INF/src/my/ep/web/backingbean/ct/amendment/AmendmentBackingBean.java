@@ -149,6 +149,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
+import org.docx4j.convert.in.Doc;
 import org.docx4j.convert.out.pdf.PdfConversion;
 import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -4069,7 +4070,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
                 converter.output(out, pdfSettings);
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
 				attachment.setFileName(getFileName(fileFormat)+".pdf");
-		} else {
+		} else if (getFileExtension(item.getFileName()).equalsIgnoreCase("doc")	){
+			  WordprocessingMLPackage wordMLPackage = Doc.convert((FileInputStream) item.getInputstream());
+	          PdfSettings pdfSettings = new PdfSettings();
+	          org.docx4j.convert.out.pdf.PdfConversion conversion = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage);
+	          OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
+	          conversion.output(out, pdfSettings);
+		}else {
+		
 			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		    fileOuputStream.write(item.getContents());
 		    fileOuputStream.close();
@@ -4266,7 +4274,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			content = getContent((index == 0)? ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER : ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
 			if (content != null) {
 				if (index == 0)
-					DocumentGenerator.getInstance().generateDoc(filePath, content);
+					DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);
 				else
 					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
@@ -4293,8 +4301,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			DocumentGenerator.getInstance().generatePdf(
 					new FileOutputStream(filePath), content);
 
-	/*		DocumentGenerator.getInstance().generateDoc(filePath, content);
-			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);*/
+			DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		}
 		return filePath;
     }
