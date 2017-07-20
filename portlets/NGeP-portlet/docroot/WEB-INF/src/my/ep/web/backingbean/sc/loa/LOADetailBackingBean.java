@@ -4552,7 +4552,9 @@ public class LOADetailBackingBean extends
 		
 		boolean isBondReq = isPerformanceBondRequired(overallContractAmtOrLoaAmt, qtCategories);
 		
-		loa.setBondReq(isBondReq);
+		if(loa.isBrandNew()){
+			loa.setBondReq(isBondReq);
+		}
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
 	}
 	

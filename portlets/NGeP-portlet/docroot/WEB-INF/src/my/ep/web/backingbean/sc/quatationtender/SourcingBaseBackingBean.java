@@ -1793,7 +1793,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * 
 		 */
 
-		if(isDirectLoa){
+		if(isDirectLoa && scLoa.isBrandNew()){
 //			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
 			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(scLoa.getLoaAmt(), null));
 		}
