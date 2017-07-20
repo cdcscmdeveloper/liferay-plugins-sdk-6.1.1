@@ -94,6 +94,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 							.getSupplierSearchSO()
 							.retrieveSupplierAndPersonnelsByBusRegNoAndName(
 									reqDTO).getSmSupplier());
+
+			if (getManagedBean().getSmSupplier() != null
+					&& getManagedBean().getSmSupplier().getSmAppl() != null
+					&& !getManagedBean()
+							.getSmSupplier()
+							.getSmAppl()
+							.getSupplierType()
+							.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+				// Agency name does not exist for G2G
+				throw new EpException(MessageConst.ERROR_722659);
+			}
 		} else {
 			getManagedBean()
 					.setSmSupplier(
