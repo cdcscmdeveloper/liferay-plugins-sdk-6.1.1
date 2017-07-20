@@ -26,9 +26,11 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AltChunkType;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.NumberingDefinitionsPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.Br;
 import org.docx4j.wml.CTAltChunk;
@@ -195,24 +197,40 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * 		the html content to generate as Doc.
 	 * @throws Exception
 	 */
+	public void generateDocxtoHtml(String filePath, String html) throws Exception {
+		debugLogger("generateDoc");
+		
+           WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+		    NumberingDefinitionsPart ndp = new NumberingDefinitionsPart();
+		    wordMLPackage.getMainDocumentPart().addTargetPart(ndp);
+		    ndp.unmarshalDefaultNumbering();
+		    wordMLPackage.getMainDocumentPart().addAltChunk(AltChunkType.Xhtml, html.getBytes());  
+		    wordMLPackage.save(new java.io.File(filePath));
+	}
+	
+	/**
+	 * Generate Doc file by html.
+	 * 
+	 * @param filePath
+	 * 		the filePath to be save.
+	 * @param html
+	 * 		the html content to generate as Doc.
+	 * @throws Exception
+	 */
 	public void generateDoc(String filePath, String html) throws Exception {
 		debugLogger("generateDoc");
 		
-		WordprocessingMLPackage wordMLPackage;
-		wordMLPackage = WordprocessingMLPackage.createPackage();
-		
-		AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
-		afiPart.setBinaryData(html.getBytes());
-		afiPart.setContentType(new ContentType("text/html"));
-		
-		Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
-
-		CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
-		ac.setId(altChunkRel.getId());
-		
-		wordMLPackage.getMainDocumentPart().addObject(ac);
-		wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
-		wordMLPackage.save(new java.io.File(filePath));
+		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+        AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html")); 
+         afiPart.setBinaryData(html.getBytes()); 
+         afiPart.setContentType(new ContentType("text/html")); 
+         Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart); 
+         // .. the bit in document body 
+         CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk(); 
+         ac.setId(altChunkRel.getId() ); 
+         wordMLPackage.getMainDocumentPart().addObject(ac); 
+         wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html"); 
+         wordMLPackage.save(new java.io.File(filePath));
 	}
 	
 	/**
@@ -472,6 +490,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 */
 	public void setVelocityEngine(VelocityEngine ve) {
 		this.ve = ve;
+	}
+	
+	public static String getFileName(String fileName) {
+	    int index = fileName.lastIndexOf('.');
+	    if (index == -1) {
+	        return fileName;
+	    } else {
+	        return fileName.substring(0, index);
+	    }
 	}
 
 	private void debugLogger(Object message) {
