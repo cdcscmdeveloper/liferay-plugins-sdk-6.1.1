@@ -1433,6 +1433,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
 		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
 		BigDecimal prevSumAmt = itemSummarySO.retrieveContractAccumulatedAmount(reqDTO);
 		BigDecimal sumOrderedAmt = BigDecimal.ZERO;
 		for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
