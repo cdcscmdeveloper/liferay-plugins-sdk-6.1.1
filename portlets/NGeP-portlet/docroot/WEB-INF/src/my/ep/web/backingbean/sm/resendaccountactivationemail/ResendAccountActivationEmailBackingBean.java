@@ -89,6 +89,16 @@ public class ResendAccountActivationEmailBackingBean extends
 					Calendar today = new GregorianCalendar();
 
 					if (accType.equals(SupplierManagementConst.ACC_GOVT_SELLER)
+							&& resDTO.getSmSupplier().getSmAppl() != null
+							&& !resDTO
+									.getSmSupplier()
+									.getSmAppl()
+									.getSupplierType()
+									.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+						throw new EpException(MessageConst.ERROR_721018);
+					}
+
+					if (accType.equals(SupplierManagementConst.ACC_GOVT_SELLER)
 							&& (!selectedPersonnel.getMobileArea().equals(
 									suppAdminMobileArea)
 									|| !selectedPersonnel.getMobileCountry()
@@ -119,7 +129,7 @@ public class ResendAccountActivationEmailBackingBean extends
 			throw new EpException(MessageConst.ERROR_721018);
 		}
 	}
-	
+
 	/**
 	 * Clear entered information on change account type
 	 * 
@@ -134,7 +144,7 @@ public class ResendAccountActivationEmailBackingBean extends
 		suppAdminMobileCountry = StringUtils.EMPTY;
 		suppAdminMobileNo = StringUtils.EMPTY;
 		suppAdminMobileTelcoId = StringUtils.EMPTY;
-		
+
 	}
 
 	/**
