@@ -252,7 +252,7 @@
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="ministry"  effect="fade"  filter="true" filterMatchMode="startsWith"  style="width:300px" 
+                 <p:selectOneMenu id="ministry"   style="width:300px" 
                       value="#{ctBackingBean.managedBean.ministryProfileId}">
             	   <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax  process="@this" partialSubmit="true" event="change"  
@@ -264,7 +264,7 @@
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="jabatan" style="width:300px"
-                      value="#{ctBackingBean.managedBean.jabatanProfileId}"  effect="fade"  filter="true" filterMatchMode="startsWith">
+                      value="#{ctBackingBean.managedBean.jabatanProfileId}" >
             	   <f:selectItems value="#{ctBackingBean.getJabatanDropdown()}"/>
             	    <p:ajax event="change" process="@this" partialSubmit="true"
             	        update=":form:ptjCodeVaue,:form:agencyTablePopUpId"  listener="#{ctBackingBean.resetJabatanDetails}" />
