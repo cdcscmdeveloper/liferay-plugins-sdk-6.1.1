@@ -6748,24 +6748,7 @@ public class SmApplicationBackingBean extends
 		if (!this.getManagedBean().isPoInquiryRespond()) {
 			validateBeforeSubmit();
 		}
-		if (getManagedBean().getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| getManagedBean()
-						.getSmAppl()
-						.getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			// exclude site visit after approval because the catcode already
-			// approved
-			if (!getManagedBean().isSiteVisitAfterApproval()) {
-				boolean validNewCatAdded = SmApplicationUtil
-						.valiateNewCategoryAdded(getManagedBean());
-				if (!validNewCatAdded) {
-					throw new EpException(MessageConst.ERROR_722570);
-				}
-			}
-		}
+		
 		initiateSmApplicationTask();
 		String msgConst = "";
 		String urlParam = SmCommonUtil.getBasePortalUrl()
