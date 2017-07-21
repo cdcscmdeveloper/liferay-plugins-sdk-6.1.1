@@ -2547,10 +2547,23 @@ public class SmApplicationBackingBean extends
 				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
 
 		// validate at least one category is added
-		boolean validNewCatAdded = SmApplicationUtil
-				.valiateNewCategoryAdded(getManagedBean());
-		if (!validNewCatAdded) {
-			throw new EpException(MessageConst.ERROR_722570);
+		if (getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean()
+						.getSmAppl()
+						.getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			// exclude site visit after approval because the catcode already
+			// approved
+			if (!getManagedBean().isSiteVisitAfterApproval()) {
+				boolean validNewCatAdded = SmApplicationUtil
+						.valiateNewCategoryAdded(getManagedBean());
+				if (!validNewCatAdded) {
+					throw new EpException(MessageConst.ERROR_722570);
+				}
+			}
 		}
 
 		// validate personnel
