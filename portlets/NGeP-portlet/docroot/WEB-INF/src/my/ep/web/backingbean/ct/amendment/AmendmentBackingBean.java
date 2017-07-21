@@ -4300,9 +4300,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (content != null) {
 			DocumentGenerator.getInstance().generatePdf(
 					new FileOutputStream(filePath), content);
-
-			DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);
-			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		}
 		return filePath;
     }
