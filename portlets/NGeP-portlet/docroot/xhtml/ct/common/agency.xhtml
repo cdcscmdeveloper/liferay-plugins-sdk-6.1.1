@@ -49,17 +49,20 @@
 				                        <h:outputText value="#{agencyData.commitmentNo}" style="float:left;text-align:left;"></h:outputText>
 							 </p:column>
 							
-							 <p:column headerText="#{lbl['lbl.ct.ministry']}" 
+							 <p:column headerText="#{lbl['lbl.ct.ministry']}"  
+							    filterBy="#{agencyData.ministryName}"   filterMatchMode="contains"
 							    styleClass="column-align-center" style="width:20%;white-space:normal;" > 
 				                       <h:outputText value="#{agencyData.ministryName}" style="float:left;text-align:left;"/>
 							 </p:column>
 							 
 							  <p:column  headerText="#{lbl['lbl.ct.jabatan']}" 
+							         filterBy="#{agencyData.kumpulanPtjName}"   filterMatchMode="contains"
 							        style="width:20%;white-space:normal;" styleClass="column-align-center"> 
 							         <h:outputText value="#{agencyData.kumpulanPtjName}"  style="float:left;text-align:left;"/>
 							   </p:column>
 							   
 							   <p:column headerText="#{lbl['lbl.ct.ptj']}"
+							          filterBy="#{agencyData.orgProfile.orgName}"   filterMatchMode="contains"
 							         style="width:20%;white-space:normal;" styleClass="column-align-center"> 	
 							          <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;"/>
 							   </p:column>
@@ -249,18 +252,19 @@
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="ministry" style="width:300px"
-                      value="#{ctBackingBean.managedBean.ministryProfileId}" >
+                 <p:selectOneMenu id="ministry"  effect="fade"  filter="true" filterMatchMode="startsWith"  style="width:300px" 
+                      value="#{ctBackingBean.managedBean.ministryProfileId}">
             	   <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax  process="@this" partialSubmit="true" event="change"  
             		  update=":form:jabatan,:form:ptjCodeVaue,:form:agencyTablePopUpId" listener="#{ctBackingBean.resetMinistryDetails}"   />
+ 
                  </p:selectOneMenu>
                  <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="jabatan" style="width:300px"
-                      value="#{ctBackingBean.managedBean.jabatanProfileId}" >
+                      value="#{ctBackingBean.managedBean.jabatanProfileId}"  effect="fade"  filter="true" filterMatchMode="startsWith">
             	   <f:selectItems value="#{ctBackingBean.getJabatanDropdown()}"/>
             	    <p:ajax event="change" process="@this" partialSubmit="true"
             	        update=":form:ptjCodeVaue,:form:agencyTablePopUpId"  listener="#{ctBackingBean.resetJabatanDetails}" />
