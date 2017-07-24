@@ -1378,7 +1378,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the paidPercentage
 	 */
 	public BigDecimal getPaidPercentage() {
-		if(getManagedBean().getPaidInvoiceAmt() != null) {
+		if(getManagedBean().getPaidInvoiceAmt() != null && getManagedBean().getPaidInvoiceAmt().intValue() > 0) {
 			paidPercentage = (getManagedBean().getPaidInvoiceAmt().multiply(
 				BigDecimal.valueOf(100)).divide(
 						getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
