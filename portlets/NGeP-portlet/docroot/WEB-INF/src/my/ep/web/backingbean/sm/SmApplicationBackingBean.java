@@ -1290,6 +1290,21 @@ public class SmApplicationBackingBean extends
 									.getSmApplRejectReasons()));
 		}
 
+		// set supplier disciplinary action status for PO/Approver review page
+		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
+			String disciplinaryActionStatus = SmCommonUtil
+					.getDisciplinaryActionStatus(getManagedBean()
+							.getSmSupplier());
+			if (!StringUtils.isBlank(disciplinaryActionStatus)) {
+				getManagedBean()
+						.setDiscplinaryActionMsg(
+								SmCommonUtil
+										.getMessage(
+												"lbl.sm.supplier.disciplinary.action.msg",
+												null));
+			}
+		}
+
 		// set payment details section only for supplier and application type is
 		// NEW or RENEW
 		if (getManagedBean().isSupplierUser()
@@ -6748,7 +6763,7 @@ public class SmApplicationBackingBean extends
 		if (!this.getManagedBean().isPoInquiryRespond()) {
 			validateBeforeSubmit();
 		}
-		
+
 		initiateSmApplicationTask();
 		String msgConst = "";
 		String urlParam = SmCommonUtil.getBasePortalUrl()
@@ -9631,8 +9646,8 @@ public class SmApplicationBackingBean extends
 					"PAPPTYP",
 					SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(
 							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-							getManagedBean().getSmAppl().getApplType(), language)
-							.getCodeName());
+							getManagedBean().getSmAppl().getApplType(),
+							language).getCodeName());
 			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT, paramMap);
