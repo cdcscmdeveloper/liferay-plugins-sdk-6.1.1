@@ -607,9 +607,13 @@ public class SupplierManagementConst {
 	public static final String BANK_VERIFICATION_FORM_PREFIX = "_PENANDATANGAN_CEK.pdf";
 
 	public static final int MAX_PAYMENT_BANK = 35;
-	
-	//EXTERNAL CONTEXT SESSION KEY MAP
+
+	// EXTERNAL CONTEXT SESSION KEY MAP
 	public static final String KEY_MAP_PERSONNEL_LIST = "personnelList";
+
+	// SUPP_SUSPEND_OR_TERMINATED
+	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
+	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
