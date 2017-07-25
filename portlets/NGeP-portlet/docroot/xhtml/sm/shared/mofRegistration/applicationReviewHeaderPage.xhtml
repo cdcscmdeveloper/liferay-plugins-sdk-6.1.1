@@ -61,13 +61,24 @@
 					<td style="vertical-align: baseline;"><p:outputLabel
 							value="#{lbl['lbl.sm.rejection.reasons']}"
 							styleClass="outputLabel-view-label" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" escape="false"
+					<td style="white-space: normal !important;"><p:outputLabel styleClass="outputLabel-view" escape="false"
 							value="#{backingBean.managedBean.rejectReasonsMsg}" />
 					</td>
 					<td colspan="4">&#160;</td>
 				</tr>
 			</p:outputPanel>
 		</table>
+		
+		<p:outputPanel rendered="#{not empty backingBean.managedBean.discplinaryActionMsg}">
+			<br />
+			<table>
+				<tr>
+					<td style="color: red; font-weight: bold; text-align: right;">
+						<span class="blink_text"><h:outputText value="#{backingBean.managedBean.discplinaryActionMsg}" /></span>
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{backingBean.managedBean.showFieldChanges}">
 			<br />

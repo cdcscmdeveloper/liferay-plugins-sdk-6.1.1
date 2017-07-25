@@ -508,6 +508,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> selectedPmReasonDescs;
 	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	private String searchRejectReason;
+	private String discplinaryActionMsg;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
 
 	private class RejectReasonPagingDataModel extends
@@ -3965,5 +3966,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestApproveAppl(SmAppl latestApproveAppl) {
 		this.latestApproveAppl = latestApproveAppl;
+	}
+
+	public String getDiscplinaryActionMsg() {
+		return discplinaryActionMsg;
+	}
+
+	public void setDiscplinaryActionMsg(String discplinaryActionMsg) {
+		this.discplinaryActionMsg = discplinaryActionMsg;
 	}
 }
