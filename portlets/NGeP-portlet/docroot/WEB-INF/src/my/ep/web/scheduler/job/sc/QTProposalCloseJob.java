@@ -89,6 +89,7 @@ public class QTProposalCloseJob implements Job {
 		} catch (Exception e) {
 			log.info("$$$$$ qt Work Flow status updated failed from QTProposalCloseJob job");
 			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
 			reSchedulePublicationForPublishFailQt(qtId);
 		} finally {
 			noticeBoardSO = null;
@@ -127,6 +128,7 @@ public class QTProposalCloseJob implements Job {
 					+ qtId);
 			log.error(e.getLocalizedMessage());
 			String errorMessage = null;
+			e.printStackTrace();
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
     		if (rootCause != null) {
     			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
@@ -165,6 +167,7 @@ public class QTProposalCloseJob implements Job {
 			log.info("$$$$$ BPM Update after Proposal Close failed for the QT Id :"
 					+ qtId);
 			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
 			String errorMessage = null;
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
     		if (rootCause != null) {
