@@ -54,12 +54,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			.getProperty("molpay.ipnurl");
 
 	public PaymentResponseBackingBean(){
-
+		
 	}
 	
 	@PostConstruct
 	public void init() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-
 		log.info("<<<<<<@PostConstruct>>>>>>>>");
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
@@ -68,6 +67,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 		String paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		Object paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		SmAppl appl = (SmAppl)session.getAttribute("smAppl");
+		
+		session.removeAttribute("paymentBpmTaskId");
+		session.removeAttribute("paymentBpmPojo");
 		
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
@@ -81,22 +84,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
-
-/*		log.info("orderId: " + orderId);
-		log.info("tranID: " + tranID);
-		log.info("status:" + status);
-		log.info("domain:" + domain);
-		log.info("amount :" + amount);
-		log.info("currency:" + currency);
-		log.info("appcode: " + appcode);
-		log.info("paydate:" + paydate);
-		log.info("skey:" + skey);
-		log.info("error_code:" + errorCode);
-		log.info("error_desc:" + errorDesc);
-		log.info("channel:" + channel);*/
 		
-		if(paymentTaskId != null && paymentBpmPojo != null){
-			responsePreRender();
+		log.info("paymentTaskId>>>>>" + paymentTaskId);
+		log.info("paymentBpmPojo>>>>>" + paymentBpmPojo);
+		log.info("appl>>>>>>>>>>>" + appl);
+		
+		if(paymentTaskId != null && paymentBpmPojo != null &&  appl != null){
+			responsePreRender(paymentTaskId, paymentBpmPojo, appl);
 			responseRedirect();
 		}else{
 			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
@@ -142,23 +136,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public void responsePreRender() throws NoSuchMethodException,SecurityException, IllegalAccessException,
+	public void responsePreRender(String paymentTaskId, Object paymentBpmPojo, SmAppl appl) throws NoSuchMethodException,SecurityException, IllegalAccessException,
 	IllegalArgumentException, InvocationTargetException {
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		HttpSession session = httpServletRequest.getSession();
 
-		SmAppl appl = null;
-		String paymentTaskId = null;
-		Object paymentBpmPojo = null;
-
-		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
-		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
-		appl = (SmAppl)session.getAttribute("smAppl");
-
-		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
-		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
 
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
@@ -210,10 +193,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 
 				boolean validPayment = false;
-
-
+/*
 				session.removeAttribute("paymentBpmTaskId");
-				session.removeAttribute("paymentBpmPojo");
+				session.removeAttribute("paymentBpmPojo");*/
 
 				PyPayment pyPayment = resDTO.getPyPayment();
 				PyPaymentResponse smPaymentRes = new PyPaymentResponse();
