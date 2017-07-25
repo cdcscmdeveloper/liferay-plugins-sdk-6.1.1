@@ -88,6 +88,7 @@ public class QTPublishJob implements Job {
 			}
 		} catch (Exception e) {
 			log.info("$$$$$ qt Work Flow status updated failed for Publish");
+			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
 			reSchedulePublicationForPublishFailQt(qtId);
 		}
@@ -130,6 +131,7 @@ public class QTPublishJob implements Job {
 		} catch (Exception e) {
 			log.info("$$$$$ Insert Supplier and send notification failed at"
 					+ DateUtils.getCurrentDate());
+			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
 			String errorMessage = null;
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
@@ -172,6 +174,7 @@ public class QTPublishJob implements Job {
 			log.info("$$$$$ BPM Update after Publish failed for the QT Id :"
 					+ qtId);
 			String errorMessage = null;
+			e.printStackTrace();
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
     		if (rootCause != null) {
     			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
