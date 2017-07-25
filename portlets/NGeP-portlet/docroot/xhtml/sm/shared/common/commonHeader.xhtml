@@ -5,36 +5,38 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<h:outputText styleClass="warning" style="font-weight: bold;" value="&#x26A0;  #{lbl['lbl.sm.glp.alert']}" rendered="#{showGlpAlert}" />
-	<div align="left" class="header-info">
-	<table class="customTbl">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
-				<td class="header-info-text">
-					#{supplierName}
-				</td>
-				
-				<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
-				<td class="header-info-text">
-					#{applNo}
-				</td>
-				
-				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']} :" /></td>
-				<td class="header-info-text">
-					#{lbl[applType]}
-				</td>
-			</tr>
-			<p:outputPanel rendered="#{not empty sdoReviewBackingBean.managedBean.rejectReasonsMsg 
-				and sdoReviewBackingBean.managedBean.smAppl.resubmit}">
-				<tr>
-					<td style="vertical-align: baseline;"><p:outputLabel
-							value="#{lbl['lbl.sm.rejection.reasons']}"
-							styleClass="outputLabel-view-label" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" escape="false"
-							value="#{sdoReviewBackingBean.managedBean.rejectReasonsMsg}" />
-					</td>
-					<td colspan="4">&#160;</td>
-				</tr>
-			</p:outputPanel>
+	
+	<table class="customTbl" style="background-color: #FAFAFA;">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
+			<td class="header-info-text">
+				#{supplierName}
+			</td>
+			
+			<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+			<td class="header-info-text">
+				#{applNo}
+			</td>
+			
+			<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']} :" /></td>
+			<td class="header-info-text">
+				#{lbl[applType]}
+			</td>
+		</tr>
+		<p:outputPanel rendered="#{not empty sdoReviewBackingBean.managedBean.rejectReasonsMsg 
+			and sdoReviewBackingBean.managedBean.smAppl.resubmit}">
+		<tr>
+			<td style="vertical-align: baseline;width: 15% !important"><p:outputLabel
+					value="#{lbl['lbl.sm.rejection.reasons']}"
+					styleClass="outputLabel-view-label" /></td>
+			<td style="white-space: normal !important;" colspan="5">
+				<p:outputLabel styleClass="outputLabel-view" escape="false"
+					value="#{sdoReviewBackingBean.managedBean.rejectReasonsMsg}" />
+			</td>
+		</tr>
+		</p:outputPanel>
 	</table>
-	</div>
+	
+	<br />
+	
 </ui:composition>

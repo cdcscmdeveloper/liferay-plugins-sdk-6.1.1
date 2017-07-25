@@ -52,27 +52,6 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.id.Hex;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.eclipse.persistence.exceptions.ValidationException;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -99,6 +78,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sm.DisciplinaryActionConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -121,6 +101,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.complaint.ComplaintReqDTO;
+import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -201,6 +183,27 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.id.Hex;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.eclipse.persistence.exceptions.ValidationException;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
@@ -5022,4 +5025,35 @@ public class SmCommonUtil {
 		return null;
 	}
 
+	/**
+	 * Get status whether supplier already suspended or terminated
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @return String
+	 */
+	public static String getDisciplinaryActionStatus(SmSupplier supplier) {
+		String retVal = StringUtils.EMPTY;
+		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+
+		ComplaintResDTO resDTO = SmServiceLookup.getComplaintSO()
+				.checkSupplierIsSuspendedTerminated(reqDTO);
+
+		if (resDTO.getComplReview() != null
+				&& !StringUtils.isBlank(resDTO.getComplReview()
+						.getDecisionTaken())) {
+			if (resDTO
+					.getComplReview()
+					.getDecisionTaken()
+					.equalsIgnoreCase(
+							DisciplinaryActionConst.JKTT_DECISION_TERMINATE)) {
+				retVal = SupplierManagementConst.TERMINATED;
+			} else {
+				retVal = SupplierManagementConst.SUSPENDED;
+			}
+		}
+
+		return retVal;
+	}
 }
