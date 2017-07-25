@@ -89,6 +89,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	private final String COMPLAINT_VIEW = "/xhtml/sm/disciplinaryAction/complaintView.xhtml";
 	private final String LODGE_COMPLAINT = "/xhtml/sm/complaint/lodgeComplaint.xhtml";
 	private final String COMPLAINT_MANAGEMENT = "complaint-management";
+	private final String complaintProcessUrl = SmCommonUtil.getBasePortalUrl() + "/web/epapp/complaint-management";
 	
 	public ComplaintBackingBean() {
 		
@@ -435,7 +436,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-				MessageUtils.getMessage(MessageConst.INFO_723001 , new String[]{getManagedBean().getSmComplaint().getComplaintNo()}, 
+				MessageUtils.getMessage(MessageConst.INFO_723001 , new String[]{getManagedBean().getSmComplaint().getComplaintNo(),complaintProcessUrl}, 
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
 		renewSesionObject();
 		
