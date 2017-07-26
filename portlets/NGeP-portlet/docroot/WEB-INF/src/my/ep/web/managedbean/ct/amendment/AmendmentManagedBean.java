@@ -48,7 +48,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String committeeName = null;
 	private String identificationNo = null;
 	private String identificationType;
-	private String editorValue;
 	private String fileDirectory;
 	private String pbQcApproved;
 	private String mofApproved;
@@ -166,18 +165,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
-	}
-	/**
-	 * @return the editorValue
-	 */
-	public String getEditorValue() {
-		return editorValue;
-	}
-	/**
-	 * @param editorValue the editorValue to set
-	 */
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
 	}
 	/**
 	 * @return the fileDirectory
