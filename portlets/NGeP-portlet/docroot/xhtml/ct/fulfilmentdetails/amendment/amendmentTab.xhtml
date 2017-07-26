@@ -37,6 +37,11 @@
 	        vertical-align: top;
 	        text-align: right;
          }
+         .columnWidth300 {
+	        width: 300px;
+	        vertical-align: top;
+	        text-align: right;
+         }
          .confirmation-message-box {
          	border: 1px solid #cecece;
 			font-family: Arial;
@@ -221,25 +226,29 @@
 			    </p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.details'] }">
+					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="supplier/supplierforloa.xhtml" />
 				    <ui:include src="supplier/paymentdetails.xhtml" />
-				    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
-					    <ui:include src="loaDetails.xhtml" />
+				    <ui:include src="loaDetails.xhtml" />
+				    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
+				    	<ui:include src="supplier/supplierSignerDetails.xhtml" />
 				    </p:outputPanel>
-				    <ui:include src="witnessDetails.xhtml" />
-				     <ui:include src="supplier/remark.xhtml" />
+				    <ui:include src="supplier/remark.xhtml" />
 			    </p:outputPanel>
 			    
 			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content']}">
+					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="letterOfAcceptance.xhtml" />
 			    </p:outputPanel>
 			    
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.view.loa']
 				        and amendmentBackingBean.managedBean.ackFA == CtConst.supplierAckLoa}">
+					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="supplier/supplierLoa.xhtml"  />
 				</p:outputPanel>
 	
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.declaration'] }">
+					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="supplier/supplierDeclaration.xhtml" />
 				</p:outputPanel>
 				

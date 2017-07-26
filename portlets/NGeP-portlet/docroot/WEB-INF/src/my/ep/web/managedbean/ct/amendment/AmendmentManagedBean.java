@@ -16,8 +16,6 @@ import javax.faces.model.SelectItem;
 
 import org.primefaces.model.DualListModel;
 
-import my.ep.constant.ct.ContractConst;
-import my.ep.constants.CTProcessNameConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -29,7 +27,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
@@ -46,7 +43,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AmendmentManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	//private String[] action;	
 	private String taskName;
 	private String ackFA;
 	private String committeeName = null;
@@ -77,8 +73,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean decisionPbQcLOA;
 	private boolean confirmMeeting;
 	private boolean selectAll;
-//	private boolean showPrintButton;
-	//private boolean bpmActionFlag = true;
+	private boolean allowAcknowledge = false;
 	private boolean autoUpdate = true;	
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
@@ -100,27 +95,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
 	private CtCommitteeMember newCommitteMembers;
-	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
 	
 	@ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
-	
-	/**
-	 * @return the action
-	 *//*
-	public String[] getAction() {
-		return action;
-	}
-	
-	*//**
-	 * @param action the action to set
-	 *//*
-	public void setAction(String[] action) {
-		this.action = action;
-	}*/
 	
 	/**
 	 * @return the taskName
@@ -515,36 +495,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
-	}
+	}	
 	
 	/**
-	 * @return the showPrintButton
-	 *//*
-	public boolean isShowPrintButton() {
-		return showPrintButton;
+	 * @return the allowAcknowledge
+	 */
+	public boolean isAllowAcknowledge() {
+		return allowAcknowledge;
 	}
-	
-	*//**
-	 * @param showPrintButton the showPrintButton to set
-	 *//*
-	public void setShowPrintButton(boolean showPrintButton) {
-		this.showPrintButton = showPrintButton;
+
+	/**
+	 * @param allowAcknowledge the allowAcknowledge to set
+	 */
+	public void setAllowAcknowledge(boolean allowAcknowledge) {
+		this.allowAcknowledge = allowAcknowledge;
 	}
-	*/
-/*	*//**
-	 * @return the bpmActionFlag
-	 *//*
-	public boolean isBpmActionFlag() {
-		return bpmActionFlag;
-	}
-	
-	*//**
-	 * @param bpmActionFlag the bpmActionFlag to set
-	 *//*
-	public void setBpmActionFlag(boolean bpmActionFlag) {
-		this.bpmActionFlag = bpmActionFlag;
-	}*/
-	
+
 	/**
 	 * @return the autoUpdate
 	 */
@@ -807,27 +773,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
 		this.newCommitteMembers = newCommitteMembers;
-	}
-	
-	/**
-	 * @return the scLoaWitness
-	 */
-	public ScLoaWitness getScLoaWitness() {
-		if (scLoaWitness == null) {
-			scLoaWitness = new ScLoaWitness();
-			String taskName = this.getTaskName();
-			if(taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-				scLoaWitness.setPartyType(ContractConst.WITNES_TYPE_SUPPLIER);
-			}
-		}
-		return scLoaWitness;
-	}
-	
-	/**
-	 * @param scLoaWitness the scLoaWitness to set
-	 */
-	public void setScLoaWitness(ScLoaWitness scLoaWitness) {
-		this.scLoaWitness = scLoaWitness;
 	}
 	
 	/**
