@@ -31,16 +31,16 @@ public class EpSchedulerListener implements JobListener {
 	@Override
 	public void jobToBeExecuted(JobExecutionContext context) {
 		String jobName = context.getJobDetail().getKey().toString();
-		log.info("********************Job to be executed [" + jobName
-				+ "]**********************************");
+		log.info("**********************************Job to be executed ["
+				+ jobName + "]**********************************");
 
 	}
 
 	@Override
 	public void jobExecutionVetoed(JobExecutionContext context) {
 		String jobName = context.getJobDetail().getKey().toString();
-		log.info("*********************Job execution vetoed[" + jobName
-				+ "]***********************");
+		log.info("**********************************Job execution vetoed["
+				+ jobName + "]**********************************");
 	}
 
 	@Override
@@ -50,14 +50,16 @@ public class EpSchedulerListener implements JobListener {
 		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
 		String dateFormatted = formatter.format(date);
 		String jobName = context.getJobDetail().getKey().toString();
-		log.info("*****************Job [" + jobName
+		log.info("**********************************Job [" + jobName
 				+ "] finish executed with duration of [" + dateFormatted
-				+ "]*****************");
+				+ "]**********************************");
 
 		if (jobException != null
 				&& !StringUtils.isBlank(jobException.getMessage())) {
-			log.info("***********Exception thrown by job: " + jobName
-					+ " with message: " + jobException.getMessage()
+			log.info("**********************************Exception thrown by job: "
+					+ jobName
+					+ " with message: "
+					+ jobException.getMessage()
 					+ "!!!!!!!!!!!!!!!!!");
 		}
 
