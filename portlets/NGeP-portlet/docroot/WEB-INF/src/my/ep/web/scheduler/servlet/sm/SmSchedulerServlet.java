@@ -134,184 +134,77 @@ public class SmSchedulerServlet extends HttpServlet {
 								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_COMPLAINT_SHOW_CAUSE_NOTIFICATION));
 		
 		// 1GFMAS jobs
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.GFMAS_VENDOR_OUTBOUND,
-								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-						MasterDataVendorOutboundJob.class,
-						SchedulerConstants.GFMAS_SM_OUT_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_VENDOR_OUTBOUND));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.GFMAS_ERR_RECEIPT_INFORMATION,
-								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-						ErrorReceiptInformationJob.class,
-						SchedulerConstants.GFMAS_SM_RECEIPT_IN_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_ERR_RECEIPT_INFORMATION));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.GFMAS_RECEIPT_INFORMATION,
-								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-						ReceiptInformationJob.class,
-						SchedulerConstants.GFMAS_SM_RECEIPT_OUT_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_RECEIPT_INFORMATION));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.GFMAS_VENDOR_INBOUND,
-								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-						MasterDataVendorInboundJob.class,
-						SchedulerConstants.GFMAS_SM_IN_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_VENDOR_INBOUND));
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(SchedulerConstants.GFMAS_VENDOR_OUTBOUND,
+//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+//						MasterDataVendorOutboundJob.class,
+//						SchedulerConstants.GFMAS_SM_OUT_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_VENDOR_OUTBOUND));
+//
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(
+//								SchedulerConstants.GFMAS_ERR_RECEIPT_INFORMATION,
+//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+//						ErrorReceiptInformationJob.class,
+//						SchedulerConstants.GFMAS_SM_RECEIPT_IN_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_ERR_RECEIPT_INFORMATION));
+//
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(
+//								SchedulerConstants.GFMAS_RECEIPT_INFORMATION,
+//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+//						ReceiptInformationJob.class,
+//						SchedulerConstants.GFMAS_SM_RECEIPT_OUT_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_RECEIPT_INFORMATION));
+//
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(SchedulerConstants.GFMAS_VENDOR_INBOUND,
+//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+//						MasterDataVendorInboundJob.class,
+//						SchedulerConstants.GFMAS_SM_IN_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_VENDOR_INBOUND));
 
 		// Eperunding Jobs
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_CONSULTANT_PROFILE_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						ConsultantProfileJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_CONSULTANT_PROFILE));
-
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_ASSOCIATED_COMPANY_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						AssociatedCompanyJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_ASSOCIATED_COMPANY));*/
-
-	/*	EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_COMPANY_OWNER_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						CompanyOwnerJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_COMPANY_OWNER));*/
-
-	/*	EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_EQUITY_OWNER_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						EquityOwnerJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_EQUITY_OWNER));*/
-
-	/*	EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_BOARD_DIRECTOR_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						BoardOfDirectorJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_BOARD_DIRECTOR));*/
-
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_MANAGEMENT_PERSONNEL_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						ManagementPersonnelJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_MANAGEMENT_PERSONNEL));*/
-
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_AUTHORIZED_SIGNATORY_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						SignatoryJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_AUTHORIZED_SIGNATORY));*/
-
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_BRANCH_COMPANY_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						BranchCompanyJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_BRANCH_COMPANY));*/
-
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_REGISTERED_CATEGORY_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						RegisteredCategoryJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_REGISTERED_CATEGORY));*/
-
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_GOVERNMENT_PROJECT_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						GovernmentProjectJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_GOVERNMENT_PROJECT));
-*/
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.EPERUNDING_DELETED_COMAPNY_JOB,
-								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-						DeletedCompanyJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_DELETED_COMAPNY_JOB));
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(
+//								SchedulerConstants.EPERUNDING_CONSULTANT_PROFILE_JOB,
+//								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
+//						ConsultantProfileJob.class,
+//						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_CONSULTANT_PROFILE));
+//
+//		
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(
+//								SchedulerConstants.EPERUNDING_DELETED_COMAPNY_JOB,
+//								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
+//						DeletedCompanyJob.class,
+//						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_EPERUNDING_DELETED_COMAPNY_JOB));
 
 		log.info("end init sm scheduler servlet....");
 
