@@ -36,7 +36,8 @@
 					update="@(.scAddMember)" />
 	
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{empty qTDetailBB.managedBean.committemembers}"
+				disabled="#{qTDetailBB.deleteselectedList(committe.scCommitteeMembers)}"
+				actionListener="#{qTDetailBB.deleteCommitteemembersData(committe.scCommitteeMembers)}"
 					process="@this, specificationcommitteeid" partialSubmit="true" styleClass="BtnSpacing"
 					oncomplete="committeeAppointmentDeletePopUp.show();"
 					update="@([id$=#{committeeAppointmentDeleteId}])"

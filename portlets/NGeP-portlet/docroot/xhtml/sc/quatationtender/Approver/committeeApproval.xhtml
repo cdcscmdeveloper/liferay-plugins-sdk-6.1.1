@@ -12,12 +12,20 @@
 			rowIndexVar="index" editable="true" rowKey="#{committeeapprover}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedMembersList}">
-            <p:ajax event="rowSelect" update="@form" />
-			<p:ajax event="rowUnselect" update="@form" />
-			<p:ajax event="rowSelectCheckbox" update="@form" />
-			<p:ajax event="rowUnselectCheckbox" update="@form" />
-			<p:ajax event="toggleSelect" update="@form" />
-			<p:column selectionMode="multiple" style="width:2%" />
+            
+			
+					<p:column style="width:3px;text-align:center;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox disabled="#{approvalBackingBean.managedBean.readOnly}"
+						value="#{qTDetailBB.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="@form"
+							listener="#{qTDetailBB.selectAll(qTDetailBB.managedBean.templateSpecBean.selectAll, membersList.scCommitteeMembers)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{committeeapprover.selected}" disabled="#{approvalBackingBean.managedBean.readOnly}">
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeeapprover.memberName}" />
