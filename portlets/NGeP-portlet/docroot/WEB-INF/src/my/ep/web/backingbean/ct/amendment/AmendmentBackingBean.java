@@ -43,13 +43,11 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -58,14 +56,11 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.dtl.ContractItemReqDTO;
-import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -76,7 +71,6 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -108,10 +102,8 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -123,6 +115,7 @@ import my.ep.type.sc.MemberRole;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
@@ -145,9 +138,6 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.convert.in.Doc;
 import org.docx4j.convert.out.pdf.PdfConversion;
@@ -157,7 +147,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
-import org.springframework.util.CollectionUtils;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -366,6 +355,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ctBackingBean.getManagedBean().setServiceTaxAlertFlg(false);				
 					}
 					
+					// During supplier claim the task
+					if (getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equals(ContractConst.SUPPLIER_ACK_LOA)) {
+						BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+						getManagedBean().setReadOnly(!bb.getManagedBean().getClaim());
+						// Default the supplier signer to claimant
+						if (!getManagedBean().isReadOnly()
+								&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy() == null
+									|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserId() == null)) {
+							ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(
+									getFacesScopes().getUserSessionBean());
+							getManagedBean().setEditorValue(getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT));
+						}
+					}					
 					return;
 				}
 		
@@ -489,46 +491,50 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						         this.getManagedBean().setSignUpdateDecision(false);
 				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 					        this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
-					        CommonUtils commonUtils = new CommonUtils();
-					        SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-					        VelocityContext context = new VelocityContext();
-							String vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
-							String content = null;
-							getManagedBean().setEditorValue("");
-							FacesScopes fs = new FacesScopes();
-							String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();		 	
-							context = new VelocityContext();	
-							context.put("hostUrl", hostUrl);
-						   if (getManagedBean().getTaskName() != null 
-									&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-								context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
-								context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-								context.put("supplierAckDate", dateSDF.format(new Date()));
-							} else {
-								context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
-								context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
-								context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
-							}
-							context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-							String supplierAddress = "";
-							if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-										supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-										supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-										supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-									}
-									context.put("supplierAddress", supplierAddress);
-									if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
-										context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
-									} else {
-										context.put("govSignDate", "");
-									}
-									context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
-								    context.put("supplier",true);
-									
-							if (vmFile != null && context != null) {
-								content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
-							}
-							getManagedBean().setEditorValue(content);
+//					        CommonUtils commonUtils = new CommonUtils();
+//					        SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+//					        VelocityContext context = new VelocityContext();
+//							String vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
+//							String content = null;
+//							getManagedBean().setEditorValue("");
+//							FacesScopes fs = new FacesScopes();
+//							String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();		 	
+//							context = new VelocityContext();	
+//							context.put("hostUrl", hostUrl);
+//						   if (getManagedBean().getTaskName() != null 
+//									&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+//								context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+//								context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+//								context.put("supplierAckDate", dateSDF.format(new Date()));
+//							} else {
+//								context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+//								context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
+//								context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
+//							}
+//							context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+//							String supplierAddress = "";
+//							if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+//										supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+//										supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+//										supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+//									}
+//									context.put("supplierAddress", supplierAddress);
+//									if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
+//										context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
+//									} else {
+//										context.put("govSignDate", "____________________");
+//									}
+//									if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() != null) {
+//										context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo());
+//									} else {
+//										context.put("agencyRefNo", "____________________");
+//									}
+//								    context.put("supplier",true);
+//									
+//							if (vmFile != null && context != null) {
+//								content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
+//							}
+							getManagedBean().setEditorValue(getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT));
 							changeAccountActionListener();
 					
 				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) 
@@ -613,16 +619,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						 ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 						 ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 						 ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
-				 }
+			        }
 			
-					if (getManagedBean().getTaskName() != null 
-			     			&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-						   for(ScLoaWitness witness : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()){
-							        if(witness.getPartyType().equalsIgnoreCase(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER)){
-							        	getManagedBean().setScLoaWitness(witness);
-							        	break;
-							        }
-						   }
+			        if (getManagedBean().getTaskName() != null 
+			        		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+						PmUser supplierSigner = new PmUser();
+						if (!getManagedBean().isReadOnly()) {
+							supplierSigner = getFacesScopes().getUserSessionBean();
+						}
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(supplierSigner);
 					}
 	     
 				  	getManagedBean().setSecretaryId(null);
@@ -765,35 +770,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						} 
 				    }
 				    
-				    if((getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+				    if ((getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 				    		|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
 				    		|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
 				    		|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))
-				    		&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())){
-				    	    for(int j =0; j < 2; j++){
+				    		&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())) {
+				    	    for (int j =0; j < 2; j++) {
 				    	    	CtLetterOfAcceptance ctloa = new CtLetterOfAcceptance();
-				    	    	if(j==0){
+				    	    	if (j == 0) {
 				    	    		ctloa.setContentTypeDesc(ResourceBundleUtils.getMessage("lbl.ct.amend.loa.sst", 
 										    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				    	    			if(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 0
-				    	    					&&  ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_SST
-				    	    					&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null){
-				    	    				ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
-				    	    			}else {
-				    	    				CtAttachment attach = new CtAttachment();
-						    	    	    ctloa.setLoaAttachments(attach);
-				    	    			}
-				    	    	}else{
+				    	    		ctloa.setDocDefinitionKey(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE);
+				    	    		
+				    	    		if (ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 0
+				    	    				&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_SST
+				    	    				&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null) {
+				    	    			ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
+				    	    		} else {
+				    	    			CtAttachment attach = new CtAttachment();
+				    	    			ctloa.setLoaAttachments(attach);
+				    	    		}
+				    	    	} else {
 				    	    		ctloa.setContentTypeDesc(ResourceBundleUtils.getMessage("lbl.ct.amend.loa.receipt", 
-										    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				    	    			if(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 1
-				    	    					&&  ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT
-				    	    					&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null ){
-				    	    				ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
-				    	    			}else {
-				    	    				CtAttachment attach = new CtAttachment();
-				    	    				ctloa.setLoaAttachments(attach);
-			    	    			}
+				    	    				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				    	    		ctloa.setDocDefinitionKey(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
+				    	    		
+				    	    		if (ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 1
+				    	    				&&  ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT
+				    	    				&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null ){
+				    	    			ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
+				    	    		} else {
+				    	    			CtAttachment attach = new CtAttachment();
+				    	    			ctloa.setLoaAttachments(attach);
+				    	    		}
 				    	    	}
 				    	    	getManagedBean().getCtLetterOfAcceptance().add(ctloa);
 				    	    }
@@ -882,7 +891,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				    	getManagedBean().setDisableEndorseAmendDetails(true);
 				    }
 				    if (getManagedBean().getTaskName() != null 
-				    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+				    		&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+				    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME))) {
 				    	getManagedBean().setDisableFinalAmendDetails(true);
 				    }
 				    if (getManagedBean().getTaskName() != null 
@@ -974,23 +984,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 				getSupplierListForLoaAck();
 				reqDTO.setSupplierList(getManagedBean().getSupplierList());
-
-				// Acknowledge Due Date
-				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-						|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
-				}
 			}
-
-			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-					&& getManagedBean().getTaskName() != null 
-					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-					&& (getManagedBean().getScLoaWitness().getIdentificationNo() != null || getManagedBean().getScLoaWitness().getEmail() != null
-					|| getManagedBean().getScLoaWitness().getDesignation() != null || getManagedBean().getScLoaWitness().getAddress() != null
-					|| getManagedBean().getScLoaWitness().getPhoneNo() != null || getManagedBean().getScLoaWitness().getWitnessName() != null)) {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
-			}			
 			
 			// Retrieve the proper committee role during sign off process and set the sign off flag to true
 			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
@@ -1484,94 +1478,69 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 		}
-		// Validation for contract signer
-		if ((!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && getManagedBean().getAckFA() != null 
-				&& getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) || (getManagedBean().getTaskName()!=null 
-				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
-						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))) {
-			if	(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner() == null 
-					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId() == null) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.signer", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			if	(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaSignerDesig() == null) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.signer.designation", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			if (getManagedBean().getScLoaWitness() != null && isSupplierRole()) {
-				if (getManagedBean().getScLoaWitness().getIdentificationNo() == null 
-						|| getManagedBean().getScLoaWitness().getIdentificationNo().length() == 0) {
+		
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
+				
+				// Validation for File Reference No
+				if (StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())){
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.identification.no", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.physical.no", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (getManagedBean().getScLoaWitness().getWitnessName() == null 
-						|| getManagedBean().getScLoaWitness().getWitnessName().length() == 0) {
+				// Validation for contract signer
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner() == null 
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId() == null) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.full.name", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.signer", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (getManagedBean().getScLoaWitness().getDesignation() == null 
-						|| getManagedBean().getScLoaWitness().getDesignation().length() == 0) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaSignerDesig() == null) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.designation", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.signer.designation", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (getManagedBean().getScLoaWitness().getAddress() == null 
-						|| getManagedBean().getScLoaWitness().getAddress().length() == 0) {
+				// Validation for Supplemental Contract Letter Date
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() ==  null){
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.address", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplemental.contract.letter.date", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (getManagedBean().getScLoaWitness().getPhoneNo() == null 
-						|| getManagedBean().getScLoaWitness().getPhoneNo().length() == 0) {
+				// Validation for Respond Period
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaResponsePeriod() ==  null){
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.tel", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.scl.response.period", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (getManagedBean().getScLoaWitness().getEmail() == null 
-						|| getManagedBean().getScLoaWitness().getEmail().length() == 0) {
+				// Validation for Supplemental Contract Letter
+				if (getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments() != null
+						&& getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments().getFilePath() == null ) {						
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.email", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				}
-			}			
-
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() ==  null){
+				// Validation for bond setting
+				if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondSubmissionPeriod() ==  null) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.amend.loa.gov.sign.date", 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.bond.no.days", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					} 
-					if (getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments() != null && 
-							getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments().getFilePath() == null ) {						
-						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-					}	
-				} else if(getManagedBean().getAckFA() != null
-						&& getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
-					if (getManagedBean().getCtLetterOfAcceptance().get(1).getLoaAttachments() != null &&
-							getManagedBean().getCtLetterOfAcceptance().get(1).getLoaAttachments().getFilePath() == null) {						
-						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.reciept.file.name", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					}
 				}
-			}
+			} 
 		}
+		
 		if (getManagedBean().getTaskName() != null 
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
@@ -3983,41 +3952,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}*/
 		return filePath;
 	}
-	
-	/**
-	 * The method used to get the Surat Pengesahan Setuju Terima Pembekal
-	 * that to be displayed on screen.
-	 * 
-	 * @throws FileNotFoundException  if an file cannot be found
-	 * @throws Exception  if an exception occurred
-	 * @see    FileNotFoundException, Exception
-	 */	
-	public String getLoaDeclerationFilePath() throws FileNotFoundException, Exception {
-		String filePath = null;
-		ScLoaReport agreementLetterReport = null;
-		for (ScLoaReport scLoaReport : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
-			if (scLoaReport.getPmDocument() != null) {
-				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(scLoaReport.getPmDocument().getDocDefinitionKey())) {
-					agreementLetterReport = scLoaReport;
-					break;
-				}
-			}
-		}
-		if (agreementLetterReport != null) {
-			String fileName = getTemplateFileName(agreementLetterReport.getPmDocument().getDocDefinitionKey());
-			if (fileName != null) {
-				AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-				filePath = getManagedBean().getFileDirectory() + "/temp";
-				File file = new File(filePath);
-				file.mkdirs();
-				filePath = filePath + "/" + attachmentFormat.format(fileName, null);
-				DocumentGenerator.getInstance().generatePdf(
-						new FileOutputStream(filePath), getContent(agreementLetterReport.getPmDocument().getDocDefinitionKey()));
-			}
-		}
-		return filePath;
-	}
-	
+		
 	/**
 	 * The method used to set the file index of attachment list.
 	 * 
@@ -4257,12 +4192,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
     
-    public void downloadLOAContentFile(int index) throws Exception{
+    public void downloadLOAContentFile(String docDefinitionKey) throws Exception {
     	
     	AttachmentFormat attachmentFormat = null;
 		
 		try {
-	    	String fileName = (index == 0) ? "AmendmentSuratPengesahanSetujuTerima.docx" : "LetterOfAcceptanceReciept .pdf";
+	    	String fileName = (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE))
+	    			? "SuratBerkaitanKontrakTambahan.docx" : "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
 			String content = null;
 			String filePath = getManagedBean().getFileDirectory();
 			File file = new File(filePath);
@@ -4271,15 +4207,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			attachmentFormat = new AttachmentDateFormat();
 			filePath = filePath + attachmentFormat.format(fileName, null);
 			
-			content = getContent((index == 0)? ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER : ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
+			content = getContent(docDefinitionKey);
 			if (content != null) {
-				if (index == 0)
+				if (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE)) {
 					DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);
-				else
+				} else {
 					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
+				}
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+				// Supplier only allow to acknowledge after letter is downloaded 
+				if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)
+						&& docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE)) {
+					getManagedBean().setAllowAcknowledge(true);
+				}
 			}
-		}catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
@@ -4288,153 +4230,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
     }
     
-    public String getDownloadLOAContent() throws Exception{
+    public String getAcknowledgmentReceiptContent() throws Exception {
     	String filePath = getManagedBean().getFileDirectory();		      
         File file = new File(filePath);
         file.mkdirs();
         
-        String fileName = "LetterOfAcceptanceReciept .pdf";
+        String fileName = "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
 		filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
 		String content = null;	
-		content = getContent(ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
+		content = getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
 		if (content != null) {
 			DocumentGenerator.getInstance().generatePdf(
 					new FileOutputStream(filePath), content);
 		}
 		return filePath;
     }
-    
-    /**
-	 * The method used to download the loa report.
-	 * 
-	 * @param  loaReport    an object of loa report
-	 * @throws IOException  if an input or output exception occurred
-	 * @see    IOException
-	 */
-    public void downloadDocFile(ScLoaReport loaReport) throws IOException {
-		AttachmentFormat attachmentFormat = null;
-		
-	    try {
-	    	String docDefinitionKey = loaReport.getPmDocument().getDocDefinitionKey();
-	    	String fileName = getTemplateFileName(docDefinitionKey);
-			if (fileName != null) {		        
-				String content = null;	
-		      	attachmentFormat = new AttachmentDateFormat();
-		      	String filePath = getManagedBean().getFileDirectory() + "/temp";
-			      
-				File file = new File(filePath);
-				file.mkdirs();
-		      	filePath = filePath + "/" + attachmentFormat.format(fileName, null);
-			       
-		      	if (ContractConst.TEMPLATE_JADUAL_HARGA.equalsIgnoreCase(loaReport.getPmDocument().getDocName())) {
-					formJadualHargaExcel(filePath);			       
-		     	} else {				        
-		     		content = getContent(docDefinitionKey);
-		     		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
-		     	}
-		      	downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
-		    } else {
-		    	if (loaReport.getScLoaReportAttachment() == null || loaReport.getScLoaReportAttachment().getFilePath() == null) {
-		    		throw new EpException(MessageConst.INFO_100052, new String[]{loaReport.getTitle()});
-		    	}
-		    	downloadFile(DocumentRepositoryUtils.getDBFilePath(loaReport.getScLoaReportAttachment().getFilePath()), loaReport.getScLoaReportAttachment().getFileName());
-		    }
-	    } catch(Exception e) {
-	    	e.printStackTrace();
-		} finally {
-			attachmentFormat = null;
-		}
-	}
-    
-  /*  *//**
-	 * The method used to download all loa reports
-	 * as a zip file.
-	 */
-	public void downloadAll() {		
-		/*	List<File> fileList = new ArrayList<File>();
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
-		String fileName = null;
-		String filePath = null;
-		String content = null;
-		String tempDirectory = getManagedBean().getFileDirectory() + "/temp";
-		File file = new File(tempDirectory);
-		file.mkdirs();		
-		
-		try {
-			for (ScLoaReport scLoaReport : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
-				// System Define Doc
-				if (scLoaReport.getDefinationType().getParameterId().equals(
-						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-								ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
-					fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
-					filePath = tempDirectory + "/" + attachmentFormat.format(fileName, null);
-					if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
-						formJadualHargaExcel(filePath);
-						fileList.add(new File(filePath));
-					} else {
-						String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
-						content = getContent(docDefinitionKey);					
-						DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
-						fileList.add(new File(filePath));
-					}
-				}
-				// User Upload Doc
-				else if (scLoaReport.getDefinationType().getParameterId().equals(
-						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-								ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD).getParameterId()))) {
-					if (scLoaReport.getScLoaReportAttachment().getFilePath() != null) {
-						fileList.add(new File(scLoaReport.getScLoaReportAttachment().getFilePath()));
-					}
-				}
-			}
-			
-			String zipFileName = "NGeP-LOA-Report.zip";
-			File zipFile = new File(tempDirectory + "/" + attachmentFormat.format(zipFileName, null));
-			try {
-				zipFile.createNewFile();
-				byte[] buffer = new byte[1024];   
-				ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));   
-				out.setLevel(Deflater.DEFAULT_COMPRESSION);   
-				for (File amendmentFile : fileList) {
-					FileInputStream in = new FileInputStream(amendmentFile);   
-					out.putNextEntry(new ZipEntry(amendmentFile.getName()));   
-					int len;   
-					while ((len = in.read(buffer)) > 0) {
-						out.write(buffer, 0, len);   
-					}   
-					out.closeEntry();   
-					in.close();   
-				}  
-				out.close();   
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			downloadFile(DocumentRepositoryUtils.getDBFilePath(zipFile.getPath().replace("\\", "/")), zipFileName);
-		} catch(Exception exp) {
-			exp.printStackTrace();
-		}*/
-	}
-	
-	/**
-	 * The method used to retrieve filename of the file to download
-	 * according to template type.
-	 * 
-	 * @return the filename
-	 */
-	private String getTemplateFileName(String docDefinitionKey) {		
-		if (ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
-			return "AmendmentRingkasanKontrakPage.pdf";
-		} else if (ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equals(docDefinitionKey)) {
-			return "AmendmentIntegrityPactPage.pdf";
-		} else if (ContractConst.DOC_DEF_KEY_JADUAL_HARGA.equals(docDefinitionKey)) {
-			return "AmendmentJadualHargaPage.xlsx";
-		} else if (ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)) {
-			return "AmendmentBonPelaksanaanPage.pdf";
-		}else if (ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
-			return "AmendmentSuratPengesahanSetujuTerimaPembekalPage.pdf";
-		}		
-		return null;
-	}
 	
 	/**
 	 * The method used for generating the content of loa reports
@@ -4456,125 +4266,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
 		
-		// Ringkasan Kontrak
-		if (ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
-			context = new VelocityContext();	
-			vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
-			
-			context.put("contractNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
-			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
-			context.put("fileNo",  ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
-			context.put("sourcingTitle",  ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
-			context.put("successfulSupplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			
-			BigDecimal contractValue = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount() != null 
-					? ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount() : BigDecimal.ZERO;			
-			context.put("contractValue", amountDF.format(contractValue));
-				
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() != null) {
-				contractValue = contractValue.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
-			}				
-			context.put("newContractValue", amountDF.format(contractValue));
-			
-			if (ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				context.put("newGSTAmout", amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()));
-				context.put("newOverallAmt", amountDF.format(contractValue.add(
-						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount())));
-			} else {
-				context.put("newGSTAmout", "T/B");
-				context.put("newOverallAmt", amountDF.format(contractValue));
-			}			
-						
-			String fulfilmentType = getParameterDesc(ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType());
-			fulfilmentType = fulfilmentType.replaceAll("&", "&#38;");
-			context.put("fulfilmentType", fulfilmentType);
-				
-			double deductionAmount = 0;				
-			for (CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()) {
-				if (deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED)) {
-					deductionAmount = deductionAmount + deduction.getAmount();
-				}
-			}				
-			context.put("deductionAmount", amountDF.format(deductionAmount));				
-			context.put("months", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod() + " bulan");
-			context.put("contractEffDate", df.format(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			context.put("contractExpDate", df.format(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-			
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
-				context.put("extendMonths",ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + " bulan");
-				context.put("extStartDate", df.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()));
-				context.put("extEndDate", df.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
-			} else {
-				context.put("extendMonths","");
-				context.put("extStartDate", "");
-				context.put("extEndDate", "");
-			}
-			context.put("amendEffExpDate", df.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-													
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
-				context.put("bondValue",ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null  
-						? amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()) : amountDF.format(BigDecimal.ZERO));					
-				context.put("amendBondValue", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() != null 
-						? amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()) : amountDF.format(BigDecimal.ZERO));
-			} else {
-				context.put("bondValue","T/B");
-				context.put("amendBondValue","T/B");
-			}
-		}
-		// Integrity Pact (Akuan Pembida Berjaya)
-		else if(ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equalsIgnoreCase(docDefinitionKey)) {
-			FacesScopes fs = new FacesScopes();
-			String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();				
-			vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
-			
-			context = new VelocityContext();	
-			context.put("hostUrl", hostUrl);
-			context.put("ptjName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
-			context.put("amendmentTitle", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle());
-			context.put("contractNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
-			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
-			context.put("amendmentRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());				
-			context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-			
-			context.put("supplierUserName", "________________");
-			context.put("supplierUserIcNo", "________________");
-			context.put("supplier",false);
-			
-			if (getManagedBean().getTaskName() != null
-					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME))) {
-				
-				context.put("supplier",true);
-				if (getManagedBean().getTaskName() != null 
-						&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-					context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
-					context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-				} else {
-					context.put("supplierUserName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
-					context.put("supplierUserIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
-				}
-			}
-		}
-		// Format Bon Pelaksanaan
-		else if (ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)) {
-			vmFile = ContractConst.DOCPATH_CT_LOA_BOND_LETTER;
-			context = new VelocityContext();
-			int type = 1;
-			
-			context.put("contractNum", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
-			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
-			context.put("type", type);
-			context.put("contractNo", "...........................");
-			context.put("supplierName", "...........................");
-			context.put("sourcingTitle", "...........................");
-			context.put("bondAmount", "..............................");
-			context.put("bondAmountWord", "..................................................");
-			context.put("expiryPeriod", "..........................");	
-		}
-		// Surat Pengesahan Setuju Terima Pembekal
-		else if (ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+		// Supplemental Contract Letter
+		if (ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE.equalsIgnoreCase(docDefinitionKey)) {
 			FacesScopes fs = new FacesScopes();
 			String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
 			vmFile = ContractConst.DOCPATH_CT_LOA_AGREEMENT_LETTER;
@@ -4636,7 +4329,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("procurementMode", procurementMode);
 			
 			if (scLoa.getBondAmt() != null && scLoa.isBondReq()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+	    					ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 				context.put("bondAmt200k", true);
 			
 				String bondAmt = "";
@@ -4728,15 +4423,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			String supplierMobileNo = "";
 			String supplierEmail = "";
 			String supplierCompName = "";
-			String supplierCompAddress = "";				
-			String witnessName = "";
-			String witnessID = "";
-			String witnessDesignation = "";
-			String witnessAddress = "";
-			String witnessTelNo = "";
-			String witnessFaxNo = "";
-			String witnessMobileNo = "";
-			String witnessEmail = "";
+			String supplierCompAddress = "";
 			
 			if (ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(
 					ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
@@ -4774,15 +4461,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						? getFacesScopes().getUserSessionBean().getEmail() : "";
 				supplierCompName = scLoiLoa.getSupplierName();
 				supplierCompAddress = supplierAddress;
-				// Witness
-				witnessName = (getManagedBean().getScLoaWitness().getWitnessName() != null) ? getManagedBean().getScLoaWitness().getWitnessName() : "";
-				witnessID = (getManagedBean().getScLoaWitness().getIdentificationNo() != null) ? getManagedBean().getScLoaWitness().getIdentificationNo() : "";
-				witnessDesignation = (getManagedBean().getScLoaWitness().getDesignation() != null) ? getManagedBean().getScLoaWitness().getDesignation() : "";
-				witnessAddress = (getManagedBean().getScLoaWitness().getAddress() != null) ? getManagedBean().getScLoaWitness().getAddress() : "";
-				witnessTelNo = (getManagedBean().getScLoaWitness().getPhoneNo() != null) ? getManagedBean().getScLoaWitness().getPhoneNo() : "";	//TODO: Full Phone No
-				witnessFaxNo = (getManagedBean().getScLoaWitness().getFaxNo() != null) ? getManagedBean().getScLoaWitness().getFaxNo() : "";
-				witnessMobileNo = (getManagedBean().getScLoaWitness().getMobileNo() != null) ? getManagedBean().getScLoaWitness().getMobileNo() : "";
-				witnessEmail = (getManagedBean().getScLoaWitness().getEmail() != null) ? getManagedBean().getScLoaWitness().getEmail() : "";
 			} else if (ContractStatusConst.FA_PENDING_VERIFICATION.equals(
 					ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
 				ackDate = dateSDF.format(scLoa.getAckDate());
@@ -4814,24 +4492,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierEmail = scLoa.getAckBy().getEmail() != null ? scLoa.getAckBy().getEmail() : "";
 				supplierCompName = scLoiLoa.getSupplierName();
 				supplierCompAddress = supplierAddress;					
-				// Witness
-				ScLoaWitness supplierWitness = null;
-				for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
-					if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(scLoaWitness.getPartyType())) {
-						supplierWitness = scLoaWitness;
-						break;
-					}
-				}
-				if (supplierWitness != null) {
-					witnessName = supplierWitness.getWitnessName();
-					witnessID = supplierWitness.getIdentificationNo();
-					witnessDesignation = supplierWitness.getDesignation();
-					witnessAddress = supplierWitness.getAddress();
-					witnessTelNo = supplierWitness.getPhoneNo();
-					witnessFaxNo = supplierWitness.getFaxNo();
-					witnessMobileNo = supplierWitness.getMobileNo();
-					witnessEmail = supplierWitness.getEmail();
-				}
+				
 			}
 			context.put("ackDate", ackDate);
 			context.put("bankAccNo", bankAccNo);
@@ -4849,27 +4510,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("supplierCompName", supplierCompName);
 			context.put("supplierCompAddress", supplierCompAddress);
 			// Witness
-			context.put("witnessName", witnessName);
-			context.put("witnessID", witnessID);
-			context.put("witnessDesignation", witnessDesignation);
-			context.put("witnessAddress", witnessAddress);
-			context.put("witnessTelNo", witnessTelNo);
-			context.put("witnessFaxNo", witnessFaxNo);
-			context.put("witnessMobileNo", witnessMobileNo);
-			context.put("witnessEmail", witnessEmail);				
+			context.put("witnessName", "");
+			context.put("witnessID", "");
+			context.put("witnessDesignation", "");
+			context.put("witnessAddress", "");
+			context.put("witnessTelNo", "");
+			context.put("witnessFaxNo", "");
+			context.put("witnessMobileNo", "");
+			context.put("witnessEmail", "");
 	
-		} else if (ContractConst.DOC_DEF_KEY_LOA_RECIEPT.equals(docDefinitionKey)) {
+		}
+		// Acknowledgment Receipt of the Supplemental Contract Letter
+		else if (ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT.equalsIgnoreCase(docDefinitionKey)) {
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
-			if (getManagedBean().getTaskName() != null 
-					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-				context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
-				context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-				context.put("supplierAckDate", dateSDF.format(new Date()));
-			} else {
-				context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
-				context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
-				context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
+			context.put("supplierName", "");
+			context.put("supplierIcNo", "");
+			context.put("supplierAckDate", "");
+			if (getManagedBean().getTaskName() != null) {
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+						&&  !getManagedBean().isReadOnly()) {
+					context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+					context.put("supplierAckDate", dateSDF.format(new Date()));
+				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+					context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+					context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
+					context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
+				}
 			}
 			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			String supplierAddress = "";
@@ -4883,9 +4551,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
 				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
 			} else {
-				context.put("govSignDate", "");
+				context.put("govSignDate", "_______________");
 			}
-			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
+			if (!StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())) {
+				context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo());
+			} else {
+				context.put("agencyRefNo", "_______________");
+			}			
 		}
 		
 		if (vmFile != null && context != null) {
@@ -4906,214 +4578,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		return sb.toString();
-	}
-	
-	/**
-	 * The method used for generating the excel sheet for Item products and services.
-	 * 
-	 * @param filePath  will be download file path
-	 */	
-	private void formJadualHargaExcel(String filePath) {
-		ContractAmendmentReqDTO reqDto = new ContractAmendmentReqDTO();
-		reqDto.setContractVerId(this.ctBackingBean.getManagedBean().getContractVer().getContractVerId());
-		reqDto.setZonal(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing());
-		reqDto.setItemType(ParameterConst.ITEM_TYPE_PRODUCT);
-		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-		ContractAmendmentResDTO resDto = amendSO.getItemList(reqDto);
-		List<CtItemPrice> productList = resDto.getItemPrices();
-		
-		reqDto.setItemType(ParameterConst.ITEM_TYPE_SERVICE);
-		resDto = amendSO.getItemList(reqDto);
-		List<CtItemPrice> serviceList = resDto.getItemPrices();
-		
-		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
-		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
-		JadualHargaBean jadualHarga = null;
-			        	
-		for (CtItemPrice productItemPrice : productList) {
-		    IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
-		    		ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-			reqDTO.setContractItemId(productItemPrice.getCtContractItem().getContractItemId());
-			reqDTO.setEffDate(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
-			if (productItemPrice.getCtContractZone() != null) {
-				reqDTO.setContractZoneId(productItemPrice.getCtContractZone().getContractZoneId());
-			}
-			ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
-			CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
-			productItemPrice.setMaxQuantity(ctItemMaxQty.getMaxQuantity());
-			jadualHarga = mappingJadualHarga(productItemPrice, ParameterConst.ITEM_TYPE_PRODUCT);
-			productJadualHargaList.add(jadualHarga);
-		}		
-		for (CtItemPrice serviceItemPrice : serviceList) {
-			jadualHarga = mappingJadualHarga(serviceItemPrice, ParameterConst.ITEM_TYPE_SERVICE);
-			serviceJadualHargaList.add(jadualHarga);
-		}
-		if (!productList.isEmpty() || !serviceList.isEmpty())
-		generateJadualHarga(filePath, productJadualHargaList, serviceJadualHargaList);
-	}
-	
-	/**
-	 * The method used to retrieve the price information of the
-	 * item products and services.
-	 * 
-	 * @param itemPrice     an object of item price
-	 * @param type          item type, 1:product item, 2:serive item
-	 * @return jadualHarga  a serialized object of jadual harga (excel sheet)
-	 */
-	private JadualHargaBean mappingJadualHarga(CtItemPrice itemPrice, String type) {
-		JadualHargaBean jadualHarga = new JadualHargaBean();
-		CommonUtils commonUtils = new CommonUtils();
-		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		jadualHarga.setZone(itemPrice.getCtContractZone() != null ? itemPrice.getCtContractZone().getZoneName() : "N/A");
-		jadualHarga.setItem(itemPrice.getCtContractItem().getScRequestItem().getItemName());
-		jadualHarga.setUnitPrice(nf.format(itemPrice.getUnitPrice().longValue()));
-		jadualHarga.setPriceType(itemPrice.getCtContractItem().getPriceType().getParameterCode());
-		if (itemPrice.getCtContractItem().getScRequestItem().getUom() != null) {
-			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getUom().getUomName());
-		}
-		// Product Item
-		if (type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {			
-			if (itemPrice.getFromQty() != null && itemPrice.getToQty() != null) {
-				jadualHarga.setTier(itemPrice.getFromQty() + " to " + itemPrice.getToQty());
-			}
-			jadualHarga.setQuantity(itemPrice.getMaxQuantity() != null ? itemPrice.getMaxQuantity().toString() : "N/A");
-			jadualHarga.setSubSequence(itemPrice.getSubSequence() != null ? itemPrice.getSubSequence() + "" : "N/A");
-		}
-		// Service Item
-		else if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-			jadualHarga.setFreqUom(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency()
-					? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());
-	    	jadualHarga.setUomPerDay(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay()
-	    			? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString());
-	    	jadualHarga.setUomPerMonth(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth()
-					? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString());
-	    	jadualHarga.setUomPerYear(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth()
-					? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString());
-	    	jadualHarga.setQuantity(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()
-	    			? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString());
-		}
-		return jadualHarga;		
-	}
-	
-	/**
-	 * The method used for generating the excel sheet for item products and services.
-	 * 
-	 * @param filePath  will be download file path
-	 * @param productList the list of product item to be generated in excel sheet
-	 * @param serviceList the list of service item to be generated in excel sheet
-	 */	
-	private void generateJadualHarga(String filePath, List<JadualHargaBean> productList, List<JadualHargaBean> serviceList) {
-		try {
-			final String templatePath = "templates" + ContractConst.DOCPATH_CT_LOA_JADUAL_HARGA;
-		    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
-		    if (inputStream != null) {
-				XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();		     
-		        Sheet productSheet = null;
-		        Sheet serviceSheet = null;
-		        boolean emptyProductList = false;
-		        Row row = null;
-		        int rowIndex = 0;
-		        int cellIndex = 0;
-		        boolean zoneExist = false;
-		        // Product Item
-		        if (!CollectionUtils.isEmpty(productList)) {
-		        	rowIndex = 0;
-		        	productSheet = wb.getSheetAt(0);
-		        	wb.setSheetName(0, "ProductSheet");
-		        	for (JadualHargaBean product : productList) {
-		        		if (!product.getZone().equals("N/A")) {
-		        			zoneExist = true;
-		        			break;
-		        		}
-		        	}
-		        	for (JadualHargaBean product : productList) {
-		        		rowIndex ++;
-		        		cellIndex = 0;
-		        		row = productSheet.createRow(rowIndex);
-		        		row.createCell(cellIndex++).setCellValue(product.getZone());
-		        		row.createCell(cellIndex++).setCellValue(product.getItem());
-		        		row.createCell(cellIndex++).setCellValue(product.getUom());
-		        		row.createCell(cellIndex++).setCellValue(product.getTier());
-		        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
-		        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
-		        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
-		        	}
-		            //Auto size all the columns
-			        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-			        	productSheet.autoSizeColumn(x);
-			        }
-			        //Hide column by price type
-			        productSheet.setColumnHidden(3, true);
-			        productSheet.setColumnHidden(4, true);
-		        	if (productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) 
-		        			|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-		        		productSheet.setColumnHidden(3, false);
-		        		productSheet.setColumnHidden(4, false);
-		        	}
-		        	if (productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) 
-		        			|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
-				        productSheet.setColumnHidden(3, false);
-		        	}
-		        	// Hide zone column if all N/A
-		        	if (!zoneExist) {
-		        		productSheet.setColumnHidden(0, true);
-		        	}
-		        } else {
-		        	wb.removeSheetAt(0);
-		        	emptyProductList = true;
-		        }
-		        // Serive Item
-		        if (!CollectionUtils.isEmpty(serviceList)) {
-		        	rowIndex = 0;
-		        	if (emptyProductList) {
-		        		serviceSheet = wb.getSheetAt(0);
-		        		wb.setSheetName(0, "ServiceSheet");
-		        	} else {
-		        		serviceSheet = wb.getSheetAt(1);
-		        		wb.setSheetName(1, "ServiceSheet");
-		        	}		        	
-		          	for (JadualHargaBean service : serviceList) {
-		        		if (!service.getZone().equals("N/A")) {
-		        			zoneExist = true;
-		        			break;
-		        		}
-		        	}		          	
-		        	for (JadualHargaBean service : serviceList) {
-		        		rowIndex ++;
-		        		cellIndex =0;
-		        		row = serviceSheet.createRow(rowIndex);
-		        		row.createCell(cellIndex++).setCellValue(service.getZone());
-		        		row.createCell(cellIndex++).setCellValue(service.getItem());
-		        		row.createCell(cellIndex++).setCellValue(service.getUom());
-		        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
-		        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
-		        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
-		        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
-		        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
-		        	}
-		        	for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-		 	        	serviceSheet.autoSizeColumn(x);
-		 	        }
-		        	// Hide zone column if all N/A
-		        	if (!zoneExist) {
-		        		 serviceSheet.setColumnHidden(0, true);
-			        }
-		        } else {
-		        	wb.removeSheetAt(1);
-		        }
-		        wb.setActiveSheet(0);
-		        // Write the output to a file
-		        FileOutputStream fileOut = new FileOutputStream(filePath);
-		        wb.write(fileOut);
-		        fileOut.close();
-		    } else {
-		    	 throw new EpException("Template file doesn't exist");
-		    }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -5297,62 +4761,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 	}
 	
-	/**
-	 * Gets the days by rules.
-	 *
-	 * @param RuleType the rule type
-	 * @return the days by rules
-	 */
-	private Integer getDaysByRules(String RuleType){
-		Integer days = 0;
-		IRuleSO ruleSO = null;
-		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		 	RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		   	ruleReqDTO.setRuleType(RuleType);
-		 	List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		  	if (ruleValueList != null && ruleValueList.size() > 0) {
-		  		days  = Integer.valueOf(ruleValueList.get(0).getRuleValue());
-		  	} else {
-				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-			}
-		} finally{
-		    	  ruleSO = null;
-		      }
-		return days;
-	}
-	
-	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e){
+	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
-		for (PmUser pmUsers : getCommitteDataModel().getList()){
-			if(pmUsers.isSelectedCheckBox()){
+		for (PmUser pmUsers : getCommitteDataModel().getList()) {
+			if (pmUsers.isSelectedCheckBox()) {
 				 ctBackingBean.getManagedBean().setButtonHideActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			 ctBackingBean.getManagedBean().setButtonHideActive(false);
-		}else{
+		} else {
 			 ctBackingBean.getManagedBean().setButtonHideActive(true);
 		}	
 	}
 
-	public void selectAllComitMem(AjaxBehaviorEvent e){
+	public void selectAllComitMem(AjaxBehaviorEvent e) {
 	    
-		for (PmUser pmUsers : getCommitteDataModel().getList()){
+		for (PmUser pmUsers : getCommitteDataModel().getList()) {
 			if (getManagedBean().isSelectAll()) {
 				pmUsers.setSelectedCheckBox(true);
-		       }else {
+		       } else {
 		    	   pmUsers.setSelectedCheckBox(false);
 		       }
 	      }
 		
-		 if((boolean) e.getComponent().getAttributes().get("value")){
+		 if ((boolean) e.getComponent().getAttributes().get("value")) {
 			 ctBackingBean.getManagedBean().setButtonHideActive(false);
-		 }else{
+		 } else {
 			 ctBackingBean.getManagedBean().setButtonHideActive(true);
-		 }		
-	    }
+		 }
+	}
 	
 	/**
 	 * The method used to navigate to contract details screen
@@ -5363,7 +4802,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String gotoCommonViewPage(Long contractId) {	
 		ContractDetailsBackingBean ctDT = null;
-		try{
+		try {
 		        ctDT =  new ContractDetailsBackingBean();
 		    	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -5385,10 +4824,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        ctDT.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 		        ctDT.getManagedBean().setBackPageAmendment(true);
 		       return CONTRACT_COMMON_PAGE;
-	   }finally{
+	   } finally {
 		   ctDT = null;
 	   }
 	}
+	
 	/**
 	 * The method used to check whether exist previous extension history
 	 * and the extend start date is already started.
@@ -5409,17 +4849,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return true;
 	}
 	
-	public boolean disableBtn(int index){
-		if(index ==0 
-				&& (getManagedBean().getTaskName() != null 
-					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))){
-			return false;
-		} else if(index ==1 && getManagedBean().getAckFA() != null &&
-				getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
-			 return false;
+	/**
+	 * The method used to retrieve the supplemental contract letter
+	 * response due date base on the selected sign date and response period.
+	 * 
+	 * @return response due date
+     */
+	public String retrieveResponseDueDate() {
+		String dueDate = ResourceBundleUtils.getMessage("lbl.txt.na", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null
+				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaResponsePeriod() != null) {
+			
+			Date ackDueDate = DateUtils.addDays(
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate(),
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaResponsePeriod());
+			
+			CommonUtils commonUtils = new CommonUtils();
+			SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+			dueDate = dateSDF.format(ackDueDate);
+			
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(ackDueDate);
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(null);
 		}
-		return true;
+		return dueDate;
 	}
-	
 }
