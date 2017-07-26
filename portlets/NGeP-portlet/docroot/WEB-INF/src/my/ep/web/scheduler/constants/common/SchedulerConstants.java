@@ -127,7 +127,7 @@ public class SchedulerConstants {
 	public static final String EPERUNDING_BRANCH_COMPANY_JOB = "BRANCH_COMPANY JOB";
 	public static final String EPERUNDING_REGISTERED_CATEGORY_JOB = "REGISTERED CATEGORY JOB";
 	public static final String EPERUNDING_GOVERNMENT_PROJECT_JOB = "GOVERNMENT PROJECT JOB";
-	public static final String EPERUNDING_DELETED_COMAPNY_JOB = "DELETED COMAPNY JOB";
+	public static final String EPERUNDING_DELETED_COMAPNY_JOB = "DELETED COMPANY JOB";
 
 	// PHIS OUT BOUND
 	public static final String PHIS_VOT_FUND_JOB = "MASTER DATA VOT JOB";
