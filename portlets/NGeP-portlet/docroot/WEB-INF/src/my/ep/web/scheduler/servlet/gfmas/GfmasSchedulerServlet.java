@@ -31,121 +31,121 @@ public class GfmasSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// gfmas auto Integration Jobs
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_KPTJ_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLKPTJJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_KPTJ));
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_PP_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLSegJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_PP));
-		
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_BANK_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLBankjob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_BANK));
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_AGOFF_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLAgOffJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_AGOFF));
-		
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_GLACC_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GlAccjob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLACC));
-		
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_PTJ_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLPTJJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLPTJ));
-		
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_VOT_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLVOTJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLVOT));
-		
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_DANA_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLDANAJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLDANA));
-		
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_PROG_ACT_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLPrgActJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_PROG_ACT));
-		
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_PROJECT_JOB,
-						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
-						GLProjectJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
-						SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_PROJECT));
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_KPTJ_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLKPTJJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_KPTJ));
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_PP_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLSegJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_PP));
+//		
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_BANK_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLBankjob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_BANK));
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_AGOFF_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLAgOffJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_AGOFF));
+//		
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_GLACC_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GlAccjob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLACC));
+//		
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_PTJ_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLPTJJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLPTJ));
+//		
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_VOT_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLVOTJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLVOT));
+//		
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_DANA_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLDANAJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_GLDANA));
+//		
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_PROG_ACT_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLPrgActJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_PROG_ACT));
+//		
+//		EpSchedulerHelper
+//		.scheduleJob(
+//				new JobKey(SchedulerConstants.GFMAS_PROJECT_JOB,
+//						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
+//						GLProjectJob.class,
+//						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+//						SchedulerPropertiesUtils
+//						.getInstance()
+//						.getProperty(
+//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_GFMAS_PROJECT));
 		
 	}
 }
