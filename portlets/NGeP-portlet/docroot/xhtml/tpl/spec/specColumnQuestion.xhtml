@@ -13,10 +13,10 @@
 		<ui:param name="specificationrequired" value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }"></ui:param>
 
 
-	<p:column style="width:18%">
+	<p:column>
 
 		<c:if test="#{updateSpec}">
-			<p:inputTextarea id="itemName" style="width:calc(100% - 20px);"
+			<p:inputTextarea id="itemName" style="width:calc(100% - 30px);"
 				value="#{question.clItem}" rendered="#{isQuestionTypeItem}"
 				required="#{isValidationReq}" rows="5" maxlength="2000"
 				onkeyup="limitTextArea(this,2000);"
@@ -24,11 +24,9 @@
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
-			<br />
-			#{question.cmItem.extensionCode}
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 			<ui:fragment rendered="#{specificationrequired }">
-			<p:inputTextarea id="specification" style="width:calc(100% - 20px);"
+			<p:inputTextarea id="specification" style="width:calc(100% - 30px);"
 				value="#{question.clSpecDetail}"
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{isValidationReq}" rows="5" maxlength="1000"
@@ -39,6 +37,8 @@
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
 			<p:message id="specificationMsg" for="specification" display="icon" />
+			<br />
+			#{question.cmItem.extensionCode}
 			</ui:fragment>
 		</c:if>
 		<c:if test="#{!updateSpec}">
@@ -198,7 +198,7 @@
 
 		<h:selectOneMenu id="priceType"
 			value="#{question.clPriceTypeCode.parameterId}"
-			required="#{isValidationReq}" style="width:#{widthPixes}"
+			required="#{isValidationReq}" style="width:calc(100% - 30px);"
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.price.type']}">
 			<f:selectItems
