@@ -48,28 +48,6 @@
 				</td>
 				</h:panelGroup>				
 			</tr>
-			<tr>
-				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
-				<td style="width: 20%">
-					<h:outputLabel value="#{lbl['lbl.ct.loa.issue.date']}" />
-				</td>
-				<td style="width: 10%" class="header-info-text">
-					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.issueDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</td>
-				<td style="width: 20%" colspan="2">
-					<h:outputLabel value="#{lbl['lbl.ct.response.due.date']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text" colspan="2">
-					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackDueDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-					(#{DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackDueDate)} #{lbl['lbl.ct.days']})
-				</td>
-				<td style="width: 20%"></td><td style="width: 20%"></td>
-				</h:panelGroup>
-			</tr>
 		</table>
 	</div>
 </ui:composition>

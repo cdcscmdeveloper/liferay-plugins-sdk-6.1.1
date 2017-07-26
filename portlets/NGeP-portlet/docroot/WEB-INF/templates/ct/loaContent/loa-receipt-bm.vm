@@ -1,14 +1,10 @@
 <html>
 <head>
 	<style>
-		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
-				
-		.footer {
-			display: block; text-align: center;
-			position: running(footer);
-		}
-		li {text-align: justify;word-spacing: -10px;}		
+	@page {
+		size: A4 portrait;
+ 	}  
+		
 	</style>
 </head>
 <body>
@@ -87,6 +83,7 @@
 				</td>
 			</tr>
 			</table>
+			 <div class="break"></div>
 		</td>
 	</tr>		
 	</table>
