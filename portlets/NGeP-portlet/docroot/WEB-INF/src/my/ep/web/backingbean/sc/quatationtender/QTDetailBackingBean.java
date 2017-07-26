@@ -5825,4 +5825,26 @@ public class QTDetailBackingBean extends
 		qtnTenderSearchBean.setPtjProfile(orgProfileptj);
 		}
 	}
+	/**
+	 * The method used to deltecommitteemembersData.
+	 * 
+	 * @param existingmember
+	 * 		the existingmember ScCommitteeMember.
+	 */
+	public void deleteCommitteemembersData(List<ScCommitteeMember> existingmember){
+		if(CollectionUtils.isNotEmpty(existingmember)){
+			log.info("Start deleteCommitteemembersData"+existingmember.size());
+			List<ScCommitteeMember> deleteMemberList=new ArrayList<ScCommitteeMember>();
+			for(ScCommitteeMember member:existingmember){
+				if(member.isSelected()){
+					deleteMemberList.add(member);
+				}
+				
+			}
+			this.getManagedBean().setCommittemembers(deleteMemberList);
+			deleteMemberList=null;
+			//log.info("end deleteCommitteemembersData"+this.getManagedBean().getCommittemembers().size());
+		}
+		
+	}
 }
