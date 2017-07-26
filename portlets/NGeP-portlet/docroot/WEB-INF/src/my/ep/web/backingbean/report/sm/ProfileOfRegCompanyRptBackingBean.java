@@ -5,26 +5,32 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.lang.StringUtils;
+
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ProfileOfRegCompanyRptManagedBean;
 
-@ManagedBean(name="profileOfRegCompanyRptBB")
+@ManagedBean(name = "profileOfRegCompanyRptBB")
 @ViewScoped
-public class ProfileOfRegCompanyRptBackingBean extends SmReportBackingBean<ProfileOfRegCompanyRptManagedBean>{
+public class ProfileOfRegCompanyRptBackingBean extends
+		SmReportBackingBean<ProfileOfRegCompanyRptManagedBean> {
 	private static final long serialVersionUID = 1L;
-	
-	public void generateReport(){
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+	public void generateReport() {
+		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		
+
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
-		
+		params.put(SmReportConst.PARAM_ZONE,
+				getManagedBean().getZone() == null ? StringUtils.EMPTY
+						: getManagedBean().getZone());
+		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
+				.getSupplierType());
+
 		generateSmReport(params);
 	}
-	
-	public void resetSearch(){
-		
+
+	public void resetSearch() {
+
 	}
 }
