@@ -62,6 +62,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -2401,5 +2402,64 @@ public class QTCommitteBackingBean extends
 			committeReqDTO.setApprovalFlow(true);
 		}
 		committeSO.validateEvaluationMethodMembers(committeReqDTO);
+	}
+	
+	/**
+	 * Select all.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param selected the selected
+	 * @param list the list
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void selectNewCommittee(boolean selected,
+			IPagingDataModel<PmUser> dataModel) {
+		List<PmUser> modelList=dataModel.getList();
+		if (modelList != null) {
+			for (PmUser entity :modelList) {
+				entity.setSelected(selected);
+			}
+		}
+	}
+	
+	/**
+	 * Deleteselected list.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @return true, if successful
+	 */
+	public <ENTITY_CLASS extends BaseEntity> boolean deleteselectedNewCommitteeList(
+			IPagingDataModel<PmUser> dataModel) {
+		List<PmUser> modelList=dataModel.getList();
+		if (modelList != null) {
+			for (PmUser entity : modelList) {
+				if (entity.isSelected()) {
+					return false;
+				}
+
+			}
+		}
+		return true;
+	}
+	
+	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel){
+		List<PmUser> modelList=dataModel.getList();
+		log.info("start addNewCommiteteUsers");
+		List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
+		if(null==userList){
+			log.info("nullList addNewCommiteteUsers");
+			userList=new ArrayList<PmUser>();
+		}
+		if (modelList != null) {
+			List<PmUser> user=new ArrayList<PmUser>();
+			for (PmUser entity : modelList) {
+			if (entity.isSelected()) {
+				user.add(entity);
+			}
+		}
+			userList.addAll(user);
+			this.getManagedBean().setSelectedPmUser(userList);
+			//log.info("end addNewCommiteteUsers"+this.getManagedBean().getSelectedPmUser().size());
+	}
 	}
 }

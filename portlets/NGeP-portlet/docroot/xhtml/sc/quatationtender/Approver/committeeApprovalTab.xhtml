@@ -28,7 +28,8 @@
 			update="@([id$=newspecificationcommitteeid])" />
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly or empty qTDetailBB.managedBean.committemembers}"
+			disabled="#{qTDetailBB.deleteselectedList(membersList.scCommitteeMembers)}"
+			actionListener="#{qTDetailBB.deleteCommitteemembersData(membersList.scCommitteeMembers)}"
 			process="@this, committeeapprovalId" partialSubmit="true"
 			oncomplete="committeeApprovalDeletePopUp.show();"
 			update="@([id$=#{committeeApprovalDeleteId}])" >

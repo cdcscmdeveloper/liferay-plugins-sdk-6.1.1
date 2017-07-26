@@ -66,12 +66,22 @@
 					rowIndexVar="index">
 
 					<ac:paginator for="existingcommitteesearchid" />
-                    <p:ajax event="rowSelect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
-			<p:ajax event="rowUnselect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
-			<p:ajax event="rowSelectCheckbox" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
-			<p:ajax event="rowUnselectCheckbox" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
-			<p:ajax event="toggleSelect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
-					<p:column selectionMode="multiple" style="width:2%" />
+                   <p:ajax event="page"
+				listener="#{qTCommitteBackingBean.addNewCommiteteUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+				update="@([id$=existingcommitteesearchid])" />
+					
+					<p:column style="width:3px;text-align:center;" >
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{qTCommitteBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="@form"
+							listener="#{qTCommitteBackingBean.selectNewCommittee(qTCommitteBackingBean.managedBean.templateSpecBean.selectAll, qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{existcommitteeuser.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:outputText value="#{existcommitteeuser.userName}"
@@ -216,7 +226,8 @@
 		</c:if>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="committeeAppointmentAddSpecificationBtnId"
-			disabled="#{empty qTCommitteBackingBean.managedBean.selectedPmUser}"
+			disabled="#{qTCommitteBackingBean.deleteselectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+			actionListener="#{qTCommitteBackingBean.addNewCommiteteUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scMemberDtl,.amendButton)" />
 
