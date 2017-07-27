@@ -226,7 +226,7 @@
 		</c:if>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="committeeAppointmentAddSpecificationBtnId"
-			disabled="#{qTCommitteBackingBean.deleteselectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+			disabled="#{qTCommitteBackingBean.enableSelectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 			actionListener="#{qTCommitteBackingBean.addNewCommiteteUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scMemberDtl,.amendButton)" />
