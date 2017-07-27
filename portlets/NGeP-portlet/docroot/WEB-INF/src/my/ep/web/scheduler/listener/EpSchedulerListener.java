@@ -1,9 +1,5 @@
 package my.ep.web.scheduler.listener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import my.ep.factory.EpLogger;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 
