@@ -46,9 +46,10 @@ public class EpSchedulerListener implements JobListener {
 	@Override
 	public void jobWasExecuted(JobExecutionContext context,
 			JobExecutionException jobException) {
-		Date date = new Date(context.getJobRunTime());
-		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
-		String dateFormatted = formatter.format(date);
+		int seconds = (int) (context.getJobRunTime() / 1000) % 60 ;
+		int minutes = (int) ((context.getJobRunTime() / (1000*60)) % 60);
+		int hours   = (int) ((context.getJobRunTime() / (1000*60*60)) % 24);
+		String dateFormatted = hours+":"+minutes+":"+seconds;
 		String jobName = context.getJobDetail().getKey().toString();
 		log.info("**********************************Job [" + jobName
 				+ "] finish executed with duration of [" + dateFormatted
