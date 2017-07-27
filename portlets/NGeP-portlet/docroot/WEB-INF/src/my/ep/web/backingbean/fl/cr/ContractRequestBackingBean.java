@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -206,6 +207,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -4268,7 +4270,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flRequest.setCreatedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
 			}
 			if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
-				flRequest.setTitle(FulfilmentConst.CONTRACT_REQUEST);
+				String msg = "";
+				Locale locale = new FacesScopes().getUserLocale();
+
+				msg = ResourceBundleUtils.getMessage("lbl.fl.title.contract.no", new String[] { ""+flRequest.getCtContract().getContractNo()} ,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				flRequest.setTitle(msg);
 			}
 			
 			reqDTO.setFlFulfilmentRequest(flRequest);
