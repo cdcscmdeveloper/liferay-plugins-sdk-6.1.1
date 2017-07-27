@@ -2422,14 +2422,15 @@ public class QTCommitteBackingBean extends
 	}
 	
 	/**
-	 * Deleteselected list.
+	 * Enableselected list.
 	 *
 	 * @param <ENTITY_CLASS> the generic type
 	 * @param list the list
 	 * @return true, if successful
 	 */
-	public <ENTITY_CLASS extends BaseEntity> boolean deleteselectedNewCommitteeList(
+	public <ENTITY_CLASS extends BaseEntity> boolean enableSelectedNewCommitteeList(
 			IPagingDataModel<PmUser> dataModel) {
+		if(null!=dataModel){
 		List<PmUser> modelList=dataModel.getList();
 		if (modelList != null) {
 			for (PmUser entity : modelList) {
@@ -2439,10 +2440,12 @@ public class QTCommitteBackingBean extends
 
 			}
 		}
+		}
 		return true;
 	}
 	
 	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel){
+		if(null!=dataModel){
 		List<PmUser> modelList=dataModel.getList();
 		log.info("start addNewCommiteteUsers");
 		List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
@@ -2460,6 +2463,7 @@ public class QTCommitteBackingBean extends
 			userList.addAll(user);
 			this.getManagedBean().setSelectedPmUser(userList);
 			//log.info("end addNewCommiteteUsers"+this.getManagedBean().getSelectedPmUser().size());
+	}
 	}
 	}
 }
