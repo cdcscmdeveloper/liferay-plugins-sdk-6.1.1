@@ -214,17 +214,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
 				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
 				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
-			if(!getManagedBean().getSmAppl().isResubmit()) {
-				String poLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(
-						getManagedBean().getZoneCode(), "UPS_PO", getManagedBean()
-								.getSmAppl().getSupplierType(), getManagedBean()
-								.getSmAppl().getApplType(), getManagedBean()
-								.getSmAppl().getApplCategoryType());
-				((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poLoginIds);				
+			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
+				setPOJobRoleWeigtage(reqDTO);
 			}
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
-			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+			
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(resAction);
 			//reqDTO.setSmRemark(smRmk);
@@ -498,6 +494,52 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				this.receiveStatusChange(doc);
 			}
 		}
+	}
+
+	private void setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
+		if(!getManagedBean().getSmAppl().isResubmit()) {
+			log.info("<<<<<<<<<<not resubmit>>>>>>>>>>");
+			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
+					.getSmAppl().getSupplierType(), getManagedBean()
+					.getSmAppl().getApplType(), getManagedBean()
+					.getSmAppl().getApplCategoryType());
+			reqDTO.setPmUser(poUser);
+			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
+			
+			setPOWeightage(poUser);
+			
+			log.info("not resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
+			log.info("not resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
+			log.info("not resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
+			reqDTO.setPmUser(poUser);
+		}else{
+			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
+			String loginId = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers().trim();
+			PmUser poUser = SmCommonUtil.getInstance().retrievePOByUserIdAndJobTask(loginId, 
+					getManagedBean().getSmAppl().getSupplierType(), getManagedBean()
+					.getSmAppl().getApplType(), getManagedBean()
+					.getSmAppl().getApplCategoryType());
+			setPOWeightage(poUser);
+			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
+			
+			log.info("is resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
+			log.info("is resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
+			log.info("is resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
+			reqDTO.setPmUser(poUser);
+		}
+		
+		
+	}
+	
+	private void setPOWeightage(PmUser poUser){
+		Integer jobRatioWeight = SmCommonUtil.getInstance().retrievePoJobTypeWeight(getManagedBean()
+				.getSmAppl().getSupplierType(), getManagedBean()
+				.getSmAppl().getApplType(), getManagedBean()
+				.getSmAppl().getApplCategoryType());
+		long accumelatedWeight = poUser.getPmPoWeightage().getAccumulatedWeight() + jobRatioWeight;
+		long newWeight = poUser.getPmPoWeightage().getNewWeight() + jobRatioWeight;
+		poUser.getPmPoWeightage().setAccumulatedWeight(accumelatedWeight);
+		poUser.getPmPoWeightage().setNewWeight(newWeight);
 	}
 
 }
