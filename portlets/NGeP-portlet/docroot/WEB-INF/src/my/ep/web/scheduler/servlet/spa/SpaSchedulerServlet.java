@@ -30,109 +30,109 @@ public class SpaSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// SPA Integration Jobs
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_MATERIAL_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						MasterDataSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_MATERIAL));
-//		
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_SEGMENT_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						SegmentSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_SEGMENT));
-//		
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_FAMILY_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						FamilySpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_FAMILY));
-//		
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_CLASS_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						ClassSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_CLASS));
-//		
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_COMMODITY_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						CommoditySpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_Commodity));
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_COLOR_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						ColorSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_COLOR));
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_BRAND_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						BrandSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_BRAND));
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_MEASUREMENT_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						MeasurementSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_MEASUREMENT));
-//		
-//		
-//		EpSchedulerHelper
-//		.scheduleJob(
-//				new JobKey(SchedulerConstants.SPA_MASTER_DATA_TYPE_JOB,
-//						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
-//						TypeSpaJob.class,
-//						SchedulerConstants.SPA_JOB_DAILY_DESC,
-//						SchedulerPropertiesUtils
-//						.getInstance()
-//						.getProperty(
-//								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_TYPE));
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_MATERIAL_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						MasterDataSpaJob.class,
+						SchedulerConstants.SPA_JOB_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_MATERIAL));
+		
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_SEGMENT_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						SegmentSpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_SEGMENT));
+		
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_FAMILY_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						FamilySpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_FAMILY));
+		
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_CLASS_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						ClassSpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_CLASS));
+		
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_COMMODITY_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						CommoditySpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_Commodity));
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_COLOR_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						ColorSpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_COLOR));
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_BRAND_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						BrandSpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_BRAND));
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_MEASUREMENT_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						MeasurementSpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_MEASUREMENT));
+		
+		
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SPA_MASTER_DATA_TYPE_JOB,
+						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
+						TypeSpaJob.class,
+						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SPA_MASTER_DATA_TYPE));
 
 	}
 }

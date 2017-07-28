@@ -25,16 +25,16 @@ public class CmSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// PHIS CM Out bound Continuous job
-		/*EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_MASTER_DATA,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataMaterialJob.class,
-						SchedulerConstants.PHIS_CM_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CM_PHIS_CM_OUTBOUND));*/
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(SchedulerConstants.PHIS_MASTER_DATA,
+//								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+//						MasterDataMaterialJob.class,
+//						SchedulerConstants.PHIS_CM_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CM_PHIS_CM_OUTBOUND));
 
 //		EpSchedulerHelper
 //				.scheduleJob(
@@ -50,15 +50,15 @@ public class CmSchedulerServlet extends HttpServlet {
 
 		// 1GFMAS Master Data Material Information job
 		//TODO is this cm or sm integration job
-//		EpSchedulerHelper.scheduleJob(
-//				new JobKey(SchedulerConstants.GFMAS_MASTER_DATA_MATERIAL,
-//						SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-//				MaterialMasterDataInformationJob.class,
-//				SchedulerConstants.GFMAS_MASTERDATA_MATERIAL_JOB_DESC,
-//				SchedulerPropertiesUtils
-//				.getInstance()
-//				.getProperty(
-//						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_SM_OUTBOUND1));
+		EpSchedulerHelper.scheduleJob(
+				new JobKey(SchedulerConstants.GFMAS_MASTER_DATA_MATERIAL,
+						SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+				MaterialMasterDataInformationJob.class,
+				SchedulerConstants.GFMAS_MASTERDATA_MATERIAL_JOB_DESC,
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_SM_OUTBOUND1));
 
 		// /CM Expired Item
 		EpSchedulerHelper.scheduleJob(new JobKey(
