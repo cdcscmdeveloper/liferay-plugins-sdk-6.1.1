@@ -26,39 +26,47 @@ public class EpSchedulerListener implements JobListener {
 
 	@Override
 	public void jobToBeExecuted(JobExecutionContext context) {
-		String jobName = context.getJobDetail().getKey().toString();
-		log.info("**********************************Job to be executed ["
-				+ jobName + "]**********************************");
-
+		try {
+			String jobName = context.getJobDetail().getKey().toString();
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job to be executed (" + jobName
+					+ ") <<<<<<<<<<<<<<<<<<<<<<");
+		} catch (Exception e) {
+			log.info("ERROR JOB LISTENER JOBTOBEEXECUTED:" + e.getMessage());
+		}
 	}
 
 	@Override
 	public void jobExecutionVetoed(JobExecutionContext context) {
-		String jobName = context.getJobDetail().getKey().toString();
-		log.info("**********************************Job execution vetoed["
-				+ jobName + "]**********************************");
+		try {
+			String jobName = context.getJobDetail().getKey().toString();
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job execution vetoed[" + jobName
+					+ "]<<<<<<<<<<<<<<<<<<<<<<");
+		} catch (Exception e) {
+			log.info("ERROR JOB LISTENER JOBEXECUTIONVETOED:" + e.getMessage());
+		}
 	}
 
 	@Override
 	public void jobWasExecuted(JobExecutionContext context,
 			JobExecutionException jobException) {
-		int seconds = (int) (context.getJobRunTime() / 1000) % 60 ;
-		int minutes = (int) ((context.getJobRunTime() / (1000*60)) % 60);
-		int hours   = (int) ((context.getJobRunTime() / (1000*60*60)) % 24);
-		String dateFormatted = hours+":"+minutes+":"+seconds;
-		String jobName = context.getJobDetail().getKey().toString();
-		log.info("**********************************Job [" + jobName
-				+ "] finish executed with duration of [" + dateFormatted
-				+ "]**********************************");
+		try {
+			int seconds = (int) (context.getJobRunTime() / 1000) % 60;
+			int minutes = (int) ((context.getJobRunTime() / (1000 * 60)) % 60);
+			int hours = (int) ((context.getJobRunTime() / (1000 * 60 * 60)) % 24);
+			String dateFormatted = hours + ":" + minutes + ":" + seconds;
+			String jobName = context.getJobDetail().getKey().toString();
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job (" + jobName
+					+ ") finish executed with duration of (" + dateFormatted
+					+ ")<<<<<<<<<<<<<<<<<<<<<<");
 
-		if (jobException != null
-				&& !StringUtils.isBlank(jobException.getMessage())) {
-			log.info("**********************************Exception thrown by job: "
-					+ jobName
-					+ " with message: "
-					+ jobException.getMessage()
-					+ "!!!!!!!!!!!!!!!!!");
+			if (jobException != null
+					&& !StringUtils.isBlank(jobException.getMessage())) {
+				log.info(">>>>>>>>>>>>>>>>>>>>>>>>Exception thrown by job: "
+						+ jobName + " with message: "
+						+ jobException.getMessage() + "!!!!!!!!!!!!!!!!!");
+			}
+		} catch (Exception e) {
+			log.info("ERROR JOB LISTENER JOBWASEXECUTED:" + e.getMessage());
 		}
-
 	}
 }
