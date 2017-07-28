@@ -92,16 +92,16 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_PROPOSAL_VALIDITY_EXPIRY));
 
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.GFMAS_SST_INFORMATION,
-//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-//						SSTInformationJob.class,
-//						SchedulerConstants.GFMAS_SC_OUT_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_1GFMAS_SC_OUTBOUND));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.GFMAS_SST_INFORMATION,
+								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+						SSTInformationJob.class,
+						SchedulerConstants.GFMAS_SC_OUT_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_1GFMAS_SC_OUTBOUND));
 
 		// failover handler Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
