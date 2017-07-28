@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:include src="/xhtml/sc/loa/loarequest/loaInstructionHeader.xhtml" />
-	
+
 	<p:panel header="#{lbl['lbl.sc.deduction.payment']}"
 		id="deductionPayId" toggleable="true">
 
@@ -35,7 +35,8 @@
 				</f:facet>
 
 				<c:if test="#{isEditableStatus}">
-					<h:selectOneMenu id="deductionType" style="width:170px;float: left;"
+					<h:selectOneMenu id="deductionType"
+						style="width:170px;float: left;"
 						label="#{lbl['lbl.sc.deduction.type']}"
 						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{scQtDeduction.deductionType.parameterId}">
@@ -52,15 +53,20 @@
 						style="width:450px;float:left;" maxlength="255"
 						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
-						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" >
+						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeNonFixed}">
 						<f:ajax></f:ajax>
 					</p:inputText>
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
 					#{lOADetailBackingBean.getParameterDesc(scQtDeduction.deductionType)}
+					<h:outputText value=" - #{scQtDeduction.deductionDesc}"
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
+                       or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeNonFixed}" />
+
 				</c:if>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}" style="width:150px;">
+			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}"
+				style="width:150px;">
 				<h:panelGroup id="deductionPayAmtId">
 					<p:inputText id="amtid" size="30" maxlength="18" required="true"
 						label="#{lbl['lbl.sc.deduction.amount']}"
@@ -98,8 +104,8 @@
 				title="#{lbl['lbl.msg.confirm.delete.header']}"
 				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 		</c:if>
-		
-        <br />
+
+		<br />
 		<h:panelGroup id="clausePnl">
 			<h:outputText value="#{lbl['lbl.sc.deduction.payment']} (" />
 			<h:outputText
@@ -144,7 +150,8 @@
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
 							disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
-							required="true" id="clauseId" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+							required="true" id="clauseId" onkeyup="limitTextArea(this,500);"
+							onkeydown="limitTextArea(this,500);"
 							label="#{lbl['lbl.sc.deduction.clause']}" rows="3"
 							autoResize="false" maxlength="500"
 							style=" margin-bottom:5px; width:825px">
