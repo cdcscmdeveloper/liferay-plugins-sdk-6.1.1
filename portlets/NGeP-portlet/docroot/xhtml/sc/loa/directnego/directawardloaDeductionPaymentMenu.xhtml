@@ -50,7 +50,7 @@
 					<p:inputText value="#{scQtDeduction.deductionDesc}"
 						style="width:450px;float:left;" maxlength="255"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
-						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" >
+						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeNonFixed}" >
 						<f:ajax></f:ajax>
 					</p:inputText>
 					</c:when>
@@ -58,7 +58,7 @@
 					#{directLOABackingBean.getParameterDesc(scQtDeduction.deductionType)}
 					<h:outputText value=" - #{scQtDeduction.deductionDesc}"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
-						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" />
+						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeNonFixed}" />
 					</c:otherwise>
 				</c:choose>
 			</p:column>
