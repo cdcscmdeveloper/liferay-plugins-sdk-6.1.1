@@ -193,9 +193,9 @@ public class SuppliersReviewBackingBean extends
 					.getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
 			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean()
 					.getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
-		} else {
+		}/* else {
 			throw new EpException(MessageConst.ERROR_790002);
-		}
+		}*/
 
 		if (catList != null && !catList.isEmpty()) {
 
