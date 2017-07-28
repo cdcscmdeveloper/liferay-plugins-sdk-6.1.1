@@ -36,7 +36,7 @@ import org.quartz.impl.matchers.KeyMatcher;
  * @author Syazwan
  * 
  */
-public class EpSchedulerHelper extends QuartzAdapter{
+public class EpSchedulerHelper extends QuartzAdapter {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
 	private static Scheduler instance;
 
@@ -233,13 +233,6 @@ public class EpSchedulerHelper extends QuartzAdapter{
 							+ "   MISFIRE POLICY:"
 							+ cronTrigger.getMisfireInstruction()
 							+ "<<<<<<<<<<<<<<<");
-
-					// Listener attached to jobKey
-					EpSchedulerHelper
-							.getScheduler()
-							.getListenerManager()
-							.addJobListener(new EpSchedulerListener(),
-									KeyMatcher.keyEquals(jobKey));
 
 					// schedule new job
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
@@ -457,6 +450,12 @@ public class EpSchedulerHelper extends QuartzAdapter{
 					log.info(">>>>>EP SCHEDULER INSTANCE IS NOT STARTED<<<<<<");
 					instance.start();
 					log.info(">>>>>EP SCHEDULER INSTANCE IS FINISH STARTED<<<<<<");
+
+					log.info(">>>>>EP SCHEDULER LISTENER START ADDING ALL JOBS<<<<<<");
+					instance.getListenerManager().addJobListener(
+							new EpSchedulerListener(),
+							GroupMatcher.anyJobGroup());
+					log.info(">>>>>EP SCHEDULER LISTENER FINISH ADDING ALL JOBS<<<<<<");
 				}
 			} catch (SchedulerException e) {
 				log.info(">>>>>FAILED TO START EP SCHEDULER DUE TO ERR MSG:"
