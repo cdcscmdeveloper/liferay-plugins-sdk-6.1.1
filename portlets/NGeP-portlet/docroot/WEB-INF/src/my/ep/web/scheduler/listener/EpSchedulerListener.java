@@ -53,7 +53,11 @@ public class EpSchedulerListener implements JobListener {
 			int seconds = (int) (context.getJobRunTime() / 1000) % 60;
 			int minutes = (int) ((context.getJobRunTime() / (1000 * 60)) % 60);
 			int hours = (int) ((context.getJobRunTime() / (1000 * 60 * 60)) % 24);
-			String dateFormatted = hours + ":" + minutes + ":" + seconds;
+			String dateFormatted = hours + "hh :" + minutes + "mm:" + seconds
+					+ "ss";
+			if (seconds == 0 && minutes == 0 && hours == 0) {
+				dateFormatted = context.getJobRunTime() + "ms";
+			}
 			String jobName = context.getJobDetail().getKey().toString();
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job (" + jobName
 					+ ") finish executed with duration of (" + dateFormatted
