@@ -26,7 +26,7 @@ public class CRMSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// CRM update govt.. user info job
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.UPDATE_GOVERNMENT_USER_INFO_JOB,
@@ -75,7 +75,7 @@ public class CRMSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_UPDATE_SUPPLIER_INFO_JOB));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_UPDATE_SUPPLIER_INFO_JOB));*/
 
 	}
 
