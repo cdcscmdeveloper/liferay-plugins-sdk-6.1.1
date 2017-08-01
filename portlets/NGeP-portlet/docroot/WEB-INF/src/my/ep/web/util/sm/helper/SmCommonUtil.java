@@ -4933,16 +4933,16 @@ public class SmCommonUtil {
 			boolean catTypeNull = false;
 			if (supplierType
 					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) {
-				if (categoryType
+				if (applType
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
-						|| categoryType
+						|| applType
 								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)) {
 					catTypeNull = true;
 				}
 			} else {
-				if (categoryType
+				if (applType
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
-						|| categoryType
+						|| applType
 								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
 					catTypeNull = true;
 				}
