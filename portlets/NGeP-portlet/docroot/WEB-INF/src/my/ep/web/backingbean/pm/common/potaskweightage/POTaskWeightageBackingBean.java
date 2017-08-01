@@ -266,7 +266,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 						applTypeLs.add(pmDesc);
 					}
 				}else{
-					if(!ProfileManagementConst.CONSULTANT_EXCLUDE_APPL_LIST.contains(parameterCode)){
+					if(ProfileManagementConst.CONSULTANT_APPL_LIST.contains(parameterCode)){
 						applTypeLs.add(pmDesc);
 					}
 				}
