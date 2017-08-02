@@ -11348,7 +11348,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			String msgCode = e.getMessage();
 			String msgParam[] = e.getParameters();
-			if (MessageConst.ERROR_100023.equalsIgnoreCase(msgCode)) {
+			if (MessageConst.ERROR_760460.equalsIgnoreCase(msgCode)) {
 				msgCode = MessageConst.ERROR_760295;
 				msgParam = new String[] { "Tier Quantity" };
 			}
