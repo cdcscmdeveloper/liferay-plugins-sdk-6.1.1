@@ -28,10 +28,9 @@ public class EpSchedulerListener implements JobListener {
 	public void jobToBeExecuted(JobExecutionContext context) {
 		try {
 			String jobName = context.getJobDetail().getKey().toString();
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job to be executed (" + jobName
-					+ ") <<<<<<<<<<<<<<<<<<<<<<");
+			log.info("Job to be executed: " + jobName);
 		} catch (Exception e) {
-			log.info("ERROR JOB LISTENER JOBTOBEEXECUTED:" + e.getMessage());
+			log.error("ERROR JOB LISTENER JOBTOBEEXECUTED:" + e.getMessage());
 		}
 	}
 
@@ -39,10 +38,9 @@ public class EpSchedulerListener implements JobListener {
 	public void jobExecutionVetoed(JobExecutionContext context) {
 		try {
 			String jobName = context.getJobDetail().getKey().toString();
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job execution vetoed[" + jobName
-					+ "]<<<<<<<<<<<<<<<<<<<<<<");
+			log.info("Job execution vetoed:" + jobName);
 		} catch (Exception e) {
-			log.info("ERROR JOB LISTENER JOBEXECUTIONVETOED:" + e.getMessage());
+			log.error("ERROR JOB LISTENER JOBEXECUTIONVETOED:" + e.getMessage());
 		}
 	}
 
@@ -59,18 +57,16 @@ public class EpSchedulerListener implements JobListener {
 				dateFormatted = context.getJobRunTime() + "ms";
 			}
 			String jobName = context.getJobDetail().getKey().toString();
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>Job (" + jobName
-					+ ") finish executed with duration of (" + dateFormatted
-					+ ")<<<<<<<<<<<<<<<<<<<<<<");
+			log.info("Job finish executed:" + jobName + " (" + dateFormatted
+					+ ")");
 
 			if (jobException != null
 					&& !StringUtils.isBlank(jobException.getMessage())) {
-				log.info(">>>>>>>>>>>>>>>>>>>>>>>>Exception thrown by job: "
-						+ jobName + " with message: "
-						+ jobException.getMessage() + "!!!!!!!!!!!!!!!!!");
+				log.info("Exception thrown by job: " + jobName
+						+ " with message: " + jobException.getMessage());
 			}
 		} catch (Exception e) {
-			log.info("ERROR JOB LISTENER JOBWASEXECUTED:" + e.getMessage());
+			log.error("ERROR JOB LISTENER JOBWASEXECUTED:" + e.getMessage());
 		}
 	}
 }
