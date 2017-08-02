@@ -2178,9 +2178,15 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil
 							.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 									.getSmAppl().getSmCompanyBasic());
+
+					// to init page whether normal or special category type is
+					// allowed
+					initApplCategoryType();
+
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
 							.checkOverLappingCategories(getManagedBean());
+
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 					if (valid) {
@@ -2227,13 +2233,6 @@ public class SmApplicationBackingBean extends
 				default:
 					break;
 				}
-
-				// init business premise whether show or hide home office
-				initBusinessPremise();
-
-				// to init page whether normal or special category type is
-				// allowed
-				initApplCategoryType();
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
@@ -7726,7 +7725,10 @@ public class SmApplicationBackingBean extends
 		retriveCurrentAppl();
 
 		if (res.equalsIgnoreCase("APPROVE") || res.equalsIgnoreCase("ESCALATE")) {
-			validateBeforeSubmit();
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				validateBeforeSubmit();
+			}
 		}
 
 		log.info(" **** After retrieve ***"
