@@ -70,6 +70,7 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sm.ComplaintSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.complaint.ComplaintManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -1233,5 +1234,12 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		return jkttReview;
 	}
 	
+	public void generateLetter() throws IOException{
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("pcomplaintid", getManagedBean().getSmComplaint().getComplaintId().toString());
+		paramMap.put(ReportConst.DOC_TYPE_RTF, "RTF");
+		//String reportUrl = generateReportURL(ReportConst.SM_COMPLAINT_SHOW_CAUSE_jsp, paramMap);	
+		generateReport(ReportConst.SM_COMPLAINT_SHOW_CAUSE_jsp, paramMap);
+	}
 }
 	
