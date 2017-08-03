@@ -129,6 +129,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		getManagedBean().getSmComplainant().getSmComplainantAddresses().add(getManagedBean().getMailingAddress());
 		getManagedBean().getSmComplainant().getSmComplainantAddresses().add(getManagedBean().getIdentificationAddress());
 		
+		FacesScopes fs = new FacesScopes();
+		String language = fs.getUserLocale().getLanguage();
+		reqDTO.setLanguage(language);
 		
 		reqDTO.setAttachmentLs(getManagedBean().getComplaintDocs());
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
