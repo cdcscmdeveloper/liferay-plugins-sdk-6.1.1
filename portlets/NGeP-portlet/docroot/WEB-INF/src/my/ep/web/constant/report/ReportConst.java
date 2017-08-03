@@ -498,6 +498,9 @@ public class ReportConst implements Serializable{
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
 	public static final String SM_VIRTUAL_VERIFICATION_BUMI_jsp = "SM_VIRTUAL_VERIFICATION_BUMI.jsp";
+	
+	// SM - Complaint
+	public static final String SM_COMPLAINT_SHOW_CAUSE_jsp = "SM_LETTER_TEMPLATE_B.jsp";
 
 	// SM - Supplier Profile
 	public static final String SM_SUPPLIER_PROFILE_REPORT = "SM_APPLICATION_DETAILS.jsp";
@@ -937,6 +940,7 @@ public class ReportConst implements Serializable{
 	public static final String VALUE_SEPARATOR = "=";
 	public static final SimpleDateFormat REPORT_DATE_TIME = new SimpleDateFormat(
 			"yyMMddHHmmss");
+	public static final String DOC_TYPE_RTF = "DocTypeRTF";
 
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
