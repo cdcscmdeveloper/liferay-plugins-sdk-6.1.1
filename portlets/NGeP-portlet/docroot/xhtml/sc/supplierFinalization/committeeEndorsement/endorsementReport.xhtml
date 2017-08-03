@@ -115,9 +115,9 @@
 				<td class="TableFieldRight">
 						
 					<ac:scSingleFileUploadButton id="endorseReportUploadBtnId" 
-						popupWidgetVar="endorseReportAttWidget"
+						popupWidgetVar="endorseReportAttWidget" update="@([id$=endorseReportTbl])"
 						attachment="#{suppFinalizationBackingBean.managedBean.endorsementReport.scQtFinalizationReportAttachment}"
-						readonly="#{!readOnly}"/>								
+						readonly="#{!readOnly}"/>											
 				</td>
 			</tr>
 		</table>
