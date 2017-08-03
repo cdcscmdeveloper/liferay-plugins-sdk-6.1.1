@@ -1206,12 +1206,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			reportFile = reportFile.substring(0, position);
 		}
 
-		res.setHeader("Content-Disposition",
-				"attachment; filename=\"" + reportFile + "_"
-						+ ReportConst.REPORT_DATE_TIME.format(new Date())
-						+ ".pdf\"");//
+		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
+			res.setHeader("Content-Disposition",
+					"attachment; filename=\"" + reportFile + "_"
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ".docx\"");//
+			res.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+		}else{
+			res.setHeader("Content-Disposition",
+					"attachment; filename=\"" + reportFile + "_"
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ".pdf\"");//
+			res.setContentType("application/pdf");
+		}
+		
 		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/pdf");
+		
 		res.flushBuffer();
 
 		OutputStream out = res.getOutputStream();
@@ -1241,6 +1251,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String excNextUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
 		
+		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
+			excNextUrl = propertiesUtils
+					.getProperty(EpPropertiesConst.EXC_NEXT_URL_RTF);
+		}
+		
 		if (paramMap.containsKey(ReportConst.PARAM_REPORT_OUTPUT_FORMAT)) {
 			int fromIndex = excNextUrl.indexOf(ReportConst.PARAM_REPORT_OUTPUT_FORMAT);
 			int endIndex = excNextUrl.indexOf(ReportConst.PARAM_SEPARATOR, fromIndex);
@@ -1258,13 +1273,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reportUrl.append(reportFile);
 
 		for (Entry<String, String> params : paramMap.entrySet()) {
-			reportUrl.append(ReportConst.PARAM_SEPARATOR);
-			reportUrl.append(params.getKey());
-			reportUrl.append(ReportConst.VALUE_SEPARATOR);
-			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
+			if(!params.getKey().equals(ReportConst.DOC_TYPE_RTF)){
+				reportUrl.append(ReportConst.PARAM_SEPARATOR);
+				reportUrl.append(params.getKey());
+				reportUrl.append(ReportConst.VALUE_SEPARATOR);
+				reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
+			}
 		}
 		reportUrl.append(excNextUrl);
-
+		log.info("reportUrl: " + reportUrl);
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
