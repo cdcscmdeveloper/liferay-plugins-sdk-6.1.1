@@ -28,7 +28,6 @@ import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
-import org.quartz.impl.matchers.KeyMatcher;
 
 /**
  * Helper class for manipulating quartz scheduler
@@ -209,6 +208,7 @@ public class EpSchedulerHelper extends QuartzAdapter {
 		if (jobKey != null && jobClass != null
 				&& !StringUtils.isBlank(jobDetailDesc)
 				&& !StringUtils.isBlank(cronExpression)) {
+
 			try {
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					// specify the job' s details..
@@ -229,17 +229,19 @@ public class EpSchedulerHelper extends QuartzAdapter {
 											.cronSchedule(cronExpression)
 											.withMisfireHandlingInstructionFireAndProceed())
 							.build();
-					log.info(">>>>>>>>>>>ADD JOB:" + jobKey.getName()
-							+ "   MISFIRE POLICY:"
-							+ cronTrigger.getMisfireInstruction()
-							+ "<<<<<<<<<<<<<<<");
 
 					// schedule new job
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
 							cronTrigger);
+
+					log.info(">>>>>>>>>>>ADD JOB:" + jobKey.getName()
+							+ "   MISFIRE POLICY:"
+							+ cronTrigger.getMisfireInstruction()
+							+ "<<<<<<<<<<<<<<<");
 				}
 			} catch (SchedulerException e) {
-				log.error(e.getMessage());
+				log.error(">>>>>>>>>>>>>>>>>>>>>>>ERROR ADD JOB:"
+						+ e.getMessage());
 			}
 		}
 	}
@@ -331,7 +333,8 @@ public class EpSchedulerHelper extends QuartzAdapter {
 					}
 				}
 			} catch (SchedulerException e) {
-				log.error(e.getMessage());
+				log.error(">>>>>>>>>>>>>>>>>>>>>>>ERROR UPDATE JOB:"
+						+ e.getMessage());
 			}
 		}
 	}
