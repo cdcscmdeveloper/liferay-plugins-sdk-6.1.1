@@ -1,12 +1,18 @@
 package my.ep.web.scheduler.listener;
 
+import my.ep.biz.service.quartz.IQuartzSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.quartz.QuartzReqDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.quartz.QuartzAuditLog;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
 import org.quartz.JobListener;
 
 /**
@@ -48,6 +54,7 @@ public class EpSchedulerListener implements JobListener {
 	public void jobWasExecuted(JobExecutionContext context,
 			JobExecutionException jobException) {
 		try {
+			String errMsg = StringUtils.EMPTY;
 			int seconds = (int) (context.getJobRunTime() / 1000) % 60;
 			int minutes = (int) ((context.getJobRunTime() / (1000 * 60)) % 60);
 			int hours = (int) ((context.getJobRunTime() / (1000 * 60 * 60)) % 24);
@@ -62,11 +69,33 @@ public class EpSchedulerListener implements JobListener {
 
 			if (jobException != null
 					&& !StringUtils.isBlank(jobException.getMessage())) {
+				errMsg = jobException.getMessage();
 				log.info("Exception thrown by job: " + jobName
 						+ " with message: " + jobException.getMessage());
 			}
+
+			insertAuditLog(context.getJobDetail().getKey(), errMsg,
+					context.getJobRunTime());
+
 		} catch (Exception e) {
 			log.error("ERROR JOB LISTENER JOBWASEXECUTED:" + e.getMessage());
 		}
+	}
+
+	private IQuartzSO getQuartzSO() {
+		return (IQuartzSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.QUARTZ, IQuartzSO.class);
+	}
+
+	private void insertAuditLog(JobKey jobKey, String errMsg,
+			Long executionDuration) {
+		QuartzAuditLog log = new QuartzAuditLog();
+		log.setJobGroup(jobKey.getGroup());
+		log.setJobName(jobKey.getName());
+		log.setExecutionDuration(executionDuration);
+		log.setErrMsg(errMsg);
+		QuartzReqDTO reqDTO = new QuartzReqDTO();
+		reqDTO.setQuartzAuditLog(log);
+		getQuartzSO().saveAuditLog(reqDTO);
 	}
 }
