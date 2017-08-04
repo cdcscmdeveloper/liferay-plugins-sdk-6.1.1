@@ -43,29 +43,29 @@ public class PmSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_VOT_FUND));
-//
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.PHIS_VOT_FUND_DANA_JOB,
-//								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-//						MasterDataVotDanaJob.class,
-//						SchedulerConstants.PHIS_PM_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_VOT_FUND_DANA));
-//
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.PHIS_PROGRAM_JOB,
-//								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-//						MasterDataProgramJob.class,
-//						SchedulerConstants.PHIS_PM_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROGRAM));
-//
+
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.PHIS_VOT_FUND_DANA_JOB,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataVotDanaJob.class,
+						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_VOT_FUND_DANA));
+
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.PHIS_PROGRAM_JOB,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataProgramJob.class,
+						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROGRAM));
+
 //		EpSchedulerHelper
 //				.scheduleJob(
 //						new JobKey(SchedulerConstants.PHIS_PROJECT_JOB,
@@ -77,28 +77,28 @@ public class PmSchedulerServlet extends HttpServlet {
 //								.getProperty(
 //										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROJECT));
 //
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.PHIS_KOD_JOB,
-//								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-//						MasterDataKodAkaunJob.class,
-//						SchedulerConstants.PHIS_PM_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_KOD));
-//
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(
-//								SchedulerConstants.PHIS_DELIVERY_ADDRESS_JOB,
-//								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-//						MasterDataDeliveryAddressJob.class,
-//						SchedulerConstants.PHIS_DELIVERY_ADDRESS_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_DELIVERY_ADDRESS));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.PHIS_KOD_JOB,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataKodAkaunJob.class,
+						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_KOD));
+
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.PHIS_DELIVERY_ADDRESS_JOB,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataDeliveryAddressJob.class,
+						SchedulerConstants.PHIS_DELIVERY_ADDRESS_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_DELIVERY_ADDRESS));
 
 		// 1GFMAS integration Jobs
 		EpSchedulerHelper
