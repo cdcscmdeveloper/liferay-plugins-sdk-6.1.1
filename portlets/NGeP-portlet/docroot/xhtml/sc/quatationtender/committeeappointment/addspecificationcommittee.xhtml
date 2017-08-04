@@ -74,7 +74,7 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{qTCommitteBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=committeeAppointmentAddSpecificationBtnId],[id$=existingcommitteesearchid])"
 							listener="#{qTCommitteBackingBean.selectNewCommittee(qTCommitteBackingBean.managedBean.templateSpecBean.selectAll, qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
