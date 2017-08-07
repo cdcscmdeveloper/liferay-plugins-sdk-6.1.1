@@ -139,17 +139,7 @@
 			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'CNT')}" update=":form" />
 			
-			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.prepareLOA 
-			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
-			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
-			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq
-			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
-		 
-	
-		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.view.loa']}"
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.view.loa']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SLOA')}" update=":form" />
@@ -158,7 +148,16 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SDEC')}" update=":form" />
-	
+			
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{(amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa)
+			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
+			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
+			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq
+			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
+			
 	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"

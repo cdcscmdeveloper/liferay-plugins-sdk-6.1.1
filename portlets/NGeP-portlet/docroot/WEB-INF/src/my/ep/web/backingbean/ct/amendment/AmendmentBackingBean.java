@@ -1873,6 +1873,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
+			}
 		}
 	}
 	
@@ -2052,7 +2058,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			if (outputValue.equalsIgnoreCase("SDEC")) {
 				getManagedBean().setSelectedTabIndex(3);
-			}		 
+			}
+			if (outputValue.equalsIgnoreCase("PB")) {
+				getManagedBean().setSelectedTabIndex(4);
+			}
 		}
 	}
 	
