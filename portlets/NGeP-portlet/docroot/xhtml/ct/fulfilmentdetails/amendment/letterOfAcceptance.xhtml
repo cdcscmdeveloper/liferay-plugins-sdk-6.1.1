@@ -8,7 +8,7 @@
 	<p:panel id="loaContents" header="#{lbl['lbl.ct.menu.loa.content']}" toggleable="true" toggleSpeed="500">
 		<p:panel rendered="#{amendmentBackingBean.managedBean.ackFA ne CtConst.supplierAckLoa}">
 	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.letter']}" escape="false"/><br/>
-	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/>
+	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/><br/>
 	    </p:panel>
 		<h:panelGrid columns="2" columnClasses="columnWidth300">
 			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" styleClass="required" />
@@ -91,7 +91,7 @@
 					<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false" 
 					      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"  
 					      fileUploadListener="#{amendmentBackingBean.UploadLetterOfAcceptance}" multiple="false" 
-					      allowTypes="/(\.|\/)(pdf|docx)$/"  widgetVar="letterUploadWV"
+					      allowTypes="#{CommonConstants.FILE_UPLOAD_PDF_DOC_TYPE}"  widgetVar="letterUploadWV"
 					      invalidFileMessage="#{lbl['lbl.txt.upload.pdf.doc.file']}"					      
 						  invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 					      update=":form:loaContentDt" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadLetterDlg.hide();" >
