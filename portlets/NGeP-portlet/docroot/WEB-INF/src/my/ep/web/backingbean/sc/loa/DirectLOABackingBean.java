@@ -7301,8 +7301,8 @@ public class DirectLOABackingBean extends
 
 		String LoaSigner = "______________";
 		String loaSignerDesig = "______________";
-		if(getManagedBean().getContractSignerUser() != null){
-			PmUser contractSigner = getManagedBean().getContractSignerUser();
+		if(scLoa.getContractSigner() != null){
+			PmUser contractSigner = scLoa.getContractSigner();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
 				LoaSigner = contractSigner.getUserName();
 			}
