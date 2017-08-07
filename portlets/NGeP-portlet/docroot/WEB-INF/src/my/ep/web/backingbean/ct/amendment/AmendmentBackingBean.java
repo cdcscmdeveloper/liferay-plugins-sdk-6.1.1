@@ -2282,9 +2282,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new contract period
 	 */
-	public String calculateNewContractPeriod() {
-		return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
-				+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+	public String calculateNewContractPeriod(boolean isCalculateNew) {
+		if (isCalculateNew) {
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
+					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+		} else {
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getLatestContractVer().getCtContractValue().getContractPeriod());
+		}
 	}
 	
 	/**
@@ -2294,9 +2299,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new contract period in years unit
 	 */
-	public String calculateMonthsAndYear() {
-		int months = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
-				+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod();
+	public String calculateMonthsAndYear(boolean isCalculateNew) {
+		int months = 0;
+		if (isCalculateNew) {
+			months = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
+					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod();			
+		} else {
+			months = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer()
+					.getCtContractValue().getContractPeriod();
+		}
 		return String.format("%.2f", months / 12.0);
 	}
 	
@@ -4151,11 +4162,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 				}
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
-				// Supplier only allow to acknowledge after letter is downloaded 
-				if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)
-						&& docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE)) {
-					getManagedBean().setAllowAcknowledge(true);
-				}
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -4163,6 +4169,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} finally {
 	
 			attachmentFormat = null;
+		}
+    }
+    
+    public void downloadSupplementalLetter(CtAttachment ctAttchment) {
+    	try {
+			downloadFile(ctAttchment.getFilePath(), ctAttchment.getFileName());
+			// Supplier only allow to acknowledge after letter is downloaded 
+			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+				getManagedBean().setAllowAcknowledge(true);
+			} else {
+				getManagedBean().setAllowAcknowledge(false);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
     }
     
