@@ -563,7 +563,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			List<SmAssociationBody> activeAssocBodies = new ArrayList<SmAssociationBody>();
 			for (SmAssociationBody assocBody : getManagedBean().getSmAppl()
 					.getSmAssociationBodies()) {
-				if (assocBody.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				if (assocBody.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+						&& assocBody.getSmPersonnel() == null) {
 					activeAssocBodies.add(assocBody);
 				}
 			}
@@ -2078,7 +2079,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getSmApplRevisionSO()
 						.retrieveRejectReasonsBySmAppl(reqDTO)
 						.getSmApplRejectReasons());
-		log.info("HTML REJECT REASON:"+rejectReasons);
+		log.info("HTML REJECT REASON:" + rejectReasons);
 		return rejectReasons;
 	}
 
