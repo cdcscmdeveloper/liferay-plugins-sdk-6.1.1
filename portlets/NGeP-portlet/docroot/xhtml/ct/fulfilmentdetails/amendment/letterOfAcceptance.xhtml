@@ -71,9 +71,9 @@
 						update=":form:loaContentDt, :form:uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;" >
 					</p:commandButton>
 					<h:commandLink rendered="#{loaReportVar.loaAttachments.filePath != null}" title="#{loaReportVar.loaAttachments.fileName}"
-						value="#{loaReportVar.loaAttachments.fileName}"
-						action="#{amendmentBackingBean.downloadFile(loaReportVar.loaAttachments.filePath, loaReportVar.loaAttachments.fileName)}">
-					</h:commandLink>							
+						value="#{loaReportVar.loaAttachments.fileName}" onclick="enableAckBtn()"
+						action="#{amendmentBackingBean.downloadSupplementalLetter(loaReportVar.loaAttachments)}">
+					</h:commandLink>
 					<p:spacer width="1"/>
 					<p:commandLink onsuccess="deleteUploadLetterDlg.show();"
 						rendered="#{loaReportVar.loaAttachments.filePath != null
@@ -84,7 +84,7 @@
 				</h:panelGroup>
 			</p:column>
 		 </p:dataTable>
-
+		<p:remoteCommand name="enableAckBtn" update="@form" />
 			 <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" resizable="false" modal="true" 
 		    	  width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(letterUploadWV);">
 					<p:ajax event="close" />
