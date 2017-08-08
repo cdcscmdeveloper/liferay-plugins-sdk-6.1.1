@@ -232,9 +232,9 @@
 				update="@(.scMemberDtl,.amendButton)" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				styleClass="BtnSpacing"
+				styleClass="BtnSpacing" process="@this" partialSubmit="true"
 				oncomplete="newspecificationcommittee.hide();"
-				update="@(.scMemberDtl,name2Class)" immediate="true">
+				update="@(.scMemberDtl,name2Class)">
 				<f:setPropertyActionListener value="false"
 					target="#{qTCommitteBackingBean.managedBean.nameRequired}" />
 			</p:commandButton>
