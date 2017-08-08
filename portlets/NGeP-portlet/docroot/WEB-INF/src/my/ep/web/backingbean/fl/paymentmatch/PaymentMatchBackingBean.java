@@ -1400,6 +1400,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 				ProjectSetiaResDTO resDTO = new ProjectSetiaResDTO();
 				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
+					if(deduction.getPmVotFund() != null){
 					if(deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())
 							|| deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) 
 							|| deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())){
@@ -1419,6 +1420,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						}
 					}
 				}
+			  }
 			}
 		}
 	}
