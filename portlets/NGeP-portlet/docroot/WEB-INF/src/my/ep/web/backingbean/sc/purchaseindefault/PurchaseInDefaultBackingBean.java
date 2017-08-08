@@ -129,9 +129,7 @@ public class PurchaseInDefaultBackingBean extends
 	public PurchaseInDefaultBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
-			PortletRequest request = (PortletRequest) FacesContext
-					.getCurrentInstance().getExternalContext().getRequest();
-			User user = (User) request.getAttribute(WebKeys.USER);
+			PmUser user = new FacesScopes().getUserSessionBean();
 			if (user != null) {
 				Long userName = user.getUserId();
 				new LogKey(userName);
