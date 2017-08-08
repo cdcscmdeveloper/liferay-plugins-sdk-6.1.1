@@ -350,7 +350,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserId() == null)) {
 							ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(
 									getFacesScopes().getUserSessionBean());
-							//getManagedBean().setEditorValue(getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT));
 						}
 					}					
 					return;
@@ -4148,6 +4147,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
     
+    /**
+	 * The method used to download the sample of LOA content file
+	 */
     public void downloadLOAContentFile(String docDefinitionKey) throws Exception {
     	
     	AttachmentFormat attachmentFormat = null;
@@ -4181,12 +4183,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
     }
     
+    /**
+	 * The method used to download the uploaded Supplemental Contract Letter
+	 */
     public void downloadSupplementalLetter(CtAttachment ctAttchment) {
     	try {
 			downloadFile(ctAttchment.getFilePath(), ctAttchment.getFileName());
+			
 			// Supplier only allow to acknowledge after letter is downloaded 
 			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
-				getManagedBean().setAllowAcknowledge(true);
+				BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+				if (bb.getManagedBean().getClaim()) {
+					getManagedBean().setAllowAcknowledge(true);
+				} else {
+					getManagedBean().setAllowAcknowledge(false);
+				}
 			} else {
 				getManagedBean().setAllowAcknowledge(false);
 			}
@@ -4196,6 +4207,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
     }
     
+    /**
+	 * The method used to retrieve the Acknowledgment Receipt content
+	 */
     public String getAcknowledgmentReceiptContent() throws Exception {
     	String filePath = getManagedBean().getFileDirectory();		      
         File file = new File(filePath);
