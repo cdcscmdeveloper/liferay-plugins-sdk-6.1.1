@@ -261,14 +261,12 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		if(StringUtils.isNotBlank(roleTask.getSupplierType())){
 			for(PmParameterDesc pmDesc : getManagedBean().getApplTypeSelection()){
 				String parameterCode = pmDesc.getPmParameter().getParameterCode();
-				if(roleTask.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
-					if(!ProfileManagementConst.CONTRACTOR_EXCLUDE_APPL_LIST.contains(parameterCode)){
-						applTypeLs.add(pmDesc);
-					}
-				}else{
+				if(roleTask.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
 					if(ProfileManagementConst.CONSULTANT_APPL_LIST.contains(parameterCode)){
 						applTypeLs.add(pmDesc);
 					}
+				}else{
+					applTypeLs.add(pmDesc);
 				}
 			}
 		}
@@ -282,14 +280,12 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 	public boolean disabledCategory(PmPoRoleTask roleTask){
 		if(StringUtils.isNotBlank(roleTask.getSupplierType()) && 
 				StringUtils.isNotBlank(roleTask.getApplType())){
-			if(roleTask.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
-				if(roleTask.getApplType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
-						roleTask.getApplType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)){
+			if(roleTask.getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
+				if(ProfileManagementConst.CONTRACTOR_EXCLUDE_APPL_LIST.contains(roleTask.getApplType())){
 					return true;
 				}
 			}else{
-				if(roleTask.getApplType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE) || 
-						roleTask.getApplType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)){
+				if(ProfileManagementConst.CONSULTANT_EXCLUDE_APPL_LIST.contains(roleTask.getApplType())){
 					return true;
 				}
 			}
