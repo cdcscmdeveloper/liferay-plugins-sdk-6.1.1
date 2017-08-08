@@ -31,9 +31,9 @@
 	 		<table style="width: 100%">
 			<tr>
 			<td class="TableFieldLeft" width="17%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /></td>
-			<td class="TableFieldRight" width="5%">
+			<td class="TableFieldRight" width="7%">
 				<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
-					update=":form:dataGridId, form:uploadWaiverDlg" icon="ui-icon-upload-arrow" process="@this" partialSubmit="true"
+					update=":form:dataGridId, form:uploadWaiverDlg" icon=" ui-icon-upload" process="@this" partialSubmit="true"
 					rendered="#{!ctBackingBean.managedBean.viewContract}"
 					disabled="#{ctBackingBean.disableBondAttachmentBtn() 
 					   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
