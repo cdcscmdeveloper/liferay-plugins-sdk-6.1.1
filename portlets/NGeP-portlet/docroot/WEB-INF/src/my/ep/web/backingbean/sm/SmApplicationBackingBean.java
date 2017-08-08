@@ -1164,8 +1164,10 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		if (getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
-				.getPmRegStatus() != null
+		if (!getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
+						.getPmRegStatus() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean()
 						.getRegStatusDescList())
 				&& getManagedBean().getRegStatusDescList().size() > 1
@@ -1222,7 +1224,9 @@ public class SmApplicationBackingBean extends
 		// init current registration status description
 		PmStatusDesc currentStatusDesc = SmApplicationUtil
 				.getCurrRegStatusDesc(getManagedBean().getSmAppl());
-		if (currentStatusDesc != null) {
+		if (currentStatusDesc != null
+				&& !getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			getManagedBean().setApprovedStatusId(
 					currentStatusDesc.getPmStatus().getStatusId());
 			getManagedBean()
