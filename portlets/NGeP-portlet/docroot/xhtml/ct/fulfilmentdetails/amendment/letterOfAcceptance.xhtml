@@ -65,7 +65,7 @@
 				 
 			<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:45%;">
 				<h:panelGroup id="uploadLetterPg" rendered="#{loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance}">
-					<p:commandButton icon="ui-icon-upload-arrow"
+					<p:commandButton icon="ui-icon-upload"
 						rendered="#{loaReportVar.loaAttachments.filePath == null}"
 						process="@this" partialSubmit="true"
 						update=":form:loaContentDt, :form:uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;" >
