@@ -2078,6 +2078,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getSmApplRevisionSO()
 						.retrieveRejectReasonsBySmAppl(reqDTO)
 						.getSmApplRejectReasons());
+		log.info("HTML REJECT REASON:"+rejectReasons);
 		return rejectReasons;
 	}
 
