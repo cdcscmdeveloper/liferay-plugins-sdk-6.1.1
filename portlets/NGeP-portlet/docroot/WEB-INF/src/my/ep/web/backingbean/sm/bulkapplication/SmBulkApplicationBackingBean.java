@@ -59,7 +59,8 @@ public class SmBulkApplicationBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -2492540872306203847L;
-	public static Logger log = Logger.getLogger(SmBulkApplicationBackingBean.class);
+	public static Logger log = Logger
+			.getLogger(SmBulkApplicationBackingBean.class);
 
 	/**
 	 * Pre-render bulk application screen
@@ -509,9 +510,10 @@ public class SmBulkApplicationBackingBean extends
 			rej.setPmReason(desc.getPmReason());
 			rej.setSmAppl(bulkVO.getAppl());
 			resList.add(rej);
-/*			sb.append(++count).append(".)");
-			sb.append(desc.getReasonDesc());
-			sb.append("\n");*/
+			/*
+			 * sb.append(++count).append(".)"); sb.append(desc.getReasonDesc());
+			 * sb.append("\n");
+			 */
 			sb.append(desc.getPmReason().getReasonId());
 			sb.append("|");
 		}
@@ -612,8 +614,11 @@ public class SmBulkApplicationBackingBean extends
 					.getEntityBySinglePropertyFromList(
 							SupplierManagementConst.SECTION_REV_ROLE_PO,
 							appl.getSmApplSectionReviews(), "roleType");
+			
+			String poRecommend = StringUtils.EMPTY;
 
-			if (appl != null && poRev != null) {
+			if (appl != null && poRev != null
+					&& !StringUtils.isBlank(poRev.getRecommendation())) {
 				String companyName = appl.getSmSupplier().getCompanyName();
 				StringBuilder sb = new StringBuilder();
 				sb.append(ResourceBundleUtils.getMessage(
@@ -638,13 +643,18 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
 						.getChangedBy()));
 				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
-				bulkApplicationVO
-						.setPoRecommendation(!StringUtils.isBlank(poRev
-								.getRecommendation())
-								&& poRev.getRecommendation().equals("APPROVE") ? SmCommonUtil
-								.getMessage("lbl.sm.bulk.approve", null)
-								: SmCommonUtil.getMessage("lbl.sm.bulk.reject",
-										null));
+
+				if (poRev.getRecommendation().equalsIgnoreCase("Approve")
+						|| poRev.getRecommendation().equalsIgnoreCase("Lulus")) {
+					poRecommend = "APPROVE";
+					bulkApplicationVO.setPoRecommendation(SmCommonUtil
+							.getMessage("lbl.sm.bulk.approve", null));
+				} else {
+					poRecommend = "REJECT";
+					bulkApplicationVO.setPoRecommendation(SmCommonUtil
+							.getMessage("lbl.sm.bulk.reject", null));
+				}
+
 				if (poRev.getPmRegStatus() != null
 						&& poRev.getPmRegStatus().getPmStatus() != null) {
 					StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -733,7 +743,7 @@ public class SmBulkApplicationBackingBean extends
 				// return by applStatus
 				if (!StringUtils.isBlank(getManagedBean().getApplStatus())
 						&& !getManagedBean().getApplStatus().equals(
-								poRev.getRecommendation())) {
+								poRecommend)) {
 					bulkApplicationVO = null;
 				}
 			}
