@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.bulkapplication;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -9,10 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -50,6 +48,10 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmOverlapCategoryVO;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "bulkApplicationBackingBean")
 @RequestScoped
@@ -368,6 +370,32 @@ public class SmBulkApplicationBackingBean extends
 					.getClaimTasks());
 			initTasks(BpmConstants.ASSIGNMENT_GROUP, getManagedBean()
 					.getUnClaimTasks());
+
+			// sort claim task by received date
+			Collections.sort(getManagedBean().getClaimTasks(),
+					new Comparator<SmBulkApplicationVO>() {
+						public int compare(SmBulkApplicationVO o1,
+								SmBulkApplicationVO o2) {
+							if (o1.getReceivedDate() == null
+									|| o2.getReceivedDate() == null)
+								return 0;
+							return o1.getReceivedDate().compareTo(
+									o2.getReceivedDate());
+						}
+					});
+
+			// sort not claim task by received date
+			Collections.sort(getManagedBean().getUnClaimTasks(),
+					new Comparator<SmBulkApplicationVO>() {
+						public int compare(SmBulkApplicationVO o1,
+								SmBulkApplicationVO o2) {
+							if (o1.getReceivedDate() == null
+									|| o2.getReceivedDate() == null)
+								return 0;
+							return o1.getReceivedDate().compareTo(
+									o2.getReceivedDate());
+						}
+					});
 		}
 		this.getManagedBean().setFailedSubmittedList(null);
 	}
@@ -614,7 +642,7 @@ public class SmBulkApplicationBackingBean extends
 					.getEntityBySinglePropertyFromList(
 							SupplierManagementConst.SECTION_REV_ROLE_PO,
 							appl.getSmApplSectionReviews(), "roleType");
-			
+
 			String poRecommend = StringUtils.EMPTY;
 
 			if (appl != null && poRev != null
@@ -742,8 +770,8 @@ public class SmBulkApplicationBackingBean extends
 
 				// return by applStatus
 				if (!StringUtils.isBlank(getManagedBean().getApplStatus())
-						&& !getManagedBean().getApplStatus().equals(
-								poRecommend)) {
+						&& !getManagedBean().getApplStatus()
+								.equals(poRecommend)) {
 					bulkApplicationVO = null;
 				}
 			}
