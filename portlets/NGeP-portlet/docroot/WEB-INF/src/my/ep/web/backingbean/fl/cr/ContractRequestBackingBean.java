@@ -3568,6 +3568,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setMinOrderQuantity(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getMinimumOrderQty());
 		} else {
 			// Try to get agency ceiling quantity for Item
+			reqDTO.setFetchMaxQty(true);
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			ciItemResDTO = contractItemSO.getItemCeilingQuantity(reqDTO);
 			
