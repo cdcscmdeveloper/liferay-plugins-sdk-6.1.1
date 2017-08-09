@@ -364,9 +364,11 @@ public class SmApplicationUtil {
 	public static boolean valiateNewCategoryAdded(
 			SmApplicationManagedBean managedBean) {
 		boolean addedNewCode = false;
+		List<String> applTypes = Arrays.asList(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF,
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
 
-		if (!managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+		if (applTypes.contains(managedBean.getSmAppl().getApplType())) {
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg().compareTo(
@@ -382,6 +384,7 @@ public class SmApplicationUtil {
 		return addedNewCode;
 
 	}
+	
 
 	/**
 	 * Validate supporting documents.For online application check whether
@@ -1282,7 +1285,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab) {
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
-		
+
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			validSave = valiateNewCategoryAdded(managedBean);
 			if (!validSave) {
