@@ -176,14 +176,14 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.remark.frn']}" /></td>
 					<td colspan="3">
 						<p:inputTextarea cols="47" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
 						onkeypress="if (event.keyCode == 13) { remarks.jq.click(); return false; }" widgetVar="remarks">
 							<p:ajax process="@this" />
 						</p:inputTextarea>
 					</td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.rejection.remarks']}"/></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.fl.remark.history']}" /></td>
