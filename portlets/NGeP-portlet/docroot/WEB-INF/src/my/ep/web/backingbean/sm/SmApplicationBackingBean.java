@@ -5460,6 +5460,50 @@ public class SmApplicationBackingBean extends
 							.getSalutationId() == null) {
 				getManagedBean().getSelectedShareHolder().setTitle(null);
 			}
+
+			// sometimes identification type is treated as new object and insert is perform
+			if (getManagedBean().getSelectedShareHolder()
+					.getIdentificationType() != null
+					&& StringUtils.isBlank(getManagedBean()
+							.getSelectedShareHolder().getIdentificationType()
+							.getParameterType())
+					&& getManagedBean().getSelectedShareHolder()
+							.getIdentificationTypeId() != null) {
+				log.info(">>>>>>IDENTIFICATION TYPE IS NEW<<<<<");
+				getManagedBean()
+						.getSelectedShareHolder()
+						.setIdentificationType(
+								SmApplicationUtil
+										.retrievePmParameterById(getManagedBean()
+												.getSelectedShareHolder()
+												.getIdentificationTypeId()));
+				log.info(">>>>>>IDENTIFICATION TYPE AFTER LOAD OBJECT:"
+						+ getManagedBean().getSelectedShareHolder()
+								.getIdentificationType());
+			}
+			// sometimes qualification type is treated as new object and insert is perform
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getSelectedShareHolder().getSmStaffAcademics())) {
+				for (SmStaffAcademic ac : getManagedBean()
+						.getSelectedShareHolder().getSmStaffAcademics()) {
+					if (ac.getQualificationId() != null
+							&& StringUtils.isBlank(ac.getQualificationId()
+									.getParameterType())) {
+						if (ac.getQualificationId().getParameterId() != null) {
+							ac.setQualificationId(SmApplicationUtil
+									.retrievePmParameterById(ac
+											.getQualificationId()
+											.getParameterId()));
+							log.info(">>>>>QUALIFICATION ID:"
+									+ ac.getQualificationId()
+											.getParameterCode());
+						} else {
+							ac.setQualificationId(null);
+							log.info(">>>>>QUALIFICATION IS NULL");
+						}
+					}
+				}
+			}
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedShareHolder(), getManagedBean().getSmAppl()
 					.getSmPersonnels());
