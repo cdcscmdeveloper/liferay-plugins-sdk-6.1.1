@@ -610,6 +610,9 @@ public class SmBulkApplicationBackingBean extends
 		reqDTO.setState("ASSIGNED");
 		reqDTO.setCtxToken(token);
 		reqDTO.setDocType("SR");
+		if (assignmentType.equals(BpmConstants.ASSIGNMENT_GROUP)) {
+			reqDTO.setIsClaimed(false);
+		}
 
 		BpmResponseDTO responseDTO = SmServiceLookup.getBpmSO()
 				.getWorklistItems(reqDTO);
