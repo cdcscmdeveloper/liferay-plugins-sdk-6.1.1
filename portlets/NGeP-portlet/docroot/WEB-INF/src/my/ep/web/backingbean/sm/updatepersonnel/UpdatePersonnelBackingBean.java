@@ -634,6 +634,29 @@ public class UpdatePersonnelBackingBean extends
 				disableAuthorizedRadio(getManagedBean()
 						.getSelectedShareHolder()));
 	}
+	
+	/**
+	 * Assign selected personnel identity type.
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent
+	 */
+	public void assignPersonIdentType(AjaxBehaviorEvent e) {
+		SmApplicationUtil
+				.setSelectedPersonnelIdentificationType(getManagedBean()
+						.getSelectedShareHolder());
+	}
+
+	/**
+	 * Load selected staff academic qualification
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
+	public void assignQualification(AjaxBehaviorEvent e) {
+		SmApplicationUtil.assignQualification(getManagedBean()
+				.getSelectedStaffAcademic());
+	}
 
 	/**
 	 * Get epRole from select items list
