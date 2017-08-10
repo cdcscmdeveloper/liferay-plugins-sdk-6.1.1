@@ -52,6 +52,27 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.id.Hex;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.eclipse.persistence.exceptions.ValidationException;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -183,27 +204,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.id.Hex;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.eclipse.persistence.exceptions.ValidationException;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
@@ -4857,7 +4857,15 @@ public class SmCommonUtil {
 			if (poList.size() > 0) {
 				return poList.get(0);
 			} else {
-				throw new EpException(MessageConst.ERROR_721117);
+				reqDTO.setCategoryType(null);
+				List<PmUser> retryPoList = SmServiceLookup.getPoRoleTaskSO()
+						.retrievePOUserListByRoleZone(reqDTO).getUserList();
+				
+				if(retryPoList.size() > 0){
+					return retryPoList.get(0);
+				}else{
+					throw new EpException(MessageConst.ERROR_721117);
+				}
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_721118);
@@ -4914,58 +4922,9 @@ public class SmCommonUtil {
 	public Integer retrievePoJobTypeWeight(String supplierType,
 			String applType, String categoryType) {
 		PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
-		ISearchBean<PmPoJobTypeRatio> searchBean = new SearchBean<PmPoJobTypeRatio>();
-
-		if (StringUtils.isNotBlank(supplierType)) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("supplierType",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							supplierType));
-		}
-
-		if (StringUtils.isNotBlank(applType)) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("applType",
-							SearchOperator.OPERATOR_EQUALS.value(), applType));
-		}
-
-		if (StringUtils.isNotBlank(categoryType)) {
-			boolean catTypeNull = false;
-			if (supplierType
-					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) {
-				if (applType
-						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
-						|| applType
-								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)) {
-					catTypeNull = true;
-				}
-			} else {
-				if (applType
-						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
-						|| applType
-								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
-					catTypeNull = true;
-				}
-			}
-
-			if (!catTypeNull) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("categoryType",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								categoryType));
-			} else {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("categoryType",
-								SearchOperator.OPERATOR_IS_NULL.value(), null));
-			}
-		}
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						DbValueConst.RECORD_STATUS_ACTIVE));
-
+		ISearchBean<PmPoJobTypeRatio> searchBean = constructJobWeightSearchBean(supplierType, applType, categoryType);
 		reqDTO.setSearchBean(searchBean);
+		
 		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -4976,7 +4935,16 @@ public class SmCommonUtil {
 			return resDTO.getResultBean().getResultList().get(0)
 					.getPoJobWeight().getWeightValue();
 		} else {
-			throw new EpException(MessageConst.ERROR_721119);
+			ISearchBean<PmPoJobTypeRatio> retrySearchBean = constructJobWeightSearchBean(supplierType, applType,null);
+			reqDTO.setSearchBean(retrySearchBean);
+			
+			PoJobTypeRatioResDTO secResDTO = reqSO.retrieveJobTypeRatioList(reqDTO);
+			if (secResDTO.getResultBean().getResultList().size() > 0) {
+				return secResDTO.getResultBean().getResultList().get(0)
+						.getPoJobWeight().getWeightValue();
+			}else{
+				throw new EpException(MessageConst.ERROR_721119);
+			}
 		}
 	}
 
@@ -5055,5 +5023,69 @@ public class SmCommonUtil {
 		}
 
 		return retVal;
+	}
+	
+	private ISearchBean<PmPoJobTypeRatio> constructJobWeightSearchBean(String supplierType,
+			String applType, String categoryType){
+		ISearchBean<PmPoJobTypeRatio> searchBean = new SearchBean<PmPoJobTypeRatio>();
+		if (StringUtils.isNotBlank(supplierType)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("supplierType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							supplierType));
+		}
+
+		if (StringUtils.isNotBlank(applType)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("applType",
+							SearchOperator.OPERATOR_EQUALS.value(), applType));
+		}
+		
+		if (StringUtils.isNotBlank(categoryType)) {
+			/*boolean catTypeNull = false;
+			if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) {
+				if (applType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
+						|| applType
+								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)) {
+					catTypeNull = true;
+				}
+			} else {
+				if (applType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
+						|| applType
+								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
+					catTypeNull = true;
+				}
+			}
+
+			if (!catTypeNull) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("categoryType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								categoryType));
+			} else {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("categoryType",
+								SearchOperator.OPERATOR_IS_NULL.value(), null));
+			}*/
+			
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("categoryType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							categoryType));
+		}else{
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("categoryType",
+							SearchOperator.OPERATOR_IS_NULL.value(), null));
+		}
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+		return searchBean;
 	}
 }
