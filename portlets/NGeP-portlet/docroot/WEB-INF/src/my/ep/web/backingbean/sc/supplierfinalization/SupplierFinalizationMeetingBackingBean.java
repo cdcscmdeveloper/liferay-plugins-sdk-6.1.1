@@ -68,6 +68,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -1370,8 +1371,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			MeetingResDTO resDTO = meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
+			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
 			renewSesionObject();
-			
 			String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
 											  ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
 			commonMessageAcknowledmentPage(MessageConst.INFO_700026, qtParam, statusParam);
@@ -1380,6 +1381,29 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 	}
 	
+	private void updateFinalizationBriefingReportStatus(Long qtId){
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try{
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setQtId(qtId);
+			ScQtFinalization finalization = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO).getScQtFinalization();
+		if(finalization != null){
+			finalization.setBriefingPaperUploaded(false);
+			reqDTO.setScQtFinalization(finalization);
+			boolean isFinalizationUpdated = qtSuppFinalizationSO.updateFinalization(reqDTO).isSuccessful();
+			if(isFinalizationUpdated){
+				log.info("$$$$$ Finalization Updated Sucessfully");
+			}
+		}
+		}finally{
+			qtSuppFinalizationSO = null;
+		}
+		
+	}	
 	private String getCommitteeRoleCode(){
 		return getCommitteMemberByUserId()
 				.getRoleCode();
