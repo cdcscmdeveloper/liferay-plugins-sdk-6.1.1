@@ -91,10 +91,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		getManagedBean().getSelectedUser().getPmPoRoleTasks().remove(roleTask);
 	}
 	
-	public void addRoleTask(){
-		PmPoRoleTask roleTask = new PmPoRoleTask();
-		roleTask.setPmUser(getManagedBean().getSelectedUser());
-		roleTask.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+	public void validateAddRoleTask(boolean newRoleTask){
 		if(getManagedBean().getSelectedUser().getPmPoRoleTasks().size() > 0){
 			List<String> rlTaskStrLs = new ArrayList<String>(); 
 			for(PmPoRoleTask rt : getManagedBean().getSelectedUser().getPmPoRoleTasks()){
@@ -109,7 +106,12 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 			}
 		}
 		
-		getManagedBean().getSelectedUser().getPmPoRoleTasks().add(roleTask);
+		if(newRoleTask){
+			PmPoRoleTask roleTask = new PmPoRoleTask();
+			roleTask.setPmUser(getManagedBean().getSelectedUser());
+			roleTask.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+			getManagedBean().getSelectedUser().getPmPoRoleTasks().add(roleTask);
+		}
 	}
 	
 	public String getApplDesc(String applType){
@@ -203,7 +205,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		
 		//set to new weightage
 		
-		
+		validateAddRoleTask(false);
 		PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
 		//contructTrackingDiary(reqDTO);
 		
