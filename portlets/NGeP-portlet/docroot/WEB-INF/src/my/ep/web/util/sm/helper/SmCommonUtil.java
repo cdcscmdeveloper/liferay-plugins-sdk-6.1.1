@@ -4503,7 +4503,9 @@ public class SmCommonUtil {
 	public static String getHtmlApplicationRejectReasons(
 			List<SmApplRejectReason> rejectReasons) {
 		String langCode = new FacesScopes().getUserLocale().getLanguage();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sbEng = new StringBuilder();
+		StringBuilder sbMs = new StringBuilder();
+		String retVal = StringUtils.EMPTY;
 		int i = 1;
 		if (!EntityHelper.isCollectionEmpty(rejectReasons)) {
 			for (SmApplRejectReason rej : rejectReasons) {
@@ -4514,8 +4516,12 @@ public class SmCommonUtil {
 								.getPmReasonDescs()) {
 							if (desc.getPmLanguage() != null
 									&& desc.getPmLanguage().getLanguageCode()
-											.equalsIgnoreCase(langCode)) {
-								sb.append(i + ") " + desc.getReasonDesc())
+											.equalsIgnoreCase("en")) {
+								sbEng.append(i + ") " + desc.getReasonDesc())
+										.append("<br />");
+								i++;
+							} else {
+								sbMs.append(i + ") " + desc.getReasonDesc())
 										.append("<br />");
 								i++;
 							}
@@ -4527,7 +4533,23 @@ public class SmCommonUtil {
 				}
 			}
 		}
-		return sb.toString();
+
+		// get reject reason by language but if selected language reason is
+		// empty then get the other reason language
+		if (langCode.equalsIgnoreCase("en")) {
+			if (sbEng.length() > 0) {
+				retVal = sbEng.toString();
+			} else {
+				retVal = sbMs.toString();
+			}
+		} else {
+			if (sbMs.length() > 0) {
+				retVal = sbMs.toString();
+			} else {
+				retVal = sbEng.toString();
+			}
+		}
+		return retVal;
 	}
 
 	public String getPaymentGatewayVKeyByBillType(String billType) {
