@@ -591,7 +591,7 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setOutcome(getManagedBean().getOutcome());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
+			//reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
 			
 			SuppFinalizationResDTO resDTO 
 					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
@@ -1748,6 +1748,7 @@ public class ConsolidationReportBackingBean extends
 				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
 				reportAttachment.setFileName(event.getFile().getFileName());
+				log.info("$$$$$ File Name "+event.getFile().getFileName());
 				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 				populateAttachmentDetails(reportAttachment);
 			}
@@ -1757,6 +1758,7 @@ public class ConsolidationReportBackingBean extends
 			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
 		}else{
 			log.info("$$$$$ File from event is null @ "+DateUtils.getCurrentDate());
+			log.info("$$$$$ Qt id is: "+this.getManagedBean().getScQtFinalization().getScQt().getQtId());
 		}
 	}
 	
