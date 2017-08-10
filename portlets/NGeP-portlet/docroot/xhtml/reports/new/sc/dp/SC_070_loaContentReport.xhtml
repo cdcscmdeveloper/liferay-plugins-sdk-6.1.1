@@ -6,19 +6,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<div class="columnScTableClass">
-		<table style="width: 100%;">
+		<table style="width: 40%;">
 			<tr>
-				<td width="100%"><h:panelGrid style="width:85%;">
-						<p:outputLabel style="margin-left:-137px;"
-							value="#{lbl['lbl.rpt.loaidnolabel']}" />
-						<p:inputText id="loaContentRptLOANo"
-							value="#{loaContentRptBackingBean.scLOAIdNo}"
-							style="margin-top:5px;width:290px;">
-							<p:ajax event="blur"
-								listener="#{loaContentRptBackingBean.getScLOAReports()}"
-								process="@this" partialSubmit="true" update="@form" />
-						</p:inputText>
-					</h:panelGrid></td>
+				<td><p:outputLabel style="float:left;"
+						value="#{lbl['lbl.rpt.loaidnolabel']}" /></td>
+				<td><p:inputText id="loaContentRptLOANo"
+						value="#{loaContentRptBackingBean.scLOAIdNo}"
+						style="margin-top:5px;width:290px;">
+						<p:ajax event="blur"
+							listener="#{loaContentRptBackingBean.getScLOAReports()}"
+							process="@this" partialSubmit="true" update="@form" />
+					</p:inputText></td>
 			</tr>
 		</table>
 	</div>
