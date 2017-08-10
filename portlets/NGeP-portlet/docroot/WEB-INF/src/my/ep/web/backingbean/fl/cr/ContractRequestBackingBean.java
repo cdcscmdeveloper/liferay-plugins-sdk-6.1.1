@@ -1633,6 +1633,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					if(itemMaxQty!=null) {
 						reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
 						reqDTO.setCtContractZoneId(contractZoneId);
+						reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
 						prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 						sumQty = zonalQtyMap.get(contractZoneId).add(prevSumQty);
 						if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
