@@ -18,6 +18,7 @@ import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -384,7 +385,6 @@ public class SmApplicationUtil {
 		return addedNewCode;
 
 	}
-	
 
 	/**
 	 * Validate supporting documents.For online application check whether
@@ -10174,6 +10174,25 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Set or assign academic qualification
+	 * 
+	 * @param SmStaffAcademic
+	 *            acad
+	 */
+	public static void assignQualification(SmStaffAcademic acad) {
+		if (acad.getQualificationLevelId() != null) {
+			acad.setQualificationId(SmApplicationUtil
+					.retrievePmParameterById(acad.getQualificationLevelId()
+							.longValue()));
+			if (acad.getQualificationId() == null) {
+				acad.setQualificationId(new PmParameter());
+			}
+		} else {
+			acad.setQualificationId(new PmParameter());
+		}
+	}
+
+	/**
 	 * Get default registration status description by HQ type and bumi status
 	 * 
 	 * @param SmFacility
@@ -10887,16 +10906,6 @@ public class SmApplicationUtil {
 			if (bean.getSelectedStaffAcademic().getPmEduField().getEduFieldId()
 					.equals(edu.getEduFieldId())) {
 				bean.getSelectedStaffAcademic().setPmEduField(edu);
-				break;
-			}
-		}
-		for (PmParameterDesc lvl : bean.getEduLevelList()) {
-			if (bean.getSelectedStaffAcademic().getQualificationId()
-					.getParameterId()
-					.equals(lvl.getPmParameter().getParameterId())) {
-				bean.getSelectedStaffAcademic().setQualificationLevelId(
-						bean.getSelectedStaffAcademic().getQualificationId()
-								.getParameterId().intValue());
 				break;
 			}
 		}
