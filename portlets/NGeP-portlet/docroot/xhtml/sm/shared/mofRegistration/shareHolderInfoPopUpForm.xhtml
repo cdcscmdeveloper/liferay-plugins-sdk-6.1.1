@@ -1230,118 +1230,123 @@
 		header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"
 		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<p:messages id="equiAcadInfoMsg" showSummary="false" showDetail="true"
-			autoUpdate="true" closable="true" />
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 30%"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.contrat.year']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="2">
-					<p:selectOneMenu
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sc.spec.contrat.year']}" id="equiStfAcaYr"
-						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
-						style="width: 107px;margin-bottom: 5px;">
-						<f:selectItems value="#{backingBean.getYearDropDown()}" />
-						<p:ajax process="@this" update="@this" partialSubmit="true"/>
-					</p:selectOneMenu>
-					<p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.institute']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:inputText
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.institute']}" id="equiStfAcaInst"
-						maxlength="50"
-						value="#{backingBean.managedBean.selectedStaffAcademic.instituteName}"
-						size="35" /> 
+		
+		<p:outputPanel id="acadOutPanelId">
+			<p:messages id="equiAcadInfoMsg" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.contrat.year']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="2">
+						<p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sc.spec.contrat.year']}" id="equiStfAcaYr"
+							value="#{backingBean.managedBean.selectedStaffAcademic.year}"
+							style="width: 107px;margin-bottom: 5px;">
+							<f:selectItems value="#{backingBean.getYearDropDown()}" />
+							<p:ajax process="@this" update="@this" partialSubmit="true"/>
+						</p:selectOneMenu>
+						<p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.institute']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.institute']}" id="equiStfAcaInst"
+							maxlength="50"
+							value="#{backingBean.managedBean.selectedStaffAcademic.instituteName}"
+							size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty backingBean.managedBean.latestPersonnel}"
+								oriValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" 
+								currValue="#{backingBean.managedBean.selectedStaffAcademic.instituteName}" 
+								alertValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" />
+							<p:message id="equiStfAcaInstMsg"
+							for="equiStfAcaInst" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:selectOneMenu
+							style="width: 207px;margin-bottom: 5px;"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
+							value="#{backingBean.managedBean.selectedStaffAcademic.qualificationLevelId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.assignQualification}" update="acadOutPanelId" />
+						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
-							and not empty backingBean.managedBean.latestPersonnel}"
-							oriValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" 
-							currValue="#{backingBean.managedBean.selectedStaffAcademic.instituteName}" 
-							alertValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" />
-						<p:message id="equiStfAcaInstMsg"
-						for="equiStfAcaInst" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:selectOneMenu
-						style="width: 207px;margin-bottom: 5px;"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
-						value="#{backingBean.managedBean.selectedStaffAcademic.qualificationId.parameterId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestStaffAcademic.qualificationId.parameterId}" 
-						currValue="#{backingBean.managedBean.selectedStaffAcademic.qualificationId.parameterId}" 
-						alertValue="#{backingBean.getEduLvlByIdFromList(backingBean.managedBean.latestStaffAcademic.qualificationId.parameterId)}" />
-					<p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:selectOneMenu
-						style="width: 207px;margin-bottom: 5px;"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.education.field']}" id="equiStfAcaEduFld"
-						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="eduField"
-							value="#{backingBean.managedBean.eduFieldList}"
-							itemValue="#{eduField.eduFieldId}"
-							itemLabel="#{eduField.fieldName}" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId}" 
-						currValue="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}" 
-						alertValue="#{backingBean.getEduFieldByIdFromList(backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId)}" />
-					<p:message id="equiStfAcaEduFldMsg" for="equiStfAcaEduFld"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.major.in']}" /></td>
-				<td colspan="2">
-					<p:inputText maxlength="50"
-						value="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}"
-						size="35" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" 
-						currValue="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}" 
-						alertValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" />
-				</td>
-			</tr>
-		</table>
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateShrHldrAcademic}" type="submit"
-				partialSubmit="true" process="equiAcadInfo"
-				update="shrAqdt, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.cancelShrHldrAcademic}">
-			</p:commandButton>
-		</div>
+								and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty backingBean.managedBean.latestPersonnel}"
+							oriValue="#{backingBean.managedBean.latestStaffAcademic.qualificationId.parameterId}" 
+							currValue="#{backingBean.managedBean.selectedStaffAcademic.qualificationId.parameterId}" 
+							alertValue="#{backingBean.getEduLvlByIdFromList(backingBean.managedBean.latestStaffAcademic.qualificationId.parameterId)}" />
+						<p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.education.field']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:selectOneMenu
+							style="width: 207px;margin-bottom: 5px;"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.education.field']}" id="equiStfAcaEduFld"
+							value="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="eduField"
+								value="#{backingBean.managedBean.eduFieldList}"
+								itemValue="#{eduField.eduFieldId}"
+								itemLabel="#{eduField.fieldName}" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty backingBean.managedBean.latestPersonnel}"
+							oriValue="#{backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId}" 
+							currValue="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}" 
+							alertValue="#{backingBean.getEduFieldByIdFromList(backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId)}" />
+						<p:message id="equiStfAcaEduFldMsg" for="equiStfAcaEduFld"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.major.in']}" /></td>
+					<td colspan="2">
+						<p:inputText maxlength="50"
+							value="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}"
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty backingBean.managedBean.latestPersonnel}"
+							oriValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" 
+							currValue="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}" 
+							alertValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" />
+					</td>
+				</tr>
+			</table>
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{backingBean.addOrUpdateShrHldrAcademic}" type="submit"
+					partialSubmit="true" process="equiAcadInfo"
+					update="shrAqdt, @([id$=Msg])" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.cancelShrHldrAcademic}">
+				</p:commandButton>
+			</div>
+		</p:outputPanel>
 	</p:dialog>
 
 
