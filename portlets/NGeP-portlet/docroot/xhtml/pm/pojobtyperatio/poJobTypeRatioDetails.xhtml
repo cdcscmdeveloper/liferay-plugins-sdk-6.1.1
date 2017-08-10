@@ -74,13 +74,11 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel
-								value="#{lbl['lbl.pm.poworkload.catType']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+								value="#{lbl['lbl.pm.poworkload.catType']}" /> </td>
 						<td><p:selectOneMenu id="catTypeList"
 								label="#{lbl['lbl.pm.poworkload.catType']}"
 								disabled="#{poJobTypeRatioBackingBean.managedBean.categoryDisabled or not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
-								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.categoryType}"
-								required="#{!empty param['disableValidation']}">
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.categoryType}">
 								<f:selectItems
 									value="#{poJobTypeRatioBackingBean.catTypeOptions()}" />
 								<p:ajax event="change" update="@this" process="@this"
