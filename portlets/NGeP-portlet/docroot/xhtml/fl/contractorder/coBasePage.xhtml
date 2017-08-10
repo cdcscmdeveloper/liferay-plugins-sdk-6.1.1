@@ -101,8 +101,7 @@
 							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
 							immediate="true" /></td>
 				</c:if>
-				<h:panelGroup id="printButtonCo"
-					rendered="#{flOrderBB.managedBean.fulfilmentOrder.status.statusId != FulfilmentStatusCont.coPendingSupplierAcknowledgement}">
+				<h:panelGroup id="printButtonCo">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload
