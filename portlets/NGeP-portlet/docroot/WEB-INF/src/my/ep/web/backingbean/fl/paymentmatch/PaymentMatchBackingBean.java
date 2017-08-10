@@ -1866,7 +1866,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		private static final long serialVersionUID = 1L;
 
 		public SearchVotPagingDataModel() {
-			super("votList",false);
+			super("votList",true);
 		}
 
 		@Override
@@ -1916,7 +1916,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		private static final long serialVersionUID = 1L;
 
 		public SearchFundPagingDataModel() {
-			super("fundList",false);
+			super("fundList",true);
 		}
 
 		@Override
@@ -2033,13 +2033,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		ProjectSetiaResDTO resDTO = new ProjectSetiaResDTO();
 		if(getManagedBean().getSelectedDeduction() != null && getManagedBean().getSelectedDeduction().getPmVotFund() != null){
-			if(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())
-					|| getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) 
-					|| getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())){
-				getManagedBean().getSelectedDeduction().setEnableCp(true);
-			}else{
-				getManagedBean().getSelectedDeduction().setEnableCp(false);
+			if(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType() != null){
+				if(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())
+						|| getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) 
+						|| getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())){
+					getManagedBean().getSelectedDeduction().setEnableCp(true);
+				}else{
+					getManagedBean().getSelectedDeduction().setEnableCp(false);
+				}
 			}
+			
 			if(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundId() != null){
 				reqDTO.setVotFundId(getManagedBean().getSelectedDeduction().getPmVotFund().getVotFundId());
 				resDTO = projectSetiaSO.retrieveSubSetiaFinancingTypeListByVotFundId(reqDTO);
