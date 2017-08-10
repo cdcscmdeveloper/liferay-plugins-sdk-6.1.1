@@ -95,7 +95,7 @@
 			
 			<p:column headerText="Category Type">
 					<p:selectOneMenu value="#{roleTask.categoryType}" rendered="#{roleTask.brandNew}"
-						disabled="#{poTaskWeightageBB.disabledCategory(roleTask)}"
+						disabled="#{poTaskWeightageBB.disabledCategory(roleTask)}" 
 						label="#{lbl['lbl.pm.po.task.category.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.norm']}"
@@ -129,7 +129,7 @@
 	</p:panel>
 	<br />
 	<div style="text-align: right;">
-			<p:commandButton id="btnAdd" action="#{poTaskWeightageBB.addRoleTask}" value="#{lbl['lbl.btn.add']}" update="poRoleTaskDtTbl">
+			<p:commandButton id="btnAdd" action="#{poTaskWeightageBB.validateAddRoleTask(true)}" value="#{lbl['lbl.btn.add']}" update="poRoleTaskDtTbl">
 				<f:param name="disableRTValidation" value="true" />
 			</p:commandButton>
 	</div>
