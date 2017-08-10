@@ -3079,7 +3079,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(getManagedBean().getSelectedPlan().isBrandNew() && ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
 			if(CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())){
 				for(PpProcurementItem ppItem : getManagedBean().getSelectedPlan().getPpProcurementItems()){
-					if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
+					if(this.getManagedBean().getSelectedPlan().getPlanYear() == null || 
+							(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear())){ 
 						//current year
 						ppItem.setInvitationDate(new Date());
 					}else{ 
