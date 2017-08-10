@@ -3076,11 +3076,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void updatePlanYearControl(){
 		log.info("updatePlanYearControl");
-		if(getManagedBean().getSelectedPlan().isBrandNew() && ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
+		if(getManagedBean().getSelectedPlan().isBrandNew() 
+				&& ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
+			if(getManagedBean().getSelectedPlan().getPlanYear() == null){
+				cancelPlanYearUpdate();
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pp.plan.year")});
+			}
+			
 			if(CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())){
 				for(PpProcurementItem ppItem : getManagedBean().getSelectedPlan().getPpProcurementItems()){
-					if(this.getManagedBean().getSelectedPlan().getPlanYear() == null || 
-							(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear())){ 
+					if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 						//current year
 						ppItem.setInvitationDate(new Date());
 					}else{ 
