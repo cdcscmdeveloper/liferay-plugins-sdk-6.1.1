@@ -598,6 +598,34 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 
+	public void addCatParamWithoutMainCatChecking(LinkedHashMap<String, String> params) {
+		List<String> lvl1Ls = new ArrayList<String>();
+		List<String> lvl2Ls = new ArrayList<String>();
+		List<String> lvl3Ls = new ArrayList<String>();
+
+		if (getManagedBean().getCategoryLs() != null
+				&& getManagedBean().getCategoryLs().size() > 0) {
+			for (CategoryRptVO catVO : getManagedBean().getCategoryLs()) {
+				/*if (catVO.getCatLvl1() == null) {
+					throw new EpException(MessageConst.ERROR_REPORT_780047);
+				}
+*/
+				lvl1Ls.add(catVO.getCatLvl2() == null ? "" :catVO.getCatLvl1().toString());
+				lvl2Ls.add(catVO.getCatLvl2() == null ? "" : catVO
+						.getCatLvl2().toString());
+				lvl3Ls.add(catVO.getCatLvl3() == null ? "" : catVO
+						.getCatLvl3().toString());
+			}
+
+			params.put(SmReportConst.PARAM_CAT_L1,
+					StringUtils.join(lvl1Ls, ","));
+			params.put(SmReportConst.PARAM_CAT_L2,
+					StringUtils.join(lvl2Ls, ","));
+			params.put(SmReportConst.PARAM_CAT_L3,
+					StringUtils.join(lvl3Ls, ","));
+		}
+	}
+	
 	public void resetCategory(){
 		getManagedBean().setSelectedCategoryLs(null);
 		getManagedBean().setCategoryLs(null);
