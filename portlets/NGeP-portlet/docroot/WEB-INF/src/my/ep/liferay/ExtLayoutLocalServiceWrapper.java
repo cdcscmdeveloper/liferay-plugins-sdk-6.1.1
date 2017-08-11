@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -34,6 +35,9 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public final String RENEW_MOF_URL = "/renew-mof-account";
 	public final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
+	
+	public final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
+	public final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_ADMIN";
 	
 	public ExtLayoutLocalServiceWrapper(LayoutLocalService layoutLocalService) {
 		super(layoutLocalService);
@@ -180,9 +184,31 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			}
 		}
 		
+		/*if(hasRoleUser(BASIC_SUPPLIER_ADMIN)) {
+			return true;
+		}
+		if(hasRoleUser(BASIC_SUPPLIER_USER)) {
+			return true;
+		}*/
 		return false;
 	}
 
+	public boolean hasRoleUser(String roleName) {
+
+		boolean hasRoleUser = false;
+		if(FacesContext.getCurrentInstance() != null) {
+	        ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
+	        long portletGroupId= themeDisplay.getScopeGroupId();
+	        long userId = themeDisplay.getUserId();
+	        try {
+	        	hasRoleUser = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, portletGroupId, roleName, true);
+	        } catch(Exception e) {
+	        	System.err.println(e);
+	        }        
+		}
+		return hasRoleUser;
+	}
+	
 	public String getScreenName() {
 
 		if(FacesContext.getCurrentInstance() != null) {
@@ -206,7 +232,11 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 						
 						User user = UserServiceUtil.getUserById(themeDisplay.getUser().getUserId());
 //						userRoleList = user.getRoles();
-						List<UserGroupRole> userGroupRoleList = UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId(), user.getGroupId());
+						List<UserGroupRole> userGroupRoleList = new ArrayList<UserGroupRole>();
+						for(Group group : user.getMySites()) {
+							userGroupRoleList.addAll(UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId(), group.getGroupId()));
+						}
+								
 						System.out.println("userGroupRoleList: " + userGroupRoleList);
 						for (UserGroupRole userGroupRole : userGroupRoleList) {
 					        /* Get Role object based on userGroupRole.getRoleId() */
