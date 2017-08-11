@@ -5,24 +5,26 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.LayoutLocalService;
 import com.liferay.portal.service.LayoutLocalServiceWrapper;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -47,17 +49,23 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		List<Layout> layouts = new ArrayList<Layout>();
 		
 		if(!isBasicSupplierUser()) {
+			log.info("inside not Basic");
 			return super.getLayouts( groupId,  privateLayout);
 		} else {
-			
+			log.info("inside Basic");
 			for(Layout layout : super.getLayouts( groupId,  privateLayout)) {
+				log.info(layout.getFriendlyURL());
 				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+					log.info("IN RENEW AND REGISTER");
 					if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && validBasicToRenewMOF()) {
+						log.info("IN RENEW");
 						layouts.add(layout);
 					} else if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && !validBasicToRenewMOF()) {
+						log.info("IN REGISTER");
 						layouts.add(layout);
 					}
 				} else {
+					log.info("NOT BOTH");
 					layouts.add(layout);
 				}
 			}
@@ -91,17 +99,23 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		List<Layout> layouts = new ArrayList<Layout>();
 		
 		if(!isBasicSupplierUser()) {
+			log.info("inside not Basic");
 			return super.getLayouts(groupId, privateLayout, parentLayoutId);
 		} else {
-			
+			log.info("inside Basic");
 			for(Layout layout : super.getLayouts(groupId, privateLayout, parentLayoutId)) {
+				log.info(layout.getFriendlyURL());
 				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+					log.info("IN RENEW AND REGISTER");
 					if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && validBasicToRenewMOF()) {
+						log.info("IN RENEW");
 						layouts.add(layout);
 					} else if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && !validBasicToRenewMOF()) {
+						log.info("IN REGISTER");
 						layouts.add(layout);
 					}
 				} else {
+					log.info("NOT BOTH");
 					layouts.add(layout);
 				}
 			}
@@ -157,9 +171,11 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public boolean isBasicSupplierUser() {
 		List<Role> loginUserRoles = getUserRoleList();
-		
+		log.info("loginUserRoles: " + loginUserRoles);
 		for (Role r : loginUserRoles) {
+			log.info("role name: " + r.getName());
 			if(StringUtils.containsAny(r.getName(), "BASIC")) {
+				log.info(r.getName() + " is BASIC");
 				return true;
 			}
 		}
@@ -182,15 +198,30 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = new ArrayList<Role>();
-		if(getScreenName() != null) {
-			try {
-				User user = UserServiceUtil.getUserById(Long.valueOf(getScreenName()));
-				userRoleList = user.getRoles();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-		}
+		try {
+			if(FacesContext.getCurrentInstance() != null) {
+				ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
+				if(themeDisplay != null) {
+					if(themeDisplay.getUser() != null) {
+						
+						User user = UserServiceUtil.getUserById(themeDisplay.getUser().getUserId());
+//						userRoleList = user.getRoles();
+						List<UserGroupRole> userGroupRoleList = UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId(), user.getGroupId());
+						System.out.println("userGroupRoleList: " + userGroupRoleList);
+						for (UserGroupRole userGroupRole : userGroupRoleList) {
+					        /* Get Role object based on userGroupRole.getRoleId() */
+					        Role role = RoleLocalServiceUtil.getRole(userGroupRole.getRoleId());
+					        
+					        System.out.println("role: " + role.getName());
+					        userRoleList.add(role);
+					    }
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}			
 		return userRoleList;
 	}
 	
