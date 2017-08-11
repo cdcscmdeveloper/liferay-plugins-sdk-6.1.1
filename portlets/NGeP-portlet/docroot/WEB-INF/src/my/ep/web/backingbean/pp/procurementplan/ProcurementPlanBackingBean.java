@@ -3065,8 +3065,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				&& ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode()) &&
 				CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())) {
 			log.info("New: "+event.getNewValue()+", Old: "+event.getOldValue());
-			getManagedBean().setOldYearValue(Long.valueOf(event.getOldValue().toString()));			
-			RequestContext.getCurrentInstance().execute("planYearChangeId.show();");
+			getManagedBean().setOldYearValue(event.getOldValue() != null ? Long.valueOf(event.getOldValue().toString()) : null);
+			
+			if(event.getOldValue() != null && event.getNewValue() != null){
+				//Change from Old Value To New Value (eg year 2017 to year 2018)
+				//Confirmation Popup
+				RequestContext.getCurrentInstance().execute("planYearChangeId.show();");
+			}else if(event.getOldValue() == null && event.getNewValue() != null){
+				//  Change from NULL to New Value (eg Null to year 2017
+				this.getManagedBean().getSelectedPlan().setPlanYear(Long.valueOf(event.getNewValue().toString()));
+				updatePlanYearControl();
+			}
 		}
 	}
 	
@@ -3078,13 +3087,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("updatePlanYearControl");
 		if(getManagedBean().getSelectedPlan().isBrandNew() 
 				&& ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
-			if(getManagedBean().getSelectedPlan().getPlanYear() == null){
-				cancelPlanYearUpdate();
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pp.plan.year")});
-			}
+//			if(getManagedBean().getSelectedPlan().getPlanYear() == null){
+//				cancelPlanYearUpdate();
+//				throw new EpException(MessageConst.ERROR_100022,
+//						new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pp.plan.year")});
+//			}
 			
-			if(CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())){
+			if(this.getManagedBean().getSelectedPlan().getPlanYear() != null 
+					&& CollectionUtils.isNotEmpty(getManagedBean().getSelectedPlan().getPpProcurementItems())){
 				for(PpProcurementItem ppItem : getManagedBean().getSelectedPlan().getPpProcurementItems()){
 					if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 						//current year
