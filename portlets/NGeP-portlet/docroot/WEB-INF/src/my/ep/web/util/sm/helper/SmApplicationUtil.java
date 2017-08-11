@@ -1594,9 +1594,7 @@ public class SmApplicationUtil {
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, null, errMsg.toString()));
+				throw new EpException(errMsg.toString());
 			}
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
