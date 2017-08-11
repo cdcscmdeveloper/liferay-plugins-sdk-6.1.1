@@ -37,7 +37,6 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	}
 
 	public List<Layout>	getLayouts(int start, int end) throws SystemException {
-		log.info(11111);
 		return super.getLayouts(start, end);
 	}
 	
@@ -155,8 +154,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	}	
 	
 	public boolean isBasicSupplierUser() {
-		FacesScopes sc = new FacesScopes();
-		List<Role> loginUserRoles = sc.getUserRoleList();
+		List<Role> loginUserRoles = getUserRoleList();
 		
 		for (Role r : loginUserRoles) {
 			if(r.getName().indexOf("BASIC") > 0) {
@@ -168,10 +166,13 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	}
 
 	public String getScreenName() {
-		ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
-		if(themeDisplay != null) {
-			if(themeDisplay.getUser() != null) {
-				return themeDisplay.getUser().getScreenName();
+
+		if(FacesContext.getCurrentInstance() != null) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
+			if(themeDisplay != null) {
+				if(themeDisplay.getUser() != null) {
+					return themeDisplay.getUser().getScreenName();
+				}
 			}
 		}
 		return null;
