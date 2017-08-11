@@ -3836,7 +3836,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage?faces-redirect=true");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prPrerender?faces-redirect=true");
 		}
 	}
 	
