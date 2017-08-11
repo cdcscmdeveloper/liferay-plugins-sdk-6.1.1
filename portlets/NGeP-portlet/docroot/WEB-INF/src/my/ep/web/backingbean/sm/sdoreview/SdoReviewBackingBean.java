@@ -214,9 +214,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
 				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
 				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
+			
+			String assignedPOName = "";
 			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
-				setPOJobRoleWeigtage(reqDTO);
+				assignedPOName = setPOJobRoleWeigtage(reqDTO);
 			}
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
@@ -240,7 +242,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 							new FacesScopes().getUserLocale())));
 				}else{
 					//						String assignedPOName = getAssignedPOName(getManagedBean().getSmAppl().getApplNo());
-					String assignedPOName = "";
+					
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721104,
 							new String[] {getManagedBean().getSmAppl().getApplNo(), assignedPOName},MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
@@ -496,7 +498,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		}
 	}
 
-	private void setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
+	private String setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
+		String processingOfficer = null;
 		if(!getManagedBean().getSmAppl().isResubmit()) {
 			log.info("<<<<<<<<<<not resubmit>>>>>>>>>>");
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
@@ -507,7 +510,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
 			
 			setPOWeightage(poUser);
-			
+			processingOfficer = poUser.getUserName();
 			log.info("not resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
 			log.info("not resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
 			log.info("not resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
@@ -520,6 +523,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					.getSmAppl().getApplType(), getManagedBean()
 					.getSmAppl().getApplCategoryType());
 			setPOWeightage(poUser);
+			processingOfficer = poUser.getUserName();
 			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
 			
 			log.info("is resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
@@ -528,7 +532,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setPmUser(poUser);
 		}
 		
-		
+		return processingOfficer;
 	}
 	
 	private void setPOWeightage(PmUser poUser){
