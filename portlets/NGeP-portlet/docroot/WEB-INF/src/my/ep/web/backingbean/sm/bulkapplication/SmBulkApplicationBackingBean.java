@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.bulkapplication;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -338,9 +339,12 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void onViewOverlapCategory(SmBulkApplicationVO vo) {
+		List<String> overlap = Arrays.asList(
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW,
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
+				ParameterConst.NEW_SM_APPLN_FOR_MOF);
 		if (vo.getAppl() != null
-				&& vo.getAppl().getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				&& overlap.contains(vo.getAppl().getApplType())
 				&& EntityHelper
 						.isCollectionEmpty(vo.getOverlapCategoryVOList())) {
 			SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
@@ -720,9 +724,11 @@ public class SmBulkApplicationBackingBean extends
 						.getStatusName());
 
 				// set overlap category alert
-				if (appl != null
-						&& appl.getApplType().equals(
-								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				List<String> overlap = Arrays.asList(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW,
+						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
+						ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				if (appl != null && overlap.contains(appl.getApplType())) {
 					for (SmSupplierCategory cat : appl
 							.getSmSupplierCategories()) {
 						if (getManagedBean().getApplStatus().equals(
@@ -735,7 +741,8 @@ public class SmBulkApplicationBackingBean extends
 												SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
 										.getRecordStatusFlg()
 										.compareTo(
-												SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
+												SupplierManagementConst.PENDING_ACT_STATUS) == 0)
+								|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
 							bulkApplicationVO.setOverlappedCategory(true);
 							break;
 						}
