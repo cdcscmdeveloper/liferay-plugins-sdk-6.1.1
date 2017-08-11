@@ -584,7 +584,9 @@
 						id="contractDuration" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						size="35">
-						<p:ajax event="blur" update="effdate,expdate"
+						<p:ajax event="blur" update="@this contractDuration,effdate,expdate,contractDurationMsg"
+							process="@this contractDuration"
+							partialSubmit="true"
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
 					</p:inputText>  <p:message id="contractDurationMsg" for="contractDuration" display="icon" /></td>
 			</tr>
@@ -602,7 +604,7 @@
 						value="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
 						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 						label="#{lbl[lbleffDate]}" size="28">
-						<p:ajax event="dateSelect" process="@this contractDuration"
+						<p:ajax event="dateSelect" process="@this"
 							partialSubmit="true"
 							listener="#{directLOABackingBean.contractEffDateChanged()}"
 							update="expdate" />
