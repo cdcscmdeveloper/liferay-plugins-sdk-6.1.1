@@ -5460,6 +5460,24 @@ public class SmApplicationBackingBean extends
 							.getSalutationId() == null) {
 				getManagedBean().getSelectedShareHolder().setTitle(null);
 			}
+			if (getManagedBean().getSelectedShareHolder()
+					.getIdentificationType() != null
+					&& getManagedBean().getSelectedShareHolder()
+							.getIdentificationType().getParameterId() == null) {
+				log.info(">>>>>IDENTIFICATION TYPE IS NEW");
+				getManagedBean().getSelectedShareHolder()
+						.setIdentificationType(null);
+			}
+			if (getManagedBean().getSelectedShareHolder().getSmStaffAcademics() != null) {
+				for (SmStaffAcademic ac : getManagedBean()
+						.getSelectedShareHolder().getSmStaffAcademics()) {
+					if (ac.getQualificationId() != null
+							&& ac.getQualificationId().getParameterId() == null) {
+						log.info(">>>>>QUALIFICATION IS NEW");
+						ac.setQualificationId(null);
+					}
+				}
+			}
 
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedShareHolder(), getManagedBean().getSmAppl()
