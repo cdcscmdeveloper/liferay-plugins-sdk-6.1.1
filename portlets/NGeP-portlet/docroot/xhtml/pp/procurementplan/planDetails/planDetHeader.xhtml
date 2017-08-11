@@ -85,9 +85,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					valueChangeListener="#{pPlanBackingBean.verifyPlanYearControl}"
 					>
 					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(pPlanBackingBean.managedBean.selectedPlan.brandNew)}"/>
-					<p:ajax event="change"  
+					<p:ajax event="change"  partialSubmit="true"  
 						update=":form:pPlanDet, :form:pPlanActor,:form:pPlanHeader"/>
-					<p:ajax event="valueChange" immediate="true" process="@this" update=":form:pPlanDet, :form:pPlanActor,:form:pPlanHeader"/>
+					<p:ajax event="valueChange" partialSubmit="true" process="@this" update=":form:pPlanDet, :form:pPlanActor,:form:pPlanHeader"/>
 				</p:selectOneMenu>
 				&#160;&#160;   
                 <p:graphicImage id="giPlanYear" value="/css/images/design/tooltips.png" />
