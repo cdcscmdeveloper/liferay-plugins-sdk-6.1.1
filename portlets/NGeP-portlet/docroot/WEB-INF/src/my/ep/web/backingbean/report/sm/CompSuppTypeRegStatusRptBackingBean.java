@@ -34,7 +34,7 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 		params.put(SmReportConst.PARAM_ZONE,
 				getManagedBean().getZone() == null ? StringUtils.EMPTY
 						: getManagedBean().getZone());
-		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
+		if (StringUtils.isNotBlank(getManagedBean().getSupplierType())) {
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 					.getSupplierType());
 		}
@@ -60,7 +60,7 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 					.getMofRegNoTo());
 		}
 
-		addCategoryParam(params);
+		addCatParamWithoutMainCatChecking(params);
 
 		generateSmReport(params);
 	}
