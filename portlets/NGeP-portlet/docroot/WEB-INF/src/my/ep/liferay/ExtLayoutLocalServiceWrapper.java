@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -15,6 +16,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
@@ -157,7 +159,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		List<Role> loginUserRoles = getUserRoleList();
 		
 		for (Role r : loginUserRoles) {
-			if(r.getName().indexOf("BASIC") > 0) {
+			if(StringUtils.containsAny(r.getName(), "BASIC")) {
 				return true;
 			}
 		}
@@ -191,4 +193,14 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		}
 		return userRoleList;
 	}
+	
+/*	public static void main(String[] args) {
+		String roleName = "BASIC_SUPPLIER_ADMIN";
+		System.out.println("roleName.indexOf(\"BASIC\"): " + roleName.indexOf("BASIC"));
+		System.out.println("ddddd" + StringUtils.containsAny(roleName, "BASIC"));
+		
+		if(roleName.indexOf("B") > 0) {
+			System.out.println(true);
+		}
+	}*/
 }
