@@ -14,6 +14,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.service.LayoutLocalService;
 import com.liferay.portal.service.LayoutLocalServiceWrapper;
 
@@ -21,29 +22,57 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 
 	public static Logger log = Logger.getLogger(ExtLayoutLocalServiceWrapper.class);
 	
+	public final String RENEW_MOF_URL = "/renew-mof-account";
+	public final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
+	
 	public ExtLayoutLocalServiceWrapper(LayoutLocalService layoutLocalService) {
 		super(layoutLocalService);
 		// TODO Auto-generated constructor stub
 	}
 
 	public List<Layout>	getLayouts(int start, int end) throws SystemException {
-		System.out.println(11111);
+		log.info(11111);
 		return super.getLayouts(start, end);
 	}
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout) throws SystemException {
-		System.out.println(22222);
-		System.out.println("group id: " + groupId);
 		
 		List<Layout> layouts = new ArrayList<Layout>();
-//		layouts.addAll(super.getLayouts( groupId,  privateLayout));
 		
-		for(Layout layout : super.getLayouts( groupId,  privateLayout)) {
-			System.out.println(layout.getFriendlyURL());
-			if(!layout.getFriendlyURL().equals("/upgrade-basic-to-mof")) {
-				layouts.add(layout);
+		if(!isBasicSupplierUser()) {
+			return super.getLayouts( groupId,  privateLayout);
+		} else {
+			
+			for(Layout layout : super.getLayouts( groupId,  privateLayout)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+					if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && validBasicToRenewMOF()) {
+						layouts.add(layout);
+					} else if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && !validBasicToRenewMOF()) {
+						layouts.add(layout);
+					}
+				} else {
+					layouts.add(layout);
+				}
 			}
 		}
+		
+		/*List<Layout> layouts = new ArrayList<Layout>();
+		
+		for(Layout layout : super.getLayouts( groupId,  privateLayout)) {
+			if(isBasicSupplierUser()) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL)) {
+					if(validBasicToRenewMOF()) {
+						layouts.add(layout);
+					}
+				} else if(layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+					layouts.add(layout);
+				} else {
+					layouts.add(layout);
+				}
+			} else {
+				layouts.add(layout);
+			}			
+		}*/
 //		remoteLayout(layouts, "/catalogue-search");
 		
 //		return super.getLayouts( groupId,  privateLayout);
@@ -51,88 +80,84 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	}
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout, long parentLayoutId) throws SystemException {
-		System.out.println(33333);
-		System.out.println("group id: " + groupId);
 		
 		List<Layout> layouts = new ArrayList<Layout>();
-//		layouts.addAll(super.getLayouts( groupId,  privateLayout, parentLayoutId));
 		
-		for(Layout layout : super.getLayouts( groupId,  privateLayout, parentLayoutId)) {
-			System.out.println(layout.getFriendlyURL());
-			if(!layout.getFriendlyURL().equals("/upgrade-basic-to-mof")) {
-				layouts.add(layout);
+		if(!isBasicSupplierUser()) {
+			return super.getLayouts(groupId, privateLayout, parentLayoutId);
+		} else {
+			
+			for(Layout layout : super.getLayouts(groupId, privateLayout, parentLayoutId)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+					if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && validBasicToRenewMOF()) {
+						layouts.add(layout);
+					} else if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && !validBasicToRenewMOF()) {
+						layouts.add(layout);
+					}
+				} else {
+					layouts.add(layout);
+				}
 			}
 		}
-//		remoteLayout(layouts, "/catalogue-search");
-//		return super.getLayouts( groupId,  privateLayout,  parentLayoutId);
+		
 		return layouts;
 	}
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout, long[] layoutIds) throws SystemException, PortalException {
-		System.out.println(44444);
-		System.out.println("group id: " + groupId);
+
 		return super.getLayouts( groupId,  privateLayout, layoutIds);
 	}
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout, long parentLayoutId, boolean incomplete, int start, int end) throws SystemException {
-		System.out.println(55555);
-		System.out.println("group id: " + groupId);
+
 		return super.getLayouts( groupId,  privateLayout,  parentLayoutId,  incomplete,  start,  end);
 	}
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout, String type) throws SystemException {
-		System.out.println(66666);
-		System.out.println("group id: " + groupId);
+
 		return super.getLayouts( groupId,  privateLayout,  type);
 	}
 	
-	/*public List<Layout>	getNoPermissionLayouts(long roleId) throws SystemException {
-		return super.getNoPermissionLayouts(roleId);
-	}*/
-	
 	public List<Layout>	getNullFriendlyURLLayouts() throws SystemException {
-		System.out.println(77777);
 		return super.getNullFriendlyURLLayouts();
 	}
 	
 	public List<Layout>	getScopeGroupLayouts(long groupId, boolean privateLayout) throws SystemException {
-		System.out.println(88888);
-		System.out.println("group id: " + groupId);
+
 		return super.getScopeGroupLayouts(groupId, privateLayout);
 	}
 	
-	private void remoteLayout(List<Layout> layouts, String friendlyUrl) throws SystemException {
-		for(Layout layout : layouts) {
-			/*if(layout.getChildren().size() > 0) {
-				remoteLayout(layout.getChildren(), friendlyUrl);				
-			} */
-			
-			if(layout.getFriendlyURL().equals(friendlyUrl)) {
-				layouts.remove(layout);
-			}
+	private boolean validBasicToRenewMOF() {
+		long userId = 0;
+		if(new FacesScopes().getUserSessionBean() != null) {
+			userId = new FacesScopes().getUserSessionBean().getUserId();
 		}
-	}
-	
-	/*public boolean isValidToViewVirtualCert() {
-		IMofAccountSO mofSO = null;
-		boolean valid = false;
+		
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setUserId(userId);
+		
+		IMofAccountSO mofAccountSO = null;
+		
 		try {
-			mofSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
-			long userId = 0;
-			if(new FacesScopes().getUserSessionBean() != null) {
-				userId = new FacesScopes().getUserSessionBean().getUserId();
-			}
-			log.info("user id: " + userId);
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setUserId(userId);
-			MofAccountResDTO resDTO = mofSO.retriveMofAccountByUserId(reqDTO);
-			valid = resDTO.isSuccessful();
-			System.out.println("valid: " + valid);
+			mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
+			MofAccountResDTO resDTO = mofAccountSO.checkExpiredDowngradedToBasic(reqDTO);
+			
+			return !resDTO.isExpired();
 		} finally {
-			mofSO = null;
+			mofAccountSO = null;
 		}
-		return valid;
-	}*/
+	}	
 	
-	
+	public boolean isBasicSupplierUser() {
+		FacesScopes sc = new FacesScopes();
+		List<Role> loginUserRoles = sc.getUserRoleList();
+		
+		for (Role r : loginUserRoles) {
+			if(r.getName().indexOf("BASIC") > 0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
