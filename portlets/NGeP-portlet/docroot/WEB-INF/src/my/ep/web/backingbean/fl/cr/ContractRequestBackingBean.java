@@ -5111,7 +5111,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setDeclarationCheck(true);
 			getEspkbCommitmentNo();
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage?faces-redirect=true");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crPrerender?faces-redirect=true");
 		}
 	}
 	
