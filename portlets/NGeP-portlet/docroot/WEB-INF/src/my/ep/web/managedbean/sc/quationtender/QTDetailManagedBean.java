@@ -1559,6 +1559,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     
     private List<ScQtContactPerson> toBeRemovalContactPersonList;
     private Long bsvDBStateId;
+    private boolean isQualificationRender=Boolean.TRUE;
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -9842,6 +9843,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setBsvDBStateId(Long bsvDBStateId) {
 		this.bsvDBStateId = bsvDBStateId;
+	}
+
+	public boolean isQualificationRender() {
+		return isQualificationRender;
+	}
+
+	public void setQualificationRender(boolean isQualificationRender) {
+		this.isQualificationRender = isQualificationRender;
 	}
 
 	

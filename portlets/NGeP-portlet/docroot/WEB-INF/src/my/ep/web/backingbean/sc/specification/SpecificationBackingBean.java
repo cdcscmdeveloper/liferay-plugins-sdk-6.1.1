@@ -9594,6 +9594,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			boolean qtMaintenanceFlow =this.getManagedBean().isMaintanceFlow();
 		    String specScreenMaintenance=this.getManagedBean().getSpecMaintenanceScreen();
 		   boolean specMaintenance= this.getManagedBean().isSpecMaintenance();
+		   boolean qualificationRender= this.getManagedBean().isQualificationRender();
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = constructSpecCommitteDtls().getScQt();
@@ -9859,6 +9860,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setPanel(isPanel);
 			this.getManagedBean().setProcMethodDropdownPresent(isDropdownPresent);
 			this.getManagedBean().setSpecMaintenanceWorkFlowStatus(scWorkFlowStatus);
+			 this.getManagedBean().setQualificationRender(qualificationRender);
 			
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
@@ -13760,6 +13762,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
       }
 		   
 		this.getManagedBean().setLoginRoleType("SC");
+		this.getManagedBean().setQualificationRender(Boolean.FALSE);
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,

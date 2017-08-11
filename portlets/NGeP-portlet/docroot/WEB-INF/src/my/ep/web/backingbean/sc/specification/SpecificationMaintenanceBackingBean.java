@@ -409,6 +409,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 			} 
 			this.getManagedBean().setCurrentStatusId(currentSpecStatusId);
 		}
+		this.getManagedBean().setQualificationRender(Boolean.FALSE);
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
