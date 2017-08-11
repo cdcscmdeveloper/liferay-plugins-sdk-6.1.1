@@ -3,6 +3,8 @@ package my.ep.liferay;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
+
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -13,10 +15,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.LayoutLocalService;
 import com.liferay.portal.service.LayoutLocalServiceWrapper;
+import com.liferay.portal.service.UserServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 
 public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 
@@ -159,5 +165,29 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		}
 		
 		return false;
+	}
+
+	public String getScreenName() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
+		if(themeDisplay != null) {
+			if(themeDisplay.getUser() != null) {
+				return themeDisplay.getUser().getScreenName();
+			}
+		}
+		return null;
+	}
+	
+	public List<Role> getUserRoleList() {
+		List<Role> userRoleList = new ArrayList<Role>();
+		if(getScreenName() != null) {
+			try {
+				User user = UserServiceUtil.getUserById(Long.valueOf(getScreenName()));
+				userRoleList = user.getRoles();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		return userRoleList;
 	}
 }
