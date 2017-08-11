@@ -170,8 +170,8 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column rendered="#{contractRequestBackingBean.managedBean.queryDisplay}">
-			<f:facet name="header" style="width:8%;">
+			<p:column rendered="#{contractRequestBackingBean.managedBean.queryDisplay}" style="text-align:center;width:3%;">
+			<f:facet name="header">
 			<h:outputText style="text-align:right" />
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
 			</f:facet>
