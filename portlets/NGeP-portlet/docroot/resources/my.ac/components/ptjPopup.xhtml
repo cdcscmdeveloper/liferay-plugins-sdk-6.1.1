@@ -37,7 +37,7 @@
 		<h:panelGroup id="orgProfilePnlGrp">
 			<p:panel id="orgProfilePnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
               <h:panelGrid columns="3" id="orgProfilePg">
-                 <p:inputText id="itMin"  readonly="true" style="width:170px" 
+                 <p:inputText id="itMin"  disabled="true" style="width:170px" 
                 	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"  rendered="#{!includePegawaiPengawal}"
@@ -55,7 +55,7 @@
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somPegaiPengwa,:form:#{cc.attrs.id}:somJabatanRpt,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
                  
-                 <p:inputText id="somPegai" readonly="true" style="width:170px" rendered="#{(ParameterConst.orgTypePtjGroup eq cc.attrs.orgTypeParamCode) or (ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode)}"                 
+                 <p:inputText id="somPegai" disabled="true" style="width:170px" rendered="#{(ParameterConst.orgTypePtjGroup eq cc.attrs.orgTypeParamCode) or (ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode)}"                 
                  	value="#{lbl['lbl.pm.org.ptj.search.pegwai']}"/>
                  <p:spacer height="1" rendered="#{(ParameterConst.orgTypePtjGroup eq cc.attrs.orgTypeParamCode) or (ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode)}"/>
                  <p:selectOneMenu id="somPegaiPengwa" styleClass="ptjPopupSomWidth"
@@ -66,7 +66,7 @@
             	    <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatanRpt,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
                  
-                 <p:inputText id="somJabRpt" readonly="true" style="width:170px"
+                 <p:inputText id="somJabRpt" disabled="true" style="width:170px"
                  	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
                  <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
@@ -79,7 +79,7 @@
                  </p:selectOneMenu>
                 </c:if>
                 <c:if test="#{!includePegawaiPengawal}">  
-                 <p:inputText id="somJab" readonly="true" style="width:170px"
+                 <p:inputText id="somJab" disabled="true" style="width:170px"
                  	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
                  <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
