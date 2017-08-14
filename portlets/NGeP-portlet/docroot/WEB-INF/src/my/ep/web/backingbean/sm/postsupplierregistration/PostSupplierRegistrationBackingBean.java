@@ -27,6 +27,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -90,7 +91,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	//private static final String VIEW_VIRTUAL_CERT = "virtual-cert";
 	private static final String RESUBMIT_APPLICATION = "resubmit-application?apId=";
 	private static final String CATALOGUE_MAINTENANCE_PAGE = "catalogue-maintenance-file";
-	
+	private static final String RENEW_MOF = "renew-mof-account";
 	
 	private int softCertStatus;
 	private boolean changeRoleSection;
@@ -644,7 +645,18 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			}
 		}
 		
-		basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if(pmUser != null){
+			MofAccountReqDTO mofReqDTO = new MofAccountReqDTO();
+			mofReqDTO.setUserId(pmUser.getUserId());
+			boolean isExpired = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).isExpired();
+			
+			if(!isExpired){
+				basicActionMap.put("RNMOF",RENEW_MOF);
+			}else{
+				basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
+			}
+		}
 		getManagedBean().setUserActionMap(basicActionMap);
 	}
 	
