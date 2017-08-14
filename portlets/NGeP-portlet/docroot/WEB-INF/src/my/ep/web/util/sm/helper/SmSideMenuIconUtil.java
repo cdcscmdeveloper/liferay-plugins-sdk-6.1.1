@@ -6,6 +6,7 @@ import java.util.List;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -25,8 +26,10 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 public class SmSideMenuIconUtil {
+	private static Logger log = EpLogger.getLogger(SmSideMenuIconUtil.class);
 	private static final String ICON_TICK = "/css/images/design/ico-tick-checkbox.png";
 	private static final String ICON_UNTICK = "/css/images/design/ico-disabled-chckbx.png";
 	private static final String ICON_VIEW = "/css/images/design/ico-view.png";
@@ -758,6 +761,8 @@ public class SmSideMenuIconUtil {
 							currPersonnel, new String[] { "shareAmt",
 									"sharePercentage" });
 					if (retVal) {
+						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
+								+ currPersonnel.getName());
 						break;
 					}
 
@@ -773,6 +778,8 @@ public class SmSideMenuIconUtil {
 							null, excludeProps);
 
 					if (retVal) {
+						log.info(">>>>DIFFERENT IN PERSONNEL ADDRESS FOR PERSONNEL:"
+								+ currPersonnel.getName());
 						break;
 					}
 
@@ -789,6 +796,8 @@ public class SmSideMenuIconUtil {
 							null, excludeProps);
 
 					if (retVal) {
+						log.info(">>>>DIFFERENT IN PERSONNEL STAFF EXPERIENCE FOR PERSONNEL:"
+								+ currPersonnel.getName());
 						break;
 					}
 
@@ -804,6 +813,8 @@ public class SmSideMenuIconUtil {
 							null, excludeProps);
 
 					if (retVal) {
+						log.info(">>>>DIFFERENT IN PERSONNEL RELATED COMPANY FOR PERSONNEL:"
+								+ currPersonnel.getName());
 						break;
 					}
 
@@ -820,6 +831,8 @@ public class SmSideMenuIconUtil {
 							nonPrimitive, excludeProps);
 
 					if (retVal) {
+						log.info(">>>>DIFFERENT IN PERSONNEL ASSOC BODY FOR PERSONNEL:"
+								+ currPersonnel.getName());
 						break;
 					}
 
@@ -837,6 +850,8 @@ public class SmSideMenuIconUtil {
 							nonPrimitive, excludeProps);
 
 					if (retVal) {
+						log.info(">>>>DIFFERENT IN PERSONNEL ACADEMIC FOR PERSONNEL:"
+								+ currPersonnel.getName());
 						break;
 					}
 				}
@@ -853,6 +868,9 @@ public class SmSideMenuIconUtil {
 						applPrev.getSmSupplierBranches(),
 						applCurr.getSmSupplierBranches(), primitive, null,
 						new String[] { "contactPersonId" });
+				if(retVal){
+					log.info(">>>>DIFFERENT IN SUPPLIER BRANCH");
+				}
 			}
 		}
 
