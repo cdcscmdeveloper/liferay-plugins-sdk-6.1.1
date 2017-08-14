@@ -32,6 +32,13 @@
 					  <p>#{lbl['lbl.sm.supplier.promo.upgrade.mof']}</p>
 					</div></div>
 				</p:commandLink><br />
+				
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'RNMOF'}" styleClass="bannerlink">
+					<div class="banner3">
+					<div class="banner3-text">
+					  <p>#{lbl['lbl.sm.supplier.promo.renew.mof']}</p>
+					</div></div>
+				</p:commandLink><br />
 			</c:forEach>
 			<ui:remove>
 				<ui:include src="mofExpiryAlert.xhtml" />
