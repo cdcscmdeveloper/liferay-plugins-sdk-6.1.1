@@ -122,7 +122,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
 	
-	private String editorValue;
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	
@@ -152,20 +151,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (getManagedBean().getApproverModel() == null) {
 			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(),  new ArrayList<PmUser>()));
 		}
-	}
-	
-	/**
-	 * @return the editorValue
-	 */
-	public String getEditorValue() {
-		return editorValue;
-	}
-
-	/**
-	 * @param editorValue the editorValue to set
-	 */
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
 	}
 		
 	/**

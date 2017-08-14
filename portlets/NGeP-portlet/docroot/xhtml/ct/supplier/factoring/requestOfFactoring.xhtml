@@ -407,14 +407,6 @@
 					</h:panelGroup>
 				</tr>
 			</table>
-			<p:dialog 
-			     id="factoringClauseDlg" styleClass="pop_up_top" header="#{lbl['lbl.ct.factoring.clauses']}"
-				widgetVar="factoringClauseDlg" modal="true" width="820" height="480" resizable="false">
-				<p:editor controls="print" 
-				  id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430"  disabled="true"/>
-				  <p:commandButton value="#{lbl['lbl.btn.close']}" process="@this" 
-				      onclick="factoringClauseDlg.hide()" style="float:right;"/>
-			</p:dialog>
 		</p:panel>
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />

@@ -684,8 +684,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		try {
 			      validateViewNotice();
 			      if (isViewNoticeFlag()) {
-				         context = new VelocityContext();			
-				         getManagedBean().setEditorValue("");
+				         context = new VelocityContext();
 				      //   String imgUrl = getServerUrl()+ "css/images/gov.png";
 				         if(getManagedBean().isTermination()) {				
 					           vmFile = "/ct/termination/termination-notice.vm";
@@ -694,8 +693,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				         }if(getManagedBean().isRemedy()) {			
 					          vmFile = "/ct/termination/remedy-notice.vm";
 				         }
-				
-						getManagedBean().setEditorValue("");
+				         
 						if(vmFile !=null) {							 				
 					          if(getServerUrl() != null){
 					               context.put("imgUrl",getServerUrl()+  "NGeP-portlet/css/images/gov.png" );

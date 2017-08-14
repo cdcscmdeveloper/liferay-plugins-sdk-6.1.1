@@ -108,7 +108,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	private ContractBackingBean ctBB = null;
-	private String editorValue;
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
@@ -160,20 +159,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public void setCtBB(ContractBackingBean ctBB) {
 		this.ctBB = ctBB;
-	}
-
-	/**
-	 * @return the editorValue
-	 */
-	public String getEditorValue() {
-		return editorValue;
-	}
-
-	/**
-	 * @param editorValue the editorValue to set
-	 */
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
 	}
 
 	/**
@@ -1111,7 +1096,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * The method used to generate the notification of factoring service and
 	 * viewable from screen.
 	 */
-	public void previewAction() {		  
+	public void previewAction() {
 		VelocityContext context = null;
 		String vmFile = null;
 		String templateName = null;
@@ -1129,8 +1114,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	   vmFile = "/ct/factoring/factoring-clause-ca.vm";
 		    	   templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_CA;	
 		       }
-
-		       setEditorValue("");
+		       
 		       if (vmFile !=null && templateName != null) {
 		    	   UserReqDTO userReqDTO =  new UserReqDTO();
 		    	   context.put("imgUrl", getServerUrl()+"NGeP-portlet/css/images/gov.png");
@@ -1215,7 +1199,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    			   context.put("approverDesignation", "");						
 		    		   }
 		    	   }
-		    	   //setEditorValue(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context));
+		    	   
 		    	   String filePath = getManagedBean().getFileDirectory();
 		    	   File file = new File(filePath);
 		    	   file.mkdirs();
