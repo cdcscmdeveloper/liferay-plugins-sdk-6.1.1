@@ -5475,6 +5475,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
                 
 			List<PmDocument> selectList = this.getManagedBean()
 					.getStageTwoTechComplianceSelect();
+			
+			List<PmDocument> technicalDocumentList=this.getManagedBean().getStageTwoTechComplianceList();
+			if(CollectionUtils.isNotEmpty(technicalDocumentList)){
+				selectList=new ArrayList<PmDocument>();
+				for(PmDocument document:technicalDocumentList){
+					if(document.isSelected()){
+						selectList.add(document);
+					}
+				}
+			}
 			this.getManagedBean().setTechStandaraChecklist(false);
 			if (null == selectList || selectList.isEmpty()) {
 				this.getManagedBean().setTechStandaraChecklist(true);
@@ -5606,6 +5616,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setFinStandaraChecklist(false);
 			if (compilance == null) {
 				compilance = new ArrayList<ScQtCheckList>();
+			}
+			List<PmDocument> financialDocumentList=this.getManagedBean().getStageTwoFinComplianceList();
+			if(CollectionUtils.isNotEmpty(financialDocumentList)){
+				selectList=new ArrayList<PmDocument>();
+				for(PmDocument document:financialDocumentList){
+					if(document.isSelected()){
+						selectList.add(document);
+					}
+				}
 			}
 			if (null == selectList || selectList.isEmpty()) {
 				this.getManagedBean().setFinStandaraChecklist(true);
