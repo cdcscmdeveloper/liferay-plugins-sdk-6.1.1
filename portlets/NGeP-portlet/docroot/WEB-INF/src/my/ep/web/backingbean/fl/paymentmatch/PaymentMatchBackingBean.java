@@ -1879,7 +1879,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			try {
 				VotFundReqDTO votReqDTO = new VotFundReqDTO();
 				votReqDTO.setVotRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
-				votReqDTO.setPtjGroupCode(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile().getOrgCode());
+				votReqDTO.setPtjGroupCode(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile().getParentOrgProfile().getOrgCode());
 				if(StringUtils.isNotBlank(getManagedBean().getSearchVotField())){
 					if(getManagedBean().getSelectedVotValue() ==  2){
 						votReqDTO.setVotFundCode(getManagedBean().getSearchVotField());
