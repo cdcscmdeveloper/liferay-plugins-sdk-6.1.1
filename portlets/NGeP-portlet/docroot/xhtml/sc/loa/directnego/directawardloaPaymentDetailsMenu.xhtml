@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<c:if test="#{!isSupplierAckStatus}">
-		<ui:include src="/xhtml/sc/loa/loarequest/loaInstructionHeader.xhtml" />
+		<ui:include src="../shared/loaInstructionHeader.xhtml" />
 	</c:if>
 	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}"
 		toggleable="true">
