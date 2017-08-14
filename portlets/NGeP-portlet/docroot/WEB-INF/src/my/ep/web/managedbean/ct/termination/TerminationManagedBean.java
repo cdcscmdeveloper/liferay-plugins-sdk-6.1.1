@@ -36,7 +36,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String taskName;
-	private String editorValue;
 	private String userLoginId;
 	private String externalPageUrl;
 	private String fileDirectory;
@@ -77,20 +76,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
-	}
-
-	/**
-	 * @return the editorValue
-	 */
-	public String getEditorValue() {
-		return editorValue;
-	}
-
-	/**
-	 * @param editorValue the editorValue to set
-	 */
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
 	}
 
 	/**
