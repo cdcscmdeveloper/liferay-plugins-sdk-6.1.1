@@ -649,13 +649,14 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(pmUser != null){
 			MofAccountReqDTO mofReqDTO = new MofAccountReqDTO();
 			mofReqDTO.setUserId(pmUser.getUserId());
-			boolean isExpired = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).isExpired();
+			int exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
 			
-			if(!isExpired){
+			if(exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW){
 				basicActionMap.put("RNMOF",RENEW_MOF);
 			}else{
 				basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
 			}
+
 		}
 		getManagedBean().setUserActionMap(basicActionMap);
 	}
