@@ -1603,8 +1603,8 @@ public class SmApplicationBackingBean extends
 				}
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-				SmApplicationUtil.validateCategoryOtherDesc(true,
-						getManagedBean(), currentTab);
+				SmApplicationUtil.validateCategoriesBeforeSave(
+						true, getManagedBean(), currentTab);
 			}
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)

@@ -76,7 +76,7 @@
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="3" cols="80" required="true"
 					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
-					<p:ajax process="@this" update="overlapCatSuppDocDtId" />
+					<p:ajax process="@this" update="overlapCatSuppDocDtId,@this" event="blur"/>
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
 			</p:column>
