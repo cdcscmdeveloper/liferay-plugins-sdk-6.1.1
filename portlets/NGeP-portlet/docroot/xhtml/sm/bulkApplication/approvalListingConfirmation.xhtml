@@ -133,10 +133,17 @@
 		<ac:smOverlapCategoryDialog 
 			voList="#{bulkApplicationBackingBean.managedBean.selectedOverlapCategoryVOList}" />
 		
-		<ac:confirmationPopup id="approveConfirmPopup" width="400" height="100"
-			widget="approveConfirmPopup" update="@form"
-			okAction="bulkApplicationBackingBean.submitApprove()"
-			title="#{lbl['lbl.sm.overlapped.category.approval.confirmation.title']}"
-			content="#{lbl['lbl.sm.overlapped.category.approval.confirmation.msg']}" />
+		<p:confirmDialog id="approveConfirmPopup" closable="true"
+			message="#{lbl['lbl.sm.overlapped.category.approval.confirmation.msg']}"
+			header="#{lbl['lbl.sm.overlapped.category.approval.confirmation.title']}" severity="alert"
+			widgetVar="approveConfirmPopup">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="approveConfirmPopup.hide();" 
+					action="#{bulkApplicationBackingBean.submitApprove}" update="@form" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="approveConfirmPopup.hide();" />
+			</div>
+		</p:confirmDialog>
 	
 </ui:composition>
