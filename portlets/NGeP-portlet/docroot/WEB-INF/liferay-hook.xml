@@ -4,9 +4,9 @@
 <hook>
 	<language-properties>Language_en_US.properties</language-properties>
 		
-	<!-- <service>
+	<service>
 	    <service-type>com.liferay.portal.service.LayoutLocalService</service-type>
 	    <service-impl>my.ep.liferay.ExtLayoutLocalServiceWrapper</service-impl>
-	</service> -->
+	</service>
 	
 </hook>
