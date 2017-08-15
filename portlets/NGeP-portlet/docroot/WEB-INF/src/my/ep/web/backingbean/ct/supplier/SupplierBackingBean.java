@@ -1106,12 +1106,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		       context = new VelocityContext();	
 		       if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())  || getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			         vmFile = "/ct/factoring/factoring-clause-supplier.vm";
+			         vmFile = ContractConst.DOCPATH_CT_FACTORING_SUPPLIER;
 			         templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER;
 
 		       } else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
 		    		   || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-		    	   vmFile = "/ct/factoring/factoring-clause-ca.vm";
+		    	   vmFile = ContractConst.DOCPATH_CT_FACTORING_CA;
 		    	   templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_CA;	
 		       }
 		       
