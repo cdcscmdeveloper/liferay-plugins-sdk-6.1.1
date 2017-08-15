@@ -628,7 +628,7 @@ public class SmBulkApplicationBackingBean extends
 						.getWorklistVO().getWorklistItem()) {
 					bulkAppl = getBulkApplicationVO(worklistItemVO);
 					if (bulkAppl != null) {
-						taskList.add(getBulkApplicationVO(worklistItemVO));
+						taskList.add(bulkAppl);
 					}
 				}
 			}
