@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import my.ep.constant.MessageConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.exception.EpException;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DirOwnCeoOneCompRptManagedBean;
@@ -55,6 +56,7 @@ public class DirOwnCeoOneCompRptBackingBean extends
 	}
 
 	public void resetSearch() {
+		getManagedBean().setSupplierType(SupplierManagementConst.SUPP_TYPE_CONSULTANT);
 		getManagedBean().setMofRegNoFrom(SmReportConst.SUPPL_CONSULT_MOF_NO);
 		getManagedBean().setMofRegNoTo(SmReportConst.SUPPL_CONSULT_MOF_NO);
 		if (getManagedBean().getSelectedOrgProfile() != null
@@ -65,4 +67,13 @@ public class DirOwnCeoOneCompRptBackingBean extends
 		getManagedBean().setIdentificationNo(StringUtils.EMPTY);
 	}
 
+	public void onChangeSuppType(){
+		if(getManagedBean().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
+			getManagedBean().setMofRegNoFrom(SmReportConst.SUPPL_CONTRACT_MOF_NO);
+			getManagedBean().setMofRegNoTo(SmReportConst.SUPPL_CONTRACT_MOF_NO);
+		}else{
+			getManagedBean().setMofRegNoFrom(SmReportConst.SUPPL_CONSULT_MOF_NO);
+			getManagedBean().setMofRegNoTo(SmReportConst.SUPPL_CONSULT_MOF_NO);
+		}
+	}
 }
