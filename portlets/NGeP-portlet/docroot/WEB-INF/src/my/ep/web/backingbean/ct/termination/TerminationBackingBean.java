@@ -684,15 +684,15 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		try {
 			      validateViewNotice();
 			      if (isViewNoticeFlag()) {
-				         context = new VelocityContext();
+			    	  context = new VelocityContext();
 				      //   String imgUrl = getServerUrl()+ "css/images/gov.png";
-				         if(getManagedBean().isTermination()) {				
-					           vmFile = "/ct/termination/termination-notice.vm";
-				         }else if(getManagedBean().isMutualTermination()) {
-					          vmFile = "/ct/termination/mutual-termination-notice.vm";
-				         }if(getManagedBean().isRemedy()) {			
-					          vmFile = "/ct/termination/remedy-notice.vm";
-				         }
+			    	  if (getManagedBean().isTermination()) {				
+			    		  vmFile = ContractConst.DOCPATH_CT_TERMINATION_NOTICE;
+			    	  } else if (getManagedBean().isMutualTermination()) {
+			    		  vmFile = ContractConst.DOCPATH_CT_MUTUAL_TERMINATION_NOTICE;
+			    	  } else if(getManagedBean().isRemedy()) {			
+			    		  vmFile = ContractConst.DOCPATH_CT_REMEDY_NOTICE;
+			    	  }
 				         
 						if(vmFile !=null) {							 				
 					          if(getServerUrl() != null){
