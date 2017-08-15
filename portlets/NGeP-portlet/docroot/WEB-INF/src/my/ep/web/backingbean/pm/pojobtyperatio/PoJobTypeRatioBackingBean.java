@@ -185,8 +185,7 @@ public class PoJobTypeRatioBackingBean extends
 				&& !SupplierManagementConst.SUPP_TYPE_CONTRACTOR
 						.equals(getManagedBean().getPoJobTypeRatio()
 								.getSupplierType())) {
-			map.remove(PmCommonUtil
-					.getResourceBundleLabels("lbl.pm.po.jobtyperatio.bumi"));
+			map.remove("lbl.pm.po.jobtyperatio.bumi");
 		}
 		SelectItem[] items = null;
 		items = new SelectItem[map.size() + 1];
