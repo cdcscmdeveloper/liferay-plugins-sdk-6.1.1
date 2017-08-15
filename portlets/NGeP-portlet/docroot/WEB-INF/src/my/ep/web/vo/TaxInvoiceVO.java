@@ -3,6 +3,8 @@
  */
 package my.ep.web.vo;
 
+import java.io.Serializable;
+
 /**
  * ChargeLineVO
  * 
@@ -10,8 +12,9 @@ package my.ep.web.vo;
  * @since 21/8/2014
  *
  */
-public class TaxInvoiceVO  {
+public class TaxInvoiceVO implements Serializable  {
 	
+	private static final long serialVersionUID = 1L;
 	private String gstFlag;
 	private String gstRate;
 	private String amountWithoutGst;
