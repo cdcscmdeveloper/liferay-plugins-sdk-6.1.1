@@ -1036,8 +1036,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 			List<Date> effectiveDates = new ArrayList<Date>();
 			List<Date> expiryDates = new ArrayList<Date>();
 			for (ScLoa loa : this.getScLoaList()) {
-				effectiveDates.add(loa.getContractEffDate());
-				expiryDates.add(loa.getContractExpDate());
+				if (loa.getContractEffDate() != null) {
+					effectiveDates.add(loa.getContractEffDate());	
+				}
+				
+				if (loa.getContractExpDate() != null) {
+					expiryDates.add(loa.getContractExpDate());	
+				}
 			}
 			Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
 			Date maxExpiryDate = getMaxExpiryDate(expiryDates);
