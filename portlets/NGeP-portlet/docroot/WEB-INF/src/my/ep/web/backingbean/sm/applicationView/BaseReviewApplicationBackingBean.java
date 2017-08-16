@@ -586,6 +586,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
 		} else {
+			List<SmSupplierBranch> deletedBranchs = new ArrayList<SmSupplierBranch>();
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					getSmSupplierBranchByRevNo());
 			for (SmSupplierBranch smSupplierBranch : getManagedBean()
@@ -603,7 +604,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 					SmApplicationUtil
 							.initGstSuppDocs(smSupplierBranch.getGst());
+				} else {
+					deletedBranchs.add(smSupplierBranch);
 				}
+			}
+			if (!EntityHelper.isCollectionEmpty(deletedBranchs)) {
+				getManagedBean().getSmAppl().getSmSupplierBranches()
+						.removeAll(deletedBranchs);
 			}
 		}
 
