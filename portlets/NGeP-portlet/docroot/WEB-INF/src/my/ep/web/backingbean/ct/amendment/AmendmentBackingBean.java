@@ -3953,13 +3953,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		filePath = filePath + "/" + fileFormat;
 		CtAttachment attachment = new CtAttachment();
 			if(getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
-			    WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(item.getInputstream());
-			    PdfSettings pdfSettings = new PdfSettings();
-			    OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
-			    PdfConversion converter = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage);
-                converter.output(out, pdfSettings);
-				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
-				attachment.setFileName(getFileName(fileFormat)+".pdf");
+				
+				  WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage .load(item.getInputstream());
+		            WordprocessingMLPackage wordMLPackage1 = WordprocessingMLPackage.createPackage();
+		            wordMLPackage1 = wordMLPackage.getMainDocumentPart().convertAltChunks();
+		            PdfSettings pdfSettings = new PdfSettings();
+		            org.docx4j.convert.out.pdf.PdfConversion conversion = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage1);
+			        OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
+			        conversion.output(out, pdfSettings);
+				    attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
+				    attachment.setFileName(getFileName(fileFormat)+".pdf");
 		} else if (getFileExtension(item.getFileName()).equalsIgnoreCase("doc")	){
 			  WordprocessingMLPackage wordMLPackage = Doc.convert((FileInputStream) item.getInputstream());
 	          PdfSettings pdfSettings = new PdfSettings();
