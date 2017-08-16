@@ -1,99 +1,99 @@
 <html>
 <head>
-	<style>
+<style>
 		@page {
 			size: A4 portrait;
-         	@top-left { content: "$contractName"; }
+         	@top-left { content: "Mobile Phone -- Huawei P10 "; }
          	@bottom-center { content: "Page " counter(page) " / " counter(pages); }
-         	@bottom-left { content: "$contractNo"; }
+         	@bottom-left { content: "CT170000000004164"; }
 		}
 		
 		li {text-align: justify;word-spacing: -10px;}
 				
         @media print {
          .break {page-break-after: always;}
-        }
+       }
         
+  </style>
 		
-	</style>
+
 </head>
-<body>
-	<div style="border: 1px solid #a1a1a1;">
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td rowspan="5">
-            <img src='http://$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='124' height='100' />
-        </td>
-        <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ptjName</span>
-        </td>
-	</tr>
-	<tr>
-        <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ministryJabatanName</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ptjAddress</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Tel No: $phoneNo</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Fax No: $faxNo</span>
-        </td>
-    </tr>
-	</table>
-	</div>
-	
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td align="center">
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>SURAT SETUJU TERIMA</span>
-            <br/> <br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            Rujukan: $fileNo <br/>
-            $loaNo <br/>
-            $issueDate <br/><br/>
-        </td>
-    </tr>
-	<tr>
-		<td>
-			<br />
-			Kepada: <br />
-			$supplierName <br />
-			$supplierAddress <br />
-			#if ( $contractWithGst == 'true' )
-			No. Pendaftaran CBP: $gstRegNo <br />
-			Tarikh Kuatkuasa CBP: $gstEffDate <br />
-			Tarikh Pengisytiharan di eP: $gstDeclareDate <br />
-			#end
-			<br />
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<br />
-			Tuan, <br />
-			<b>Perubahan/Tambahan Kepada $contractNo </b> <br/><br/>
-		</td>
-	</tr>	
-	<tr>
-		<td>
+      <body>
+      
+         <table cellpadding="0" cellspacing="0" width="100%">
+       		 <tr>
+       			 <td> <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ptjName</span> </td>
+       	     </tr>
+       	     <tr>
+       			 <td> <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ministryJabatanName</span> </td>
+       	     </tr>
+       	     <tr>
+       			 <td> <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ptjAddress</span> </td>
+       	     </tr>
+       	     <tr>
+       			 <td> <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Tel No: $phoneNo</span> </td>
+       	     </tr>
+       	     <tr>
+       			 <td> <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Fax No: $faxNo</span> </td>
+       	     </tr>
+ 	    </table>
+ 		<br />
+		<br />
+ 		<table cellpadding="0" cellspacing="0" width="100%">
+   		 		<tr>
+       		 		<td align="center">
+       		 		<div style="text-align:center">  
+           				 <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>SURAT SETUJU TERIMA</span></div>
+           				<br/> <br/>
+       		 		</td>
+   			 </tr>
+   			 <tr>
+        		<td align="right">
+        		<div style="text-align:right">  
+           			  Rujukan: $fileNo <br/>
+          			    $loaNo<br/>
+           			 $issueDate <br/><br/></div>
+        		</td>
+   	 		</tr>
+		</table>
+
+		<table  cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td>
+					<br />
+					Kepada: <br />
+					$supplierName <br />
+					$supplierAddress <br />
+					#if ( $contractWithGst == 'true' )
+						No. Pendaftaran CBP: $gstRegNo <br />
+						Tarikh Kuatkuasa CBP: $gstEffDate <br />
+						Tarikh Pengisytiharan di eP: $gstDeclareDate <br />
+						#end <br />
+				</td>
+			</tr>
+
+     		<tr>
+				<td>
+					<br />
+					<br />
+					
+					Tuan, <br />
+					<b>Perubahan/Tambahan Kepada $contractNo </b> <br/><br/>
+				</td>
+			</tr>	
+		</table>
+    
+   
+      <table>
+        <tr>
+        <td>      
+
 			<ol style="padding-left: 20px;" >
 				#if ( $contractWithGst == 'false' )
-				<li style="padding-bottom:20px;">Kerajaan telah bersetuju menerima $procurementMode tuan dengan nilai RM$overallContractValue (Ringgit Malaysia: $overallContractValueTxt).<br /></li>
+				<li style="padding-bottom:20px;">Kerajaan telah bersetuju menerima $procurementMode tuan dengan nilai RM $overallContractValue (Ringgit Malaysia: $overallContractValueTxt).<br /></li>
 				#end
 				#if ( $contractWithGst == 'true' )
-				<li style="padding-bottom:20px;">Kerajaan telah bersetuju menerima $procurementMode tuan dengan nilai RM$overallContractValue (Ringgit Malaysia: $overallContractValueTxt) yang mengandungi harga tawaran syarikat sebanyak RM$contractAmt (Ringgit Malaysia: $contractAmtTxt) dan kenaan Cukai Barangan dan Perkhidmatan (CBP) sebanyak RM$gstAmt (Ringgit Malaysia: $gstAmtTxt)<br /></li>
+				<li style="padding-bottom:20px;">Kerajaan telah bersetuju menerima $procurementMode tuan dengan nilai RM $overallContractValue (Ringgit Malaysia: $overallContractValueTxt) yang mengandungi harga tawaran syarikat sebanyak RM$contractAmt (Ringgit Malaysia: $contractAmtTxt) dan kenaan Cukai Barangan dan Perkhidmatan (CBP) sebanyak RM$gstAmt (Ringgit Malaysia: $gstAmtTxt)<br /></li>
 				#end
 				<li style="padding-bottom:20px;">Dengan penerimaan tawaran tuan oleh Kerajaan, tuan adalah dinasihatkan bahawa suatu ikatan Kontrak terwujud antara Kerajaan dengan tuan. Suatu Kontrak Rasmi akan disempurnakan kemudiannya dengan memasukkan semua terma  sebagaimana yang diubahsuaikan. Tuan akan diberitahu oleh Kerajaan apabila Dokumen Kontrak siap sedia untuk ditandatangani oleh tuan. Surat Setuju Terima ini merupakan sebahagian daripada syarat-syarat kontrak dan perlu dibaca bersama. Bagaimanapun, sehinggalah Perjanjian Kontrak yang formal itu dilaksanakan, Surat Setuju Terima ini akan menjadi kontrak yang sah mengikat di antara tuan dan Kerajaan. <br /></li>
 				#if ( $bondAmt200k == 'true' )
@@ -107,303 +107,134 @@
 				<li style="padding-bottom:20px;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate. Perubahan/Tambahan kepada syarat-syarat kontrak adalah seperti di lampiran.<br /></li>
 				<li style="padding-bottom:20px;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.<br /><br /></li>
 			</ol>
-		</td>
-	</tr>	
-	<tr>
-		<td>
-			Sekian, terima kasih. <br /><br />
-		</td>
-	</tr>
-	<tr>
-		<td align="center">
-			<span style='font-weight:bold;font-size:14px;font-family: Albertus Medium;'>"BERKHIDMAT UNTUK NEGARA"</span> <br /><br /><br />
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Saya yang menurut perintah, <br /><br /><br />
-			________________________________ <br />
-			$contractSigner <br />
-			$contractSignerDesignation			
-		</td>
-	</tr>
-	<tr>
-		<td><br /><br /><br /><br /><br/>
-			Dengan ini yang bertandatangan di bawah ini mengakui penerimaan surat tersebut dan mengesahkan tiada apa apa terma, syarat atau stipulasi tambahan telah dikenakan dengan keluaran surat tersebut oleh yang bertandatangan di bawah ini.
-			<br /><br /><br /><br /><br/>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<table border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tr>
-				<td colspan="3">
-					<br />________________________________
-				</td>
-				<td>
-				</td>
-				<td colspan="3">
-					<br />________________________________
-				</td>
+			</td>
 			</tr>
-			<tr>
-				<td colspan="3" style='font-weight:bold;'>
-					Tandatangan bagi pihak Pembekal
-					<br /><br /><br /><br />
-				</td>
-				<td>
-				</td>
-				<td colspan="3" style='font-weight:bold;'>
-					Tandatangan bagi pihak saksi Pembekal
-					<br /><br /><br /><br />
-				</td>
-			</tr>
-			<tr valign="top">
-				<td width="17%">
-					Nama Penuh 
-				</td>
-				<td width="1%">
-					: 
-				</td>
-				<td width="30%">
-					$supplierUserName
-				</td>
-				<td width="4%">
-				</td>
-				<td width="17%">
-					Nama Penuh
-				</td>
-				<td width="1%">
-					: 
-				</td>
-				<td width="30%">
-					$witnessName
-				</td>
-			</tr>
-			<tr>
-				<td>
-					No KP
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierUserID
-				</td>
-				<td>
-				</td>
-				<td>
-					No KP
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessID
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Jawatan
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierUserDesignation
-				</td>
-				<td>
-				</td>
-				<td>
-					Jawatan
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessDesignation
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					Nama Pembekal
-				</td>
-				<td>
-					: 
-				</td>
-				<td style="white-space: normal;">
-					$supplierCompName
-				</td>
-				<td>
-				<td>
-				</td>
-				</td>
-				<td>
-				</td>
-				<td>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					Alamat
-				</td>
-				<td>
-					: 
-				</td>
-				<td style="white-space: normal;">
-					$supplierCompAddress
-				</td>
-				<td>
-				</td>
-				<td>
-					Alamat
-				</td>
-				<td>
-					: 
-				</td>
-				<td style="white-space: normal;">
-					$witnessAddress
-				</td>
-			</tr>
-			<tr>
-				<td>
-					No Tel
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierTelNo
-				</td>
-				<td>
-				</td>
-				<td>
-					No Tel
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessTelNo
-				</td>
-			</tr>
-			<tr>
-				<td>
-					No Faks
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierFaxNo
-				</td>
-				<td>
-				</td>
-				<td>
-					No Faks
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessFaxNo
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Tel Bimbit
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierMobileNo
-				</td>
-				<td>
-				</td>
-				<td>
-					Tel Bimbit
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessMobileNo
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Alamat emel
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierEmail
-				</td>
-				<td>
-				</td>
-				<td>
-					Alamat emel
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$witnessEmail
-				</td>
-			</tr>
-			</table>
-			 <div class="break"></div>
+		</table>
+				
+		  	<div>Sekian, terima kasih.</div>
+			   
+			<div style="text-align:center">    
+			    <span style='font-weight:bold;font-size:14px;font-family: Albertus Medium;'>"BERKHIDMAT UNTUK NEGARA"</span> <br /><br /><br />
+			</div>
 			
-			<table>
-			<tr>
-				<td>
-					No. Akaun Bank
-				</td>
-				<td>
-					: 
-				</td>
-				<td colspan="4">
-					$bankAccNo
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Nama Bank
-				</td>
-				<td>
-					: 
-				</td>
-				<td colspan="4">
-					$bankName
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					Alamat Bank
-				</td>
-				<td valign="top">
-					: 
-				</td>
-				<td colspan="4">
-					$bankAddress
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Tarikh
-				</td>
-				<td>
-					: 
-				</td>
-				<td colspan="4">
-					$ackDate
-				</td>
-			</tr>
-			</table>
+			<div> Saya yang menurut perintah </div><br/><br/>
+			     <div> 	________________________________ <br />
+			           Contract Approver <br />
+			           Ketua Jabatan			 </div>
+	
+			<br /> <br /> <br /> 
+		
+		 <table>
+            <tr><td colspan="2">
+            Dengan ini yang bertandatangan di bawah ini mengakui penerimaan surat tersebut dan mengesahkan tiada apa apa terma, 
+            syarat atau stipulasi tambahan telah dikenakan dengan keluaran surat tersebut oleh yang bertandatangan di bawah ini.
 		</td>
-	</tr>		
-	</table>
-</body>
+	   </tr>
+	   <tr>
+	   <td>  ________________________________<br /> 
+			 Tandatangan bagi pihak Pembekal</td>	
+	   <td> ________________________________<br /> 
+		    Tandatangan bagi pihak saksi Pembekal</td>
+	    </tr>
+	 </table>
+			
+         <br /> <br /> 
+         
+      <table>
+        <tr>
+          <td style="width:17%;">Nama Penuh</td>
+           <td style="width:30%;">: $supplierUserName </td>
+            <td style="width:17%;">Nama Penuh</td>
+       <td style="width:30%;">: $witnessName </td>
+      </tr>
+      
+      <tr>
+          <td>No KP</td>
+           <td>: $supplierUserID </td>
+            <td>No KP</td>
+       <td>: $witnessID</td>
+      </tr>
+      
+      <tr>
+          <td>Jawatan</td>
+           <td>: $supplierUserDesignation </td>
+            <td>Jawatan</td>
+       <td>: $witnessDesignation</td>
+      </tr>
+      
+       <tr>
+          <td>Nama Pembekal</td>
+          <td>: $supplierCompName </td>
+          <td>
+          </td> 
+          <td>
+          </td>
+      </tr>
+      
+       <tr>
+          <td>Alamat</td>
+          <td>: $supplierCompAddress </td>
+          <td>Alamat </td> 
+          <td>: $witnessAddress </td>
+      </tr>
+      
+       <tr>
+          <td>No Tel </td>
+          <td>: $supplierTelNo </td>
+          <td>No Tel</td> 
+          <td>: $witnessTelNo</td>
+      </tr>
+      
+       <tr>
+          <td>No Faks</td>
+          <td>: $supplierFaxNo</td>
+          <td>No Faks</td> 
+          <td>: $witnessFaxNo</td>
+      </tr>
+      
+      <tr>
+          <td>Tel Bimbit</td>
+          <td>: $supplierMobileNo </td>
+          <td>Tel Bimbit</td> 
+          <td>: $witnessMobileNo</td>
+      </tr>
+      
+      <tr>
+          <td>Alamat emel</td>
+          <td>: $supplierEmail</td>
+          <td>Alamat emel</td> 
+          <td>: $witnessEmail </td>
+      </tr>
+      
+      
+       <tr>
+          <td>No. Akaun Bank</td>
+          <td>: $bankAccNo</td>
+          <td></td> 
+          <td></td>
+      </tr>
+      
+      <tr>
+          <td>Nama Bank </td>
+          <td>: $bankName </td>
+          <td></td> 
+          <td></td>
+      </tr>
+      
+       <tr>
+          <td>Alamat Bank </td>
+          <td>: $bankAddress </td>
+          <td></td> 
+          <td></td>
+      </tr>
+      
+      <tr>
+          <td>Tarikh </td>
+          <td>: $ackDate </td>
+          <td></td> 
+          <td></td>
+      </tr>
+      
+      </table>
+	</body>
 </html>
