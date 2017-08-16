@@ -6640,13 +6640,17 @@ public class DirectLOABackingBean extends
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
-
+			log.info("Old Path : " + tFilePath.toString());
 			//create destination File object
 			//StringBuilder aFilePath = new StringBuilder("c:");
 			StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
+			log.info("New Path : " + aFilePath.toString());
+			log.info("Before rename to new path");
 			boolean isFileRenamed = oldName.renameTo(newName);
+			
+			log.info("After rename to new path");
 			
 			if(isFileRenamed)
 			log.info("Temporary Loa No folder has been renamed.");
