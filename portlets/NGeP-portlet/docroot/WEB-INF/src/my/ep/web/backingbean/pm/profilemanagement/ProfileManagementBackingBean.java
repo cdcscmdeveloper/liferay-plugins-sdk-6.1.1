@@ -3783,7 +3783,7 @@ public class ProfileManagementBackingBean extends
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
+			throw new EpException("Failed to reset password.");
 		} finally {
 			userSO = null;
 		}
