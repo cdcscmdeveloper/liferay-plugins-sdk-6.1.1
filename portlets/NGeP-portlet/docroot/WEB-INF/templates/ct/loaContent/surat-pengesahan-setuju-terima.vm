@@ -3,9 +3,9 @@
 <style>
 		@page {
 			size: A4 portrait;
-         	@top-left { content: "Mobile Phone -- Huawei P10 "; }
+         	@top-left { content: "$contractName"; }
          	@bottom-center { content: "Page " counter(page) " / " counter(pages); }
-         	@bottom-left { content: "CT170000000004164"; }
+         	@bottom-left { content: "$contractNo"; }
 		}
 		
 		li {text-align: justify;word-spacing: -10px;}
