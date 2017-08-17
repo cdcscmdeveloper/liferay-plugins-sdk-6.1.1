@@ -5628,7 +5628,7 @@ public class LOADetailBackingBean extends
 	public void downloadGuidelinePdf() throws Exception{
 		debugLogger("downloadGuidelinePdf");
 		ScPbAttachment pbAttachment = new ScPbAttachment();
-		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
+		//pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
 		pbAttachment.setFileName("Guideline.docx");
 		
 		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
