@@ -84,6 +84,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -210,14 +211,27 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 	    String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 	    String factoringId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+	    String supplierUserId = originalServletRequest.getParameter(ContractConst.SUPPLIER_USER_ID);
     
-        if (factoringId != null) {
-    	      reqDTO = new ContractSupplierReqDTO();
-    	      reqDTO.setFactoringId(Long.parseLong(factoringId));
- 	 	      setFactoringDetails(reqDTO);
- 	 	
- 	 	      //Restrict If login user not the contract admin
- 	 	      if (!getFacesScopes().getUserSessionBean().getUserId().equals(getManagedBean().getFactoring().getLoa().getContractAdmin().getUserId())) {
+        if (!StringUtils.isEmpty(factoringId)) {
+        	reqDTO = new ContractSupplierReqDTO();
+    		reqDTO.setFactoringId(Long.parseLong(factoringId));
+    		setFactoringDetails(reqDTO);
+    		Long userId = null;
+ 	 	     //Restrict If login user not the contract admin / supplier
+    		if (StringUtils.isEmpty(supplierUserId)) {
+    			String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+    					ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.MIN_CONTRACT_ADMIN.value() : RoleCode.BPK_CCA.value();			
+				CtActor ctActor = retrieveContractActor(
+						reqDTO.getFactoringId(),
+						ParameterConst.DOCTYPE_REQUEST_FACTORING,
+						roleCode);
+				userId = (ctActor != null) ? ctActor.getUser().getUserId() : null;
+    		} else {
+    			userId = Long.parseLong(supplierUserId);
+    		}
+			
+ 	 	      if (userId == null || !getFacesScopes().getUserSessionBean().getUserId().equals(userId)) {
  	 	    	  FacesContext fc = FacesContext.getCurrentInstance();
  	 	    	  fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
 					  MessageUtils.getMessage(MessageConst.ERROR_700116,
@@ -226,8 +240,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			        return;
  	 	      }
  	 	      getManagedBean().setViewOnly(true);
- 	 	     return;
- 	     }
+ 	 	      return;
+        }
          if (taskId == null) {
 		         return;
            }	
@@ -1104,17 +1118,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	
 		try {			
 		       context = new VelocityContext();	
-		       if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())  || getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			         vmFile = ContractConst.DOCPATH_CT_FACTORING_SUPPLIER;
-			         templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER;
-
-		       } else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-		    		   || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-		    	   vmFile = ContractConst.DOCPATH_CT_FACTORING_CA;
-		    	   templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_CA;	
+		       if (isSupplierRole()) {
+		    	   context.put("isContractAdmin", false);
+		    	   vmFile = (!getManagedBean().isViewOnly()) ? ContractConst.DOCPATH_CT_FACTORING_SUPPLIER : ContractConst.DOCPATH_CT_FACTORING_CA;
+		       } else if (isContractAdmin() || isApproverRole()) {
+		    	   context.put("isContractAdmin", true);
+		    	   vmFile = ContractConst.DOCPATH_CT_FACTORING_CA;		    	   
 		       }
-		       
+		       templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE;
 		       if (vmFile !=null && templateName != null) {
 		    	   UserReqDTO userReqDTO =  new UserReqDTO();
 		    	   context.put("imgUrl", getServerUrl()+"NGeP-portlet/css/images/gov.png");
@@ -1179,9 +1190,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	   }
 		    	   context.put("supplierName", ctContractVer.getCtContractValue().getSupplierName());
 
-		    	   if (ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
+		    	   if (ContractConst.DOCPATH_CT_FACTORING_CA.equalsIgnoreCase(vmFile)) {
 		    		   PmUser user = null;
-		    		   if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
+		    		   if (getManagedBean().isViewOnly()) {
+		    			   String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+		    					   ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();			
+		    			   CtActor ctActor = retrieveContractActor(
+		    					   				getManagedBean().getFactoring().getFactoringId(),
+		    					   				ParameterConst.DOCTYPE_REQUEST_FACTORING,
+		    					   				roleCode);
+		    			   user = (ctActor != null) ? ctActor.getUser() : null;
+		    		   } else if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
 		    			   for (PmUser approver : getManagedBean().getApproverModel().getTarget()) {
 		    				   if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver.getUserId()) != null) {
 		    					   user = getManagedBean().getUserMap().get(approver.getUserId());
