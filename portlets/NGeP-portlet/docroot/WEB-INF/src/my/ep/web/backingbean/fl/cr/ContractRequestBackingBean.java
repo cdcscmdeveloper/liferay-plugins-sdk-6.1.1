@@ -4146,6 +4146,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					getManagedBean().setSelectedTabIndex(1);
+					getManagedBean().setEmailValidate(true);
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}else{
 					checkReceivingOfficerList();
