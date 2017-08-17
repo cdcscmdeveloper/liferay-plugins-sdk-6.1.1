@@ -123,7 +123,7 @@
 						mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						required="#{!empty param['disableValidation']}" 
-						requiredMessage="#{svcSiteAssignBackingBean.getLabelWithParam('lbl.sm.siteassign.expected.visiting.date.validation.msg', facilityType)}"
+						requiredMessage="#{svcSiteAssignBackingBean.getLabelWithParam('lbl.sm.siteassign.expected.visiting.date.validation.msg', svc.smSvTask.smSvAddress.facilityName)}"
 						size="30" showOn="button" /><br />
 					<p:pickList id="pickList"
 							value="#{svc.svoUserList}"
