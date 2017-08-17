@@ -762,7 +762,10 @@ public class SmSideMenuIconUtil {
 									"sharePercentage" });
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
-								+ currPersonnel.getName());
+								+ currPersonnel.getName()
+								+ currPersonnel.getName()
+								+ "  SEARCH CRITERIA PRIMITIVE:" + primitive
+								+ "  NON PRIMITIVE:" + nonPrimitive);
 						break;
 					}
 
@@ -779,7 +782,11 @@ public class SmSideMenuIconUtil {
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ADDRESS FOR PERSONNEL:"
-								+ currPersonnel.getName());
+								+ currPersonnel.getName()
+								+ currPersonnel.getName()
+								+ "  SEARCH CRITERIA PRIMITIVE:"
+								+ primitive
+								+ "  NON PRIMITIVE:" + nonPrimitive);
 						break;
 					}
 
@@ -797,7 +804,11 @@ public class SmSideMenuIconUtil {
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL STAFF EXPERIENCE FOR PERSONNEL:"
-								+ currPersonnel.getName());
+								+ currPersonnel.getName()
+								+ currPersonnel.getName()
+								+ "  SEARCH CRITERIA PRIMITIVE:"
+								+ primitive
+								+ "  NON PRIMITIVE:" + nonPrimitive);
 						break;
 					}
 
@@ -814,7 +825,11 @@ public class SmSideMenuIconUtil {
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL RELATED COMPANY FOR PERSONNEL:"
-								+ currPersonnel.getName());
+								+ currPersonnel.getName()
+								+ currPersonnel.getName()
+								+ "  SEARCH CRITERIA PRIMITIVE:"
+								+ primitive
+								+ "  NON PRIMITIVE:" + nonPrimitive);
 						break;
 					}
 
@@ -832,7 +847,11 @@ public class SmSideMenuIconUtil {
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ASSOC BODY FOR PERSONNEL:"
-								+ currPersonnel.getName());
+								+ currPersonnel.getName()
+								+ currPersonnel.getName()
+								+ "  SEARCH CRITERIA PRIMITIVE:"
+								+ primitive
+								+ "  NON PRIMITIVE:" + nonPrimitive);
 						break;
 					}
 
@@ -851,7 +870,10 @@ public class SmSideMenuIconUtil {
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ACADEMIC FOR PERSONNEL:"
-								+ currPersonnel.getName());
+								+ currPersonnel.getName()
+								+ "  SEARCH CRITERIA PRIMITIVE:"
+								+ primitive
+								+ "  NON PRIMITIVE:" + nonPrimitive);
 						break;
 					}
 				}
@@ -868,7 +890,7 @@ public class SmSideMenuIconUtil {
 						applPrev.getSmSupplierBranches(),
 						applCurr.getSmSupplierBranches(), primitive, null,
 						new String[] { "contactPersonId" });
-				if(retVal){
+				if (retVal) {
 					log.info(">>>>DIFFERENT IN SUPPLIER BRANCH");
 				}
 			}
