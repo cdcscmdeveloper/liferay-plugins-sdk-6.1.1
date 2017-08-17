@@ -19,12 +19,10 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
-import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
@@ -55,6 +53,7 @@ public class SvcSiteAssignBackingBean extends
 	private final Long SV_AFTER_APPROVE = 20117L;
 	private final String SVC_TASK_LIST = "/xhtml/bpmtasklist/svcTasklist.xhtml";
 	private final String SVC_ACK_PAGE = "/xhtml/sm/svcassignment/svcAcknowledgement.xhtml";
+	private static String SVC_PRE_RENDER_XHTML = "/xhtml/sm/svcassignment/prerenderSvcTaskList.xhtml";
 	
 	public SvcSiteAssignBackingBean() {
 		SmCommonUtil.setMDCUserId();
@@ -266,6 +265,17 @@ public class SvcSiteAssignBackingBean extends
 	 */
 	public String navigateToSvcTaskList(){
 		return SVC_TASK_LIST;
+	}
+	
+	/**
+	 * redirect to svcTaskList
+	 */
+	public void redirectToSvcTaskList(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,SVC_PRE_RENDER_XHTML);
+		//return SVC_TASK_LIST;
 	}
 	
 	/**
