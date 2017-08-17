@@ -57,6 +57,9 @@
 			</p:inputText>
 			<p:message id="ratePerUomAnsMsg" for="ratePerUomAns" display="icon" />
 		</p:column>
+		<p:column style="width:80px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.duration.month']}" rendered="#{templateSpecBean.specMaster ne null and templateSpecBean.specMaster.durationMonth ne null}">
+			<h:outputText value="#{templateSpecBean.specMaster.durationMonth}"></h:outputText>
+			</p:column>
 		<p:column style="text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">			
 			<h:outputText id="totalAmount" 
 				value="#{tplSpecAnswer.answerNumeric}"
