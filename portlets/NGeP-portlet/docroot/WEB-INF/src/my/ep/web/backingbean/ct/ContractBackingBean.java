@@ -3525,7 +3525,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 			&& !getManagedBean().isDirectPurchase()
 			&& !getManagedBean().getCtContractAmount().isBondExempted()
-			&& !getManagedBean().isCommonView()) {
+			&& (!getManagedBean().isCommonView()
+				|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
+					equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) )){
 			return  true;
 		}
 		return false;
