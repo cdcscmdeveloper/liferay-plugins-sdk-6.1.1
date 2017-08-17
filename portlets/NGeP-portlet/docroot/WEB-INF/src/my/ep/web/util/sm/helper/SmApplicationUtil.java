@@ -11396,13 +11396,27 @@ public class SmApplicationUtil {
 	public static boolean isRejectedApplValidForResubmission(SmAppl rejAppl) {
 		boolean valid = true;
 		if (rejAppl.getApplSubmitDate() != null) {
-			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
-			long diff = currentDate.getTime()
-					- rejAppl.getApplSubmitDate().getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
-			if (diffDays > SmRuleHelper.getInstance()
-					.getApplicationResubmissionDays()) {
-				valid = false;
+			List<Long> statusIds = new ArrayList<Long>();
+			statusIds
+					.add(Long
+							.parseLong(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_APPROVAL));
+			SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
+			swReqDTO.setStatusIds(statusIds);
+			swReqDTO.setApplId(rejAppl.getApplId());
+			SmWorkflowStatus currWorkflow = SmServiceLookup
+					.getSmWorkFlowStatusSO()
+					.retrieveWorkflowByDocIdAndMultipleStatus(swReqDTO)
+					.getWorkflowStatus();
+			if (currWorkflow != null) {
+				Timestamp currentDate = new Timestamp(
+						System.currentTimeMillis());
+				long diff = currentDate.getTime()
+						- currWorkflow.getCreatedDate().getTime();
+				long diffDays = diff / (24 * 60 * 60 * 1000);
+				if (diffDays > SmRuleHelper.getInstance()
+						.getApplicationResubmissionDays()) {
+					valid = false;
+				}
 			}
 		}
 		return valid;
