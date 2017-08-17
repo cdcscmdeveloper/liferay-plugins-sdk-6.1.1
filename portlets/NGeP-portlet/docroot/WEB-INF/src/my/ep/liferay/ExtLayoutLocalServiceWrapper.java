@@ -32,6 +32,8 @@ import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.LayoutLocalService;
 import com.liferay.portal.service.LayoutLocalServiceWrapper;
 import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -45,7 +47,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	public final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
 	
 	public final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
-	public final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_ADMIN";
+	public final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
 	
 	public final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
 	
@@ -185,10 +187,16 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	private Integer validBasicToRenewMOF() {
 		
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		long logedInUserId = 0;
+		if(serviceContext != null) {
+			logedInUserId = serviceContext.getUserId();
+		}
+		
 		if(PortalSessionThreadLocal.getHttpSession() != null) {
-			if(PortalSessionThreadLocal.getHttpSession().getAttribute("validToRenewMOF") != null) {
-				System.out.println("returning value from http session: " + PortalSessionThreadLocal.getHttpSession().getAttribute("validToRenewMOF"));
-				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute("validToRenewMOF");
+			if(PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF") != null) {
+				System.out.println("returning value from http session: " + PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF"));
+				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
 			}
 		}
 			
@@ -213,8 +221,8 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 				MofAccountResDTO resDTO = mofAccountSO.checkExpiredDowngradedToBasic(reqDTO);
 				log.info("resDTO.isExpired(): " + resDTO.getBasicMOFRenewFlg());
 				
-				PortalSessionThreadLocal.getHttpSession().setAttribute("validToRenewMOF", resDTO.getBasicMOFRenewFlg());
-				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute("validToRenewMOF");
+				PortalSessionThreadLocal.getHttpSession().setAttribute(logedInUserId + "validToRenewMOF", resDTO.getBasicMOFRenewFlg());
+				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
 				
 //				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("validToRenewMOF", resDTO.isExpired());
 //				return (boolean)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("validToRenewMOF");
