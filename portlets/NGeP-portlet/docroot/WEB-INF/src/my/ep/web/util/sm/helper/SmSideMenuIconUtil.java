@@ -1,6 +1,7 @@
 package my.ep.web.util.sm.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
@@ -764,8 +765,10 @@ public class SmSideMenuIconUtil {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
 								+ currPersonnel.getName()
 								+ currPersonnel.getName()
-								+ "  SEARCH CRITERIA PRIMITIVE:" + primitive
-								+ "  NON PRIMITIVE:" + nonPrimitive);
+								+ "  SEARCH CRITERIA PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(primitive)
+								+ "  NON PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
 
@@ -785,8 +788,9 @@ public class SmSideMenuIconUtil {
 								+ currPersonnel.getName()
 								+ currPersonnel.getName()
 								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ primitive
-								+ "  NON PRIMITIVE:" + nonPrimitive);
+								+ EntityHelper.getArrayToPrint(primitive)
+								+ "  NON PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
 
@@ -807,8 +811,9 @@ public class SmSideMenuIconUtil {
 								+ currPersonnel.getName()
 								+ currPersonnel.getName()
 								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ primitive
-								+ "  NON PRIMITIVE:" + nonPrimitive);
+								+ EntityHelper.getArrayToPrint(primitive)
+								+ "  NON PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
 
@@ -828,8 +833,9 @@ public class SmSideMenuIconUtil {
 								+ currPersonnel.getName()
 								+ currPersonnel.getName()
 								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ primitive
-								+ "  NON PRIMITIVE:" + nonPrimitive);
+								+ EntityHelper.getArrayToPrint(primitive)
+								+ "  NON PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
 
@@ -850,8 +856,9 @@ public class SmSideMenuIconUtil {
 								+ currPersonnel.getName()
 								+ currPersonnel.getName()
 								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ primitive
-								+ "  NON PRIMITIVE:" + nonPrimitive);
+								+ EntityHelper.getArrayToPrint(primitive)
+								+ "  NON PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
 
@@ -865,15 +872,16 @@ public class SmSideMenuIconUtil {
 					}
 					retVal = EntityHelper.hasDiffBetweenList(
 							prevPersonnel.getSmStaffAcademics(),
-							currPersonnel.getSmStaffAcademics(), null,
+							currPersonnel.getSmStaffAcademics(), primitive,
 							nonPrimitive, excludeProps);
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ACADEMIC FOR PERSONNEL:"
 								+ currPersonnel.getName()
 								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ primitive
-								+ "  NON PRIMITIVE:" + nonPrimitive);
+								+ EntityHelper.getArrayToPrint(primitive)
+								+ "  NON PRIMITIVE:"
+								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
 				}
@@ -1347,4 +1355,5 @@ public class SmSideMenuIconUtil {
 		}
 		return retVal;
 	}
+
 }
