@@ -26,6 +26,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.helper.Paginator;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -777,6 +778,11 @@ public class SmBulkApplicationBackingBean extends
 						bulkApplicationVO.getApprovedCategories().add(cat);
 					}
 				}
+
+				bulkApplicationVO.setAppliedPaginator(new Paginator(
+						bulkApplicationVO.getPendingApproveCategories()));
+				bulkApplicationVO.setApprovedPaginator(new Paginator(
+						bulkApplicationVO.getApprovedCategories()));
 
 				// return by applStatus
 				if (!StringUtils.isBlank(getManagedBean().getApplStatus())

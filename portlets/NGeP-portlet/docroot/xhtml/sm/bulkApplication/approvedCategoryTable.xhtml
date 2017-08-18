@@ -7,11 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true">
-		<p:dataTable var="apprCat" widgetVar="smCatCodesNonRenewApplDtWidVar"
-			value="#{tasks.approvedCategories}"
-			rowKey="#{apprCat}" rowIndexVar="indexAppr" id="catDt" >
-			
-			<ac:paginator for="catDt" />
+		<p:dataTable var="apprCat" value="#{tasks.approvedPaginator.model}" rowIndexVar="indexAppr" >
 			
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 				<p:outputLabel value="#{indexAppr + 1}"
@@ -47,6 +43,8 @@
 			</p:column>
 				
 		</p:dataTable>
+		<br />
+		<ac:smBulkPaginator paginator="#{tasks.approvedPaginator}" />
 	</p:panel>
 
 </ui:composition>
