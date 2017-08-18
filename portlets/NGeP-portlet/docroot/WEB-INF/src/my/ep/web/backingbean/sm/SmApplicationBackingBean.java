@@ -1603,8 +1603,20 @@ public class SmApplicationBackingBean extends
 				}
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-				SmApplicationUtil.validateCategoriesBeforeSave(
-						true, getManagedBean(), currentTab);
+				SmApplicationUtil.validateCategoriesBeforeSave(true,
+						getManagedBean(), currentTab);
+			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+					&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				boolean validSave = SmApplicationUtil.validateEquityOwnerCount(
+						getManagedBean(), currentTab, currentPageType);
+				if (validSave) {
+					validSave = SmApplicationUtil.validateEquityOwnerAmount(
+							getManagedBean(), currentTab, ruleHelper);
+				} else if (validSave) {
+					validSave = SmApplicationUtil.validateEquityCompanyAmount(
+							getManagedBean(), currentTab);
+				}
 			}
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
