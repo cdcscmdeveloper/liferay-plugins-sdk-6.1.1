@@ -6,6 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<style type="text/css">
+		.commandLink {
+			color:blue !important; 
+			text-decoration: underline;
+		}
+	</style>
 	<p:spacer height="15px" rendered="#{consolidationReportBackingBean.managedBean.itemized}"/>	
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<h:outputText styleClass="instruction"
@@ -33,7 +39,7 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eval.ranking']}" style="width:5%; text-align:center;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;white-space:normal;">
 		               	<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
