@@ -7,10 +7,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true">
-		<p:dataTable var="applCat" widgetVar="applCatWidVar" value="#{tasks.pendingApproveCategories}"
-			rowKey="#{applCat}" rowIndexVar="indexAppl" id="applCatDtId"
+		<p:dataTable var="applCat" value="#{tasks.appliedPaginator.model}" rowIndexVar="indexAppl"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<ac:paginator for="applCatDtId" />
 			
 			<p:columnGroup type="header">
 				<p:row>
@@ -19,7 +17,7 @@
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 10% !important;"/>
 					<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="width : 10% !important;"/>
 					<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" style="width : 10% !important;"/>
-					<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 20% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 25% !important;"/>
 				</p:row>
 			</p:columnGroup>
 			
@@ -75,6 +73,8 @@
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
 			</p:column>
-		</p:dataTable><br />
+		</p:dataTable>
+		<br />
+		<ac:smBulkPaginator paginator="#{tasks.appliedPaginator}" />
 	</p:panel>
 </ui:composition>
