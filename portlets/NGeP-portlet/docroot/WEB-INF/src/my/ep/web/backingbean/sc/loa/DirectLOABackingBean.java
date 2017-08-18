@@ -320,9 +320,10 @@ public class DirectLOABackingBean extends
 				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
 			validateLoaWitnessAndAckBy();
 		}
+		boolean isGenerate = checkDownloadReportStatus(scLoaReport);
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
-		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport,isGenerate);
 		if(scLoaReport.getDefinationType().getParameterCode().equals(
 				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
 				scLoaReport.getDefinationType().getParameterCode().equals(
@@ -332,7 +333,33 @@ public class DirectLOABackingBean extends
 		downloadFile(scLoaReportAttachmentGenerated);
 		
 	}
-
+	
+	/**
+	 * check status to force generate attachment for upload and download
+	 * definition type
+	 * 
+	 * @param scLoaReport
+	 * @return return true or false to force generate attachement
+	 */
+	public boolean checkDownloadReportStatus(ScLoaReport scLoaReport){
+		
+		boolean isGenerate = false;
+		if(scLoaReport.getDefinationType().getParameterCode().equals(
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
+				getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+						QTStatusConst.LOA_PENDING_SUBMISSION)) {
+			isGenerate = true;
+		}
+		if(scLoaReport.getDefinationType().getParameterCode().equals(
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)&&
+				getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)){
+			isGenerate = true;
+		}
+		
+		return isGenerate;
+	}
+	
 	/**
 	 * submit LOA details. submit - save data into database and BPM process will
 	 * route to the next respective user.
@@ -426,7 +453,7 @@ public class DirectLOABackingBean extends
 		}
 
 		if (agreementLetterReport != null) {
-			ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport);
+			ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport,false);
 			agreementLetterReport
 			.setScLoaReportAttachment(agreementLetterAttachment);
 
@@ -3823,7 +3850,7 @@ public class DirectLOABackingBean extends
 			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport, false);
 			if(scLoaReport.getDefinationType().getParameterCode().equals(
 					ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
 					scLoaReport.getDefinationType().getParameterCode().equals(
@@ -3847,7 +3874,7 @@ public class DirectLOABackingBean extends
 	 * @return the sc loa report attachment
 	 */
 	private ScLoaReportAttachment generateDocumentAttachment(
-			ScLoaReport scLoaReport) {
+			ScLoaReport scLoaReport, boolean isGenerated) {
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
@@ -3862,7 +3889,7 @@ public class DirectLOABackingBean extends
 				ScLoa scLoa = getManagedBean().getScLoa();
 				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 				
-				if (scLoaReportAttachment == null) {
+				if (scLoaReportAttachment == null || isGenerated) {
 					StringBuilder filename = new StringBuilder(); // replace white space due to firefox
                     filename.append(scLoaReport.getTitle().replaceAll("\\s", ""));
 					scLoaReportAttachment = new ScLoaReportAttachment();
