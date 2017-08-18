@@ -1674,7 +1674,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				catList.add(cat);
 			}
 			if (getManagedBean().isViewApplicationHistory()) {
-				// for history load all category except status deleted
+				// for history load all category
 				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
 			} else {
 				// for supp profile load all active category only
