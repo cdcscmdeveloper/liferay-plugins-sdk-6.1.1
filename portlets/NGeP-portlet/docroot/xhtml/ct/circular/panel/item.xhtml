@@ -549,9 +549,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;" styleClass="column-align-center" >
 				         	 <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 						         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
-		                             disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:70px;">
+		                            style="width:70px;">
 						             <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 					                 <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+					                     <p:ajax process="@this"   /> 
 					          </p:selectOneMenu>
 					         </c:if>
 							   <c:if test="#{panelBackingBean.managedBean.viewContract}">
