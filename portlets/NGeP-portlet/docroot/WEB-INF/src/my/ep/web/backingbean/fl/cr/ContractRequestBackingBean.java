@@ -3798,6 +3798,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
+//			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();
+//			List<Long> suspendItemId = new ArrayList<Long>();
 			for(FlTempItem flTempItem : flRequest.getFlTempItems()) {
 				flItemAddr = new FlFulfilmentItemAddr();
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
@@ -3808,7 +3810,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}else{
 					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
 				}
+				contractItemReqDTO.setIgnoreRecordStatus(true);//TODO
 				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
+//				if(contractItemResDTO.getCtContractItem() == null){
+//					suspendedItem.add(flTempItem);
+//					suspendItemId.add(flTempItem.getScRequestItem().getRequestNoteItemId());
+//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,"Inactive contract item: "+flTempItem.getScRequestItem().getItemName()+" has been removed by system."));
+//					continue;
+//				}
 				flItemAddr.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
 				flItemAddr.setItemType(flTempItem.getScRequestItem().getItemType());
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
@@ -3844,6 +3853,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 				itemAddrList.add(flItemAddr);
 			}
+//			flRequest.getFlTempItems().removeAll(suspendedItem);
+//			List<FlFulfilmentItemAddr> deleteFlItemAddrs = new ArrayList<FlFulfilmentItemAddr>();
+//			if(getManagedBean().getFlRequest().getFlDeliveryAddresses() != null){
+//				for(FlDeliveryAddress deliveryAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+//					for(FlFulfilmentItemAddr itemAddr : deliveryAddr.getFlFulfilmentItemAddr()){
+//						if(suspendItemId.contains(itemAddr.getScRequestItem().getRequestNoteItemId())){
+//							deleteFlItemAddrs.add(itemAddr);
+//						}
+//					}
+//				}
+//				for(FlDeliveryAddress deliveryAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+//					deliveryAddr.getFlFulfilmentItemAddr().removeAll(deleteFlItemAddrs);
+//				}
+//			}
 			if(itemAddrList.size()>0) {
 				sortItems(itemAddrList);
 				getManagedBean().getItemAddrList().addAll(itemAddrList);
