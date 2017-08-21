@@ -55,7 +55,7 @@
 		<td>
 		<p style='float:right;text-align:justify;'>
 			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Rujukan Kami : $fileNo </span>
-		<br />
+		<br /><br />
 			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tarikh :$dateSDF.format($issueDate)</span> 
 		<br />
 		</p>
@@ -71,8 +71,21 @@
           <br/><br/>
           
             <span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan,</span><br/><br/>
-			<span style="font-family:Arial;font-size:11px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">$method Untuk : $title</span> <br /> 
-          	<span style="font-family:Arial;font-size:11px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">No. $method : $qtNo </span>
+			<table style="height: auto;" width="70%">
+				<tbody>
+					<tr>
+						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">$method Untuk</span> 
+						</td>
+						<td style="width: 5%"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">:</span></td>
+						<td style="width: auto;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;"> $title</span></td>
+					</tr>
+					<tr>
+						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">No. $method</span></td>
+						<td style="width: 5%"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">:</span></td>
+						<td style="width: auto;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">$qtNo</span></td>
+					</tr>
+				</tbody>
+			</table>
           
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Merujuk kepada cadangan tawaran yang tersebut di atas, Kerajaan Malaysia ingin memberitahu tuan bahawa pada amnya terma-terma cadangan tuan boleh diterima oleh Kerajaan.</span></p>
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2. Walau bagaimanapun, Kerajaan tidak dapat menerima cadangan tuan tanpa perbincangan/rundingan lanjut dengan tuan berhubung dengan terma-terma tertentu untuk kontrak yang dicadangkan itu, terutama terma-terma yang berkenaan dengan perkara-perkara berikut:</span></p>
@@ -96,13 +109,19 @@
 				<table width="70%" align="center">
                   #foreach( $scNegoLocation in $scNegoLocations )
 					<tr>
-						<td>Tarikh :<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
+						<td style="width: 15%;">Tarikh</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
                   	</tr>
                     <tr>
-						<td>Masa :<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$timeSDF.format($scNegoLocation.negoDate)</span></td>
+						<td style="width: 15%;">Masa</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$timeSDF.format($scNegoLocation.negoDate)</span></td>
                   	</tr>
                   	<tr>
-						<td>Tempat :<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
+						<td style="width: 15%;">Tempat</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
 					</tr>
 					#end
 				</table>
@@ -113,10 +132,11 @@
 	</tr>
 	<tr>
 		<td>
-			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekian, terima kasih.</span><br/>
-			<span style="font-family:Arial;font-size:12px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekian, terima kasih.</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span><br/><br/>
 			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya yang menurut perintah,</span><br/><br/><br/><br/><br/><br/>
-			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSigner</span><br/>
+			<span>................................................</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSigner</span><br/><br/>
 			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSignerDesignation</span>
 		</td>
 	</tr>
