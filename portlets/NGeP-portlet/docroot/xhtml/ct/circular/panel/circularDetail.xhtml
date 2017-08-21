@@ -111,7 +111,9 @@
 			                            </f:facet>
 			                             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                               <p:inputText value="#{data.name}"  onkeypress="if (event.keyCode == 13) { return false; }"
-					                                 style="width:95%;" maxlength="80" />
+					                                 style="width:95%;" maxlength="80">
+					                                 <p:ajax process="@this"></p:ajax>
+							   	               </p:inputText>
 					                     </c:if>
 							   	           <c:if test="#{panelBackingBean.managedBean.viewContract}">
 							   	                  <h:outputText  value="#{data.name}" style="float:left;" />
@@ -121,7 +123,9 @@
 			                    <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
 			                      <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                     <p:inputText value="#{data.address}" onkeypress="if (event.keyCode == 13) { return false; }"   
-				        	                style="width:95%;" maxlength="200"  />
+				        	                style="width:95%;" maxlength="200">
+				        	                <p:ajax process="@this"></p:ajax>
+							   	     </p:inputText>
 				        	       </c:if>
 							   	   <c:if test="#{panelBackingBean.managedBean.viewContract}">
 							   	        <h:outputText  value="#{data.address}" style="float:left;"/>
@@ -136,7 +140,9 @@
 			                        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                      <p:inputText id="email"  label="#{lbl['lbl.ct.email']}" 
 				                            style="width:95%;" 
-				                           onkeypress="if (event.keyCode == 13) { return false; }"  maxlength="100" value="#{data.email}" />
+				                           onkeypress="if (event.keyCode == 13) { return false; }"  maxlength="100" value="#{data.email}">
+				                           <p:ajax process="@this"></p:ajax>
+							   	  	  </p:inputText>
 				                     </c:if>
 							   	       <c:if test="#{panelBackingBean.managedBean.viewContract}">
 							   	                   <h:outputText  value="#{data.email}" style="float:left;" />
@@ -151,8 +157,10 @@
 			                         <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                       <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
 				                             label="#{lbl['lbl.ct.tel']}" maxlength="20"
-				                             disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
-				                         </c:if>
+				                             disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }">
+				                             <p:ajax process="@this"></p:ajax>
+							   	 		</p:inputText>
+				           		      </c:if>
 							   	                      <c:if test="#{panelBackingBean.managedBean.viewContract}">
 							   	                              <h:outputText  value="#{data.phoneNo}" style="float:left;" />
 							   	                      </c:if>
