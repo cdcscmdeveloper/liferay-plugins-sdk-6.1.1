@@ -1635,23 +1635,11 @@ public class ConsolidationReportBackingBean extends
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			searchBean
-					.getDataFilterBeans()
-					.add(new SearchFilterBean(
-							"qtEvaluationResult.scQtProposal.scQtSupplier.scQt.qtId",
-							SearchOperator.OPERATOR_EQUALS.value(), qtId));
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("qtEvaluationResult.evaluationStage",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							evaluationStage));
-
-			if (null != selectedZoneId) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								selectedZoneId));
-			}
 
 			Long selectedItemId = null;
 			if (null != selectedItem) {
@@ -1672,7 +1660,7 @@ public class ConsolidationReportBackingBean extends
 
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setSearchBean(searchBean);
-
+				reqDTO.setQtId(qtId);
 				if (!DEFAULT_ZONE.equals(selectedZoneId)) {
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
