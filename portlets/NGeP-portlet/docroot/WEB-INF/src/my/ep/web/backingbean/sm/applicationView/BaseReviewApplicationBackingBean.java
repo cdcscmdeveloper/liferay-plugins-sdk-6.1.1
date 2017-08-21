@@ -711,12 +711,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 			getManagedBean().getSmAppl().setSmPersonnels(getPersonnelByRevNo());
-			setPersonnelInfoCalculationSummary();
 		}
 		SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
 				.getSmAppl());
 		getManagedBean().getSmAppl().getSmPersonnels()
 				.removeAll(deletedPersonnels);
+		setPersonnelInfoCalculationSummary();
 	}
 
 	/**
