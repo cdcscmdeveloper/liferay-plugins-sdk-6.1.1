@@ -8692,11 +8692,26 @@ public class SmApplicationUtil {
 	public static void validateBranchGstInformation(SmSupplierBranch br,
 			SmGstSupplier brGst, SmGstSupplier hqGst) {
 		if (hqGst != null && !StringUtils.isBlank(hqGst.getGstRegNo())) {
-			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-					&& (brGst == null || StringUtils.isBlank(brGst
-							.getGstRegNo()))) {
-				throw new EpException(SmCommonUtil.getMessage(
-						"lbl.sm.gst.branch.req.msg", null));
+			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (brGst == null || StringUtils.isBlank(brGst.getGstRegNo())) {
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.gst.branch.req.msg", null));
+				} else if (!StringUtils.isBlank(brGst.getGstRegNo())) {
+
+					if (hqGst.getSmSupplier() != null
+							&& !StringUtils.isBlank(hqGst.getSmSupplier()
+									.getRegNo())) {
+
+						// Validate GST reg no. uniqueness
+						SmCommonUtil.validateGstRegNoUniqueness(hqGst
+								.getSmSupplier().getRegNo(), brGst
+								.getGstRegNo());
+
+						if (!SmCommonUtil.validateGstRegNo(brGst.getGstRegNo())) {
+							throw new EpException(MessageConst.ERROR_721027);
+						}
+					}
+				}
 			}
 		}
 	}
