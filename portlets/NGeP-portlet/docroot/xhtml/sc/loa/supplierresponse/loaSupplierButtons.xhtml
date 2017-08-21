@@ -44,6 +44,9 @@
 					<ui:define name="outComeSection">
 						<c:choose>
 							<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+							<p:commandButton value="#{lbl['lbl.btn.view.loa']}" process="@this" ajax="false" immediate="true" 
+									 action="#{lOADetailBackingBean.downloadViewLoa}"/>
+									 
 								<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 									partialSubmit="true" update="@form" onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
