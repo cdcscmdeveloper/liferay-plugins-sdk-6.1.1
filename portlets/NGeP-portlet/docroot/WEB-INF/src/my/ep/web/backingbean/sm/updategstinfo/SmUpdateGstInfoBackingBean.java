@@ -554,9 +554,8 @@ public class SmUpdateGstInfoBackingBean extends
 		if (gst.getGstEndDate() != null
 				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
 			throw new EpException(MessageConst.ERROR_721044);
-		} else if (StringUtils.isNotBlank(gst.getGstRegNo())
-				&& gst.getGstRegNo().length() != SmRuleHelper.getInstance()
-						.getGstRegNumLength()) {
+		} else if (!StringUtils.isBlank(gst.getGstRegNo())
+				&& !SmCommonUtil.validateGstRegNo(gst.getGstRegNo())) {
 			throw new EpException(MessageConst.ERROR_721027);
 		}
 		validateBranch();
@@ -570,9 +569,11 @@ public class SmUpdateGstInfoBackingBean extends
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 
 				// validate branch GST is required if HQ had GST info
-				SmApplicationUtil.validateBranchGstInformation(
-						brVO.getBranch(), brVO.getGst(), getManagedBean()
-								.getHqGstSupplier());
+				if (!brVO.isSameWithHq()) {
+					SmApplicationUtil.validateBranchGstInformation(brVO
+							.getBranch(), brVO.getGst(), getManagedBean()
+							.getHqGstSupplier());
+				}
 
 				if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
 
