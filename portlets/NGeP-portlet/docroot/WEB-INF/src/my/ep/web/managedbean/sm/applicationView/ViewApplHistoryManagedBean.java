@@ -7,15 +7,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -38,7 +42,7 @@ public class ViewApplHistoryManagedBean extends
 	private PmTrackingDiaryBackingBean trackingDiary;
 
 	public ViewApplHistoryManagedBean() {
-		
+
 	}
 
 	private class SmSupplierPagingDataModel extends PagingDataModel<Object[]> {
@@ -87,10 +91,40 @@ public class ViewApplHistoryManagedBean extends
 			reqDTO.setApplicationType(getSearchApplType());
 			reqDTO.setApplicationNo(getSearchApplNo());
 			reqDTO.setPmStatusId(getSearchApplStatusId());
-			return SmServiceLookup.getSmApplRevisionSO()
+
+			ISearchResultBean<Object[]> retVal = SmServiceLookup
+					.getSmApplRevisionSO()
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
+
+			int i = 0;
+			for (Object[] obj : retVal.getResultList()) {
+				obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
+						+ "");
+				retVal.getResultList().set(i, obj);
+				i++;
+			}
+			return retVal;
 		}
+	}
+
+	private String getWorkflowStatus(Long applId, String statusOri) {
+		SmWorkflowStatus st = SmCommonUtil
+				.getCurrentActiveWokFlowStatus(applId);
+		String retVal = statusOri;
+		if (st.getPmStatus() != null
+				&& st.getPmStatus().getStatusId() != null
+				&& st.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_CANCELLATION_APPROVED) == 0) {
+			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
+					.getPmStatus().getStatusId());
+			if (sd != null) {
+				retVal = sd.getStatusName();
+			}
+		}
+		return retVal;
 	}
 
 	/**
