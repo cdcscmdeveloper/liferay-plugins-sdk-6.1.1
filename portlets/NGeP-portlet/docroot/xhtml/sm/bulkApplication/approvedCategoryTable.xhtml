@@ -10,7 +10,7 @@
 		<p:dataTable var="apprCat" value="#{tasks.approvedPaginator.model}" rowIndexVar="indexAppr" >
 			
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
-				<p:outputLabel value="#{indexAppr + 1}"
+				<p:outputLabel value="#{indexAppr + 1 + tasks.approvedPaginator.fromIndex}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width : 40%;">
