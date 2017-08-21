@@ -5726,4 +5726,25 @@ public class LOADetailBackingBean extends
 		}
 		return branchName;
 	}
+	
+	public void downloadViewLoa() throws Exception {
+		log.info("start downloadViewLoa");
+	List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
+	if(CollectionUtils.isNotEmpty(scloaReports)){
+		ScLoaReport report=null;
+		for(ScLoaReport loaReport:scloaReports){
+			if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
+				log.info("LoaReport Title"+loaReport.getTitle());
+				//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
+				//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
+				report = loaReport;									
+			break;	
+			}
+		}
+		if(null!=report){
+			//log.info("report not null"+report.getScLoaReportAttachment().getFileName());
+			downloadFile(report.getScLoaReportAttachment());
+		}
+	}
+	}
 }
