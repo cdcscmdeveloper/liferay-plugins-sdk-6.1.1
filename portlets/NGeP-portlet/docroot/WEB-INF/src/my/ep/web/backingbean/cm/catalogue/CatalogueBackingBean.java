@@ -9298,15 +9298,33 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		FacesScopes fs = new FacesScopes();
 		String hostName = fs.getRequest().getServerName();
 		int portNo = fs.getRequest().getServerPort();
+		
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
+		supplierReqDTO.setAllStatuses(true);
+
+		SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+		SmSupplier supplier = smResDTO.getResultBean().getResultList().get(0);
+		
 		String softCertPath = "/web/epapp/supptemp-request-soft-cert";
 		String url = SmCommonUtil.getBasePortalUrl() + softCertPath;
-
 		log.info("*******Str Url**********" + url);
-		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-				FacesMessage.SEVERITY_INFO,
-				null, MessageUtils.getMessage(MessageConst.INFO_721030, new String[]{url},MessageUtils.BUNDLE_COMMON_MESSAGES, fs.getUserLocale())));
+		if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_INFO,
+					null, MessageUtils.getMessage(MessageConst.INFO_721040, new String[]{url},MessageUtils.BUNDLE_COMMON_MESSAGES, fs.getUserLocale())));
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_INFO,
+					null, MessageUtils.getMessage(MessageConst.INFO_721030, new String[]{url},MessageUtils.BUNDLE_COMMON_MESSAGES, fs.getUserLocale())));
+		}
+		
 
+		
 
 		return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 	}
