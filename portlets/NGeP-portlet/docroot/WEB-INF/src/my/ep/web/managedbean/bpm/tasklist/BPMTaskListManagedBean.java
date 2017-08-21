@@ -29,6 +29,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constants.BpmConstants;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
@@ -519,6 +520,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle());
+						       }
+						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
+						    	   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.review.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						       }
+						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVISE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
+						    	   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						       }
 						}
 					}
