@@ -2,10 +2,12 @@ package my.ep.web.backingbean.sm.applicationView;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +51,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmAssociateCompany_;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -90,6 +93,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -621,6 +625,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			getManagedBean().getSmAppl().setSmAssociateCompanies(
 					getAssocCompanyByRevNo());
+			removeDeletedFromList(getManagedBean().getSmAppl()
+					.getSmAssociateCompanies());
 		}
 
 		// companyProjectsExperienceInfoFormViewOnly
@@ -759,6 +765,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private void initStep5BankInfo() {
 		getManagedBean().setSmSupplierBankList(getSupplierBankByRevNo());
 		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
+		removeDeletedFromList(getManagedBean().getSmSupplierBankList());
 	}
 
 	/**
@@ -2708,5 +2715,24 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.getSmAppl().getSmApplSupportDocs(), getManagedBean()
 				.getSmAppl(), "SUPPLIER_DECLARE");
 		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
+	}
+
+	public void removeDeletedFromList(List<? extends Object> mainList) {
+		Iterator<? extends Object> removeIter = mainList.iterator();
+		Object removeVal = null;
+		while (removeIter.hasNext()) {
+			Object removeObj = removeIter.next();
+			try {
+				removeVal = PropertyUtils.getProperty(removeObj,
+						"recordStatusFlg");
+				if (removeVal != null
+						&& Integer.parseInt(removeVal.toString()) == DbValueConst.RECORD_STATUS_DELETED) {
+					removeIter.remove();
+				}
+			} catch (IllegalAccessException | InvocationTargetException
+					| NoSuchMethodException | NullPointerException e) {
+				throw new EpException(e.getMessage());
+			}
+		}
 	}
 }
