@@ -78,6 +78,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -463,14 +464,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private void initStep0BaseInfo(SmAppl smAppl) {
 		getManagedBean().setSmAppl(smAppl);
 
-		if (getManagedBean().getSmSupplier() == null) {
-			try {
-				getManagedBean().setSmSupplier(
-						getManagedBean().getSmAppl().getSmSupplier());
-			} catch (ValidationException ex) {
-				log.debug(ex.getMessage());
-			}
-		}
+		getManagedBean().setSmSupplier(
+				getManagedBean().getSmAppl().getSmSupplier());
 
 		getManagedBean().setBusinessTypeVal(
 				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
@@ -590,7 +585,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
 		} else {
-			List<SmSupplierBranch> deletedBranchs = new ArrayList<SmSupplierBranch>();
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					getSmSupplierBranchByRevNo());
 			for (SmSupplierBranch smSupplierBranch : getManagedBean()
@@ -608,14 +602,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 					SmApplicationUtil
 							.initGstSuppDocs(smSupplierBranch.getGst());
-				} else {
-					deletedBranchs.add(smSupplierBranch);
 				}
 			}
-			if (!EntityHelper.isCollectionEmpty(deletedBranchs)) {
-				getManagedBean().getSmAppl().getSmSupplierBranches()
-						.removeAll(deletedBranchs);
-			}
+			removeDeletedFromList(getManagedBean().getSmAppl()
+					.getSmSupplierBranches());
 		}
 
 		// associatedCompanyInfoFormViewOnly
