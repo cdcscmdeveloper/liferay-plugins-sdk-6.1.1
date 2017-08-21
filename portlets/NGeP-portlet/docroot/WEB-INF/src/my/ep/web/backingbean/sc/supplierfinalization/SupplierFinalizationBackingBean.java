@@ -30,7 +30,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -104,7 +103,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -402,6 +400,38 @@ public class SupplierFinalizationBackingBean extends
 					new HashSet<ScQtEvaluationResultDtl>());
 		}		
 
+	}
+	
+	private void loadRecommededSuppliersIntoCachedData(boolean isItemized) {
+		List<ScQtRecommend> scQtRecommends = getManagedBean().getScQtFinalization().getScQtRecommends();
+		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
+			Set<String> zoneAndItemIds = new HashSet<String>();
+			for (ScQtRecommend recommend : scQtRecommends) {
+				if (!recommend.isCancelled() && 
+						CollectionUtils.isNotEmpty(recommend.getRecommendDtls())) {
+					Long zoneId = recommend.getTplSpecZoneDtl() != null ? recommend.getTplSpecZoneDtl().getSpecZoneId() : DEFAULT_ZONE;
+					Long itemId = recommend.getRequestItem() != null ? recommend.getRequestItem().getRequestNoteItemId() : null;
+					itemId = isItemized ? itemId : DEFAULT_ITEM;
+					String zoneAndItemId = zoneId + "|" + itemId;
+					
+					// only update cache data for same item and zone (cater for normal and zonal package to run once).
+					if (!zoneAndItemIds.contains(zoneAndItemId)) {
+						List<ScQtEvaluationResultDtl> recommendedSuppliers = retrieveRecommendedSuppliers(
+								zoneId, itemId);
+						for (ScQtEvaluationResultDtl recommendedSupplier : recommendedSuppliers) {
+							// update isAwarded flag if not shortlisted. 
+							updateCachedData(recommendedSupplier, 
+									zoneId, 
+									itemId, 
+									!recommendedSupplier.isShortListed() ? true : null);	
+						}
+						
+						zoneAndItemIds.add(zoneAndItemId);
+					}
+				}
+			}
+		}
+		
 	}
 	
 	private void initializeCommitteeRemarks() {
@@ -3167,7 +3197,6 @@ public class SupplierFinalizationBackingBean extends
 	private void resetSupplierSelectionAndDisable(
 					ScQtEvaluationResultDtl evalResultDtl) {
 		evalResultDtl.setSuppSelectionDisabled(true);
-		evalResultDtl.setAwareded(false);
 		evalResultDtl.setShortListed(false);
 	}
 
@@ -4469,6 +4498,9 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setItemize(itemized);
 		
 		setSelectionMode(finalizationMethod);
+		if (!triggeredFromEvent) {
+			loadRecommededSuppliersIntoCachedData(itemized);	
+		}
 		
 		if (itemized) {
 			if (isZonal) {
@@ -4504,30 +4536,21 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			Long itemId = item.getRequestItem().getRequestNoteItemId();
-			SuppFinalizationResDTO resDTO = retrieveQualifiedSuppliers(isAward, !isAward, 
-																	  specZoneId, itemId);	
-			List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
-					  resDTO.getQualifiedSuppliersByEvalStage().getResultList();
 			item.setSelectedSuppliers(new HashMap<Integer,SmSupplier>());
 			
-			if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
-				List<QtEvaluationResultDtlBean> cachedSuppliersList = 
-						  		getCachedSuppliersFromMap(specZoneId, itemId);				
-				for (ScQtEvaluationResultDtl evalResDtl 
-								   : qualifiedSuppliers) {
-					QtEvaluationResultDtlBean recommendedBean = getCachedBeanFromList(
-							cachedSuppliersList, evalResDtl.getEvaluationResultDtlId());
-					if (recommendedBean == null) {
-						recommendedBean = updateCachedData(evalResDtl, specZoneId, itemId);
-					}
-					if (isAward && recommendedBean.isAwarded()) {
-						item.getSelectedSuppliers().put(
-								recommendedBean.getScQtProposal().getSupplierNo(),
-								recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
-					} else if (!isAward && recommendedBean.isShortlisted()) {
-						item.getSelectedSuppliers().put(
-								recommendedBean.getScQtProposal().getSupplierNo(),
-								recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
+			List<QtEvaluationResultDtlBean> cachedSuppliersList = getCachedSuppliersFromMap(specZoneId, itemId);	
+			if (CollectionUtils.isNotEmpty(cachedSuppliersList)) {			
+				for (QtEvaluationResultDtlBean recommendedBean : cachedSuppliersList) {
+					if (recommendedBean != null) {
+						if (isAward && recommendedBean.isAwarded()) {
+							item.getSelectedSuppliers().put(
+									recommendedBean.getScQtProposal().getSupplierNo(),
+									recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
+						} else if (!isAward && recommendedBean.isShortlisted()) {
+							item.getSelectedSuppliers().put(
+									recommendedBean.getScQtProposal().getSupplierNo(),
+									recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
+						}
 					}
 				}
 			}
@@ -4788,38 +4811,25 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		Map<Long,List<ScQtRecommend>> zonalItems = scQtFinalization.getScQtRecommendsByZone();
 		
-		SuppFinalizationResDTO resDTO = retrieveQualifiedSuppliers(true, true, currentZoneId, null);
-		if (resDTO.isSuccessful()) {
-			ISearchResultBean<ScQtEvaluationResultDtl> resultBean = 
-								resDTO.getQualifiedSuppliersByEvalStage();
-			if (CollectionUtils.isNotEmpty(
-					resultBean.getResultList())) {
-				for (ScQtEvaluationResultDtl evalResDtl 
-								 : resultBean.getResultList()) {
-					updateCachedData(evalResDtl, currentZoneId, DEFAULT_ITEM);
-				}
-			}
-		}
-		
 		if (MapUtils.isNotEmpty(zonalItems) && 
 				zonalItems.containsKey(currentZoneId)) {
 			scQtRecommends = zonalItems.get(currentZoneId);
 		}		
 		
 		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
-			MapKey mapKey = new MapKey(currentZoneId, DEFAULT_ITEM);
-			
-			List<QtEvaluationResultDtlBean> cachedSuppliers = 
-					getManagedBean().getQualifiedSuppliersCache()
-									.get(mapKey);
-			if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
-				for (QtEvaluationResultDtlBean cachedSupplier 
-											: cachedSuppliers) {
-					cachedSupplier.setAwarded(false);
-					cachedSupplier.setShortlisted(false);
-				}
-			}
 			if (zonalPackageItemsCancelled) {
+				MapKey mapKey = new MapKey(currentZoneId, DEFAULT_ITEM);
+				List<QtEvaluationResultDtlBean> cachedSuppliers = 
+						getManagedBean().getQualifiedSuppliersCache()
+										.get(mapKey);
+				if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
+					for (QtEvaluationResultDtlBean cachedSupplier 
+												: cachedSuppliers) {
+						cachedSupplier.setAwarded(false);
+						cachedSupplier.setShortlisted(false);
+					}
+				}
+				
 				for (ScQtRecommend scQtRecommend : scQtRecommends) {
 					scQtRecommend.setCancelled(true);
 					
@@ -5040,7 +5050,6 @@ public class SupplierFinalizationBackingBean extends
 		ScQtEvaluationResultDtl recommendedSupplier = 
 					this.getManagedBean().getRecommendedSupplier();
 
-		recommendedSupplier.setAwareded(true);
 		selectSupplierEvent(recommendedSupplier, true);
 	}
 
@@ -5061,15 +5070,10 @@ public class SupplierFinalizationBackingBean extends
 		SmSupplier smSupplier = evaluationResultDtl.getQtEvaluationResult()
 									.getScQtProposal().getScQtSupplier().getSmSupplier();
 		if (isAwarded) {
-			isSelected = evaluationResultDtl.isAwareded();
-			if (isSelected) {
-				evaluationResultDtl.setShortListed(false);
-			}
+			isSelected = isAwarded;
+			evaluationResultDtl.setShortListed(false);
 		} else {
 			isSelected = evaluationResultDtl.isShortListed();
-			if (isSelected) {
-				evaluationResultDtl.setAwareded(false);
-			}
 		}
 		
 		if (isSecretaryUser || 
@@ -5084,7 +5088,6 @@ public class SupplierFinalizationBackingBean extends
 					selectedItem.getSelectedSuppliers().put(supplierCode, smSupplier);
 				}
 			} else {
-				evaluationResultDtl.setAwareded(false);
 				evaluationResultDtl.setShortListed(false);
 				
 				if (isItemized) {
@@ -5114,7 +5117,7 @@ public class SupplierFinalizationBackingBean extends
 				checkAndResetPreviouslyAwardedSupplier(
 						evaluationResultDtl, selectedZoneId, selectedItemId);
 			}
-			updateCachedData(evaluationResultDtl, selectedZoneId, selectedItemId);
+			updateCachedData(evaluationResultDtl, selectedZoneId, selectedItemId, isAwarded);
 		} 
 	}
 	
@@ -5122,7 +5125,7 @@ public class SupplierFinalizationBackingBean extends
 	 * Update the supplier selection in the cached list
 	 */
 	private QtEvaluationResultDtlBean updateCachedData(ScQtEvaluationResultDtl selectedSupplier,
-								  					   Long specZoneId, Long requestedItemId) {
+								  					   Long specZoneId, Long requestedItemId, Boolean isAwarded) {
 		boolean alreadyExists = true;
 		
 		if (selectedSupplier == null) {
@@ -5142,8 +5145,9 @@ public class SupplierFinalizationBackingBean extends
 			alreadyExists = false;
 		}
 		
-		recommendedBean.setAwarded(
-				selectedSupplier.isAwareded());
+		if (isAwarded != null) {
+			recommendedBean.setAwarded(isAwarded);	
+		}
 		recommendedBean.setShortlisted(
 				selectedSupplier.isShortListed());
 		recommendedBean.setBidRank(
@@ -5327,9 +5331,7 @@ public class SupplierFinalizationBackingBean extends
 		evalResDtlBean.setBidPrice(totalBidPrice);
 	}
 
-	private SuppFinalizationResDTO retrieveQualifiedSuppliers(boolean isAwarded,  boolean isShortlisted,  
-									 						  Long specZoneId, Long requestItemId) {
-		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+	private List<ScQtEvaluationResultDtl> retrieveRecommendedSuppliers(Long specZoneId, Long requestItemId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -5345,56 +5347,25 @@ public class SupplierFinalizationBackingBean extends
 			
 			ISearchBean<ScQtEvaluationResultDtl> searchBean = 
 							new SearchBean<ScQtEvaluationResultDtl>();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"qtEvaluationResult.scQtProposal.scQtSupplier.scQt.qtId",
-					SearchOperator.OPERATOR_EQUALS.value(), 
-					this.getManagedBean().getScQt().getQtId()));
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("qtEvaluationResult.evaluationStage",
-							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));		
-			
-			if (null != specZoneId && !DEFAULT_ZONE.equals(specZoneId)) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
-								SearchOperator.OPERATOR_EQUALS.value(), specZoneId));
-			} 
-			if (null != requestItemId && !DEFAULT_ITEM.equals(requestItemId)) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scRequestItem.requestNoteItemId",
-								SearchOperator.OPERATOR_EQUALS.value(), requestItemId));				
-			} 	
-			
-			if (isAwarded && isShortlisted) {
-				searchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(
-								new SearchFilterBean(
-								"isAwareded",
-								SearchOperator.OPERATOR_EQUALS.value(), true),
-								new SearchFilterBean(
-								"isShortListed",
-								SearchOperator.OPERATOR_EQUALS.value(), true,
-								SearchCondition.CONDITION_OR.value())));
-			} else if (isAwarded) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("isAwareded",
-								SearchOperator.OPERATOR_EQUALS.value(), true));	
-			} else if (isShortlisted) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("isShortListed",
-								SearchOperator.OPERATOR_EQUALS.value(), true));					
-			}
+							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));
 			
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setSearchBean(searchBean);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setSpecZoneId(DEFAULT_ZONE.equals(specZoneId) ? null : specZoneId);
+			if (null != requestItemId && !DEFAULT_ITEM.equals(requestItemId)) {
+				reqDTO.setRequestItemId(requestItemId);
+			}
+			reqDTO.setFilterByRecommendedSuppliers(true);
+			reqDTO.setSearchBean(searchBean);
 			
-			resDTO = qtSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+			return qtSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO)
+					.getQualifiedSuppliersByEvalStage().getResultList();
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
-
-		return resDTO;
 	}
 
 	private PmParameter getPmParameterByTypeAndCode(String parameterType,
@@ -5487,7 +5458,6 @@ public class SupplierFinalizationBackingBean extends
 							.getQualifiedByItemSuppliers();
 					if (CollectionUtils.isNotEmpty(selectedQualSuppliers)) {
 						for (ScQtEvaluationResultDtl evalResultDtl : selectedQualSuppliers) {
-							evalResultDtl.setAwareded(isAwarded);
 							evalResultDtl.setShortListed(isShortlisted);
 							selectSupplierEvent(evalResultDtl, isAwarded);
 						}
@@ -5905,23 +5875,9 @@ public class SupplierFinalizationBackingBean extends
 				log.debug("pageChangeListener");
 			}
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"qtEvaluationResult.scQtProposal.scQtSupplier.scQt.qtId",
-					SearchOperator.OPERATOR_EQUALS.value(), qtId));
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("qtEvaluationResult.evaluationStage",
-							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));
-			
-			if (null != selectedZoneId &&  SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage)) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
-								SearchOperator.OPERATOR_EQUALS.value(), selectedZoneId));
-			}
-			if (null != selectedItemId) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scRequestItem.requestNoteItemId",
-								SearchOperator.OPERATOR_EQUALS.value(), selectedItemId));				
-			}			
+							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));		
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
@@ -5930,8 +5886,12 @@ public class SupplierFinalizationBackingBean extends
 								IQTSuppFinalizationSO.class);
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setQtId(qtId);
+				if (null != selectedZoneId &&  SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage)) {
+					reqDTO.setSpecZoneId(selectedZoneId);
+				}
+				reqDTO.setRequestItemId(selectedItemId);
 				reqDTO.setSearchBean(searchBean);
-				reqDTO.setSpecZoneId(selectedZoneId);
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				if (resDTO.isSuccessful()) {
@@ -6101,28 +6061,10 @@ public class SupplierFinalizationBackingBean extends
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"qtEvaluationResult.scQtProposal.scQtSupplier.scQt.qtId",
-					SearchOperator.OPERATOR_EQUALS.value(), qtId));
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("qtEvaluationResult.evaluationStage",
 							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));		
-			
-			if (null != selectedZoneId) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
-								SearchOperator.OPERATOR_EQUALS.value(), selectedZoneId));
-			} 
-			
-			Long selectedItemId = null;
-			if (null != selectedItem) {
-				selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scRequestItem.requestNoteItemId",
-								SearchOperator.OPERATOR_EQUALS.value(), 
-								selectedItem.getRequestItem().getRequestNoteItemId()));				
-			} 
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
@@ -6131,11 +6073,17 @@ public class SupplierFinalizationBackingBean extends
 								IQTSuppFinalizationSO.class);
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-				reqDTO.setSearchBean(searchBean);
-				
+				reqDTO.setQtId(qtId);
 				if (selectedZoneId != null) {
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
+				
+				Long selectedItemId = null;
+				if (null != selectedItem) {
+					selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+					reqDTO.setRequestItemId(selectedItemId);
+				} 
+				reqDTO.setSearchBean(searchBean);
 				
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
@@ -6148,7 +6096,7 @@ public class SupplierFinalizationBackingBean extends
 					List<QtEvaluationResultDtlBean> cachedSuppliers = 
 							getCachedSuppliersFromMap(zoneId, selectedItemId);
 					
-					if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
+					if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {						
 						if (selectedItem != null) {
 							disableSuppliersByItem(selectedItem, qualifiedSuppliers);
 						} else {
@@ -6158,39 +6106,26 @@ public class SupplierFinalizationBackingBean extends
 						for (ScQtEvaluationResultDtl qualSupplier 
 												: qualifiedSuppliers) {
 							QtEvaluationResultDtlBean recommendationBean = null;
-							if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
-								recommendationBean = getCachedBeanFromList(cachedSuppliers, 
-															qualSupplier.getEvaluationResultDtlId());
-								if (recommendationBean != null) {
-									qualSupplier.setShortListed(
-											recommendationBean.isShortlisted());
-									qualSupplier.setAwareded(
-											recommendationBean.isAwarded());
-								}
-								// Set shortlisted as true by defaultly for qualified suppliers in Bidding 
-								if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-										.equals(getManagedBean().getFinalizationMethod())
-										&& !qualSupplier.isSuppSelectionDisabled() && !isQTRefinalized()) {
-									qualSupplier.setShortListed(true);		
-								}
-								recommendationBean = updateCachedData(qualSupplier, 
-										zoneId, selectedItemId);
-								if (qualSupplier.isAwareded()) {
-									getManagedBean().setRecommendedSupplier(qualSupplier);
-								} 
-							} else {
-								recommendationBean = updateCachedData(qualSupplier, 
-										zoneId, selectedItemId);
-								if (qualSupplier.isAwareded()) {
-									getManagedBean().setRecommendedSupplier(qualSupplier);
-								}
-								//  Set shortlisted as true by defaultly for qualified suppliers in Bidding  
-								if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-										.equals(getManagedBean().getFinalizationMethod())
-										&& !qualSupplier.isSuppSelectionDisabled()&& !isQTRefinalized()) {
-									qualSupplier.setShortListed(true);		
-								}
-							} 
+							recommendationBean = getCachedBeanFromList(cachedSuppliers, 
+									qualSupplier.getEvaluationResultDtlId());
+							if (recommendationBean != null) {
+								qualSupplier.setShortListed(
+										recommendationBean.isShortlisted());
+							}
+							
+							//  Set shortlisted as true by defaultly for qualified suppliers in Bidding  
+							if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+									.equals(getManagedBean().getFinalizationMethod())
+									&& !qualSupplier.isSuppSelectionDisabled()&& !isQTRefinalized()) {
+								qualSupplier.setShortListed(true);		
+							}
+							
+							recommendationBean = updateCachedData(qualSupplier, 
+									zoneId, selectedItemId, null);
+							
+							if (recommendationBean.isAwarded()) {
+								getManagedBean().setRecommendedSupplier(qualSupplier);
+							}
 							
 							if (selectedItem != null) {
 								if (!selectedItem.isCancelled()) {
@@ -6233,6 +6168,19 @@ public class SupplierFinalizationBackingBean extends
 			
 			return resultBean;
 		}
+	}
+	
+	private Long getAwardedSupplierId(ScQtRecommend scQtRecommend) {
+		Long awardedSupplierId = null;		
+		if (scQtRecommend != null && CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
+			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+				if (recommendDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					awardedSupplierId = recommendDtl.getSupplier().getSupplierId();
+					break;
+				}
+			}	
+		}			
+		return awardedSupplierId;
 	}
 	
 	private List<QtEvaluationResultDtlBean> getCachedSuppliersFromMap(Long zoneId, Long itemId) {
@@ -6338,35 +6286,11 @@ public class SupplierFinalizationBackingBean extends
 			items = scQtFinalization.getScQtRecommends();
 		}
 		
-		if (CollectionUtils.isNotEmpty(items)) {
-			boolean isAward = getManagedBean().isSingleAward();
-			
+		if (CollectionUtils.isNotEmpty(items)) {			
 			// to set the recommend details for each item
 			for (ScQtRecommend scQtRecommend : items) {
 				Long itemId = scQtRecommend.getRequestItem().getRequestNoteItemId();
-				
-				List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
 				cachedSuppliers = getCachedSuppliersFromMap(specZoneId, itemId);
-				if (CollectionUtils.isEmpty(cachedSuppliers)) {
-					SuppFinalizationResDTO resDTO = retrieveQualifiedSuppliers(true, true, 
-																		specZoneId, itemId);	
-					qualifiedSuppliers = resDTO.getQualifiedSuppliersByEvalStage().getResultList();
-				}
-				if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
-					for (ScQtEvaluationResultDtl evalResDtl 
-									   : qualifiedSuppliers) {
-						QtEvaluationResultDtlBean recommendedBean = getCachedBeanFromList(
-									cachedSuppliers, evalResDtl.getEvaluationResultDtlId());
-						if (recommendedBean == null) {
-							if (isAward && evalResDtl.isShortListed()) {
-								evalResDtl.setShortListed(false);
-							} else if (!isAward && evalResDtl.isAwareded()) {
-								evalResDtl.setAwareded(false);
-							}
-							updateCachedData(evalResDtl, specZoneId, itemId);
-						}
-					}
-				}
 				
 				filterRecommendDtls(scQtRecommend, cachedSuppliers);
 			}				
@@ -6393,32 +6317,6 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			specZoneId = DEFAULT_ZONE;
 			items = scQtFinalization.getScQtRecommends();
-		}
-
-		boolean isAward = getManagedBean().isSingleAward();
-		SuppFinalizationResDTO resDTO = retrieveQualifiedSuppliers(
-											true, true, specZoneId, null);	
-		List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
-				resDTO.getQualifiedSuppliersByEvalStage().getResultList();
-		
-		List<QtEvaluationResultDtlBean> cachedSuppliersList = 
-				getCachedSuppliersFromMap(specZoneId, DEFAULT_ITEM);
-		
-		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
-			for (ScQtEvaluationResultDtl evalResDtl 
-							   : qualifiedSuppliers) {
-				QtEvaluationResultDtlBean recommendedBean = getCachedBeanFromList(
-						cachedSuppliersList, evalResDtl.getEvaluationResultDtlId());
-				
-				if (recommendedBean == null) {
-					if (isAward && evalResDtl.isShortListed()) {
-						evalResDtl.setShortListed(false);
-					} else if (!isAward && evalResDtl.isAwareded()) {
-						evalResDtl.setAwareded(false);
-					}
-					updateCachedData(evalResDtl, specZoneId, DEFAULT_ITEM);
-				}
-			}
 		}
 		
 		Map<MapKey,List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache = 
@@ -6507,25 +6405,7 @@ public class SupplierFinalizationBackingBean extends
 					break;
 				}
 			}
-		} 
-		
-		// If the previously awarded supplier does not exist in the cache,
-		// then check if an awarded supplier exists in the database
-		if (awardedSupplier == null) {
-			SuppFinalizationResDTO resDTO = retrieveQualifiedSuppliers(true, false, 
-													selectedZoneId, selectedItemId);
-			if (resDTO.isSuccessful()) {
-				ISearchResultBean<ScQtEvaluationResultDtl> resultBean = 
-									resDTO.getQualifiedSuppliersByEvalStage();
-				if (CollectionUtils.isNotEmpty(
-						resultBean.getResultList())) {
-					ScQtEvaluationResultDtl previouslyAwardedSupplier = 
-								resultBean.getResultList().get(0);	
-					awardedSupplier = updateCachedData(previouslyAwardedSupplier, 
-													   selectedZoneId, selectedItemId);
-				}
-			}
-		}		
+		} 	
 		
 		QtEvaluationResultDtlBean selectedSupplier = 
 						new QtEvaluationResultDtlBean();
