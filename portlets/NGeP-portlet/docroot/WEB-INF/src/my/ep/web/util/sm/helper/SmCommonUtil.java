@@ -2297,26 +2297,29 @@ public class SmCommonUtil {
 	}
 
 	public static boolean validateGstRegNo(String value) {
-		String gstNoPattern = "\\d+";
-		Pattern pattern;
-		Matcher matcher;
+		if(!StringUtils.isBlank(value)){
+			String gstNoPattern = "\\d+";
+			Pattern pattern;
+			Matcher matcher;
 
-		pattern = Pattern.compile(gstNoPattern);
+			pattern = Pattern.compile(gstNoPattern);
 
-		if (value != null) {
-			String gstNo = value.toString();
+			if (value != null) {
+				String gstNo = value.toString();
 
-			if (gstNo.length() > 0) {
-				if (gstNo.length() != 12) {
-					return false;
+				if (gstNo.length() > 0) {
+					if (gstNo.length() != SmRuleHelper.getInstance()
+							.getGstRegNumLength()) {
+						return false;
+					}
+
+					matcher = pattern.matcher(value.toString());
+					if (!matcher.matches()) {
+						return false;
+					}
+
+					return true;
 				}
-
-				matcher = pattern.matcher(value.toString());
-				if (!matcher.matches()) {
-					return false;
-				}
-
-				return true;
 			}
 		}
 
