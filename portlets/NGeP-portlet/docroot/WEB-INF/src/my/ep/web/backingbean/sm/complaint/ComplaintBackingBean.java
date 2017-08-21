@@ -91,6 +91,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	private final String LODGE_COMPLAINT = "/xhtml/sm/complaint/lodgeComplaint.xhtml";
 	private final String COMPLAINT_MANAGEMENT = "complaint-management";
 	private final String complaintProcessUrl = SmCommonUtil.getBasePortalUrl() + "/web/epapp/complaint-management";
+	private PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 	
 	public ComplaintBackingBean() {
 		
@@ -536,29 +537,31 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	}
 	
 	public void onTickSameAsAddress(SmAddress srcAddr, SmAddress destAddr) {
+		if(getManagedBean().isSameAddress()){
+			if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
+					|| srcAddr.getPmState() == null
+					|| srcAddr.getPmState().getStateId() == null
+					|| srcAddr.getPmDistrict() == null
+					|| srcAddr.getPmDistrict().getDistrictId() == null
+					|| srcAddr.getPmCity() == null
+					|| srcAddr.getPmCity().getCityId() == null
+					|| StringUtils.isBlank(srcAddr.getPostcode())) {
+				String addrType = SmCommonUtil.getMessage(
+						"lbl.sm.complainant.same.as.ic.address", null);
 
-		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
-				|| srcAddr.getPmState() == null
-				|| srcAddr.getPmState().getStateId() == null
-				|| srcAddr.getPmDistrict() == null
-				|| srcAddr.getPmDistrict().getDistrictId() == null
-				|| srcAddr.getPmCity() == null
-				|| srcAddr.getPmCity().getCityId() == null
-				|| StringUtils.isBlank(srcAddr.getPostcode())) {
-			String addrType = SmCommonUtil.getMessage(
-					"lbl.sm.complainant.same.as.ic.address", null);
-
-			if (!getManagedBean().getSmComplainant().getIdentificationType()
-					.getParameterCode()
-					.equalsIgnoreCase(SupplierManagementConst.NEW_IC)) {
-				addrType = SmCommonUtil.getMessage(
-						"lbl.sm.complainant.same.as.perm.address", null);
+				if (!getManagedBean().getSmComplainant().getIdentificationType()
+						.getParameterCode()
+						.equalsIgnoreCase(SupplierManagementConst.NEW_IC)) {
+					addrType = SmCommonUtil.getMessage(
+							"lbl.sm.complainant.same.as.perm.address", null);
+				}
+				getManagedBean().setSameAddress(false);
+				throw new EpException(MessageConst.ERROR_722656,
+						new String[] { addrType });
+			} else {
+				//getManagedBean().setSameAddress(true);
+				SmApplicationUtil.getInstance().cloneAddress(destAddr, srcAddr);
 			}
-			getManagedBean().setSameAddress(false);
-			throw new EpException(MessageConst.ERROR_722656,
-					new String[] { addrType });
-		} else {
-			SmApplicationUtil.getInstance().cloneAddress(destAddr, srcAddr);
 		}
 	}
 	
@@ -690,7 +693,6 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		}
 
 		if (this.getManagedBean().getSmComplaint() == null) {
-			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			PmParameter defaultIdentificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			
 			log.info("--------------BackingBean is Null--------------------");
@@ -1243,6 +1245,15 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		paramMap.put(ReportConst.DOC_TYPE_RTF, "RTF");
 		//String reportUrl = generateReportURL(ReportConst.SM_COMPLAINT_SHOW_CAUSE_jsp, paramMap);	
 		generateReport(ReportConst.SM_COMPLAINT_SHOW_CAUSE_jsp, paramMap);
+	}
+	
+	public int getPostCodeLength(PmCountry country){
+		if(country.getCountryId().equals(defaultCountry.getCountryId())){
+			return 5;
+		}else{
+			return 10;
+		}
+
 	}
 }
 	

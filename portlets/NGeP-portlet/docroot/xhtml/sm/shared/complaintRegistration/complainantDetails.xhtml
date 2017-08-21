@@ -119,13 +119,13 @@
 			
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="#{lbl['lbl.sm.phoneno']}" /></td>
+						value="#{lbl['lbl.sm.complainant.phone.home']}" /></td>
 				<td class="tdContent">
-					<ac:phone id="txtPhoneNoId" isMobile="false" label="#{lbl['lbl.sm.phoneno']}" disabled="#{complainantDtlViewFLag}"
+					<ac:phone id="txtPhoneNoId" isMobile="false" label="#{lbl['lbl.sm.complainant.phone.home']}" disabled="#{complainantDtlViewFLag}"
 						countryCode="#{complaintBackingBean.managedBean.smComplainant.homePhoneCountry}" 
 						areaCode="#{complaintBackingBean.managedBean.smComplainant.homePhoneArea}" 
 						number="#{complaintBackingBean.managedBean.smComplainant.homePhoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.complainant.phone.home']} - #{lbl['lbl.sm.invalidNo']}" />
 				</td>
 				
 				<td class="tdTitle"><p:outputLabel
@@ -188,8 +188,10 @@
 					</td>
 				</tr>
 			</c:if>
-			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantAddress.xhtml"></ui:include>
+			
 		</table>
+		
+		<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantAddress.xhtml"></ui:include>
 	</p:panel>
 	
 	<p:dialog header="#{lbl['lbl.sm.complainant.myidentity.info']}" widgetVar="myidentityDlg" modal="true" height="250" width="500">
