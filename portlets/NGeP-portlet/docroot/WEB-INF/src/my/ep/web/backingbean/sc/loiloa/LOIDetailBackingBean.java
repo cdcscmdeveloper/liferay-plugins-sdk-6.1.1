@@ -4756,6 +4756,8 @@ public class LOIDetailBackingBean extends
 							recommendDtl.setRecordStatus(false);
 							recommendDtl.setRecordStatusFlg(
 									DbValueConst.RECORD_STATUS_SUSPENDED);
+						} else {
+							log.info("awardSelectedSupplierAction-->recommendDtlId:" + recommendDtl.getRecommendDtlId() +", status not update: " + recommendDtl.getRecordStatusFlg());
 						}
 					}
 				}
