@@ -18,10 +18,10 @@
 			src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
 <!-- 		<ui:include -->
 <!-- 			src="/xhtml/sm/shared/complaintRegistration/complainantContact.xhtml" /> -->
+
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
 		<ac:lovPopup />
-		
 		<br />
 		
 		<div align="left">
@@ -31,18 +31,22 @@
 			<h:outputText value="#{lbl['lbl.sm.complaint.lodge.have.agreed']}"></h:outputText>
 			<p:commandLink style="color:blue;" value="#{lbl['lbl.sm.term.and.condition.header']}" onclick="dlg2.show();" />
 		</div>
-		<p:dialog id="modalDialog" header="#{lbl['lbl.sm.term.and.condition.header']}"
-			widgetVar="dlg2" modal="true" height="200" width="600">
-			<ac:smPanel id="tt">
-				<h:outputText value="#{lbl['lbl.sm.complaint.lodge.complaint.termscond.note']}" escape="false" />
-			</ac:smPanel>
-		</p:dialog>
+		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])" id="btnSubmitCompl" 
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])" id="btnSubmitCompl" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			disabled="#{!complaintBackingBean.managedBean.complaintTerm}" action="#{complaintBackingBean.lodgeComplaint}">
 				<f:param name="disableValidation" value="true" />
-			</p:commandButton>
+		</p:commandButton>
 		</div>
+
+		<br />
+		<hr />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.complaint.instruction.bottom']}" escape="false"/>
+
+		<p:dialog id="modalDialog" header="#{lbl['lbl.sm.term.and.condition.header']}"
+			widgetVar="dlg2" modal="true" height="200" width="600">
+			<h:outputText value="#{lbl['lbl.sm.complaint.lodge.complaint.termscond.note']}" escape="false" />
+		</p:dialog>
 	</ui:define>
 </ui:composition>
