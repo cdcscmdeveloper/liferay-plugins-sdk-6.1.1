@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -51,7 +53,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
-import my.ep.persistence.entity.sm.SmAssociateCompany_;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -78,7 +79,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -99,7 +99,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.eclipse.persistence.exceptions.ValidationException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
@@ -1682,6 +1681,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		getManagedBean().setActiveCategoryList(catList);
+
+		// sort by record status
+		Collections.sort(getManagedBean().getActiveCategoryList(),
+				new Comparator<SmSupplierCategory>() {
+					@Override
+					public int compare(final SmSupplierCategory s1,
+							final SmSupplierCategory s2) {
+						return s1.getRecordStatusFlg()
+								- s2.getRecordStatusFlg();
+					}
+				});
+
+		SmApplicationUtil.sortSupplierCategory(getManagedBean()
+				.getActiveCategoryList());
 	}
 
 	/**
