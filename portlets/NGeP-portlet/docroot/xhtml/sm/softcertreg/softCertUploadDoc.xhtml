@@ -113,14 +113,14 @@
 						</ui:repeat>
 					</table>
 				</p:column>
-				<p:column>
+				<p:column style="text-align:center !important;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.action']}" />
 					</f:facet>
 					<table width="100%">
 						<ui:repeat var="suppDoc" value="#{upload.suppDocList}">
 							<tr>
-								<td width="20%" style="border-style: none !important;">
+								<td width="20%" style="border-style: none !important;text-align: center !important;">
 									<p:commandLink oncomplete="uploadDialog.show();return false;" update="@([id$=uploadDialog])"
 										action="#{softCertBackingBean.assignSelectedSupportDoc(upload.personnel,suppDoc)}">
 										<p:graphicImage value="/css/images/design/upload.png"
@@ -172,8 +172,11 @@
 						<h:outputText value="#{lbl['lbl.sm.softcert.suppdoc']}" />
 					</f:facet>
 					<table width="100%">
-						<ui:repeat var="suppDoc" value="#{offline.suppDocList}">
+						<ui:repeat var="suppDoc" value="#{offline.suppDocList}" varStatus="status">
 							<tr>
+								<td style="width: 5% !important;vertical-align: baseline !important;border-style: none !important;">
+									<h:outputText value="#{status.index + 1})"  />
+								</td>
 								<td width="40%" style="border-style: none !important;">
 									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</td>
