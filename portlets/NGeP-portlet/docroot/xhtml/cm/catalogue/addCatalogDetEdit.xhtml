@@ -39,8 +39,13 @@
 		<div style="text-align: right; min-height: 40px;">
 			<div style="float: left; clear: both;">
 				<p:commandButton value="#{lbl['lbl.cm.back']}"
-					rendered="#{!unspscCodeBackingBean.supplierTemp}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'U'}"
 					action="#{catalogueBackingBean.navigate}">
+				</p:commandButton>
+				
+				<p:commandButton value="#{lbl['lbl.cm.back']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U'}"
+					action="#{catalogueBackingBean.cancelToPublishTab}">
 				</p:commandButton>
 			</div>
 
@@ -53,33 +58,10 @@
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
-
-				<ui:remove>
-					<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-						rendered="#{catalogueBackingBean.managedBean.displayCatalogue}"
-						action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
-				</ui:remove>
-
-				<div style="float: left; clear: both;">
-					<ui:remove>
-						<p:commandButton value="#{lbl['lbl.cm.back']}"
-							rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
-							action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
-						</p:commandButton>
-					</ui:remove>
-
-				</div>
+			
 			</h:panelGroup>
 
-			<ui:remove>
-				<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
-					<div style="float: left; clear: both;">
-						<p:commandButton value="#{lbl['lbl.cm.back']}"
-							action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
-						</p:commandButton>
-					</div>
-				</h:panelGroup>
-			</ui:remove>
+		
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
@@ -88,13 +70,6 @@
 				<p:commandButton value="#{lbl['lbl.btn.reject']}"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
-
-				<ui:remove>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						action="#{reviewCatBackingBean.cancelToPendingApprovalItem()}"
-						immediate="true">
-					</p:commandButton>
-				</ui:remove>
 
 			</h:panelGroup>
 		</div>
