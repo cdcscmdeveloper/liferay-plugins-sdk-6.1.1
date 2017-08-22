@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm.softcertreg;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -701,6 +702,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				.getSmAppl().getSmSupplier().getSupplierId();
 		getManagedBean().setAllAuthSuppUserAlreadyRequested(true);
 		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
+		List<Integer> statusAllowedToRequest = Arrays.asList(
+				SupplierManagementConst.SOFT_CERT_PENDING_REQ,
+				SupplierManagementConst.SOFT_CERT_REJECTED,
+				SupplierManagementConst.SOFT_CERT_REQ_FAILED,
+				SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
 		for (SmPersonnel personnel : personnels) {
 			// check for supplier tmp
 			if (StringUtils.isNotBlank(personnel.getEpRole())
@@ -714,9 +720,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 			}
 			// check for softcert flg not entitled to request
-			else if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
-					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
-					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+			else if (!statusAllowedToRequest.contains(personnel
+					.getSoftcertFlg())) {
 				personnel.setDisableRowSelection(true);
 			}
 			// check for softcert flg that pending request or rejected or failed
@@ -916,7 +921,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		boolean disableButton = true;
 
 		if (smPersonnel.getPmUser() != null
-				&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
+				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED || smPersonnel
+						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL)) {
 			getManagedBean().setRenderRevokeButton(true);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
