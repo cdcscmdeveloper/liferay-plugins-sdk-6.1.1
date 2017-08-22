@@ -1641,17 +1641,6 @@ public class ConsolidationReportBackingBean extends
 							SearchOperator.OPERATOR_EQUALS.value(),
 							evaluationStage));
 
-			Long selectedItemId = null;
-			if (null != selectedItem) {
-				selectedItemId = selectedItem.getRequestItem()
-						.getRequestNoteItemId();
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scRequestItem.requestNoteItemId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								selectedItem.getRequestItem()
-										.getRequestNoteItemId()));
-			}
-
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
 				qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -1663,6 +1652,11 @@ public class ConsolidationReportBackingBean extends
 				reqDTO.setQtId(qtId);
 				if (!DEFAULT_ZONE.equals(selectedZoneId)) {
 					reqDTO.setSpecZoneId(selectedZoneId);
+				}
+				Long selectedItemId = null;
+				if (null != selectedItem) {
+					selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+					reqDTO.setRequestItemId(selectedItemId);
 				}
 
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
