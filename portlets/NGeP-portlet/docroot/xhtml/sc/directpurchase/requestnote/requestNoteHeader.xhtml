@@ -8,10 +8,17 @@
 		<div align="left" class="header-info header-spacing" style="width: 100%">
 			<table style="width: 100%">
 				<tr>
-					<td style="width:9%"><h:outputLabel
-							value="#{lbl['lbl.sc.request.note.header.rn.no']}" /></td>
+					<td style="width:9%">
+						<h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+						<br/>
+						<h:outputLabel
+							value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+					</td>
 					<td class="header-info-text">
-						#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+							#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+						<br/>
+							#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}
 				   </td>
 
 					<td style="width:3%"><h:outputLabel
