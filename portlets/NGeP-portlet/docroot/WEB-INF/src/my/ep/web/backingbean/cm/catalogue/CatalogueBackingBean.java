@@ -7547,9 +7547,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().setError3(false);
 		}
+		
+		String type = checkProductOrService(this.getManagedBean().getSelectedMaintainItem().getCmItem().getExtensionCode());
 
-		this.getManagedBean().setPricingTabIndex(2);
-		this.getManagedBean().setZonalPricingIndex(0);
+		if(type.equalsIgnoreCase("P")){
+			this.getManagedBean().setPricingTabIndex(2);
+			this.getManagedBean().setZonalPricingIndex(0);
+		}else{
+			this.getManagedBean().setPricingTabIndex(1);
+			this.getManagedBean().setZonalPricingIndex(0);
+		}
+
+		
 	}
 
 	/**
@@ -7576,9 +7585,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().setError3(false);
 		}
-
-		this.getManagedBean().setPricingTabIndex(2);
-		this.getManagedBean().setZonalPricingIndex(1);
+		
+		String type = checkProductOrService(this.getManagedBean().getSelectedMaintainItem().getCmItem().getExtensionCode());
+		
+		if(type.equalsIgnoreCase("P")){
+			this.getManagedBean().setPricingTabIndex(2);
+			this.getManagedBean().setZonalPricingIndex(1);
+		}else{
+			this.getManagedBean().setPricingTabIndex(1);
+			this.getManagedBean().setZonalPricingIndex(1);
+		}
 	}
 
 	/**
@@ -10037,5 +10053,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		
 		return page.toString();
+	}
+	
+	public String checkProductOrService(String code){
+		
+		String type = "";	
+		if(code!=null && code.trim().length()>2){
+			
+			
+			String checkCode = code.substring(0, 2);
+			Integer number = Integer.valueOf(checkCode);
+			
+			
+			if(number.compareTo(70)>=0){
+				type = "S";
+			}else{
+				type = "P";
+			}
+		}
+		return type;	
 	}
 }
