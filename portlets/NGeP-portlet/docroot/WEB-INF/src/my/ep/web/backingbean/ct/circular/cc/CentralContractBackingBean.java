@@ -692,6 +692,21 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		        	}
 		        }
 	
+		        // Validate duplicated contract
+		        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		        	ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+		        	CircularReqDTO circularReqDTO = null;
+		        	for (CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
+		        		circularReqDTO = new CircularReqDTO();
+		        		circularReqDTO.setContractId(circularContract.getCtContract().getContractId());
+		        		CircularResDTO circularResDTO = circularSO.retrieveCircularByContractId(circularReqDTO);
+		        		if (circularResDTO.getCircular() != null) {
+		        			throw new EpException(MessageConst.ERROR_750047, 
+		        					new String[]{circularContract.getCtContract().getContractName(), circularResDTO.getCircular().getCircularNo()});
+		        		}
+		        	}
+		        }
+		        
 		        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					
 		        		if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
