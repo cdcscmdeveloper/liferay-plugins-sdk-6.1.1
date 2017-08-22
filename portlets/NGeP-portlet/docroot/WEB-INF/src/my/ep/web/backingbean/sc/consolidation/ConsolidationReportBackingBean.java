@@ -846,17 +846,17 @@ public class ConsolidationReportBackingBean extends
 					});
 
 			if (finalizationReports != null) {
-				if (_scQtFinalization.isReEvaluateCompReq()
+				/*if (_scQtFinalization.isReEvaluateCompReq()
 						|| _scQtFinalization.isReEvaluateTechReq()
 						|| _scQtFinalization.isReEvaluateFinReq()) {
 					for (ScQtFinalizationReport report : finalizationReports) {
-						if (report.getPmDocument().getDocDefinitionKey() == "KT") {
+						if (report.getPmDocument()!= null && report.getPmDocument().getDocDefinitionKey() == "KT") {
 							break;
 						}
 
 					}
 
-				}
+				}*/
 				this.getManagedBean().setFinalizationReports(
 						finalizationReports);
 			}
