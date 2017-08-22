@@ -10073,4 +10073,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		return type;	
 	}
+	
+	public String cancelToPublishTab() {
+
+		log.info("*********cancelToPublishTab*************");
+
+		return naviToMaintenancePage(false);
+	}
+	
+	
 }
