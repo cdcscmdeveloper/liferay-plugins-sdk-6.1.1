@@ -1004,14 +1004,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 						detail.setRecordStatus(true);
 						detail.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);	
 					} else if (detail.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-						log.info("updateRecommendDetails-->status not updated to active:" + detail.getRecordStatusFlg());
+						log.info("updateRecommendDetails-->recommendDtlId:" + detail.getRecommendDtlId() +", status not updated to active: " + detail.getRecordStatusFlg());
 					}
 				} else {
 					// update record status flag to suspended.
 					if (detail.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						detail.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);	
 					} else if (detail.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
-						log.info("updateRecommendDetails-->status not updated to suspended:" + detail.getRecordStatusFlg());
+						log.info("updateRecommendDetails-->recommendDtlId:" + detail.getRecommendDtlId() +", status not updated to suspended: " + detail.getRecordStatusFlg());
 					}
 					detail.setRecordStatus(false);
 				}	
