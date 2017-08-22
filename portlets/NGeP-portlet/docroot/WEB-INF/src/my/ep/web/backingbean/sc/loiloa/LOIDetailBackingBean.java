@@ -4047,7 +4047,7 @@ public class LOIDetailBackingBean extends
 									reportDTO = new NegotiationRecommendationReportDTO();
 									List<ScQtRecommend> scQtRecommends = scQtRecommendsByZone.get(zoneId);
 									if (CollectionUtils.isNotEmpty(scQtRecommends)) {
-										ScQtRecommend scQtRecommend = scQtRecommendsByZone.get(zoneId).get(0);
+										ScQtRecommend scQtRecommend = scQtRecommends.get(0);
 										if (CollectionUtils.isEmpty(
 												scQtRecommend.getAwardSupplierList())) {
 											processRecommendedSuppliersByPKG(scQtRecommends);
