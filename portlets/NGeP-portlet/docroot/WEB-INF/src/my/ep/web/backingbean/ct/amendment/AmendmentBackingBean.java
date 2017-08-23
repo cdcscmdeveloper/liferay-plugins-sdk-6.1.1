@@ -879,7 +879,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
 					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 				
-				String filePath = getAcknowledgmentReceiptContent();
+				String filePath = getAcknowledgmentReceiptContent(true);
 				CtAttachment attachment = new CtAttachment();
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 				attachment.setFileName("PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf");
@@ -4213,13 +4213,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     /**
 	 * The method used to retrieve the Acknowledgment Receipt content
 	 */
-    public String getAcknowledgmentReceiptContent() throws Exception {
+    public String getAcknowledgmentReceiptContent(boolean isCompleted) throws Exception {
     	String filePath = getManagedBean().getFileDirectory();		      
         File file = new File(filePath);
         file.mkdirs();
         
         String fileName = "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
-		filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+		if (isCompleted) {
+			AttachmentDateFormat attachmentFormat = new AttachmentDateFormat();
+			filePath = getManagedBean().getFileDirectory() +  "/" + attachmentFormat.format(fileName, null);
+		} else {
+			filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+		}
 		String content = null;	
 		content = getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
 		if (content != null) {
