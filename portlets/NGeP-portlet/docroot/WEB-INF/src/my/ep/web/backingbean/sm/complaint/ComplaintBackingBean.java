@@ -932,8 +932,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	}
 	
 	public void showDeleteDialog(SmAttachment attachment){
-		String msg = SmCommonUtil.getMessage("lbl.sm.complainant.upload.delete.confirm", new String[]{attachment.getFileName()});
-		
+		//String msg = SmCommonUtil.getMessage("lbl.sm.complainant.upload.delete.confirm", new String[]{attachment.getFileName()});
+		String msg = SmCommonUtil.getMessage("lbl.sm.complainant.upload.delete.confirm", null);
+
 		getManagedBean().setAttachmentDeleteMsg(msg);
 		getManagedBean().setSelectedAttachment(attachment);
 
