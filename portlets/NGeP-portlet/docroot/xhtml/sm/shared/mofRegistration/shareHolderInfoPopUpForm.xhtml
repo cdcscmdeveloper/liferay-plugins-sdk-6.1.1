@@ -1282,7 +1282,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
 							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{backingBean.assignQualification}" update="acadOutPanelId" />
+								listener="#{backingBean.assignQualification}" update="@this" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
