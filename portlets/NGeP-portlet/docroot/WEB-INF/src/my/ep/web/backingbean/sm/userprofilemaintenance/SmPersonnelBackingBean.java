@@ -48,7 +48,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -96,14 +95,10 @@ public class SmPersonnelBackingBean extends
 				resDTO.getPmCountry().getCountryId());
 
 		initAuthorizedPersonnels(smSupplier);
-		getManagedBean().setUserLimitTooltips(
-				SmCommonUtil
-						.getMessage("lbl.sm.userprofile.search.userlimit",
-								new String[] { getManagedBean()
-										.getMaxUserLimit() + "" }));
+		resetUserLimitMsg();
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
-		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null);
+		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null, null);
 	}
 
 	/**
@@ -132,7 +127,7 @@ public class SmPersonnelBackingBean extends
 					getManagedBean().getUpdateSmPersonnelMailingAddress()
 							.getSmAddress());
 
-		SmCommonUtil.redirectToPage("updateUserProfile.xhtml", "", null);
+		SmCommonUtil.redirectToPage("updateUserProfile.xhtml", "", null, null);
 	}
 
 	/**
@@ -186,7 +181,7 @@ public class SmPersonnelBackingBean extends
 			constructNoSupplierUserToDeactivateMsg(smSupplier);
 		}
 
-		SmCommonUtil.redirectToPage(redirectPage, "", null);
+		SmCommonUtil.redirectToPage(redirectPage, "", null, null);
 
 	}
 
@@ -1206,6 +1201,7 @@ public class SmPersonnelBackingBean extends
 						"confirmDialog.show()");
 			}
 		}
+		resetUserLimitMsg();
 	}
 
 	/**
@@ -1236,7 +1232,7 @@ public class SmPersonnelBackingBean extends
 			log.info("Result:" + resDTO.isSuccessful());
 			if (resDTO.isSuccessful()) {
 				SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
-						MessageConst.INFO_100002, null);
+						MessageConst.INFO_100002, null, null);
 				getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
 			} else {
 				throw new EpException(MessageConst.ERROR_722632);
@@ -1297,7 +1293,7 @@ public class SmPersonnelBackingBean extends
 					new String[] {
 							smPersonnel.getEmail(),
 							SmRuleHelper.getInstance().getEmailActivationDays()
-									+ "" });
+									+ "" }, null);
 		} else {
 			throw new EpException(MessageConst.ERROR_722633);
 		}
@@ -1830,16 +1826,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	/**
-	 * Check whether the login user have active application that still running
-	 * 
-	 * @return boolean
-	 */
-	private boolean isHavePendingTaskList(SmSupplier supplier) {
-		boolean retVal = SmApplicationUtil.checkActiveSmApplForSupp(supplier);
-		return retVal;
-	}
-
-	/**
 	 * Set whether the personnel is deactivated or not
 	 * 
 	 * @param SmPersonnel
@@ -1915,8 +1901,26 @@ public class SmPersonnelBackingBean extends
 		return epRole;
 	}
 
-	private int calculateFinalOffSet(int currentPage) {
-		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
-		return offSet;
+	private void resetUserLimitMsg() {
+		// reset user limit message
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSmPersonnelList())) {
+			int balanceUser = getManagedBean().getMaxUserLimit()
+					- getManagedBean().getSmPersonnelList().size();
+
+			if (balanceUser > 0) {
+				getManagedBean().setUserLimitTooltips(
+						SmCommonUtil.getMessage(
+								"lbl.sm.userprofile.search.userlimit",
+								new String[] { balanceUser + "" }));
+			} else {
+				getManagedBean()
+						.setUserLimitTooltips(
+								SmCommonUtil
+										.getMessage(
+												"lbl.sm.userprofile.search.userlimit.max",
+												null));
+			}
+		}
 	}
 }
