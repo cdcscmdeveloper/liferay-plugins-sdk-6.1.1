@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.amendment;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -3940,7 +3941,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void UploadLetterOfAcceptance(FileUploadEvent event) throws Exception {
 		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		
+
 		UploadedFile item = event.getFile();
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
@@ -3953,8 +3954,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		filePath = filePath + "/" + fileFormat;
 		CtAttachment attachment = new CtAttachment();
 			if(getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
-				
-				  WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage .load(item.getInputstream());
+				  InputStream is = new ByteArrayInputStream(item.getContents());
+				  WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage .load(is);
 		            WordprocessingMLPackage wordMLPackage1 = WordprocessingMLPackage.createPackage();
 		            wordMLPackage1 = wordMLPackage.getMainDocumentPart().convertAltChunks();
 		            PdfSettings pdfSettings = new PdfSettings();
