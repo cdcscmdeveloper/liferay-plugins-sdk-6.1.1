@@ -36,12 +36,12 @@ public class ChangeExpiredMofPersonnelToBasicJob implements Job{
 					isChangeStatus = true;
 				}
 
-				if(!isChangeStatus){
+				/*if(!isChangeStatus){
 					boolean isHasActiveTransaction = SmApplicationUtil.hasActiveTransactions(mofAccount.getSmSupplier());
 					if(!isHasActiveTransaction){
 						isChangeStatus = true;
 					}
-				}
+				}*/
 				
 				//change role to basic
 				if(isChangeStatus){
