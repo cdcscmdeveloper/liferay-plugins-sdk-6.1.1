@@ -101,6 +101,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> approvedCategoryList;
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierCategory> suppProfileOrHistoryCategoryList;
+	private List<SmSupplierCategory> pendingApprovedCategoryList;
 	private List<SmSupplierBank> smSupplierBankList;
 	private List<PmCategoryL3> dockYardFacilitiesVOList;
 	private List<PmCategoryL3> storeFacilitiesVOList;
@@ -1422,6 +1423,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setUpdatePersonnelPage(boolean updatePersonnelPage) {
 		this.updatePersonnelPage = updatePersonnelPage;
+	}
+
+	public List<SmSupplierCategory> getPendingApprovedCategoryList() {
+		return pendingApprovedCategoryList;
+	}
+
+	public void setPendingApprovedCategoryList(
+			List<SmSupplierCategory> pendingApprovedCategoryList) {
+		this.pendingApprovedCategoryList = pendingApprovedCategoryList;
 	}
 
 }
