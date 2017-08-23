@@ -74,6 +74,7 @@
 						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload)}"
 						popupWidgetVar="dnSuppFileUploadDlg"
 						attachment="#{scLoaReport.scLoaReportAttachment}"
+						update=":#{p:component('contentsTbl')}"
 						readonly="#{directLOABackingBean.managedBean.readOnly}"
 						rowIndex="#{rowIndex}">
 						<f:setPropertyActionListener for="actionEvent"

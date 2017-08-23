@@ -74,6 +74,7 @@
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
 					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
+					update=":#{p:component('contentsTbl')}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
 					rowIndex="#{rowIndex}">
 					<f:setPropertyActionListener for="actionEvent"
