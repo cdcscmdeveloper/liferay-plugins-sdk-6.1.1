@@ -60,7 +60,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
-				<h:inputText style="width:96%" value="#{scLoaReport.title}"
+				<h:inputText style="width:60%" value="#{scLoaReport.title}"
 				    label="#{lbl['lbl.sc.content']}"
 				    id="contendId"
 				    required="true" 
@@ -77,7 +77,7 @@
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
-			<p:column style="width:10%;text-align: center;"
+			<p:column style="width:auto;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
@@ -91,6 +91,7 @@
 					rendered="#{(isEditableStatus and !lOADetailBackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
 						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload)}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
+					update=":#{p:component('contentsTbl')}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
 					rowIndex="#{rowIndex}">
 					<f:setPropertyActionListener for="actionEvent"
