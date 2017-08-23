@@ -62,6 +62,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.revertApplication.RevertApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -8306,83 +8307,84 @@ public class SmApplicationBackingBean extends
 	 * @param SmAssociateCompany
 	 *            assoc
 	 */
-	public void onBlurSetAssociateCompany(SmAssociateCompany assoc) {
+	public void onBlurSetAssociateCompany() {
+		SmAssociateCompany assoc = getManagedBean().getSelectedAssocCompany();
 		if (assoc != null && !StringUtils.isBlank(assoc.getRegNo())) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 			reqDTO.setRegNo(assoc.getRegNo());
-			SmMofAccount acc = SmServiceLookup.getMofAccountSO()
-					.retriveMofAccountBySupplierRegNo(reqDTO).getMofAccount();
-			if (acc != null) {
-				assoc.setMofNo(acc.getMofNo());
-				if (acc.getSmSupplier() != null) {
-					assoc.setCompanyName(acc.getSmSupplier().getCompanyName());
-					SmAddress assocAddr = assoc.getSmAddress();
-					if (acc.getSmSupplier().getSmAppl() != null
-							&& acc.getSmSupplier().getSmAppl()
-									.getSmCompanyBasic() != null
-							&& !EntityHelper.isCollectionEmpty(acc
-									.getSmSupplier().getSmAppl()
-									.getSmCompanyBasic()
-									.getSmCompanyAddresses())) {
-						if (acc.getSmSupplier().getSmAppl().getSmCompanyBasic()
-								.getSmCompanyAddresses().get(0).getSmAddress() != null
-								&& assocAddr != null) {
-							SmCompanyBasic accCompBasic = acc.getSmSupplier()
-									.getSmAppl().getSmCompanyBasic();
-							SmAddress accAddr = accCompBasic
-									.getSmCompanyAddresses().get(0)
-									.getSmAddress();
+			SmSupplier supplier = null;
+			List<SmSupplier> suppliers = SmServiceLookup.getRegistrationSO()
+					.retrieveActiveSupplierByRegNo(reqDTO).getSmSuppliers();
+			supplier = !EntityHelper.isCollectionEmpty(suppliers) ? suppliers
+					.get(0) : supplier;
 
-							assocAddr.setAddress1(accAddr.getAddress1());
-							assocAddr.setAddress2(accAddr.getAddress2());
-							assocAddr.setAddress3(accAddr.getAddress3());
-							assocAddr.setPostcode(accAddr.getPostcode());
-							if (accAddr.getPmCountry() != null) {
-								assocAddr.setCountryId(accAddr.getPmCountry()
-										.getCountryId());
-								assocAddr.setPmCountry(SmCommonUtil
-										.getInstance().getCountryById(
-												assocAddr.getCountryId()));
-								onChangeCountry(
-										assocAddr,
-										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-							}
-							if (accAddr.getPmState() != null) {
-								assocAddr.setStateId(accAddr.getPmState()
-										.getStateId());
-								assocAddr.setPmState(SmCommonUtil.getInstance()
-										.getStateById(assocAddr.getStateId()));
-								onChangeState(
-										assocAddr,
-										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-							}
-							if (accAddr.getPmDistrict() != null) {
-								assocAddr.setDistrictId(accAddr.getPmDistrict()
-										.getDistrictId());
-								assocAddr.setPmDistrict(SmCommonUtil
-										.getInstance().getDistrictById(
-												assocAddr.getDistrictId()));
-								onChangeDistrict(
-										assocAddr,
-										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-							}
-							if (accAddr.getPmCity() != null) {
-								assocAddr.setCityId(accAddr.getPmCity()
-										.getCityId());
-								assocAddr.setPmCity(SmCommonUtil.getInstance()
-										.getCityById(assocAddr.getCityId()));
-								onChangeCity(
-										assocAddr,
-										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-							}
-							assoc.setPhoneCountry(accCompBasic
-									.getPhoneCountry());
-							assoc.setPhoneArea(accCompBasic.getPhoneArea());
-							assoc.setPhoneNo(accCompBasic.getPhoneNo());
-							assoc.setFaxCountry(accCompBasic.getFaxCountry());
-							assoc.setFaxArea(accCompBasic.getFaxArea());
-							assoc.setFaxNo(accCompBasic.getFaxNo());
+			if (supplier != null
+					&& !EntityHelper.isCollectionEmpty(supplier
+							.getSmMofAccounts())
+					&& supplier.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				assoc.setMofNo(supplier.getSmMofAccounts().get(0).getMofNo());
+				assoc.setCompanyName(supplier.getCompanyName());
+				SmAddress assocAddr = assoc.getSmAddress();
+				if (supplier.getSmAppl() != null
+						&& supplier.getSmAppl().getSmCompanyBasic() != null
+						&& !EntityHelper.isCollectionEmpty(supplier.getSmAppl()
+								.getSmCompanyBasic().getSmCompanyAddresses())) {
+					if (supplier.getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0).getSmAddress() != null
+							&& assocAddr != null) {
+						SmCompanyBasic accCompBasic = supplier.getSmAppl()
+								.getSmCompanyBasic();
+						SmAddress accAddr = accCompBasic
+								.getSmCompanyAddresses().get(0).getSmAddress();
+
+						assocAddr.setAddress1(accAddr.getAddress1());
+						assocAddr.setAddress2(accAddr.getAddress2());
+						assocAddr.setAddress3(accAddr.getAddress3());
+						assocAddr.setPostcode(accAddr.getPostcode());
+						if (accAddr.getPmCountry() != null) {
+							assocAddr.setCountryId(accAddr.getPmCountry()
+									.getCountryId());
+							assocAddr.setPmCountry(SmCommonUtil.getInstance()
+									.getCountryById(assocAddr.getCountryId()));
+							onChangeCountry(
+									assocAddr,
+									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
 						}
+						if (accAddr.getPmState() != null) {
+							assocAddr.setStateId(accAddr.getPmState()
+									.getStateId());
+							assocAddr.setPmState(SmCommonUtil.getInstance()
+									.getStateById(assocAddr.getStateId()));
+							onChangeState(
+									assocAddr,
+									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+						}
+						if (accAddr.getPmDistrict() != null) {
+							assocAddr.setDistrictId(accAddr.getPmDistrict()
+									.getDistrictId());
+							assocAddr
+									.setPmDistrict(SmCommonUtil.getInstance()
+											.getDistrictById(
+													assocAddr.getDistrictId()));
+							onChangeDistrict(
+									assocAddr,
+									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+						}
+						if (accAddr.getPmCity() != null) {
+							assocAddr
+									.setCityId(accAddr.getPmCity().getCityId());
+							assocAddr.setPmCity(SmCommonUtil.getInstance()
+									.getCityById(assocAddr.getCityId()));
+							onChangeCity(
+									assocAddr,
+									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+						}
+						assoc.setPhoneCountry(accCompBasic.getPhoneCountry());
+						assoc.setPhoneArea(accCompBasic.getPhoneArea());
+						assoc.setPhoneNo(accCompBasic.getPhoneNo());
+						assoc.setFaxCountry(accCompBasic.getFaxCountry());
+						assoc.setFaxArea(accCompBasic.getFaxArea());
+						assoc.setFaxNo(accCompBasic.getFaxNo());
 					}
 				}
 			}
