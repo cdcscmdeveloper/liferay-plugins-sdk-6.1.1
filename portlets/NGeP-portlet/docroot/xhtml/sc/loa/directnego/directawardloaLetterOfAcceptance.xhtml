@@ -11,7 +11,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
 		id="directLoaLetterOfAcceptancePanel" toggleable="true">
 		
-		<table width="100%">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}" /> <p:outputLabel
@@ -60,7 +60,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
-				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}"
+				<h:inputText style="width:60%" label="#{lbl['lbl.sc.content']}"
 					id="contendId" value="#{scLoaReport.title}" required="true"
 					disabled="#{directLOABackingBean.managedBean.readOnly}"
 					rendered="#{empty scLoaReport.pmDocument}">
@@ -76,7 +76,7 @@
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
-			<p:column style="width:10%;text-align: center;"
+			<p:column style="width:auto;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
@@ -88,6 +88,7 @@
 						rendered="#{(isEditableStatus and !directLOABackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
 						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload)}"
 						popupWidgetVar="scDocDnUploadDlg"
+						update=":#{p:component('contentsTbl')}"
 						attachment="#{scLoaReport.scLoaReportAttachment}"
 						readonly="#{directLOABackingBean.managedBean.readOnly}"
 						rowIndex="#{rowIndex}">
