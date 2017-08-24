@@ -132,7 +132,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			
 			FulfilmentResDTO resDTO = adjustmentSO.saveAdjustment(reqDTO);
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_745013;
+				String messageId = MessageConst.INFO_745020;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				}
