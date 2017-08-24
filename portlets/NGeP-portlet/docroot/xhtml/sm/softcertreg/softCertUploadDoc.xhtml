@@ -101,7 +101,7 @@
 								<td style="width: 5% !important;vertical-align: baseline !important;border-style: none !important;">
 									<h:outputText value="#{status.index + 1})"  />
 								</td>
-								<td style="border-style: none !important;">
+								<td style="border-style: none !important;width: 95%;">
 									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" 
 										rendered="#{empty suppDoc.smSofcertDocFiles or empty suppDoc.smSofcertDocFiles[0].fileName}"/>
 									<p:commandLink ajax="false" value="#{suppDoc.pmDocument.docName}" 
