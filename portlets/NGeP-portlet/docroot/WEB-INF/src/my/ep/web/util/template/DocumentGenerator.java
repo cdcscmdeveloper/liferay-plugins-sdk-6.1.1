@@ -5,6 +5,7 @@ package my.ep.web.util.template;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
@@ -51,7 +52,10 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
-import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.html.simpleparser.HTMLWorker;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * Singleton Helper For Document Generator.
@@ -152,7 +156,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
 		
-		ITextRenderer render = new ITextRenderer();
 		
         if (html != null) {
         	html = html.replaceAll("&amp;nbsp;", "");
@@ -160,10 +163,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         			   .replaceAll("&", "&amp;");
         	html = html.replaceAll("&amp;#62", "&#62");
           	html = html.replaceAll("&amp;#60", "&#60");
-        	 
-            render.setDocumentFromString(html);
-            render.layout();
-            render.createPDF(os);
+          	
+          	Document document = new Document();
+          	PdfWriter writer = PdfWriter.getInstance(document, os);
+          	document.open();
+          	HTMLWorker htmlWorker = new HTMLWorker(document);
+          	htmlWorker.parse(new StringReader(html));
+          	document.close();
         }
         
         os.flush();
