@@ -3,16 +3,14 @@
  */
 package my.ep.web.util.template;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
-
-import my.ep.factory.EpLogger;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -53,9 +51,11 @@ import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.html.simpleparser.HTMLWorker;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
+
+import my.ep.factory.EpLogger;
 
 
 /**
@@ -164,13 +164,14 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         			   .replaceAll("&", "&amp;");
         	html = html.replaceAll("&amp;#62", "&#62");
           	html = html.replaceAll("&amp;#60", "&#60");
-          	
-           
+          	       
           	Document document = new Document();
-          	 PdfWriter.getInstance(document, os);
+          	PdfWriter writer =  PdfWriter.getInstance(document, os);
           	document.open();
-          	HTMLWorker htmlWorker = new HTMLWorker(document);
-          	htmlWorker.parse(new StringReader(html));
+          	
+            InputStream is = new ByteArrayInputStream(html.getBytes());
+            XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+            
           	document.close();
         }
         
