@@ -3580,16 +3580,23 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			log.info("PublicSearchCategoryPagingDataModel - pageChangeListener");
 			ICategoryCodeSO categoryCodeSO;
 			try {
-				ISearchBean<PmCategoryL3> searchBeanData = getSearchBeanData(searchBean);
+				CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
+				//ISearchBean<PmCategoryL3> searchBeanData = getSearchBeanData(searchBean);
 				categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								ICategoryCodeSO.class);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setFetchEntities(true);
-				reqDTO.setSearchBean(searchBeanData);
+				reqDTO.setCatDesc(ccPulicSearchBean.getCatDesc());
+				reqDTO.setSelectedSupplierType(ccPulicSearchBean.getSelectedSupplierType());
+				reqDTO.setSelectedBumiPercentage(ccPulicSearchBean.getSelectedBumiPercentage());
+				reqDTO.setSelectedCompanyType(ccPulicSearchBean.getSelectedCompanyType());
+				reqDTO.setHomeOperated(ccPulicSearchBean.getHomeOperated());
+				reqDTO.setPaidUpCapitalSearch(ccPulicSearchBean.getPaidUpCapital());
+				reqDTO.setSearchBean(searchBean);
 				CategoryCodeResDTO resDTO = categoryCodeSO
-						.searchAllCategoryL3(reqDTO);
+						.searchPublicAllCategoryL3(reqDTO);
 				if(resDTO.isSuccessful() && resDTO.getCategoryL3ResultBean() !=null){				
 					return resDTO.getCategoryL3ResultBean();
 				}
@@ -3609,6 +3616,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @param searchBean
 	 * @return ISearchBean<PmCategoryL3>
 	 */
+	@Deprecated
 	private ISearchBean<PmCategoryL3> getSearchBeanData(
 			ISearchBean<PmCategoryL3> searchBean) {
 		CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
@@ -3680,8 +3688,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		
 		if(ccPulicSearchBean.getSelectedCompanyType() !=null){
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(
+						
+			
+//			searchBean.getDataFilterBeans().add(
+		SearchMultiFilterBean ctMulti1SearchBean =	new SearchMultiFilterBean(
 							new SearchMultiFilterBean(
 									new SearchMultiFilterBean(
 										new SearchFilterBean("byCompType",
@@ -3696,7 +3706,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 														DbValueConst.RECORD_STATUS_ACTIVE)),
 														new SearchFilterBean("pmCategoryRestrs.companyTypeId.recordStatusFlg",
 																SearchOperator.OPERATOR_EQUALS.value(),
-																DbValueConst.RECORD_STATUS_ACTIVE)));
+																DbValueConst.RECORD_STATUS_ACTIVE));
+		
+//		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
+//				.getInstance().getServiceObject(
+//						ModuleCodeConst.PROFILE_MANAGEMENT,
+//						ICategoryCodeSO.class);
+//		SearchMultiFilterBean ctMulti2SearchBean = 
+//				new SearchMultiFilterBean(ctMulti1SearchBean, 
+//						new SearchFilterBean("categoryL3Id",
+//				SearchOperator.OPERATOR_IN.value(),
+//				categoryCodeSO.getCateogryL3WithoutCompTypeAndRestrictionSQ(), 
+//				SearchCondition.CONDITION_OR.value()));
+//		
+//		searchBean.getDataFilterBeans().add(ctMulti2SearchBean);
 		}
 		
 		if(ccPulicSearchBean.getSelectedBumiPercentage() !=null){
