@@ -5,6 +5,7 @@ package my.ep.web.util.template;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
@@ -51,7 +52,10 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
-import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.html.simpleparser.HTMLWorker;
+import com.lowagie.text.pdf.PdfWriter;
 
 
 /**
@@ -161,17 +165,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         	html = html.replaceAll("&amp;#62", "&#62");
           	html = html.replaceAll("&amp;#60", "&#60");
           	
-            ITextRenderer renderer = new ITextRenderer();
-            renderer.setDocumentFromString(html);
-            renderer.layout();
-            renderer.createPDF(os);
-          	
-          /*	Document document = new Document();
+           
+          	Document document = new Document();
           	 PdfWriter.getInstance(document, os);
           	document.open();
           	HTMLWorker htmlWorker = new HTMLWorker(document);
           	htmlWorker.parse(new StringReader(html));
-          	document.close();*/
+          	document.close();
         }
         
         os.flush();
