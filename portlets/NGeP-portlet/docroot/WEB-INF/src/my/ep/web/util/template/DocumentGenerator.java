@@ -165,7 +165,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
           	html = html.replaceAll("&amp;#60", "&#60");
           	
           	Document document = new Document();
-          	PdfWriter writer = PdfWriter.getInstance(document, os);
+          	 PdfWriter.getInstance(document, os);
           	document.open();
           	HTMLWorker htmlWorker = new HTMLWorker(document);
           	htmlWorker.parse(new StringReader(html));
