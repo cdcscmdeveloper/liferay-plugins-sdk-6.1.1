@@ -3798,8 +3798,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
-//			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();
-//			List<Long> suspendItemId = new ArrayList<Long>();
+			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();
 			for(FlTempItem flTempItem : flRequest.getFlTempItems()) {
 				flItemAddr = new FlFulfilmentItemAddr();
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
@@ -3810,14 +3809,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}else{
 					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
 				}
-				contractItemReqDTO.setIgnoreRecordStatus(true);//TODO
 				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
-//				if(contractItemResDTO.getCtContractItem() == null){
-//					suspendedItem.add(flTempItem);
-//					suspendItemId.add(flTempItem.getScRequestItem().getRequestNoteItemId());
-//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,"Inactive contract item: "+flTempItem.getScRequestItem().getItemName()+" has been removed by system."));
-//					continue;
-//				}
+				if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
+						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
+						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+						contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
+					suspendedItem.add(flTempItem);
+				}
 				flItemAddr.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
 				flItemAddr.setItemType(flTempItem.getScRequestItem().getItemType());
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
@@ -3853,20 +3851,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 				itemAddrList.add(flItemAddr);
 			}
-//			flRequest.getFlTempItems().removeAll(suspendedItem);
-//			List<FlFulfilmentItemAddr> deleteFlItemAddrs = new ArrayList<FlFulfilmentItemAddr>();
-//			if(getManagedBean().getFlRequest().getFlDeliveryAddresses() != null){
-//				for(FlDeliveryAddress deliveryAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-//					for(FlFulfilmentItemAddr itemAddr : deliveryAddr.getFlFulfilmentItemAddr()){
-//						if(suspendItemId.contains(itemAddr.getScRequestItem().getRequestNoteItemId())){
-//							deleteFlItemAddrs.add(itemAddr);
-//						}
-//					}
-//				}
-//				for(FlDeliveryAddress deliveryAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-//					deliveryAddr.getFlFulfilmentItemAddr().removeAll(deleteFlItemAddrs);
-//				}
-//			}
+			String suspendedItemName = null;
+			if(suspendedItem != null && !suspendedItem.isEmpty()){
+				for(FlTempItem suspendItem : suspendedItem){
+					if(suspendedItemName != null){
+						suspendedItemName = suspendedItemName+", "+suspendItem.getScRequestItem().getItemName();
+					}else{
+						suspendedItemName = suspendItem.getScRequestItem().getItemName();
+					}
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, 
+						MessageUtils.getMessage(MessageConst.ERROR_740054, 
+								new String[]{suspendedItemName}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			
 			if(itemAddrList.size()>0) {
 				sortItems(itemAddrList);
 				getManagedBean().getItemAddrList().addAll(itemAddrList);
@@ -4155,7 +4153,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						}
 					}
 				}
-				
+				validateSuspensionItems(action);
 				validateChargelineLimit(action);
 			}
 			
@@ -4320,6 +4318,41 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	
+	private void validateSuspensionItems(String action) {
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ||
+				action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
+			List<FlFulfilmentItemAddr> suspendedItem = new ArrayList<FlFulfilmentItemAddr>();
+			for(FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
+				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+				contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractItemReqDTO.setUomId(itemAddr.getScRequestItem().getUom().getUomId());
+				if(itemAddr.getScRequestItem().getCmItem() != null && itemAddr.getScRequestItem().getCmItem().getExtensionCode() != null){
+					contractItemReqDTO.setItemCode(itemAddr.getScRequestItem().getCmItem().getExtensionCode());
+				}else{
+					contractItemReqDTO.setItemCode(itemAddr.getScRequestItem().getTempUnspscCode());
+				}
+				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
+				if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
+						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
+						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+						contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
+					suspendedItem.add(itemAddr);
+				}
+			}
+			String suspendedItemName = null;
+			if(suspendedItem != null && !suspendedItem.isEmpty()){
+				for(FlFulfilmentItemAddr suspendItem : suspendedItem){
+					if(suspendedItemName != null){
+						suspendedItemName = suspendedItemName+", "+suspendItem.getScRequestItem().getItemName();
+					}else{
+						suspendedItemName = suspendItem.getScRequestItem().getItemName();
+					}
+				}
+				throw new EpException(MessageConst.ERROR_740054, new String[]{suspendedItemName});
+			}
+		}
+	}
 	/**
 	 * Check mof account expired date and effective date.
 	 *
