@@ -80,7 +80,6 @@
 			<p:column style="width:auto;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
@@ -106,21 +105,18 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton rendered="#{!isPendingVerification}"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"
 				action="#{lOADetailBackingBean.downloadAllReports}" />
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 				styleClass="ui-button" update="@form" onclick="printBtn.jq.click();"
 				actionListener="#{lOADetailBackingBean.showVerifyButton()}"
 				rendered="#{isPendingVerification}" />
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 				partialSubmit="true" process="@form" styleClass="ui-button"
 				widgetVar="printBtn" style="display:none;"
 				actionListener="#{lOADetailBackingBean.downloadAllReports}" />
