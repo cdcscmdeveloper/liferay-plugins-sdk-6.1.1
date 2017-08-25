@@ -69,7 +69,7 @@
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
 				<h:panelGroup id="SuratSetujuTerimaId"
-					rendered="#{scLoaReport.pmDocument.docDefinitionKey eq 'SP' and isPendingSubmissionStatus}">
+					rendered="#{(scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'UD' or scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'UP') and isPendingSubmissionStatus}">
 					<span style="color: red;">*</span>
 				</h:panelGroup>
 
