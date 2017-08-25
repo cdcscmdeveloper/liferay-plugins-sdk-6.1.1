@@ -54,7 +54,7 @@
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
 				<h:panelGroup id="PerakuanPenerimaanId"
-					rendered="#{scLoaReport.pmDocument.docDefinitionKey eq 'AL' and isSupplierAckStatus}">
+					rendered="#{scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'SU' and isSupplierAckStatus}">
 					<span style="color: red;">*</span>
 				</h:panelGroup>
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
