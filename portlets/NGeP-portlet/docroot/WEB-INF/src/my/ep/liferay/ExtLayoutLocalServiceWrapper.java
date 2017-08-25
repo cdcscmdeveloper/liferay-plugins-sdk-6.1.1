@@ -35,7 +35,6 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -157,40 +156,8 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
 			}
 		}
-		
-		if(logedInUserId > 0) {
-			log.info("current logged in user Id: " + logedInUserId);
-			try {
-				User user = UserLocalServiceUtil.getUser(logedInUserId);
-				if(user != null) {
-					String loginId = user.getScreenName();
-					if(loginId != null) {
-						MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-						reqDTO.setLoginId(loginId);
-						
-						IMofAccountSO mofAccountSO = null;
-						
-						try {
-							mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
-							MofAccountResDTO resDTO = mofAccountSO.checkExpiredDowngradedToBasic(reqDTO);
-							log.info("Supplier Status: " + resDTO.getBasicMOFRenewFlg());
-							
-							PortalSessionThreadLocal.getHttpSession().setAttribute(logedInUserId + "validToRenewMOF", resDTO.getBasicMOFRenewFlg());
-							return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
-	
-						} finally {
-							mofAccountSO = null;
-						}
-					}
-				}
-			} catch(SystemException se) {
-				log.error(se.getMessage());
-			} catch(PortalException pe) {
-				log.error(pe.getMessage());
-			}
-		}
-		
-		/*if(FacesContext.getCurrentInstance() != null) {
+			
+		if(FacesContext.getCurrentInstance() != null) {
 
 			long userId = 0;
 			if(new FacesScopes().getUserSessionBean() != null) {
@@ -213,8 +180,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			} finally {
 				mofAccountSO = null;
 			}
-		}*/
-//		return SupplierManagementConst.BASIC_ONLY;
+		}
 		return SupplierManagementConst.MOF_CAN_RENEW;
 	}	
 	
