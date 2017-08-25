@@ -56,9 +56,9 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<Layout>	getLayouts(int start, int end) throws SystemException {
+	/*public List<Layout>	getLayouts(int start, int end) throws SystemException {
 		return super.getLayouts(start, end);
-	}
+	}*/
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout) throws SystemException {
 		
@@ -67,7 +67,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		Iterator<Layout> iter = layouts.iterator();
 		
 		Integer validBasicToRenewMOF = validBasicToRenewMOF();
-		System.out.println("11 validBasicToRenewMOF(): " + validBasicToRenewMOF);
+		log.info("11 validBasicToRenewMOF(): " + validBasicToRenewMOF);
 		
 		while (iter.hasNext()) {
 			Layout layout = iter.next();
@@ -75,60 +75,17 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
 
 				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
-					System.out.println("11 removing register MOF");
+					log.info("11 removing register MOF");
 					iter.remove();
 				}
 				
 				if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
-					System.out.println("11 removing renew MOF");
+					log.info("11 removing renew MOF");
 					iter.remove();
 				}
 			}
 		}
 		
-		/*if(!isBasicSupplierUser()) {
-			log.info("inside not Basic");
-			return super.getLayouts( groupId,  privateLayout);
-		} else {
-			log.info("inside Basic");
-			for(Layout layout : super.getLayouts( groupId,  privateLayout)) {
-				log.info(layout.getFriendlyURL());
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
-					log.info("IN RENEW AND REGISTER");
-					if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && validBasicToRenewMOF()) {
-						log.info("IN RENEW");
-						layouts.add(layout);
-					} else if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && !validBasicToRenewMOF()) {
-						log.info("IN REGISTER");
-						layouts.add(layout);
-					}
-				} else {
-					log.info("NOT BOTH");
-					layouts.add(layout);
-				}
-			}
-		}*/
-		
-		/*List<Layout> layouts = new ArrayList<Layout>();
-		
-		for(Layout layout : super.getLayouts( groupId,  privateLayout)) {
-			if(isBasicSupplierUser()) {
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL)) {
-					if(validBasicToRenewMOF()) {
-						layouts.add(layout);
-					}
-				} else if(layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
-					layouts.add(layout);
-				} else {
-					layouts.add(layout);
-				}
-			} else {
-				layouts.add(layout);
-			}			
-		}*/
-//		remoteLayout(layouts, "/catalogue-search");
-		
-//		return super.getLayouts( groupId,  privateLayout);
 		return layouts;
 	}
 	
@@ -139,7 +96,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		Iterator<Layout> iter = layouts.iterator();
 		
 		Integer validBasicToRenewMOF = validBasicToRenewMOF();
-		System.out.println("22 validBasicToRenewMOF(): " + validBasicToRenewMOF);
+		log.info("22 validBasicToRenewMOF(): " + validBasicToRenewMOF);
 		
 		while (iter.hasNext()) {
 			Layout layout = iter.next();
@@ -147,12 +104,12 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
 				
 				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL)  && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
-					System.out.println("22 removing register MOF");
+					log.info("22 removing register MOF");
 					iter.remove();
 				}
 				
 				if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
-					System.out.println("22 removing renew MOF");
+					log.info("22 removing renew MOF");
 					iter.remove();
 				}
 			}
@@ -161,7 +118,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		return layouts;
 	}
 	
-	public List<Layout>	getLayouts(long groupId, boolean privateLayout, long[] layoutIds) throws SystemException, PortalException {
+	/*public List<Layout>	getLayouts(long groupId, boolean privateLayout, long[] layoutIds) throws SystemException, PortalException {
 
 		return super.getLayouts( groupId,  privateLayout, layoutIds);
 	}
@@ -183,7 +140,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	public List<Layout>	getScopeGroupLayouts(long groupId, boolean privateLayout) throws SystemException {
 
 		return super.getScopeGroupLayouts(groupId, privateLayout);
-	}
+	}*/
 	
 	private Integer validBasicToRenewMOF() {
 		
@@ -195,17 +152,13 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		
 		if(PortalSessionThreadLocal.getHttpSession() != null) {
 			if(PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF") != null) {
-				System.out.println("returning value from http session: " + PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF"));
+				log.info("returning value from http session: " + PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF"));
 				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
 			}
 		}
 			
 		if(FacesContext.getCurrentInstance() != null) {
-			
-			/*if(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("validToRenewMOF") != null) {
-				return (boolean)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("validToRenewMOF");
-			}*/
-			
+
 			long userId = 0;
 			if(new FacesScopes().getUserSessionBean() != null) {
 				userId = new FacesScopes().getUserSessionBean().getUserId();
@@ -223,9 +176,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 				
 				PortalSessionThreadLocal.getHttpSession().setAttribute(logedInUserId + "validToRenewMOF", resDTO.getBasicMOFRenewFlg());
 				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
-				
-//				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("validToRenewMOF", resDTO.isExpired());
-//				return (boolean)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("validToRenewMOF");
+
 			} finally {
 				mofAccountSO = null;
 			}
@@ -233,7 +184,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		return SupplierManagementConst.BASIC_ONLY;
 	}	
 	
-	public boolean isBasicSupplierUser() {
+	/*public boolean isBasicSupplierUser() {
 		List<Role> loginUserRoles = getUserRoleList();
 		log.info("loginUserRoles: " + loginUserRoles);
 		for (Role r : loginUserRoles) {
@@ -243,17 +194,11 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 				return true;
 			}
 		}
-		
-		/*if(hasRoleUser(BASIC_SUPPLIER_ADMIN)) {
-			return true;
-		}
-		if(hasRoleUser(BASIC_SUPPLIER_USER)) {
-			return true;
-		}*/
-		return false;
-	}
 
-	public boolean hasRoleUser(String roleName) {
+		return false;
+	}*/
+
+	/*public boolean hasRoleUser(String roleName) {
 
 		boolean hasRoleUser = false;
 		if(FacesContext.getCurrentInstance() != null) {
@@ -267,9 +212,9 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	        }        
 		}
 		return hasRoleUser;
-	}
+	}*/
 	
-	public String getScreenName() {
+	/*public String getScreenName() {
 
 		if(FacesContext.getCurrentInstance() != null) {
 			ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
@@ -280,14 +225,14 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			}
 		}
 		return null;
-	}
+	}*/
 	
-	public List<Role> getUserRoleList() {
+	/*public List<Role> getUserRoleList() {
 		List<Role> userRoleList = new ArrayList<Role>();
 		try {
 			if(FacesContext.getCurrentInstance() != null) {
 				if(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(USER_ROLE_SESSION_KEY) != null) {
-					System.out.println("Getting role session");
+					log.info("Getting role session");
 					userRoleList = (List<Role>)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(USER_ROLE_SESSION_KEY);
 				} else {
 				
@@ -302,16 +247,16 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 								userGroupRoleList.addAll(UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId(), group.getGroupId()));
 							}
 									
-							System.out.println("userGroupRoleList: " + userGroupRoleList);
+							log.info("userGroupRoleList: " + userGroupRoleList);
 							for (UserGroupRole userGroupRole : userGroupRoleList) {
-						        /* Get Role object based on userGroupRole.getRoleId() */
+						         Get Role object based on userGroupRole.getRoleId() 
 						        Role role = RoleLocalServiceUtil.getRole(userGroupRole.getRoleId());
 						        
-						        System.out.println("role: " + role.getName());
+						        log.info("role: " + role.getName());
 						        userRoleList.add(role);
 						    }
 							if(userRoleList != null && userRoleList.size() > 0){
-								System.out.println("userRoleList adding to session: " + userRoleList);
+								log.info("userRoleList adding to session: " + userRoleList);
 								FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(USER_ROLE_SESSION_KEY, userRoleList);
 							}
 						}
@@ -323,9 +268,9 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			e.printStackTrace();
 		}			
 		return userRoleList;
-	}
+	}*/
 	
-	private void getHttpSession() {
+	/*private void getHttpSession() {
 		if(FacesContext.getCurrentInstance() != null) {
 			ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 			PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
@@ -333,7 +278,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			
 			HttpSession session = httpServletRequest.getSession();
 		}
-	}
+	}*/
 	
 /*	public static void main(String[] args) {
 		String roleName = "BASIC_SUPPLIER_ADMIN";
