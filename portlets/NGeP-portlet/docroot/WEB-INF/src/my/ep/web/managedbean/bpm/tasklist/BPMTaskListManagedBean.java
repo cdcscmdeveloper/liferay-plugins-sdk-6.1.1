@@ -23,6 +23,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.KPICodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -54,6 +55,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
+	private static final long serialVersionUID = 1L;
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
 	private static Map bpmMap = null;
@@ -522,10 +524,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle());
 						       }
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
-						    	   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.review.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    	   if (worklistItemVO.getDocStatus() != null
+											&& (ContractStatusConst.CR_PENDING_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() || 
+												ContractStatusConst.CR_PENDING_REVISION_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() )) {
+						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.review.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    	   }
 						       }
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVISE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
-						    	   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    	   if (worklistItemVO.getDocStatus() != null
+											&& ContractStatusConst.CR_PENDING_REVISION.intValue() == worklistItemVO.getDocStatus().intValue()) {
+						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    	   }
 						       }
 						}
 					}
