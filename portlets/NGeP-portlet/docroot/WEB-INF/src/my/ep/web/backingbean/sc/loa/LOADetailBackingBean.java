@@ -486,11 +486,7 @@ public class LOADetailBackingBean extends
 				if(getManagedBean().getCurrentStatusId() != null){
 					if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
 						if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getDocType() != null){
-//							if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
 								getManagedBean().setSelectedTabIndex(1);
-//							} else{
-//								getManagedBean().setSelectedTabIndex(5);
-//							}
 						}
 					}
 				}
@@ -4153,7 +4149,11 @@ public class LOADetailBackingBean extends
 			}
 
 			if (resDTO != null) {
-				if (resDTO.getScLoa() != null) {
+				ScLoa scLoa = resDTO.getScLoa();
+				if (scLoa != null) {
+					if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa.getPmStatus().getStatusId())){
+						getManagedBean().setSelectedTabIndex(1);
+					}
 					return editLOAAction(resDTO.getScLoa());
 				} else if (resDTO.getScLoi() != null) {
 					return null;
