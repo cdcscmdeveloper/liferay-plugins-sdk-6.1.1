@@ -144,6 +144,9 @@ import org.docx4j.convert.in.Doc;
 import org.docx4j.convert.out.pdf.PdfConversion;
 import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.openpackaging.parts.relationships.Namespaces;
+import org.docx4j.relationships.Relationship;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -3950,14 +3953,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		 
 		String fileFormat= attachmentFormat.format(item.getFileName(), null);
-		
 		filePath = filePath + "/" + fileFormat;
 		CtAttachment attachment = new CtAttachment();
-			if(getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
+			/*if(getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
 				  InputStream is = new ByteArrayInputStream(item.getContents());
 				  WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage .load(is);
-		            WordprocessingMLPackage wordMLPackage1 = WordprocessingMLPackage.createPackage();
+		            
+				    MainDocumentPart mdp = wordMLPackage.getMainDocumentPart();
+		            List<Relationship> hfRels = new ArrayList<Relationship>();
+		            for (Relationship rel : mdp.getRelationshipsPart().getRelationships().getRelationship() ) {
+		         
+		                if (rel.getType().equals(Namespaces.HYPERLINK)
+		                        || rel.getType().equals(Namespaces.RELATIONSHIPS)) {
+		                    hfRels.add(rel);
+		                }
+		            }
+		            for (Relationship rel : hfRels ) {
+		                mdp.getRelationshipsPart().removeRelationship(rel);
+		            }
+				  
+				    WordprocessingMLPackage wordMLPackage1 = WordprocessingMLPackage.createPackage();
 		            wordMLPackage1 = wordMLPackage.getMainDocumentPart().convertAltChunks();
+		         
+		            
+		            
+		            
 		            PdfSettings pdfSettings = new PdfSettings();
 		            org.docx4j.convert.out.pdf.PdfConversion conversion = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage1);
 			        OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
@@ -3971,13 +3991,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	          OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
 	          conversion.output(out, pdfSettings);
 		}else {
-		
+		*/
 			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		    fileOuputStream.write(item.getContents());
 		    fileOuputStream.close();
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setFileName(item.getFileName());
-		}
+		//}
 		
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
