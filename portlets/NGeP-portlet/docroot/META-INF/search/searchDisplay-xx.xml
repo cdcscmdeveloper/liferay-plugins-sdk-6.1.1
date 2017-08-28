@@ -2167,8 +2167,8 @@
 		<bean id="PM_ORG_PROFILE_SPEC_MAINTENANCE" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
 		<property name="daoClass"
-			value="my.ep.persistence.dao.sc.quationtender.QTDetailDAO" />
-		<property name="searchMethod" value="retrieveSpecMaintenancePtj" />
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveQTPtj" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
