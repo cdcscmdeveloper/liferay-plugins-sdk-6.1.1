@@ -5808,17 +5808,17 @@ public class QTDetailBackingBean extends
 	 * @param orgProfile
 	 * 		the PmOrgProfile instance
 	 */
-	public void SpecMaintenacepostUpdateOrgProfileListener(BaseEntity scQt) {
+	public void SpecMaintenacepostUpdateOrgProfileListener(BaseEntity orgProfile) {
 		debugLogger("SpecMaintenacepostUpdateOrgProfileListener");
-		if (scQt instanceof ScQt) {
-			ScQt scqt = (ScQt)scQt;
+		if (orgProfile instanceof PmOrgProfile) {
+			PmOrgProfile pmOrgProfile = (PmOrgProfile)orgProfile;
 		IOrgProfileSO orgProfileSO = null;
 		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
 		orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		
 		OrgProfileReqDTO ptjreqDTO = new OrgProfileReqDTO();
-		ptjreqDTO.setOrgProfileId(scqt.getPmOrgProfile().getOrgProfileId());
+		ptjreqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 		PmOrgProfile orgProfileptj = orgProfileSO.retrieveOrgProfileByProfileId(
 				ptjreqDTO).getPmOrgProfile();
 		log.info("SpecMaintenacepostUpdateOrgProfileListener"+orgProfileptj);
