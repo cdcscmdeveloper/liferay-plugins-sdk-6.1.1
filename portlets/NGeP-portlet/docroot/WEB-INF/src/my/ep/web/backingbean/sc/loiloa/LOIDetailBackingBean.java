@@ -4892,6 +4892,7 @@ public class LOIDetailBackingBean extends
 			
 			// set the checkbox or radio button of supplier selected
 			// Multiple LOI or Online Bidding
+			List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 			Map<Long,ScQtRecommendDtl> recommendDtlsMap = new HashMap<Long,ScQtRecommendDtl>();
 			for (ScQtRecommendDtl scQtRecommendDtl 
 										: scQtRecommend.getRecommendDtls()) {
@@ -4915,11 +4916,14 @@ public class LOIDetailBackingBean extends
 							evaluationResultDtl.setScQtRecommendDtl(
 										new ArrayList<ScQtRecommendDtl>());
 						}
+						ScQtRecommendDtl recommendDtl = recommendDtlsMap.get(supplierId);
 						evaluationResultDtl.getScQtRecommendDtl()
-							.add(recommendDtlsMap.get(supplierId));						
+							.add(recommendDtl);						
 						
-						scQtRecommend.getAwardSupplierList()
-									 .add(evaluationResultDtl);
+						if (recommendDtl != null && recommendDtlIds.contains(String.valueOf(recommendDtl.getRecommendDtlId()))) {
+							scQtRecommend.getAwardSupplierList()
+							 .add(evaluationResultDtl);
+						}						
 						
 						if (isItemized) {
 							calculateOfferedPrice(
