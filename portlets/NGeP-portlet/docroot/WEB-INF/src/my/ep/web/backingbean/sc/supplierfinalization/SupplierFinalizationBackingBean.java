@@ -1526,6 +1526,7 @@ public class SupplierFinalizationBackingBean extends
 							
 							if (!(detail.getRecordStatusFlg().equals(
 									DbValueConst.RECORD_STATUS_REJECTED))) {
+								debugLogger("filterRecommendedSuppliersList.recordStatusFlg-->recommendDtlId:" + detail.getRecommendDtlId() +", status: " + detail.getRecordStatusFlg());
 								detail.setRecordStatus(true);
 								detail.setRecordStatusFlg(
 										DbValueConst.RECORD_STATUS_ACTIVE);
@@ -1582,6 +1583,7 @@ public class SupplierFinalizationBackingBean extends
 						.equals(DbValueConst.RECORD_STATUS_REJECTED) || 
 							recommendDtl.getRecordStatusFlg()
 								.equals(DbValueConst.RECORD_STATUS_CANCELLED))) {
+					debugLogger("processAndSetDeletedRecommendDtls.recordStatusFlg-->recommendDtlId:" + recommendDtl.getRecommendDtlId() +", status: " + recommendDtl.getRecordStatusFlg());
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(
 							DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -1594,6 +1596,7 @@ public class SupplierFinalizationBackingBean extends
 					&& !toBeAddedSet.contains(recommendDtl)) {
 				recommendDtl.setDeleted(true);
 				removedRecommendDtlSet.add(recommendDtl);
+				debugLogger("processAndSetDeletedRecommendDtls.deleted-->recommendDtlId:" + recommendDtl.getRecommendDtlId() +", status: " + recommendDtl.getRecordStatusFlg());
 			}
 		}
 		scQtRecommend.getRemoveSupplierList()
@@ -5399,7 +5402,7 @@ public class SupplierFinalizationBackingBean extends
 				= this.getManagedBean().getSelectedItemList();
 		if (selectedItemList == null
 				|| CollectionUtils.isEmpty(selectedItemList)) {
-			log.info("No supplier has been selected or no item has been selected");
+			debugLogger("No supplier has been selected or no item has been selected");
 			return;
 		}
 
@@ -5500,7 +5503,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setAwardSupplier(null);
 			this.getManagedBean().setSelectedItem(null);
 		} else {
-			log.info("There are no selected items");
+			debugLogger("There are no selected items");
 			return;
 		}
 	}
@@ -5688,10 +5691,14 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
+		StringBuilder msg = new StringBuilder(message.toString());
+		if (getManagedBean().getScQt() != null) {
+			msg.append(" qtId:" + getManagedBean().getScQt().getQtId());
 		}
-		log.info(message);
+		if (log.isDebugEnabled()) {
+			log.debug(msg);
+		}		
+		log.info(msg);
 	}
 
 	/**
@@ -6170,19 +6177,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private Long getAwardedSupplierId(ScQtRecommend scQtRecommend) {
-		Long awardedSupplierId = null;		
-		if (scQtRecommend != null && CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
-			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
-				if (recommendDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					awardedSupplierId = recommendDtl.getSupplier().getSupplierId();
-					break;
-				}
-			}	
-		}			
-		return awardedSupplierId;
-	}
-	
 	private List<QtEvaluationResultDtlBean> getCachedSuppliersFromMap(Long zoneId, Long itemId) {
 		if (zoneId == null && itemId == null) {
 			log.error("zoneId : " + zoneId + "; itemId : " + itemId);
@@ -6379,10 +6373,6 @@ public class SupplierFinalizationBackingBean extends
 			scQtRecommend.getRecommendDtls().clear();
 			scQtRecommend.getRecommendDtls().addAll(toBeAddedSet);
 		}			
-	}
-	
-	private void resetSupplierAwardOrShortlistedFlag(Long zoneId, Long ItemId) {
-		
 	}
 	
 	private void checkAndResetPreviouslyAwardedSupplier(

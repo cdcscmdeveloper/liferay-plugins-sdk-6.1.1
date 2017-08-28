@@ -1286,7 +1286,7 @@ public class LOIDetailBackingBean extends
 	 * Page navigation from loi details page to loi loa list.
 	 */
 	public void backToPrevious() {
-		log.info("backToPrevious");
+		debugLogger("backToPrevious");
 		retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
@@ -1791,7 +1791,7 @@ public class LOIDetailBackingBean extends
 						.getSmCompanyAddresses()) {
 					if (AddressType.CONTACT_ADDRESS.value().equals(
 							smCompanyAddress.getAddressType())) {
-						log.info("found hq address");
+						debugLogger("found hq address");
 
 						scLoi.setSupplierBranch(supplierBranchAsHQ);
 						
@@ -1812,7 +1812,7 @@ public class LOIDetailBackingBean extends
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
 				if (supplierBranch.getBranchName().equals(
 						selectedSupplierBranchName)) {
-					log.info("found branch address");
+					debugLogger("found branch address");
 
 					scLoi.setSupplierBranch(supplierBranch.getBranchName());
 					
@@ -2764,10 +2764,14 @@ public class LOIDetailBackingBean extends
 	 *            the message
 	 */
 	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
+		StringBuilder msg = new StringBuilder(message.toString());
+		if (getManagedBean().getScQt() != null) {
+			msg.append(" qtId:" + getManagedBean().getScQt().getQtId());
 		}
-		log.info(message);
+		if (log.isDebugEnabled()) {
+			log.debug(msg);
+		}		
+		log.info(msg);
 	}
 
 	/**
@@ -2977,7 +2981,7 @@ public class LOIDetailBackingBean extends
 			} else {
 				supplierAddress = "&lt;&lt;Address&gt;&gt;";
 			}
-			log.info("supplierAddress" + supplierAddress);
+			debugLogger("supplierAddress" + supplierAddress);
 			//context.put("supplierAddress", supplierAddress);
 			StringBuilder supplierAddressTable = null;
 			if(StringUtils.isNotBlank(supplierAddress)){
@@ -2988,7 +2992,7 @@ public class LOIDetailBackingBean extends
 					supplierAddressTable.append("<br />");
 				}
 			}
-			log.info("SupplierAddressTable" + supplierAddressTable);
+			debugLogger("SupplierAddressTable" + supplierAddressTable);
 			context.put("supplierAddressTable", supplierAddressTable);
 
 			String title = scLoiLoa.getTitle();
@@ -4413,15 +4417,15 @@ public class LOIDetailBackingBean extends
 		context.put("contractDuration", contractDuration);
 		String ptjName=" ";
 		if(null!=this.getManagedBean().getCurrentStatusId()){
-			log.info("=====if generateOfferedAndQTDtlsPdf"+this.getManagedBean().getCurrentStatusId());
-			log.info("publish date"+this.getManagedBean().getScQtFinalization().getScQt().getPublishDate());
-			log.info("current date"+this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
+			debugLogger("=====if generateOfferedAndQTDtlsPdf"+this.getManagedBean().getCurrentStatusId());
+			debugLogger("publish date"+this.getManagedBean().getScQtFinalization().getScQt().getPublishDate());
+			debugLogger("current date"+this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
 		 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?this.getManagedBean().getScQtFinalization().getScQt().getPublishDate() : this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
 		}else{
-			log.info("=====else generateOfferedAndQTDtlsPdf");
+			debugLogger("=====else generateOfferedAndQTDtlsPdf");
 			ptjName=pmOrgProfile.getOrgName();
 		}
-		log.info("ptjName generateOfferedAndQTDtlsPdf"+ptjName);
+		debugLogger("ptjName generateOfferedAndQTDtlsPdf"+ptjName);
 		context.put("ptj", ptjName);
 		String totalSuppliers = "";
 		if (this.getManagedBean().getLois() != null) {
@@ -4477,15 +4481,15 @@ public class LOIDetailBackingBean extends
 		// pmOrgProfile.getParentOrgProfile().getOrgName());
 		String ptjName=" ";
 		if(null!=this.getManagedBean().getCurrentStatusId()){
-			log.info("=====if generateCoverPdfFromVelocity"+this.getManagedBean().getCurrentStatusId());
-			log.info("publish date"+this.getManagedBean().getScQtFinalization().getScQt().getPublishDate());
-			log.info("current date"+this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
+			debugLogger("=====if generateCoverPdfFromVelocity"+this.getManagedBean().getCurrentStatusId());
+			debugLogger("publish date"+this.getManagedBean().getScQtFinalization().getScQt().getPublishDate());
+			debugLogger("current date"+this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
 		 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?this.getManagedBean().getScQtFinalization().getScQt().getPublishDate() : this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
 		}else{
-			log.info("=====else generateCoverPdfFromVelocity");
+			debugLogger("=====else generateCoverPdfFromVelocity");
 			ptjName=pmOrgProfile.getOrgName();
 		}
-		log.info("ptjName generateCoverPdfFromVelocity"+ptjName);
+		debugLogger("ptjName generateCoverPdfFromVelocity"+ptjName);
 		context.put("agency",ptjName);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
@@ -4752,7 +4756,7 @@ public class LOIDetailBackingBean extends
 							recommendDtl.setRecordStatusFlg(
 									DbValueConst.RECORD_STATUS_SUSPENDED);
 						} else {
-							log.info("awardSelectedSupplierAction-->recommendDtlId:" + recommendDtl.getRecommendDtlId() +", status not update: " + recommendDtl.getRecordStatusFlg());
+							debugLogger("awardSelectedSupplierAction-->recommendDtlId:" + recommendDtl.getRecommendDtlId() +", status not update: " + recommendDtl.getRecordStatusFlg());
 						}
 					}
 				}
