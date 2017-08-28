@@ -1004,14 +1004,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 						detail.setRecordStatus(true);
 						detail.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);	
 					} else if (detail.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-						log.info("updateRecommendDetails-->recommendDtlId:" + detail.getRecommendDtlId() +", status not updated to active: " + detail.getRecordStatusFlg());
+						debugLogger("updateRecommendDetails-->recommendDtlId:" + detail.getRecommendDtlId() +", status not updated to active: " + detail.getRecordStatusFlg());
 					}
 				} else {
 					// update record status flag to suspended.
 					if (detail.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						detail.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);	
 					} else if (detail.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
-						log.info("updateRecommendDetails-->recommendDtlId:" + detail.getRecommendDtlId() +", status not updated to suspended: " + detail.getRecordStatusFlg());
+						debugLogger("updateRecommendDetails-->recommendDtlId:" + detail.getRecommendDtlId() +", status not updated to suspended: " + detail.getRecordStatusFlg());
 					}
 					detail.setRecordStatus(false);
 				}	
@@ -2322,10 +2322,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
+		StringBuilder msg = new StringBuilder(message.toString());
+		if (getManagedBean().getScQt() != null) {
+			msg.append(" qtId:" + getManagedBean().getScQt().getQtId());
 		}
-		log.info(message);
+		if (log.isDebugEnabled()) {
+			log.debug(msg);
+		}		
+		log.info(msg);
 	}
 
 	/**
