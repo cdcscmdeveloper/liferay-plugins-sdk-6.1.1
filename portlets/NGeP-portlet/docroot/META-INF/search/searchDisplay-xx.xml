@@ -2165,21 +2165,21 @@
 	</bean>
 	
 		<bean id="PM_ORG_PROFILE_SPEC_MAINTENANCE" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="qtId" />
+		<property name="pk" value="orgProfileId" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.sc.quationtender.QTDetailDAO" />
 		<property name="searchMethod" value="retrieveSpecMaintenancePtj" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmOrgProfile.pmOrgValidity.orgCode" />
+					<property name="columnName" value="pmOrgValidity.orgCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.ta.org.code" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmOrgProfile.pmOrgValidity.orgName" />
+					<property name="columnName" value="pmOrgValidity.orgName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.ta.org.name" />
