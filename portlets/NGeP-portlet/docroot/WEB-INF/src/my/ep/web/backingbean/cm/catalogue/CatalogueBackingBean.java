@@ -6580,18 +6580,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 */
 	public void updateValidateGroupingDates(int index) {
-
+		
 		CmPromotionTierPricing promotionTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getCmPromotionTierPricings()
 				.get(index);
 
 		List<CmPromotionTierPricing> list = this.getManagedBean()
 				.getSelectedMaintainItem().getCmPromotionTierPricings();
-
+		
+		
 		int tempIndex = index + 1;
-
+		
 		while (tempIndex < this.getManagedBean().getSelectedMaintainItem()
 				.getCmPromotionTierPricings().size()) {
+			
 			CmPromotionTierPricing pricing = list.get(tempIndex);
 			if (pricing.getPromo_group_id() == promotionTierPricing
 					.getPromo_group_id()
@@ -6601,6 +6603,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.compareTo(
 							promotionTierPricing.getParentPrice()
 							.getStartDate()) == 0) {
+				
 				pricing.setStartDate(promotionTierPricing.getStartDate());
 				pricing.setEndDate(promotionTierPricing.getEndDate());
 			}
@@ -7184,7 +7187,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
 		Date startDate = tier.getStartDate();
 		Date endDate = tier.getEndDate();
-		updateTierDate(tier.getStand_group_id(), startDate, endDate, tier.getPricingType());
+		updateTierDate(tier.getPromo_group_id(), startDate, endDate, tier.getPricingType());
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 
 		for(int i = 0; i < index; i++){
@@ -7252,7 +7255,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		case "04":
 			for(CmPricing pricing : this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings()){
-				if(pricing.getStand_group_id() == standGroupId){
+				if(pricing.getPromo_group_id() == standGroupId){
 					pricing.setStartDate(startDate);
 					pricing.setEndDate(endDate);
 				}
@@ -7270,7 +7273,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		case "08":	
 			for(CmPricing pricing : this.getManagedBean()
 					.getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
-				if(pricing.getStand_group_id() == standGroupId){
+				if(pricing.getPromo_group_id() == standGroupId){
 					pricing.setStartDate(startDate);
 					pricing.setEndDate(endDate);
 				}
@@ -7294,7 +7297,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getSelectedMaintainItem().getCmPromotionTierPricings().get(index);
 		Date startDate = tier.getStartDate();
 		Date endDate = tier.getEndDate();
-		updateTierDate(tier.getStand_group_id(), startDate, endDate, tier.getPricingType());
+		updateTierDate(tier.getPromo_group_id(), startDate, endDate, tier.getPricingType());
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 
 		for(int i = 0; i < index; i++){
@@ -10080,6 +10083,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		return naviToMaintenancePage(false);
 	}
+	
+	
+
 	
 	
 }
