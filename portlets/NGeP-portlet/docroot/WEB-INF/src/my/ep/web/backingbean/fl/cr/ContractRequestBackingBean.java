@@ -3810,12 +3810,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
 				}
 				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
-				if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
-						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
-						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
-						contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
-					suspendedItem.add(flTempItem);
+				if(getManagedBean().getTaskName() != null){
+					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+							contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
+						suspendedItem.add(flTempItem);
+					}
 				}
+				
 				flItemAddr.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
 				flItemAddr.setItemType(flTempItem.getScRequestItem().getItemType());
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
@@ -4333,12 +4336,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					contractItemReqDTO.setItemCode(itemAddr.getScRequestItem().getTempUnspscCode());
 				}
 				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
-				if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
-						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
-						getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
-						contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
-					suspendedItem.add(itemAddr);
+				if(getManagedBean().getTaskName() != null){
+					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+							contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
+						suspendedItem.add(itemAddr);
+					}
 				}
+				
 			}
 			String suspendedItemName = null;
 			if(suspendedItem != null && !suspendedItem.isEmpty()){
