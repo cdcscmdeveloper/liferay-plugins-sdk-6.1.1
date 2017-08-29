@@ -10797,10 +10797,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 			this.getManagedBean().setFinancialScoring(null);
 			this.getManagedBean().setOfferPricePackage(null);
-			if(reqDTO.isZonesQt()){
+			if(reqDTO.isZonesQt() || (this.getManagedBean().getQt().isZonal()&& SourcingConstants.FINANCIAL_DOCTYPE
+					.equalsIgnoreCase(specType)) && this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(getSpecMaintenance())){
 				this.getManagedBean().setZoneGeneralTrees(
 						new ArrayList<TreeNode>());
 			}
+			
 			this.getManagedBean().setPanelSpecExistedOrNot(false);
 			specCommitteeResetData();
 			// settemplateSpecList(savedCheckLists);
