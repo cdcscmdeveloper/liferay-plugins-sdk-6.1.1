@@ -1882,6 +1882,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
+			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
 		}
 	}
 	
@@ -2059,10 +2060,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (outputValue.equalsIgnoreCase("SLOA")) {
 				getManagedBean().setSelectedTabIndex(2);
 			}
-			if (outputValue.equalsIgnoreCase("SDEC")) {
+			if (outputValue.equalsIgnoreCase("PB")) {
 				getManagedBean().setSelectedTabIndex(3);
 			}
-			if (outputValue.equalsIgnoreCase("PB")) {
+			if (outputValue.equalsIgnoreCase("SDEC")) {
 				getManagedBean().setSelectedTabIndex(4);
 			}
 		}
