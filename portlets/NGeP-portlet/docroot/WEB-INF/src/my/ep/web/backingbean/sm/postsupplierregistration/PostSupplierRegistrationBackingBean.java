@@ -157,8 +157,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							if(wfStatus != null){
 								if(wfStatus.getPmStatus() != null && 
 									(wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
-									wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)){
-									getManagedBean().setFlowStatus(3);
+									wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
+									wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
+									getManagedBean().setFlowStatus(4);
 									
 									path = RESUBMIT_APPLICATION + wfStatus.getDocId();
 									getManagedBean().setFlowStatus(3);
