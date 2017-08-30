@@ -113,6 +113,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
@@ -655,6 +656,7 @@ public class CreateQtBackingBean extends
 			}
 			
 				// Procurement Mode
+				PmPtjSpecialApproval ptjSpecialApproval = getManagedBean().getPtjSpecialApproval();
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO
 						.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
@@ -662,8 +664,11 @@ public class CreateQtBackingBean extends
 				if (isQuotationThresHold || isPanel) {
 					parameterReqDTO
 							.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
-				} else if (scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval() && amount.intValue() < this
-						.getManagedBean().getPtjSpecialApproval().getProcureAmt().intValue()){
+				} else if (BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
+						ptjSpecialApproval != null &&
+						ptjSpecialApproval.getProcureAmt() != null &&
+						amount != null &&
+						amount.compareTo(ptjSpecialApproval.getProcureAmt()) >= 0){
 					this.getManagedBean().setProcMethodDropdownPresent(true);
 					//scQt.setProcurementMode(new PmParameter());
 				}else {
@@ -2747,11 +2752,11 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 			}
 			scQt.setPtjSpecialApproval(ptjSpecialApproval);
-			this.getManagedBean().setProcMethodDropdownPresent(true);
 		} else {
 			scQt.setPtjSpecialApproval(null);
-			this.getManagedBean().setProcMethodDropdownPresent(false);
+			
 		}
+		this.getManagedBean().setProcMethodDropdownPresent(false);
 		
 		BigDecimal amount = scQt.getEstimatedAmount() != null ? scQt
 				.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
