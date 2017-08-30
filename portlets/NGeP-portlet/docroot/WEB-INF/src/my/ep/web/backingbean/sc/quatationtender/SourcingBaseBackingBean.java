@@ -155,7 +155,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -2825,11 +2825,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		boolean isProcumentMethodDropdownReq = false;
 		BigDecimal amount = scQt.getEstimatedAmount() != null ? scQt
 				.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
-		if (amount != null
-				&& !scQt.isPanel()
-				&& !isQuotationThresHold(amount)
-				&& amount.intValue() < scQt.getPtjSpecialApproval()
-						.getProcureAmt().intValue()) {
+		PmPtjSpecialApproval ptjSpecialApproval = scQt.getPtjSpecialApproval();
+		if (!scQt.isPanel() && 
+				!isQuotationThresHold(amount) &&
+				BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
+				ptjSpecialApproval != null &&
+				ptjSpecialApproval.getProcureAmt() != null &&
+				amount != null &&
+				amount.compareTo(ptjSpecialApproval.getProcureAmt()) >= 0) {
 			isProcumentMethodDropdownReq = true;
 		}
 		return isProcumentMethodDropdownReq;
