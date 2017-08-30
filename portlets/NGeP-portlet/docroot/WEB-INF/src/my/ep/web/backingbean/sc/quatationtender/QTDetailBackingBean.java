@@ -747,7 +747,7 @@ public class QTDetailBackingBean extends
 					.setContractNo(selectedScQt.getExistingContractNo());
 			this.getManagedBean().setPtjSpecialApproval(
 					selectedScQt.getPtjSpecialApproval());
-			this.getManagedBean().setPanel(scQt.isPanel());
+			this.getManagedBean().setPanel(selectedScQt.isPanel());
 			
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
@@ -788,7 +788,7 @@ public class QTDetailBackingBean extends
 						if (selectedScQt.getScQtSupplierCriteria() != null &&
 								selectedScQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
 							List<TplSpecZoneDtl> specZoneDtls = selectedScQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
-							populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+							populateZoneDetailIntoTreeNode(selectedScQt, specZoneDtls);
 						}
 					}
 				}
@@ -802,14 +802,14 @@ public class QTDetailBackingBean extends
 						new PmParameter());
 			}
 
-			setScQtTrackingDairyObject(scQt);
+			setScQtTrackingDairyObject(selectedScQt);
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean()
 					.getCurrentStatusId())) {
 				this.getManagedBean().setCreateQt(true);
-				if (scQt.getObtainSpecialApproval() != null
-						&& scQt.getObtainSpecialApproval()) {
+				if (selectedScQt.getObtainSpecialApproval() != null
+						&& selectedScQt.getObtainSpecialApproval()) {
 					this.getManagedBean().setProcMethodDropdownPresent(
-							checkForProcumentMethodDropdown(scQt));
+							checkForProcumentMethodDropdown(selectedScQt));
 				}
 				
 			}
