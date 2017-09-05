@@ -4023,6 +4023,19 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70018":
+					if(!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1) &&
+						!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)){
+						if (supplierType != null
+								&& supplierType
+										.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+							throw new EpException(
+									MessageConst.ERROR_MYIDENTITY_70032_G2G);
+						} else {
+							throw new EpException(
+									MessageConst.ERROR_MYIDENTITY_70032);
+						}
+					}
 				}
 			}
 		} catch (Exception ex) {
