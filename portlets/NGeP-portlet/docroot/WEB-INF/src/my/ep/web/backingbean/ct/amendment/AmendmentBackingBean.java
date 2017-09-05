@@ -2060,11 +2060,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (outputValue.equalsIgnoreCase("SLOA")) {
 				getManagedBean().setSelectedTabIndex(2);
 			}
-			if (outputValue.equalsIgnoreCase("PB")) {
-				getManagedBean().setSelectedTabIndex(3);
-			}
-			if (outputValue.equalsIgnoreCase("SDEC")) {
-				getManagedBean().setSelectedTabIndex(4);
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+	    			&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+	    			&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+	    					ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+				if (outputValue.equalsIgnoreCase("PB")) {
+					getManagedBean().setSelectedTabIndex(3);
+				}
+				if (outputValue.equalsIgnoreCase("SDEC")) {
+					getManagedBean().setSelectedTabIndex(4);
+				}
+			} else {
+				if (outputValue.equalsIgnoreCase("SDEC")) {
+					getManagedBean().setSelectedTabIndex(3);
+				}
 			}
 		}
 	}
