@@ -699,8 +699,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		        	for (CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 		        		circularReqDTO = new CircularReqDTO();
 		        		circularReqDTO.setContractId(circularContract.getCtContract().getContractId());
-		        		if (circularContract.getCtCircularVer() != null) {
+		        		// Filtered out own previously added contract
+		        		if (circularContract.getCtCircularVer() != null
+		        				&& circularContract.getCtCircularVer().getCircularVerId() != null) {
+		        			// this is catered for pending submission / pending approval scenario
 		        			circularReqDTO.setCircularVerId(circularContract.getCtCircularVer().getCircularVerId());
+		        		} else {
+		        			// this is catered for pending creation scenario
+		        			if (getManagedBean().getCircularVer() != null
+		        					&& getManagedBean().getCircularVer().getCtCircular() != null
+		        					&& getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null) {
+		        				circularReqDTO.setCircularVerId(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer().getCircularVerId());
+		        			}
 		        		}
 		        		CircularResDTO circularResDTO = circularSO.retrieveCircularByContractId(circularReqDTO);
 		        		if (circularResDTO.getCircular() != null) {
