@@ -8,6 +8,7 @@
 		<div align="left" class="header-info header-spacing" style="width: 100%">
 			<table style="width: 100%">
 				<tr>
+				<c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo != null}">
 					<td style="width:9%">
 						<h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
@@ -20,7 +21,16 @@
 						<br/>
 							#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}
 				   </td>
-
+				 </c:if>
+				 <c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo == null}">
+					<td style="width:9%">
+						<h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+					</td>
+					<td class="header-info-text">
+							#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+				   </td>
+				 </c:if>
 					<td style="width:3%"><h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.ptj.name']}" /></td>
 					<td class="header-info-text">
