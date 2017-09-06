@@ -7493,6 +7493,13 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
+		if (recommendation.equals("APPROVE")
+				&& getManagedBean().getSmAppl().getPmRegStatus() != null
+				&& getManagedBean().getSmAppl().getPmRegStatus().getPmStatus() != null) {
+			getManagedBean().setPoRecommendStatusId(
+					getManagedBean().getSmAppl().getPmRegStatus().getPmStatus()
+							.getStatusId());
+		}
 		RequestContext.getCurrentInstance()
 				.execute("submitApprvrDialog.show()");
 	}
