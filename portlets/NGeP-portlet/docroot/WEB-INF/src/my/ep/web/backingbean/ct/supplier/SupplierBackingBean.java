@@ -24,7 +24,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1119,16 +1118,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		try {			
 		       context = new VelocityContext();	
 		       if (isSupplierRole()) {
-		    	   context.put("isContractAdmin", false);
 		    	   vmFile = (!getManagedBean().isViewOnly()) ? ContractConst.DOCPATH_CT_FACTORING_SUPPLIER : ContractConst.DOCPATH_CT_FACTORING_CA;
 		       } else if (isContractAdmin() || isApproverRole()) {
-		    	   context.put("isContractAdmin", true);
 		    	   vmFile = ContractConst.DOCPATH_CT_FACTORING_CA;		    	   
 		       }
 		       templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE;
 		       if (vmFile !=null && templateName != null) {
 		    	   UserReqDTO userReqDTO =  new UserReqDTO();
-		    	   context.put("imgUrl", getServerUrl()+"NGeP-portlet/css/images/gov.png");
 		    	   
 		    	   if (getManagedBean().getFactoring().getCreatedBy() == null) {
 		    		   userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
@@ -1233,18 +1229,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}  catch (Exception e) {
 			throw new EpException(e.toString());
 		} 
-	}
-
-	/**
-	 * The method used to retrieve the base URL.
-	 * 
-	 * @return url  the base URL
-	 */
-	private String getServerUrl() {
-		PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		return requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 	}
 
 	/**
