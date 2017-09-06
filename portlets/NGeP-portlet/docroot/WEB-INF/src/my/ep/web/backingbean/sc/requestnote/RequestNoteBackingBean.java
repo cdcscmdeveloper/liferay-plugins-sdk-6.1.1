@@ -3460,6 +3460,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					context.put("itemName", supplierItem.getRequestNoteItem().getCmItem().getItemName());
 					context.put("desc", supplierItem.getRequestNoteItem().getItemDesc() != null ? supplierItem.getRequestNoteItem().getItemDesc() : "T/B" );
 					context.put("uom", supplierItem.getRequestNoteItem().getUom() != null ? supplierItem.getRequestNoteItem().getUom().getUomName() : "T/B");
+					context.put("priceType", supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "T/B");
+					context.put("supplierName", supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
+					if(supplierItem.getScPrInquiy().getIsStockAvailable() != null){
+						context.put("stockAvailable", supplierItem.getScPrInquiy().getIsStockAvailable() == 0 ? "Tidak" : "Ya");						
+					}
+					else{
+						context.put("stockAvailable", "T/B");
+					}
 				}	
 				marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
 				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
@@ -3473,7 +3481,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				marketSummaryAndPIBean.setUnitPrice(supplierItemPrice.getItemPrice() !=null ? amountDF.format(supplierItemPrice.getItemPrice()).toString() : "T/B");			    
 				marketSummaryAndPIBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName().replaceAll("&", "&#38;") : "T/B");
 				if(supplierItem.getScPrInquiy().getIsStockAvailable() != null){
-				   marketSummaryAndPIBean.setStockAvailability(supplierItem.getScPrInquiy().getIsStockAvailable() == 0 ? "No" : "Yes");
+				   marketSummaryAndPIBean.setStockAvailability(supplierItem.getScPrInquiy().getIsStockAvailable() == 0 ? "Tidak" : "Ya");
 				}else {
 				   marketSummaryAndPIBean.setStockAvailability("T/B");
 				}

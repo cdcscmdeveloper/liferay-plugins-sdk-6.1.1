@@ -66,23 +66,30 @@
 		   <td> Unit Ukuran </td>
 		   <td> $uom </td>
 	 </tr>
+	 <tr>
+		   <td> Jenis Harga </td>
+		   <td> $priceType </td>
+	 </tr>
+	 <tr>
+		   <td> Pembekal </td>
+		   <td> $supplierName </td>
+	 </tr>
+	 <tr>
+		   <td> Ketersediaan Stok </td>
+		   <td> $stockAvailable </td>
+	 </tr>
   </table>
   
    <br/>
    <br/>
  <table class="table2">
 		<tr>
-		<th width="15%"> Pembekal </th>
-		<th width="8%">  Tempoh Penghantaran </th>
-		<th width="8%"> Pesanan Minima </th>
-		<th width="15%"> Maklumat Tambahan </th>
-		<th width="10%"> Jenis Harga </th>
-		<th width="10%"> Harga Katalog (RM) </th>
-		<th width="13%"> Ketersediaan Stok </th>
 		<th width="6%"> Zon </th>
+		<th width="8%">  Tempoh Penghantaran </th>
+		<th width="10%"> Harga Katalog (RM) </th>
+		<th width="10%"> Harga Baru Ditawarkan (RM) </th>
 		<th width="8%"> Dari Kuantiti </th>
 		<th width="7%"> Kepada Kuantiti </th>
-		<th width="10%"> Harga Seunit (RM) </th>
      </tr>
      
       #set( $count = 0 )	
@@ -92,14 +99,10 @@
       #set ($supplierId = $requestNoteVo.supplierId)
       #if( $count == 0 )  
       	<tr>
-			<td>$requestNoteVo.supplierName</td>
-		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
-			<td style="text-align:right">$requestNoteVo.minQty</td>
-		    <td>$requestNoteVo.addItemDesc</td>
-		    <td>$requestNoteVo.priceType</td>
-		    <td>$requestNoteVo.cataloguePrice</td>
-		    <td>$requestNoteVo.stockAvailability</td>
 		    <td>$requestNoteVo.zone</td>
+		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
+		    <td>$requestNoteVo.cataloguePrice</td>
+		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
 		    <td style="text-align:right">
 		    #if( $requestNoteVo.frQty != 0 )
 		    	$requestNoteVo.frQty
@@ -110,25 +113,20 @@
 		     	$requestNoteVo.toQty
 		     #end	
 		     </td>
-		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
 		</tr>
 		#else
 		<tr>
-		    #if( $supplierId != $prevSupplierId )  
-			<td>$requestNoteVo.supplierName</td>
+		    <td>$requestNoteVo.zone</td>
+		    #if( $supplierId != $prevSupplierId )
 		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
-			<td style="text-align:right">$requestNoteVo.minQty</td>
-		    <td>$requestNoteVo.addItemDesc</td>
 		    #else
 		    <td></td>
 		    <td></td>
 			<td></td>
 		    <td></td>
 		    #end
-		    <td>$requestNoteVo.priceType</td>
 		    <td>$requestNoteVo.cataloguePrice</td>
-		    <td>$requestNoteVo.stockAvailability</td>
-		    <td>$requestNoteVo.zone</td>
+		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
  			<td style="text-align:right">
 		    #if( $requestNoteVo.frQty != 0 )
 		    	$requestNoteVo.frQty
@@ -139,7 +137,6 @@
 		     	$requestNoteVo.toQty
 		     #end	
 		     </td>
-		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
 		</tr>
 		#end
 		
