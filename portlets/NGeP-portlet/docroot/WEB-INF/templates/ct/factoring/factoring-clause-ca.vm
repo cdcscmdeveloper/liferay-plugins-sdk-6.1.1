@@ -15,11 +15,6 @@
 	  <table style="border:1px solid black;" width="100%">
 		<tbody>
 		<tr>
-		#if ( $isContractAdmin == 'true' )
-		<td width="10%">
-			<img src="$imgUrl" height="100" width="120"/>
-		</td>
-		#end
 		<td>
 			<div>$supplierName</div>
 			<div>$supplierAddress</div>
