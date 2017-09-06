@@ -470,7 +470,11 @@ public class SmApplicationUtil {
 			return smSupp;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_721017);
+			throw new EpException(MessageUtils.getMessage(
+					MessageConst.ERROR_721017,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale())
+					+ " (" + e.getMessage() + ")");
 		}
 
 	}
@@ -11635,20 +11639,18 @@ public class SmApplicationUtil {
 		// approve SME Status
 		SmApplicationUtil.setSmeStatus(smAppl);
 
-		SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
-				.getEntityBySinglePropertyFromList(
-						SupplierManagementConst.SECTION_REV_ROLE_PO,
-						smAppl.getSmApplSectionReviews(), "roleType");
-
 		PmRegStatus regStatus = null;
-		if (poRev != null && poRev.getPmRegStatus() != null) {
-			regStatus = poRev.getPmRegStatus();
+		if (approveStatusId != null) {
+			PmStatus status = SmCommonUtil.getInstance().retrievePmStatusById(
+					approveStatusId);
+			regStatus = status.getPmRegStatus();
 		} else {
-			if (approveStatusId != null) {
-				// approve status
-				PmStatus status = SmCommonUtil.getInstance()
-						.retrievePmStatusById(approveStatusId);
-				regStatus = status.getPmRegStatus();
+			SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							SupplierManagementConst.SECTION_REV_ROLE_PO,
+							smAppl.getSmApplSectionReviews(), "roleType");
+			if (poRev != null && poRev.getPmRegStatus() != null) {
+				regStatus = poRev.getPmRegStatus();
 			}
 		}
 
