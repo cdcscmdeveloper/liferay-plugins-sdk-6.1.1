@@ -1973,8 +1973,8 @@ public class LOADetailBackingBean extends
 		title=title.replaceAll("\r\n", "<br />");
 		//#13245 don't escape
         //title=title.replaceAll("&", "&#38;");
-		//title=title.replaceAll("<", "&#60;");
-		//title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
 		context.put("title", title);
 
 		String userName = "Nama Pembekal";
