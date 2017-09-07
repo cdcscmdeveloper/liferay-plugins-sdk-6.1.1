@@ -502,11 +502,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			// set condition field for saved request note
-			if (!scRequestNoteDtl.isReRecommend()) {
+			// Not used after moved back to dpOsbSO
+//			if (!scRequestNoteDtl.isReRecommend()) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("requestNoteItem.requestNoteItemId^");
 				sb.append(scRequestNoteDtl.getRequestItem()
 						.getRequestNoteItemId());
+				sb.append("|");
+				sb.append("loaRejected^0");
 
 				if (scRequestNoteDtl.getPiRequestSupplierItem() != null){
 					ScPrInquiry scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
@@ -521,7 +524,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 				}
 				scRequestNoteDtl.setConditionField(sb.toString());
-			}
+//			} 
 			
 			if(scRequestNoteDtl.getScRequestSupplierItem() != null && scRequestNoteDtl.getPriceType() != null){
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
@@ -1149,10 +1152,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				scRequestNoteDtl.setProdAndServiceFlag(checkServiceOrProduct(scRequestNoteDtl));
 
 				// set condition field for saved request note
-				if(!scRequestNoteDtl.isReRecommend()) {
+//				if(!scRequestNoteDtl.isReRecommend()) {
 					StringBuilder sb = new StringBuilder();
 					sb.append("requestNoteItem.requestNoteItemId^");
 					sb.append(scRequestNoteDtl.getRequestItem().getRequestNoteItemId());
+					sb.append("|");
+					sb.append("loaRejected^0");
 
 					if (scRequestNoteDtl.getPiRequestSupplierItem() != null){
 						ScPrInquiry scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
@@ -1168,7 +1173,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 
 					scRequestNoteDtl.setConditionField(sb.toString());
-				}
+//				}
 
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
