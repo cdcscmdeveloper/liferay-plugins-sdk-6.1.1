@@ -40,7 +40,7 @@
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{sdoReviewBackingBean.onClickClaimButton}" update="@form" process="@this"
-				rendered="#{!sdoReviewBackingBean.managedBean.claimTask}" onclick="this.disabled=true;blockWidget.show();" oncomplete="blockWidget.hide()">
+				rendered="#{!sdoReviewBackingBean.managedBean.claimTask}" onclick="this.disabled=true;" oncomplete="blockWidget.hide()">
 				<f:param name="taskId" value="#{sdoReviewBackingBean.managedBean.taskId}" />
 			</p:commandButton>
 		</div>
