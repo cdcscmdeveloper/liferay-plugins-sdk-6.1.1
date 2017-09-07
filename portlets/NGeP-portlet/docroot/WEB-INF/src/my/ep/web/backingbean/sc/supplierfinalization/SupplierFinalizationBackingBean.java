@@ -945,6 +945,11 @@ public class SupplierFinalizationBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
+			finalizationReports.addAll(this.getManagedBean().getDocumentList());
+			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
 			SuppFinalizationReqDTO reqDTO = null;
 			
@@ -1068,7 +1073,7 @@ public class SupplierFinalizationBackingBean extends
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			ScQtFinalization scQtFinalization = getManagedBean()
 					.getScQtFinalization();
-
+			
 			switch (index) {
 				case 0:
 					// Preparation Tab
@@ -1747,6 +1752,11 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("submitSuppFinalization");
 		this.getManagedBean().setAction(outcome);
 		
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
+		finalizationReports.addAll(this.getManagedBean().getDocumentList());
+		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+		scQtFinalization.setScQtFinalizationReports(finalizationReports);
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(currentStatusId) || 
@@ -2146,7 +2156,7 @@ public class SupplierFinalizationBackingBean extends
 			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
 			
 			List<ScQtFinalizationReport> finalizationReports 
-								= _scQtFinalization.getScQtFinalizationReports();
+	        					= new ArrayList<ScQtFinalizationReport>(_scQtFinalization.getScQtFinalizationReports());
 			
 			int endorsementReportCount = 0;
 			ScQtFinalizationReport coverReport = null;
@@ -2178,8 +2188,6 @@ public class SupplierFinalizationBackingBean extends
 					getManagedBean().isInitialDecisionFwdToBPK()) {
 				finalizationReports.remove(coverReport);
 			}
-			scQtFinalization.setScQtFinalizationReports(
-									finalizationReports);
 			
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
