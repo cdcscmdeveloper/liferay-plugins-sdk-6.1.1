@@ -145,7 +145,7 @@ public class MolPayServlet extends HttpServlet {
 						e.printStackTrace();
 					}
 					paymentOrder.setChannelName(channel);
-					smPaymentRes.setTransactionId(Long.valueOf(tranID));
+					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
 					smPaymentRes.setTransactionDate(txDate);
