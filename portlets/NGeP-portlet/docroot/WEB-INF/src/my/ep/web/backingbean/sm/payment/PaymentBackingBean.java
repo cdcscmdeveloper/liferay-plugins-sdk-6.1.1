@@ -563,7 +563,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.getPaymentId());
 			BigDecimal txAmount = new BigDecimal(0);
 			txAmount = totalAmount.setScale(2, BigDecimal.ROUND_UP);
-			Long txID = Long.valueOf("123456");
+			String txID = "123456";
 			paymentReqDTO.setPaymentId(ordId);
 
 			PaymentResDTO paymentResDTO = paymentSO
