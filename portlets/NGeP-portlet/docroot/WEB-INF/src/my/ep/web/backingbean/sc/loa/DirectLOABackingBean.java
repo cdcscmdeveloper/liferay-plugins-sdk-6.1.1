@@ -4705,8 +4705,8 @@ public class DirectLOABackingBean extends
 				//title = title.replaceAll("\\W", ""); 
 				title=title.replaceAll("\r\n", "<br />");
 				//title=title.replaceAll("&", "&#38;");
-				//title=title.replaceAll("<", "&#60;");
-				//title=title.replaceAll(">", "&#62;");
+				title=title.replaceAll("<", "&#60;");
+				title=title.replaceAll(">", "&#62;");
 				context.put("title", title);
 		
 
