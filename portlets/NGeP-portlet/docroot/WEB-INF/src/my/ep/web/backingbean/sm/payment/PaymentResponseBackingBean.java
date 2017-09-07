@@ -189,7 +189,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("SKey & Key1 Are Match>>>>");
 
 				BigDecimal txAmount = new BigDecimal(amount);
-				Long txID = Long.valueOf(tranID);
+				//Long txID = Long.valueOf(tranID);
 
 
 				boolean validPayment = false;
@@ -256,7 +256,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					e.printStackTrace();
 				}
 				paymentOrder.setChannelName(channel);
-				smPaymentRes.setTransactionId(txID);
+				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
 				smPaymentRes.setTransactionDate(txDate);
