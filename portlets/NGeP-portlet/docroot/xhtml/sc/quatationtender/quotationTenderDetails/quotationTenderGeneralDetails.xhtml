@@ -27,6 +27,14 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false"
 			rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+			<ui:fragment rendered="#{!scQt.panel and (qtStatusChecklistScoring or qtStatusAfterChecklistScoring)}">
+				<ui:param name="checkCategoryCodemedicine" value="#{createQtBB.isMultipleProposalCategory(scQt, null)}"></ui:param>
+			<ui:fragment rendered="#{checkCategoryCodemedicine}">
+			<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.procurement.medicine.general.info']}" escape="false"
+			 />
+			</ui:fragment>
+			</ui:fragment>
 		<table style="width: 100%;">
 			<c:if test="#{createQtBB.managedBean.ptjSpecialApproval !=  null or scQt.obtainSpecialApproval != null}">
 				<tr>
