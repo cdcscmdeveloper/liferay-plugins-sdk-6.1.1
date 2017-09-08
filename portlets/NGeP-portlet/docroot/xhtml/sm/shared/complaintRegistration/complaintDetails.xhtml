@@ -79,7 +79,10 @@
 	<p:panel header="#{lbl['lbl.sm.complaint.upload.docproof']}" id="pnlComplDoc" toggleable="true">
 		<p:dataTable value="#{complaintBackingBean.managedBean.complaintDocs}" var="complDoc">
 			<p:column headerText="#{lbl['lbl.sm.complainant.document.name']}">
-				#{complDoc.fileName}
+				
+				<p:commandLink value="#{complDoc.fileName}" update=":form" ajax="false">
+					<p:fileDownload value="#{complaintBackingBean.commonDownload(complDoc.filePath, complDoc.fileName, complDoc.fileName)}" />
+				</p:commandLink>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.action']}">
