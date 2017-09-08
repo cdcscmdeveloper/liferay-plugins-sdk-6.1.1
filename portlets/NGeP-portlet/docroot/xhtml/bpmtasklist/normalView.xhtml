@@ -171,7 +171,7 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
+			<p:commandButton value="#{lbl['lbl.bpm.btn.release']}" onclick="this.disabled=true;"
 				action="#{bpmTasklistBackingBean.releaseTask}" update="@form"
 				rendered="#{tasks.claimed}">
 
