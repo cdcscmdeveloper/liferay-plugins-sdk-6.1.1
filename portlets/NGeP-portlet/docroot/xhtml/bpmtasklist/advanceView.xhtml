@@ -172,7 +172,7 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" onclick="this.disabled=true;"
 				action="#{bpmTasklistBackingBean.claimTask}" update="@form">
 
 				<f:param name="taskId" value="#{tasks.taskId}" />
