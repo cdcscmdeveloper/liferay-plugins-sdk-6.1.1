@@ -3189,7 +3189,7 @@ public class LOIDetailBackingBean extends
 	 */
 	private void parseLOIDetails(ScLoi scLoi, String outcome) {
 		if (scLoi.isBrandNew()) {
-			scLoi.setIssueDate(new Date());
+			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 
 			ScLoiWorkFlowStatus currentStatus = (ScLoiWorkFlowStatus)scLoi.getScWorkFlowStatus();
 			List<ScLoiWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoiWorkFlowStatus>();
