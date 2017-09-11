@@ -1135,7 +1135,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				getManagedBean().setHyperLinkPage(true);
-				getManagedBean().setTaskId(null);//for the purpose of hide the back button.
+				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
