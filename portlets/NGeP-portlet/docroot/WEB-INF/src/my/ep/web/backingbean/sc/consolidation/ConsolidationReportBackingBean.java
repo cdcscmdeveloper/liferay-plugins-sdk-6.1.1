@@ -496,8 +496,7 @@ public class ConsolidationReportBackingBean extends
 				|| this.getManagedBean().getScQtFinalization()
 						.isReEvaluateFinReq()) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
-			scQtFinalizationReport
-					.setScQtFinalizationReportAttachment(reportAttachment);
+			//scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		downloadFile(reportAttachment);
 	}
@@ -827,15 +826,16 @@ public class ConsolidationReportBackingBean extends
 					new Comparator<ScQtFinalizationReport>() {
 						public int compare(ScQtFinalizationReport report1,
 								ScQtFinalizationReport report2) {
-							if (report1.getChangedDate() != null
-									&& report2.getChangedDate() != null) {
+							
+							if (report1.getCreatedDate() != null
+									&& report2.getCreatedDate() != null) {
 
 								// Ascending order
-								if (report1.getChangedDate().getTime() == report2
-										.getChangedDate().getTime()) {
+								if (report1.getCreatedDate().getTime() == report2
+										.getCreatedDate().getTime()) {
 									return 0;
-								} else if (report1.getChangedDate().getTime() > report2
-										.getChangedDate().getTime()) {
+								} else if (report2.getCreatedDate().getTime() < report1
+										.getCreatedDate().getTime()) {
 									return 1;
 								} else {
 									return -1;
@@ -1338,8 +1338,7 @@ public class ConsolidationReportBackingBean extends
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
 				generateKertasTaklimatPdf(scQt, reportAttachment);
-				scQtFinalizationReport
-						.setScQtFinalizationReportAttachment(reportAttachment);
+				//scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 			} else {
 				debugLogger("No document type exists with the key "
 						+ docDefinitionKey);
