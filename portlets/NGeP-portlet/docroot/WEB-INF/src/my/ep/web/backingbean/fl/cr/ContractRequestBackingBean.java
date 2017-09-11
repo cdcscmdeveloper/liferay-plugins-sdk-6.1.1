@@ -5151,7 +5151,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setButtonVal(null);
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
