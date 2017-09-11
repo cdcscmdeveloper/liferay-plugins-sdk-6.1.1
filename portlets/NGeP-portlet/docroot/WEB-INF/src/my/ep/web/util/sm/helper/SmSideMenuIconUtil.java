@@ -1,7 +1,6 @@
 package my.ep.web.util.sm.helper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
@@ -1087,9 +1086,34 @@ public class SmSideMenuIconUtil {
 
 			// smSupplierCategory
 			if (isSupplier) {
-				retVal = EntityHelper.hasDiffBetweenList(
-						applPrev.getSmSupplierCategories(),
-						applCurr.getSmSupplierCategories(), null,
+
+				List<SmSupplierCategory> prevCatList = new ArrayList<SmSupplierCategory>();
+				List<SmSupplierCategory> currCatList = new ArrayList<SmSupplierCategory>();
+
+				if (!EntityHelper.isCollectionEmpty(applPrev
+						.getSmSupplierCategories())) {
+					for (SmSupplierCategory prev : applPrev
+							.getSmSupplierCategories()) {
+						if (prev.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+								&& prev.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
+							prevCatList.add(prev);
+						}
+					}
+				}
+
+				if (!EntityHelper.isCollectionEmpty(applCurr
+						.getSmSupplierCategories())) {
+					for (SmSupplierCategory curr : applCurr
+							.getSmSupplierCategories()) {
+						if (curr.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+								&& curr.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
+							currCatList.add(curr);
+						}
+					}
+				}
+
+				retVal = EntityHelper.hasDiffBetweenList(prevCatList,
+						currCatList, null,
 						new String[] { "pmCategoryL3" }, arrExcludeProps);
 			} else {
 				retVal = EntityHelper.hasDiffBetweenList(
