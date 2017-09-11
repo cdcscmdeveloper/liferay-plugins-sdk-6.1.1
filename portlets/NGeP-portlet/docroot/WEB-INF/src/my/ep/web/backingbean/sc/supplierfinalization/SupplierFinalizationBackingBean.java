@@ -1182,7 +1182,7 @@ public class SupplierFinalizationBackingBean extends
 	
 					reqDTO.setScQtCommittee(_scQtCommittee);
 					reqDTO.setScQtFinalization(scQtFinalization);
-					reqDTO.setQtRefinalized(isQTRefinalized());
+					reqDTO.setRefinalize(isQTRefinalized());
 //					reqDTO.setResetSuppliers(
 //							this.getManagedBean().getResetSupplierList());
 					
