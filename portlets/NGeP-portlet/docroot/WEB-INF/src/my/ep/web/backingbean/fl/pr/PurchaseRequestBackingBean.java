@@ -4027,6 +4027,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 
 				searchBean.setUseEntityClass(true);
+				glAccountReqDTO.setGlAccountRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 				glAccountReqDTO.setPtjGroupId(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
 				glAccountReqDTO.setGlAccountObjByKumpPTJSearchBean(searchBean);
 				glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance()
