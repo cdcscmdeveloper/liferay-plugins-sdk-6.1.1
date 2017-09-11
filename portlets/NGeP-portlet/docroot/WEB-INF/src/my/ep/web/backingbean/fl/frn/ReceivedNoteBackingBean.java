@@ -488,18 +488,21 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public void initializeRejectionRemarks(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> rejectionRemarks,FlFulfilmentNoteItem noteItem,boolean isHideRemarks) {
 		FacesScopes facesScopes = new FacesScopes();
 
-		boolean flWorkflowStatusMatch = false;
+		boolean statusMatch = false;
 		if(flWorkflowStatus!=null) {
 			if(rejectionRemarks.size()>0 && rejectionRemarks.get(0).getFlWorkflowStatus()!=null) {
-				if(flWorkflowStatus.getWorkflowStatusId().longValue()==rejectionRemarks.get(0).getFlWorkflowStatus().getWorkflowStatusId().longValue()) {
-					flWorkflowStatusMatch = true;
+				if(flWorkflowStatus.getPmStatus().getStatusId().longValue()==rejectionRemarks.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue()) {
+					statusMatch = true;
 				}
 			}
 		} else { // both also null
-			flWorkflowStatusMatch = true;
+			statusMatch = true;
 		}
-
-		if (rejectionRemarks.size() == 0 || !flWorkflowStatusMatch) {
+		
+		if(rejectionRemarks.get(0).getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId())){
+			statusMatch = true;
+		}
+		if (rejectionRemarks.size() == 0 || !statusMatch) {
 			FlRemark remark = new FlRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
