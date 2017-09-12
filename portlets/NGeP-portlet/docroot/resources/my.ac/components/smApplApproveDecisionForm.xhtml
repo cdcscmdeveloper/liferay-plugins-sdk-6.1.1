@@ -23,7 +23,7 @@
 	</cc:interface>
 	
 	<cc:implementation>
-		<p:outputPanel id="approveApplOutPanelId">
+		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
