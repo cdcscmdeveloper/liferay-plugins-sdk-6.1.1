@@ -11182,7 +11182,7 @@ public class SmApplicationUtil {
 					if (item == null) {
 						item = new SelectItem();
 						item.setLabel(eduLevel.getCodeName());
-						item.setValue(eduLevel.getParameterDescId());
+						item.setValue(eduLevel.getPmParameter().getParameterId());
 						finalList.add(item);
 					}
 				}
