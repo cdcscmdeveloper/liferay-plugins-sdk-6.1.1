@@ -61,7 +61,18 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
 			
-			getManagedBean().setZoneCode(pmZone.getZoneCode());
+			if(pmZone != null){
+				if(StringUtils.isNotBlank(pmZone.getZoneCode())){
+					getManagedBean().setZoneCode(pmZone.getZoneCode());
+					//getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+				}else{
+					getManagedBean().setZoneCode(null);
+					//getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+				}
+			}else{
+				getManagedBean().setZoneCode(null);
+			}
+			
 			getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 			
 			retrievePOUsers();
