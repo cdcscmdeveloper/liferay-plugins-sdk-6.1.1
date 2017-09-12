@@ -826,7 +826,9 @@ public class ConsolidationReportBackingBean extends
 					new Comparator<ScQtFinalizationReport>() {
 						public int compare(ScQtFinalizationReport report1,
 								ScQtFinalizationReport report2) {
-							if(report1.getPmDocument()!= null && report2.getPmDocument()!= null){
+							if(report1.getPmDocument()!= null && report2.getPmDocument()!= null && 
+									report1.getChangedDate()!= null && report2
+											.getChangedDate()!= null){
 								Integer displaySequence1 = Integer.valueOf(report1.getPmDocument().getDisplaySeq());
 								Integer displaySequence2 = Integer.valueOf(report2.getPmDocument().getDisplaySeq());
 								
