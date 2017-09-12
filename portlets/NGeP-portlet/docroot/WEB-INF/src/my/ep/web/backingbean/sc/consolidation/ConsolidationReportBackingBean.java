@@ -827,16 +827,16 @@ public class ConsolidationReportBackingBean extends
 						public int compare(ScQtFinalizationReport report1,
 								ScQtFinalizationReport report2) {
 							if(report1.getPmDocument()!= null && report2.getPmDocument()!= null && 
-									report1.getChangedDate()!= null && report2
-											.getChangedDate()!= null){
+									report1.getCreatedDate()!= null && report2
+											.getCreatedDate()!= null){
 								Integer displaySequence1 = Integer.valueOf(report1.getPmDocument().getDisplaySeq());
 								Integer displaySequence2 = Integer.valueOf(report2.getPmDocument().getDisplaySeq());
 								
 								if(displaySequence1.intValue() == displaySequence2.intValue()){
 									return 0;
 								}else if ((displaySequence1.intValue() > displaySequence2.intValue()) && 
-										(report2.getChangedDate().getTime() > report1
-										.getChangedDate().getTime())){
+										(report1.getCreatedDate().after(report2
+												.getCreatedDate()))){
 									return 1;
 								}else {
 									return -1;
@@ -845,11 +845,11 @@ public class ConsolidationReportBackingBean extends
 									&& report2.getCreatedDate() != null) {
 
 								// Ascending order
-								if (report1.getCreatedDate().getTime() == report2
-										.getCreatedDate().getTime()) {
+								if (report1.getCreatedDate().equals(report2
+										.getCreatedDate())) {
 									return 0;
-								} else if (report2.getCreatedDate().getTime() < report1
-										.getCreatedDate().getTime()) {
+								} else if (report1.getCreatedDate().after(report2
+										.getCreatedDate())) {
 									return 1;
 								} else {
 									return -1;
