@@ -498,10 +498,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		} else { // both also null
 			statusMatch = true;
 		}
-		
-		if(rejectionRemarks.get(0).getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId())){
-			statusMatch = true;
+		if(rejectionRemarks.size()>0){
+			if(rejectionRemarks.get(0).getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId())){
+				statusMatch = true;
+			}
 		}
+		
 		if (rejectionRemarks.size() == 0 || !statusMatch) {
 			FlRemark remark = new FlRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
