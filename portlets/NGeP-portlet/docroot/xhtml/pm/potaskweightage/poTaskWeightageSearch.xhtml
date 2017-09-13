@@ -29,18 +29,36 @@
 			
 			<tr>
 				<th width="15%">
-				<p:outputLabel value="#{lbl['lbl.pm.po.task.user.name']}" /></th>
+				<p:outputLabel value="#{lbl['lbl.pm.po.task.user.status']}" /></th>
 				<td width="25%">
 					<p:selectOneMenu value="#{poTaskWeightageBB.managedBean.recordStatus}" style="width:300px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.active']}" 
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.active']}" 
 						itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.txt.inactive']}" 
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.inactive']}" 
+						itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
+						<p:ajax event="change" update="searchPnl" process="@form" listener="#{poTaskWeightageBB.resetPoStatus}" />
+					</p:selectOneMenu>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<p:outputPanel rendered="#{poTaskWeightageBB.managedBean.recordStatus eq DbValueConst.recordStatusSuspended}">
+			<tr>
+				<th width="15%">
+				<p:outputLabel value="#{lbl['lbl.pm.po.task.po.status']}" /></th>
+				<td width="25%">
+					<p:selectOneMenu value="#{poTaskWeightageBB.managedBean.poStatus}" style="width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.active']}" 
+						itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.inactive']}" 
 						itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
 					</p:selectOneMenu>
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
+			</p:outputPanel>
 		</table>
 		
 		<div style="text-align: right;">

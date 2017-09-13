@@ -176,11 +176,14 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		}
 		
 		reqDTO.setRecordStatus(getManagedBean().getRecordStatus());
+		reqDTO.setPoStatus(getManagedBean().getPoStatus());
 		//reqDTO.setByWeightage(true);
 		/*	reqDTO.setSupplierType("K");
 			reqDTO.setApplicationType("A");
 			reqDTO.setCategoryType("N");*/
 		
+		/*log.info("getManagedBean().getRecordStatus()>>>>>>" + getManagedBean().getRecordStatus());
+		log.info("getManagedBean().getPoStatus()>>>>>>" + getManagedBean().getPoStatus());*/
 		
 		IPoRoleTaskSO reqSO = (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
@@ -307,5 +310,11 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		}
 		
 		return false;
+	}
+	
+	public void resetPoStatus(){
+		if(getManagedBean().getRecordStatus() != DbValueConst.RECORD_STATUS_SUSPENDED){
+			getManagedBean().setPoStatus(null);
+		}
 	}
 }

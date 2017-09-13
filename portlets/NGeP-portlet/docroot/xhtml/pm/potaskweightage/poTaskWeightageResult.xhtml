@@ -53,6 +53,7 @@
 				
 				<p:column headerText="#{lbl['lbl.pm.po.task.action']}">
 					<p:commandLink id="poWeightageEditBtn" 
+						disabled="#{(poTaskWeightageBB.managedBean.poStatus eq DbValueConst.recordStatusSuspended) or (poTaskWeightageBB.managedBean.recordStatus eq DbValueConst.recordStatusSuspended)}"
 						action="#{poTaskWeightageBB.editUser(poUser)}">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" >
 						</p:graphicImage>
