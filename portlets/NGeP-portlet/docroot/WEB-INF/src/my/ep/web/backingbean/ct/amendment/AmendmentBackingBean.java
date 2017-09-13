@@ -4,7 +4,6 @@
 package my.ep.web.backingbean.ct.amendment;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -140,13 +139,9 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.docx4j.convert.in.Doc;
 import org.docx4j.convert.out.pdf.PdfConversion;
 import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-import org.docx4j.openpackaging.parts.relationships.Namespaces;
-import org.docx4j.relationships.Relationship;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -1639,10 +1634,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		// Validation for committee member
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().isConfirmMeeting()
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
+				(getManagedBean().getTaskName() != null &&
+				(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)
+				|| getManagedBean().isSignOffDecision()))
 				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null
 				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0) {
-			validateMeetingDetails();
+			   validateMeetingDetails();
 		}
 		// Validation for approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -4008,6 +4006,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setFileName(item.getFileName());
 		//}
+			
 		
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
