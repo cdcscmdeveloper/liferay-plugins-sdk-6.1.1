@@ -255,6 +255,7 @@
 
 
 			<portlet id="BpmTaskList"></portlet>
+			<portlet id="BpmErrorList"></portlet>
 			<portlet id="Welcome"></portlet>
 			<portlet id="supplierUserActivation"></portlet>
 
