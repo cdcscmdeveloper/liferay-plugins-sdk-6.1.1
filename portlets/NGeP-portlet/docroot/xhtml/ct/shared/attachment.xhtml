@@ -75,7 +75,7 @@
                          <div class="ppRightBtn">
 		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                         update=":form:lampiran" 
-		                         action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}" oncomplete="deleteAttachmentDlg.hide();"/>
+		                         action="#{ctBackingBean.deleteAttachmentActionByIndex(ctBackingBean.managedBean.attachFileIndex)}" oncomplete="deleteAttachmentDlg.hide();"/>
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg.hide();" type="button" />
 		                 </div>
                    </p:confirmDialog>
