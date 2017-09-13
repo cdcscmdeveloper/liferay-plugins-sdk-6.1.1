@@ -425,7 +425,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to delete attachment from the list.
 	 * @param index  file index of attachment list
 	 */
-	public void deleteAttachmentAction(int index) {
+	public void deleteAttachmentActionByIndex(int index) {
 			CtAttachment attachment = this.getManagedBean().getAttachmentList().get(index);
 			if(attachment.getAttachmentId() != null){
 				   getManagedBean().getDeleteAttachmentList().add(attachment);
