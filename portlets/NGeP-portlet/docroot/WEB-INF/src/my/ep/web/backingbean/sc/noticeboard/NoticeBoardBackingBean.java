@@ -1789,7 +1789,8 @@ public class NoticeBoardBackingBean extends
 			registerdAttandance = new ArrayList<ScQtBsvAttendance>();
 			for (ScQtBsvAttendance scQtBsvAttendance : preRegisterdAttandance) {
 				if (scQtBsvAttendance.isPreRegisterd()) {
-					scQtBsvAttendance.setAttended(true);
+					// revert to FT version. 
+					//scQtBsvAttendance.setAttended(true);
 					scQtBsvAttendance.setBsvRegistration(scQtBsvRegistration);
 					registerdAttandance.add(scQtBsvAttendance);
 				}
