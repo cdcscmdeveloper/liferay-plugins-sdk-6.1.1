@@ -1439,13 +1439,14 @@ public class LOADetailBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		
+		title = title.trim();
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
+		title = title.replaceAll("<", "&#60;");
+		title = title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
 		//title=title.replaceAll("&", "&#38;");
-		//title=title.replaceAll("<", "&#60;");
-		//title=title.replaceAll(">", "&#62;");
+		
 		context.put("title", title);
 		context.put("supplierName", scLoiLoa.getSupplierName());
 		context.put("loaAmt", amountDF.format(scLoa.getLoaAmt()));
@@ -1599,13 +1600,14 @@ public class LOADetailBackingBean extends
 		if (title == null) {
 			title = "";
 		}
+		title = title.trim();
 		
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
 		//title=title.replaceAll("&", "&#38;");
-		//title=title.replaceAll("<", "&#60;");
-		//title=title.replaceAll(">", "&#62;");
+		title = title.replaceAll("<", "&#60;");
+		title = title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
 		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false);
@@ -1967,14 +1969,16 @@ public class LOADetailBackingBean extends
 		if (title == null) {
 			title = "";
 		}
+		title = title.trim();
 		
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
+		
 		//#13245 don't escape
         //title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		title = title.replaceAll("<", "&#60;");
+		title = title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title);
 
 		String userName = "Nama Pembekal";

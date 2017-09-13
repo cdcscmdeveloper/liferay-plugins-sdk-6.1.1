@@ -4700,13 +4700,13 @@ public class DirectLOABackingBean extends
 				if (title == null) {
 					title = "";
 				}
-				
+				title = title.trim();
 				//replace all special characters
 				//title = title.replaceAll("\\W", ""); 
-				title=title.replaceAll("\r\n", "<br />");
 				//title=title.replaceAll("&", "&#38;");
-				title=title.replaceAll("<", "&#60;");
-				title=title.replaceAll(">", "&#62;");
+				title = title.replaceAll("<", "&#60;");
+				title = title.replaceAll(">", "&#62;");
+				title = title.replaceAll("\r\n", "<br />");
 				context.put("title", title);
 		
 
@@ -4979,13 +4979,13 @@ public class DirectLOABackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		
+		title = title.trim();
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
 		//title=title.replaceAll("&", "&#38;");
-		//title=title.replaceAll("<", "&#60;");
-		//title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title);
 
 		context.put("hasLoi", false); // TODO
@@ -7271,13 +7271,13 @@ public class DirectLOABackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		
+		title = title.trim();
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
 		//title=title.replaceAll("&", "&#38;");
-		//title=title.replaceAll("<", "&#60;");
-		//title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll("<", "&#60;");
+		title=title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
 		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false); // TODO
