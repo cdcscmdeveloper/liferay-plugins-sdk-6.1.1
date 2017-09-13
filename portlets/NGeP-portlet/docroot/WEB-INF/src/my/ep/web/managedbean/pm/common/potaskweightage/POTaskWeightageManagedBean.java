@@ -27,6 +27,7 @@ public class POTaskWeightageManagedBean extends BaseManagedBean{
 	private String identificationNo;
 	private int recordStatus;
 	private Map<Long,PmPoRoleTask> existingRoleTaskMap;
+	private Integer poStatus;
 
 	public String getRoleCode() {
 		return roleCode;
@@ -98,5 +99,13 @@ public class POTaskWeightageManagedBean extends BaseManagedBean{
 
 	public void setExistingRoleTaskMap(Map<Long, PmPoRoleTask> existingRoleTaskMap) {
 		this.existingRoleTaskMap = existingRoleTaskMap;
+	}
+
+	public Integer getPoStatus() {
+		return poStatus;
+	}
+
+	public void setPoStatus(Integer poStatus) {
+		this.poStatus = poStatus;
 	}
 }
