@@ -2043,28 +2043,29 @@ public class NoticeBoardBackingBean extends
 	 *        the Long variable.
 	 */
 	private void retriveBsvDetails(Long qtId) {
-
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTNoticeBoardSO.class);
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		reqDTO.setUserId(pmUser.getUserId());
+		Long supplierId = getSupplierId();
+		SmSupplier smSupplier = null;
+		if (supplierId != null) {
+			SupplierSearchResDTO searchResDTO = getSupplierInfo(supplierId);
+			smSupplier = searchResDTO.getSmSupplier();
+			reqDTO.setSmSupplier(smSupplier);
+			
+		} else {
+			smSupplier = new SmSupplier();
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			reqDTO.setUserId(pmUser.getUserId());
+		}
 		reqDTO.setQtId(qtId);
 		NoticeBoardResDTO resDTO = qtNoticeBoardSO
 				.retrieveSupplierRegistrationDtl(reqDTO);
 		ScQt scQt = resDTO.getScQt();
 		this.getManagedBean().setScQt(resDTO.getScQt());
+		this.getManagedBean().setSmSupplier(smSupplier);
 		
-		Long supplierId = getSupplierId();
-		if (supplierId != null) {
-			
-			SupplierSearchResDTO searchResDTO = getSupplierInfo(supplierId);
-			SmSupplier smSupplier = searchResDTO.getSmSupplier();
-			this.getManagedBean().setSmSupplier(smSupplier);
-		} else {
-			this.getManagedBean().setSmSupplier(new SmSupplier());
-		}
 		boolean isNotRigistered = false;
 		boolean isRenderRigsterbtn = false;
 		
