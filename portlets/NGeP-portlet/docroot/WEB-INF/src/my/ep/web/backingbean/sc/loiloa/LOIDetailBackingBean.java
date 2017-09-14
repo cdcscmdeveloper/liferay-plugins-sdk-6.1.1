@@ -3293,6 +3293,8 @@ public class LOIDetailBackingBean extends
 			if (scLoi.getRecommendBy() != null) {
 				PmParameter recommendedBy = scLoi.getRecommendBy();
 				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+						.equals(recommendedBy.getParameterCode())
+						|| ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
 						.equals(recommendedBy.getParameterCode())) {
 					// validate negotiation location
 					if (scLoi.getScNegoLocations() == null
