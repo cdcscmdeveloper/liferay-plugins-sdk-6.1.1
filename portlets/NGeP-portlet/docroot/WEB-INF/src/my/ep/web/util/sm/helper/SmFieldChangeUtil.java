@@ -352,7 +352,8 @@ public class SmFieldChangeUtil {
 						"disableRowSelection", "freeSoftCert",
 						"softcertRejectReason", "pmCountry", "pmUser",
 						"pmRace", "title", "identificationType",
-						"identityResponseCode", "tempPassword" })) {
+						"identityResponseCode", "tempPassword", "softcert",
+						"softcertFlg" })) {
 			currPersonnel.setChangedFieldStatus("U");
 		}
 	}
