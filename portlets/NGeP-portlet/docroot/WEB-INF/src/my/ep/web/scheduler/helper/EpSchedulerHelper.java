@@ -451,7 +451,8 @@ public class EpSchedulerHelper extends QuartzAdapter {
 				instance = StdSchedulerFactory.getDefaultScheduler();
 				if (!instance.isStarted()) {
 					log.info(">>>>>EP SCHEDULER INSTANCE IS NOT STARTED<<<<<<");
-					instance.start();
+					log.info(">>>>>EP SCHEDULER DELAYING STARTUP<<<<<<");
+					instance.startDelayed(600);
 					log.info(">>>>>EP SCHEDULER INSTANCE IS FINISH STARTED<<<<<<");
 				}
 				log.info(">>>>>EP SCHEDULER LISTENER START ADDING ALL JOBS<<<<<<");
@@ -459,7 +460,6 @@ public class EpSchedulerHelper extends QuartzAdapter {
 						new EpSchedulerListener(), GroupMatcher.anyJobGroup());
 				log.info(">>>>>EP SCHEDULER LISTENER FINISH ADDING ALL JOBS<<<<<<");
 				
-				instance.startDelayed(600);
 			} catch (SchedulerException e) {
 				log.info(">>>>>FAILED TO START EP SCHEDULER DUE TO ERR MSG:"
 						+ e.getMessage() + "<<<<<<<<<");
