@@ -759,7 +759,8 @@ public class SmSideMenuIconUtil {
 									primitive, null, null);
 					retVal = EntityHelper.isObjectDifference(prevPersonnel,
 							currPersonnel, new String[] { "shareAmt",
-									"sharePercentage" });
+									"sharePercentage", "softcert",
+									"softcertFlg" });
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
 								+ currPersonnel.getName()
@@ -1113,8 +1114,8 @@ public class SmSideMenuIconUtil {
 				}
 
 				retVal = EntityHelper.hasDiffBetweenList(prevCatList,
-						currCatList, null,
-						new String[] { "pmCategoryL3" }, arrExcludeProps);
+						currCatList, null, new String[] { "pmCategoryL3" },
+						arrExcludeProps);
 			} else {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmSupplierCategories(),
