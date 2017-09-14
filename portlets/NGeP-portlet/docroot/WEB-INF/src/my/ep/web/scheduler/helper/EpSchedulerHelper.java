@@ -458,6 +458,8 @@ public class EpSchedulerHelper extends QuartzAdapter {
 				instance.getListenerManager().addJobListener(
 						new EpSchedulerListener(), GroupMatcher.anyJobGroup());
 				log.info(">>>>>EP SCHEDULER LISTENER FINISH ADDING ALL JOBS<<<<<<");
+				
+				instance.startDelayed(600);
 			} catch (SchedulerException e) {
 				log.info(">>>>>FAILED TO START EP SCHEDULER DUE TO ERR MSG:"
 						+ e.getMessage() + "<<<<<<<<<");
