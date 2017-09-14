@@ -6099,11 +6099,21 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		scLoa.setContractEffDate(null);
 		scLoa.setContractExpDate(null);
+		PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
+		if(null!=fulfilMentType && 
+			ParameterConst.FULFILMENT_TYPE_ONE_OFF
+			.equals(fulfilMentType.getParameterCode())){
+			this.getManagedBean()
+			.getSpecTemplateSpecBean()
+			.getSpecMaster().setDurationMonth(
+				null);
+	}else{
 		this.getManagedBean()
 		.getSpecTemplateSpecBean()
 		.getSpecMaster()
 		.setDurationMonth(
 				scLoa.getContractDuration());
+	}
 		updatePerformanceBond(scLoa);
 
 	}
