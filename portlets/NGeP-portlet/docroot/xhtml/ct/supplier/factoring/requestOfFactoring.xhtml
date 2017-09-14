@@ -261,7 +261,7 @@
 				    <h:panelGroup id="uploadFactoringPg">
 					    <h:panelGrid columns="5">
 						    <p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
-							  icon="ui-icon-upload"  immediate="true" update="factoringPanel" 
+							  icon="ui-icon-upload"  immediate="true" update="factoringPanel, uploadFactoringDlg" 
 							   actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
 							   rendered="#{supplierBackingBean.managedBean.factoring.filePath == null}"/>			 
 						     
@@ -307,7 +307,7 @@
 				     <h:panelGroup id="uploadRemoveFactoringPg" rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					     <h:panelGrid columns="3">
 					 		<p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
-							  icon="ui-icon-upload"  immediate="true" update="factoringPanel" 
+							  icon="ui-icon-upload"  immediate="true" update="factoringPanel, uploadFactoringDlg" 
 							   actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
 							   rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath == null}"/>			 
 						     

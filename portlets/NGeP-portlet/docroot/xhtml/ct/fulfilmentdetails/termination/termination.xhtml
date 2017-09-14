@@ -54,7 +54,7 @@
 		     <h:panelGroup id="uploadTerminationPg" rendered="#{terminationBackingBean.managedBean.mutualTermination}">
 				<p:commandButton 
 					oncomplete="uploadTerminatinDlg.show();return false;"
-					 icon="ui-icon-upload" immediate="true" 
+					 icon="ui-icon-upload" immediate="true" update="uploadTerminatinDlg"
 					 disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
 					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath == null}" />
 				<h:commandLink
