@@ -2199,15 +2199,16 @@ public class SupplierFinalizationBackingBean extends
 				 			+ SPACE + "(" + totalFinalizationRounds + ")";
 					addEndorsementReport(reportTitle);
 					//Sort reports
-				sortReports(endorsementReports);
+					sortEndorsementReports(endorsementReports);
 				} else {
-					sortReports(endorsementReports);
+					sortEndorsementReports(endorsementReports);
 					this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
 				}
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
 			
 			if (finalizationReports != null) {
+				//sortReports(finalizationReports);
 				getManagedBean().setDocumentList(finalizationReports);
 			}
 			
@@ -6587,6 +6588,65 @@ public class SupplierFinalizationBackingBean extends
 				new Comparator<ScQtFinalizationReport>() {
 					public int compare(ScQtFinalizationReport report1, 
 							ScQtFinalizationReport report2) {
+						if(report1.getPmDocument()!= null && report2.getPmDocument()!= null ){
+							Integer displaySequence1 = Integer.valueOf(report1.getPmDocument().getDisplaySeq());
+							Integer displaySequence2 = Integer.valueOf(report2.getPmDocument().getDisplaySeq());
+							
+							if(displaySequence1.intValue() == displaySequence2.intValue()){
+								return 0;
+							}else if (displaySequence1.intValue() > displaySequence2.intValue()){
+								if(report1.getCreatedDate()!= null && report2
+										.getCreatedDate()!= null && report1.getCreatedDate().after(report2
+												.getCreatedDate())){
+									return 1;
+								}else if(report1.getCreatedDate()== null && report2.getCreatedDate()!= null){
+									return 1;
+								}else{
+									return -1;
+								}
+								
+							}else {
+								if(report1.getCreatedDate()!= null && report2
+										.getCreatedDate()!= null && report1.getCreatedDate().after(report2
+												.getCreatedDate())){
+									return 1;
+								}else if(report1.getCreatedDate()== null && report2.getCreatedDate()!= null){
+									return 1;
+								}else{
+									return -1;
+								}
+							}
+						}else if (report1.getPmDocument()== null && report2.getPmDocument() != null) {
+							return 1;
+						}else if(report1.getPmDocument()!= null && report2.getPmDocument()== null){
+							return -1;
+						}else if (report1.getCreatedDate() != null
+								&& report2.getCreatedDate() != null) {
+							// Ascending order
+							if (report1.getCreatedDate().equals(report2
+									.getCreatedDate())) {
+								return 0;
+							} else if (report1.getCreatedDate().after(report2
+									.getCreatedDate())) {
+								return 1;
+							} else {
+								return -1;
+							}
+						}
+						return -1;
+					}
+				});
+	}
+	
+	/**
+	 * Sort the reports based on date and time 
+	 * @param reports
+	 */
+	private void sortEndorsementReports(List<ScQtFinalizationReport> reports){
+		Collections.sort(reports, 
+				new Comparator<ScQtFinalizationReport>() {
+					public int compare(ScQtFinalizationReport report1, 
+							ScQtFinalizationReport report2) {
 						if (report1.getChangedDate() != null && 
 								report2.getChangedDate() != null) {
 							
@@ -6604,7 +6664,7 @@ public class SupplierFinalizationBackingBean extends
 						return -1;
 					}
 				});
-	}
+			}
 	
 	public void handleEndorseReportUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {

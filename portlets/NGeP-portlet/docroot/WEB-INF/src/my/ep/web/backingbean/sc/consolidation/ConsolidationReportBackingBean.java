@@ -822,7 +822,7 @@ public class ConsolidationReportBackingBean extends
 			// Sort the reports as per the last updated date (in ascending
 			// order)
 
-			Collections.sort(finalizationReports,
+			/*Collections.sort(finalizationReports,
 					new Comparator<ScQtFinalizationReport>() {
 						public int compare(ScQtFinalizationReport report1,
 								ScQtFinalizationReport report2) {
@@ -844,7 +844,11 @@ public class ConsolidationReportBackingBean extends
 									}
 									
 								}else {
-									if(report1.getCreatedDate()== null){
+									if(report1.getCreatedDate()!= null && report2
+											.getCreatedDate()!= null && report1.getCreatedDate().after(report2
+													.getCreatedDate())){
+										return 1;
+									}else if(report1.getCreatedDate()== null){
 										return 1;
 									}else{
 										return -1;
@@ -869,7 +873,7 @@ public class ConsolidationReportBackingBean extends
 							}
 							return -1;
 						}
-			});
+			});*/
 
 			if (finalizationReports != null) {
 				this.getManagedBean().setFinalizationReports(
