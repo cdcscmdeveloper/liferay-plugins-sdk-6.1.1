@@ -124,6 +124,7 @@ public class ScheduleBiddingBackingBean extends
 	 */
 
 	public void preRenderView() {
+		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
 			SCEvaluationDataType dpDataType = getBpmTaskDetails(
 					SCEvaluationDataType.class, null);
@@ -140,17 +141,17 @@ public class ScheduleBiddingBackingBean extends
 					((PmUser) (new FacesScopes().getUserSessionBean()))
 							.getUserId());
 			populateDurationDropDownValues();
-			FacesContext fc = FacesContext.getCurrentInstance();
+			
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
 		} catch (Exception e) {
 			handleException(e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, e
-							.getMessage()));
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
 
