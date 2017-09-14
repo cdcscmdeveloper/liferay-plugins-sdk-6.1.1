@@ -313,7 +313,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.approval.letter']}" styleClass="required" />
 				<h:panelGroup id="uploadApprovalLetter">
 			 		<p:commandButton oncomplete="uploadApprovalLetterDlg.show();return false;"
-						update="uploadApprovalLetter" icon="ui-icon-upload"
+						update="uploadApprovalLetter, uploadApprovalLetterDlg" icon="ui-icon-upload"
 						rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath == null}"
 				 		disabled="#{ctBackingBean.managedBean.disableAmendDetails}"/>	
 		     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName}" 
