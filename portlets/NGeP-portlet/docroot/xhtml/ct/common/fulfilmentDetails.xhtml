@@ -241,7 +241,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required"/>
 	  		 <h:panelGroup id="uploadBondExemptedPg">
 			 <p:commandButton oncomplete="uploadBondExemptedDlg.show();return false;"
-				 update="uploadBondExemptedPg"  icon="ui-icon-upload"
+				 update="uploadBondExemptedPg, uploadBondExemptedDlg"  icon="ui-icon-upload"
 				  rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath == null}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
