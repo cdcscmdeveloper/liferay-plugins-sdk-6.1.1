@@ -4532,15 +4532,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
-
+			
 			for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {					
 				reqDTO.setSupplierItemId(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getSupplierItemId());	
-
-
 				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
-				//				CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
 				CmSupplierItem catalog = resDTO.getSupplierItem();
+				
 				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
 
 				catalog.getCmStandardPricing().setPrice(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmStandardPricing().getPrice());
@@ -4862,7 +4860,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				supplierReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 				supplierReqDTO.setAllStatuses(true);
 				SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-
 				reqDTO.setSupplierItemId(catalog.getSupplierItemId());
 				reqDTO.setUomId(catalog.getPmUom().getUomId());
 				reqDTO.setExtensionCode(catalog.getCmItem().getExtensionCode());
@@ -4928,7 +4925,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				reqDTO.getSaveSupplierItems().add(catalog);
 
-			}			
+			}
+			
+			
+			if(reqDTO.getSaveSupplierItems()!=null && reqDTO.getSaveSupplierItems().size()>1){
+				Map map = new HashMap();
+				String key = "";
+				for(CmSupplierItem check : reqDTO.getSaveSupplierItems()){
+					key = check.getPmUom().getUomId()+"_"+check.getCmItem().getExtensionCode()+"_"+check.getCmStandardPricing().getStartDate()+"_"+check.getCmStandardPricing().getEndDate();
+					if(!map.containsKey(key)){
+						map.put(key, check);
+					}else{
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715019,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+						return naviToMaintenancePage(false);
+					}
+				}
+			}	
+			
 			resDTO = catalogueSO.updateSupplierItem(reqDTO);
 			log.debug("resDTO.isSuccessful():" + resDTO.isSuccessful());
 
@@ -7347,7 +7365,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			System.out.println("*******promotion*******"+pricing.getPrice());
 
 
-			if (pricing.getStand_group_id() == cmPricing.getStand_group_id() && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
+			if (pricing.getPromo_group_id() == cmPricing.getPromo_group_id() && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
 				priceInvalid = true;
 			}
 
