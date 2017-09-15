@@ -1,11 +1,17 @@
 package my.ep.web.vo;
 
+import java.io.Serializable;
+
 import org.primefaces.model.DualListModel;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmSvTask;
 
-public class SmSvcAssignmentVO {
+public class SmSvcAssignmentVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SmSvTask smSvTask;
 	private DualListModel<PmUser> svoUserList;
 	
