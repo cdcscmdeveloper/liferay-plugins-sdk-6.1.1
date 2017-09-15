@@ -1847,6 +1847,8 @@ public class LOADetailBackingBean extends
 			supplierWitnessIcNo = supplierWitness.getIdentificationNo();
 			supplierWitnessAddress = supplierWitness.getAddress();
 		}
+		
+		supplierWitnessAddress = supplierWitnessAddress.replaceAll("\r\n", "<br />");
 		context.put("supplierWitnessUser", supplierWitnessUser);
 		context.put("supplierWitnessIcNo", supplierWitnessIcNo);
 		context.put("supplierWitnessAddress", supplierWitnessAddress);
