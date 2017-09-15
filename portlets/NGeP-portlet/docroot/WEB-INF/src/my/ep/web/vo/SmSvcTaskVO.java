@@ -1,6 +1,12 @@
 package my.ep.web.vo;
 
-public class SmSvcTaskVO {
+import java.io.Serializable;
+
+public class SmSvcTaskVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long stateId;
 	private String stateName;
 	private int totalTaskBefore;
