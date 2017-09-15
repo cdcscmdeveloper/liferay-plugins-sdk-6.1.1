@@ -416,8 +416,7 @@ public class BSVAttendanceBackingBean extends
 					registration.setAttended(true);
 
 				} else {
-					throw new EpException(MessageConst.ERROR_760043,
-							new String[] { "1" });
+					throw new EpException(MessageConst.ERROR_760043);
 				}
 
 			}
@@ -1049,8 +1048,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 						registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 					}
 				} else {
-					throw new EpException(MessageConst.ERROR_760043,
-							new String[] { "1" });
+					throw new EpException(MessageConst.ERROR_760043);
 				}
 
 			}
