@@ -11,26 +11,18 @@
 		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
-		
-			<table width="100%">
-				<tr>
-					<td><p:commandButton
-							value="#{lbl['lbl.btn.back']}" style="float:left;"
-							immediate="true" process="@this" partialSubmit="true"
-							styleClass="BtnSpacing"
-							action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
-						<!--  Need to add all screen button into a single page and append here.. -->
-						<div class="ppRightBtn">
-						<ui:include src="financialchecklistbuttons.xhtml" />
-						</div>
-						</td>
-				</tr>
-			</table>
-		
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;" immediate="true"
+				process="@this" partialSubmit="true" styleClass="BtnSpacing"
+				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+			<!--  Need to add all screen button into a single page and append here.. -->
+			<ui:include src="financialchecklistbuttons.xhtml" />
+		</div>
+		<p:spacer height="4"></p:spacer>
 		<!-- Header file for all sub screens -->
-		<ui:include
-			src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
+		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<!-- inclueded page for respecitive checklist -->
+		<p:spacer height="4"></p:spacer>
 		<ui:include
 			src="#{supplierProposalDetailBackingBean.managedBean.pageUrl}" />
 	</ui:define>
