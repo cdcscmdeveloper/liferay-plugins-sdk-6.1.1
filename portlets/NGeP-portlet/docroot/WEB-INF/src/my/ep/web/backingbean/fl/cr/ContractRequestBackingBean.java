@@ -51,6 +51,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
@@ -93,6 +94,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
@@ -147,6 +149,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
@@ -207,7 +210,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -4206,10 +4208,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 						IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+						ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+						
 						ContractReqDTO contractReqDTO = new ContractReqDTO();
 						contractReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-						if(!contractSO.checkContractStatus(contractReqDTO).isActive()) {
-							throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+						if(contractSO.checkContractStatus(contractReqDTO).isActive()){
+							CircularReqDTO circularReqDTO = new CircularReqDTO();
+							circularReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+							CtCircularVer circularVer = circularSO.retrieveCircularVerByContractId(circularReqDTO).getCircularVer();
+							Date expDate = circularVer.getEndDate();
+							int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
+							Calendar today = Calendar.getInstance();
+							today.setTime(DateUtils.getCurrentDateWithoutTime());
+							today.add(Calendar.DATE, days);
+							if(today.getTime().after(expDate)) {
+								throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+							}
+						}else{
+							throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});//TODO Bug #15835
 						}
 					} else {
 						Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
