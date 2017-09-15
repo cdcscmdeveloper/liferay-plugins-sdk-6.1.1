@@ -2518,7 +2518,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									ParameterConst.DEDUCTION_TYPE_FIXED)
 									|| deductionType
 											.getParameterCode()
-											.equals(ParameterConst.DEDUCTION_TYPE_OTHERS))) {
+											.equals(ParameterConst.DEDUCTION_TYPE_OTHERS) || deductionType
+											.getParameterCode()
+											.equals(ParameterConst.DEDUCTION_TYPE_NON_FIXED))) {
 								if (deduction.getDeductionType()
 										.getParameterId() == scQtDeduction
 										.getDeductionType().getParameterId()) {
