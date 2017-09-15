@@ -1165,11 +1165,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 */
 	public String insertContractedItemCodeForService(CmUnspsc commodity) {
 		this.getManagedBean().setSelectedUNSPSCObj(commodity);
-		return insertContractedItemCode();
+		return insertContractedItemCode(null);
 
 	}
 
-	public String insertContractedItemCode() {
+	public String insertContractedItemCode(Object [] objSelected) {
 		log.info("**********insertContractedItemCode************");
 		FacesContext facesContext = null;
 
@@ -1187,9 +1187,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		ExtensionCodeVO extCodeVO = null;
 
-		if (isSelectedRequestItemProduct()) {
-			Object[] objects = (Object[]) this.getManagedBean()
-					.getSelectedExtenstionForItem();
+		if (objSelected !=null) {
+			Object[] objects = (Object[]) objSelected;
 
 			if (objects != null && objects.length > 0) {
 				extCodeVO = new ExtensionCodeVO();
