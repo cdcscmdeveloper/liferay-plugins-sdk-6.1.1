@@ -646,6 +646,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveFinancialNonGovCompanyExpAction(boolean isCompleted) {
 		debugLogger("saveFinancialNonGovCompanyExpAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		List<ScQtPRPExperience> experiences = this.getManagedBean()
@@ -850,7 +851,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveTechnicalSpecificationAction(boolean isCompleted) {
 		debugLogger("saveTechnicalSpecificationAction");
-
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 
@@ -874,7 +875,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveFinancialSpecificationAction(boolean isCompleted) {
 		debugLogger("saveFinancialSpecificationAction");
-
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 
@@ -897,6 +898,7 @@ public class SPDetailBackingBean extends
 	 */
 	private ProposalResDTO saveTemplateSpecDtls() {
 		debugLogger("saveTempleateSpecDtls");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
@@ -1009,6 +1011,7 @@ public class SPDetailBackingBean extends
 	 */
 	private ProposalResDTO saveTechTemplateSpecDtls() {
 		debugLogger("saveTempleateSpecDtls");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
@@ -1041,6 +1044,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveFinancialCreditFacilityAction(boolean isCompleted) {
 		debugLogger("saveFinancialCreditFacilityAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
@@ -1207,6 +1211,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveFinancialCashOnHandAction(boolean isCompleted) {
 		debugLogger("saveFinancialCashOnHandAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		List<ScQtPRPCashOnHand> qtPRPCashOnHandList = this.getManagedBean()
@@ -1283,6 +1288,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveBankStatementAction(boolean isCompleted) {
 		debugLogger("saveBankStatementAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		List<ScQtPRPBankStmt> prpBankStmts = this.getManagedBean()
@@ -1353,6 +1359,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveTechEmployeesDtlAction(boolean isCompleted) {
 		debugLogger("saveTechEmployessDtlAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		List<EncryptDataBean> encEmployeeList = null;
 		ScQtPRPEmployee prpEmployee = getManagedBean().getScQtPRPEmployee();
@@ -1421,8 +1428,8 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveTechNonGovCompanyExpAction(boolean isCompleted) {
 		debugLogger("saveTechNonGovCompanyExpAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		validateContractNo();
-
 		List<ScQtPRPExperience> experiencesTosave = new ArrayList<ScQtPRPExperience>();
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
@@ -1542,8 +1549,8 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveAssetLiabilityAction(boolean isCompleted) {
-
 		debugLogger("saveAssetLiabilityAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		List<EncryptDataBean> prpAssetLiabilityList = new ArrayList<EncryptDataBean>();
@@ -1628,6 +1635,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveFinancialPaidUpCapitalAction(boolean isCompleted) {
 		debugLogger("saveFinancialPaidUpCapitalAction");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4399,6 +4407,16 @@ public class SPDetailBackingBean extends
 			}
 		});
 	}
-	
+	private void validateProposalCloseTime(ScQt qt){
+		if(qt.getClosingDate().before(DateUtils.getCurrentDate())){
+			StringBuilder qtSB = new StringBuilder();
+			qtSB.append(getParameterDesc(qt.getProcurementMode().getParameterType()
+					,qt.getProcurementMode().getParameterCode()));
+			qtSB.append(" - ");
+			qtSB.append(qt.getQtNo());
+			throw new EpException(MessageConst.ERROR_760461,
+					new String[] {qtSB.toString(),qt.getClosingDate().toString()});
+		}
+	}
 	
 }
