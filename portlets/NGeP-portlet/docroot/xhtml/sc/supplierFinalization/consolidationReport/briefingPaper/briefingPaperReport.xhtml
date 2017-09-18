@@ -54,7 +54,7 @@
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false" action="#{consolidationReportBackingBean.downloadReport(report)}" />
 					<ui:fragment
-						rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey}">
+						rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.title eq 'Kertas Taklimat'}">
 						<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
 							popupWidgetVar="kertasTaklimUploadAttWidget"
 							attachment="#{report.scQtFinalizationReportAttachment}"
