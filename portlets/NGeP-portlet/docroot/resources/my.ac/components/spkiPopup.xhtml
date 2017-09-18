@@ -21,12 +21,16 @@
 
 	<cc:implementation>
 
-		<script>
-			$(document).keypress(function(event) {
-				if (event.which == '13') {
-					event.preventDefault();
-				}
-			});
+		<script type="application/javascript">
+		
+	
+			function blockEnter() {
+				$(document).keypress(function(event) {
+					if (event.which == '13') {
+						event.preventDefault();
+					}
+				});
+			}
 
 			var runEnableAutoUpdate = true;
 			function setRunEnableAutoUpdate(runEnableAutoUpdate) {
@@ -62,10 +66,10 @@
 						<h:panelGrid columns="2" cellpadding="3">
 							<h:outputLabel style="white-space: normal;"
 								value="#{cc.attrs.challengeQues1}" />
-							<p:inputText value="#{cc.attrs.challengeAns1}" />
+							<p:inputText id="answerId" value="#{cc.attrs.challengeAns1}" onkeypress="blockEnter();" />
 
 							<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-							<p:password id="password" value="#{cc.attrs.password}" />
+							<p:password id="password" value="#{cc.attrs.password}" onkeypress="blockEnter();" />
 
 						</h:panelGrid>
 
