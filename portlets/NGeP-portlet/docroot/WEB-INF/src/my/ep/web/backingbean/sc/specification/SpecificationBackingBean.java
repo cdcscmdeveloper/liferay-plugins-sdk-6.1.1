@@ -2753,9 +2753,25 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					}
 				}
 			}
-
+		List<ScQtCommitteeActivity> committeeActivities=resDTO.getCommitteActivities();
+			if (null != this.getManagedBean().getCurrentStatusId()
+					&& QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH
+							.equals(this.getManagedBean()
+									.getCurrentStatusId())){
+				log.info("60034L"+this.getManagedBean().getCurrentStatusId());
+				if(CollectionUtils.isNotEmpty(committeeActivities)){
+					for(ScQtCommitteeActivity activity:committeeActivities){
+						if (!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
+								.equalsIgnoreCase(activity
+										.getScCommitteeMember().getMemberRole().getParameterCode())) {
+							activity.setSignedOff(Boolean.TRUE);
+					}
+				}
+				
+			}
+			}
 			this.getManagedBean().setCommitteeActivities(
-					resDTO.getCommitteActivities());
+					committeeActivities);
 
 		} finally {
 			committeSO = null;
