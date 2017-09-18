@@ -22,22 +22,30 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 		getManagedBean().setPaymentTypeMethodLs(getPaymentTypeMethodList());
 	}
 	
-	public void generateReport(){
-		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+	public void generateReport() {
+		SimpleDateFormat df = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		
+
 		addCompanyNameParam(params);
 		addSelectedPaymentTypeParam(params);
-		
-		
-		if(StringUtils.isNotBlank(getManagedBean().getReportType())){
-			params.put(SmReportConst.PARAM_RPT_TYPE, getManagedBean().getReportType());
+
+		if (StringUtils.isNotBlank(getManagedBean().getReportType())) {
+			params.put(SmReportConst.PARAM_RPT_TYPE, getManagedBean()
+					.getReportType());
 		}
-		
-		if(getManagedBean().getDateFrom() != null){
-			params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
-			params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
+
+		if (getManagedBean().getDateFrom() != null) {
+			params.put(SmReportConst.PARAM_DATE_FROM,
+					df.format(getManagedBean().getDateFrom()));
+			params.put(SmReportConst.PARAM_DATE_TO,
+					df.format(getManagedBean().getDateTo()));
+		}
+
+		if (!StringUtils.isBlank(getManagedBean().getPaymentMethod())) {
+			params.put(SmReportConst.PARAM_PAYMENT_METHOD,
+					StringUtils.upperCase(getManagedBean().getPaymentMethod()));
 		}
 
 		generateSmReport(params);
