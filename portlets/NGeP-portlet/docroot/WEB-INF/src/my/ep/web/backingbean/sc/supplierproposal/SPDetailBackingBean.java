@@ -521,8 +521,8 @@ public class SPDetailBackingBean extends
 	 *            the digi sign
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
-
 		debugLogger("submitSupplierProposal");
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmAppl() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -4319,6 +4319,7 @@ public class SPDetailBackingBean extends
 	 * Action method for Spki sign.
 	 */
 	public void spkiSignAction() {
+		validateProposalCloseTime(this.getManagedBean().getQt());
 		retrievePaidUpCapitalNdDeclarationDtls();
 		IQTProposalSO proposalSO = null;
 		try {
