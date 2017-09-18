@@ -99,8 +99,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The sc loa approval. */
 	private ScLoaApproval scLoaApproval;
 
-
-
 	/** The selected sc loa reports. */
 	private List<ScLoaReport> selectedScLoaReports;
 
@@ -287,6 +285,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
     private String fileTypePdf ="/(\\.|\\/)(pdf)$/i";
     
     private String guidelineTooltip;
+    
+    /** The tracking dairy view. */
+	private boolean trackingDairyView;
 	
 	/**
 	 * Gets the spki backing bean.
@@ -1709,6 +1710,20 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setSupplierContractSignerList(
 			List<PmUser> supplierContractSignerList) {
 		this.supplierContractSignerList = supplierContractSignerList;
+	}
+
+	/**
+	 * @return the trackingDairyView
+	 */
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+
+	/**
+	 * @param trackingDairyView the trackingDairyView to set
+	 */
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
 	}
 	
 }
