@@ -883,7 +883,9 @@ public class SmApplicationUtil {
 	 * @return int - max review count number
 	 */
 	public static int assignMaxReviewCount(String appType, String applCatType,
-			String supplierType, String businessType, boolean isReviewSiteVisit) {
+			String supplierType, String businessType,
+			boolean isReviewSiteVisit, boolean showTravelPanel,
+			boolean showMachineryPanel) {
 		int i = 0;
 		switch (appType) {
 
@@ -929,15 +931,26 @@ public class SmApplicationUtil {
 		if (businessType
 				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
 			i = i - 2;
+		} else {
+			if (!businessType
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+					&& !businessType
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
+				i = i - 1;
+			}
 		}
-		if (businessType
-				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
-				|| businessType
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
-			i = i - 1;
-		}
+
 		if (isReviewSiteVisit) {
 			i = i + 1;
+		}
+		if (applCatType.equals("S")) {
+			if (!showTravelPanel && !showMachineryPanel) {
+				i = i - 2;
+			} else {
+				if (!showTravelPanel || !showMachineryPanel) {
+					i = i - 1;
+				}
+			}
 		}
 		return i;
 	}
@@ -5694,8 +5707,11 @@ public class SmApplicationUtil {
 						&& cat.getPmCategoryL3().getCategoryTypeCode()
 								.getParameterId() != null
 						&& cat.getRecordStatusFlg() != null
-						&& cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						&& (cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+								.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
 						&& !isCategoryRejected(cat)) {
 					String facType = "";
 					if (cat.getPmCategoryL3().getFacilityType() != null) {
@@ -6844,7 +6860,9 @@ public class SmApplicationUtil {
 					managedBean.getSmAppl().getApplCategoryType(), managedBean
 							.getSmAppl().getSupplierType(),
 					managedBean.getBusinessTypeVal(),
-					managedBean.isReviewSiteVisit());
+					managedBean.isReviewSiteVisit(),
+					managedBean.isShowTravelSoftwarePanel(),
+					managedBean.isShowMachineryEquipmentPanel());
 		}
 
 		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
@@ -11182,7 +11200,8 @@ public class SmApplicationUtil {
 					if (item == null) {
 						item = new SelectItem();
 						item.setLabel(eduLevel.getCodeName());
-						item.setValue(eduLevel.getPmParameter().getParameterId());
+						item.setValue(eduLevel.getPmParameter()
+								.getParameterId());
 						finalList.add(item);
 					}
 				}
