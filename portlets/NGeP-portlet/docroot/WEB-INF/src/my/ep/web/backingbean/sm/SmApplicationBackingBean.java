@@ -8519,18 +8519,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	private int getMaxSecCountByShowPanel() {
+		getManagedBean().setMaxReviewCount(
+				assignMaxReviewCount(
+						getManagedBean().getSmAppl().getApplType(),
+						getManagedBean().getSmAppl().getApplCategoryType(),
+						getManagedBean().getSmAppl().getSupplierType(),
+						getManagedBean().getBusinessTypeVal()));
 		int retVal = getManagedBean().getMaxReviewCount();
-		if (getManagedBean().getSmAppl().getApplCategoryType().equals("S")) {
-			if (!getManagedBean().isShowTravelSoftwarePanel()
-					&& !getManagedBean().isShowMachineryEquipmentPanel()) {
-				retVal = retVal - 2;
-			} else {
-				if (!getManagedBean().isShowTravelSoftwarePanel()
-						|| !getManagedBean().isShowMachineryEquipmentPanel()) {
-					retVal = retVal - 1;
-				}
-			}
-		}
 		return retVal;
 	}
 
@@ -8803,7 +8798,9 @@ public class SmApplicationBackingBean extends
 			String supplierType, String businessType) {
 		return SmApplicationUtil.assignMaxReviewCount(appType, applCatType,
 				supplierType, businessType, getManagedBean()
-						.isReviewSiteVisit());
+						.isReviewSiteVisit(), getManagedBean()
+						.isShowTravelSoftwarePanel(), getManagedBean()
+						.isShowMachineryEquipmentPanel());
 	}
 
 	/**
