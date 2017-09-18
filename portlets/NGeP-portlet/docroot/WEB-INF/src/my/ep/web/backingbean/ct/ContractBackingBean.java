@@ -138,6 +138,7 @@ import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -3286,12 +3287,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * 
 	 * @return the navigate URL 
 	 */
-	public void goToLoaView(Long loaId) {
-		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-		loaDetailBackingBean.viewLOA(loaId);
+	public void goToLoaView(ScLoa scLoa) {
+		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+		} else {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+		}
 	}
 	  
 	  /**

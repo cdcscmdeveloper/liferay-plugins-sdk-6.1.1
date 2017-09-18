@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.pm.OrganizationType;
@@ -92,6 +93,7 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -443,7 +445,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
 				&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
 			for (CtPerformanceBond ctPerformanceBond : getManagedBean().getContractVer().getCtContractAmount().getCtPerformanceBonds()) {
-				if (StringUtils.isNotBlank(ctPerformanceBond.getFilePath())) {
+				if (StringUtils.isNotBlank(ctPerformanceBond.getFilePath())
+						&& !ctPerformanceBond.getFilePath().equalsIgnoreCase("N/A")) {
 					getManagedBean().setValidBondAttachment(true);
 					break;
 				}
@@ -1111,12 +1114,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * 
 	 * @return the navigate URL 
 	 */
-	public void goToLoaView(Long loaId) {
-		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-		loaDetailBackingBean.viewLOA(loaId);
+	public void goToLoaView(ScLoa scLoa) {
+		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+		} else {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+		}
 	}
 
 	/**
