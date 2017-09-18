@@ -7190,6 +7190,25 @@ public class DirectLOABackingBean extends
 	}
 	
 	/**
+	 * View loa.
+	 *
+	 * @param loaId the loa id
+	 */
+	public void viewLOA(long loaId) {
+		debugLogger("viewLOA");
+		try {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(loaId);
+			retriveLoaDetails(loaId, this.getManagedBean().getBackToPreviousPage(), true);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+	
+	/**
 	 * Generate agreement letter doc from velocity.
 	 *
 	 * @param attachment the attachment
