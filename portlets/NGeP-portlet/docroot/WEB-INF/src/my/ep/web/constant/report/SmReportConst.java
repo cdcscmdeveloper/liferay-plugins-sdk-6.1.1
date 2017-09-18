@@ -57,6 +57,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_REG_STATUS = "PREGSTATUS";
 	public static final String PARAM_SV_STATUS = "PSITESTATUS";
 	public static final String PARAM_SVO_USER = " PSVOUSERID";
+	public static final String PARAM_PAYMENT_METHOD = "PPAYMENTMENTHOD";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
