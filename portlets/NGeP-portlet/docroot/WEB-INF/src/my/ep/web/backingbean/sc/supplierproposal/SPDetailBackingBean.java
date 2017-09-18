@@ -4409,6 +4409,7 @@ public class SPDetailBackingBean extends
 	}
 	private void validateProposalCloseTime(ScQt qt){
 		if(qt.getClosingDate().before(DateUtils.getCurrentDate())){
+			this.getManagedBean().setReadOnly(true);
 			StringBuilder qtSB = new StringBuilder();
 			qtSB.append(getParameterDesc(qt.getProcurementMode().getParameterType()
 					,qt.getProcurementMode().getParameterCode()));
