@@ -3069,6 +3069,8 @@ public class LOIDetailBackingBean extends
 			if (scLoi.getScNegoLocations() != null
 					&& scLoi.getScNegoLocations().size() > 0) {
 				context.put("scNegoLocations", scLoi.getScNegoLocations());
+			} else {
+				context.put("scNegoLocations", "null");
 			}
 			
 			
