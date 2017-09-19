@@ -168,6 +168,7 @@ import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -4139,13 +4140,10 @@ public class SmApplicationUtil {
 	public static List<PmReasonDesc> retrieveRejectReasonListByParameterCode(
 			String paramterCode) {
 		List<PmReasonDesc> reasonDescList = null;
-		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IReasonSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonCategory(paramterCode);
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-		ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
+		ReasonResDTO resDTO = SmServiceLookup.getReasonSO().retrieveReasonDescListByCategory(reqDTO);
 
 		if (resDTO != null) {
 			reasonDescList = resDTO.getReasonDescList();
@@ -4165,6 +4163,16 @@ public class SmApplicationUtil {
 			}
 		}
 		return reasonDescList;
+	}
+	
+	public static List<PmReasonDesc> retrieveMofRejectReason(String businessType){
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON.value());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setParameterCodes(Arrays.asList(businessType));
+		reqDTO.setRestrictionType(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
+		ReasonResDTO resDTO = SmServiceLookup.getReasonSO().retrieveSuppReasonByRestrType(reqDTO);
+		return resDTO.getReasonDescList();
 	}
 
 	// @SuppressWarnings("unused")
