@@ -40,7 +40,7 @@
 						<h:outputText value="#{lbl['lbl.sc.location']}"/>
 				</f:facet>
 				<p:inputText value="#{negoloc.negoLocation}" id="negLocId" label="#{lbl['lbl.sc.location']}" maxlength="255"
-				size="36" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected and isTermLocRequired}">
+				size="48" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected and isTermLocRequired}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this" />
 				</p:inputText>
