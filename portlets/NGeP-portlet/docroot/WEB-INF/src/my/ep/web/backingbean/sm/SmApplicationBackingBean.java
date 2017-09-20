@@ -926,15 +926,9 @@ public class SmApplicationBackingBean extends
 		retrieveBusinessTypeList();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
-		getManagedBean()
-				.setReasonDescInitList(
-						SmApplicationUtil
-								.retrieveRejectReasonListByParameterCode(getManagedBean()
-										.getBusinessTypeVal()
-										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) ? ReasonCategory.ROC_REJECTION_REASON
-										.value()
-										: ReasonCategory.SUPPLIER_REJECTION_REASON
-												.value()));
+		getManagedBean().setReasonDescInitList(
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmSupplier().getBusinessType()));
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -9850,15 +9844,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void resetSearchRejectedReason() {
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
-		getManagedBean()
-				.setReasonDescList(
-						SmApplicationUtil
-								.retrieveRejectReasonListByParameterCode(getManagedBean()
-										.getBusinessTypeVal()
-										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) ? ReasonCategory.ROC_REJECTION_REASON
-										.value()
-										: ReasonCategory.SUPPLIER_REJECTION_REASON
-												.value()));
+		getManagedBean().setReasonDescList(
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmSupplier().getBusinessType()));
 		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 
