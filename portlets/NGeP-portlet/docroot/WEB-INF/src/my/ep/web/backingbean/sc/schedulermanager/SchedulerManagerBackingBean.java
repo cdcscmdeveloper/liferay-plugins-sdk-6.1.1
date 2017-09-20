@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.schedulermanager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -483,7 +484,7 @@ public class SchedulerManagerBackingBean extends
 					&& job.getTrigger().getPreviousFireTime() != null
 					&& job.getTrigger().getNextFireTime() != null
 					&& job.getTrigger().getNextFireTime()
-							.before(job.getTrigger().getPreviousFireTime())) {
+							.before(new Date())) {
 				getManagedBean().getEpSchedulerProblemJobList().add(job);
 			}
 		}
