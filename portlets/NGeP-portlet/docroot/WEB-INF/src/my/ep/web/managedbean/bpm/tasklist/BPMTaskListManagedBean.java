@@ -408,7 +408,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				if(getTaskDesc()!=null && getTaskDesc().trim().length()>0){
-					reqDTO.setTaskTitle(getTaskDesc());
+					reqDTO.setTaskTitle(getTaskDesc().replaceAll("<", "&#60;"));
 				}
 				
 				if(getSelectedOrgProfile()!=null){
@@ -513,15 +513,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 														face.getUserLocale()));
 							}
 							 if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle());
+						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle());
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle());
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
 						    	   if (worklistItemVO.getDocStatus() != null
@@ -709,15 +709,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle());
+						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle());
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle());
+						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
 						}
 					}
