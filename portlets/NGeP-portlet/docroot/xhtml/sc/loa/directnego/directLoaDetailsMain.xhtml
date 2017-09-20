@@ -28,6 +28,7 @@
 
 		<ui:param name="isSupplierAckStatus"
 			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isTrackingDairyView" value="#{directLOABackingBean.managedBean.trackingDairyView}" />
 
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaButtons.xhtml" />
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaHeader.xhtml" />

@@ -988,7 +988,7 @@ public class LOIDetailBackingBean extends
 			}  else {
 				getManagedBean().setHideColumnFlag(Boolean.FALSE);
 			}
-			calculateOfferedAndFinalPriceByItem(scLoi);
+			//calculateOfferedAndFinalPriceByItem(scLoi);
 			
 		} else {
 			scLoi.setScNegoTerms(null);
@@ -4228,13 +4228,13 @@ public class LOIDetailBackingBean extends
 
 		VelocityContext context = new VelocityContext();
 		List<ScLoi> lois = getManagedBean().getLois();
-		if (CollectionUtils.isNotEmpty(lois)) {
+		/*if (CollectionUtils.isNotEmpty(lois)) {
 			for (ScLoi loi : lois) {
 				if(!loi.equals(getManagedBean().getScLoi())){
 					calculateOfferedAndFinalPriceByItem(loi);	
 				}
 			}
-		}
+		}*/
 		context.put("isZonal", getManagedBean().isZonal());
 		context.put("decimalFormatter", new DecimalFormat("#,###,##0.00"));
 		context.put("scLois", lois);

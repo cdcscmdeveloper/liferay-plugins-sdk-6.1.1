@@ -18,7 +18,7 @@
 
 	<div class="ppRightBtn">
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfAward, directLOABackingBean.managedBean.scLoa.loaId, true)}"
+			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfAward, directLOABackingBean.managedBean.scLoa.loaId, directLOABackingBean.isSupplier())}"
 			immediate="true" 
 			rendered="#{!empty directLOABackingBean.managedBean.backToPreviousPage}" />
 					
