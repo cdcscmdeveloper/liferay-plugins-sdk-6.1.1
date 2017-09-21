@@ -24,6 +24,12 @@
 
 				<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
 			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.attendance']}"
+				style="width:15%;white-space: normal;"
+				rendered="false">
+				<h:outputText value="#{lbl[scQtBriefReg.attended ? 'lbl.txt.yes' : 'lbl.txt.no']}" />
+			</p:column>
 
 		</p:dataTable>
 
@@ -94,7 +100,7 @@
 		<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
-			rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
+			rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
 			selection="#{bsvAttendanceBackingBean.managedBean.scQtBriefingAttendance}"
 			selectionMode="single" style="width:100%">
 
@@ -121,6 +127,10 @@
 					<p:column headerText="#{lbl['lbl.sc.email']}">
 
 					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sc.supplier.attendance.self.registered']}">
+
+					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.attendance']}">
 
@@ -136,12 +146,12 @@
 						update="@this"></p:ajax>
 				</p:inputText>
 			</p:column>
-			<p:column style="width:6%;white-space: normal;">
-				<h:outputLabel
+			<p:column style="width:10%;white-space: normal;">
+				<h:outputText
 					value="#{scQtBriefAttendace.authorized ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 
 			</p:column>
-			<p:column style="width:22%;white-space: normal;">
+			<p:column style="width:15%;white-space: normal;">
 				<h:outputText value="#{scQtBriefAttendace.icPassPort}"
 					rendered="#{scQtBriefAttendace.authorized}" />
 				<p:inputText value="#{scQtBriefAttendace.icPassPort}"
@@ -151,7 +161,7 @@
 				</p:inputText>
 
 			</p:column>
-			<p:column style="width:22%;white-space: normal;">
+			<p:column style="width:15%;white-space: normal;">
 				<h:outputText value="#{scQtBriefAttendace.contactNo}"
 					rendered="#{scQtBriefAttendace.authorized}" />
 				<p:inputText value="#{scQtBriefAttendace.contactNo}"
@@ -168,6 +178,10 @@
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						update="@this"></p:ajax>
 				</p:inputText>
+			</p:column>
+			<p:column style="width:10%;white-space: normal; text-align:center;">
+				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.preRegisterd}"
+					disabled="true" />
 			</p:column>
 			<p:column style="width:6%;white-space: normal; text-align:center;">
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
