@@ -6588,45 +6588,12 @@ public class SupplierFinalizationBackingBean extends
 				new Comparator<ScQtFinalizationReport>() {
 					public int compare(ScQtFinalizationReport report1, 
 							ScQtFinalizationReport report2) {
-						if(report1.getPmDocument()!= null && report2.getPmDocument()!= null ){
-							Integer displaySequence1 = Integer.valueOf(report1.getPmDocument().getDisplaySeq());
-							Integer displaySequence2 = Integer.valueOf(report2.getPmDocument().getDisplaySeq());
-							
-							if(displaySequence1.intValue() == displaySequence2.intValue()){
-								return 0;
-							}else if (displaySequence1.intValue() > displaySequence2.intValue()){
-								if(report1.getCreatedDate()!= null && report2
-										.getCreatedDate()!= null && report1.getCreatedDate().after(report2
-												.getCreatedDate())){
-									return 1;
-								}else if(report1.getCreatedDate()== null && report2.getCreatedDate()!= null){
-									return 1;
-								}else{
-									return -1;
-								}
-								
-							}else {
-								if(report1.getCreatedDate()!= null && report2
-										.getCreatedDate()!= null && report1.getCreatedDate().after(report2
-												.getCreatedDate())){
-									return 1;
-								}else if(report1.getCreatedDate()== null && report2.getCreatedDate()!= null){
-									return 1;
-								}else{
-									return -1;
-								}
-							}
-						}else if (report1.getPmDocument()== null && report2.getPmDocument() != null) {
-							return 1;
-						}else if(report1.getPmDocument()!= null && report2.getPmDocument()== null){
-							return -1;
-						}else if (report1.getCreatedDate() != null
+						 if (report1.getCreatedDate() != null
 								&& report2.getCreatedDate() != null) {
-							// Ascending order
 							if (report1.getCreatedDate().equals(report2
 									.getCreatedDate())) {
 								return 0;
-							} else if (report1.getCreatedDate().after(report2
+							} else if (report1.getCreatedDate().before(report2
 									.getCreatedDate())) {
 								return 1;
 							} else {
