@@ -26,11 +26,14 @@ import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.py.PyPayment;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -41,6 +44,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -111,15 +115,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					log.info("Key1>>>>" + key1);
 					if (skey.equals(key1)) {
 						String billType = StringUtils.EMPTY;
+						String personnelName = null;
+						
 						if(resDTO.getPyPayment() != null){
 							billType = resDTO.getPyPayment().getPyBill().getBillType();
 						}
-						showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType) ;
+						showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls().get(0)) ;
 					}else{
-						showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+						showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 					}
 				}else{
-					showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+					showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 				}
 				log.info("<<<<<<<>PostConstruct Parameter - End>>>>>>>>>>>");
 				responseRedirect();
@@ -204,6 +210,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Long paymentId = pyPayment.getPaymentId();
 
 				log.info("Status Success 0>>>>>");
+				String softcertUserName = null;
 				if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
 					BigDecimal paymentAmount = pyPayment.getPaymentAmt();
 					log.info("paymentId>>>>" + paymentId);
@@ -327,9 +334,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			if(resDTO.getPyPayment() != null){
 				billType = resDTO.getPyPayment().getPyBill().getBillType();
 			}
-			showPaymentResponse(status,Long.valueOf(orderId),errorDesc,billType);
+			showPaymentResponse(status,Long.valueOf(orderId),errorDesc,billType,resDTO.getPyPayment().getPyBill().getPyBillDtls().get(0));
 		}else{
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 		}
 
 	}
@@ -342,7 +349,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 * @param Long
 	 *            paymentId
 	 */
-	public void showPaymentResponse(String status, Long paymentId, String errorDesc, String billType) {
+	public void showPaymentResponse(String status, Long paymentId, String errorDesc, String billType, PyBillDtl billDtl) {
 		log.info(">>>>showPaymentResponse<<<<<<<<<<" + status);
 		
 		boolean paymentStatus = false;
@@ -355,6 +362,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				msgCode = MessageConst.INFO_721058;
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 				msgCode = MessageConst.INFO_721065;
+				
+				getManagedBean().setMsgParam(getSoftCertNameEmail(billDtl));
 			}else{
 				msgCode = MessageConst.INFO_721064;
 			}
@@ -462,10 +471,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
 		if(fc.getMessageList().size() < 1){
+			String[] msgParam = null;
+			
+			if(getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065)){
+				msgParam = getManagedBean().getMsgParam();
+			}else{
+				msgParam = new String[]{errorDesc};
+			}
 			fc.addMessage(
 					null,
 					new FacesMessage(getManagedBean().getMessageSeverity(), null,
-							MessageUtils.getMessage(getManagedBean().getMessageId(),new String[]{errorDesc},
+							MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		
@@ -490,5 +506,48 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 	}
 	
+	private String[] getSoftCertNameEmail(PyBillDtl bill){
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setPersonnelId(bill.getBillDtlRefId());
+		SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
 
+		if(personnel != null){
+			String[] strArr = new String[]{personnel.getName(), personnel.getEmail()};
+			return strArr;
+		}
+
+		return null;
+	}
+	
+/*	public static void main(String args[]){
+		String tranID = "355374";
+		String orderId = "215";
+		String status = "00";
+		String domain = "cdc4_Dev";
+		String amount = "50.00";
+		String currency = "RM";
+		String appcode = "657300";
+		String paydate = "2017-09-15 16:07:05";
+		String vKey = "11504645159a52c481f04ded493c8c13";
+		String sKey = "6a53011c1afd949ca399a7a4547d96db";
+		
+		String tranID = "356409";
+		String orderId = "224";
+		String status = "00";
+		String domain = "cdc4_Dev";
+		String amount = "50.00";
+		String currency = "RM";
+		String appcode = "657300";
+		String paydate = "2017-09-19 17:44:35";
+		String vKey = "11504645159a52c481f04ded493c8c13";
+		String sKey = "8443165a504774d4e4a8f14e0ca0e49f";
+		
+		String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
+		String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
+		
+		System.out.println("skey >>>>" + sKey);
+		System.out.println("key1>>>>>" + key1);
+	}*/
+	
+	
 }

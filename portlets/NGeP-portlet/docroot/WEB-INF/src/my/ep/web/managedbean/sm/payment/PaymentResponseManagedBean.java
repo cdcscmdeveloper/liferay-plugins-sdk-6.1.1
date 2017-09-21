@@ -16,6 +16,7 @@ public class PaymentResponseManagedBean extends BaseManagedBean{
 	private String messageId;
 	private Severity messageSeverity;
 	private String errDesc;
+	private String[] msgParam;
 	
 	public Long getPaymentId() {
 		return paymentId;
@@ -52,6 +53,12 @@ public class PaymentResponseManagedBean extends BaseManagedBean{
 	}
 	public void setErrDesc(String errDesc) {
 		this.errDesc = errDesc;
+	}
+	public String[] getMsgParam() {
+		return msgParam;
+	}
+	public void setMsgParam(String[] msgParam) {
+		this.msgParam = msgParam;
 	}
 
 }
