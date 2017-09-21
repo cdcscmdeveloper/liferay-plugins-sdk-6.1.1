@@ -2400,17 +2400,79 @@ public class SmApplicationUtil {
 			sec.setSitevisitVerified(isVerifiedAll);
 		}
 		sec.setFactoryVerify(isVerifiedAll);
-		sec.setManufacturingVerified(isVerifiedAll);
 		if (managedBean.isShowMachineryEquipmentPanel()) {
 			sec.setMachineryVerified(isVerifiedAll);
 		}
-		sec.setLicenseVerified(isVerifiedAll);
 		sec.setAssocBodyVerified(isVerifiedAll);
 		if (managedBean.isShowTravelSoftwarePanel()) {
 			sec.setSupplierSystemVerified(isVerifiedAll);
 		}
 
 		return sec;
+	}
+
+	public static int getTickVerifySectionCount(SmApplicationManagedBean bean,
+			SmApplSectionReview rev) {
+		int retVal = 0;
+
+		if (rev.isBasicVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isOfficeFacilityVerfied()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isStaffVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isTrnsNetworkVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isBranchVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isAssociateVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isCertVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isExperienceVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isCaptialVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isShareholderVerifed()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isEquityCompVerifed()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isPersonnelVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isBankVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isCategoryVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isSitevisitVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isFactoryVerify()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isMachineryVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isAssocBodyVerified()) {
+			retVal = retVal + 1;
+		}
+		if (rev.isSupplierSystemVerified()) {
+			retVal = retVal + 1;
+		}
+		return retVal;
 	}
 
 	/**
@@ -4143,7 +4205,8 @@ public class SmApplicationUtil {
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonCategory(paramterCode);
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-		ReasonResDTO resDTO = SmServiceLookup.getReasonSO().retrieveReasonDescListByCategory(reqDTO);
+		ReasonResDTO resDTO = SmServiceLookup.getReasonSO()
+				.retrieveReasonDescListByCategory(reqDTO);
 
 		if (resDTO != null) {
 			reasonDescList = resDTO.getReasonDescList();
@@ -4164,14 +4227,16 @@ public class SmApplicationUtil {
 		}
 		return reasonDescList;
 	}
-	
-	public static List<PmReasonDesc> retrieveMofRejectReason(String businessType){
+
+	public static List<PmReasonDesc> retrieveMofRejectReason(String businessType) {
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON.value());
+		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
+				.value());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setParameterCodes(Arrays.asList(businessType));
 		reqDTO.setRestrictionType(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
-		ReasonResDTO resDTO = SmServiceLookup.getReasonSO().retrieveSuppReasonByRestrType(reqDTO);
+		ReasonResDTO resDTO = SmServiceLookup.getReasonSO()
+				.retrieveSuppReasonByRestrType(reqDTO);
 		return resDTO.getReasonDescList();
 	}
 
