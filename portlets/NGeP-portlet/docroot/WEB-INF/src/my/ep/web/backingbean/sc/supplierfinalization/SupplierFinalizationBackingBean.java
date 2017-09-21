@@ -2356,7 +2356,7 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("downloadAllReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
-				.getScQtFinalization().getScQtFinalizationReports();
+				.getDocumentList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
