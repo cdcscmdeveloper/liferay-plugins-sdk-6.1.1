@@ -13,13 +13,15 @@
                 <ac:paginator for="committeTable" />
                   <p:column  style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}">
 			      <f:facet name="header">
-					<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
+					<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}"
+						disabled="#{amendmentBackingBean.managedBean.confirmMeeting}">
 						<p:ajax partialSubmit="true" process="@this"
 							update=":form:committeTable,:form:committeDelBtn" listener="#{amendmentBackingBean.selectAllCommittees()}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{ctCommitteeVar.selectedCheckBox}" styleClass="myCustomChekBox"
-					disabled="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
+					disabled="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary
+						or amendmentBackingBean.managedBean.confirmMeeting}">
 					 <p:ajax event="change" update=":form:committeTable,:form:committeDelBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
 				</p:selectBooleanCheckbox>
 		      </p:column>
