@@ -410,12 +410,8 @@ public class BSVAttendanceBackingBean extends
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
-				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
-
-				if (flag) {
-					registration.setAttended(true);
-
-				} else {
+				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
+				if (!flag) {
 					throw new EpException(MessageConst.ERROR_760043);
 				}
 
@@ -494,25 +490,29 @@ public class BSVAttendanceBackingBean extends
 		getManagedBean().setPayLoad(siteVisitDatatype);
 	}
 
-	/**
-	 * @param bsvAttandance
-	 *            the instance of ScQtBsvAttendance
-	 * @return true/false
-	 */
-	private boolean isOneAuthorizedPersonal(
-			List<ScQtBsvAttendance> bsvAttandance) {
-
+	private boolean isAttendedOrPreRegistered(ScQtBsvRegistration bsvRegistration, List<ScQtBsvAttendance> bsvAttandance) {
+		boolean isAttendedOrPreRegistered = false;
+		
+		bsvRegistration.setAttended(false);
+		
 		if (null == bsvAttandance || bsvAttandance.isEmpty()) {
-			return false;
+			return isAttendedOrPreRegistered;
 		}
 		for (ScQtBsvAttendance attendance : bsvAttandance) {
 			if (null != bsvAttandance) {
-				if (attendance.isAuthorized() && attendance.isAttended()) {
-					return true;
+				boolean isAuthorizedAndAttended = attendance.isAuthorized() && attendance.isAttended();
+				
+				if (isAuthorizedAndAttended || attendance.isPreRegisterd()) {
+					isAttendedOrPreRegistered = true;
+				}
+				
+				if (isAuthorizedAndAttended) {
+					bsvRegistration.setAttended(true);
+					break;
 				}
 			}
 		}
-		return false;
+		return isAttendedOrPreRegistered;
 	}
 
 	/**
@@ -1038,10 +1038,9 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
-				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
+				isAttendedOrPreRegistered(registration, bsvAttandance);
 
-				if (flag) {
-					registration.setAttended(true);
+				if (registration.isAttended()) {
 					if (null == registration.getBsvRegistrationId()) {
 						invokeBPM = true;
 						registration.setPostRegistered(true);
