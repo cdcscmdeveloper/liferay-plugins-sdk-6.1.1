@@ -1658,6 +1658,7 @@ public class SmPersonnelBackingBean extends
 		if (!EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		}
+		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.REPLACE_SUPP_ADMIN);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
