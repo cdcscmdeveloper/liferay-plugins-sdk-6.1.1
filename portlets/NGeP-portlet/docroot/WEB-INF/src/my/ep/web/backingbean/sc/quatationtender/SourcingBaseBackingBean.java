@@ -118,6 +118,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
@@ -2898,5 +2899,50 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())
 								+ " (" + msgCode + ")"));
+	}
+	
+	
+	/**
+	 * checkKertasTaklimat Uploaded report
+	 * 
+	 * 
+	 * @param finalizationReports
+	 * 
+	 */
+	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports){
+		if(CollectionUtils.isNotEmpty(finalizationReports)){
+			int count=0;
+			for(ScQtFinalizationReport finalizationReport:finalizationReports){
+				if(null!=finalizationReport.getPmDocument() && "KT".equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
+				++count;	
+				}
+				
+			}
+			log.info("checkKertasTaklimatReports count"+count);
+			if(count==1){
+				log.info("enter count1"+count);
+				for(ScQtFinalizationReport finalizationReport:finalizationReports){
+					if(null!=finalizationReport.getPmDocument() && "KT".equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+					}
+					
+				}	
+			}else if(count>1){
+				log.info("enter countGreaterThan1"+count);
+				 String SPACE = " ";
+				  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+				 			+ SPACE + "(" + (count-1) + ")";
+				  log.info("reportTitle"+reportTitle);
+				for(ScQtFinalizationReport finalizationReport:finalizationReports){
+					if(null!=finalizationReport.getPmDocument() && "KT".equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey()) && reportTitle.equalsIgnoreCase(finalizationReport.getTitle()) ){
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+						break;
+					}
+					
+				}	
+			}
+		}
+		
 	}
 }

@@ -818,11 +818,12 @@ public class ConsolidationReportBackingBean extends
 
 			List<ScQtFinalizationReport> finalizationReports = _scQtFinalization
 					.getScQtFinalizationReports();
+			checkKertasTaklimatReports(finalizationReports);
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			// Sort the reports as per the last updated date (in ascending
 			// order)
 
-			Collections.sort(finalizationReports,
+			/*Collections.sort(finalizationReports,
 					new Comparator<ScQtFinalizationReport>() {
 						public int compare(ScQtFinalizationReport report1,
 								ScQtFinalizationReport report2) {
@@ -841,7 +842,29 @@ public class ConsolidationReportBackingBean extends
 							return -1;
 						}
 			});
+*/
+		/*	Collections.sort(finalizationReports,
+					new Comparator<ScQtFinalizationReport>() {
+						public int compare(ScQtFinalizationReport report1,
+								ScQtFinalizationReport report2) {
+							
+							if (report1.getCreatedDate() != null
+									&& report2.getCreatedDate() != null) {
 
+								// Ascending order
+								if (report1.getCreatedDate().getTime() == report2
+										.getCreatedDate().getTime()) {
+									return 0;
+								} else if (report2.getCreatedDate().getTime() < report1
+										.getCreatedDate().getTime()) {
+									return 1;
+								} else {
+									return -1;
+								}
+							}
+							return -1;
+						}
+					});*/
 			if (finalizationReports != null) {
 				this.getManagedBean().setFinalizationReports(
 						finalizationReports);

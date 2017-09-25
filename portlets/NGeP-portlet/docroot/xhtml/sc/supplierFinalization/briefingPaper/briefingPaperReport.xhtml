@@ -58,7 +58,7 @@
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey}">
+					rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.kertasTaklimatUpload}">
 					<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
 						popupWidgetVar="kertasTaklimUploadAttWidget"
 						attachment="#{report.tempReportAttachment}" rowIndex="#{rowIndex}"
