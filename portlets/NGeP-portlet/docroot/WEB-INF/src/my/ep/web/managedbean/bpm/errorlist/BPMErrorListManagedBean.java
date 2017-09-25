@@ -1,4 +1,4 @@
-package my.ep.web.backingbean.bpm.errorlist;
+package my.ep.web.managedbean.bpm.errorlist;
 
 import java.util.List;
 import java.util.Map;
@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import org.bouncycastle.ocsp.RespData;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -43,6 +45,7 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	private String errorDesc;
 	private String docNoGroup;
 	private String errorDescGroup;
+	private String payloadContent;
 	private int showIndex = 0;
 	private Boolean claim = true;
 	
@@ -264,6 +267,20 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * @return the payload
+	 */
+	public String getPayloadContent() {
+		return payloadContent;
+	}
+
+	/**
+	 * @param payload the payload to set
+	 */
+	public void setPayloadContent(String payloadContent) {
+		this.payloadContent = payloadContent;
+	}
+
+	/**
 	 * @return the showIndex
 	 */
 	public int getShowIndex() {
@@ -348,6 +365,8 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 			System.out.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
 
 			IBpmSO bpmSO = null;
+			
+			
 
 			try {
 				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="
@@ -358,18 +377,21 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 				
-				Object token = getBPMAuthenticationCtxToken();
-
-				System.out.println("testing BPM auth******" + token);
+				System.out.println("testing BPM auth******" + getToken());
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState(BpmConstants.STATE_ASSIGNED);
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-				reqDTO.setCtxToken(token);
+				reqDTO.setCtxToken(getToken());
 
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
+				if(responseDTO.getWorklistVO().getWorklistItem() != null){
+					for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()){
+						setTitle(worklistItemVO.getTitle());
+					}
+				}
 				
 				if (responseDTO.getWorklistVO() != null) {
 					System.out.println("testing BPM******size="
@@ -391,13 +413,6 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 			} finally {
 				bpmSO = null;
 			}
-		}
-
-		public Object getBPMAuthenticationCtxToken() {
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			Object ctxToken = bpmSO.authenticate("weblogic");
-			return ctxToken;
 		}
 
 	}
