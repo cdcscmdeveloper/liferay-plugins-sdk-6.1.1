@@ -4212,10 +4212,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						
 						ContractReqDTO contractReqDTO = new ContractReqDTO();
 						contractReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+						CtCircularVer circularVer = null;
+						CircularReqDTO circularReqDTO = new CircularReqDTO();
+						circularReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+						circularVer = circularSO.retrieveCircularVerByContractId(circularReqDTO).getCircularVer();
 						if(contractSO.checkContractStatus(contractReqDTO).isActive()){
-							CircularReqDTO circularReqDTO = new CircularReqDTO();
-							circularReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-							CtCircularVer circularVer = circularSO.retrieveCircularVerByContractId(circularReqDTO).getCircularVer();
 							Date expDate = circularVer.getEndDate();
 							int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
 							Calendar today = Calendar.getInstance();
@@ -4225,7 +4226,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
 							}
 						}else{
-							throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});//TODO Bug #15835
+							throw new EpException(MessageConst.ERROR_740055, new String[]{circularVer.getCircularNo()});
 						}
 					} else {
 						Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
