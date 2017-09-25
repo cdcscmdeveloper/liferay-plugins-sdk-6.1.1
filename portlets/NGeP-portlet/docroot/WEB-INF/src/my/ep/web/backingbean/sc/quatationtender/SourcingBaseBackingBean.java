@@ -2913,7 +2913,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if(CollectionUtils.isNotEmpty(finalizationReports)){
 			int count=0;
 			for(ScQtFinalizationReport finalizationReport:finalizationReports){
-				if(null!=finalizationReport.getPmDocument() && "KT".equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
+				if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
 				++count;	
 				}
 				
@@ -2922,7 +2922,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if(count==1){
 				log.info("enter count1"+count);
 				for(ScQtFinalizationReport finalizationReport:finalizationReports){
-					if(null!=finalizationReport.getPmDocument() && "KT".equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
+					if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
 						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
 					}
 					
@@ -2935,7 +2935,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				 			+ SPACE + "(" + (count-1) + ")";
 				  log.info("reportTitle"+reportTitle);
 				for(ScQtFinalizationReport finalizationReport:finalizationReports){
-					if(null!=finalizationReport.getPmDocument() && "KT".equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey()) && reportTitle.equalsIgnoreCase(finalizationReport.getTitle()) ){
+					if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey()) && reportTitle.equalsIgnoreCase(finalizationReport.getTitle()) ){
 						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
 						break;
 					}
