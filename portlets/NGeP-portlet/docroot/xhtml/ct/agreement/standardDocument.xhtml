@@ -12,9 +12,7 @@
 				
 				<p:column style="width:40%;" styleClass="column-align-center"
 					rendered="#{contentsVar.contentType.parameterCode != ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
-				   			or (agreementBackingBean.managedBean.contractVer.ctContractAmount.bondReq
-								and !agreementBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
-								and agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase)}">
+				   			or agreementBackingBean.managedBean.bondReq}">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.contents']}" />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
@@ -24,9 +22,7 @@
 				
 				<p:column style="width:30%px;" styleClass="column-align-center"
 					rendered="#{contentsVar.contentType.parameterCode != ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
-				   			or (agreementBackingBean.managedBean.contractVer.ctContractAmount.bondReq
-								and !agreementBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
-								and agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase)}">
+				   			or agreementBackingBean.managedBean.bondReq}">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.type']}" />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
@@ -41,9 +37,7 @@
 				
 				<p:column style="width:30%;" styleClass="column-align-center"
 					rendered="#{contentsVar.contentType.parameterCode != ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
-				   			or (agreementBackingBean.managedBean.contractVer.ctContractAmount.bondReq
-								and !agreementBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
-								and agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase)}">
+				   			or agreementBackingBean.managedBean.bondReq}">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.action']}"  />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
