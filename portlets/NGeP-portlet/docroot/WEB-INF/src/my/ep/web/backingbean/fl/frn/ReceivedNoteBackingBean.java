@@ -550,12 +550,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
 			item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
-			if(getManagedBean().isAcknowledged()){
-				getManagedBean().setRemainingQty(item.getFlDelOrderItem().getDeliveredQty().subtract(item.getReceivedQty()));
-			}else{
-				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(item));
-				getManagedBean().setRemainingQty(remainQty);
-			}
+			getManagedBean().setRemainingQty(item.getFlDelOrderItem().getDeliveredQty().subtract(item.getReceivedQty()));
 		}
 	}
 	 
@@ -841,21 +836,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}else{  
 			throw new EpException(MessageConst.ERROR_750040);
 		}
-	}
-	
-	/**
-	 * Gets the remaining quantity.
-	 *
-	 * @param flFulfilmentNoteItem the fl fulfilment note item
-	 * @return the remaining quantity
-	 */
-	public double getRemainingQuantity(FlFulfilmentNoteItem flFulfilmentNoteItem) {
-		if(flFulfilmentNoteItem.getReceivedQty()==null) {
-			flFulfilmentNoteItem.setReceivedQty(BigDecimal.ZERO);
-		}
-		double orderQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().doubleValue();
-		double receivedQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getReceivedQty().doubleValue();
-		return orderQty - receivedQty - flFulfilmentNoteItem.getReceivedQty().doubleValue();	
 	}
 	
 	/**
@@ -1164,12 +1144,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setOrderedQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty());
 			getManagedBean().setDeliveredQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty());
 			getManagedBean().setDeliveredAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredAmt());
-			if(getManagedBean().isAcknowledged()){
-				getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
-			}else{
-				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(getManagedBean().getSelectedItem()));
-				getManagedBean().setRemainingQty(remainQty);
-			}
+			getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
 			getManagedBean().setItemTypeProduct(false);
 			if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
 				getManagedBean().setItemTypeProduct(true);
