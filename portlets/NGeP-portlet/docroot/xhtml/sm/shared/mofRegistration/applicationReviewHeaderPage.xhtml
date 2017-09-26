@@ -10,10 +10,10 @@
 	
 	<h:outputText styleClass="warning" style="font-weight: bold;" value="&#x26A0; #{lbl['lbl.sm.glp.alert']}" rendered="#{backingBean.managedBean.smAppl.smSupplierCerts.size() > 0}" /> 
 	
-		<table style="width: 100%">
+		<table style="width: 100%;">
 			<tr>
 
-				<td><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
 				<td class="header-info-text"><c:if
 						test="#{backingBean.managedBean.smAppl.applType eq 'N'}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'A'}">#{lbl['lbl.sm.addnlCat.headerLbl']}</c:if>
@@ -21,12 +21,12 @@
 					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'R'}">#{lbl['lbl.sm.renewMof.headerLbl']}</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'U'}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
 				</td>
-				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td class="header-info-text">#{backingBean.managedBean.smAppl.applNo}</td>
-				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 				<td class="header-info-text">#{backingBean.managedBean.currentStatus}</td>
 				<c:if test="#{backingBean.managedBean.approverUser}">
-					<td><h:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+					<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 					<td class="header-info-text">
 						<c:choose>
 							<c:when test="#{fn:containsIgnoreCase(backingBean.managedBean.poSecReview.recommendation, 'APPROVE')}">
@@ -44,16 +44,16 @@
 			</tr>
 			<tr>
 
-				<td><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 				<td class="header-info-text"><h:outputLabel
 						value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 						style="font-weight: normal !important;float: left;font-size: 100%;text-align: left;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputLabel></td>
-				<td><h:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
 				<td class="header-info-text">#{backingBean.managedBean.smSupplier.epNo}</td>
-				<td><h:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
 				<td class="header-info-text">#{backingBean.managedBean.mofNumber}</td>
 			</tr>
 			<p:outputPanel rendered="#{not empty backingBean.managedBean.rejectReasonsMsg and backingBean.managedBean.smAppl.resubmit}">
@@ -61,10 +61,10 @@
 					<td style="vertical-align: baseline;"><p:outputLabel
 							value="#{lbl['lbl.sm.rejection.reasons']}"
 							styleClass="outputLabel-view-label" /></td>
-					<td style="white-space: normal !important;"><p:outputLabel styleClass="outputLabel-view" escape="false"
+					<td style="white-space: normal !important;" colspan="5">
+						<p:outputLabel styleClass="outputLabel-view" escape="false"
 							value="#{backingBean.managedBean.rejectReasonsMsg}" />
 					</td>
-					<td colspan="4">&#160;</td>
 				</tr>
 			</p:outputPanel>
 		</table>
