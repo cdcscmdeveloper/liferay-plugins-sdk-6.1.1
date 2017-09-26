@@ -70,7 +70,7 @@
 					</td>
 					<td>
 						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+			   				value="#{agreementBackingBean.getContractAmt()}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>	
@@ -92,7 +92,7 @@
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				 disabled="true" 
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
-			   				 value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}" >
+			   				 value="#{agreementBackingBean.getGstAmt()}" >
 			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:90px;" disabled="true" 
@@ -115,7 +115,7 @@
 					</td>
 					<td>
 						<p:inputText id="overAllAmts" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.gstAmount + agreementBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+			   				value="#{agreementBackingBean.getGstAmt() + agreementBackingBean.getContractAmt()}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -163,7 +163,7 @@
 		   
 		   <h:panelGrid columns="3" 
 		     rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
-		     	and agreementBackingBean.managedBean.contractVer.ctContractAmount.bondReq}">
+		     	and agreementBackingBean.managedBean.bondReq}">
 			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
