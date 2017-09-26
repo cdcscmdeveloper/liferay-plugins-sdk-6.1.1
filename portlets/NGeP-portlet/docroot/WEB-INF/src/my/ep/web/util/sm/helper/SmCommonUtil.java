@@ -4535,13 +4535,12 @@ public class SmCommonUtil {
 											.equalsIgnoreCase("en")) {
 								sbEng.append(i + ") " + desc.getReasonDesc())
 										.append("<br />");
-								i++;
 							} else {
 								sbMs.append(i + ") " + desc.getReasonDesc())
 										.append("<br />");
-								i++;
 							}
 						}
+						i++;
 					} catch (ValidationException ex) {
 						log.debug(">>>>ERROR INITIALIZE REJECT REASON:"
 								+ ex.getMessage() + "<<<<<<<");
