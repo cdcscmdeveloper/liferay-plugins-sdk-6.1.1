@@ -430,6 +430,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getCtAgreement().getCtWorkflowStatus(),
 			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
+		// Retrieve bond req flag
+		if (!getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+				&& !getManagedBean().getCtAgreement().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+					&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
+				getManagedBean().setBondReq(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().isBondReq());
+			} else {
+				getManagedBean().setBondReq(getManagedBean().getContractVer().getCtContractAmount().isBondReq());
+			}
+		} else {
+			getManagedBean().setBondReq(false);
+		}
+		
 		// Enable or Disable GST field
 		if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
 				&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
@@ -442,8 +455,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 		
 		// Check for valid Bond Attachment
-		if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-				&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+		if (getManagedBean().isBondReq()) {
 			for (CtPerformanceBond ctPerformanceBond : getManagedBean().getContractVer().getCtContractAmount().getCtPerformanceBonds()) {
 				if (StringUtils.isNotBlank(ctPerformanceBond.getFilePath())
 						&& !ctPerformanceBond.getFilePath().equalsIgnoreCase("N/A")) {
@@ -1016,12 +1028,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		 	userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		 	reqDTO = new UserReqDTO();
 		 	reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-		     
+		 	
 		 	if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
 		 		 reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
-		 	} 
-		 	
-		 	reqDTO.setApprovalLimit(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
+		 	}
+		 	reqDTO.setApprovalLimit(getContractAmt().add(getGstAmt()));
 		 	resDTO = userSO.retrieveUserListByRole(reqDTO);
 		 	
 		 	List<PmUser> list = resDTO.getUserList();
@@ -1488,37 +1499,29 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				context.put("contractEndDate", df.format(getManagedBean().getCtAgreement().getExpDate()));
 				context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");
 	
-				BigDecimal overallAmount  = null;
-				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
-					overallAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
-					getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
-				} else {
-					overallAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
-				}
+				BigDecimal overallAmount  = getContractAmt().add(getGstAmt());
 				BigDecimal lamt  = overallAmount.setScale(
 				CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP);
 				context.put("contractValue", nf.format(lamt) + "");
 				context.put("contractValueText", NumberWordUtil.convert(lamt.toString()));
-				if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-						&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+				if (getManagedBean().isBondReq()) {
 					context.put("isBondReq", true);
 				} else {
 					context.put("isBondReq", false);
 				}
-				if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-						&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
-					if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
+				if (getManagedBean().isBondReq()) {
+					if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+							&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
 						if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 							context.put("performanceBondValue", nf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt()) + "");
 							context.put("performanceBondValueText", NumberWordUtil.convert(
 									getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString() : ""));
 						}
-				
 					} else {
-						if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
-							context.put("performanceBondValue", nf.format(getManagedBean().getCtContract().getLoa().getBondAmt()) + "");
+						if (getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt() != null) {
+							context.put("performanceBondValue", nf.format(getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt()) + "");
 							context.put("performanceBondValueText", NumberWordUtil.convert(
-							getManagedBean().getCtContract().getLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtContract().getLoa().getBondAmt().toString() : ""));
+									getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt().doubleValue() != 0 ? getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt().toString() : ""));
 						}
 					}
 				}
@@ -1871,9 +1874,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		    String supplierEmel = "N/A";
 	    
 	    
-	    if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-	    		&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
-			if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
+	    if (getManagedBean().isBondReq()) {
+	    	if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+						&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
 				if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 					bondAmount = af.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt());
 					bondAmountTxt =  NumberWordUtil.convert(
@@ -1882,10 +1885,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					bondPercentageTxt = bondPercentage;
 				}						
 			} else {
-				if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
-					bondAmount = af.format(getManagedBean().getCtContract().getLoa().getBondAmt());
+				if (getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt() != null) {
+					bondAmount = af.format(getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt());
 					bondAmountTxt =  NumberWordUtil.convert(
-							getManagedBean().getCtContract().getLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtContract().getLoa().getBondAmt().toString() : "");
+							getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt().doubleValue() != 0 ? getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt().toString() : "");
 					bondPercentage = pf.format(getManagedBean().getCtContract().getLoa().getBondPercentage());
 					bondPercentageTxt = bondPercentage;
 				}
@@ -2664,5 +2667,40 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			 ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
 		 }
 		this.getManagedBean().getCtAgreement().getContractDocumentAttachments().remove(index);
+	}
+	
+	/**
+	 * The method used to retrieve the correct contract amount
+	 * base on pending verification flag
+	 * 
+	 * @return contract amount
+	 */
+	public BigDecimal getContractAmt() {
+		BigDecimal contractAmount = BigDecimal.ZERO;
+	 	if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+				&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
+	 		contractAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
+	 				getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount());
+	 	} else {
+	 		contractAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+	 	}
+		return contractAmount;
+	}
+	
+	/**
+	 * The method used to retrieve the correct gst amount
+	 * base on pending verification flag
+	 * 
+	 * @return gst amount
+	 */
+	public BigDecimal getGstAmt() {
+		BigDecimal gstAmount = BigDecimal.ZERO;
+	 	if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+				&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
+	 		gstAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount();
+	 	} else {
+	 		gstAmount = getManagedBean().getContractVer().getCtContractAmount().getGstAmount();
+	 	}
+		return gstAmount;
 	}
 }

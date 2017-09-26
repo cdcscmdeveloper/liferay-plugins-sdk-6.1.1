@@ -61,6 +61,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean buttonHideActive = true;
 	private boolean selectAll;
 	private boolean migrationContract = false;
+	private boolean bondReq = false;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
 	private List<CtAgreementParty> ctSupplierWitness;
@@ -768,5 +769,19 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setMigrationContract(boolean migrationContract) {
 		this.migrationContract = migrationContract;
+	}
+
+	/**
+	 * @return the bondReq
+	 */
+	public boolean isBondReq() {
+		return bondReq;
+	}
+
+	/**
+	 * @param bondReq the bondReq to set
+	 */
+	public void setBondReq(boolean bondReq) {
+		this.bondReq = bondReq;
 	}	
 }
