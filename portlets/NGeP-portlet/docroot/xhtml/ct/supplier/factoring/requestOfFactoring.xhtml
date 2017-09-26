@@ -70,7 +70,8 @@
 			    <tr>
 				     <td>
 					       <p:commandButton value="#{lbl['lbl.btn.back']}"  
-						        immediate="true"  rendered="#{supplierBackingBean.managedBean.taskId==null}" 
+						        immediate="true"  rendered="#{supplierBackingBean.managedBean.taskId==null
+						        	and !supplierBackingBean.managedBean.viewOnly}" 
 						       action="#{supplierBackingBean.backAction}" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"/>
 				    </td>
 				    <td class="ppRightBtn">
