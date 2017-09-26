@@ -53,7 +53,8 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}" 
 						immediate="true" 
-						rendered="#{suspensionBackingBean.managedBean.taskId==null}" 
+						rendered="#{suspensionBackingBean.managedBean.taskId==null
+							and !suspensionBackingBean.managedBean.viewOnly}" 
 						action="#{suspensionBackingBean.backAction}"
 						onstart="blockWidget.show();" 
 						oncomplete="blockWidget.hide();"/>
