@@ -1242,12 +1242,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						}else{
 							deductionList.add(deduction.getCtDeduction().getDeductionId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
 						}
-						if(deduction.getPmVotFund().getVotFundType().equalsIgnoreCase(VotFundType.SETIA.value())){
-							if(deduction.getFinancingType() == null || deduction.getFinancingType().isEmpty()){
-								getManagedBean().setSelectedTabIndex(2);
-								throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.cp",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),ResourceBundleUtils.getMessage("lbl.fl.vot.s",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-							}
-						}
 					}
 				}
 				getManagedBean().getPaymentAdvice().getFlPaymentDeduction().removeAll(emptyDeductionList);
