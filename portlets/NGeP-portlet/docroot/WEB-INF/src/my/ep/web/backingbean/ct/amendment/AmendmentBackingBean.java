@@ -3719,7 +3719,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				reqDTO = new UserReqDTO();
 				reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());	
 				reqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				reqDTO.setApprovalLimit(newContractAmt());
+				reqDTO.setApprovalLimit(newOverallContractAmt());
 				resDTO = userSO.retrieveUserListByRole(reqDTO);
 				
 				items = new SelectItem[resDTO.getUserList().size()+1];
