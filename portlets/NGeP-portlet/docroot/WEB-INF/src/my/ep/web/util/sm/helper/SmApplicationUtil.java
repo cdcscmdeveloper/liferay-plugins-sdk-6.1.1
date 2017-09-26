@@ -11510,7 +11510,10 @@ public class SmApplicationUtil {
 			List<Long> statusIds = new ArrayList<Long>();
 			statusIds
 					.add(Long
-							.parseLong(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_APPROVAL));
+							.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER));
+			statusIds
+					.add(Long
+							.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER));
 			SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 			swReqDTO.setStatusIds(statusIds);
 			swReqDTO.setApplId(rejAppl.getApplId());
