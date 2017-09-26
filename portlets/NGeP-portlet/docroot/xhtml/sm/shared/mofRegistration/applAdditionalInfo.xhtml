@@ -14,18 +14,20 @@
 				<td colspan="4"></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.appl.status.createdbydate']}"
+				<td style="vertical-align: baseline;">
+					<p:outputLabel value="#{lbl['lbl.sm.appl.status.createdbydate']}"
 						styleClass="outputLabel-view-label" /></td>
 				<td><p:outputLabel
 						value="#{backingBean.managedBean.applStatusInfo.createdByAndDate}"
 						styleClass="outputLabel-view" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.epno']}"
+				<td style="vertical-align: baseline;">
+					<p:outputLabel value="#{lbl['lbl.sm.epno']}"
 						styleClass="outputLabel-view-label" /></td>
 				<td><p:outputLabel
 						value="#{backingBean.managedBean.smSupplier.epNo}"
 						styleClass="outputLabel-view" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}"
+				<td style="vertical-align: baseline;">
+					<p:outputLabel value="#{lbl['lbl.sm.application.no']}"
 						styleClass="outputLabel-view-label" /></td>
 				<td><p:outputLabel
 						value="#{backingBean.managedBean.smAppl.applNo}"
@@ -34,13 +36,14 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.appl.status.modifiedbydate']}"
+				<td style="vertical-align: baseline;">
+					<p:outputLabel value="#{lbl['lbl.sm.appl.status.modifiedbydate']}"
 						styleClass="outputLabel-view-label" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view"
 						value="#{backingBean.managedBean.applStatusInfo.modifiedByAndDate}" />
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}"
+				<td style="vertical-align: baseline;">
+					<p:outputLabel value="#{lbl['lbl.sm.mofNo']}"
 						styleClass="outputLabel-view-label" /></td>
 				<td><p:outputLabel value="#{backingBean.managedBean.mofNumber}"
 						styleClass="outputLabel-view" /></td>
@@ -60,10 +63,9 @@
 					<td style="vertical-align: baseline;"><p:outputLabel
 							value="#{lbl['lbl.sm.rejection.reasons']}"
 							styleClass="outputLabel-view-label" /></td>
-					<td style="white-space: normal !important;"><p:outputLabel styleClass="outputLabel-view" escape="false"
+					<td style="white-space: normal !important;" colspan="5"><p:outputLabel styleClass="outputLabel-view" escape="false"
 							value="#{backingBean.managedBean.rejectReasonsMsg}" />
 					</td>
-					<td colspan="4">&#160;</td>
 				</tr>
 			</p:outputPanel>
 		</table>
