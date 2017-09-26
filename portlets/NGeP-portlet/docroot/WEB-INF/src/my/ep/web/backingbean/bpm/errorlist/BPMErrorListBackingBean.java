@@ -94,6 +94,12 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
 	}
+	
+	public String submitError(String taskId){
+		log.info("............................submitTask");
+		
+		return "";
+	}
 
 	public void onClickPayload(String taskId) throws JAXBException{
 
@@ -110,9 +116,9 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 			payload = resDTO.getPojo();
 		}
 		
-		String payLoadString = Parser.getInstance().parseObj(payload);
+		//String payLoadString = Parser.getInstance().parseObj(payload);
 
-		this.getManagedBean().setPayloadContent(payLoadString);
+		this.getManagedBean().setPayloadContent(payload.toString());
 	}
 
 }
