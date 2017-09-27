@@ -16,7 +16,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.mof.no']}"
 					  style="width:20%; white-space:normal;">
-				<h:outputText value="#{smPersonnel.smAppl.smSupplier.smMofAccount.mofNo}" />
+				<h:outputText value="#{suppFinalizationBackingBean.retriveMofAccountBySupplier(smPersonnel.smAppl.smSupplier).mofNo}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.company.name']}"
