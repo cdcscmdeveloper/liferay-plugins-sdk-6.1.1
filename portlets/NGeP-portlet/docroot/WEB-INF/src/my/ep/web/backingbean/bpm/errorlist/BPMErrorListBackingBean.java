@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.bpm.errorlist;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -10,8 +11,11 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.errorlist.BPMErrorListManagedBean;
@@ -95,15 +99,44 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
 	}
 	
-	public String submitError(String taskId){
+	public void submitError(String taskId){
 		log.info("............................submitTask");
 		
-		return "";
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setTaskId(taskId);
+		reqDTO.setCtxToken(getBPMAuthenticationCtxToken());
+		
+		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
+
+		if(resDTO.getPojo() != null){
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			reqDTO.setPojo(resDTO.getPojo());
+		}
+		
+		resDTO = bpmSO.updateTask(reqDTO);
+		
+		this.getManagedBean().getErrorListDataModel().reloadData();
+		
+		if(resDTO.isSuccessful()){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									MessageConst.INFO_700034,
+									new String[] {},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
+		
 	}
 
 	public void onClickPayload(String taskId) throws JAXBException{
 
 		Object payload = null;
+		String payLoadString = null;
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
@@ -114,11 +147,11 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 		if(resDTO.getPojo() != null){
 			payload = resDTO.getPojo();
+			payLoadString = Parser.getInstance().parseObj(payload);
 		}
 		
-		//String payLoadString = Parser.getInstance().parseObj(payload);
+		this.getManagedBean().setPayloadContent(payLoadString);
 
-		this.getManagedBean().setPayloadContent(payload.toString());
 	}
 
 }
