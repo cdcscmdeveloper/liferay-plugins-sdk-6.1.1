@@ -3954,6 +3954,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				}
 			}
 		} catch (Exception ex) {
@@ -3961,7 +3963,7 @@ public class SmCommonUtil {
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException(message + "(ERR-729999)");
+				throw new EpException(message + "(ERR-" + ex.getMessage().toString() + ")");
 			} else {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
@@ -3978,6 +3980,7 @@ public class SmCommonUtil {
 	 */
 	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
 			String postCode, String type, String supplierType) {
+		log.info(">>>>>>>>>>>>>>verifyOwnerWithMyIdentity<<<<<<<<<<<");
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMyIdentitySO.class);
@@ -3995,8 +3998,8 @@ public class SmCommonUtil {
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
-					+ ">>code>>" + resDTO.getStatusCode());
+			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()+ ">>code>>" + resDTO.getStatusCode());
+			//log.info("resDTO.getResidentStatus()>>>>>>>>" + resDTO.getResidentStatus());
 			if (!resDTO
 					.getSeverity()
 					.equalsIgnoreCase(
@@ -4009,31 +4012,39 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70032":
-					if (supplierType != null
-							&& supplierType
-									.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
-						throw new EpException(
-								MessageConst.ERROR_MYIDENTITY_70032_G2G);
-					} else {
-						throw new EpException(
-								MessageConst.ERROR_MYIDENTITY_70032);
+					if(StringUtils.isNotBlank(resDTO.getResidentStatus()) &&
+							!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1) &&
+							!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)){
+						if (supplierType != null){
+							if(supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)){
+								throw new EpException(
+										MessageConst.ERROR_MYIDENTITY_70032_G2G);
+							}else{
+								throw new EpException(
+										MessageConst.ERROR_MYIDENTITY_70032);
+							}
+						}
 					}
-
 				case "70004":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
-				case "70018":
-					if(!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1) &&
-						!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)){
-						if (supplierType != null
-								&& supplierType
-										.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
-							throw new EpException(
-									MessageConst.ERROR_MYIDENTITY_70032_G2G);
-						} else {
-							throw new EpException(
-									MessageConst.ERROR_MYIDENTITY_70032);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				}
+			}else{
+				if(resDTO.getStatusCode().equals("70018")){
+					if(StringUtils.isNotBlank(resDTO.getResidentStatus()) &&
+							!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1) &&
+							!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)){
+						if (StringUtils.isNotBlank(supplierType)){
+							if(supplierType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)){
+								throw new EpException(
+										MessageConst.ERROR_MYIDENTITY_70032_G2G);
+							}
+						}else{
+							// NULL is Basic Registration
+							throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
 						}
 					}
 				}
@@ -4043,7 +4054,7 @@ public class SmCommonUtil {
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException(message + "(ERR-729999)");
+				throw new EpException(message + "(" + ex.getMessage().toString() + ")");
 			} else {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
