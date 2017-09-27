@@ -1243,7 +1243,8 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	public void generateLetter() throws IOException{
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("pcomplaintid", getManagedBean().getSmComplaint().getComplaintId().toString());
-		paramMap.put(ReportConst.DOC_TYPE_RTF, "RTF");
+		paramMap.put(ReportConst.DOC_TYPE_RTF, "rtf");
+		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
 		//String reportUrl = generateReportURL(ReportConst.SM_COMPLAINT_SHOW_CAUSE_jsp, paramMap);	
 		generateReport(ReportConst.SM_COMPLAINT_SHOW_CAUSE_jsp, paramMap);
 	}

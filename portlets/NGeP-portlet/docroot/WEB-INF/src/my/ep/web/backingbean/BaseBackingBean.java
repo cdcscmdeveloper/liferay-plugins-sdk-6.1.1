@@ -1210,8 +1210,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			res.setHeader("Content-Disposition",
 					"attachment; filename=\"" + reportFile + "_"
 							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".docx\"");//
-			res.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+							+ ".rtf\"");//
+			res.setContentType("application/octet-stream");
 		}else{
 			res.setHeader("Content-Disposition",
 					"attachment; filename=\"" + reportFile + "_"
