@@ -1,6 +1,12 @@
 package my.ep.web.vo;
 
-public class CategoryRptVO {
+import java.io.Serializable;
+
+public class CategoryRptVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long catLvl1;
 	private Long catLvl2;
 	private Long catLvl3;
