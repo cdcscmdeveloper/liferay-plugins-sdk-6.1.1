@@ -604,23 +604,25 @@ public class LovBackingBean implements Serializable {
 	 * 
 	 */
 	public void setAutoUpdateValue() {
-		String autoUpdateValue = this.getLovBean().getAutoUpdateValue();
-		
-		if (StringUtils.isNotBlank(autoUpdateValue)) {
-			String enableAutoUpdate = (String)FacesContext.getCurrentInstance()
-					.getExternalContext().getRequestParameterMap().get("enableAutoUpdate");
-			
-			if (StringUtils.isNotBlank(enableAutoUpdate)) {
-				if(!FacesScopes.isValueReference(autoUpdateValue)) {
-					autoUpdateValue = "#{" + autoUpdateValue + "}";
-				}
+		LovBean lovBean = this.getLovBean();
+		if (lovBean != null) {
+			String autoUpdateValue = lovBean.getAutoUpdateValue();
+			if (StringUtils.isNotBlank(autoUpdateValue)) {
+				String enableAutoUpdate = (String)FacesContext.getCurrentInstance()
+						.getExternalContext().getRequestParameterMap().get("enableAutoUpdate");
 				
-				FacesContext context = FacesContext.getCurrentInstance();
-				ValueExpression autoUpdateVE = context.getApplication().getExpressionFactory()
-						.createValueExpression(context.getELContext(),
-								autoUpdateValue, Boolean.class);
-				autoUpdateVE.setValue(context.getELContext(), Boolean.valueOf(enableAutoUpdate));	
-			}
+				if (StringUtils.isNotBlank(enableAutoUpdate)) {
+					if(!FacesScopes.isValueReference(autoUpdateValue)) {
+						autoUpdateValue = "#{" + autoUpdateValue + "}";
+					}
+					
+					FacesContext context = FacesContext.getCurrentInstance();
+					ValueExpression autoUpdateVE = context.getApplication().getExpressionFactory()
+							.createValueExpression(context.getELContext(),
+									autoUpdateValue, Boolean.class);
+					autoUpdateVE.setValue(context.getELContext(), Boolean.valueOf(enableAutoUpdate));	
+				}
+			}	
 		}
 	}
 	
