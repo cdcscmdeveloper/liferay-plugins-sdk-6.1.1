@@ -2703,4 +2703,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 	}
 		return gstAmount;
 	}
+	
+	/**
+	 * The method used to retrieve the file reference no
+	 * base on pending verification flag
+	 * 
+	 * @return file reference no
+	 */
+	public String getFileRefNo() {
+	 	if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+				&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
+	 		return getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo();
+	 	} else {
+	 		return getManagedBean().getContractVer().getCtContractValue().getLoaPhysicalNo();
+	 	}
+	}
 }
