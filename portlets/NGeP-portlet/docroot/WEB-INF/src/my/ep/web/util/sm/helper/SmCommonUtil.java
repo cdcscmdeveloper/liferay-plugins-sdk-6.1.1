@@ -3918,7 +3918,7 @@ public class SmCommonUtil {
 			String postCode, String type) {
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
-				"sm", IMyIdentitySO.class);
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
 
 		if (type != null
 				&& type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)) {
@@ -3929,7 +3929,7 @@ public class SmCommonUtil {
 
 		reqDTO.setNewIcNo(identificationNo);
 		reqDTO.setPostCode(postCode);
-		reqDTO.setName(name);
+		reqDTO.setName(name.trim());
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
@@ -3983,7 +3983,7 @@ public class SmCommonUtil {
 		log.info(">>>>>>>>>>>>>>verifyOwnerWithMyIdentity<<<<<<<<<<<");
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
-				"sm", IMyIdentitySO.class);
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
 
 		if (type != null
 				&& type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)) {
@@ -3994,7 +3994,7 @@ public class SmCommonUtil {
 
 		reqDTO.setNewIcNo(identificationNo);
 		reqDTO.setPostCode(postCode);
-		reqDTO.setName(name);
+		reqDTO.setName(name.trim());
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
