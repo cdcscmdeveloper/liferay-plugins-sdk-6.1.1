@@ -3453,6 +3453,7 @@ public class SupplierFinalizationBackingBean extends
 		try {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(selectedSupplier.getSupplierId());
+			reqDTO.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
 			
 			personnelSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
