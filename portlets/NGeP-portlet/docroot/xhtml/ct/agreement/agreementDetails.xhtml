@@ -58,7 +58,7 @@
 					<h:panelGrid columns="3" styleClass="top-aligned-columns">
 						<p:inputTextarea autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:130px;margin-bottom:5px;"
-							value="#{agreementBackingBean.managedBean.agreementContractVer.ctContractValue.loaPhysicalNo}" />
+							value="#{agreementBackingBean.getFileRefNo()}" />
 							  <p:spacer width="1" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
 					</h:panelGrid>
