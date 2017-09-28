@@ -98,28 +98,23 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
 	}
-	
+
 	public void submitError(String taskId){
 		log.info("............................submitTask");
-		
+
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		
+
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setTaskId(taskId);
-		reqDTO.setCtxToken(getBPMAuthenticationCtxToken());
-		
-		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
+		reqDTO.setCtxToken(getManagedBean().getToken());
+		reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 
-		if(resDTO.getPojo() != null){
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
-			reqDTO.setPojo(resDTO.getPojo());
-		}
-		
-		resDTO = bpmSO.updateTask(reqDTO);
-		
+		BpmResponseDTO resDTO = bpmSO.updateTask(reqDTO);
+
+
 		this.getManagedBean().getErrorListDataModel().reloadData();
-		
+
 		if(resDTO.isSuccessful()){
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -130,7 +125,7 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		}
-		
+
 	}
 
 	public void onClickPayload(String taskId) throws JAXBException{
@@ -141,7 +136,7 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 				.getServiceObject(IBpmSO.class);
 
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(getBPMAuthenticationCtxToken());
+		reqDTO.setCtxToken(getManagedBean().getToken());
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
 
@@ -149,7 +144,7 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 			payload = resDTO.getPojo();
 			payLoadString = Parser.getInstance().parseObj(payload);
 		}
-		
+
 		this.getManagedBean().setPayloadContent(payLoadString);
 
 	}
