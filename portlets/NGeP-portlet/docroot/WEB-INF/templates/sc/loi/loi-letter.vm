@@ -25,9 +25,6 @@
 		.table2 th, .table2 td {
 			border: 1px solid black;
 		}
-		.highlightme {
-			background-color: #FFFF00;
-		}
 		th{
 			background-color: #BCE18A;
 		}
@@ -50,7 +47,7 @@
 		<td align='center' valign="top">
 			<span style='font-weight:bold;font-size:12px;font-family:Arial;'>SURAT NIAT</span>
 			<br />
-			<span style='font-weight:bold;font-size:11px;font-family:Arial;'>(Bagi <span class="highlightme">$method</span> <span class="highlightme">$category</span>)</span>
+			<span style='font-weight:bold;font-size:11px;font-family:Arial;'>(Bagi $method $category)</span>
 			<br />
 		</td>
 	</tr>
@@ -77,15 +74,13 @@
 			<table style="height: auto;" width="70%">
 				<tbody>
 					<tr>
-						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">
-							<span class="highlightme">$method</span> Untuk</span> 
+						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">$method Untuk</span> 
 						</td>
 						<td style="width: 5%"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">:</span></td>
 						<td style="width: auto;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;"> $title</span></td>
 					</tr>
 					<tr>
-						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">No. 
-							<span class="highlightme">$method</span> </span></td>
+						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">No. $method</span></td>
 						<td style="width: 5%"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">:</span></td>
 						<td style="width: auto;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">$qtNo</span></td>
 					</tr>
@@ -100,7 +95,7 @@
                   #foreach($scNegoTerm in $scNegoTerms)
                   <tr>
 					#if ($scNegoTerm.termDesc == 'Price')
-                    <td>2.$count	Harga <span class="highlightme">$method</span></td>
+                    <td>2.$count	Harga $method</td>
 					#else
 					<td>2.$count	$scNegoTerm.termDesc</td>
 					#end
@@ -110,7 +105,7 @@
               	</table>
           	</span>
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Sehubungan itu, sila nyatakan secara rasmi persetujuan tuan untuk berbincang/berunding/
-				<span class="highlightme">terma dalam perenggan 2 di atas</span> dalam tempoh $ackDueDays hari daripada tarikh surat ini. Jika tuan bersetuju, Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan seperti ketetapan berikut:</span></p>
+				terma dalam perenggan 2 di atas dalam tempoh $ackDueDays hari daripada tarikh surat ini. Jika tuan bersetuju, Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan seperti ketetapan berikut:</span></p>
 			<span style='font-weight:bold;font-size:11px;font-family: Times New Roman;'>
 				<table width="70%" align="center">
 				#if ($scNegoLocations != 'null')
@@ -118,36 +113,36 @@
 					<tr>
 						<td style="width: 15%;">Tarikh</td>
 						<td style="width: 5%;">:</td>
-						<td style="width: auto;"><span class="highlightme" style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
                   	</tr>
                     <tr>
 						<td style="width: 15%;">Masa</td>
 						<td style="width: 5%;">:</td>
-						<td style="width: auto;"><span class="highlightme" style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$timeSDF.format($scNegoLocation.negoDate)</span></td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$timeSDF.format($scNegoLocation.negoDate)</span></td>
                   	</tr>
                   	<tr>
 						<td style="width: 15%;">Tempat</td>
 						<td style="width: 5%;">:</td>
-						<td style="width: auto;"><span class="highlightme" style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
 					</tr>
 					#end
 				#else
 					<tr>
 						<td style="width: 15%;">Tarikh</td>
 						<td style="width: 5%;">:</td>
-						<td style="width: auto;"><span class="highlightme" style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							Tidak Berkenaan</span></td>
                   	</tr>
                     <tr>
 						<td style="width: 15%;">Masa</td>
 						<td style="width: 5%;">:</td>
-						<td style="width: auto;"><span class="highlightme" style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							Tidak Berkenaan</span></td>
                   	</tr>
                   	<tr>
 						<td style="width: 15%;">Tempat</td>
 						<td style="width: 5%;">:</td>
-						<td style="width: auto;"><span class="highlightme" style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							Tidak Berkenaan</span></td>
 					</tr>
 				#end
