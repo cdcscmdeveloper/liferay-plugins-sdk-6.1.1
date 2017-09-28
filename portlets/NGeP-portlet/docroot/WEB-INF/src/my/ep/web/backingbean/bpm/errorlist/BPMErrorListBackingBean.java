@@ -130,8 +130,11 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 	public void onClickPayload(String taskId) throws JAXBException{
 
+		this.getManagedBean().setPayloadContent("");
+		
 		Object payload = null;
 		String payLoadString = null;
+		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
