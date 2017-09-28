@@ -35,6 +35,12 @@ public abstract class DpReportManagedBean extends ReportBaseManagedBean {
 	/** The sc pi dtls prc rpt group. */
 	private String scPIDtlsPrcRptGroup;
 	
+	private boolean isPtjEnable = false;
+	private boolean isRequisitionerEnable = false;
+	
+	private String scRequisitioner;
+	private String scPtj;
+	
 	/**
 	 * @return the dateFrom
 	 */
@@ -132,4 +138,61 @@ public abstract class DpReportManagedBean extends ReportBaseManagedBean {
 	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
 		this.selectedOrgProfile = selectedOrgProfile;
 	}
+
+	/**
+	 * @return the isPtjEnable
+	 */
+	public boolean isPtjEnable() {
+		return isPtjEnable;
+	}
+
+	/**
+	 * @param isPtjEnable the isPtjEnable to set
+	 */
+	public void setPtjEnable(boolean isPtjEnable) {
+		this.isPtjEnable = isPtjEnable;
+	}
+
+	/**
+	 * @return the isRequisitionerEnable
+	 */
+	public boolean isRequisitionerEnable() {
+		return isRequisitionerEnable;
+	}
+
+	/**
+	 * @param isRequisitionerEnable the isRequisitionerEnable to set
+	 */
+	public void setRequisitionerEnable(boolean isRequisitionerEnable) {
+		this.isRequisitionerEnable = isRequisitionerEnable;
+	}
+
+	/**
+	 * @return the scRequisitioner
+	 */
+	public String getScRequisitioner() {
+		return scRequisitioner;
+	}
+
+	/**
+	 * @param scRequisitioner the scRequisitioner to set
+	 */
+	public void setScRequisitioner(String scRequisitioner) {
+		this.scRequisitioner = scRequisitioner;
+	}
+
+	/**
+	 * @return the scPtj
+	 */
+	public String getScPtj() {
+		return scPtj;
+	}
+
+	/**
+	 * @param scPtj the scPtj to set
+	 */
+	public void setScPtj(String scPtj) {
+		this.scPtj = scPtj;
+	}
+
 }
