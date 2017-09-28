@@ -6,6 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:param name="requisitionerEnableDisable"
+			value="#{pidSummaryRptBackingBean.retrieveUserRoles()}"></ui:param>
+	<ui:param name="ptjEnableDisable"
+			value="#{pidSummaryRptBackingBean.retrievePtjRoles()}"></ui:param>
 
 	<table style="width: 100%;">
 		<tr>
@@ -56,6 +60,34 @@
 				</p:inputText></td>
 		</tr>
 	</table>
+	
+	<c:if test="#{ptjEnableDisable}">
+			<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
+				style="margin-top:5px;width:130px;" />
+			<p:selectOneMenu
+				value="#{pidSummaryRptBackingBean.managedBean.scPtj}"
+				style="margin-top:5px;width:300px;">
+				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+					itemValue="#{null}"></f:selectItem>
+
+				<f:selectItems value="#{pidSummaryRptBackingBean.retrievePTJList()}"></f:selectItems>
+				<p:ajax event="change" partialSubmit="true" update="@this"
+					process="@this" />
+			</p:selectOneMenu>
+		</c:if>
+		<c:if test="#{requisitionerEnableDisable}">
+			<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"
+				style="margin-top:5px;width:160px;" />
+			<p:selectOneMenu
+				value="#{pidSummaryRptBackingBean.managedBean.scRequisitioner}"
+				style="margin-top:5px;width:300px;">
+				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+					itemValue="#{null}"></f:selectItem>
+
+				<f:selectItems value="#{pidSummaryRptBackingBean.retrieveRequisitioner()}"></f:selectItems>
+				<p:ajax event="change" partialSubmit="true" update="@this" />
+			</p:selectOneMenu>
+		</c:if>
 	
 	<table style="width: 100%;">
 		<tr>
