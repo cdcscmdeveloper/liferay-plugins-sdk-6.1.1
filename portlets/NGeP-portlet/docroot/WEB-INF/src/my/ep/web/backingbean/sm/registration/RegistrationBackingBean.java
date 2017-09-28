@@ -382,7 +382,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		SmAddress smPermAdd = this.getManagedBean().getSmPermenantAdd();
 		SmAddress smResAdd = this.getManagedBean().getSmResAdd();
-		
+	
 		if(!smPersonnel.getEmail().equals(this.getManagedBean().getConfirmEmail())){
 			throw new EpException(MessageConst.ERROR_721020);
 		}
@@ -428,10 +428,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); //DEFAULT for Individual
 //			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
 			smSuppOwner.setIdentificationTypeId(identificationType.getParameterId());
-			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
+			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName().trim());
 			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
 			smSuppOwner.setNationality(indNationality);
-			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
+			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName().trim());
 //			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
 			smPersonnel.setIdentificationNo(smSupp.getRegNo());
 			smPersonnel.setPmCountry(indNationality);
@@ -458,7 +458,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
 		}
 
-		smSupp.setCompanyName(smAppl.getSmCompanyBasic().getCompanyName());
+		smSupp.setCompanyName(smAppl.getSmCompanyBasic().getCompanyName().trim());
 		smAppl.setSmSupplier(smSupp);
 		smAppl.getSmCompanyBasic().setSmAppl(smAppl);
 		smAppl.getSmCompanyBasic().setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
@@ -473,6 +473,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
+		smPersonnel.setName(smPersonnel.getName().trim());
 		
 		if(!smPersonnel.getPmCountry().getCountryCode().
 				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
