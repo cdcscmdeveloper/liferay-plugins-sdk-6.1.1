@@ -2362,9 +2362,15 @@ public class SupplierFinalizationBackingBean extends
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
 			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports.get(i)
 					.getScQtFinalizationReportAttachment();
+			ScQtFinalizationReport qtReport = scQtFinalizationReports.get(i);
 			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtFinalizationReports.get(i), false);
-				scQtFinalizationReports.get(i).setScQtFinalizationReportAttachment(attachment);
+				attachment = generateDocumentAttachment(qtReport, false);
+				qtReport.setScQtFinalizationReportAttachment(attachment);
+			}
+			if(attachment != null) {
+				String prefixName = qtReport.getTitle().replaceAll(
+						SourcingConstants.REG_EXP_WHITE_SPACE, "");
+				attachment.setTempFileName(prefixName);
 			}
 			scAttachments.add(attachment);
 		}

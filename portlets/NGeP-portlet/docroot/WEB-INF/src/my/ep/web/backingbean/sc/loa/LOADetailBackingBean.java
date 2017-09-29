@@ -1184,7 +1184,11 @@ public class LOADetailBackingBean extends
 						ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
 			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 		}
-		
+		if(scLoaReportAttachmentGenerated != null) {
+			String prefixName = scLoaReport.getTitle().replaceAll(
+					SourcingConstants.REG_EXP_WHITE_SPACE, "");
+			scLoaReportAttachment.setTempFileName(prefixName);
+		}
 		downloadFile(scLoaReportAttachmentGenerated);
 	}
 
@@ -1391,8 +1395,9 @@ public class LOADetailBackingBean extends
 								ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
 					scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 				} 
+				
 				String prefixName = scLoaReport.getTitle().replaceAll(
-						SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE);
+						SourcingConstants.REG_EXP_WHITE_SPACE, "");
 				scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 				scAttachments.add(scLoaReportAttachmentGenerated);
 			}
