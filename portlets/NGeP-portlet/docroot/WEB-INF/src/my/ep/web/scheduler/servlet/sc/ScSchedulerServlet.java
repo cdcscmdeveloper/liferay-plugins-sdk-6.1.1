@@ -52,7 +52,9 @@ public class ScSchedulerServlet extends HttpServlet {
 
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_DAILY_JOB,
-				SchedulerConstants.SC_JOB_GROUP), BidSchedulesPoolingJob.class);
+				SchedulerConstants.SC_JOB_GROUP), 
+				BidSchedulesPoolingJob.class,
+				SchedulerConstants.SC_DAILY_JOB_DESCRIPTION);
 
 		// Sc Continous job
 		EpSchedulerHelper
@@ -106,7 +108,9 @@ public class ScSchedulerServlet extends HttpServlet {
 		// failover handler Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
-				SchedulerConstants.SC_JOB_GROUP), ScFailoverHandlerJob.class);
+				SchedulerConstants.SC_JOB_GROUP), 
+				ScFailoverHandlerJob.class,
+				SchedulerConstants.SC_FAILOVER_HANDLER_JOB_DESCRIPTION);
 
 		// Sc Qt Publish job
 		EpSchedulerHelper
@@ -123,7 +127,9 @@ public class ScSchedulerServlet extends HttpServlet {
 		// Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_QT_PUBLISH_JOB,
-				SchedulerConstants.SC_JOB_GROUP), QTPublishSchedulingJob.class);
+				SchedulerConstants.SC_JOB_GROUP), 
+				QTPublishSchedulingJob.class,
+				SchedulerConstants.SC_QT_PUBLISH_JOB_DESCRIPTION);
 		// Qt Proposal Close job
 
 		EpSchedulerHelper
@@ -141,7 +147,8 @@ public class ScSchedulerServlet extends HttpServlet {
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB,
 				SchedulerConstants.SC_JOB_GROUP),
-				QTProposalCloseSchedulingJob.class);
+				QTProposalCloseSchedulingJob.class,
+				SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION);
 
 		EpSchedulerHelper
 				.scheduleJob(
