@@ -37,7 +37,7 @@
 				<p:inputText style="width:85%" value="#{scLoiSuppDoc.title}"
 					required="true" id="repoTitleId"
 					label="#{lbl['lbl.sc.document.title']}"
-					readonly="#{lOIDetailBackingBean.managedBean.readOnly}">
+					readonly="#{lOIDetailBackingBean.managedBean.readOnly or isCompleted}">
 					<p:ajax event="keyup" />
 				</p:inputText>
 				<p:message id="repoTitleIdMsg" for="repoTitleId" display="icon" />
