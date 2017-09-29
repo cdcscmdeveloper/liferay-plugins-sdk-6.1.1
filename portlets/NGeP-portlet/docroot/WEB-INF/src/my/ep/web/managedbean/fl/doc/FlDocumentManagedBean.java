@@ -320,7 +320,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					boolean isRemoveFactoring=false;
 					FLOrderInfo orderInfo=null;
 					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-						if(null != orderInfo){						
+						if(null != orderInfo){	
 							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
 							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId());
 							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(),docsearchResult.getDocId(),orderInfo.getRole(),orderInfo.getOrderId(),reqDTO.getUserId());
@@ -432,8 +432,18 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentSupplier()) {
-											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+										if(getSearchFunctionType() != null){
+											if(getSearchFunctionType()==ParameterConst.ORG_TYPE_PTJ){
+												orderInfo.setRole(null);
+											}else if(getSearchFunctionType()==ParameterConst.ORG_TYPE_SUPPLIER){
+												if(isFlFulfilmentSupplier()) {
+													orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+												}
+											}
+										}else{
+											if(isFlFulfilmentSupplier()) {
+												orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+											}
 										}
 									}
 								}
@@ -455,9 +465,16 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentSupplier()) {
-											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+										if(getSearchFunctionType()==ParameterConst.ORG_TYPE_PTJ){
+											orderInfo.setRole(null);
+										}else if(getSearchFunctionType()==ParameterConst.ORG_TYPE_SUPPLIER){
+											if(isFlFulfilmentSupplier()) {
+												orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+											}
 										}
+//										if(isFlFulfilmentSupplier()) {
+//											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+//										}
 									}
 								}
 							}
