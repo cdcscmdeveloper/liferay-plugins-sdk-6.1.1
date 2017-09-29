@@ -40,6 +40,7 @@ public class SchedulerConstants {
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
 	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job to run daily at 11:55 PM to update qualified/disqualified suppliers";
 	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job to run daily at 12:05 AM";
+	public static final String SC_FAILOVER_HANDLER_JOB_DESCRIPTION = "Job to run once server started";
 	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run daily at 12:00 am to publish Qt's";
 	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run daily at 12:00 am to close proposal";
 	public static final String SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION  = "Job to Send Reminder for Quotation proposal validity";
