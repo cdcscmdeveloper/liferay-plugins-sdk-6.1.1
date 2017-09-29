@@ -100,6 +100,7 @@ public class SchedulerConstants {
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB = "Check or Terminate Basic Account Expiration";
 	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB = "Change MOF Expired Personnel Role";
 	public static final String SM_COMPLAINT_SHOWCAUSE_NOTIFICATION = "Complaint ShowCause Notification";
+	public static final String SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION = "Complaint Accusation Letter Notification";
 
 	// Sm Job Description
 	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 11:55 PM to delete pending activation personnel";
@@ -109,7 +110,8 @@ public class SchedulerConstants {
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 1 AM to check or deactivate Basic Account";
 	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run every hour to Change MOF Expired Personnel Role";
 	public static final String SM_COMPLAINT_SHOWCAUSE_NOTIFICATION_JOB_DESC = "Job run every day at 2 AM to send the show cause notification which didn't submit";
-
+	public static final String SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION_JOB_DESC = "Job run every day at 3 AM to send the accusation letter notification which didn't submit";
+	
 	// Integration
 	public static final String PHIS_INTEGRATION_JOB_GROUP = "PHIS INTEGRATION JOB GROUP";
 	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING INTEGRATION JOB GROUP";
