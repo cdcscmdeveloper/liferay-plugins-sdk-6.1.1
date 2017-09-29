@@ -26,6 +26,8 @@ import my.ep.web.scheduler.job.gfmas.MasterDataVendorOutboundJob;
 import my.ep.web.scheduler.job.gfmas.ReceiptInformationJob;
 import my.ep.web.scheduler.job.sm.ChangeExpiredMofPersonnelToBasicJob;
 import my.ep.web.scheduler.job.sm.CheckBasicAccountExpirationJob;
+import my.ep.web.scheduler.job.sm.ComplaintAccusationLetterReminderJob;
+import my.ep.web.scheduler.job.sm.ComplaintShowCauseLetterReminderJob;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
@@ -126,12 +128,25 @@ public class SmSchedulerServlet extends HttpServlet {
 				new JobKey(
 						SchedulerConstants.SM_COMPLAINT_SHOWCAUSE_NOTIFICATION,
 						SchedulerConstants.SM_JOB_GROUP),
-				CheckBasicAccountExpirationJob.class,
+				ComplaintShowCauseLetterReminderJob.class,
 				SchedulerConstants.SM_COMPLAINT_SHOWCAUSE_NOTIFICATION_JOB_DESC,
 				SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
 								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_COMPLAINT_SHOW_CAUSE_NOTIFICATION));
+		
+		//Accusation letter notification - 
+				EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION,
+								SchedulerConstants.SM_JOB_GROUP),
+						ComplaintAccusationLetterReminderJob.class,
+						SchedulerConstants.SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION));
 		
 		// 1GFMAS jobs
 		EpSchedulerHelper
