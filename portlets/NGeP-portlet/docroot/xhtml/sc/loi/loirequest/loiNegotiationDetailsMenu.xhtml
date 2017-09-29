@@ -24,7 +24,7 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
 						value="#{lOIDetailBackingBean.flag}"
-						rendered="#{isEditableStatus}">
+						rendered="#{isEditableStatus}" disabled="#{isCompleted}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=loiNegotationDetailsPanel])"
 							listener="#{lOIDetailBackingBean.selectAllNegoLocations}"></p:ajax>
 					</p:selectBooleanCheckbox>
@@ -114,7 +114,7 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
 						value="#{lOIDetailBackingBean.flag}"
-						rendered="#{isEditableStatus}">
+						rendered="#{isEditableStatus}" disabled="#{isCompleted}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 							listener="#{lOIDetailBackingBean.selectAll}"></p:ajax>
 					</p:selectBooleanCheckbox>
