@@ -517,11 +517,20 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setPmUser(poUser);
 		}else{
 			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
+			PmUser poUser = null;
 			String loginId = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers().trim();
-			PmUser poUser = SmCommonUtil.getInstance().retrievePOByUserIdAndJobTask(loginId, 
-					getManagedBean().getSmAppl().getSupplierType(), getManagedBean()
-					.getSmAppl().getApplType(), getManagedBean()
-					.getSmAppl().getApplCategoryType());
+			if(loginId == null){
+				poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmAppl().getApplType(), getManagedBean()
+						.getSmAppl().getApplCategoryType());
+			}else{
+				poUser = SmCommonUtil.getInstance().retrievePOByUserIdAndJobTask(loginId, 
+						getManagedBean().getSmAppl().getSupplierType(), getManagedBean()
+						.getSmAppl().getApplType(), getManagedBean()
+						.getSmAppl().getApplCategoryType());
+			}
+
 			setPOWeightage(poUser);
 			processingOfficer = poUser.getUserName();
 			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
