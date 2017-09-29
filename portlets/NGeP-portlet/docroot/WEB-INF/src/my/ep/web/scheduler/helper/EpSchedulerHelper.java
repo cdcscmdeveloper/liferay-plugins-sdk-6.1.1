@@ -88,7 +88,7 @@ public class EpSchedulerHelper extends QuartzAdapter {
 	 *            <? extends Job> jobClass (mandatory)
 	 */
 	public static boolean runJobOnce(JobKey jobKey,
-			Class<? extends Job> jobClass) {
+			Class<? extends Job> jobClass, String jobDetailDesc) {
 		boolean success = true;
 		try {
 
@@ -97,8 +97,12 @@ public class EpSchedulerHelper extends QuartzAdapter {
 
 				// check if job not exist, add to scheduler context
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
-					jobDetail = JobBuilder.newJob(jobClass)
-							.withIdentity(jobKey).storeDurably().build();
+					// specify the job' s details..
+					JobBuilder jobBuilder = JobBuilder.newJob(jobClass)
+							.withIdentity(jobKey)
+							.withDescription(jobDetailDesc);
+
+					jobDetail = jobBuilder.build();
 
 					// add job
 					EpSchedulerHelper.getScheduler().addJob(jobDetail, true);
@@ -459,7 +463,7 @@ public class EpSchedulerHelper extends QuartzAdapter {
 				instance.getListenerManager().addJobListener(
 						new EpSchedulerListener(), GroupMatcher.anyJobGroup());
 				log.info(">>>>>EP SCHEDULER LISTENER FINISH ADDING ALL JOBS<<<<<<");
-				
+
 			} catch (SchedulerException e) {
 				log.info(">>>>>FAILED TO START EP SCHEDULER DUE TO ERR MSG:"
 						+ e.getMessage() + "<<<<<<<<<");
