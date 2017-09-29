@@ -433,9 +433,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
 										if(getSearchFunctionType() != null){
-											if(getSearchFunctionType()==ParameterConst.ORG_TYPE_PTJ){
+											if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
 												orderInfo.setRole(null);
-											}else if(getSearchFunctionType()==ParameterConst.ORG_TYPE_SUPPLIER){
+											}else if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)){
 												if(isFlFulfilmentSupplier()) {
 													orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
 												}
@@ -465,16 +465,19 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(getSearchFunctionType()==ParameterConst.ORG_TYPE_PTJ){
-											orderInfo.setRole(null);
-										}else if(getSearchFunctionType()==ParameterConst.ORG_TYPE_SUPPLIER){
+										if(getSearchFunctionType() != null){
+											if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
+												orderInfo.setRole(null);
+											}else if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)){
+												if(isFlFulfilmentSupplier()) {
+													orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+												}
+											}
+										}else{
 											if(isFlFulfilmentSupplier()) {
 												orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
 											}
 										}
-//										if(isFlFulfilmentSupplier()) {
-//											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-//										}
 									}
 								}
 							}
