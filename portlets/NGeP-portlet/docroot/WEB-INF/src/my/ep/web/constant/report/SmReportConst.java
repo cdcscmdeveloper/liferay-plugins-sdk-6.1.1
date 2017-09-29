@@ -149,7 +149,7 @@ public class SmReportConst implements Serializable {
 	public static final String PAYMENT_SOFTC_CERT = "S";
 
 	public static final String CLASSIFICATION_CODE_1 = "H0171403";
-	public static final String CLASSIFICATION_CODE_2 = "L1121109";
+	public static final String CLASSIFICATION_CODE_2 = "L1121107";														
 	public static final String SOFTCERT_REQ_DATE = "R";
 	public static final String SOFTCERT_EXP_DATE = "E";
 	public static final String SOFTCERT_RENEW_DATE = "N";
