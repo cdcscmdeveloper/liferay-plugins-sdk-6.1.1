@@ -519,7 +519,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
 			PmUser poUser = null;
 			String payloadPO = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers();
-			String loginId = payloadPO != null ? payloadPO.trim() : null;
+			String loginId = StringUtils.isNotBlank(payloadPO) ? payloadPO.trim() : null;
 			if(loginId == null){
 				poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 						.getSmAppl().getSupplierType(), getManagedBean()
