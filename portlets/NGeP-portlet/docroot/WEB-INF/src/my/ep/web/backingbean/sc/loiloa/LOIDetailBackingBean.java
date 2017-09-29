@@ -3844,7 +3844,7 @@ public class LOIDetailBackingBean extends
 				scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
 			}
 			String prefixName = scLoiReport.getTitle().replaceAll(
-					SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE);
+					SourcingConstants.REG_EXP_WHITE_SPACE, "");
 			scLoiReportAttachment.setTempFileName(prefixName);
 			scAttachments.add(scLoiReportAttachment);
 		}
