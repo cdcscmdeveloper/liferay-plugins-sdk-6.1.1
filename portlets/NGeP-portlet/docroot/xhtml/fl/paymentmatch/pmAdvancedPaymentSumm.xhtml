@@ -10,25 +10,25 @@
 	<p:panel id="pymtTrackingPnl" header="#{lbl['lbl.fl.advanced.payment.summary']}" toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="No. Of Contract Orders: " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.advance.payment.co.issued']}" /></td>
 				<td><p:inputText value="#{paymentMatchBackingBean.managedBean.numberOfCO}" disabled="true" size="10" style="text-align:right">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Paid Amt.(RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.advance.payment.paid.amount']}" /></td>
 				<td><p:inputText value="#{paymentMatchBackingBean.managedBean.paidAmt}" disabled="true" size="10" style="text-align:right">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Paid(%)" /></td>
+				<td><p:outputLabel value="{lbl['lbl.fl.advance.payment.paid.percentage']}" /></td>
 				<td><p:inputText value="#{paymentMatchBackingBean.managedBean.paidPerc}" disabled="true" size="10" style="text-align:right">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Balance Amt(RM)" /></td>
+				<td><p:outputLabel value="{lbl['lbl.fl.advance.payment.balance.to.paid']}" /></td>
 				<td><p:inputText value="#{paymentMatchBackingBean.managedBean.balanceAmt}" disabled="true" size="10" style="text-align:right">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
