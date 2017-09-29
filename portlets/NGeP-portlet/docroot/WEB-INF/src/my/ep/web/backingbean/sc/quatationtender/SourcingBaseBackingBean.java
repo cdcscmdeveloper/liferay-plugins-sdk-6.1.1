@@ -156,6 +156,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -345,9 +346,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		File file = null;
 		if (scAttachment != null
 				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-		try {
+			try {
+				String fileName = scAttachment.getFileName();
+				if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+					String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+					fileName = scAttachment.getTempFileName() + "." + extension;
+				}
 				file = downloadFile(getActualFilePath(scAttachment),
-						scAttachment.getFileName());
+						fileName);
 			} catch (FileNotFoundException exception) {
 				// Separate the file name from absolute path
 				String splitMsg[] = StringUtils.split(exception.getMessage(),
@@ -467,7 +473,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 					File file = new File(getActualFilePath(scAttachment));
 
-					zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+					if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+						zos.putNextEntry(new ZipEntry(scAttachment.getTempFileName() + "." + extension));
+					} else {
+						zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+					}
 
 					// Get the file
 					FileInputStream fis = null;
