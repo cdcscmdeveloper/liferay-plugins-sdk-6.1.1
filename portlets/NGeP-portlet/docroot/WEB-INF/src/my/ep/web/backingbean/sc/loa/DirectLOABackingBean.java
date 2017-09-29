@@ -333,7 +333,7 @@ public class DirectLOABackingBean extends
 		if(scLoaReportAttachmentGenerated != null) {
 			String prefixName = scLoaReport.getTitle().replaceAll(
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
-			scLoaReportAttachment.setTempFileName(prefixName);
+			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 		}
 		downloadFile(scLoaReportAttachmentGenerated);
 	}
