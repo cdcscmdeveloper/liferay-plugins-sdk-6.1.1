@@ -1695,12 +1695,13 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getLois().add(resDTO.getScLoi());
 
 		// remarks
-		getManagedBean().getScLoi().setScLoiRemarks(
-				initializeRemarks(getManagedBean().getScLoi(), 
-						currentStatus,
-						getManagedBean().getScLoi().getScLoiRemarks(),
-						ScLoiRemark.class));
-
+		if(!QTStatusConst.LOI_COMPLETED.equals(statusId)){
+			getManagedBean().getScLoi().setScLoiRemarks(
+					initializeRemarks(getManagedBean().getScLoi(), 
+							currentStatus,
+							getManagedBean().getScLoi().getScLoiRemarks(),
+							ScLoiRemark.class));
+		}
 		// status
 		getCurrentStatus(currentStatus.getPmStatus()
 				.getStatusId());
