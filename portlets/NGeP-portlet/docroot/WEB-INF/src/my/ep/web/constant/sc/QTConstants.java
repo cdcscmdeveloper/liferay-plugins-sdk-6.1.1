@@ -82,7 +82,7 @@ public interface QTConstants {
 	public static final String SC_LOA_AWARD_TAB = "Award Details";
 	public static final String SC_PERFORMANCE_BOND_TAB = "Performance Bond";
 	public static final String SC_PAYMENT_TAB = "Payment Details";
-	public static final String LOI_NEGO_TERM_PRICE = "Price";
+	public static final String LOI_NEGO_TERM_PRICE = "Harga";
 
 	public static final Long SC_MEETING_PENDING_STATUS_ID = 62650L;
 	public static final Long SC_MEETING_CANCELLED_STATUS_ID = 62651L;
