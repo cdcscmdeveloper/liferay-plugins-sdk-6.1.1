@@ -81,19 +81,25 @@ public class ScheduleBiddingBackingBean extends
 	 * Populate duration drop down values.
 	 */
 	public void populateDurationDropDownValues() {
-		SelectItem[] items = null;
+		List<SelectItem> items = null;
 		FacesScopes face = new FacesScopes();
 		try {
 
-			items = new SelectItem[3];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+			items = new ArrayList<SelectItem>();
+			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			items[1] = new SelectItem(getManagedBean().getBidMinDuration(),
-					"01:00");
-
-			items[2] = new SelectItem(getManagedBean().getBidMaxDuration(),
-					"02:00");
+					face.getUserLocale())));
+			long startHour = 1;
+			long endHour = 2;
+			if (getManagedBean().getBidMinDuration() != null) {
+				startHour = getManagedBean().getBidMinDuration();
+			}
+			if (getManagedBean().getBidMaxDuration() != null) {
+				endHour = getManagedBean().getBidMaxDuration();
+			}
+			for (long duration = startHour; duration <= endHour; duration++) {				
+				items.add(new SelectItem(duration, duration+""));
+			}
 			/*
 			 * getManagedBean().getBidMinDuration()+" "+
 			 * ResourceBundleUtils.getMessage( "lbl.txt.hour",
@@ -102,7 +108,7 @@ public class ScheduleBiddingBackingBean extends
 			 * ResourceBundleUtils.getMessage( "lbl.txt.hours",
 			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())
 			 */
-			getManagedBean().setSelectItems(items);
+			getManagedBean().setSelectItems(items.toArray(new SelectItem[items.size()]));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
