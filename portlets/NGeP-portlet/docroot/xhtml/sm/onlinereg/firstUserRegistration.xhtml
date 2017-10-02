@@ -64,7 +64,7 @@
 			      });
 			});
 	</script>
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  escape="false" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="firstUserTncDialog" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
 				action="#{registrationBackingBean.onCallFirstUserTncDialog}">
