@@ -147,7 +147,6 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 		if(resDTO.getPojo() != null){
 			payload = resDTO.getPojo();
-			//payLoadString = Parser.getInstance().parseObj(payload);
 			payLoadString = printFieldValue(payload);
 		}
 
