@@ -1000,6 +1000,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		reqDTO.setStatusIds(new ArrayList<Long>());
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS);
 		reqDTO.setSupplierId(supplierId);
 		
 		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.
