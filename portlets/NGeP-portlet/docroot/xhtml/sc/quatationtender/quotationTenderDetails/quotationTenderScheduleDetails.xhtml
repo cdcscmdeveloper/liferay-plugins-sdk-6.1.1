@@ -226,8 +226,10 @@
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.address']}">
-					<h:outputText value="#{samplesubmissiondtl.scAddress.address1}" />,
-					<h:outputText value="#{samplesubmissiondtl.scAddress.address2}" />,
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address1}" />
+					<h:outputText value="," rendered="#{!empty samplesubmissiondtl.scAddress.address2}" />
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address2}" />
+					<h:outputText value="," rendered="#{!empty samplesubmissiondtl.scAddress.address3}" />
 					<h:outputText value="#{samplesubmissiondtl.scAddress.address3}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
