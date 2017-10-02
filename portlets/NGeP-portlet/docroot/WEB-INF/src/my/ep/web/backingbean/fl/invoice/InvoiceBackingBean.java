@@ -86,7 +86,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
-import my.ep.jaxb.fl.maintenace.cancel.common.order.FLOrderCancelReqType;
+import my.ep.jaxb.fl.maintenace.cancel.codata.FLCOCancelReqType;
 import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
 import my.ep.persistence.constant.DbValueConst;
@@ -480,17 +480,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 			}else if(FLProcessNameConst.RESUBMIT_AP59_ORDER.equals(this.getManagedBean().getTaskName())){
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-				FLOrderCancelReqType reqType = (FLOrderCancelReqType)obj;
+				FLCOCancelReqType reqType = (FLCOCancelReqType)obj;
 
 				reqDTO = new FulfilmentReqDTO();
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-				Long invoiceId = reqType.getInvoiceId();
+				Long invoiceId = reqType.getOrderCancelDetails().getInvoiceId();
 
-				if(reqType.getErrorIds() != null && Long.parseLong(reqType.getErrorIds()) > 0){
+				if(reqType.getOrderCancelDetails().getErrorIds() != null && Long.parseLong(reqType.getOrderCancelDetails().getErrorIds()) > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
 					getManagedBean().setGfmasError(true);
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-					errReq.setErrorId(Long.parseLong(reqType.getErrorIds()));
+					errReq.setErrorId(Long.parseLong(reqType.getOrderCancelDetails().getErrorIds()));
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
 					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));

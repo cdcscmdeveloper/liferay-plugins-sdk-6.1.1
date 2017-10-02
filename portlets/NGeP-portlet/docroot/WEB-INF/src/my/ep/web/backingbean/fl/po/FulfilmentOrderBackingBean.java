@@ -66,7 +66,8 @@ import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
-import my.ep.jaxb.fl.maintenace.cancel.common.order.FLOrderCancelReqType;
+import my.ep.jaxb.fl.maintenace.cancel.codata.FLCOCancelReqType;
+import my.ep.jaxb.fl.maintenace.cancel.podata.FLPOCancelReqType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -401,14 +402,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
-					FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
+					FLCOCancelReqType coCancelDataType = (FLCOCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
-					if(orderCancelReqType.getErrorIds() != null && orderCancelReqType.getErrorIds().length() > 0){
+					flReqDTO.setFlOrderId(coCancelDataType.getOrderCancelDetails().getOrderDetails().getOrderId());
+					if(coCancelDataType.getOrderCancelDetails().getErrorIds() != null && coCancelDataType.getOrderCancelDetails().getErrorIds().length() > 0){
 						getManagedBean().setAutoUpdate(Boolean.FALSE);
 						getManagedBean().setGfmasError(true);
 						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-						errReq.setErrorId(new Long(orderCancelReqType.getErrorIds()));
+						errReq.setErrorId(new Long(coCancelDataType.getOrderCancelDetails().getErrorIds()));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
 						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
@@ -525,14 +526,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
-					FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
+					FLPOCancelReqType poCancelReqType = (FLPOCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
-					if(orderCancelReqType.getErrorIds() != null && orderCancelReqType.getErrorIds().length() > 0){
+					flReqDTO.setFlOrderId(poCancelReqType.getOrderCancelDetails().getOrderDetails().getOrderId());
+					if(poCancelReqType.getOrderCancelDetails().getErrorIds() != null && poCancelReqType.getOrderCancelDetails().getErrorIds().length() > 0){
 						getManagedBean().setAutoUpdate(Boolean.FALSE);
 						getManagedBean().setGfmasError(true);
 						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-						errReq.setErrorId(new Long(orderCancelReqType.getErrorIds()));
+						errReq.setErrorId(new Long(poCancelReqType.getOrderCancelDetails().getErrorIds()));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
 						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
