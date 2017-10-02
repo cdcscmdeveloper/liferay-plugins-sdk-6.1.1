@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.bpm.errorlist;
 
+import java.lang.reflect.Field;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -145,11 +147,33 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 		if(resDTO.getPojo() != null){
 			payload = resDTO.getPojo();
-			payLoadString = Parser.getInstance().parseObj(payload);
+			//payLoadString = Parser.getInstance().parseObj(payload);
+			payLoadString = printFieldValue(payload);
 		}
 
 		this.getManagedBean().setPayloadContent(payLoadString);
 
+	}
+	
+	public String printFieldValue(Object obj){
+		
+		String value = "";
+		
+		for(Field field : obj.getClass().getDeclaredFields()){
+			field.setAccessible(true);
+			String name = field.getName();
+			Object object = null;
+			
+			try {
+				object = field.get(obj);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			
+			value += name+"\t: "+object+"<br />";
+		}
+		
+		return value;
 	}
 
 }
