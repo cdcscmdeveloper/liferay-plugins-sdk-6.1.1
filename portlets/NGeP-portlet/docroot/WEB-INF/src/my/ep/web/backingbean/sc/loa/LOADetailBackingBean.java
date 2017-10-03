@@ -2596,7 +2596,7 @@ public class LOADetailBackingBean extends
 				scLoa = resDTO.getScLoa();
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
-				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+				successMessage(MessageConst.INFO_700033, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 						scLoa.getLoaNo(), Boolean.TRUE);
 			}
 
