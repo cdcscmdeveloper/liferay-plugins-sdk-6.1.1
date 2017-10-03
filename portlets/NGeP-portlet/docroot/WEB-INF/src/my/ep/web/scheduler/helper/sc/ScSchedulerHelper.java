@@ -48,6 +48,7 @@ public class ScSchedulerHelper {
 	 */
 	public void scheduleSimpleQTPublishingJob(ScQt scQt)
 			throws SchedulerException {
+		log.info("scheduleSimpleQTPublishingJob qtNo:" + scQt.getQtNo() + ", publishDate:" + scQt.getPublishDate());
 		JobKey jobKey = getQTPublishingJobKey(scQt);
 
 		// define the job and tie it to our QTPublishJob class
@@ -83,6 +84,7 @@ public class ScSchedulerHelper {
 	 * @throws SchedulerException
 	 */
 	public void scheduleSimpleQTClosingJob(ScQt scQt) throws SchedulerException {
+		log.info("scheduleSimpleQTClosingJob qtNo:" + scQt.getQtNo() + ", closingDate:" + scQt.getClosingDate());
 		JobKey jobKey = getQTClosingJobKey(scQt);
 
 		// define the job and tie it to our QTPublishJob class
