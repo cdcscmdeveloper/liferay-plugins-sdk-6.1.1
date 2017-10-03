@@ -5502,7 +5502,7 @@ public class QTDetailBackingBean extends
 	 * 		the quotation / tender id
 	 */
 	public void closeProposal(ScQt scQt) {
-		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
+		log.info("closeProposal-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		
 		IQTProposalSO qtProposalSO = null;
 		try {
@@ -5555,7 +5555,7 @@ public class QTDetailBackingBean extends
 	 * 		the quotation / tender id
 	 */
 	public void publishQT(ScQt scQt) {
-		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
+		log.info("publishQT-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		
 		IQTDetailSO qtDetailSO = null;
 		try {
