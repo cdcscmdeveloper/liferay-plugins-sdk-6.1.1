@@ -3327,27 +3327,92 @@ public class SmApplicationUtil {
 
 			appl.getSmPersonnels().clear();
 			if (!EntityHelper.isCollectionEmpty(equityOwners)) {
+				// sort by name
+				Collections.sort(equityOwners, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(equityOwners);
 			}
 			if (!EntityHelper.isCollectionEmpty(directors)) {
+				// sort by name
+				Collections.sort(directors, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(directors);
 			}
 			if (!EntityHelper.isCollectionEmpty(higherManagements)) {
+				// sort by name
+				Collections.sort(higherManagements,
+						new Comparator<SmPersonnel>() {
+							@Override
+							public int compare(final SmPersonnel s1,
+									final SmPersonnel s2) {
+								return (s1.getName()).compareTo(s2.getName());
+							}
+						});
 				appl.getSmPersonnels().addAll(higherManagements);
 			}
 			if (!EntityHelper.isCollectionEmpty(managements)) {
+				// sort by name
+				Collections.sort(managements, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(managements);
 			}
 			if (!EntityHelper.isCollectionEmpty(profs)) {
+				// sort by name
+				Collections.sort(profs, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(profs);
 			}
 			if (!EntityHelper.isCollectionEmpty(semiProfs)) {
+				// sort by name
+				Collections.sort(semiProfs, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(semiProfs);
 			}
 			if (!EntityHelper.isCollectionEmpty(staffs)) {
+				// sort by name
+				Collections.sort(staffs, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(staffs);
 			}
 			if (!EntityHelper.isCollectionEmpty(noRoles)) {
+				// sort by name
+				Collections.sort(noRoles, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1,
+							final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
 				appl.getSmPersonnels().addAll(noRoles);
 			}
 		}
