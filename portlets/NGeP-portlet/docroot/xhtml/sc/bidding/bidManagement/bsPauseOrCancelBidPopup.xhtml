@@ -4,9 +4,11 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<p:messages id="bidPauseCancelMessages"  autoUpdate="#{!biddingBB.managedBean.autoUpdate}" showDetail="true"
-		showSummary="false" closable="true" severity="error, info" />
+
+	<p:messages id="bidPauseCancelMessages"
+		autoUpdate="#{!(biddingBB.managedBean.autoUpdate)}" showDetail="true"
+		closable="true" showSummary="false" severity="error, info"/>
+    <p:panel id="pauseOrCancel">
 	<div>
 		<table>
 			<tr>
@@ -21,25 +23,26 @@
 						styleClass="mandatory" /> <h:outputLabel id="supplierNotesLblBPC"
 						value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
 				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes"
-						required="true" label="#{lbl['lbl.sc.notes.to.supplier']}"
+						label="#{lbl['lbl.sc.notes.to.supplier']}" rows="5"
 						value="#{biddingBB.managedBean.bidAction.remark}" cols="65"
 						onkeyup="limitTextArea(this,200);"
-						onkeydown="limitTextArea(this,200);" maxLength="200" /> <p:message
-						id="supplierNotesMsg" for="bidPauseOrCancelsupplierNotes"
-						showDetail="false" display="icon" /></TD>
+						onkeydown="limitTextArea(this,200);" maxLength="200">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@this,bidPauseCancelMessages" />
+					</p:inputTextarea></TD>
 			</tr>
 		</table>
 	</div>
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
-			styleClass="BtnSpacing"
-			actionListener="#{biddingBB.bidPauseOrCancelAction}"
-			process="@this,bidPauseOrCancelsupplierNotes " partialSubmit="true" />
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+			styleClass="BtnSpacing" update="@([id$=biddingListPanel],[id$=biddingList])"
+			action="#{biddingBB.bidPauseOrCancelAction}"
+			process="@this,pauseOrCancel" partialSubmit="true" />
 
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 			styleClass="BtnSpacing" partialSubmit="true"
 			action="#{biddingBB.closePopUpAction}"
 			oncomplete="bidPauseOrCancel.hide();" immediate="true" />
 	</div>
-
+</p:panel>
 </ui:composition>

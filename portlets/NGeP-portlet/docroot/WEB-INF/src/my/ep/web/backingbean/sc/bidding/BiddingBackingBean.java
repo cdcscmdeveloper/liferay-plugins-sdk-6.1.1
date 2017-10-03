@@ -198,7 +198,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param bid
 	 */
 	public void bidPausePopUpAction(ScBidSchedule bid) {
-		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+		this.getManagedBean().setAutoUpdate(false);
 		getManagedBean().setDuration("0:0");
 		getManagedBean().getBidAction().setActionType(
 				BiddingConst.BID_ACTION_TYPE_PAUSED);
@@ -216,7 +216,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param bid
 	 */
 	public void bidCancelPopUpAction(ScBidSchedule bid) {
-		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+		this.getManagedBean().setAutoUpdate(false);
 		getManagedBean().setDuration("0:0");
 		getManagedBean().getBidAction().setActionType(
 				BiddingConst.BID_ACTION_TYPE_CANCELLED);
@@ -251,6 +251,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 						"bidPauseOrCancel.hide();");
 				log.info("bidPauseOrCancelAction successful");
 				this.getManagedBean().getSearchDataModel().reloadData();
+				this.getManagedBean().setAutoUpdate(true);
 
 			}
 
