@@ -1922,7 +1922,7 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				renewSesionObject();
 				this.getManagedBean().setScQt(scQt);
-				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), Boolean.TRUE);
+				successMessage(MessageConst.INFO_700033, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), Boolean.TRUE);
 			}
 
 		} finally {
@@ -2088,7 +2088,7 @@ public class LOIDetailBackingBean extends
 				scLoi = resDTO.getScLoi();
 				renewSesionObject();
 				this.getManagedBean().setScQt(scQt);
-				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.TRUE);
+				successMessage(MessageConst.INFO_700033, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.TRUE);
 			}
 
 		} finally {
@@ -2123,7 +2123,7 @@ public class LOIDetailBackingBean extends
 
 				renewSesionObject();
 
-				successMessage(MessageConst.INFO_700005,
+				successMessage(MessageConst.INFO_700033,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_INTENT, qtNo, Boolean.TRUE);
 			}
@@ -2499,7 +2499,7 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
 
-				successMessage(MessageConst.INFO_700005,
+				successMessage(MessageConst.INFO_700033,
 						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
 						ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
 								.getScQt().getQtNo(), Boolean.TRUE);
