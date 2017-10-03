@@ -186,18 +186,18 @@
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
 
-				<p:commandLink id="cancelButton" onmouseover="Cancel"
+				<p:commandLink id="cancelButton" 
 					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
-
 					<p:graphicImage id="cancelBtnImage"
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png"
 						title="#{lbl['lbl.sc.cancel.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
+				<!-- onmouseover="Cancel" -->
 				<p:commandLink id="resumeButton"
 					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PAUSED}"
 					process="@this" partialSubmit="true"
@@ -229,8 +229,8 @@
 
 		<p:dialog
 			header="#{(biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.paused) ? lbl['lbl.sc.pause.bid'] : lbl['lbl.sc.cancel.bid']}"
-			widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade"
-			draggable="false" resizable="false" modal="false"
+			widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="flase"
+			draggable="false" resizable="false" modal="false" styleClass="pop_up_top"
 			id="bidPauseOrCancel">
 			<ui:include
 				src="/xhtml/sc/bidding/bidManagement/bsPauseOrCancelBidPopup.xhtml"></ui:include>
