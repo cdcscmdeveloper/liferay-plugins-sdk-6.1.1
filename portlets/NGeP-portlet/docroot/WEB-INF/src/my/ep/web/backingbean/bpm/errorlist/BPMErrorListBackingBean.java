@@ -101,9 +101,9 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
 	}
 
-	public void submitError(String taskId){
+	public void submitError(String taskId, String title){
 		log.info("............................submitTask");
-
+		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
@@ -123,11 +123,18 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_700034,
-									new String[] {},
+									new String[] {title},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		}
 
+	}
+	
+	public String refreshError(){
+		
+		this.getManagedBean().getErrorListDataModel().resetData();
+		
+		return "errorListView?faces-redirect=true";
 	}
 
 	public void onClickPayload(String taskId) throws JAXBException{
