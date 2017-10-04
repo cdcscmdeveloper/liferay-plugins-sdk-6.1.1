@@ -57,6 +57,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		
 		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
 		getManagedBean().setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
+		getManagedBean().setPoStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 		if(activeOrg.size() > 0){
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
@@ -310,11 +311,5 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		}
 		
 		return false;
-	}
-	
-	public void resetPoStatus(){
-		if(getManagedBean().getRecordStatus() != DbValueConst.RECORD_STATUS_SUSPENDED){
-			getManagedBean().setPoStatus(null);
-		}
 	}
 }
