@@ -12,16 +12,24 @@
 	<ui:define name="contentSection">
 
 		<p:messages id="errorListMsgId" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false"></p:messages>
-
+			closable="true" showSummary="false">
+		</p:messages>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<h:panelGroup id="errorsListViewId">
 
 			<p:panel header="#{lbl['lbl.bpm.my.errors']}" collapsed="false">
-				<p:blockUI block=":form" widgetVar="blockWidget">
-					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-				</p:blockUI>
-
-
+			
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.bpm.btn.refresh']}"
+						onclick="this.disabled=true;" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{bpmErrorListBackingBean.refreshError()}" update="@form">
+					</p:commandButton>
+				</div>
+				
 				<p:dataTable
 					value="#{bpmErrorListBackingBean.managedBean.errorListDataModel}"
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
@@ -32,19 +40,19 @@
 
 					<p:column width="25%;" style="white-space:normal;">
 						<f:facet name="header">
-				#{lbl['lbl.bpm.title']}
-			</f:facet>
+							#{lbl['lbl.bpm.title']}
+						</f:facet>
 						<p:commandLink
 							action="#{bpmErrorListBackingBean.onClickPayload(errors.taskId)}"
 							oncomplete="payloadPopUp.show()" update="@form">
-				#{errors.title}
-			</p:commandLink>
+							#{errors.title}
+						</p:commandLink>
 					</p:column>
 
 					<p:column width="10%">
 						<f:facet name="header">
-					#{lbl['lbl.bpm.created.date']}
-				</f:facet>
+							#{lbl['lbl.bpm.created.date']}
+						</f:facet>
 						<h:outputText value="#{errors.createDate.time}">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
@@ -53,20 +61,20 @@
 
 					<p:column width="18%">
 						<f:facet name="header">
-				#{lbl['lbl.bpm.process']}
-			</f:facet>
+							#{lbl['lbl.bpm.process']}
+						</f:facet>
 			
-			#{errors.process}
-		</p:column>
+							#{errors.process}
+					</p:column>
 
 					<p:column width="6%">
 						<f:facet name="header">
-				#{lbl['lbl.cm.action']}
-			</f:facet>
+							#{lbl['lbl.cm.action']}
+						</f:facet>
 						<p:commandButton value="#{lbl['lbl.bpm.btn.retry']}"
 							onclick="this.disabled=true;" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{bpmErrorListBackingBean.submitError(errors.taskId)}"
+							action="#{bpmErrorListBackingBean.submitError(errors.taskId,errors.title)}"
 							update="@form">
 
 							<f:param name="errorId" value="#{errors.taskId}" />
