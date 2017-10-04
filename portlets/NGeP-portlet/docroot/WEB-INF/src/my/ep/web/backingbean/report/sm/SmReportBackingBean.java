@@ -630,4 +630,21 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		getManagedBean().setSelectedCategoryLs(null);
 		getManagedBean().setCategoryLs(null);
 	}
+	
+	public void setDateToByDateRange(int dateRange){
+		if(dateRange != 0 && getManagedBean().getDateFrom() != null){
+			Calendar calTo = Calendar.getInstance();
+			Date dtFrom = getManagedBean().getDateFrom();
+			calTo.setTime(dtFrom);
+			calTo.add(Calendar.MONTH, dateRange);
+			
+			Date currentDate = new Date();
+			
+			if(calTo.getTime().after(currentDate)){
+				getManagedBean().setDateTo(currentDate);
+			}else{
+				getManagedBean().setDateTo(calTo.getTime());
+			}
+		}
+	}
 }
