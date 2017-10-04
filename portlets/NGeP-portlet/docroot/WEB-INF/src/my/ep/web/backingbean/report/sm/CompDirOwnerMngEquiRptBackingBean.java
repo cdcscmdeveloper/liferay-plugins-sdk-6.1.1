@@ -23,7 +23,7 @@ public class CompDirOwnerMngEquiRptBackingBean extends
 	private static final long serialVersionUID = -6634506001926215613L;
 
 	public CompDirOwnerMngEquiRptBackingBean() {
-		setDefaultDateFromAndDateTo();
+		//setDefaultDateFromAndDateTo();
 	}
 
 	public void generateReport() {
