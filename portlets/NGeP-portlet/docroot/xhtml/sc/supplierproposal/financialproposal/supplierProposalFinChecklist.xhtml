@@ -49,20 +49,20 @@
 
 				<h:outputText
 					rendered="#{(financeList.scQtCheckList.definationType.parameterCode eq 'NA')}"
-					value="#{lbl['lbl.sc.attachment.msg']}" />
+					value="#{lbl['lbl.sc.attachment.upload.instruction']}" />
 				<h:outputText
 					rendered="#{(financeList.scQtCheckList.definationType.parameterCode eq 'UP' and financeList.scQtCheckList.action.parameterCode eq 'O')}"
-					value="#{lbl['lbl.sc.attachment.msg1']}" />
+					value="#{lbl['lbl.sc.attachment.upload.download.instruction']}" />
 
 				<h:outputText
 					rendered="#{financeList.scQtCheckList.action.parameterCode eq 'V' and financeList.scQtCheckList.definationType.parameterCode eq 'UP'}"
-					value="#{lbl['lbl.sc.attachment.view.msg']}" />
+					value="#{lbl['lbl.sc.attachment.view.instruction']}" />
 				<h:outputText
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF'}"
-					value="#{lbl['lbl.sc.prepare']}" />
+					value="#{lbl['lbl.sc.prepare.proposal.instruction']}" />
 				<h:outputText
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}"
-					value="#{lbl['lbl.sc.view']}" />
+					value="#{lbl['lbl.sc.view.supplier.info.instruction']}" />
 			</p:column>
 
 			<p:column style="white-space: normal; text-align: center;">
