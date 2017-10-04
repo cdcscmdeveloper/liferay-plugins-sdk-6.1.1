@@ -109,11 +109,11 @@
 						styleClass="mandatory" /></td>
 				<td class="tdContent">
 					
-					<p:selectOneMenu id="nationalityId"
+					<p:selectOneMenu id="nationalityId" 
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.nationality']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryId}"
-						style="width:80%"
+						style="width:80%" disabled="#{not empty registrationBackingBean.managedBean.smSuppOwner.nationality.countryId}"
 						rendered="#{registrationBackingBean.managedBean.smSuppOwner.brandNew and registrationBackingBean.managedBean.smAppl.applType ne SupplierManagementConst.ACC_BASIC}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="counLs"
