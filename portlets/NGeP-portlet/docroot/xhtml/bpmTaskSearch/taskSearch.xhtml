@@ -57,6 +57,13 @@ xmlns:p="http://primefaces.org/ui"
 				#{vo.assignees}
 			</p:column>
 			
+			<p:column style="min-width: 30px;white-space: pre-line;">
+				<f:facet name="header">
+					Claimed by
+				</f:facet>
+				#{vo.acquiredBy}
+			</p:column>
+			
 			<p:column>
 				<f:facet name="header">
 					Status
