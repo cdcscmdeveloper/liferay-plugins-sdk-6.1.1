@@ -55,6 +55,14 @@ public class ResendAccountActivationEmailBackingBean extends
 	private String accType;
 
 	private SmPersonnel selectedPersonnel;
+	
+	public void preRender() {
+		renewSesionObject();
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
+						"", null, null);
+	}
 
 	public void onClickResend() {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
