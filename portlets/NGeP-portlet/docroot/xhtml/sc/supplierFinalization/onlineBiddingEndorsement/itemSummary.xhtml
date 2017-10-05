@@ -13,7 +13,7 @@
 			rows="10"
 			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem}"
 			rowKey="#{item}" rowIndexVar="rowIndex" style="width:100%"
-			emptyMessage="#{lbl['lbl.sc.qt.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
 			selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
@@ -61,7 +61,7 @@
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10" rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
-			emptyMessage="#{lbl['lbl.sc.qt.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
 			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBidItemBean}">
 			<ac:paginator for="supplierItemTbl" />
 			
