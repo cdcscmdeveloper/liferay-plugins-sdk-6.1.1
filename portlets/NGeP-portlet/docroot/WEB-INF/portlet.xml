@@ -4134,8 +4134,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>BpmRetryList</portlet-name>
-		<display-name>BpmRetryList</display-name>
+		<portlet-name>BpmServiceRetry</portlet-name>
+		<display-name>BpmServiceRetry</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -4149,7 +4149,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>BPM Retry List</title>
+			<title>BPM Service Retry</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
