@@ -2406,6 +2406,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItems.remove(expenditureItem);
 		}
 		
+		calculateEpGrandTotal(paramCode);
 	}
 	
 	/**
@@ -2890,8 +2891,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		//remove deleted item from list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
-			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
+			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);			
 		}
+		calculatePpGrandTotal();
 		
 		
 //		if(this.getManagedBean().getDeletePpItems()!=null && !this.getManagedBean().getDeletePpItems().isEmpty()){
