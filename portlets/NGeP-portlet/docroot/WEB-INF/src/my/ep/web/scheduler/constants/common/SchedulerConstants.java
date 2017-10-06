@@ -62,14 +62,14 @@ public class SchedulerConstants {
 	public static final String IMPOSED_SERVICE_TAX_REMINDER = "IMPOSED SERVICE TAX REMINDER";
 
 	// CT Job Description
-	public static final String UPDATE_EXPIRED_CONTRACT_JOB_DESC = "Job run every day at 00:01 AM to expire the contract that no more effective.";
-	public static final String UPDATE_EXPIRED_FACTORING_JOB_DESC = "Job run every day at 00:01 AM to expire the factoring that no more effective.";
-	public static final String UPDATE_EXPIRED_CIRCULAR_JOB_DESC = "Job run every day at 00:01 AM to expire the circular that no more effective.";
-	public static final String UPDATE_SUSPENDED_AGENCY_ITEM_JOB_DESC = "Job run every day at 00:01 AM to activate the suspended agency and item.";
-	public static final String CONTRACT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Contract Notification to contract admin and selected approvers.";
-	public static final String AGREEMENT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Agreement Completion Notification to contract admin and selected approvers.";
-	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Performance Bond Notification to contract admin and selected approvers.";
-	public static final String REMEDY_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Remedy Notification to contract admin and selected approvers.";
+	public static final String UPDATE_EXPIRED_CONTRACT_JOB_DESC = "Job run every day at 00:01 to inactive the contracts which are expired.";
+	public static final String UPDATE_EXPIRED_FACTORING_JOB_DESC = "Job run every day at 00:01 to remove the factorings which are expired.";
+	public static final String UPDATE_EXPIRED_CIRCULAR_JOB_DESC = "Job run every day at 00:01 to inactive the circulars which are expired.";
+	public static final String UPDATE_SUSPENDED_AGENCY_ITEM_JOB_DESC = "Job run every day at 00:01 to activate the agencies and items which are suspended.";
+	public static final String CONTRACT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 to send the contract reminder before expiry base on contract setting.";
+	public static final String AGREEMENT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 to send the agreement reminder before completion base on contract setting.";
+	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 to send the performance bond reminder before expiry base on contract setting.";
+	public static final String REMEDY_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 to send the remedy reminder before expiry base on contract setting.";
 	public static final String IMPOSED_SERVICE_TAX_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Imposed Service Tax Notification to contract admin.";
 
 	// PM Module Constants
@@ -255,17 +255,17 @@ public class SchedulerConstants {
 	// NOTIFICATIONS
 	public static final String NTF_JOB_GROUP = "NOTIFICATION JOB GROUP";
 	public static final String NTF_MESSAGE_BULK_INTERNAL_JOB = "NTF BULK MESSAGE JOB";
-	public static final String NTF_MESSAGE_BULK_JOB_DESC = "Ntf Bulk Job run every 3 minutes";
+	public static final String NTF_MESSAGE_BULK_JOB_DESC = "Job run every 3 minutes to send portal inbox and sms notification for Sourcing module - Supplier invitation";
 
 	public static final String NTF_MESSAGE_REAL_TIME_INTERNAL_JOB = "NTF REAL TIME MESSAGE JOB";
-	public static final String NTF_MESSAGE_REAL_TIME_JOB_DESC = "Ntf Real Time Message Job run every 2 minutes";
+	public static final String NTF_MESSAGE_REAL_TIME_JOB_DESC = "Job run every 2 minutes to send portal inbox and sms notification for user already exist in NextGen system ";
 
 	public static final String NTF_MESSAGE_DIRECT_EMAIL_INTERNAL_JOB = "NTF DIRECT EMAIL MESSAGE JOB";
-	public static final String NTF_MESSAGE_DIRECT_EMAIL_JOB_DESC = "Ntf Direct Email Job run every 4 minute";
+	public static final String NTF_MESSAGE_DIRECT_EMAIL_JOB_DESC = "Job run every 4 minutes to send email notification for user which not exist in NextGen system";
 
 	public static final String NTF_EMAIL_BULK_INTERNAL_JOB = "NTF BULK EMAIL JOB";
-	public static final String NTF_EMAIL_BULK_JOB_DESC = "Ntf Bulk Email Job run every 20 minutes";
+	public static final String NTF_EMAIL_BULK_JOB_DESC = "Job run every 20 minutes to send email notification for Sourcing module - Supplier invitation";
 
 	public static final String NTF_EMAIL_REAL_TIME_INTERNAL_JOB = "NTF REAL TIME  EMAIL JOB";
-	public static final String NTF_EMAIL_REAL_TIME_JOB_DESC = "Real Time Email Job run every 5 minutes";
+	public static final String NTF_EMAIL_REAL_TIME_JOB_DESC = "Job run every 5 minutes to send email notification for user already exist in NextGen system ";
 }
