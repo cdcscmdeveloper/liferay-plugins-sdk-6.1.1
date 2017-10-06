@@ -36,7 +36,7 @@
 					header="#{lbl['lbl.pm.header.general.org.search']}"
 					toggleable="true">
 					<h:panelGrid columns="3" id="orgProfilePg">
-						<p:inputText id="itAccType" readonly="true" style="width:170px"
+						<p:inputText id="itAccType" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.acc.type']}" />
 						<p:spacer height="1" />
 						<p:selectOneMenu id="somAccType" styleClass="pmGoPopupSomWidth"
@@ -53,7 +53,7 @@
 								update="somAccClass,somGoCode" />
 						</p:selectOneMenu>
 
-						<p:inputText id="itAccClass" readonly="true" style="width:170px"
+						<p:inputText id="itAccClass" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.acc.class']}" />
 						<p:spacer height="1" />
 						<p:selectOneMenu id="somAccClass" styleClass="pmGoPopupSomWidth"
@@ -66,7 +66,7 @@
 								update="@this,somGoCode" />
 						</p:selectOneMenu>
 
-						<p:inputText id="itGoCode" readonly="true" style="width:170px"
+						<p:inputText id="itGoCode" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.gen.obj.code']}" />
 						<p:spacer height="1" />
 						<p:selectOneMenu id="somGoCode" styleClass="pmGoPopupSomWidth"
@@ -77,7 +77,7 @@
 								update="@this" />
 						</p:selectOneMenu>
 
-						<p:inputText id="itDesc" readonly="true" style="width:170px"
+						<p:inputText id="itDesc" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.desc']}" />
 						<p:spacer height="1" />
 						<p:inputText id="itSearchDesc"  style="width:300px"
