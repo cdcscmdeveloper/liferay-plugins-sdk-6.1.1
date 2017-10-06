@@ -113,7 +113,7 @@
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.nationality']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryId}"
-						style="width:80%" disabled="#{not empty registrationBackingBean.managedBean.smSuppOwner.nationality.countryId}"
+						style="width:80%" disabled="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC}"
 						rendered="#{registrationBackingBean.managedBean.smSuppOwner.brandNew and registrationBackingBean.managedBean.smAppl.applType ne SupplierManagementConst.ACC_BASIC}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="counLs"
@@ -139,8 +139,17 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
-					<h:outputText id="cmbUsrIdenType"
+					<h:outputText rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC}"
 						value="#{registrationBackingBean.getParamDescByParameterId(registrationBackingBean.managedBean.smSuppOwner.identificationTypeId)}"/>
+					<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.identificationtype']}"
+						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
+						style="width:200px" rendered="#{registrationBackingBean.managedBean.applType ne SupplierManagementConst.ACC_BASIC}">
+						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
+						<p:ajax event="change" update="pnlIdentType,pnlIdentLabel"
+							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
+					</p:selectOneMenu>
+					
+					<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" />
 				</td>
 
 				<td class="tdTitle">
