@@ -29,7 +29,7 @@
 							listener="#{lOIDetailBackingBean.selectAllNegoLocations}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{negoloc.selected}">
+				<p:selectBooleanCheckbox value="#{negoloc.selected}" disabled="#{isCompleted}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=loiNegotationDetailsPanel])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
