@@ -9093,7 +9093,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml
+				/xhtml/sm/resendaccountactivationemail/preRenderResendActivationEmail.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
