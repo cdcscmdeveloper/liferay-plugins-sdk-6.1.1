@@ -124,14 +124,14 @@ public class CtSchedulerServlet extends HttpServlet {
 						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_REMEDY_EXPIRATION_REMINDER));
 		
 		// Send Imposed Service Tax Notification to contract admin.
-		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER,
-				SchedulerConstants.CT_JOB_GROUP),
-				CtImposedServiceTaxNotificationJob.class,
-				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER_JOB_DESC,
-				SchedulerPropertiesUtils
-				.getInstance()
-				.getProperty(
-						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_IMPOSED_SERVICE_TAX_REMINDER));
+//		EpSchedulerHelper.scheduleJob(new JobKey(
+//				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER,
+//				SchedulerConstants.CT_JOB_GROUP),
+//				CtImposedServiceTaxNotificationJob.class,
+//				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER_JOB_DESC,
+//				SchedulerPropertiesUtils
+//				.getInstance()
+//				.getProperty(
+//						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_IMPOSED_SERVICE_TAX_REMINDER));
 	}
 }
