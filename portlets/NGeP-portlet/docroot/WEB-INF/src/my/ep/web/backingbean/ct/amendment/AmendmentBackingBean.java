@@ -2313,25 +2313,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to retrieve the new contract period
-	 * with addition of old contract period and extended period
-	 * in years unit
-	 * 
-	 * @return new contract period in years unit
-	 */
-	public String calculateMonthsAndYear(boolean isCalculateNew) {
-		int months = 0;
-		if (isCalculateNew) {
-			months = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod();			
-		} else {
-			months = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer()
-					.getCtContractValue().getContractPeriod();
-		}
-		return String.format("%.2f", months / 12.0);
-	}
-	
-	/**
 	 * The method used to retrieve the new bond amount
 	 * in text format.
 	 * 
