@@ -31,24 +31,19 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.bond.submission.due.date']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
-			<h:panelGrid columns="5">
-				<p:inputText style="width:100px;" disabled="true" 
-				       styleClass="ppRightBtn" value="#{amendmentBackingBean.calculateMonthsAndYear(false)}" />
+			<h:panelGrid columns="3">
+				<p:inputText style="width:120px;" disabled="true" 
+				       styleClass="ppRightBtn" value="#{amendmentBackingBean.calculateNewContractPeriod(false)}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="(#{lbl['lbl.ct.years']})" />
-				<p:spacer width="1" />
-				<p:outputLabel value="#{amendmentBackingBean.calculateNewContractPeriod(false)}"> #{lbl['lbl.ct.months']}</p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.period']}" />
-			<h:panelGrid columns="5">
-				<p:inputText style="width:100px;" disabled="true" styleClass="ppRightBtn"
+			<h:panelGrid columns="3">
+				<p:inputText style="width:120px;" disabled="true" styleClass="ppRightBtn"
 					value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
-						? amendmentBackingBean.calculateMonthsAndYear(true) : lbl['lbl.txt.na']}" />
+						? amendmentBackingBean.calculateNewContractPeriod(true) : lbl['lbl.txt.na']}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="(#{lbl['lbl.ct.years']})" />
-				<p:spacer width="1" />
-				<p:outputLabel value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
-					? amendmentBackingBean.calculateNewContractPeriod(true) : lbl['lbl.txt.na']}"> #{lbl['lbl.ct.months']}</p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.gst.all.amt']}" />
 			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
