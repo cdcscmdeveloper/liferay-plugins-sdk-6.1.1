@@ -118,7 +118,7 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean()
 				.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
 		assignValReqdToFalse();
-		getManagedBean().setShowGst(false);
+		getManagedBean().setShowGst(true);
 		getManagedBean().setFinancialOrgLs(
 				getInstance().retrieveFinancialOrgList());
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
@@ -132,11 +132,9 @@ public class GovtSellerRegistrationBackingBean extends
 		initCompanyAddressSelectItems(getManagedBean().getSmAppl()
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 				.getSmAddress());
-		setHqGst(getManagedBean().getSmSupp());
-		if (getManagedBean().getSmGstSupplier() != null) {
-			SmApplicationUtil.initBranchGstInformation(getManagedBean()
-					.getSmGstSupplier(), getManagedBean().getSmAppl());
-		}
+		// init gst
+		getInstance().initGstInfo(getManagedBean().getSmSupp(),
+				getManagedBean(),true);
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		getManagedBean().setShowBranchPointOfContact(true);
 		initBankBranches();
@@ -874,6 +872,7 @@ public class GovtSellerRegistrationBackingBean extends
 								.getCompanyName());
 		setBranchBankBeforeSubmit();
 		reqDTO.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
+		reqDTO.setGstList(getInstance().getCleanGst());
 		try {
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
 					.updateOnlineAcc(reqDTO);
