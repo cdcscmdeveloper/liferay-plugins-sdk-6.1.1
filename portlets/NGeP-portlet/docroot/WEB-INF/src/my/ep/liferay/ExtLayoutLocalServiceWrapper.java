@@ -145,6 +145,8 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 							PortalSessionThreadLocal.getHttpSession().setAttribute(logedInUserId + "validToRenewMOF", resDTO.getBasicMOFRenewFlg());
 							return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
 	
+						} catch(Exception e) {
+							log.error(e.getMessage());
 						} finally {
 							mofAccountSO = null;
 						}
@@ -157,30 +159,6 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			}
 		}
 		
-		/*if(FacesContext.getCurrentInstance() != null) {
-
-			long userId = 0;
-			if(new FacesScopes().getUserSessionBean() != null) {
-				userId = new FacesScopes().getUserSessionBean().getUserId();
-			}
-			
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setUserId(userId);
-			
-			IMofAccountSO mofAccountSO = null;
-			
-			try {
-				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
-				MofAccountResDTO resDTO = mofAccountSO.checkExpiredDowngradedToBasic(reqDTO);
-				log.info("resDTO.isExpired(): " + resDTO.getBasicMOFRenewFlg());
-				
-				PortalSessionThreadLocal.getHttpSession().setAttribute(logedInUserId + "validToRenewMOF", resDTO.getBasicMOFRenewFlg());
-				return (Integer)PortalSessionThreadLocal.getHttpSession().getAttribute(logedInUserId + "validToRenewMOF");
-
-			} finally {
-				mofAccountSO = null;
-			}
-		}*/
 //		return SupplierManagementConst.BASIC_ONLY;
 		return SupplierManagementConst.MOF_CAN_RENEW;
 	}	
@@ -216,109 +194,4 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
         return isBasic;
 	}
 	
-	/*public boolean isBasicSupplierUser() {
-		List<Role> loginUserRoles = getUserRoleList();
-		log.info("loginUserRoles: " + loginUserRoles);
-		for (Role r : loginUserRoles) {
-			log.info("role name: " + r.getName());
-			if(StringUtils.containsAny(r.getName(), "BASIC")) {
-				log.info(r.getName() + " is BASIC");
-				return true;
-			}
-		}
-
-		return false;
-	}*/
-
-	/*public boolean hasRoleUser(String roleName) {
-
-		boolean hasRoleUser = false;
-		if(FacesContext.getCurrentInstance() != null) {
-	        ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
-	        long portletGroupId= themeDisplay.getScopeGroupId();
-	        long userId = themeDisplay.getUserId();
-	        try {
-	        	hasRoleUser = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, portletGroupId, roleName, true);
-	        } catch(Exception e) {
-	        	System.err.println(e);
-	        }        
-		}
-		return hasRoleUser;
-	}*/
-	
-	/*public String getScreenName() {
-
-		if(FacesContext.getCurrentInstance() != null) {
-			ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
-			if(themeDisplay != null) {
-				if(themeDisplay.getUser() != null) {
-					return themeDisplay.getUser().getScreenName();
-				}
-			}
-		}
-		return null;
-	}*/
-	
-	/*public List<Role> getUserRoleList() {
-		List<Role> userRoleList = new ArrayList<Role>();
-		try {
-			if(FacesContext.getCurrentInstance() != null) {
-				if(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(USER_ROLE_SESSION_KEY) != null) {
-					log.info("Getting role session");
-					userRoleList = (List<Role>)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(USER_ROLE_SESSION_KEY);
-				} else {
-				
-					ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
-					if(themeDisplay != null) {
-						if(themeDisplay.getUser() != null) {
-							
-							User user = UserServiceUtil.getUserById(themeDisplay.getUser().getUserId());
-	//						userRoleList = user.getRoles();
-							List<UserGroupRole> userGroupRoleList = new ArrayList<UserGroupRole>();
-							for(Group group : user.getMySites()) {
-								userGroupRoleList.addAll(UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId(), group.getGroupId()));
-							}
-									
-							log.info("userGroupRoleList: " + userGroupRoleList);
-							for (UserGroupRole userGroupRole : userGroupRoleList) {
-						         Get Role object based on userGroupRole.getRoleId() 
-						        Role role = RoleLocalServiceUtil.getRole(userGroupRole.getRoleId());
-						        
-						        log.info("role: " + role.getName());
-						        userRoleList.add(role);
-						    }
-							if(userRoleList != null && userRoleList.size() > 0){
-								log.info("userRoleList adding to session: " + userRoleList);
-								FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(USER_ROLE_SESSION_KEY, userRoleList);
-							}
-						}
-					}
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}			
-		return userRoleList;
-	}*/
-	
-	/*private void getHttpSession() {
-		if(FacesContext.getCurrentInstance() != null) {
-			ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-			PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-			HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-			
-			HttpSession session = httpServletRequest.getSession();
-		}
-	}*/
-	
-/*	public static void main(String[] args) {
-		String roleName = "BASIC_SUPPLIER_ADMIN";
-		System.out.println("roleName.indexOf(\"BASIC\"): " + roleName.indexOf("BASIC"));
-		System.out.println("ddddd" + StringUtils.containsAny(roleName, "BASIC"));
-		
-		if(roleName.indexOf("B") > 0) {
-			System.out.println(true);
-		}
-	}*/
 }
