@@ -43,7 +43,6 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -650,6 +649,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
+		reqDTO.setGstList(getCleanGst());
 		
 		try{
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
@@ -677,6 +677,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}finally{
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 		}
+	}
+	
+	public List<SmGstSupplier> getCleanGst() {
+		List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
+		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+				.getSmGstSupplier());
+		supplierGstList.add(getManagedBean().getSmGstSupplier());
+		return supplierGstList;
 	}
 
 	/**
@@ -1360,8 +1368,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				setDisableCompanyNameBusinessTypeInMaintenance();
 				
 				//retrieve Supplier GST Info
-				SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(resDTO.getSmSupp().getSupplierId(), null, null,true);
-				getManagedBean().setSmGstSupplier(gstSupp);
+				initGstInfo(resDTO.getSmSupp(),getManagedBean(),false);
+				getManagedBean().setGstFlag(true);
 
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
@@ -1374,6 +1382,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlinereg/outputMsg.xhtml");
 
+		}
+	}
+	
+	public void initGstInfo(SmSupplier sup,
+			RegistrationManagedBean managedBean, boolean loadBranchGst) {
+
+		managedBean.setSmGstSupplier(SmCommonUtil
+				.getSmGstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
+						null, null, true));
+		if (managedBean.getSmGstSupplier() == null) {
+			managedBean.setSmGstSupplier(new SmGstSupplier());
+			managedBean.getSmGstSupplier().setIsCurrent(true);
+		}
+		SmApplicationUtil.initGstSuppDocs(managedBean.getSmGstSupplier());
+		if (loadBranchGst) {
+			SmApplicationUtil.initBranchGstInformation(
+					managedBean.getSmGstSupplier(), managedBean.getSmAppl());
 		}
 	}
 	
