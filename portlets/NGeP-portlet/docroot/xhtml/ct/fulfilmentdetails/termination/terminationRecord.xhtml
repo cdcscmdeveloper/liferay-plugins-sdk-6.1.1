@@ -83,7 +83,7 @@
           <f:verbatim/><f:verbatim/>   
           <f:verbatim rendered="#{terminationBackingBean.managedBean.termination}" />
 		  <p:commandButton id="lodgeComplaintBtn" value="#{lbl['lbl.ct.lodge.complaint']}"
-		      onclick="confirmation.show()" rendered="#{terminationBackingBean.managedBean.termination or !terminationBackingBean.managedBean.viewContract}"
+		      onclick="confirmation.show()" rendered="#{false}"
 		  	disabled="#{terminationBackingBean.managedBean.contractVer.ctTermination.complaintLodged}" />
 		</h:panelGrid>
 	    
