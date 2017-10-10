@@ -15,12 +15,14 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.errorlist.BPMErrorListManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.StatusHelper;
 
@@ -75,7 +77,9 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		else{
 			this.getManagedBean().setDocType("");
 		}
-
+		
+		this.getManagedBean().getErrorListDataModel().reloadData();
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "errorListView");
 	}
@@ -104,6 +108,9 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 	public void submitError(String taskId, String title){
 		log.info("............................submitTask");
 		
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = facesScopes.getUserSessionBean();
+		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
@@ -126,6 +133,8 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 									new String[] {title},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+			
+			log.info(title+" | "+user.getUserName()+" | "+DateUtils.getCurrentDate());
 		}
 
 	}
@@ -138,7 +147,7 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 	}
 
 	public void onClickPayload(String taskId) throws JAXBException{
-
+		
 		this.getManagedBean().setPayloadContent("");
 		
 		Object payload = null;
@@ -158,7 +167,8 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		}
 
 		this.getManagedBean().setPayloadContent(payLoadString);
-
+		
+		refreshError();
 	}
 	
 	public String printFieldValue(Object obj){
