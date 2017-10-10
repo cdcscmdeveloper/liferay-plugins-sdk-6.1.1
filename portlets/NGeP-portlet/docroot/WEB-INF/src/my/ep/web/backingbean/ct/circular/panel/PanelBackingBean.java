@@ -1679,16 +1679,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public SelectItem[] getCircularDocTypeValues() {
 		SelectItem[] items = null;
 		try {
+			String panelString = ResourceBundleUtils.getMessage("lbl.ct.panel.circular",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			String centralContractString = ResourceBundleUtils.getMessage("lbl.ct.central.contract.circular",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			if(isPanelAdmin() && isCentralContractAdmin()) { 
 				items = new SelectItem[2];
-				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, "Panel Circular");
-				items[1] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, "Central Contract Circular");
+				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, panelString);
+				items[1] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, centralContractString);
 			} else if(isPanelAdmin()) {
 				items = new SelectItem[1];
-				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, "Panel Circular");
+				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, panelString);
 			} else if(isCentralContractAdmin()) {
 				items = new SelectItem[1];
-				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, "Central Contract Circular");
+				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, centralContractString);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
