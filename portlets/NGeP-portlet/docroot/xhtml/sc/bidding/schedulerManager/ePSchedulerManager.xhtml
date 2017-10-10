@@ -187,7 +187,7 @@
 		<p:outputPanel rendered="#{not empty schedulerManagerBB.managedBean.epSchedulerProblemJobList}">
 			<p:panel header="#{lbl['lbl.quartz.alert.jobs']}" toggleable="true" id="jobAlertListPanelId">
 				
-				<p:dataTable var="probJob" id="probJob" widgetVar="jobBeanWidVar"
+				<p:dataTable var="probJob" id="probJobDt" widgetVar="jobBeanWidVar"
 				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{schedulerManagerBB.managedBean.epSchedulerProblemJobList}"
 					rows="10" rowKey="#{probJob}" rowIndexVar="index">
