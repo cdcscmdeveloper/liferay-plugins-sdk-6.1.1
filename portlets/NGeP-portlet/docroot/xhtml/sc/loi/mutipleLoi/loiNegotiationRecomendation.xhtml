@@ -22,7 +22,7 @@
 	
 	<p:outputPanel id="itemSupplierPanel">
 
-		<p:panel header="#{lbl['lbl.sc.recommendation']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.multipleloi.recommendation.title']}" toggleable="true">
 			<table style="border: 0px; width: 100%;">
 				<tr>
 					<c:if test="#{lOIDetailBackingBean.managedBean.scQt.zonal}">
@@ -263,7 +263,7 @@
 
 							<p:column style="text-align: right;">
 								<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.sc.quantity']}" />
+									<h:outputText value="#{lbl['lbl.sc.multipleloi.recommendation.quantity']}" />
 									<ac:iconTooltip
 										value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 								</f:facet>
