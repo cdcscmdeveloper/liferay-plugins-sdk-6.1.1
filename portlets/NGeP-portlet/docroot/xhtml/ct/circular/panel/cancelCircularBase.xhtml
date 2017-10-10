@@ -23,6 +23,9 @@
                 text-align: center !important;
       }
     </style>
+    	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage  value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
     	<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    <ui:include src="cancelCircularButtons.xhtml" />
 		<ui:include src="cancelCircularHeader.xhtml" />
