@@ -37,46 +37,49 @@ public class SpinnerBackingBean {
 	 * Get the new spin value based on step factor value.
 	 * 
 	 * @param component
-	 * 		the UIComponent instance
+	 *            the UIComponent instance
 	 * @param value
-	 * 		the current spin value
+	 *            the current spin value
 	 * @param stepFactor
-	 * 		the step factor value
+	 *            the step factor value
 	 * @param min
-	 * 		the minimum value
+	 *            the minimum value
 	 * @param max
-	 * 		the maximum value
+	 *            the maximum value
 	 * @param postUpdateListener
-	 * 		the post update listener string
-	 * @return	the new spin value
+	 *            the post update listener string
+	 * @return the new spin value
 	 */
-	public BigDecimal getSpinValue(UIComponent component, Object value, Object stepFactor, Object min, Object max, String postUpdateListener) {
+	public BigDecimal getSpinValue(UIComponent component, Object value,
+			Object stepFactor, Object min, Object max, String postUpdateListener) {
 		debugLogger("getSpinValue");
-		
+
 		BigDecimal newValue;
 		BigDecimal stepFactorValue = convertObjectToBigDecimal(stepFactor);
 		BigDecimal minValue = convertObjectToBigDecimal(min);
 		BigDecimal maxValue = convertObjectToBigDecimal(max);
-		
+
 		if (value == null || !(value instanceof BigDecimal)) {
 			newValue = BigDecimal.valueOf(0);
 		} else {
-			newValue = (BigDecimal)value;
+			newValue = (BigDecimal) value;
 		}
-		
+
 		if (stepFactorValue != null) {
 			newValue = newValue.add(stepFactorValue);
 		}
-		
+
 		if (minValue != null && newValue.compareTo(minValue) < 0) {
 			newValue = minValue;
 		}
-		
-		/*if (maxValue != null && newValue.compareTo(maxValue) > 0) {
-			newValue = maxValue;
-		}*/
-		
-		valueChangedAction(component, newValue, stepFactor, min, max, postUpdateListener);
+
+		/*
+		 * if (maxValue != null && newValue.compareTo(maxValue) > 0) { newValue
+		 * = maxValue; }
+		 */
+
+		valueChangedAction(component, newValue, stepFactor, min, max,
+				postUpdateListener);
 
 		return newValue;
 	}
@@ -85,83 +88,91 @@ public class SpinnerBackingBean {
 	 * Value Changed Action fired during blur event on spinner input text.
 	 * 
 	 * @param component
-	 * 		the UIComponent instance
+	 *            the UIComponent instance
 	 * @param value
-	 * 		the current spin value
+	 *            the current spin value
 	 * @param stepFactor
-	 * 		the step factor value
+	 *            the step factor value
 	 * @param min
-	 * 		the minimum value
+	 *            the minimum value
 	 * @param max
-	 * 		the maximum value
+	 *            the maximum value
 	 * @param postUpdateListener
-	 * 		the post update listener string
+	 *            the post update listener string
 	 */
-	public void valueChangedAction(UIComponent component, Object value, Object stepFactor, Object min, Object max, String postUpdateListener) {
+	public void valueChangedAction(UIComponent component, Object value,
+			Object stepFactor, Object min, Object max, String postUpdateListener) {
 		debugLogger("valueChangedAction");
-		
-		UIComponent spinnerInput = (UIComponent)component.findComponent("spinnerInput");
+
+		UIComponent spinnerInput = (UIComponent) component
+				.findComponent("spinnerInput");
 		BigDecimal currentValue = convertObjectToBigDecimal(value);
-		
+
 		if (currentValue != null && stepFactor != null) {
-			//BigDecimal stepFactorValue = convertObjectToBigDecimal(stepFactor);
+			BigDecimal stepFactorValue = convertObjectToBigDecimal(stepFactor);
 			BigDecimal minValue = new BigDecimal(0);
-					//convertObjectToBigDecimal(min);
+			// convertObjectToBigDecimal(min);
 			BigDecimal maxValue = convertObjectToBigDecimal(max);
-			
+
 			// check must be greater or equal to min value.
 			if (minValue != null) {
 				if (currentValue.compareTo(minValue) < 0) {
 					throwExcepion(MessageConst.ERROR_760301, spinnerInput);
 				}
 			}
-			
+
 			// check must be less than or equal to max value.
 			if (maxValue != null) {
-				if (currentValue.compareTo(maxValue) > 0) {
+
+				if ((maxValue.floatValue()- currentValue.floatValue()) <= stepFactorValue
+						.floatValue()) {
 					throwExcepion(MessageConst.ERROR_760302, spinnerInput);
 				}
+				/*
+				 * if (currentValue.compareTo(maxValue) > 0) {
+				 * throwExcepion(MessageConst.ERROR_760302, spinnerInput); }
+				 */
 			}
-			
-			/*// check value must be multiple by step factor.
-			if (currentValue.remainder(stepFactorValue)
-					.compareTo(BigDecimal.valueOf(0)) != 0) {
-				throwExcepion(MessageConst.ERROR_760301, spinnerInput);
-			}*/
+
+			/*
+			 * // check value must be multiple by step factor. if
+			 * (currentValue.remainder(stepFactorValue)
+			 * .compareTo(BigDecimal.valueOf(0)) != 0) {
+			 * throwExcepion(MessageConst.ERROR_760301, spinnerInput); }
+			 */
 		}
-		
+
 		invokeMethodAction(postUpdateListener, spinnerInput, currentValue);
 	}
-	
-	private void invokeMethodAction(String postUpdateListener, UIComponent component, BigDecimal newValue) {
+
+	private void invokeMethodAction(String postUpdateListener,
+			UIComponent component, BigDecimal newValue) {
 		if (StringUtils.isNotBlank(postUpdateListener)) {
-			MethodExpression methodExp = FacesScopes
-	                .createMethodExpression(FacesContext.getCurrentInstance(),
-	                		postUpdateListener, null,
-	                        new Class[] { UIComponent.class, Object.class });
-			
-			methodExp.invoke(
-					FacesContext.getCurrentInstance().getELContext(), 
-					new Object[]{component, newValue});
+			MethodExpression methodExp = FacesScopes.createMethodExpression(
+					FacesContext.getCurrentInstance(), postUpdateListener,
+					null, new Class[] { UIComponent.class, Object.class });
+
+			methodExp.invoke(FacesContext.getCurrentInstance().getELContext(),
+					new Object[] { component, newValue });
 		}
 	}
-	
+
 	private void throwExcepion(String msgId, UIComponent spinnerInput) {
 		spinnerInput.getValueExpression("value").setValue(
 				FacesContext.getCurrentInstance().getELContext(), null);
-		
+
 		throw new EpException(msgId);
 	}
-	
+
 	private BigDecimal convertObjectToBigDecimal(Object value) {
 		if (value != null) {
 			if (value instanceof BigDecimal) {
-				return (BigDecimal)value;
+				return (BigDecimal) value;
 			} else {
 				return new BigDecimal(value.toString());
 			}
 		}
-		
+
 		return null;
 	}
 }
