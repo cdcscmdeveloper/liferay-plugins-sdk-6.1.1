@@ -2684,7 +2684,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 	} else {
 	 		contractAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 	 	}
-		return contractAmount;
+		return (contractAmount != null) ? contractAmount : BigDecimal.ZERO;
 	}
 	
 	/**
@@ -2701,7 +2701,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 	} else {
 	 		gstAmount = getManagedBean().getContractVer().getCtContractAmount().getGstAmount();
 	 	}
-		return gstAmount;
+		return (gstAmount != null) ? gstAmount : BigDecimal.ZERO;
 	}
 	
 	/**
