@@ -187,7 +187,7 @@
 		<p:outputPanel rendered="#{not empty schedulerManagerBB.managedBean.epSchedulerProblemJobList}">
 			<p:panel header="#{lbl['lbl.quartz.alert.jobs']}" toggleable="true" id="jobAlertListPanelId">
 				
-				<p:dataTable var="probJob" id="probJobDt" widgetVar="jobBeanWidVar"
+				<p:dataTable var="probJob" id="probJobDt" widgetVar="probJobWidVar"
 				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{schedulerManagerBB.managedBean.epSchedulerProblemJobList}"
 					rows="10" rowKey="#{probJob}" rowIndexVar="index">
@@ -212,8 +212,8 @@
 	
 					<p:column headerText="#{lbl['lbl.quartz.health.state']}">
 						<h:outputText value="#{lbl['lbl.quartz.health.state.none']}" rendered="#{empty probJob.state}"/>
-						<p:graphicImage value="/css/images/design/ico-submit.png" rendered="#{probJob.state ne 'ERROR' and probJob.state ne 'BLOCKED'}"
-							title="#{lbl['lbl.quartz.state.normal.tooltips']}" />
+						<p:graphicImage value="/css/images/design/icon_alert.png" rendered="#{probJob.state ne 'ERROR' and probJob.state ne 'BLOCKED'}"
+							title="#{lbl['lbl.quartz.state.passed.execdate']}" />
 						<p:graphicImage value="/css/images/design/icon_alert.png" rendered="#{probJob.state eq 'BLOCKED'}"
 							title="#{lbl['lbl.quartz.state.blocked.tooltips']}" />
 						<p:graphicImage value="/css/images/design/icon_error.png" rendered="#{probJob.state eq 'ERROR'}"
