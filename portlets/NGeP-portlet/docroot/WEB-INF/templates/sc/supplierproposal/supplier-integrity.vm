@@ -18,7 +18,7 @@
 <body>
 	<div id="u12" class="u12">
 		<div id="u12_rtf">
-			<p style="text-align:center;"><span style="font-family:Arial;font-size:20px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">SURAT AKUAN PEMBIDA Bagi $title</span></p>
+			<p style="text-align:center;"><span style="font-family:Arial;font-size:20px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">SURAT AKUAN PEMBIDA <br/> Bagi <br/> $title</span></p>
 		</div>
 	</div>
 	<div id="u15" class="u15"  >
