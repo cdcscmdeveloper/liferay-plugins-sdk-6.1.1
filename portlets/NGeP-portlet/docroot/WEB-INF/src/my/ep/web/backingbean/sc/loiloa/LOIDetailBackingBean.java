@@ -2620,6 +2620,26 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		reqDTO.setEcActivityList(ecActivityList);
+		
+		boolean multiLoiAttended = false;
+		
+		for(ScQtCommitteeActivity committee : ecActivityList){
+			if(committee.isMultiLoiAttended() 
+					|| this.getManagedBean().getSelectedMeetingAttList() != null){
+				multiLoiAttended = true;
+			}
+		}
+		
+		for(ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee().getMeetingAttendances()){
+			if(meetingAttendance.isSelected()
+					|| meetingAttendance != null){
+				multiLoiAttended = true;
+			}
+		}
+
+		if(!multiLoiAttended){
+			throw new EpException(MessageConst.ERROR_760462);
+		}
 
 //		boolean itemized = this.getManagedBean().isItemized();
 //		ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean()
