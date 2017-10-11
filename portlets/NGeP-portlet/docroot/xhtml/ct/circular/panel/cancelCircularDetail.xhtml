@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="cancelCcrPnl" header="#{lbl['lbl.ct.panel.circular.to.cancel']}" toggleable="true" toggleSpeed="500" >
-		<p:selectOneMenu value="#{panelBackingBean.managedBean.circularDocType}" 
+		<p:selectOneMenu value="#{panelBackingBean.managedBean.circularDocType}" style="width:380px;"
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}" 
 			rendered="#{!panelBackingBean.isBPKApprover()}" >
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
