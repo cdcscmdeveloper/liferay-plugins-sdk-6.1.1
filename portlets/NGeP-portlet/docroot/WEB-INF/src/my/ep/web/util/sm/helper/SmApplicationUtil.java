@@ -7830,6 +7830,21 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			if (!EntityHelper.isCollectionEmpty(gst.getSmGstSupplierDocs())) {
+				// sort by doc name
+				Collections.sort(gst.getSmGstSupplierDocs(),
+						new Comparator<SmGstSupplierDoc>() {
+							@Override
+							public int compare(final SmGstSupplierDoc s1,
+									final SmGstSupplierDoc s2) {
+								String str1 = s1.getPmDocument() == null ? StringUtils.EMPTY
+										: s1.getPmDocument().getDocName();
+								String str2 = s2.getPmDocument() == null ? StringUtils.EMPTY
+										: s2.getPmDocument().getDocName();
+								return (str1.compareTo(str2));
+							}
+						});
+			}
 		}
 	}
 
