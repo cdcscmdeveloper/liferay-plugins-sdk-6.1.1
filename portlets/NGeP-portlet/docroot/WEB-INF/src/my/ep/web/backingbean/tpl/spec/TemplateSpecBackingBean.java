@@ -1990,7 +1990,7 @@ public class TemplateSpecBackingBean extends
 
 					if (!templateSpecHelper.isPriceTypeStandard(priceType)
 							&& ((!specificationReq && !isItemTypeService) || (specificationReq && !templateSpecHelper
-									.isPriceTypeStandard(priceType)))) {
+									.isPriceTypeZonalStandard(priceType)))) {
 						isAllPriceTypesStandard = false;
 
 						break;
