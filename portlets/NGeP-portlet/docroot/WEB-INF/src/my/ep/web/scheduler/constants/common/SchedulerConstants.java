@@ -206,7 +206,16 @@ public class SchedulerConstants {
 	
 	
 	///GFMAS AUTO
-	public static final String GFMAS_KPTJ_INTEGRATION_JOB_DESC = "Job run every 5 minute";
+	public static final String GFMAS_KPTJ_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLPCG Files";
+	public static final String GFMAS_VOT_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLVOT Files";
+	public static final String GFMAS_BANK_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS CMBNK Files";
+	public static final String GFMAS_AGOFF_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLBAC Files";
+	public static final String GFMAS_PROJECT_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLPRJ Files";
+	public static final String GFMAS_DANA_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLGLC Files";
+	public static final String GFMAS_GLACC_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLGLC Files";
+	public static final String GFMAS_PRGACT_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLPRG Files";
+	public static final String GFMAS_PTJ_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLPTJ Files";
+	public static final String GFMAS_PP_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLSEG Files";
 
 	// CRM Job Group ID
 	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";
