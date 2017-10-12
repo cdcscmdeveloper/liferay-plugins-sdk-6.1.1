@@ -89,6 +89,8 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		}
 		if(getManagedBean().getSelectedOrgProfile() != null){
 			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		} else if(getManagedBean().getSupplierId() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSupplierId());
 		}
 		if(getManagedBean().getRequisitioner() != null){
 			params.put(FlReportConst.FL_RPT_REQUI_NAME, getManagedBean().getRequisitioner());
