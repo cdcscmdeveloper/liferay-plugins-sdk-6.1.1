@@ -46,6 +46,7 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private String acknowledgeOfficer;
 	private String payOfficer;
 	private String supplierCompName;
+	private String supplierId;
 	
 	private Date fromDate;
 	private Date toDate;
@@ -336,6 +337,14 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 
 	public void setSupplierCompName(String supplierCompName) {
 		this.supplierCompName = supplierCompName;
+	}
+	
+	public String getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(String supplierId) {
+		this.supplierId = supplierId;
 	}
 
 	public boolean isSupplier() {
