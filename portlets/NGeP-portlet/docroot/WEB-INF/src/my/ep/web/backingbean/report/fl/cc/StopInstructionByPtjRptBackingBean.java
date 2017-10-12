@@ -92,6 +92,8 @@ public class StopInstructionByPtjRptBackingBean extends FlReportBackingBean<Stop
 		}
 		if(getManagedBean().getSelectedOrgProfile() != null){
 			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		} else if(getManagedBean().getSupplierId() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSupplierId());
 		}
 		if(getManagedBean().getApprover() != null){
 			params.put(FlReportConst.FL_RPT_APPROVER_NAME, getManagedBean().getApprover());
