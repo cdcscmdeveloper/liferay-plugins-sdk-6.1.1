@@ -47,7 +47,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_PP_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLSegJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_PP_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -59,7 +59,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_BANK_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLBankjob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_BANK_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -70,7 +70,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_AGOFF_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLAgOffJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_AGOFF_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -82,7 +82,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_GLACC_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GlAccjob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_GLACC_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -94,7 +94,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_PTJ_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLPTJJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_PTJ_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -106,7 +106,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_VOT_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLVOTJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_VOT_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -118,7 +118,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_DANA_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLDANAJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_DANA_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -130,7 +130,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_PROG_ACT_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLPrgActJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_PRGACT_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -141,7 +141,7 @@ public class GfmasSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.GFMAS_PROJECT_JOB,
 						SchedulerConstants.GFMAS_AUTO_INTEGRATION_JOB_GROUP),
 						GLProjectJob.class,
-						SchedulerConstants.GFMAS_KPTJ_INTEGRATION_JOB_DESC,
+						SchedulerConstants.GFMAS_PROJECT_INTEGRATION_JOB_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
