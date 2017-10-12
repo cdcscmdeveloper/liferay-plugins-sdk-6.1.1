@@ -175,7 +175,7 @@
 							value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
 							size="35" maxlength="20" >
 							<p:ajax event="blur" process="@this" update="assocBlockPanel" partialSubmit="true" 
-								listener="#{backingBean.onBlurSetAssociateCompany()}"/>
+								listener="#{backingBean.onBlurRegNo(backingBean.managedBean.selectedAssocCompany,'AssocCompanyPanel')}"/>
 							<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
 							<f:attribute name="validate" value="N" />
 						</p:inputText> 
