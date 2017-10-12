@@ -95,6 +95,8 @@ public class FulfilmentReceivedNoteRptBackingBean extends FlReportBackingBean<Fu
 		}
 		if(getManagedBean().getSelectedOrgProfile() != null){
 			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
+		} else if(getManagedBean().getSupplierId() != null){
+			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSupplierId());
 		}
 		if(getManagedBean().getReceivingOfficer() != null){
 			params.put(FlReportConst.FL_RPT_REC_OFF, getManagedBean().getReceivingOfficer());
