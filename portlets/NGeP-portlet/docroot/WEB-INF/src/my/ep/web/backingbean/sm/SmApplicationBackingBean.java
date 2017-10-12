@@ -46,7 +46,6 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -57,7 +56,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -87,7 +85,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -8270,120 +8267,106 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Set mof no by business registration no entered
+	 * Set company information details (MOF No. and address contact details by
+	 * registration no.)
 	 * 
+	 * @param Object
+	 *            obj
 	 * @param String
-	 *            regNo
-	 * @return
+	 *            panel
 	 */
-	public void onBlurSetMofNo(Object obj) {
-		String mofNo = StringUtils.EMPTY;
+	public void onBlurRegNo(Object obj, String panel) {
 		try {
-			Object objRegNoVal = PropertyUtils.getProperty(obj, "regNo");
-			if (objRegNoVal != null) {
-				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-				reqDTO.setRegNo(objRegNoVal.toString());
-				SmMofAccount acc = SmServiceLookup.getMofAccountSO()
-						.retriveMofAccountBySupplierRegNo(reqDTO)
-						.getMofAccount();
-				if (acc != null) {
-					mofNo = acc.getMofNo();
-				}
-			}
-			PropertyUtils.setProperty(obj, "mofNo", mofNo);
-		} catch (IllegalAccessException | InvocationTargetException
-				| NoSuchMethodException e) {
-			log.error(e.getMessage());
-		}
-	}
+			String objRegNoVal = obj == null ? StringUtils.EMPTY
+					: PropertyUtils.getProperty(obj, "regNo").toString();
+			if (!StringUtils.isBlank(objRegNoVal)) {
+				RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+				reqDTO.setRegNo(objRegNoVal);
+				SmSupplier supplier = null;
+				List<SmSupplier> suppliers = SmServiceLookup
+						.getRegistrationSO()
+						.retrieveActiveSupplierByRegNo(reqDTO).getSmSuppliers();
+				supplier = !EntityHelper.isCollectionEmpty(suppliers) ? suppliers
+						.get(0) : supplier;
 
-	/**
-	 * Set associate company related info based on entered registration no
-	 * 
-	 * @param SmAssociateCompany
-	 *            assoc
-	 */
-	public void onBlurSetAssociateCompany() {
-		SmAssociateCompany assoc = getManagedBean().getSelectedAssocCompany();
-		if (assoc != null && !StringUtils.isBlank(assoc.getRegNo())) {
-			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-			reqDTO.setRegNo(assoc.getRegNo());
-			SmSupplier supplier = null;
-			List<SmSupplier> suppliers = SmServiceLookup.getRegistrationSO()
-					.retrieveActiveSupplierByRegNo(reqDTO).getSmSuppliers();
-			supplier = !EntityHelper.isCollectionEmpty(suppliers) ? suppliers
-					.get(0) : supplier;
+				if (supplier != null
+						&& !EntityHelper.isCollectionEmpty(supplier
+								.getSmMofAccounts())
+						&& supplier.getSmMofAccounts().get(0)
+								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 
-			if (supplier != null
-					&& !EntityHelper.isCollectionEmpty(supplier
-							.getSmMofAccounts())
-					&& supplier.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				assoc.setMofNo(supplier.getSmMofAccounts().get(0).getMofNo());
-				assoc.setCompanyName(supplier.getCompanyName());
-				SmAddress assocAddr = assoc.getSmAddress();
-				if (supplier.getSmAppl() != null
-						&& supplier.getSmAppl().getSmCompanyBasic() != null
-						&& !EntityHelper.isCollectionEmpty(supplier.getSmAppl()
-								.getSmCompanyBasic().getSmCompanyAddresses())) {
-					if (supplier.getSmAppl().getSmCompanyBasic()
-							.getSmCompanyAddresses().get(0).getSmAddress() != null
-							&& assocAddr != null) {
-						SmCompanyBasic accCompBasic = supplier.getSmAppl()
-								.getSmCompanyBasic();
-						SmAddress accAddr = accCompBasic
-								.getSmCompanyAddresses().get(0).getSmAddress();
+					PropertyUtils.setProperty(obj, "mofNo", supplier
+							.getSmMofAccounts().get(0).getMofNo());
+					PropertyUtils.setProperty(obj, "companyName",
+							supplier.getCompanyName());
+					SmAddress addr = (SmAddress) PropertyUtils.getProperty(obj,
+							"smAddress");
+					if (supplier.getSmAppl() != null
+							&& supplier.getSmAppl().getSmCompanyBasic() != null
+							&& !EntityHelper.isCollectionEmpty(supplier
+									.getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses())) {
+						if (supplier.getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress() != null
+								&& addr != null) {
+							SmCompanyBasic compBasic = supplier.getSmAppl()
+									.getSmCompanyBasic();
+							SmAddress compBasicAddr = compBasic
+									.getSmCompanyAddresses().get(0)
+									.getSmAddress();
+							addr.setAddress1(compBasicAddr.getAddress1());
+							addr.setAddress2(compBasicAddr.getAddress2());
+							addr.setAddress3(compBasicAddr.getAddress3());
+							addr.setPostcode(compBasicAddr.getPostcode());
+							if (compBasicAddr.getPmCountry() != null) {
+								addr.setCountryId(compBasicAddr.getPmCountry()
+										.getCountryId());
+								addr.setPmCountry(SmCommonUtil.getInstance()
+										.getCountryById(addr.getCountryId()));
+								onChangeCountry(addr, panel);
+							}
+							if (compBasicAddr.getPmState() != null) {
+								addr.setStateId(compBasicAddr.getPmState()
+										.getStateId());
+								addr.setPmState(SmCommonUtil.getInstance()
+										.getStateById(addr.getStateId()));
+								onChangeState(addr, panel);
+							}
+							if (compBasicAddr.getPmDistrict() != null) {
+								addr.setDistrictId(compBasicAddr
+										.getPmDistrict().getDistrictId());
+								addr.setPmDistrict(SmCommonUtil.getInstance()
+										.getDistrictById(addr.getDistrictId()));
+								onChangeDistrict(addr, panel);
+							}
+							if (compBasicAddr.getPmCity() != null) {
+								addr.setCityId(compBasicAddr.getPmCity()
+										.getCityId());
+								addr.setPmCity(SmCommonUtil.getInstance()
+										.getCityById(addr.getCityId()));
+								onChangeCity(addr, panel);
+							}
 
-						assocAddr.setAddress1(accAddr.getAddress1());
-						assocAddr.setAddress2(accAddr.getAddress2());
-						assocAddr.setAddress3(accAddr.getAddress3());
-						assocAddr.setPostcode(accAddr.getPostcode());
-						if (accAddr.getPmCountry() != null) {
-							assocAddr.setCountryId(accAddr.getPmCountry()
-									.getCountryId());
-							assocAddr.setPmCountry(SmCommonUtil.getInstance()
-									.getCountryById(assocAddr.getCountryId()));
-							onChangeCountry(
-									assocAddr,
-									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+							PropertyUtils.setProperty(obj, "phoneCountry",
+									compBasic.getPhoneCountry());
+							PropertyUtils.setProperty(obj, "phoneArea",
+									compBasic.getPhoneArea());
+							PropertyUtils.setProperty(obj, "phoneNo",
+									compBasic.getPhoneNo());
+							PropertyUtils.setProperty(obj, "faxCountry",
+									compBasic.getFaxCountry());
+							PropertyUtils.setProperty(obj, "faxArea",
+									compBasic.getFaxArea());
+							PropertyUtils.setProperty(obj, "faxNo",
+									compBasic.getFaxNo());
 						}
-						if (accAddr.getPmState() != null) {
-							assocAddr.setStateId(accAddr.getPmState()
-									.getStateId());
-							assocAddr.setPmState(SmCommonUtil.getInstance()
-									.getStateById(assocAddr.getStateId()));
-							onChangeState(
-									assocAddr,
-									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-						}
-						if (accAddr.getPmDistrict() != null) {
-							assocAddr.setDistrictId(accAddr.getPmDistrict()
-									.getDistrictId());
-							assocAddr
-									.setPmDistrict(SmCommonUtil.getInstance()
-											.getDistrictById(
-													assocAddr.getDistrictId()));
-							onChangeDistrict(
-									assocAddr,
-									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-						}
-						if (accAddr.getPmCity() != null) {
-							assocAddr
-									.setCityId(accAddr.getPmCity().getCityId());
-							assocAddr.setPmCity(SmCommonUtil.getInstance()
-									.getCityById(assocAddr.getCityId()));
-							onChangeCity(
-									assocAddr,
-									SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-						}
-						assoc.setPhoneCountry(accCompBasic.getPhoneCountry());
-						assoc.setPhoneArea(accCompBasic.getPhoneArea());
-						assoc.setPhoneNo(accCompBasic.getPhoneNo());
-						assoc.setFaxCountry(accCompBasic.getFaxCountry());
-						assoc.setFaxArea(accCompBasic.getFaxArea());
-						assoc.setFaxNo(accCompBasic.getFaxNo());
 					}
 				}
 			}
+		} catch (IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
