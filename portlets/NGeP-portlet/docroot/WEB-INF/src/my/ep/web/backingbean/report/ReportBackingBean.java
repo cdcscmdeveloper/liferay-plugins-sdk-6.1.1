@@ -12288,23 +12288,23 @@ public class ReportBackingBean extends
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
-		List<String> supplCompNameLst = reportSO
+		List<Object[]> supplCompNameLst = reportSO
 				.retrieveSupplierCompName(lngUserId);
-		if (CollectionUtils.isNotEmpty(supplCompNameLst)) {
-			for (int i = 0; i < supplCompNameLst.size(); i++) {
-				supplCompanyList.add(supplCompNameLst.get(i));
-			}
-		}
+//		if (CollectionUtils.isNotEmpty(supplCompNameLst)) {
+//			for (int i = 0; i < supplCompNameLst.size(); i++) {
+//				supplCompanyList.add(supplCompNameLst.get(i));
+//			}
+//		}
 		if (supplCompNameLst.size() > 0) {
 			if (StringUtils.isNotEmpty(this.getModuleValue())
 					&& (this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
-				this.setSmCompanyName(supplCompNameLst.get(0));
+				this.setSmCompanyName(supplCompNameLst.get(0).toString());
 			}
 			if ((StringUtils.isNotEmpty(this.getModuleValue()))
 					&& (this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
-				this.setFlSupplier(supplCompNameLst.get(0));
+				this.setFlSupplier(supplCompNameLst.get(0).toString());
 			}
 		}
 
