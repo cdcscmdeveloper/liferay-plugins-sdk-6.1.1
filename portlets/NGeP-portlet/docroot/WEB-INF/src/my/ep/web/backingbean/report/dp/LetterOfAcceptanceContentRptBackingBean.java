@@ -13,10 +13,14 @@ package my.ep.web.backingbean.report.dp;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -26,15 +30,22 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.constant.report.DpReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.dp.LetterOfAcceptanceContentRptManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 /**
  * The Class LetterOfAcceptanceContentRptBackingBean.
@@ -113,9 +124,35 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 
 		if (StringUtils.isNotEmpty(this.getScLOAIdNo())
 				&& this.getScLOAIdNo().startsWith(ReportConst.LA_VALUE)) {
-
+           
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-
+			FacesScopes facesScopes=new FacesScopes();
+			/*if(null==reqDTO.getLoaReportDataSearchBean()){
+				reqDTO.setLoaReportDataSearchBean(super.createSearchBean(ScLoa.class, "loacontentReportTbl"));
+			}*/
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest()
+					.getAttribute(WebKeys.THEME_DISPLAY);
+			String portletName=themeDisplay.getPortletDisplay().getPortletName();
+			System.out.println("portletName"+portletName);
+			ISearchBean<ScLoa> loaContentReport=new SearchBean<ScLoa>();
+			if("dpReports".equalsIgnoreCase(portletName)){
+			loaContentReport.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"scLoiLoa.docType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.DOCTYPE_PURCHASE_REQUEST));
+			}
+			else if("qtReports".equalsIgnoreCase(portletName)){
+				List<String> docTypes=new ArrayList<String>();
+				docTypes.add(ParameterConst.DOCTYPE_QUOTATION);
+				docTypes.add(ParameterConst.DOCTYPE_DIRECT_NEGO);
+				loaContentReport.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"scLoiLoa.docType",
+								SearchOperator.OPERATOR_IN.value(),
+								docTypes));
+				}
+			reqDTO.setLoaReportDataSearchBean(loaContentReport);
 			reqDTO.setLoaNo(this.getScLOAIdNo());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaNo(
 					reqDTO);
@@ -135,6 +172,9 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 
 				this.getManagedBean().setScQt(reportsResDTO.getScQt());
 
+			}else{
+				this.getManagedBean().setLoaReportDocumentList(
+						new ArrayList<ScLoaReport>());
 			}
 
 		} else {
@@ -155,6 +195,7 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 
 	public void generateReport(LinkedHashMap<String, String> params) {
 		generateDpReport(params);
+		
 	}
 
 	/**
@@ -285,8 +326,8 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 
 	@Override
 	public LinkedHashMap<String, String> getparams() {
-		// TODO Auto-generated method stub
-		return null;
+	LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+		return params;
 	}
 
 	/**
