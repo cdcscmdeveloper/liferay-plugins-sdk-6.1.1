@@ -20,17 +20,13 @@
 			margin-top:20px;
 		}
 		.table1 {
-			width:85%;
 			margin-left:20px;
-      		border-spacing:10px;
 		}
 		th{
 			background-color: #BCE18A;
 		}
-		p{
+		p #font1, #font1{
 			text-align:justify;
-		}
-		#font1{
 			font-family:Arial;
 			font-size:12px;
 			font-weight:normal;
@@ -62,70 +58,154 @@
 <div>
 	<table width='100%'>
 		<tr>
-			<td>
-				<p><span id='font1'>
+			<td colspan='3'>
+				<p id='font1'>
 				Saya…………………………………………………………… nombor kad pengenalan ………………………….. yang mewakili syarikat ………………………………………………. nombor pendaftaran………………………. (*MOF/CIDB/SSM) dengan sesungguhnya dan sebenarnya mengaku bahawa:
-				</span></p>
+				</p>
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td colspan='3'>
 				<table class='table1'>
 					<tr>
 						<td><span id='font1'>(a)</span></td>
 						<td>
-							<span id='font1'>
+							<p id='font1'>
 							syarikat <b>TIDAK</b> membuat salah nyataan (misrepresentation) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;
-							</span>
+							</p>
 						</td>
 					</tr>
 					<tr>
 						<td><span id='font1'>(b)</span></td>
 						<td>
-							<span id='font1'>
+							<p id='font1'>
 							syarikat <b>TIDAK</b> membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;
-							</span>
+							</p>
 						</td>
 					</tr>
 					<tr>
 						<td><span id='font1'>(c)</span></td>
 						<td>
-							<span id='font1'>
+							<p id='font1'>
 							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apaapa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
-							</span>
+							</p>
 						</td>
 					</tr>
 						<tr>
 						<td><span id='font1'>(d)</span></td>
 						<td>
-							<span id='font1'>
+							<p id='font1'>
 							syarikat/ pemilik/ rakan kongsi/ pengarah <b>TIDAK</b> disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; dan
-							</span>
+							</p>
 						</td>
 					</tr>
 					<tr>
 						<td><span id='font1'>(e)</span></td>
 						<td>
-							<span id='font1'>
+							<p id='font1'>
 							syarikat <b>TIDAK</b> digulungkan.
-							</span>
+							</p>
 						</td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td colspan='3'>
 				<p>
-					<span id='font1'>
+					<p id='font1'>
 						Sekiranya pada bila-bila masa, dibuktikan bahawa pengisytiharan perenggan di atas adalah tidak benar, Kerajaan berhak menarik balik tawaran kontrak atau menamatkan perkhidmatan syarikat bagi projek ini.
-					</span>
+					</p>
 				</p>
 				<p>
-					<span id='font1'>
+					<p id='font1'>
 						Dan saya membuat Surat Akuan Bersumpah ini dengan kepercayaan bahawa apa-apa yang tersebut di dalamnya adalah benar serta menurut Akta Akuan Berkanun 1960.
-					</span>
+					</p>
 				</p>
+			</td>
+		</tr>
+		<tr>
+			<td style='width:45%'>
+				<span id='font1'>Diperbuat dan dengan</span>
+			</td>
+			<td style='width:15%;text-align:center;'>
+				<span id='font1'>)</span>
+			</td>
+			<td style='width:45%'>
+				<span id='font1'></span>
+			</td>
+		</tr>
+		<tr>
+			<td style='width:45%'>
+				<span id='font1'>sebenar-benarnya diakui oleh</span>
+			</td>
+			<td style='width:15%;text-align:center;'>
+				<span id='font1'>)</span>
+			</td>
+			<td style='width:45%'>
+				<span id='font1'></span>
+			</td>
+		</tr>
+		<tr>
+			<td style='width:45%'>
+				<span id='font1'></span>
+			</td>
+			<td style='width:15%;text-align:center;'>
+				<span id='font1'>)</span>
+			</td>
+			<td style='width:45%'>
+				<span id='font1'>Tandatangan..............................................</span>
+			</td>
+		</tr>
+		<tr>
+			<td style='width:45%'>
+				<span id='font1'>.......................................................................</span>
+			</td>
+			<td style='width:15%;text-align:center;'>
+				<span id='font1'>)</span>
+			</td>
+			<td style='width:45%'>
+				<span id='font1'></span>
+			</td>
+		</tr>
+		<tr>
+			<td style='width:45%'>
+				<span id='font1'>di....................................................................</span>
+			</td>
+			<td style='width:15%;text-align:center;'>
+				<span id='font1'>)</span>
+			</td>
+			<td style='width:45%'>
+				<span id='font1'></span>
+			</td>
+		</tr>
+		<tr>
+			<td style='width:45%'>
+				<span id='font1'>pada...............................................................</span>
+			</td>
+			<td style='width:15%;text-align:center;'>
+				<span id='font1'>)</span>
+			</td>
+			<td style='width:45%'>
+				<span id='font1'></span>
+			</td>
+		</tr>
+		<tr>
+			<td style='text-align:center;' colspan='3'>
+				<span id='font1'>Di hadapan saya,</span>
+				<br/><br/>
+				<span id='font1'>............................................</span>
+				<br/>
+				<span id='font1'>Pesuruhjaya Sumpah</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='3'>
+				<span id='font1'>Catatan:</span>
+				<ol type="i">
+					<li><span id='font1'>*Potong mana yang tidak berkenaan.</span></li>
+					<li><span id='font1'>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF.</span></li>
+				</ol> 
 			</td>
 		</tr>
 	</table>
