@@ -163,8 +163,8 @@
 							label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
 							value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
 							size="35" > 
-							<p:ajax event="blur" process="@this" update="suppEquiMofNoId" partialSubmit="true"
-									listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedEquityCompany)}"/>
+							<p:ajax event="blur" process="@this" update="equiCompBlockPanel" partialSubmit="true"
+									listener="#{backingBean.onBlurRegNo(backingBean.managedBean.selectedEquityCompany,'EquiCompanyPanel')}"/>
 							</p:inputText>
 							<p:message id="suppEquiCompRegNoMsg"
 							for="suppEquiCompRegNo" showSummary="true" showDetail="false"
