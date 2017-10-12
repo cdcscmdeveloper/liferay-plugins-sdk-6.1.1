@@ -1,0 +1,135 @@
+<html>
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		
+		#bottom {
+			clear:both;
+			text-align:right;
+		}
+		body {
+			font-family: "Helvetica";
+			font-size: 8pt;
+		}
+		.header-cont {
+			width:100%;
+			margin-top:50px;
+		}
+		.title {
+			width:100%;
+			margin-top:20px;
+		}
+		.table1 {
+			width:85%;
+			margin-left:20px;
+      		border-spacing:10px;
+		}
+		th{
+			background-color: #BCE18A;
+		}
+		p{
+			text-align:justify;
+		}
+		#font1{
+			font-family:Arial;
+			font-size:12px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:#333333;
+		}
+	</style>
+</head>
+<body>
+<div class='header-cont'>
+	<table width='100%'>
+		<tr>
+			<td align='right'>
+				<span style='font-weight:bold;font-size:12px;font-family:Arial;'>Lampiran C</span>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class='title'>
+	<table width='100%'>
+		<tr>
+			<td align='center'>
+				<span style='font-weight:bold;font-size:12px;font-family:Arial;'>SURAT AKUAN SUMPAN SYARIKAT</span>
+			</td>
+		</tr>
+	</table>
+</div>
+<div>
+	<table width='100%'>
+		<tr>
+			<td>
+				<p><span id='font1'>
+				Saya…………………………………………………………… nombor kad pengenalan ………………………….. yang mewakili syarikat ………………………………………………. nombor pendaftaran………………………. (*MOF/CIDB/SSM) dengan sesungguhnya dan sebenarnya mengaku bahawa:
+				</span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table class='table1'>
+					<tr>
+						<td><span id='font1'>(a)</span></td>
+						<td>
+							<span id='font1'>
+							syarikat <b>TIDAK</b> membuat salah nyataan (misrepresentation) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td><span id='font1'>(b)</span></td>
+						<td>
+							<span id='font1'>
+							syarikat <b>TIDAK</b> membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td><span id='font1'>(c)</span></td>
+						<td>
+							<span id='font1'>
+							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apaapa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
+							</span>
+						</td>
+					</tr>
+						<tr>
+						<td><span id='font1'>(d)</span></td>
+						<td>
+							<span id='font1'>
+							syarikat/ pemilik/ rakan kongsi/ pengarah <b>TIDAK</b> disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; dan
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td><span id='font1'>(e)</span></td>
+						<td>
+							<span id='font1'>
+							syarikat <b>TIDAK</b> digulungkan.
+							</span>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>
+					<span id='font1'>
+						Sekiranya pada bila-bila masa, dibuktikan bahawa pengisytiharan perenggan di atas adalah tidak benar, Kerajaan berhak menarik balik tawaran kontrak atau menamatkan perkhidmatan syarikat bagi projek ini.
+					</span>
+				</p>
+				<p>
+					<span id='font1'>
+						Dan saya membuat Surat Akuan Bersumpah ini dengan kepercayaan bahawa apa-apa yang tersebut di dalamnya adalah benar serta menurut Akta Akuan Berkanun 1960.
+					</span>
+				</p>
+			</td>
+		</tr>
+	</table>
+</div>
+
+</body>
+</html>
