@@ -674,11 +674,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 */
 	private void retrieveSupplierCompName() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
-		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(getFacesScopes().getUserSessionBean().getUserId());
-		if (supplCompNameLst.size() > 0) {
-				getManagedBean().setSupplierCompName(supplCompNameLst.get(0));
+		List<Object[]> supplCompNameLst = reportSO.retrieveSupplierCompName(getFacesScopes().getUserSessionBean().getUserId());
+		if (CollectionUtils.isNotEmpty(supplCompNameLst)) {
+			for (Object[] object : supplCompNameLst) {
+				getManagedBean().setSupplierCompName(object[0].toString());
+				getManagedBean().setSupplierId(object[1].toString());
+			}
 		}
-
+		
 	}
 	
 }
