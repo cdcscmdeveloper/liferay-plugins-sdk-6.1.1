@@ -10,7 +10,7 @@ import my.ep.factory.EpLogger;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 public class ComplaintAccusationLetterReminderJob  implements Job{
-	public static Logger log = EpLogger.getLogger(ComplaintShowCauseLetterReminderJob.class);
+	public static Logger log = EpLogger.getLogger(ComplaintAccusationLetterReminderJob.class);
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		log.info("*********ComplaintAccusationLetterReminderJob start*******");
