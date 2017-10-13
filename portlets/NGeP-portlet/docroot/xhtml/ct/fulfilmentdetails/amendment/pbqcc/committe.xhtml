@@ -200,7 +200,7 @@
 	          
 	              <f:facet name="footer">
 			      <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
-				      <p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this,modelDialog" id="cmtOkBtnId"
+				      <p:commandButton value="#{lbl['lbl.btn.select']}" process="@this,modelDialog" id="cmtOkBtnId"
 				         disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 				          action="#{amendmentBackingBean.addSelectedCommitteMembers}"  update="committeTable,modelDialog" onclick="dlg2.hide();"
 				          oncomplete="committeTableWidget.paginator.endLink.click();" />
