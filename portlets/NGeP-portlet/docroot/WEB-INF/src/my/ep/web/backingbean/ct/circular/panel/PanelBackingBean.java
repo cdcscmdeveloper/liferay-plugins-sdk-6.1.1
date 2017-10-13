@@ -598,14 +598,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
+				String docType = null;
+				if (getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+					docType = ResourceBundleUtils.getMessage("lbl.ct.cancel.cc.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				} else {
+					docType = ResourceBundleUtils.getMessage("lbl.ct.cancel.panel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				}
 				
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700021;
-					if (getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
-						nextRole = RoleCode.BPK_CQ_APPROVER.value();
-					} else {
-						nextRole = RoleCode.BPK_PQ_APPROVER.value();
-					}
+					nextRole = (getManagedBean().getApproverModel().getTarget() != null) ? getManagedBean().getApproverModel().getTarget().get(0).getUserName() : "";
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -615,15 +617,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				} 
 				log.info("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
-					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
-					
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
-									resDTO.getCancelCircularReq().getCancelCircularReqNo(), roleDesc.getRoleName()},
+							MessageUtils.getMessage(messageId, new String[]{docType, 
+									resDTO.getCancelCircularReq().getCancelCircularReqNo(), nextRole},
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				} else {
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
+							MessageUtils.getMessage(messageId, new String[]{docType, 
 									resDTO.getCancelCircularReq().getCancelCircularReqNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
