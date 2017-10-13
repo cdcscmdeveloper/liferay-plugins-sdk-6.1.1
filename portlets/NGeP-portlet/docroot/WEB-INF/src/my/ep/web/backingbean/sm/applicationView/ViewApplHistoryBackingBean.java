@@ -213,14 +213,15 @@ public class ViewApplHistoryBackingBean extends
 		return statusDesc;
 	}
 
-	private void initWorkflowStatus(SmAppl smAppl, int index) {
+	private void initWorkflowStatus(SmAppl smAppl, String status) {
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
 		SmWorkflowStatus sts = SmCommonUtil
 				.getCurrentActiveWokFlowStatus(smAppl.getApplId());
 		if (sts != null && sts.getPmStatus() != null) {
 			smAppl.setWorkflowStatus(sts.getPmStatus());
-			smAppl.setWorkflowStatusDesc(getApplicationStatus(sts.getPmStatus()));
+			smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
+					.getPmStatus()) : status);
 			if (rejectedStatus.contains(sts.getPmStatus().getStatusId()
 					.toString())) {
 				getManagedBean().setResubmitUrl(
@@ -244,7 +245,7 @@ public class ViewApplHistoryBackingBean extends
 	 * @param String
 	 *            applNo
 	 */
-	public void initSmApplByApplNo(Long applId, int index) {
+	public void initSmApplByApplNo(Long applId, String status) {
 		getManagedBean().setResubmitUrl(StringUtils.EMPTY);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplId(applId);
@@ -258,7 +259,7 @@ public class ViewApplHistoryBackingBean extends
 			viewApplication(smAppl);
 			initBumiRecommendNote();
 			initVirtualCert();
-			initWorkflowStatus(getManagedBean().getSmAppl(), index);
+			initWorkflowStatus(getManagedBean().getSmAppl(), status);
 		}
 	}
 
