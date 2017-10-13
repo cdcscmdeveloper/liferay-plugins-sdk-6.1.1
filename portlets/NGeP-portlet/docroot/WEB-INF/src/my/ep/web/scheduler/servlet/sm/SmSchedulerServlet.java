@@ -147,7 +147,20 @@ public class SmSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION));
-		
+
+		//MOF Renewal Reminder - 
+		EpSchedulerHelper
+			.scheduleJob(
+					new JobKey(
+							SchedulerConstants.SM_MOF_RENEWAL_REMINDER,
+							SchedulerConstants.SM_JOB_GROUP),
+					ComplaintAccusationLetterReminderJob.class,
+					SchedulerConstants.SM_MOF_RENEWAL_REMINDER_JOB_DESC,
+					SchedulerPropertiesUtils
+							.getInstance()
+							.getProperty(
+									EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_MOF_RENEWAL_REMINDER));
+				
 		// 1GFMAS jobs
 		EpSchedulerHelper
 				.scheduleJob(
