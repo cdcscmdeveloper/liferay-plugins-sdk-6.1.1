@@ -142,10 +142,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText
-							required="#{backingBean.managedBean.valueReqd}"
+							validator="#{backingBean.validateRequiredField}"
 							label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
 							value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
-							size="35" />
+							size="35" >
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<f:attribute name="labelName" value="#{lbl['lbl.sm.equiComp.compName']}" />
+							</p:inputText>
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestEquityCompany.companyName}" 
@@ -159,10 +162,11 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="20"
-							required="#{backingBean.managedBean.valueReqd}"
+							validator="#{backingBean.validateRequiredField}"
 							label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
 							value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
 							size="35" > 
+							<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
 							<p:ajax event="blur" process="@this" update="equiCompBlockPanel" partialSubmit="true"
 									listener="#{backingBean.onBlurRegNo(backingBean.managedBean.selectedEquityCompany,'EquiCompanyPanel')}"/>
 							</p:inputText>
@@ -449,7 +453,9 @@
 					action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
 					partialSubmit="true" process=":form:tt:eqiCompDialog"
 					onclick="equiCompBlockWidget.show();" oncomplete="equiCompBlockWidget.hide();"
-					update=":form:tt:eqiComDt, @([id$=Msg])" />
+					update=":form:tt:eqiComDt, @([id$=Msg])" >
+					<f:param name="validate" value="true" />
+				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelEquiCompFuntionc}" />
