@@ -407,6 +407,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	public void onChangeAccType(AjaxBehaviorEvent e) {
 		getManagedBean().setReactivateBasic(new ReactivateSupplierVO());
+		setDefaultIdentificationType(getManagedBean().getReactivateBasic());
+	}
+
+	private void setDefaultIdentificationType(ReactivateSupplierVO vo) {
+		PmParameter ic = SmCommonUtil.retrieveParameterByTypeAndCode(
+				ParameterTypeConst.IDENTIFICATION_TYPES,
+				SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+		vo.setNewIdentificationType(ic.getParameterId());
 	}
 
 	/**
