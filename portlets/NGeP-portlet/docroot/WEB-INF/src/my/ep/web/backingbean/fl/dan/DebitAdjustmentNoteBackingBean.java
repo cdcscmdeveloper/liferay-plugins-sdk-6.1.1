@@ -234,31 +234,31 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		BigDecimal sumOrderedAmt = new BigDecimal(0);
 		BigDecimal sumInvoiceAmt = new BigDecimal(0);
 		BigDecimal sumDanAmt = new BigDecimal(0);
+		BigDecimal sumRecalledAmt = new BigDecimal(0);
 		String danAmount = null;
 		if(adjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
 			
 			for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
 				sumOrderedAmt =sumOrderedAmt.add(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt());
 				sumInvoiceAmt = sumInvoiceAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt());
-				sumDanAmt = sumDanAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt().subtract(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt()));
 				if(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt() != null && adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt().doubleValue()>0){
-					sumDanAmt = sumInvoiceAmt.subtract((sumOrderedAmt).subtract(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt()));
+					sumRecalledAmt = sumRecalledAmt.add(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt());
 				}
-				danAmount=sumDanAmt.toString().replace("-", "");
-				
 			}
+			sumDanAmt = sumInvoiceAmt.subtract((sumOrderedAmt).subtract(sumRecalledAmt));
+			danAmount=sumDanAmt.toString().replace("-", "");
 		}
 		if(adjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)){
 			for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
 				sumOrderedAmt =sumOrderedAmt.add(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt());
 				sumInvoiceAmt = sumInvoiceAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt());
-				sumDanAmt = sumDanAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt().subtract(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt()));
 				if(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt() != null && adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt().doubleValue()>0){
-					sumDanAmt = sumOrderedAmt.subtract(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt()).subtract(sumInvoiceAmt);
+					sumRecalledAmt = sumRecalledAmt.add(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt());
 				}
-				danAmount=sumDanAmt.toString().replace("-", "");
-			
+				
 			}
+			sumDanAmt = sumOrderedAmt.subtract(sumRecalledAmt).subtract(sumInvoiceAmt);
+			danAmount=sumDanAmt.toString().replace("-", "");
 		}
 		getManagedBean().setOrderedAmtTotal(sumOrderedAmt);
 		getManagedBean().setInvAmtTotal(sumInvoiceAmt);
