@@ -98,12 +98,14 @@
 			
 			<p:outputPanel rendered="#{not empty forceReplaceSuppAdminBackingBean.managedBean.accType}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.suppAdmin.idno']}" />
+					<td><p:outputLabel value="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_MOF ? 
+					lbl['lbl.sm.person.composition.suppAdmin.idno'] : lbl['lbl.sm.person.composition.suppAdmin.icno']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
 						<p:inputText
-							label="#{lbl['lbl.sm.person.composition.suppAdmin.idno']}"
+							label="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_MOF ? 
+					lbl['lbl.sm.person.composition.suppAdmin.idno'] : lbl['lbl.sm.person.composition.suppAdmin.icno']}"
 							required="true" id="idNo" 
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.identificationNo}"
 							size="35" maxlength="15">
@@ -120,6 +122,7 @@
 					<td>
 						<p:selectOneMenu id="newAdminIdTypeId" required="true"
 							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idtype']}"
+							disabled="#{forceReplaceSuppAdminBackingBean.managedBean.accType ne SupplierManagementConst.ACC_MOF}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationType}"
 							style="width:200px">
 							<f:selectItems
