@@ -104,14 +104,15 @@ public class SchedulerConstants {
 	public static final String SM_MOF_RENEWAL_REMINDER = "MOF RENEWAL REMINDER";
 
 	// Sm Job Description
-	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 11:55 PM to delete pending activation personnel";
-	public static final String SM_APP_SOFTCERT_RENEW_REMINDER_JOB_DESC = "Job run every day at 02:30 AM to send the soft cert renew reminder.";
-	public static final String SM_PAYMENT_REMINDER_JOB_DESC = "Job run every day at 03:00 AM to send the payment reminder.";
-	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 AM to send offline supporting document reminder.";
-	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 1 AM to check or deactivate Basic Account";
-	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run every hour to Change MOF Expired Personnel Role";
-	public static final String SM_COMPLAINT_SHOWCAUSE_NOTIFICATION_JOB_DESC = "Job run every day at 2 AM to send the show cause notification which didn't submit";
-	public static final String SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION_JOB_DESC = "Job run every day at 3 AM to send the accusation letter notification which didn't submit";
+	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 23:55 to delete pending activation personnel which expire after 7 days";
+	public static final String SM_PAYMENT_REMINDER_JOB_DESC = "Job run every day at 03:00 to send the payment reminder through email notification on 14 and 7 days before expiry since payment notification is sent 60 days before expiry";
+	public static final String SM_COMPLAINT_SHOWCAUSE_NOTIFICATION_JOB_DESC = "Job run every day at 02:00 to send the show cause notification which has not been submitted after 21 days";
+	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run daily at 00:00 to downgrade MOF Account to Basic Account after expired";
+	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 01:00 to terminate MOF Accounts and deactivate Basic Accounts which are not logged in after 1 year";
+	public static final String SM_APP_SOFTCERT_RENEW_REMINDER_JOB_DESC = "Job run every day at 02:30 to send the soft cert renewal reminder 3 months before expiry.";
+	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 to send offline supporting document reminder 120 days before expiry.";
+	public static final String SM_COMPLAINT_ACCUSATION_LETTER_NOTIFICATION_JOB_DESC = "Job run every day at 02:00 to send the accusation notification which has not been submitted after 21 days";	
+		
 	public static final String SM_MOF_RENEWAL_REMINDER_JOB_DESC = "Job run every day at 4 AM to send the remind MOF supplier to renew MOF status";
 	
 	// Integration
