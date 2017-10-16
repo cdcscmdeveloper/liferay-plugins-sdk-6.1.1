@@ -60,11 +60,11 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-				style="width:15%;">
+				style="width:5%;">
 				<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
 					id="technicaluploadNoActionUserScoreId"
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
-					style="text-align:right;" size="35" maxlength="18" required="true"
+					style="text-align:right;"  maxlength="18" required="true"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}">
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -74,17 +74,17 @@
 						value="#{evaluationBackingBean.managedBean.userScores}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputText>
-				<p:spacer width="5"></p:spacer>
-				<h:outputText
+				<p:spacer width="2"></p:spacer>
+				<h:outputText style="text-align:left;"
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 				<p:message id="technicaluploadNoActionUserScoreMessage"
 					for="technicaluploadNoActionUserScoreId" display="icon"></p:message>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 						value="#{complianceTechnicalSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
