@@ -1888,14 +1888,24 @@ public class SupplierFinalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_760452);
 			}
 			
-			if (this.getManagedBean().getJustification() == null
-					|| this.getManagedBean().getJustification().getReasonId() == null) {
+			if (this.getManagedBean().getFinalizationMethod() != null
+					&& (this.getManagedBean().getFinalizationMethod()
+							.equals(ParameterConst.RECOMMEND_BY_AWARD)
+							|| this.getManagedBean()
+									.getFinalizationMethod()
+									.equals(ParameterConst.RECOMMEND_BY_MULTIPLE_LOI) || this
+							.getManagedBean().getFinalizationMethod()
+							.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
+				if (this.getManagedBean().getJustification() == null
+						|| this.getManagedBean().getJustification()
+								.getReasonId() == null) {
 					navigateToEndorsementReportTab();
-				throw new EpException(MessageConst.ERROR_100061,
-						new String[] { ResourceBundleUtils.getMessage(
-								"lbl.sc.sf.justification.selection",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
+					throw new EpException(MessageConst.ERROR_100061,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.sf.justification.selection",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}
 			}
 			scQtCommittee = preparationDtlsInfo();
 			
