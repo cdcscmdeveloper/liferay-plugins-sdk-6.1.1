@@ -59,8 +59,8 @@
 
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-				style="width:15%">
-				<p:inputText style="text-align:right;" size="20" maxlength="18"
+				style="width:5%">
+				<p:inputText style="text-align:right;"  maxlength="18"
 					id="financialuploadNoActionUserScoreId"
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					value="#{evaFinSupplier.totalUserScore}" required="true"
@@ -73,16 +73,16 @@
 						value="#{evaluationBackingBean.managedBean.userScores}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputText>
-				<p:spacer width="5"></p:spacer>
-				<h:outputText
+				<p:spacer width="2"></p:spacer>
+				<h:outputText style="text-align:left;"
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 				<p:message id="financialuploadNoActionUserScoreMessage"
 					for="financialuploadNoActionUserScoreId" display="icon"></p:message>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 				<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 						value="#{evaFinSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
