@@ -81,7 +81,11 @@
 			readonly="#{!readOnly}" numberOfCols="80" />
 
 		<p:panel id="panelJustificationId"
-			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true">
+			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
+			rendered="#{suppFinalizationBackingBean.managedBean.finalizationMethod ne null and 
+			(suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendByAward or 
+			suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendBySingleAward or 
+			suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendByMultipleLoi)}">
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 20%; margin-left: 55px;"><p:outputLabel
@@ -130,8 +134,8 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td class="TableFieldLeft" width="24%"><h:outputLabel
-							value="#{lbl['lbl.txt.attachment']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.txt.attachment']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
 					<td class="TableFieldRight"><ac:scSingleFileUploadButton
 							id="endorseReportUploadBtnId"
 							popupWidgetVar="endorseReportAttWidget"
