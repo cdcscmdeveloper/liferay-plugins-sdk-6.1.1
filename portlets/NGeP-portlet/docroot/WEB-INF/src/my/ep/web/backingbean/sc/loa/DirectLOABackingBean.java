@@ -3918,7 +3918,12 @@ public class DirectLOABackingBean extends
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateDeclarationPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
-					} 
+					}else if (SourcingConstants.DOC_DEF_KEY_SURAT_AKUAN_SYARIKAT
+							.equals(docDefinitionKey)){
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateDeclarationOfOathFromVelocity(scLoaReportAttachment, scLoa);
+					}
 					/*if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -4003,7 +4008,10 @@ public class DirectLOABackingBean extends
 						//scLoaReportAttachment.setFileName(filename.toString());
 						generateDeclarationPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
-					} 
+					}else if (SourcingConstants.DOC_DEF_KEY_SURAT_AKUAN_SYARIKAT
+							.equals(docDefinitionKey)){
+						//generateDeclarationOfOathFromVelocity(scLoaReportAttachment, scLoa);
+					}
 					/*if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -7139,6 +7147,29 @@ public class DirectLOABackingBean extends
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_ACKNOWLEDGEMENT_OF_LOA_RECEIPT, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+	
+	private void generateDeclarationOfOathFromVelocity(ScAttachment attachment,
+			ScLoa scLoa) throws Exception{
+		populateAttachmentDetails(attachment);
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		VelocityContext context = new VelocityContext();
+		
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		
+		if(scLoiLoa.getSmSupplier() != null){
+			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+			if(smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size()>0){
+				context.put("mofNo", smSupplier.getSmMofAccounts().get(0).getMofNo());
+			}
+			else{
+				context.put("mofNo", smSupplier.getRegNo());
+			}
+		}
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_SURAT_AKUAN_SUMPAH_SYARIKAT, context, 
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
