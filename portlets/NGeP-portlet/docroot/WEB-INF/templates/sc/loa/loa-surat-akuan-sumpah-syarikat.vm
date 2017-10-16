@@ -28,11 +28,15 @@
 		p #font1, #font1{
 			text-align:justify;
 			font-family:Arial;
-			font-size:12px;
+			font-size:11px;
 			font-weight:normal;
 			font-style:normal;
 			text-decoration:none;
 			color:#333333;
+		}
+		u {    
+			border-bottom: 1px dotted #000;
+			text-decoration: none;
 		}
 	</style>
 </head>
@@ -41,7 +45,7 @@
 	<table width='100%'>
 		<tr>
 			<td align='right'>
-				<span style='font-weight:bold;font-size:12px;font-family:Arial;'>Lampiran C</span>
+				<span id='font1'><b>Lampiran C</b></span>
 			</td>
 		</tr>
 	</table>
@@ -50,7 +54,7 @@
 	<table width='100%'>
 		<tr>
 			<td align='center'>
-				<span style='font-weight:bold;font-size:12px;font-family:Arial;'>SURAT AKUAN SUMPAN SYARIKAT</span>
+				<span id='font1;'><b>SURAT AKUAN SUMPAH SYARIKAT</b></span>
 			</td>
 		</tr>
 	</table>
@@ -60,7 +64,7 @@
 		<tr>
 			<td colspan='3'>
 				<p id='font1'>
-				Saya ...................................................................... nombor kad pengenalan .............................. yang mewakili syarikat ............................. nombor pendaftaran ................................. (*MOF/CIDB/SSM) dengan sesungguhnya dan sebenarnya mengaku bahawa:
+				Saya ...................................................................... nombor kad pengenalan .............................. yang mewakili syarikat <u>$supplierName</u> nombor pendaftaran <u>$mofNo</u> (*MOF/CIDB/SSM) dengan sesungguhnya dan sebenarnya mengaku bahawa:
 				</p>
 			</td>
 		</tr>
@@ -193,7 +197,7 @@
 		<tr>
 			<td style='text-align:center;' colspan='3'>
 				<span id='font1'>Di hadapan saya,</span>
-				<br/><br/>
+				<br/><br/><br/>
 				<span id='font1'>............................................</span>
 				<br/>
 				<span id='font1'>Pesuruhjaya Sumpah</span>
