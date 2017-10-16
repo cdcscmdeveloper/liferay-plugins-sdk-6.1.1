@@ -368,6 +368,27 @@
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />
 			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<p:selectOneRadio id="sl1mReq" styleClass="commonLabel"
+								value="#{lOADetailBackingBean.managedBean.scLoa.sl1mReq}"
+								required="true"
+								label="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}"
+								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
+								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
+							</p:selectOneRadio>
+							<p:message id="sl1mReqMsg" for="sl1mReq" display="icon" />
+						</td>
+					</tr>
+				</table>
+			</td>
 		</tr>
 		</table>
 	</p:panel>
