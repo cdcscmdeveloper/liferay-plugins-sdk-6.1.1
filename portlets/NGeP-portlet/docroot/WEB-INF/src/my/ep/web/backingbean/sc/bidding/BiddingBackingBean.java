@@ -1056,6 +1056,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					BiddingConst.BID_ACTION_TYPE_FAILED);
 			parameterFilterBean.setCaseInsensitive(true);
 			searchBean.getDataFilterBeans().add(parameterFilterBean);
+			SearchFilterBean pmParameterFilterBean = new SearchFilterBean(
+					"pmParameter.parameterCode",
+					SearchOperator.OPERATOR_NOT_EQUALS.value(),
+					BiddingConst.BID_ACTION_TYPE_RESUME);
+			pmParameterFilterBean.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(pmParameterFilterBean);
 		} else {
 			SearchFilterBean pmParameterFilterBean = new SearchFilterBean(
 					"pmParameter.parameterCode",
