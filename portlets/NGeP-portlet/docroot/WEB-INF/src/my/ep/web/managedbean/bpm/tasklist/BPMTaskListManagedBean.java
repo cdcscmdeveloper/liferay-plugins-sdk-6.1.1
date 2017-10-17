@@ -258,6 +258,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
+							
+							if (worklistItemVO.getTitle().matches("<")) {
+								worklistItemVO.getTitle().replaceAll("<", "&#60;");
+							}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -436,6 +440,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
+							
+							if (worklistItemVO.getTitle().matches("<")) {
+								worklistItemVO.getTitle().replaceAll("<", "&#60;");
+							}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -641,6 +649,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
+							
+							if (worklistItemVO.getTitle().matches("<")) {
+								worklistItemVO.getTitle().replaceAll("<", "&#60;");
+							}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
