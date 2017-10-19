@@ -260,7 +260,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							
 							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.getTitle().replaceAll("<", "&#60;");
+								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 							}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
@@ -441,8 +441,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							
-							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.getTitle().replaceAll("<", "&#60;");
+							if (worklistItemVO.getTitle().contains("<")) {
+								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"))  ;
 							}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
@@ -651,7 +651,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							
 							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.getTitle().replaceAll("<", "&#60;");
+								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 							}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
