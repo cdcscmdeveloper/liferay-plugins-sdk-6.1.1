@@ -969,13 +969,21 @@ public class SupplierFinalizationBackingBean extends
 			validateFinalizationReports(reqDTO);
 			
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
-				if (this.getManagedBean().getJustification() == null
-						||this.getManagedBean().getJustification().getReasonId()== null) {
-					throw new EpException(MessageConst.ERROR_100061,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.sc.sf.justification.selection",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
+				if (this.getManagedBean().getFinalizationMethod() != null
+						&& (this.getManagedBean().getFinalizationMethod()
+								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
+								.getManagedBean().getFinalizationMethod()
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
+					if (this.getManagedBean().getJustification() == null
+							|| this.getManagedBean().getJustification()
+									.getReasonId() == null) {
+						navigateToEndorsementReportTab();
+						throw new EpException(MessageConst.ERROR_100061,
+								new String[] { ResourceBundleUtils.getMessage(
+										"lbl.sc.sf.justification.selection",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
 				}
 			}
 						
@@ -1890,10 +1898,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (this.getManagedBean().getFinalizationMethod() != null
 					&& (this.getManagedBean().getFinalizationMethod()
-							.equals(ParameterConst.RECOMMEND_BY_AWARD)
-							|| this.getManagedBean()
-									.getFinalizationMethod()
-									.equals(ParameterConst.RECOMMEND_BY_MULTIPLE_LOI) || this
+							.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
 							.getManagedBean().getFinalizationMethod()
 							.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
 				if (this.getManagedBean().getJustification() == null
