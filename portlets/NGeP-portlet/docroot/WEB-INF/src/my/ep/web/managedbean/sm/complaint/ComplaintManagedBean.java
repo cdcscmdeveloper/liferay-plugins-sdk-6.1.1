@@ -95,6 +95,7 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private SmComplainantAddress mailingAddress;
 	
 	private PmCountry myCountry;
+	private List<Long> stateLs;
 	
 	public ComplaintManagedBean(){
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
@@ -272,6 +273,11 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private ISearchBean<SmComplaint> getComplaintSearchBeanData(ISearchBean<SmComplaint> searchBean) {
 		
 		ComplaintSearchBean complaintSearchBean = getComplaintSearchBean();
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.stateId",
+						SearchOperator.OPERATOR_IN.value(), stateLs));
+
 		if (StringUtils.isNotBlank(complaintSearchBean.getSearchBy())){	
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(getComplaintSearchType(complaintSearchBean.getSearchBy()),
@@ -483,5 +489,13 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setMyCountry(PmCountry myCountry) {
 		this.myCountry = myCountry;
+	}
+
+	public List<Long> getStateLs() {
+		return stateLs;
+	}
+
+	public void setStateLs(List<Long> stateLs) {
+		this.stateLs = stateLs;
 	}
 }
