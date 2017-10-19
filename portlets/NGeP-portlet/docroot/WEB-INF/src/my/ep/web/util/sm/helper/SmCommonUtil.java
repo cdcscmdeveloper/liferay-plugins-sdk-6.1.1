@@ -120,6 +120,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
@@ -165,6 +167,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -5135,5 +5138,38 @@ public class SmCommonUtil {
 						SearchOperator.OPERATOR_EQUALS.value(),
 						DbValueConst.RECORD_STATUS_ACTIVE));
 		return searchBean;
+	}
+	
+	public List<Long> getStateIdLsByZoneId(Long zoneId){
+		ZoneReqDTO reqDTO =  new ZoneReqDTO();
+		reqDTO.setZoneId(zoneId);
+		ZoneResDTO resDTO =SmServiceLookup.getZoneSO().retrieveZoneStateByZoneId(reqDTO);
+		PmZone pmZone = resDTO.getPmZone();
+		
+		List<Long> zstateLs = new ArrayList<Long>();
+		
+		if(pmZone != null){
+			if(pmZone.getPmZoneStates().size() > 0){
+				for(PmZoneState zState : pmZone.getPmZoneStates()){
+					zstateLs.add(zState.getPmState().getStateId());
+				}
+			}
+		}
+		
+		return zstateLs;
+	}
+	
+	public PmZone getUserZone(){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		//getManagedBean().setStateLs(null);
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
+		if(activeOrg.size() > 0){
+			PmUserOrg userOrg = activeOrg.get(0);
+			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
+			
+			return pmZone;
+		}
+		
+		return null;
 	}
 }
