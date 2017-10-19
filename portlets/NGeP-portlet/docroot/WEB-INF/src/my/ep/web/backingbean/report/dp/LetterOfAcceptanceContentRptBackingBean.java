@@ -254,13 +254,13 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 						new String[] { this.getScLOAIdNo() });
 			} else {
 				this.setValuesEmpty(true);
-				if (this.getReportValue()
+				/*if (this.getReportValue()
 						.trim()
-						.equalsIgnoreCase(ReportConst.SC_S1_LOA_CONTENT_RPT_VAL)) {
+						.equalsIgnoreCase(ReportConst.SC_S1_LOA_CONTENT_RPT_VAL)) {*/
 					if (StringUtils.isBlank(this.getScLOAIdNo())) {
 						throw new EpException(MessageConst.ERROR_REPORT_780003);
 					}
-				}
+				//}
 			}
 
 		}
