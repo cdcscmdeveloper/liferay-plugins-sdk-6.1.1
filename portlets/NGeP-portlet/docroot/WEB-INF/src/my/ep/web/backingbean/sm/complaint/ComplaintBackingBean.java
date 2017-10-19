@@ -47,6 +47,8 @@ import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.DiMyidentity;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -54,6 +56,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmComplainant;
@@ -76,6 +79,7 @@ import my.ep.web.managedbean.sm.complaint.ComplaintManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -84,6 +88,8 @@ import my.ep.web.vo.SmComplaintSummaryVO;
 @ManagedBean(name = "complaintBackingBean")
 @RequestScoped
 public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> {
+	private static final long serialVersionUID = 1L;
+
 	public static Logger log = Logger.getLogger(ComplaintManagedBean.class);
 	//private IPagingDataModel<SmComplaint> complaintDataModel = new ComplaintPagingDataModel();
 	
@@ -522,6 +528,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		Long curStatusId = getManagedBean().getSmComplaint().getPmStatus().getStatusId();
 		Long nextStatusId = getNextStatus(curStatusId);
 		
+		if(nextStatusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK){
+			getManagedBean().getSmComplaint().setCaseConfirmDate(new Date());
+		}
+		
 		log.info("***nextStatusId***" + nextStatusId);
 		PmStatus nextStatus = SmCommonUtil.getInstance().retrievePmStatusById(nextStatusId);
 
@@ -680,6 +690,22 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	public void prerenderComplaintView(){
 		renewSesionObject();
 		resetComplaintSearchBean();
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		//getManagedBean().setStateLs(null);
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
+		if(activeOrg.size() > 0){
+			PmUserOrg userOrg = activeOrg.get(0);
+			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
+			
+			if(pmZone != null){
+				List<Long> zoneLs = SmCommonUtil.getInstance().getStateIdLsByZoneId(pmZone.getZoneId());
+				
+				getManagedBean().setStateLs(zoneLs);
+				getManagedBean().getComplaintDataModel().reloadData();
+			}
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, COMPLAINT_VIEW);
 	}
