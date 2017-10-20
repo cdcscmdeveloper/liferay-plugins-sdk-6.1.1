@@ -111,6 +111,8 @@ import org.primefaces.event.FileUploadEvent;
 @RequestScoped
 public class RegistrationBackingBean extends BaseBackingBean<RegistrationManagedBean>{
 
+	private static final long serialVersionUID = 1L;
+
 	public static final String SUPPLIER = "SUP";
 
 	public static Logger log = Logger.getLogger(RegistrationBackingBean.class);
@@ -472,7 +474,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
-		smPersonnel.setName(smPersonnel.getName().trim());
 		
 		if(!smPersonnel.getPmCountry().getCountryCode().
 				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
@@ -490,10 +491,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smPersonnel.setClerical(false);
 			smPersonnel.setEquityOwner(true);
 		}
-		
-		String trimmedName = smPersonnel.getName().trim();
-		smPersonnel.setName(trimmedName);
-		
 		
 		//to set the softcert Flag
 		//All supplier type will mark to "SOFT_CERT_PENDING_REQ", except supplier type is "Consultant"
