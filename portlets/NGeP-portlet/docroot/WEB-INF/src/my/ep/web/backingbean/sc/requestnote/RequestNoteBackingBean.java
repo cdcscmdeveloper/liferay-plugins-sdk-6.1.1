@@ -3442,10 +3442,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param scSupplierItemPrices the sc supplier item prices
 	 * @throws Exception the exception
 	 */
-	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment,ScRequestSupplierItem supplierItem, List<ScSupplierItemPrice> scSupplierItemPrices) throws Exception {
+	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment,ScRequestSupplierItem supplierItem, 
+			List<ScSupplierItemPrice> scSupplierItemPrices) throws Exception {
 		attachment.setFileName("pi_report.pdf");
 		populateAttachmentDetails(attachment);
-		
+		List<ScRequestNoteDtl> scRequestNoteDtl = getManagedBean().getRequestNoteDtls();
 		CommonUtils commonUtils = new CommonUtils();
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
@@ -3473,11 +3474,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					else{
 						context.put("stockAvailable", "T/B");
 					}
-				}	
+				}
 				marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
 				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 				marketSummaryAndPIBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :"T/B");
-				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "T/B");
+				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? scRequestNoteDtl.get(0).getDeliverTerm().toString() : "T/B");
 				marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc().replaceAll("&", "&#38;") : "T/B");
 				marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "T/B");
 				marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString(): "T/B");
