@@ -121,9 +121,6 @@
 		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
 		    #else
 		    <td></td>
-		    <td></td>
-			<td></td>
-		    <td></td>
 		    #end
 		    <td>$requestNoteVo.cataloguePrice</td>
 		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
