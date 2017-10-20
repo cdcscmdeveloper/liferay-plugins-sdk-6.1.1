@@ -62,6 +62,7 @@ public class QTPublishJob implements Job {
 		debugLogger("Start execute from QTPublishJob @"+DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
+		log.info("from execute to publish QT with qtId"+qtId);
 
 		try {
 
