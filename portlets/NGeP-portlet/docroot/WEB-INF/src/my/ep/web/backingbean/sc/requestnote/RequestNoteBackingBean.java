@@ -3478,7 +3478,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
 				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 				marketSummaryAndPIBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :"T/B");
-				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? scRequestNoteDtl.get(0).getDeliverTerm().toString() : "T/B");
+				marketSummaryAndPIBean.setDeliveryTerm(scRequestNoteDtl.get(0).getDeliverTerm() != null ? scRequestNoteDtl.get(0).getDeliverTerm().toString() : "T/B");
 				marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc().replaceAll("&", "&#38;") : "T/B");
 				marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "T/B");
 				marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString(): "T/B");
