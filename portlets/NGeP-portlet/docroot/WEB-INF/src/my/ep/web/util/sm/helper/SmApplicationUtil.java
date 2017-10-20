@@ -640,7 +640,10 @@ public class SmApplicationUtil {
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
 				|| sup.getBusinessType()
 						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)) {
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)) {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT;
 
 		} else if (sup
@@ -7192,6 +7195,8 @@ public class SmApplicationUtil {
 							managedBean.getBasicCompanyStates().add(state);
 						}
 					}
+				}else{
+					managedBean.setBasicCompanyStates(stateLs);
 				}
 
 			} else {
