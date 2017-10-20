@@ -21,9 +21,14 @@
 									<p:row id="contrPerSumTableHdrRow1">
 										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;"/>
 										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
-										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:20%;text-align: center !important;"
-											styleClass="tableheaderrow" >#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;" 
+											rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
+											#{lbl['lbl.sm.person.composition.bod']}
+										</p:column>
+										<p:column rowspan="2" style="width:20%;text-align: center !important;" styleClass="tableheaderrow" 
+											rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
+											#{lbl['lbl.sm.person.composition.hghMngt']}
+										</p:column>
 										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
 										<p:column colspan="2" style="text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
@@ -42,14 +47,14 @@
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.equiOwnrBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.bodBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
@@ -87,14 +92,14 @@
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.equiOwnrNonBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.bodNonBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
@@ -132,14 +137,14 @@
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.equiOwnrFrgPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.bodFrgPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
@@ -174,11 +179,11 @@
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
 										</p:column>
-										<p:column styleClass="tableheaderrow">
+										<p:column styleClass="tableheaderrow" rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodTotalCnt}" />
 										</p:column>
-										<p:column styleClass="tableheaderrow">
+										<p:column styleClass="tableheaderrow" rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
 										</p:column>
@@ -203,9 +208,14 @@
 									<p:row id="consultPerSumHdrRow">
 										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;"/>
 										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
-										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:15%;text-align: center !important;"
-											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;" 
+											rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
+											#{lbl['lbl.sm.person.composition.bod']}
+										</p:column>
+										<p:column rowspan="2" style="width:15%;text-align: center !important;" styleClass="tableheaderrow" 
+											rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
+											#{lbl['lbl.sm.person.composition.hghMngt']}
+										</p:column>
 										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
 										<p:column colspan="2" style="text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
@@ -232,14 +242,14 @@
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.equiOwnrBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.bodBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
@@ -308,14 +318,14 @@
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.equiOwnrNonBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.bodNonBumiPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
@@ -382,14 +392,14 @@
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.equiOwnrFrgPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
 												&#160;(<h:outputText value="#{backingBean.managedBean.personCalc.bodFrgPerc}" />%)
 											</p:outputPanel>
 										</p:column>
-										<p:column>
+										<p:column rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
 											<p:outputPanel rendered="#{!backingBean.managedBean.supplierUser}">
@@ -452,11 +462,11 @@
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
 										</p:column>
-										<p:column styleClass="tableheaderrow">
+										<p:column styleClass="tableheaderrow" rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodTotalCnt}" />
 										</p:column>
-										<p:column styleClass="tableheaderrow">
+										<p:column styleClass="tableheaderrow" rendered="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT}">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
 										</p:column>
