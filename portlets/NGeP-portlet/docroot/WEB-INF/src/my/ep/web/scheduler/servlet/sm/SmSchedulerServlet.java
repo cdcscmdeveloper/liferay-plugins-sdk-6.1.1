@@ -30,6 +30,7 @@ import my.ep.web.scheduler.job.sm.ComplaintAccusationLetterReminderJob;
 import my.ep.web.scheduler.job.sm.ComplaintShowCauseLetterReminderJob;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
+import my.ep.web.scheduler.job.sm.MofRenewReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
 import my.ep.web.scheduler.job.sm.SupportingDocumentReminderJob;
 
@@ -154,7 +155,7 @@ public class SmSchedulerServlet extends HttpServlet {
 					new JobKey(
 							SchedulerConstants.SM_MOF_RENEWAL_REMINDER,
 							SchedulerConstants.SM_JOB_GROUP),
-					ComplaintAccusationLetterReminderJob.class,
+					MofRenewReminderJob.class,
 					SchedulerConstants.SM_MOF_RENEWAL_REMINDER_JOB_DESC,
 					SchedulerPropertiesUtils
 							.getInstance()
