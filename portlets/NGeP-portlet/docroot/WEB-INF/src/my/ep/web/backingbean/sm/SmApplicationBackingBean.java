@@ -6801,6 +6801,27 @@ public class SmApplicationBackingBean extends
 		}
 		if (!this.getManagedBean().isPoInquiryRespond()) {
 			validateBeforeSubmit();
+
+			// validate if no SDO exist then dont allowed to submit
+			SmAddress hqAddr = getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress();
+			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+			zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
+			PmZone zone = SmServiceLookup.getZoneSO()
+					.retrieveZoneByStateId(zoneReqDTO).getPmZone();
+			if (zone != null) {
+				String sdoLoginIds = SmCommonUtil
+						.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(),
+								RoleCode.UPS_SDO.value(), getManagedBean()
+										.getSmAppl().getSupplierType(),
+								getManagedBean().getSmAppl().getApplType(),
+								getManagedBean().getSmAppl()
+										.getApplCategoryType());
+				if (StringUtils.isBlank(sdoLoginIds)) {
+					throw new EpException(MessageConst.ERROR_722660);
+				}
+			}
+
 		}
 
 		initiateSmApplicationTask();
