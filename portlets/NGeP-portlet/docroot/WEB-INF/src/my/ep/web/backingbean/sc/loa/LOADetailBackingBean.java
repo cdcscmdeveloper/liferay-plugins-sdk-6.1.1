@@ -1700,6 +1700,15 @@ public class LOADetailBackingBean extends
 		setSSMInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 
+		String fiService = "";
+		if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
+			fiService = "0.8%";
+		}
+		else if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())){
+			fiService = "0.4%";
+		}
+		context.put("fiService", fiService);
+
 		String qtNo = MALAY_NA;
 		if(scQt != null) {
 			qtNo = scQt.getQtNo();
@@ -4616,7 +4625,7 @@ public class LOADetailBackingBean extends
 			isAgreementMandatory = true;
 			loa.setAgreementReq(isAgreementMandatory);
 		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
-			isAgreementMandatory = true;
+			isAgreementMandatory = false;
 			loa.setAgreementReq(isAgreementMandatory);
 		}
 		
