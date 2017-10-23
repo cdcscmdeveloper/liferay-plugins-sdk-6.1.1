@@ -109,6 +109,10 @@ hr {
     padding: 0;
 }
 
+u {    
+	border-bottom: 1px dotted #000;
+	text-decoration: none;
+}
 </style>
 </head>
 
@@ -286,14 +290,18 @@ hr {
 				</p>
 
 				<p>
-					<span class="text-family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan minimum peserta SL1M seramai ....................................orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+					<span class="text-family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan minimum peserta SL1M seramai <u>$minSL1M</u> orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 				</p>
-					<table border="0" cellpadding="1" cellspacing="1" width="50%" align="center">
+					<table width="50%" align="center">
 						<tr>
-							<td align="center">
+							<td>
+							<p style="text-align:center">
 								<span class="text-family">1% X Harga Kontrak</span>
-								<hr/>
+							</p>
+							<hr/>
+							<p style="text-align:center">
 								<span class="text-family">RM18,000*</span>
+							</p>
 							</td>
 						</tr>
 					</table>
@@ -310,6 +318,7 @@ hr {
 					<p>
 						<span class="text_family">(b)	melaksanakan program ini mengikut Jadual Pelaksanaan Program SL1M yang diluluskan oleh Sekretariat SL1M;</span>
 					</p>
+					<p>
 						<span class="text_family">(c)	mengemaskini maklumat berkaitan pengalaman syarikat melaksanakan program SL1M dalam sistem ePerolehan di Kementerian Kewangan atau sistem di Lembaga Pembangunan Industri Pembinaan Malaysia (CIDB), mengikut mana yang berkaitan;</span>
 					</p>
 					<p>
