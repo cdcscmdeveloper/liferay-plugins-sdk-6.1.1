@@ -1537,6 +1537,9 @@ public class LOADetailBackingBean extends
 		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		
+		DecimalFormat integerDF = new DecimalFormat(
+				commonUtils
+				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -1699,6 +1702,7 @@ public class LOADetailBackingBean extends
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setSSMInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, scQt, myLocale);
+		setMinSL1MParticipant(context, scLoa, integerDF);
 
 		String fiService = "";
 		if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
@@ -5276,6 +5280,28 @@ public class LOADetailBackingBean extends
 			regNo = smSupplier.getRegNo();
 		}
 		context.put("regNo", regNo);
+	}
+	
+
+	public void setMinSL1MParticipant(VelocityContext context,
+			ScLoa scLoa, DecimalFormat integerDF){
+		
+		BigDecimal loaAmount = scLoa.getLoaAmt();
+		BigDecimal gstAmt = scLoa.getGstAmt();
+		BigDecimal value = new BigDecimal(18000);
+		BigDecimal hundred = new BigDecimal(100);
+		BigDecimal totalAmount = new BigDecimal(0);
+		
+		String minSL1M = "........................";
+		if(gstAmt != null){
+			totalAmount = loaAmount.add(gstAmt);
+		}else{
+			totalAmount = loaAmount;
+		}
+		minSL1M = integerDF.format(((totalAmount)
+				.divide(hundred))
+				.divide(value,0, BigDecimal.ROUND_HALF_UP));
+		context.put("minSL1M", minSL1M);
 	}
 	
 	/**
