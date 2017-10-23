@@ -9,7 +9,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:define name="contentSection">
-
+	<script type="text/javascript">
+            function paginatorGoToLastPage() {
+            	roleTaskTblWV.paginator.setPage(roleTaskTblWV.paginator.cfg.pageCount - 1);
+            }
+	 </script>
+ 
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	
 	<div class="nav-wrapper" align="justify">
@@ -64,8 +69,8 @@
 		</table>
 		<br />
 		<p:dataTable id="poRoleTaskDtTbl" value="#{poTaskWeightageBB.managedBean.selectedUser.pmPoRoleTasks}" var="roleTask" rowKey="#{roleTask}"
-		 rowIndexVar="index">
-		 	<ac:paginator for="poRoleTaskDtTbl" />
+		 rowIndexVar="index" widgetVar="roleTaskTblWV">
+		 	<ac:paginator for="poRoleTaskDtTbl"  />
 			
 			<p:column headerText="#{lbl['lbl.pm.po.task.supplier.type']}">
 				<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,roleTask.supplierType)}" rendered="#{!roleTask.brandNew}" />
@@ -129,7 +134,8 @@
 	</p:panel>
 	<br />
 	<div style="text-align: right;">
-			<p:commandButton id="btnAdd" action="#{poTaskWeightageBB.validateAddRoleTask(true)}" value="#{lbl['lbl.btn.add']}" update="poRoleTaskDtTbl">
+			<p:commandButton id="btnAdd" action="#{poTaskWeightageBB.validateAddRoleTask(true)}" value="#{lbl['lbl.btn.add']}" 
+			update="poRoleTaskDtTbl" oncomplete="paginatorGoToLastPage();">
 				<f:param name="disableRTValidation" value="true" />
 			</p:commandButton>
 	</div>
