@@ -3288,136 +3288,73 @@ public class SmApplicationUtil {
 	 *            appl
 	 */
 	public static void sortPersonnelByRoleInCompany(SmAppl appl) {
-		List<SmPersonnel> equityOwners = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> directors = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> higherManagements = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> managements = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> profs = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> semiProfs = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> staffs = new ArrayList<SmPersonnel>();
-		List<SmPersonnel> noRoles = new ArrayList<SmPersonnel>();
 		if (appl != null
 				&& !EntityHelper.isCollectionEmpty(appl.getSmPersonnels())) {
 
 			for (SmPersonnel per : appl.getSmPersonnels()) {
 				if (per.isEquityOwner()) {
-					equityOwners.add(per);
+					if (per.isDirector() && per.isHigherManagement()) {
+						per.setSort(1);
+					} else if (per.isDirector()) {
+						per.setSort(2);
+					} else if (per.isHigherManagement()) {
+						per.setSort(3);
+					}
 				} else if (!per.isEquityOwner() && per.isDirector()) {
-					directors.add(per);
+					if (per.isHigherManagement()) {
+						per.setSort(4);
+					} else {
+						per.setSort(5);
+					}
 				} else if (!per.isEquityOwner() && !per.isDirector()
 						&& per.isHigherManagement()) {
-					higherManagements.add(per);
+					if (per.isManagement()) {
+						per.setSort(6);
+					} else {
+						per.setSort(7);
+					}
 				} else if (!per.isEquityOwner() && !per.isDirector()
 						&& !per.isHigherManagement() && per.isManagement()) {
-					managements.add(per);
+					per.setSort(8);
 				} else if (!per.isEquityOwner() && !per.isDirector()
 						&& !per.isHigherManagement() && !per.isManagement()
 						&& per.isProf()) {
-					profs.add(per);
+					per.setSort(9);
 				} else if (!per.isEquityOwner() && !per.isDirector()
 						&& !per.isHigherManagement() && !per.isManagement()
 						&& !per.isProf() && per.isSemiProf()) {
-					semiProfs.add(per);
+					per.setSort(10);
 				} else if (!per.isEquityOwner() && !per.isDirector()
 						&& !per.isHigherManagement() && !per.isManagement()
 						&& !per.isProf() && !per.isSemiProf()
 						&& per.isClerical()) {
-					staffs.add(per);
+					per.setSort(11);
 				} else {
-					noRoles.add(per);
+					per.setSort(12);
 				}
 			}
 
-			appl.getSmPersonnels().clear();
-			if (!EntityHelper.isCollectionEmpty(equityOwners)) {
-				// sort by name
-				Collections.sort(equityOwners, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(equityOwners);
-			}
-			if (!EntityHelper.isCollectionEmpty(directors)) {
-				// sort by name
-				Collections.sort(directors, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(directors);
-			}
-			if (!EntityHelper.isCollectionEmpty(higherManagements)) {
-				// sort by name
-				Collections.sort(higherManagements,
-						new Comparator<SmPersonnel>() {
-							@Override
-							public int compare(final SmPersonnel s1,
-									final SmPersonnel s2) {
-								return (s1.getName()).compareTo(s2.getName());
-							}
-						});
-				appl.getSmPersonnels().addAll(higherManagements);
-			}
-			if (!EntityHelper.isCollectionEmpty(managements)) {
-				// sort by name
-				Collections.sort(managements, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(managements);
-			}
-			if (!EntityHelper.isCollectionEmpty(profs)) {
-				// sort by name
-				Collections.sort(profs, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(profs);
-			}
-			if (!EntityHelper.isCollectionEmpty(semiProfs)) {
-				// sort by name
-				Collections.sort(semiProfs, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(semiProfs);
-			}
-			if (!EntityHelper.isCollectionEmpty(staffs)) {
-				// sort by name
-				Collections.sort(staffs, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(staffs);
-			}
-			if (!EntityHelper.isCollectionEmpty(noRoles)) {
-				// sort by name
-				Collections.sort(noRoles, new Comparator<SmPersonnel>() {
-					@Override
-					public int compare(final SmPersonnel s1,
-							final SmPersonnel s2) {
-						return (s1.getName()).compareTo(s2.getName());
-					}
-				});
-				appl.getSmPersonnels().addAll(noRoles);
-			}
+			// sort by name
+			Collections.sort(appl.getSmPersonnels(),
+					new Comparator<SmPersonnel>() {
+						@Override
+						public int compare(final SmPersonnel s1,
+								final SmPersonnel s2) {
+							return (s1.getName()).compareTo(s2.getName());
+						}
+					});
+
+			// sort by sort
+			Collections.sort(appl.getSmPersonnels(),
+					new Comparator<SmPersonnel>() {
+						@Override
+						public int compare(final SmPersonnel s1,
+								final SmPersonnel s2) {
+							return (s2.getSort() > s1.getSort() ? -1 : (s1
+									.getSort() == s2.getSort() ? 0 : 1));
+						}
+					});
+
 		}
 	}
 
@@ -7195,7 +7132,7 @@ public class SmApplicationUtil {
 							managedBean.getBasicCompanyStates().add(state);
 						}
 					}
-				}else{
+				} else {
 					managedBean.setBasicCompanyStates(stateLs);
 				}
 
