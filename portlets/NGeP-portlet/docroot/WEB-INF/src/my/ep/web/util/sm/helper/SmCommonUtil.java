@@ -3959,6 +3959,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
 				}
 			}
 		} catch (Exception ex) {
@@ -4034,6 +4036,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
 				}
 			}else{
 				if(resDTO.getStatusCode().equals("70018")){
