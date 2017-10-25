@@ -1891,10 +1891,11 @@ public class SupplierFinalizationBackingBean extends
 						.addAll(this.getManagedBean().getEndorsementReports());
 			}
 			
-			if(!scQtFinalization.isBriefingPaperUploaded()){
+			// Disabling kertas taklimat as per Bug #16172
+			/*if(!scQtFinalization.isBriefingPaperUploaded()){
 				navigateToBriefingPaperTab();
 				throw new EpException(MessageConst.ERROR_760452);
-			}
+			}*/
 			
 			if (this.getManagedBean().getFinalizationMethod() != null
 					&& (this.getManagedBean().getFinalizationMethod()
