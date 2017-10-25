@@ -46,15 +46,10 @@
 							<p:outputLabel value="#{lbl['lbl.sm.gstNo']}" />
 							<p:outputLabel value="*" styleClass="mandatory" 
 							rendered="#{not empty backingBean.managedBean.selectedBranch.gst.gstEffDate 
-							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate 
-							and (backingBean.managedBean.supplierUser
-							and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R'))}"/>
+							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate}"/>
 						</td>
 						<td><c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:inputText label="#{lbl['lbl.sm.gstNo']}"
 										required="#{not empty backingBean.managedBean.selectedBranch.gst.gstEffDate 
 										or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate}"
@@ -81,14 +76,10 @@
 							<p:outputLabel value="*" styleClass="mandatory" 
 							rendered="#{not empty backingBean.managedBean.selectedBranch.gst.gstRegNo 
 							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate 
-							and (backingBean.managedBean.supplierUser
-							and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R'))}"/>
+							and backingBean.managedBean.supplierUser}"/>
 						</td>
 						<td><c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:calendar id="gstBrEffDate" showOn="button" navigator="true"
 										display="inline" label="#{lbl['lbl.sm.gst.effdate']}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -116,9 +107,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 						<td><c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:calendar id="gstBrEndDate" showOn="button" navigator="true"
 										display="inline" label="#{lbl['lbl.sm.gst.eff.end.date']}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -160,9 +149,7 @@
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
-									style="width : 20%;" rendered="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R') 
+									style="width : 20%;" rendered="#{backingBean.managedBean.supplierUser  
 									and not empty backingBean.managedBean.selectedBranch.gst 
 									and not empty backingBean.managedBean.selectedBranch.gst.gstRegNo}">
 									
@@ -182,9 +169,7 @@
 									<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty tableGstBr.fileName}" />
 									<p:commandLink id="deleteBrAttId" style="white-space: normal !important;"
 										partialSubmit="true" rendered="#{not empty tableGstBr.fileName and 
-											(backingBean.managedBean.supplierUser 
-											and (backingBean.managedBean.smAppl.applType eq 'N' 
-											or backingBean.managedBean.smAppl.applType eq 'R') 
+											(backingBean.managedBean.supplierUser  
 											and not empty backingBean.managedBean.selectedBranch.gst 
 											and not empty backingBean.managedBean.selectedBranch.gst.gstRegNo)}"
 										process="@this" action="#{backingBean.deleteBrAttachment(tableGstBr)}"
@@ -202,8 +187,7 @@
 				
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-						rendered="#{backingBean.managedBean.supplierUser and 
-								(backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}"
+						rendered="#{backingBean.managedBean.supplierUser}"
 						partialSubmit="true" process="@this" update=":#{p:component('branchGstInfoPanelId')}"
 						disabled="#{empty backingBean.managedBean.selectedBranch.gst 
 							or empty backingBean.managedBean.selectedBranch.gst.gstRegNo}"
@@ -221,9 +205,7 @@
 						</td>
 						<td style="border-style: none !important;">
 							<c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:inputText readonly="true" disabled="true" 
 										value="#{backingBean.managedBean.selectedBranch.gst.gstRegNo}" size="40" />
 								</c:when>
@@ -242,9 +224,7 @@
 						</td>
 						<td style="border-style: none !important;">
 							<c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:inputText readonly="true" disabled="true" 
 										value="#{backingBean.managedBean.selectedBranch.gst.gstEffDate}" size="40" >
 										<f:convertDateTime
@@ -268,9 +248,7 @@
 						</td>
 						<td style="border-style: none !important;">
 							<c:choose>
-								<c:when test="#{backingBean.managedBean.supplierUser 
-									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+								<c:when test="#{backingBean.managedBean.supplierUser}">
 									<p:inputText readonly="true" disabled="true" 
 										value="#{backingBean.managedBean.selectedBranch.gst.gstEndDate}" size="40" >
 										<f:convertDateTime
