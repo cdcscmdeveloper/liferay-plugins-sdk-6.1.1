@@ -1112,7 +1112,7 @@ public class EvaluationBackingBean extends
 						 * throw new EpException(MessageConst.ERROR_760204); }
 						 */
 						if (null != proposalCheckList.getCompliance()
-								&& !proposalCheckList.getCompliance()) {
+								&&ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE==proposalCheckList.getCompliance()) {
 							if (null == proposalCheckList.getRemark()
 									|| "".equalsIgnoreCase(proposalCheckList
 											.getRemark())) {
@@ -11230,7 +11230,7 @@ private void retriveCommitteeRemarksList(){
 						 * throw new EpException(MessageConst.ERROR_760204); }
 						 */
 						if (null != proposalCheckList.getCompliance()
-								&& !proposalCheckList.getCompliance()) {
+								&&ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE==proposalCheckList.getCompliance()) {
 							if (null == proposalCheckList.getRemark()
 									|| "".equalsIgnoreCase(proposalCheckList
 											.getRemark())) {
