@@ -1109,11 +1109,11 @@ public class SPDetailBackingBean extends
 
 					if (!finProposalChecklist.isSubmitted()
 							|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-									.getCompliance().equals(Boolean.FALSE))) {
+									.getCompliance()==ParameterConst.COMPLIANCE_STATUS__COMPLIANCE)) {
 						finProposalChecklist
 								.setScQtProposalChecklistAttachment(null);
 						finProposalChecklist.setSubmitted(true);
-						finProposalChecklist.setCompliance(true);
+						finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 					} else {
 						finProposalChecklist
 								.setScQtProposalChecklistAttachment(null);
@@ -1121,13 +1121,13 @@ public class SPDetailBackingBean extends
 
 				} else if (finProposalChecklist.isSubmitted()
 						|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-								.getCompliance().equals(Boolean.TRUE))) {
+								.getCompliance()==ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE)) {
 					if (finProposalChecklist
 							.getScQtProposalChecklistAttachment() != null) {
-						finProposalChecklist.setCompliance(Boolean.FALSE);
+						finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 					} else {
 						finProposalChecklist.setSubmitted(false);
-						finProposalChecklist.setCompliance(Boolean.FALSE);
+						finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 					}
 				}
 			}
