@@ -39,7 +39,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
-				<h:outputText value="#{complianceTechnicalSupplier.compliance}"></h:outputText>
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.compliance)}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
