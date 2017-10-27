@@ -1704,12 +1704,14 @@ public class LOADetailBackingBean extends
 		setMofInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 		setMinSL1MParticipant(context, scLoa, integerDF);
 
-		String fiService = "";
-		if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
-			fiService = "0.8%";
-		}
-		else if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())){
-			fiService = "0.4%";
+		String fiService = "T/B";
+		if(scQt != null){
+			if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
+				fiService = "0.8%";
+			}
+			else if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())){
+				fiService = "0.4%";
+			}
 		}
 		context.put("fiService", fiService);
 
