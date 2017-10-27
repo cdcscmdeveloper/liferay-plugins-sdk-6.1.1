@@ -164,6 +164,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 				case QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION :
 					proposalReqDTO = new ProposalReqDTO();
 					proposalReqDTO.setQtId(qtId);
+					proposalReqDTO.setJobType(SourcingConstants.JOB_TYPE_RETRY);
 					proposalReqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 					proposalResDTO = getQTProposalSO()
 							.updateRescheduleWorkFlowStatus(proposalReqDTO);
