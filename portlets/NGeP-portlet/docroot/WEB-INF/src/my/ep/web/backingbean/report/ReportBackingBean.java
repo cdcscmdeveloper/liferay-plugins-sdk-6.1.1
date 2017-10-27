@@ -18901,7 +18901,7 @@ public class ReportBackingBean extends
 					
 					log.info("6");
 					
-					System.out.println("jimmy reportbackingbean - " + reportTitle);
+					//System.out.println("reportbackingbean - " + reportTitle);
 					
 					this.getManagedBean().setRequestId(String.valueOf(resDTO.getRequestId()));
 					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
@@ -20537,7 +20537,7 @@ public class ReportBackingBean extends
 		try{
 		
 			String ip = Inet4Address.getLocalHost().getHostAddress();
-			System.out.println("Jimmy ntf ip = " + ip);
+			System.out.println("ntf ip = " + ip);
 			
 			if(ip != null){
 				

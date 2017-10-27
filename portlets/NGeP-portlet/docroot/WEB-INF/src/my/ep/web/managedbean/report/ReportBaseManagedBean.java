@@ -208,7 +208,7 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 		try{
 		
 			String ip = Inet4Address.getLocalHost().getHostAddress();
-			System.out.println("Jimmy ntf ip = " + ip);
+			//System.out.println("ntf ip = " + ip);
 			
 			if(ip != null){
 				
