@@ -84,17 +84,17 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 		}
 		//if (!userRoleLogin.equals(ReportConst.REQUISITIONER)) {
 			if (StringUtils.isNotEmpty(getManagedBean().getScRequisitioner())) {
-				params.put(ReportConst.SC_AMP_REQUISENER_EQ, "\"" + getManagedBean().getScRequisitioner() + "\"");
+				params.put(DpReportConst.PARAM_REQUISITIONER_ID, getManagedBean().getScRequisitioner());
 			}
 		//}
 		//if (StringUtils.isNotEmpty(userRoleLogin)) {
-			params.put(ReportConst.AMP_USER_ACCESS_ROLE_EQ, "\"" + userRoleLogin + "\"");
+			params.put(DpReportConst.PARAM_USER_ACCESS_ROLE, userRoleLogin);
 		//}
 		//if(StringUtils.isNotEmpty(getManagedBean().getScRequisitioner())){
-			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, getManagedBean().getScRequisitioner());	
+			params.put(DpReportConst.PARAM_DESK_OFFICER, getManagedBean().getScRequisitioner());	
 		//}
 		//if(StringUtils.isNotEmpty(getManagedBean().getScPtj())){
-			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, getManagedBean().getScPtj());	
+			params.put(DpReportConst.PARAM_PTJ, getManagedBean().getScPtj());	
 		//}
 
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
