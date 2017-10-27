@@ -30,6 +30,10 @@ public class DpReportConst implements Serializable {
 	public static final String PARAM_CREATED_TO_DATE = "CREATODT";
 	public static final String PARAM_STATUS = "STATUS";
 	public static final String PARAM_SUPPLIER = "SUPP";
+	public static final String PARAM_REQUISITIONER_ID = "REQUIUSRID";
+	public static final String PARAM_USER_ACCESS_ROLE = "LOGIN";
+	public static final String PARAM_DESK_OFFICER = "DOUSERID";
+	public static final String PARAM_PTJ= "ORGPROFILEID";
 	
 	// SC_050 Item Inquiry Details Report Param
 	public static final String PARAM_GROUP = "PGROUP";
