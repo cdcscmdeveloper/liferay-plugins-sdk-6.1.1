@@ -5230,6 +5230,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			contractCriteriaList.add(ResourceBundleUtils.getMessage(
 					"lbl.fl.supp.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.doc.maintain.physical.loa.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.doc.maintain.loa.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
 			
 			items = new SelectItem[contractCriteriaList.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(

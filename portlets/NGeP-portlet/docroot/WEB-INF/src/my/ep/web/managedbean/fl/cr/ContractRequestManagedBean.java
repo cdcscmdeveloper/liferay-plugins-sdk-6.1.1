@@ -343,6 +343,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 										"supplier_name",
 										SearchOperator.OPERATOR_LIKE.value(), 
 										searchContractCriteria,true));
+					}else if(searchContractListDD == 10){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"loa_physical_no",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria,true));
+					}else if(searchContractListDD == 11){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"loa_no",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria,true));
 					}
 					
 				}
