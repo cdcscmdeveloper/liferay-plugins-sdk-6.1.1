@@ -123,7 +123,7 @@
 							<ui:param name="unknownCountry" value="#{registrationBackingBean.getUnknownCountry()}" />
 							<f:selectItem itemValue="#{unknownCountry.countryId}" itemLabel="#{unknownCountry.countryName}" />
 						</c:if>
-						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="cmbUsrIdenType,pnlIdentType,pnlIdentLabel" />
+						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="pnlIdentypeSelect,pnlIdentType,pnlIdentLabel" />
 					</p:selectOneMenu>
 					<p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
 					
@@ -139,15 +139,19 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
-					<h:outputText rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC}"
+					<p:outputPanel id="pnlIdentypeSelect">
+					<h:outputText rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC || 
+					registrationBackingBean.managedBean.smSuppOwner.nationality.countryCode eq SupplierManagementConst.COUNTRY_MALAYSIA_CODE}"
 						value="#{registrationBackingBean.getParamDescByParameterId(registrationBackingBean.managedBean.smSuppOwner.identificationTypeId)}"/>
 					<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.identificationtype']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
-						style="width:200px" rendered="#{registrationBackingBean.managedBean.applType ne SupplierManagementConst.ACC_BASIC}">
+						style="width:200px" rendered="#{(registrationBackingBean.managedBean.applType ne SupplierManagementConst.ACC_BASIC) and 
+						(registrationBackingBean.managedBean.smSuppOwner.nationality.countryCode ne SupplierManagementConst.COUNTRY_MALAYSIA_CODE)}">
 						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
 						<p:ajax event="change" update="pnlIdentType,pnlIdentLabel"
 							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
 					</p:selectOneMenu>
+					</p:outputPanel>
 					
 					<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" />
 				</td>
