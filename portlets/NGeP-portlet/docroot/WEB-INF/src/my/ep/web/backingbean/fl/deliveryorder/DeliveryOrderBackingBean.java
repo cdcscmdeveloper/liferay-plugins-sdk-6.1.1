@@ -1334,7 +1334,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());

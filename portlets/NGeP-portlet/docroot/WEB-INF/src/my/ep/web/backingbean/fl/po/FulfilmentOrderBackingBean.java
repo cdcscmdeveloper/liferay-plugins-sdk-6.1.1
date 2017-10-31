@@ -1078,7 +1078,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				crBB.setFulfilmentItemAddr(crBB.getManagedBean().getFlRequest());
 				crBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
-						getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
+				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 				return NAV_CR;
 			}if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -1134,8 +1134,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-				getManagedBean().setHyperLinkPage(true);
+//				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+//				getManagedBean().setHyperLinkPage(true);
 				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
@@ -1178,8 +1178,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-				getManagedBean().setHyperLinkPage(true);
+//				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+//				getManagedBean().setHyperLinkPage(true);
 				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);

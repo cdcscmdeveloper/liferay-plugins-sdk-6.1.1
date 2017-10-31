@@ -1008,7 +1008,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
@@ -1020,7 +1020,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			getManagedBean().setDocMaintainRemarks(true);
 			getManagedBean().setAcknowledged(true);
-			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			if(getManagedBean().getAcknowledgeDate() == null){
 				FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
 				if(actor != null){
