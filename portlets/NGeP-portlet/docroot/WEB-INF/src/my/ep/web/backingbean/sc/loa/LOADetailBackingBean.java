@@ -1675,7 +1675,9 @@ public class LOADetailBackingBean extends
 		
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
-
+		
+		context.put("isAgreementReq", scLoa.isAgreementReq());
+		
 		String LoaSigner = "______________";
 		String loaSignerDesig = "______________";
 		if(getManagedBean().getContractSignerUser() != null){
