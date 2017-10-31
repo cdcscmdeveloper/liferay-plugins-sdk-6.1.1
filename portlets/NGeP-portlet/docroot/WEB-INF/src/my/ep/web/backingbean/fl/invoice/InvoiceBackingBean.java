@@ -686,7 +686,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			getManagedBean().setInvoiceId(resDTO.getInvoice().getInvoiceId());
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setInvoice(resDTO.getInvoice());
 			getManagedBean().setReliefDeclarationCheck(true);
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
