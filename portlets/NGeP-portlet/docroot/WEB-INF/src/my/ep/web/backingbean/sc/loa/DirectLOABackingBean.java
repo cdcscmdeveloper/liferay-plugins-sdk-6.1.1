@@ -7424,6 +7424,8 @@ public class DirectLOABackingBean extends
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
+		context.put("isAgreementReq", scLoa.isAgreementReq());
+		
 		String LoaSigner = "______________";
 		String loaSignerDesig = "______________";
 		if(scLoa.getContractSigner() != null){
@@ -7451,12 +7453,14 @@ public class DirectLOABackingBean extends
 		setMofInfoForAgreementLetter(context, scLoa, myLocale);
 		setMinSL1MParticipant(context, scLoa, integerDF);
 		
-		String fiService = "";
-		if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
-			fiService = "0.8%";
-		}
-		else if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())){
-			fiService = "0.4%";
+		String fiService = "T/B";
+		if(scQt != null){
+			if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
+				fiService = "0.8%";
+			}
+			else if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())){
+				fiService = "0.4%";
+			}
 		}
 		context.put("fiService", fiService);
 		
