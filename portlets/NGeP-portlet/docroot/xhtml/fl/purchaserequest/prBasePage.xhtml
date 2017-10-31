@@ -28,7 +28,7 @@
 		<c:if test="#{purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePurchaseRequest)}" />
 		</c:if>			
-		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" escape="false"/>
 		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{purchaseRequestBackingBean.managedBean.gfmasError}" >		
 			<table>
 				<tr>
