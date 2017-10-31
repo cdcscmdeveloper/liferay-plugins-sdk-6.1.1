@@ -2218,14 +2218,22 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722532,
 						new String[] { pers.getIdentificationNo() });
 			}
-			myIdentityVerification(pers);
-			if (pers.getIdentityResponseCode().equals("70020")) {
-				validUser = false;
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
-			} else if (pers.getIdentityResponseCode().equals("70031")) {
-				validUser = false;
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+			
+			String postCode = "";
+			for (SmPersonnelAddress addr : pers.getSmPersonnelAddresses()) {
+				if (addr.getAddressType() != null
+						&& addr.getAddressType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
+						&& addr.getSmAddress() != null) {
+					postCode = addr.getSmAddress().getPostcode();
+					log.debug(" *** Perm Addr Post Code ****" + postCode);
+				}
 			}
+			
+			String myIdentityRespCode = SmCommonUtil.getInstance().verifyWithMyIdentity(pers.getName(), pers.getIdentificationNo(), 
+					postCode, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+			pers.setIdentityResponseCode(myIdentityRespCode);
 		}
 		if (!pers.isEquityOwner() && !pers.isDirector()
 				&& !pers.isHigherManagement() && !pers.isManagement()
