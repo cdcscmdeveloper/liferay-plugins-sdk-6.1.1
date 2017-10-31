@@ -3916,8 +3916,10 @@ public class SmCommonUtil {
 	 * @param name
 	 * @param identificationNo
 	 * @param postCode
+	 * 
+	 * @return responseCode
 	 */
-	public void verifyWithMyIdentity(String name, String identificationNo,
+	public String verifyWithMyIdentity(String name, String identificationNo,
 			String postCode, String type) {
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3963,6 +3965,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
 				}
 			}
+			
+			return resDTO.getStatusCode();
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
