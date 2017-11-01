@@ -4212,15 +4212,17 @@ public class SupplierFinalizationBackingBean extends
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 			scQtFinalization.setRePublishOption(null);
+			this.getManagedBean().setFinalizationMethod(null);
 			this.getManagedBean().setReEvaluate(true);
 		} else if (decision.equals(ParameterConst.DECISION_RE_PUBLISH)) {
 			resetReEvaluate(scQtFinalization);
-			
+			this.getManagedBean().setFinalizationMethod(null);
 			if (null == scQtFinalization.getRePublishOption()) {
 				scQtFinalization.setRePublishOption(new PmParameter());
 			}
 			this.getManagedBean().setRePublish(true);
 		} else if (decision.equals(ParameterConst.DECISION_CANCEL)) {
+			this.getManagedBean().setFinalizationMethod(null);
 			resetReEvaluate(scQtFinalization);
 			scQtFinalization.setRePublishOption(null);
 			this.getManagedBean().setCancel(true);
