@@ -8,7 +8,13 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel id="deductionPanel" header="#{lbl['lbl.fl.payment.match.deduction']}" toggleable="true">
-	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction']}" escape="false"/>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction']}" escape="false" />
+	<h:outputText value="&lt;br/&gt;" escape="false" />
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction.payment']}" escape="false" />
+			<p:commandLink  oncomplete="paymentDeductionGuideLineInfo.show();"  value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
+					process="@this"
+					update=":form:paymentDeductionGuideLineInfoDialog"/>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction.payment1']}" escape="false"  />
 		<p:dataTable id="deductionDataTable" var="deduction" value="#{paymentMatchBackingBean.deductionTable}"
 			rowIndexVar="index" rowStyleClass="selectable" style="width: 100%"
 			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
@@ -127,6 +133,22 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	
+	<p:dialog id="paymentDeductionGuideLineInfoDialog" header="#{lbl['lbl.fl.instruction.deduction.payment1']}"
+		widgetVar="paymentDeductionGuideLineInfo" showEffect="fade" hideEffect="fade" modal="true"
+		width="600" resizable="false">
+		<p:dataTable id="paymentDeductionDt" var="paymentDeduction" style="width:100%">
+			<ac:paginator for="paymentDeductionDt" />
+			<p:column headerText= "CONTENT NOT AVAILABLE" style="white-space:normal;">
+			</p:column>
+		</p:dataTable>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.fl.btn.close']}" 
+				oncomplete="paymentDeductionGuideLineInfo.hide();" >
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	
 	<ui:include src="/xhtml/fl/paymentmatch/deductionPopUp.xhtml" />
 	<ac:lovPopup />	
 </ui:composition>
