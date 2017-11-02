@@ -18,23 +18,23 @@
 			#foreach($svmachine in $machineLs)
 			<tr>
 				<td>$velocityCount</td>
-				#if($!svmachine.smMachineDtl.machine.machineDes)
-					<td>$!svmachine.smMachineDtl.machineType</td>
+				#if($!svmachine.machine.machineDes)
+					<td>$!svmachine.machineType</td>
 				#else
-					<td>$!svmachine.smMachineDtl.machine.machineDesc</td>
+					<td>$!svmachine.machine.machineDesc</td>
 				#end
-				<td>$!svmachine.smMachineDtl.brandName</td>
-				<td>$!svmachine.smMachineDtl.machineFunction</td>
-				<td>$!svmachine.smMachineDtl.qty</td>
+				<td>$!svmachine.brandName</td>
+				<td>$!svmachine.machineFunction</td>
+				<td>$!svmachine.qty</td>
 				<td style="text-align:right">
-				#if($svmachine.smMachineDtl.value) 
-					$smVmUtil.formatToTwoDecimalPoint($svmachine.smMachineDtl.value)
+				#if($svmachine.value) 
+					$smVmUtil.formatToTwoDecimalPoint($svmachine.value)
 				#end
 				</td>
 				<td>
-					$purchaseMethodMap.get($svmachine.smMachineDtl.purchaseMethod)
+					$purchaseMethodMap.get($svmachine.purchaseMethod)
 				</td>
-				<td>$!svmachine.smMachineDtl.guarantorName</td>
+				<td>$!svmachine.guarantorName</td>
 			</tr>
 			#end
 		#else
