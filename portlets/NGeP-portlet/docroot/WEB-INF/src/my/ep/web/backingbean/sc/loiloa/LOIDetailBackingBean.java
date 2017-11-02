@@ -46,6 +46,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -1654,6 +1655,7 @@ public class LOIDetailBackingBean extends
 			handleBranchDetailsChanged();
 		}
 			
+		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
 		// Issue & Acknowledge Date
 		if(scLoi.getIssueDate() == null){
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
@@ -1663,9 +1665,9 @@ public class LOIDetailBackingBean extends
 			scLoi.setLoiResponseDate((int) days);
 		}
 		else{
-			scLoi.setLoiResponseDate(5);
+			scLoi.setLoiResponseDate(loaRespPeriod);
 		}
-		//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
+		
 		scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
 		
 		// approvers
