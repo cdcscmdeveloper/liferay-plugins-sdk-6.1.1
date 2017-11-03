@@ -153,7 +153,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
 				<td><p:inputText styleClass="ppRightBtn"
-						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
+						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(lOIDetailBackingBean.managedBean.scLoi.issueDate, lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
 						disabled="true" size="4" readonly="true" /> #{lbl['lbl.sc.days']}
 					<ui:param name="days" value="#{lOIDetailBackingBean.retrivemessage(lOIDetailBackingBean.managedBean.scLoi.ackDueDate)}" />
 					<ac:iconTooltip value="#{days}" /><p:inputText size="30" disabled="true"
