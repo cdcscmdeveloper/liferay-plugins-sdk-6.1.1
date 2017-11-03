@@ -2230,9 +2230,14 @@ public class SmApplicationUtil {
 					log.debug(" *** Perm Addr Post Code ****" + postCode);
 				}
 			}
-			
-			String myIdentityRespCode = SmCommonUtil.getInstance().verifyWithMyIdentity(pers.getName(), pers.getIdentificationNo(), 
-					postCode, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+
+			String myIdentityRespCode = SmCommonUtil
+					.getInstance()
+					.verifyWithMyIdentity(
+							pers.getName(),
+							pers.getIdentificationNo(),
+							postCode,
+							my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
 			pers.setIdentityResponseCode(myIdentityRespCode);
 		}
 		if (!pers.isEquityOwner() && !pers.isDirector()
@@ -10723,14 +10728,28 @@ public class SmApplicationUtil {
 			String updateAddressDetails) {
 		if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (bean.getSelectedShareHolder().isEquityOwner()
-					|| bean.getSelectedShareHolder().isDirector()
-					|| bean.getSelectedShareHolder().isHigherManagement()
-					|| bean.getSelectedShareHolder().isManagement()) {
+			if (!bean
+					.getSmSupplier()
+					.getBusinessType()
+					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+					&& (bean.getSelectedShareHolder().isEquityOwner()
+							|| bean.getSelectedShareHolder().isDirector()
+							|| bean.getSelectedShareHolder()
+									.isHigherManagement() || bean
+							.getSelectedShareHolder().isManagement())) {
 				bean.getSelectedShareHolder().setClerical(false);
 				bean.getSelectedShareHolder().setDisableStaff(true);
 			} else {
-				bean.getSelectedShareHolder().setDisableStaff(false);
+				if (bean.getSmSupplier()
+						.getBusinessType()
+						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+						&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
+						&& bean.getSelectedShareHolder().isEquityOwner()) {
+					bean.getSelectedShareHolder().setClerical(false);
+					bean.getSelectedShareHolder().setDisableStaff(true);
+				} else {
+					bean.getSelectedShareHolder().setDisableStaff(false);
+				}
 			}
 
 		} else if (bean.getSmAppl().getSupplierType()
@@ -10776,6 +10795,17 @@ public class SmApplicationUtil {
 				bean.getShareHolderOffAddr().setSameAsPerm(true);
 			}
 		}
+	}
+
+	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl) {
+		boolean retVal = false;
+		for (SmPersonnel per : appl.getSmPersonnels()) {
+			if (per.isEquityOwner() && per.isClerical()) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
 	}
 
 	/**
