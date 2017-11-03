@@ -378,6 +378,6 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
 		}
-		logger.info(message);
+		//logger.info(message);
 	}
 }
