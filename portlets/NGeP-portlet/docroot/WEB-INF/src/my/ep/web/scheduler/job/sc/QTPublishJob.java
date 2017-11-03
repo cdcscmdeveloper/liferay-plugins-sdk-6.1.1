@@ -10,6 +10,9 @@
  */
 package my.ep.web.scheduler.job.sc;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
@@ -21,6 +24,7 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -59,10 +63,12 @@ public class QTPublishJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		debugLogger("Start execute from QTPublishJob @"+DateUtils.getCurrentDate());
+		debugLogger("Start execute from QTPublishJob @"
+				+ DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
-		log.info("from execute to publish QT with qtId"+qtId);
+		Long qtId = dataMap
+				.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
+		log.info("from execute to publish QT with qtId" + qtId);
 
 		try {
 
@@ -73,19 +79,26 @@ public class QTPublishJob implements Job {
 			}
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
-			ProposalResDTO proposalResDTO = proposalSO
-					.updateProposalWorkFlowStatus(proposalReqDTO);
-			
-			if (!proposalResDTO.isSpecChanged()) {// skip  publish QT call if QT is waiting to sign off pending spec changes. 
-				if (proposalResDTO.isSuccessful()) {
-					log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
-					insertSuppliersAndSendNotification(qtId);
-				} else {
-					log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
-					updateQtAsDisrupted(qtId,
-							QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
-							proposalResDTO.getErrorMessage());
+			ScQt qt = proposalSO.getQtByQtId(proposalReqDTO).getScQt();
+			if (qt.getPublishDate().equals(getCompareTime())) {
+				ProposalResDTO proposalResDTO = proposalSO
+						.updateProposalWorkFlowStatus(proposalReqDTO);
+				// skip publish QT call if QT is waiting to sign off pending specchanges.
+				if (!proposalResDTO.isSpecChanged()) {
+					if (proposalResDTO.isSuccessful()) {
+						log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
+						insertSuppliersAndSendNotification(qtId);
+					} else {
+						log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
+						updateQtAsDisrupted(
+								qtId,
+								QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
+								proposalResDTO.getErrorMessage());
+					}
 				}
+			}else if(qt.getPublishDate().before(getCompareTime())){
+				log.info("$$$$$ qtPublish job executed after the Actual publish time or pulish failed before");
+				reSchedulePublicationForPublishFailQt(qtId);
 			}
 		} catch (Exception e) {
 			log.info("$$$$$ qt Work Flow status updated failed for Publish");
@@ -98,11 +111,13 @@ public class QTPublishJob implements Job {
 			proposalSO = null;
 			noticeBoardSO = null;
 		}
-		debugLogger("end execute from QTPublishJob @"+DateUtils.getCurrentDate());
+		debugLogger("end execute from QTPublishJob @"
+				+ DateUtils.getCurrentDate());
 	}
 
 	private void insertSuppliersAndSendNotification(Long qtId) {
-		// Insert suppliers and send notification after work flow status update successful
+		// Insert suppliers and send notification after work flow status update
+		// successful
 		try {
 			if (noticeBoardSO == null) {
 				noticeBoardSO = BusinessDelegate.getInstance()
@@ -136,12 +151,12 @@ public class QTPublishJob implements Job {
 			log.error(e.getLocalizedMessage());
 			String errorMessage = null;
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
-    		if (rootCause != null) {
-    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
-    		} else {
-    			errorMessage = ExceptionUtils.getStackTrace(e);
-    			
-    		}
+			if (rootCause != null) {
+				errorMessage = ExceptionUtils.getStackTrace(rootCause);
+			} else {
+				errorMessage = ExceptionUtils.getStackTrace(e);
+
+			}
 			updateQtAsDisrupted(qtId,
 					QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION,
 					errorMessage);
@@ -177,23 +192,24 @@ public class QTPublishJob implements Job {
 			String errorMessage = null;
 			e.printStackTrace();
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
-    		if (rootCause != null) {
-    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
-    		} else {
-    			errorMessage = ExceptionUtils.getStackTrace(e);
-    			
-    		}
+			if (rootCause != null) {
+				errorMessage = ExceptionUtils.getStackTrace(rootCause);
+			} else {
+				errorMessage = ExceptionUtils.getStackTrace(e);
+
+			}
 			updateQtAsDisrupted(qtId,
-					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION,
-					errorMessage);
+					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION, errorMessage);
 		}
 	}
 
-	private void updateQtAsDisrupted(Long qtId, int disruptionStage, String errorMessage) {
+	private void updateQtAsDisrupted(Long qtId, int disruptionStage,
+			String errorMessage) {
 		try {
-			if(proposalSO == null){
-				proposalSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			if (proposalSO == null) {
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
 			}
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
@@ -204,18 +220,29 @@ public class QTPublishJob implements Job {
 			proposalSO = null;
 		}
 	}
-	
-	private void reSchedulePublicationForPublishFailQt(Long qtId){
-		if(proposalSO == null){
+
+	private void reSchedulePublicationForPublishFailQt(Long qtId) {
+		if (proposalSO == null) {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 		}
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		reqDTO.setQtId(qtId);
 		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
-		if(resDTO.isSuccessful()){
-			log.info("Work flow status updated for publish failed QT with id"+qtId);
+		ProposalResDTO resDTO = proposalSO
+				.updateRescheduleWorkFlowStatus(reqDTO);
+		if (resDTO.isSuccessful()) {
+			log.info("Work flow status updated for publish failed QT with id"
+					+ qtId);
 		}
 	}
+
+	private Date getCompareTime() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date compareTime = cal.getTime();
+		return compareTime;
+	}
+
 }
