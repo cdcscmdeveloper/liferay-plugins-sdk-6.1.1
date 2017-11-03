@@ -5564,7 +5564,7 @@ public class LOIDetailBackingBean extends
 	public String retrivemessage(Date date){
 		String message="";
 		if(null!=date){
-			long dayBal = DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(),
+			long dayBal = DateUtils.getDaysDifference(getManagedBean().getScLoi().getIssueDate(),
 					date);
 			String[] dayLeftParam = { dayBal + "" };
 			 message= getMessage(
