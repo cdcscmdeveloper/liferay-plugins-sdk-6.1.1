@@ -10,6 +10,9 @@
  */
 package my.ep.web.scheduler.job.sc;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
@@ -21,6 +24,7 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -74,8 +78,12 @@ public class QTProposalCloseJob implements Job {
 			}
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
+			ScQt qt = proposalSO
+					.getQtByQtId(proposalReqDTO).getScQt();
+			if(qt.getClosingDate().equals(getCompareTime())){
 			ProposalResDTO proposalResDTO = proposalSO
 					.updateProposalWorkFlowStatus(proposalReqDTO);
+			
 			if (proposalResDTO.isSuccessful()) {
 				log.info("$$$$$ qt Work Flow status update suceessful from QTProposalCloseJob job");
 				insertProposalAmount(qtId);
@@ -84,6 +92,10 @@ public class QTProposalCloseJob implements Job {
 				updateQtAsDisrupted(qtId,
 						QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
 						proposalResDTO.getErrorMessage());
+			}
+			}else if(qt.getClosingDate().before(getCompareTime())){
+				log.info("%%%%% QT not Closed ontime and updated to closing reschedule");
+				reSchedulePublicationForPublishFailQt(qtId);
 			}
 
 		} catch (Exception e) {
@@ -211,5 +223,12 @@ public class QTProposalCloseJob implements Job {
 		if(resDTO.isSuccessful()){
 			log.info("Work flow status updated for proposal close failed QT with id"+qtId);
 		}
+	}
+	private Date getCompareTime() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date compareTime = cal.getTime();
+		return compareTime;
 	}
 }
