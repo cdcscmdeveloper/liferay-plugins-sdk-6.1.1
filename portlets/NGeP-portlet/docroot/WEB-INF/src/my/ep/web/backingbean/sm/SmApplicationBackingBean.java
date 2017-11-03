@@ -9249,17 +9249,17 @@ public class SmApplicationBackingBean extends
 											.divide(getManagedBean()
 													.getSmAppl()
 													.getSmCompanyBasic()
-													.getPaidUpCapital(), 4,
+													.getPaidUpCapital(), 8,
 													RoundingMode.HALF_UP)
 											.multiply(mul)
-											.setScale(2, RoundingMode.HALF_UP));
+											.setScale(3, RoundingMode.HALF_UP));
 				}
 
 			} else {
 				getManagedBean().getSelectedEquityCompany().setSharePercentage(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+						new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
 				getManagedBean().getSelectedEquityCompany().setShareAmt(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+						new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
 				throw new EpException(MessageConst.ERROR_722521);
 			}
 		} catch (NumberFormatException ne) {

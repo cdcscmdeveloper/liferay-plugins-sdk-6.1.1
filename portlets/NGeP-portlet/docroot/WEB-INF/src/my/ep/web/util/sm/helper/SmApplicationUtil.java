@@ -4961,7 +4961,7 @@ public class SmApplicationUtil {
 					&& managedBean.getSelectedShareHolder().getPmCountry()
 							.getCountryId() == null) {
 				managedBean.getSelectedShareHolder().setSharePercentage(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+						new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
 				managedBean.getSelectedShareHolder().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				throw new EpException(MessageConst.ERROR_722560);
@@ -5044,16 +5044,16 @@ public class SmApplicationUtil {
 									.getShareAmt()
 									.divide(managedBean.getSmAppl()
 											.getSmCompanyBasic()
-											.getPaidUpCapital(), 4,
+											.getPaidUpCapital(), 8,
 											RoundingMode.HALF_UP).multiply(mul)
-									.setScale(2, RoundingMode.HALF_UP));
+									.setScale(3, RoundingMode.HALF_UP));
 				}
 
 			} else {
 				managedBean.getSelectedShareHolder().setSharePercentage(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+						new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
 				managedBean.getSelectedShareHolder().setShareAmt(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+						new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
 				throw new EpException(MessageConst.ERROR_722551, new String[] {
 						SmCommonUtil.getMessage("lbl.sm.personnel", null),
 						SmCommonUtil.getMessage("lbl.sm.personnel", null),
