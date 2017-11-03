@@ -56,7 +56,10 @@
 				</td>
 				<td class="tdContent">
 				<p:selectOneMenu value="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterId}" id="complntIdentType"
-					label="#{lbl['lbl.sm.identificationtype']}" required="#{!empty param['disableValidation']}" disabled="#{complainantDtlViewFLag}"> 
+					label="#{lbl['lbl.sm.identificationtype']}" required="#{!empty param['disableValidation']}" 
+					disabled="#{complainantDtlViewFLag or 
+					(complaintBackingBean.managedBean.smComplainant.nationality.countryCode eq SupplierManagementConst.COUNTRY_MALAYSIA_CODE or 
+					complaintBackingBean.managedBean.smComplainant.nationality.countryCode eq ParameterConst.countryUnknownCode)}"> 
 						<f:selectItems value="#{complaintBackingBean.getDropdownValues(ParameterTypeConst.identificationTypes)}"/>
 						<p:ajax event="change" listener="#{complaintBackingBean.identificationTypeOnChange()}" update="pnlComplIdentType, pnlComplIdentNo"></p:ajax>
 				</p:selectOneMenu>
