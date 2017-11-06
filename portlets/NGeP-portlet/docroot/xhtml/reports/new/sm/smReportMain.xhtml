@@ -242,6 +242,10 @@
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smSiteVisitApplPerformedRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_031_site_visit_status_rpt.xhtml"></ui:include>
 				</c:if>
+				
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smDiscActExecSummaryRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_083_disc_act_exec_summary.xhtml"></ui:include>
+				</c:if>
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
