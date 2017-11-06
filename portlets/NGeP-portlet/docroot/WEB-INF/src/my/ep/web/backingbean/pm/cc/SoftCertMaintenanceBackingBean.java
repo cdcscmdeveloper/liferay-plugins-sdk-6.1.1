@@ -11,6 +11,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -18,7 +20,9 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
@@ -68,9 +72,12 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 	public String generateSecurityToken(){
 		String tok = null;
 		try{
+			String identificationNo = getDigiCertUserId();
+			String epNo = getSupplierEpNo();
+			log.info("SECURITY IDNO:"+identificationNo);
+			log.info("SECURITY EPNO:"+epNo);
 			KMCClient client = getClient();
-			
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(getDigiCertUserId(),getSupplierEpNo()));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(identificationNo,epNo));
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -148,16 +155,45 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 		System.out.println("Encoded URL " + url3);	 
 	}
 	
-	public void RequestRevokeCert(String digiCertUserId, String supplierEpNo) throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
+	public void RequestRevokeCert(String digiCertUserId, String supplierEpNo)
+			throws IOException, PortalException, SystemException {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setEpNo(supplierEpNo);
+		reqDTO.setIdentificationNo(digiCertUserId);
+		String certIssuer = SmServiceLookup.getPersonnelSO()
+				.getCertIssuerByUserIdNoAndEpNo(reqDTO).getCertIssuer();
+		if (!StringUtils.isBlank(certIssuer)
+				&& certIssuer.equals(CommonConstants.TRUSTGATE)) {
+			revokeTrustGate(digiCertUserId, supplierEpNo);
+		} else {
+			revokeDigiCert(digiCertUserId, supplierEpNo);
+		}
+	}
+	
+	public void revokeDigiCert(String digiCertUserId, String supplierEpNo) throws IOException{
+		log.info("INSIDE REVOKE DIGICERT!!!");
+		String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
+		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
 		externalContext.redirect(url4);
 		log.info(">>>>>>>>>>>>>>>>>DigicertUserId:"+digiCertUserId);
 		log.info(">>>>>>>>>>>>>>>>>OrgId:"+supplierEpNo);
 		log.info(">>>>>>>>>>>>>>>>>Token:"+encodedtoken);
-		log.info(">>>>>>>>>>>>>>>>>Encoded URL " + url4);	 
+		log.info(">>>>>>>>>>>>>>>>>Encoded URL " + url4);
+	}
+	
+	public void revokeTrustGate(String digiCertUserId, String supplierEpNo) throws IOException{
+		log.info("INSIDE REVOKE TRUSTGATE!!!");
+		String token = generateSecurityToken(); 
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
+		externalContext.redirect(url4);
+		log.info(">>>>>>>>>>>>>>>>>DigicertUserId:"+digiCertUserId);
+		log.info(">>>>>>>>>>>>>>>>>OrgId:"+supplierEpNo);
+		log.info(">>>>>>>>>>>>>>>>>Token:"+encodedtoken);
+		log.info(">>>>>>>>>>>>>>>>>Encoded URL " + url4);
 	}
 	
 

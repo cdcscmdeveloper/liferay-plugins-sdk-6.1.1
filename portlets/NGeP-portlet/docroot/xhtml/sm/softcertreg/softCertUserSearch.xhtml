@@ -22,10 +22,11 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
 			<h:outputText styleClass="instruction" value="&lt;br/&gt;#{lbl['lbl.sm.softcert.revoke']}" escape="false" 
 			rendered="#{softCertBackingBean.managedBean.renderRevokeButton}" />
-			<h:commandLink action="#{softCertBackingBean.revoke}" rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"
-				disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}" target="_blank" process="@this" partialSubmit="true" update=":form" >
-				<h:outputText value="#{lbl['lbl.sm.softcert.revoke.here']}" escape="false" styleClass="instruction"/>
-			</h:commandLink>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"
+				action="#{softCertBackingBean.navigateToRevokeUser}" process="@this" partialSubmit="true" update=":form">
+				&#160;<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.revoke.here']}" escape="false"/>
+			</p:commandLink>
 			
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -82,8 +83,5 @@
 
 			</p:dataTable>
 			
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.revoke.remark']}" escape="false"
-				rendered="#{softCertBackingBean.managedBean.renderRevokeButton}">
-			</h:outputText>
 		</p:panel>
 </ui:composition>
