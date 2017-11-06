@@ -18,6 +18,7 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTDisruptionConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmEndpointConst;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
@@ -68,7 +69,7 @@ public class QTPublishJob implements Job {
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap
 				.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
-		log.info("from execute to publish QT with qtId" + qtId);
+		log.info("from execute to publish QT with qtId " + qtId);
 
 		try {
 
@@ -228,6 +229,7 @@ public class QTPublishJob implements Job {
 		}
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		reqDTO.setQtId(qtId);
+		reqDTO.setJobType(SourcingConstants.JOB_TYPE_PUBLISH);
 		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 		ProposalResDTO resDTO = proposalSO
 				.updateRescheduleWorkFlowStatus(reqDTO);
