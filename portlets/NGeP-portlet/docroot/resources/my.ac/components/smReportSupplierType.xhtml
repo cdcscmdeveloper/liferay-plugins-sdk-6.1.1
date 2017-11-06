@@ -11,7 +11,7 @@
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="showAll" default="true" />
-		<cc:attribute name="allValue" default=""/>
+		<cc:attribute name="selectOne" default="false"/>
 	</cc:interface>
 
 	<cc:implementation>
@@ -19,6 +19,9 @@
 			style="width:300px;" required="#{cc.attrs.required}" label="#{lbl['lbl.rpt.supplierType']}">
 			<c:if test="#{cc.attrs.showAll}">
 				<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{cc.attrs.allValue}"></f:selectItem>
+			</c:if>
+			<c:if test="#{cc.attrs.selectOne}">
+				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
 			</c:if>
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="#{SupplierMgmtConst.suppTypeConsultant}"></f:selectItem>
 			<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="#{SupplierMgmtConst.suppTypeContractor}"></f:selectItem>
