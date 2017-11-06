@@ -58,6 +58,10 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_SV_STATUS = "PSITESTATUS";
 	public static final String PARAM_SVO_USER = " PSVOUSERID";
 	public static final String PARAM_PAYMENT_METHOD = "PPAYMENTMENTHOD";
+	public static final String PARAM_DISC_ZONE = "PZONE";
+	public static final String PARAM_DISC_STATUS = "PSTATUS";
+	public static final String PARAM_DISC_SUPP_TYPE = "PSUPPTYP";
+	public static final String PARAM_DISC_SUPP_ID = "PSUPPID";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -123,6 +127,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_CDCSS_DEPOSIT_ADJUSTMENT_RPT_VAL = "SM_077";
 	public static final String SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL = "SM_078";
 	public static final String SM_REJECTED_SOFTCERT_RPT_VAL = "SM_079";
+	public static final String SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL = "SM_083";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
@@ -522,5 +527,9 @@ public class SmReportConst implements Serializable {
 
 	public String getSvCompletedStatus() {
 		return SV_COMPLETED_STATUS;
+	}
+
+	public String getSmDiscActExecSummaryRptVal() {
+		return SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL;
 	}
 }
