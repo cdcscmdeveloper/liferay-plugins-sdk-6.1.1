@@ -18,6 +18,7 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTDisruptionConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmEndpointConst;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
@@ -218,6 +219,7 @@ public class QTProposalCloseJob implements Job {
 		}
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		reqDTO.setQtId(qtId);
+		reqDTO.setJobType(SourcingConstants.JOB_TYPE_CLOSE);
 		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
 		if(resDTO.isSuccessful()){
