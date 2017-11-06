@@ -70,6 +70,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private String SELECT_PERSONNELS_PAGE = "1";
 	private String UPLOAD_DOC_PAGE = "2";
 	private String PAYMENT_PAGE = "3";
+	private String REVOKE_PAGE = "4";
 
 	public SoftCertBackingBean() {
 		SmCommonUtil.setMDCUserId();
@@ -176,6 +177,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						&& usr.getUserId().compareTo(
 								personnel.getPmUser().getUserId()) == 0) {
 					this.getManagedBean().setLoginUserPersonnelInfo(personnel);
+					getManagedBean().setSmAppl(
+							getManagedBean().getLoginUserPersonnelInfo()
+									.getSmAppl());
 					break;
 				}
 			}
@@ -212,6 +216,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 										.toString() }));
 
 		getManagedBean().setTargetPage(PAYMENT_PAGE);
+	}
+
+	public void navigateToRevokeUser() {
+		getManagedBean().setTargetPage(REVOKE_PAGE);
 	}
 
 	/**
@@ -289,7 +297,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		BigDecimal amountPerPersonnel = BigDecimal.ZERO;
 		int i = 0;
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
-			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
+
+			// for G2G supplier all softcert request is free
+			if (!StringUtils.isBlank(getManagedBean().getSmAppl()
+					.getSupplierType())
+					&& getManagedBean()
+							.getSmAppl()
+							.getSupplierType()
+							.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 				if (StringUtils.isNotBlank(personnel.getEpRole())
 						&& personnel.getEpRole().equals(
 								RoleCode.SUPPLIER_TEMP.value())) {
@@ -303,34 +318,50 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					personnel.setFreeSoftCert(true);
 				}
 			} else {
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
-					personnel.setFreeSoftCert(true);
-				} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					if (personnel.getSoftcertRejectCode() != null) {
-						if (personnel
-								.getSoftcertRejectCode()
-								.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)
-								|| personnel
-										.getSoftcertRejectCode()
-										.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
-							personnel.setFreeSoftCert(false);
-							amountPerPersonnel = SmRuleHelper.getInstance()
-									.getSoftCertFee();
-						} else {
-							personnel.setFreeSoftCert(true);
-						}
+				if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
+					if (StringUtils.isNotBlank(personnel.getEpRole())
+							&& personnel.getEpRole().equals(
+									RoleCode.SUPPLIER_TEMP.value())) {
+						getManagedBean().setSupplierTmpPersonnel(personnel);
+					}
+					if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
+						personnel.setFreeSoftCert(false);
+						amountPerPersonnel = SmRuleHelper.getInstance()
+								.getSoftCertFee();
 					} else {
 						personnel.setFreeSoftCert(true);
 					}
 				} else {
-					amountPerPersonnel = SmRuleHelper.getInstance()
-							.getSoftCertFee();
+					if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+						personnel.setFreeSoftCert(true);
+					} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+						if (personnel.getSoftcertRejectCode() != null) {
+							if (personnel
+									.getSoftcertRejectCode()
+									.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)
+									|| personnel
+											.getSoftcertRejectCode()
+											.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
+								personnel.setFreeSoftCert(false);
+								amountPerPersonnel = SmRuleHelper.getInstance()
+										.getSoftCertFee();
+							} else {
+								personnel.setFreeSoftCert(true);
+							}
+						} else {
+							personnel.setFreeSoftCert(true);
+						}
+					} else {
+						amountPerPersonnel = SmRuleHelper.getInstance()
+								.getSoftCertFee();
+					}
+					this.getManagedBean()
+							.getPaymentMap()
+							.put(personnel.getPersonnelId(), amountPerPersonnel);
+					amount = amount.add(amountPerPersonnel);
 				}
-				this.getManagedBean().getPaymentMap()
-						.put(personnel.getPersonnelId(), amountPerPersonnel);
-				amount = amount.add(amountPerPersonnel);
+				i++;
 			}
-			i++;
 		}
 		BigDecimal gst = amount.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
 				: getManagedBean().getGstRate().divide(new BigDecimal(100))
@@ -477,7 +508,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public String getPersonnelSoftCertPrice(SmPersonnel smPersonnel) {
 		if (smPersonnel.isFreeSoftCert()) {
-			if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+				return "0.00 ("
+						+ SmCommonUtil.getMessage("lbl.sm.softcert.g2gfree",
+								null) + ")";
+			} else if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
 				return "0.00 ("
 						+ SmCommonUtil.getMessage("lbl.sm.softcert.rejectfree",
 								null) + ")";
@@ -543,9 +579,18 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.getIdentificationNo(),
 							getManagedBean().getLoginUserPersonnelInfo()
 									.getSmAppl().getSmSupplier().getEpNo());
+
 		} catch (Exception ex) {
 			throwKmcExceptionInNewPage(ex.getMessage());
 		}
+	}
+
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
 	}
 
 	/**
@@ -596,7 +641,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				.spkiSignTransaction(prepareOriginalText());
 		pmDigiSign.setSpkiSignedData(signedData);
 		getManagedBean().setDigiSign(pmDigiSign);
-		makePayment();
+		if (getManagedBean().getTargetPage() == PAYMENT_PAGE) {
+			makePayment();
+		} else if (getManagedBean().getTargetPage() == REVOKE_PAGE) {
+			revoke();
+		}
 		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 		RequestContext.getCurrentInstance().update("@form");
 	}
@@ -702,6 +751,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				.getSmAppl().getSmSupplier().getSupplierId();
 		getManagedBean().setAllAuthSuppUserAlreadyRequested(true);
 		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
+		getManagedBean().setRevokePersonnelList(new ArrayList<SmPersonnel>());
 		List<Integer> statusAllowedToRequest = Arrays.asList(
 				SupplierManagementConst.SOFT_CERT_PENDING_REQ,
 				SupplierManagementConst.SOFT_CERT_REJECTED,
@@ -723,6 +773,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			else if (!statusAllowedToRequest.contains(personnel
 					.getSoftcertFlg())) {
 				personnel.setDisableRowSelection(true);
+
+				// issued softcert personnel that can do revoke action
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
+					getManagedBean().getRevokePersonnelList().add(personnel);
+				}
 			}
 			// check for softcert flg that pending request or rejected or failed
 			else {
@@ -1285,7 +1340,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			if (getManagedBean().getLoginUserPersonnelInfo() != null
 					&& (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 							.contains(getManagedBean()
-									.getLoginUserPersonnelInfo().getEpRole()))) {
+									.getLoginUserPersonnelInfo().getEpRole()))
+					&& getManagedBean().getRevokePersonnelList().size() > 1) {
 				getManagedBean().setRenderRevokeButton(true);
 			} else {
 				getManagedBean().setRenderRevokeButton(false);

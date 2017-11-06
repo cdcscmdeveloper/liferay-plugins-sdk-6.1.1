@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -33,7 +34,9 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> personnelList;
 	private List<SmPersonnel> softCertSelectList;
 	private List<SmPersonnel> softCertPayList;
+	private List<SmPersonnel> revokePersonnelList;
 	private SmPersonnel softCertSelect;
+	private SmPersonnel revokePersonnelSelect;
 	private HashMap<Long, BigDecimal> paymentMap = new HashMap<Long, BigDecimal>();
 	private BigDecimal totalPaymentAmount;
 	private BigDecimal totalAmountBeforeGst;
@@ -59,8 +62,10 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private boolean allAuthSuppUserAlreadyRequested;
 	private boolean basicAppl;
 	private boolean disableButton;
+	private boolean autoUpdate;
 	private PmDigiSign digiSign;
 	private String gstPercentageLabel;
+	private SmAppl smAppl;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -339,6 +344,38 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setDisableButton(boolean disableButton) {
 		this.disableButton = disableButton;
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public List<SmPersonnel> getRevokePersonnelList() {
+		return revokePersonnelList;
+	}
+
+	public void setRevokePersonnelList(List<SmPersonnel> revokePersonnelList) {
+		this.revokePersonnelList = revokePersonnelList;
+	}
+
+	public SmPersonnel getRevokePersonnelSelect() {
+		return revokePersonnelSelect;
+	}
+
+	public void setRevokePersonnelSelect(SmPersonnel revokePersonnelSelect) {
+		this.revokePersonnelSelect = revokePersonnelSelect;
 	}
 
 }

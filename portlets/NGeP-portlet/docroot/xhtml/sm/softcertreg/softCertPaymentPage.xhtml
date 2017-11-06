@@ -108,7 +108,8 @@
 			password="#{softCertBackingBean.managedBean.spkiBackingBean.password}"
 			challengeAns1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeAns1}"
 			challengeQues1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-			postSignAction="#{softCertBackingBean.onClickSignSpki(spkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{softCertBackingBean.onClickSignSpki(spkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{softCertBackingBean.enableAutoUpdate()}" />
 	</p:outputPanel>
 
 </ui:composition>
