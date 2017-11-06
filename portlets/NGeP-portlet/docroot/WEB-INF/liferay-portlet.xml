@@ -2956,18 +2956,6 @@
 			1gfmasMasterData-portlet
 		</css-class-wrapper>
 	</portlet>
-	<portlet>
-		<portlet-name>poWorkload</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>
-			poWorkload-portlet
-		</css-class-wrapper>
-	</portlet>
 	
 	<portlet>
 		<portlet-name>scSpecCommitteeMaintenance</portlet-name>
@@ -3127,6 +3115,19 @@
 	
 	<portlet>
 		<portlet-name>dpReports</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			ss-portlet
+		</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>smOnScreenSql</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
