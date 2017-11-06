@@ -9744,40 +9744,6 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>poWorkload</portlet-name>
-		<display-name>PO Workload</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/poworkload/poWorkloadPreRender.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>PO Workload</title>
-			<short-title>PO Workload</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	
-	<portlet>
 		<portlet-name>scSpecCommitteeMaintenance</portlet-name>
 		<display-name>Specification Committee Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
@@ -10029,6 +9995,38 @@
 			<portlet-info>
 				<title>QT Reports</title>
 				<short-title>QT Reports</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		
+		<portlet>
+			<portlet-name>smOnScreenSql</portlet-name>
+			<display-name>SM on Screen SQL</display-name>
+			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>/xhtml/sm/onScreenSql/onScreenSqlMain.xhtml</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>SM on Screen SQL</title>
+				<short-title>SM on Screen SQL</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>

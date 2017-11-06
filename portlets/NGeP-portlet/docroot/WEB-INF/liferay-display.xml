@@ -82,7 +82,6 @@
            	<portlet id="pmTaskReassignment"></portlet>
            	<portlet id="pmRace"></portlet>
            	<portlet id="pmCustService"></portlet>
-           	<portlet id="poWorkload"></portlet>
            	<portlet id="pmPoJobWeight"></portlet>
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
@@ -348,6 +347,7 @@
 		<portlet id="smComplaintSummary"></portlet>
 		<portlet id="rejectionAcknowledgementLetter"></portlet>
 		<portlet id="supplierTaskReassignment"></portlet>
+		<portlet id="smOnScreenSql"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
