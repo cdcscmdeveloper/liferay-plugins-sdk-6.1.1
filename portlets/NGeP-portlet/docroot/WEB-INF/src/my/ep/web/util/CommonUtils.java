@@ -78,6 +78,8 @@ public class CommonUtils {
 				break;
 			case CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE : decimalPrecision = 2;
 				break;
+			case CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE_EQUITY : decimalPrecision = 3;
+				break;
 			default : 
 				throw new IllegalArgumentException("Invalid numberFormatType.");
 		}
