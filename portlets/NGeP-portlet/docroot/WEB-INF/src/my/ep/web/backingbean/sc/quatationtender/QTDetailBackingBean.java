@@ -5566,23 +5566,19 @@ public class QTDetailBackingBean extends
 			reqDTO.setQtId(scQt.getQtId());
 			scQt = qtDetailSO.retriveQTDetails(reqDTO)
 					.getQtDetail();
-			scQt.setPublishDate(new Date());
-			reqDTO.setQtdetail(scQt);
-			QuationTenderResDTO resDTO = qtDetailSO.updateQTDetails(reqDTO);
-			boolean isSucessful = resDTO.isSuccessful();
-			if(isSucessful){
-				scQt = resDTO.getQtDetail();
-				if(scQt != null) {
-					try {
-						log.info("call simple scheduler if QT is publishing today.");
-						scQt.setPublishDate(new Date());
-						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
-					} catch (SchedulerException e) {
-						log.info(scQt.getQtNo()+ " Publish failed");
-						throw new EpException(e.getLocalizedMessage());
-					}
-					
-					FacesContext.getCurrentInstance().addMessage(
+			Calendar newPublishDate = Calendar.getInstance();
+			newPublishDate.setTime(DateUtils.getCurrentDate());
+			newPublishDate.add(Calendar.MINUTE, 15);
+			scQt.setPublishDate(newPublishDate.getTime());
+			if(scQt != null) {
+				log.info("call simple scheduler if QT is publishing today.");
+				ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
+				reqDTO.setQtdetail(scQt);
+				QuationTenderResDTO resDTO = qtDetailSO.updateQTDetails(reqDTO);
+				if(resDTO.isSuccessful()){
+					log.info("***** simple job was built and scQt is updated with new publish date *****");
+				}
+				FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(
 									FacesMessage.SEVERITY_INFO,
@@ -5590,8 +5586,15 @@ public class QTDetailBackingBean extends
 									scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
 									));
 				}
-			}
-		} finally {
+			
+		}catch (SchedulerException e) {
+			log.info(scQt.getQtNo()+ " Publish failed bcoz of scheduler exception");
+			throw new EpException(e.getLocalizedMessage());
+		}catch(Exception e){
+			log.info(scQt.getQtNo()+ " Publish failed");
+			throw new EpException(e.getLocalizedMessage());
+		}
+		finally {
 			qtDetailSO = null;
 		}
 	}
