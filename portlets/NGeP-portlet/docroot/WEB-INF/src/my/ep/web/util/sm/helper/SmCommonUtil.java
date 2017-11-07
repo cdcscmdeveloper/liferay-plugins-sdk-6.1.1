@@ -1508,7 +1508,7 @@ public class SmCommonUtil {
 				person.setSharePercentage(person
 						.getShareAmt()
 						.divide(managedBean.getSmAppl().getSmCompanyBasic()
-								.getPaidUpCapital(), 4, RoundingMode.HALF_UP)
+								.getPaidUpCapital(), 8, RoundingMode.HALF_UP)
 						.multiply(mul).setScale(2, RoundingMode.HALF_UP));
 			} else {
 				person.setShareAmt(new BigDecimal(0).setScale(2,
