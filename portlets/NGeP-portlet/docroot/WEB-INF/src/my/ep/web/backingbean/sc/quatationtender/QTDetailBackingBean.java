@@ -4354,29 +4354,7 @@ public class QTDetailBackingBean extends
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				Long currentStatusId = qtDetails.getQtStatus().getStatusId();
 				
-				if (QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(currentStatusId)) {
-					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-					if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getPublishDate()), todayDate)) {
-						try {
-							log.info("call simple scheduler if QT is publishing today.");
-							ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
-						} catch (SchedulerException e) {
-							e.printStackTrace();
-							log.error(e.getMessage());
-						}
-					} 
-				} else if (QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(currentStatusId)) {
-					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-					if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getClosingDate()), todayDate)) {
-						try {
-							log.info("call simple scheduler if QT is closing today.");
-							ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
-						} catch (SchedulerException e) {
-							e.printStackTrace();
-							log.error(e.getMessage());
-						}
-					} 
-				} else if (QTStatusConst.QT_PENDING_PUBLICATION.equals(currentStatusId)) {
+				if (QTStatusConst.QT_PENDING_PUBLICATION.equals(currentStatusId)) {
 					if (amendMentBean != null) {						
 						List<String> enableFields = QTFieldMapper.getEnableFieldsByStatus(currentStatusId,
 								true, !getManagedBean().isReadOnly());
