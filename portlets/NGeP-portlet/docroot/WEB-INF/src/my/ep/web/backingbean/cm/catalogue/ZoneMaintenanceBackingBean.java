@@ -12,8 +12,11 @@ package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -186,6 +189,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		} else {
 			log.info("Not SuccessMMMMMMMMMMMMMMMMM");
 			throw new EpException(MessageConst.ERROR_716001);
+			
+			
+			
 		}
 	}
 
@@ -206,6 +212,28 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		reqDTO.setCmSupplierZoneList(getManagedBean().getCmSupplierZoneList());
 		log.info("Current Size:" + getManagedBean().getCmSupplierZoneList().size());
+		
+		Map checkRepeatMap = new HashMap();
+		if(getManagedBean().getCmSupplierZoneList()!=null && getManagedBean().getCmSupplierZoneList().size()>0){
+			for(CmSupplierZone zone : getManagedBean().getCmSupplierZoneList()){
+				
+				for(CmSupplierZoneDTL zoneDet : zone.getCmSupplierZoneDtls()){
+					if(!checkRepeatMap.containsKey(zoneDet.getPmDistrict().getDistrictId())){
+						checkRepeatMap.put(zoneDet.getPmDistrict().getDistrictId(), zoneDet.getPmDistrict().getDistrictId());
+					}else{
+						throw new EpException(MessageUtils
+								.getMessage(
+										MessageConst.ERROR_716015, new String[] {zoneDet.getPmDistrict().getDistrictName()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes()
+										.getUserLocale()));
+						
+					}
+				}
+				
+			}
+		}
+		
 		ZoneMaintenanceResDTO resDTO = new ZoneMaintenanceResDTO();
 		if(getManagedBean().getCmSupplierZoneList().size() > 0)
 			resDTO = zoneMaintenanceSO.save(reqDTO);
