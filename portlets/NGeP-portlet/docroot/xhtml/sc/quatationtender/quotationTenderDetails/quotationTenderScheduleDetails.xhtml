@@ -24,14 +24,19 @@
 									<ui:param name="isPublishDateEnable" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_PUBLISH_DATE)}" />
 									<c:choose>
 										<c:when test="#{isPublishDateEnable and qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION}">
-											<ac:dateTime id="resNoticePublish"
-												mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+											<p:calendar id="resNoticePublish"
+												mindate="#{DateUtils.addDays(qTScheduleDetailBackingBean.managedBean.today, 1)}"
 												maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 												label="#{lbl['lbl.sc.publish.date']}"
 												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
-												update="@([id$=scheduleDetalsPublishingClosing])"
-												postUpdateListener="qTScheduleDetailBackingBean.handleReschedulePublishedDate">
-											</ac:dateTime>
+												readonlyInput="true"
+												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+												showOn="button"
+												size="15">
+												<p:ajax event="dateSelect" process="@this"
+													listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
+													update="scheduleDetalsPublishingClosing" />
+											</p:calendar>
 										</c:when>
 										<c:when test="#{isPublishDateEnable}">
 											<p:calendar label="#{lbl['lbl.sc.publish.date']}"
@@ -39,7 +44,7 @@
 												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
 												id="noticePublish" 
 												readonlyInput="true"
-												pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 												showOn="button"
 												maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 												size="15">
@@ -110,13 +115,18 @@
 						<td>
 							<c:choose>
 								<c:when test="#{qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE}">
-									<ac:dateTime id="resClosingDate"
-										mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+									<p:calendar id="resClosingDate"
+										mindate="#{DateUtils.addDays(qTScheduleDetailBackingBean.managedBean.today, 1)}"
 										label="#{lbl['lbl.sc.closing.date']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.newClosingDate}"
-										update="@([id$=scheduleDetalsPublishingClosing], .amendButton)"
-										postUpdateListener="qTScheduleDetailBackingBean.handleReschedulePublishClosingDate">
-									</ac:dateTime>
+										readonlyInput="true"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										showOn="button"
+										size="15">
+										<p:ajax event="dateSelect" process="@this"
+											listener="#{qTScheduleDetailBackingBean.handleReschedulePublishClosingDate}"
+											update="@([id$=scheduleDetalsPublishingClosing], .amendButton)" />
+									</p:calendar>
 								</c:when>
 								<c:otherwise>
 									<p:inputText id="closingDate"

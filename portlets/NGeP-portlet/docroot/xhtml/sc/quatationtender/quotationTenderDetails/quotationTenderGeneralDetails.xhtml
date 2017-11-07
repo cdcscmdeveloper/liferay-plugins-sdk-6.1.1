@@ -21,6 +21,8 @@
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
 	<ui:param name="amountsShowHide"
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
+		
+	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
 		toggleable="true">
@@ -126,6 +128,7 @@
 									test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
 									<ac:lov id="ctCircularPanel" lovId="CT_CIRCULAR_PANEL"
 										headerText="#{lbl['lbl.sc.spec.circular.list']}"
+										autoUpdateValue="createQtBB.managedBean.autoUpdate"
 										update=":form:panelItemId"
 										saveObject="createQtBB.managedBean.qt.circularVer"
 										value="#{scQt.circularVer.circularNo}" size="105"
@@ -195,8 +198,9 @@
 							lovId="PM_ORG_PROFILE_AUTH_TYPE"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							saveObject="createQtBB.managedBean.qt.pmOrgProfile"
-							value="#{createQtBB.managedBean.qt.pmOrgProfile.orgName}" update="@form"
-							size="105" readonly="true" conditionField="recordStatus^1" postUpdateListener="createQtBB.resetPTJSpecApproval()"/> <p:message
+							autoUpdateValue="createQtBB.managedBean.autoUpdate"
+							update=":form:qtdetailsid"
+							value="#{createQtBB.managedBean.qt.pmOrgProfile.orgName}" size="105" readonly="true" conditionField="recordStatus^1" postUpdateListener="createQtBB.resetPTJSpecApproval()" /> <p:message
 							id="ptjMsg" for="ptjProfAuthId" display="icon" 
 							/></td>
 				</tr>
@@ -537,12 +541,12 @@
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EXISTING_CONTRACT) and !isReadOnly}">
 							<ac:lov id="contractLovId" lovId="CT_CONTRACT"
 								headerText="#{lbl['lbl.sc.qt.existing.contract.no.search']}"
+								autoUpdateValue="createQtBB.managedBean.autoUpdate"
 								update=":form:qtdetailsid"
 								saveObject="createQtBB.managedBean.ctContract"
 								value="#{createQtBB.managedBean.ctContract.contractNo}"
 								size="25"
 								conditionField="#{createQtBB.constuctConditionFields()}" />
-							<ac:lovPopup />
 						</c:when>
 						<c:otherwise>
 							<p:inputText id="extContractTxt"
