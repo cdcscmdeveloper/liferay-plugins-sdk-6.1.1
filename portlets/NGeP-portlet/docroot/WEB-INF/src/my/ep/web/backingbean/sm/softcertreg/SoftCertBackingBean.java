@@ -573,10 +573,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void revoke() {
 		try {
+			SmPersonnel revokePersonnel = getManagedBean().getSoftCertSelect() != null ? getManagedBean()
+					.getSoftCertSelect() : getManagedBean()
+					.getLoginUserPersonnelInfo();
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestRevokeCert(
-							getManagedBean().getLoginUserPersonnelInfo()
-									.getIdentificationNo(),
+							revokePersonnel.getIdentificationNo(),
 							getManagedBean().getLoginUserPersonnelInfo()
 									.getSmAppl().getSmSupplier().getEpNo());
 

@@ -275,9 +275,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 					|| (getLoginUser() != null && getLoginUser().getUserId() == null)) {
 				throw new EpException(MessageConst.ERROR_721017);
 			}
-			if (StringUtils.isBlank(getCertIssuer())) {
-				throw new EpException("Not authorized personnel!!");
-			}
 
 			Map<Object, Object> challenges = new HashMap<Object, Object>();
 			challenges.put(challengeQues1, challengeAns1);
@@ -840,6 +837,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			reqDTO.setIdentificationNo(getLoginUser().getIdentificationNo());
 			certIssuer = SmServiceLookup.getPersonnelSO()
 					.getCertIssuerByUserIdNoAndEpNo(reqDTO).getCertIssuer();
+			certIssuer = certIssuer == null ? CommonConstants.DIGICERT
+					: certIssuer;
 		}
 		return certIssuer;
 	}
