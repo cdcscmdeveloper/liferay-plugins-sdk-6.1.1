@@ -66,6 +66,9 @@ public class QTPublishJob implements Job {
 			throws JobExecutionException {
 		debugLogger("Start execute from QTPublishJob @"
 				+ DateUtils.getCurrentDate());
+		//TODO remove before live
+		log.info("Start execute from QTPublishJob @"
+				+ DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap
 				.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
