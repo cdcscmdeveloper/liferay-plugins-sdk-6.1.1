@@ -99,6 +99,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -139,9 +140,11 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.constant.SPKIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
@@ -2751,6 +2754,18 @@ public class PmCommonUtil implements Serializable{
 
 		UserResDTO resDTO = userSO.retrieveUserListByOrgProfileId(reqDTO);
 		return resDTO.getUserList();
+	}
+	
+	public static String getCertIssuerByIdentificationNoAndEpNo(String idNo,
+			String epNo) {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setEpNo(epNo);
+		reqDTO.setIdentificationNo(idNo);
+		String certIssuer = SmServiceLookup.getPersonnelSO()
+				.getCertIssuerByUserIdNoAndEpNo(reqDTO).getCertIssuer();
+		certIssuer = StringUtils.isBlank(certIssuer) ? SPKIConst.DIGICERT
+				: certIssuer;
+		return certIssuer;
 	}
 
 }
