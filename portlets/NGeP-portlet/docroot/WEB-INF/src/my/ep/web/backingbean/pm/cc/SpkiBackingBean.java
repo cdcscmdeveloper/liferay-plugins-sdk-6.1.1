@@ -2,9 +2,7 @@ package my.ep.web.backingbean.pm.cc;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,36 +12,30 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.SPKIConst;
+import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.TrustGateHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
-import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
-import com.augtech.kmc.client.InvalidKMCAPIFieldException;
-import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
 import com.augtech.kmc.client.KMCRequestBuilder;
@@ -108,24 +100,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private static final Logger logger = EpLogger
 			.getLogger(SpkiBackingBean.class);
 
-	private KMCClient getClient() throws KMCAPIException {
-		URL resource = getClass().getResource(".");
-		String path = resource.getPath();
-		System.out.println("path value with (.) :" + path);
-
-		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
-		String filePath = substring + PATH;
-		System.out.println("filePath :" + filePath);
-
-		// Create property file
-		File f = new File(filePath);
-		// File f = new
-		// File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-		// Create KMCClient with the property file
-		KMCClient client = KMCClientFactory.getInstance(f);
-		return client;
-	}
-
 	public String getSpkiEnabledProperty() {
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		System.out.println("getSpkiEnabledProperty :"
@@ -135,135 +109,16 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer().equals(CommonConstants.TRUSTGATE)) {
-				getTrustGateChallengeQuestions();
+			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+				challs = TrustGateHelper.getInstance().getChallengeQuestion(
+						getLoginUser().getIdentificationNo(),getSupplier().getEpNo());
 			} else {
-				getDigiCertChallengeQuestions();
+				challs = DigiCertHelper.getInstance().getChallengeQuestion(
+						getLoginUser().getIdentificationNo());
 			}
+			setChallengeQues1(challs.get(0));
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
-	}
-
-	private void getDigiCertChallengeQuestions() {
-		logger.info("INSIDE DIGICERT CHALLENGE QUESTION!!");
-		try {
-			KMCClient client = getClient();
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
-					.getChallengeQuestions(
-							getLoginUser().getIdentificationNo(), 1));
-			// List<String> challs = null;
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs = (List<String>) res
-						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-				if (challs.size() == 0) {
-					System.out.println("No challanges found for the user! ");
-					throw new EpException(MessageConst.ERROR_776051);
-
-				} else {
-					setChallengeQues1(challs.get(0));
-					RequestContext.getCurrentInstance().execute(
-							"spki_dlg.show()");
-				}
-
-				break;
-
-			default:
-				System.out
-						.println("GetChallengeQuestions API return error. Code was "
-								+ res.getStatusCode()
-								+ ". Message was : "
-								+ res.getStatusMessage());
-				// throw new EpException(res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776062);
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new EpException(ex.getMessage());
-
-		}
-	}
-
-	public void getTrustGateChallengeQuestions() {
-		logger.info("INSIDE TRUSTGATE CHALLENGE QUESTION!!");
-		try {
-			KMCClient client = getClient();
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
-					.getChallengeQuestions(
-							getLoginUser().getIdentificationNo(), 1));
-			// List<String> challs = null;
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs = (List<String>) res
-						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-				if (challs.size() == 0) {
-					System.out.println("No challanges found for the user! ");
-					throw new EpException(MessageConst.ERROR_776051);
-
-				} else {
-					setChallengeQues1(challs.get(0));
-					RequestContext.getCurrentInstance().execute(
-							"spki_dlg.show()");
-				}
-
-				break;
-
-			default:
-				System.out
-						.println("GetChallengeQuestions API return error. Code was "
-								+ res.getStatusCode()
-								+ ". Message was : "
-								+ res.getStatusMessage());
-				// throw new EpException(res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776062);
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new EpException(ex.getMessage());
-
-		}
-	}
-
-	public String generateSecurityToken() {
-		String tok = null;
-		try {
-			KMCClient client = getClient();
-
-			String loginId = new FacesScopes().getUserScreenName();
-
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setLoginId(loginId);
-			UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
-			if (resDTO.getPmUser() == null) {
-				throw new EpException("PM User is null");
-			}
-
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
-					.generateToken(getDigiCertUserId(), getSupplierEpNo(resDTO
-							.getPmUser().getUserId())));
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				tok = (String) res.get(GenSecToken.TOKEN);
-				System.out.println("Token is " + tok);
-				break;
-
-			default:
-				System.err.println("API return error. Message was : "
-						+ res.getStatusMessage());
-			}
-			// assertEquals(IKMCAPIResponse.OPERATION_SUCCESSFUL,res.getStatusCode());
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			// fail(ex.getMessage());
-		}
-		return tok;
 	}
 
 	public byte[] spkiEnabledSignTransaction(String originalText) {
@@ -283,18 +138,16 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 			String pin = getPassword();
 
-			logger.info("getChallengeQues1: " + getChallengeQues1());
-			logger.info("getChallengeAns1: " + getChallengeAns1());
-			logger.info("getPassword: " + getPassword());
-			logger.info("dataForSigning: " + dataForSigning);
-			logger.info("certissuer:" + getCertIssuer());
-
-			if (getCertIssuer().equals(CommonConstants.TRUSTGATE)) {
-				signUsingTrustGate(getLoginUser(), pin, challenges,
-						dataForSigning);
+			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+				signedData = TrustGateHelper.getInstance().getSignedData(
+						getLoginUser().getIdentificationNo(),
+						getSupplier().getEpNo(), pin,
+						challenges, dataForSigning);
 			} else {
-				signUsingDigiCert(getLoginUser(), pin, challenges,
-						dataForSigning);
+				signedData = DigiCertHelper.getInstance().getSignedData(
+						getLoginUser().getIdentificationNo(),
+						getSupplier().getEpNo(), pin,
+						challenges, dataForSigning);
 			}
 
 		} catch (Exception ex) {
@@ -302,82 +155,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 		}
 		return signedData;
-	}
-
-	private void signUsingDigiCert(PmUser user, String pin,
-			Map<Object, Object> challenges, String dataForSigning)
-			throws KMCAPIException, InvalidKMCAPIFieldException {
-		logger.info("SIGN USING DIGICERT!!!");
-		KMCClient client = getClient();
-		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(
-				user.getIdentificationNo(), getSupplierEpNo(user.getUserId()),
-				pin.toCharArray(), challenges, new ByteArrayInputStream(
-						dataForSigning.getBytes())));
-
-		switch (res.getStatusCode()) {
-		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-			signedData = (byte[]) res
-					.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
-			logger.info("Data signing successful. SIGNEDTEXT " + signedData);
-			break;
-
-		default:
-			logger.info("API return error. Code was " + res.getStatusCode()
-					+ " Message was : " + res.getStatusMessage());
-
-			if (res.getStatusCode() == ERROR_CERT_REVOKED) {
-				throw new EpException(MessageConst.ERROR_776057);
-			} else if (res.getStatusCode() == ERROR_USER_INVALID) {
-				throw new EpException(MessageConst.ERROR_776058);
-			} else if (res.getStatusCode() == ERROR_PIN_BLOCKED) {
-				throw new EpException(MessageConst.ERROR_776059);
-			} else if (res.getStatusCode() == ERROR_INVALID_PIN) {
-				throw new EpException(MessageConst.ERROR_776060);
-			} else if (res.getStatusCode() == OPERATION_FAILED) {
-				throw new EpException(MessageConst.ERROR_776061);
-			} else {
-				throw new EpException(MessageConst.ERROR_776062);
-			}
-
-		}
-	}
-
-	private void signUsingTrustGate(PmUser user, String pin,
-			Map<Object, Object> challenges, String dataForSigning)
-			throws KMCAPIException, InvalidKMCAPIFieldException {
-		logger.info("SIGN USING TRUSTGATE!!!");
-		KMCClient client = getClient();
-		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(
-				user.getIdentificationNo(), getSupplierEpNo(user.getUserId()),
-				pin.toCharArray(), challenges, new ByteArrayInputStream(
-						dataForSigning.getBytes())));
-
-		switch (res.getStatusCode()) {
-		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-			signedData = (byte[]) res
-					.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
-			logger.info("Data signing successful. SIGNEDTEXT " + signedData);
-			break;
-
-		default:
-			logger.info("API return error. Code was " + res.getStatusCode()
-					+ " Message was : " + res.getStatusMessage());
-
-			if (res.getStatusCode() == ERROR_CERT_REVOKED) {
-				throw new EpException(MessageConst.ERROR_776057);
-			} else if (res.getStatusCode() == ERROR_USER_INVALID) {
-				throw new EpException(MessageConst.ERROR_776058);
-			} else if (res.getStatusCode() == ERROR_PIN_BLOCKED) {
-				throw new EpException(MessageConst.ERROR_776059);
-			} else if (res.getStatusCode() == ERROR_INVALID_PIN) {
-				throw new EpException(MessageConst.ERROR_776060);
-			} else if (res.getStatusCode() == OPERATION_FAILED) {
-				throw new EpException(MessageConst.ERROR_776061);
-			} else {
-				throw new EpException(MessageConst.ERROR_776062);
-			}
-
-		}
 	}
 
 	public byte[] spkiSignTransaction(String originalText) {
@@ -401,21 +178,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public String getSupplierEmail() {
 
 		return new FacesScopes().getUserSessionBean().getEmail();
-	}
-
-	public String getSupplierEpNo(Long userId) {
-		ISupplierSearchSO smSupplierSO = null;
-		System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
-		smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", ISupplierSearchSO.class);
-		// Long userId = facesScope.getUserSessionBean().getUserId();
-
-		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setUserId(userId);
-		SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
-		System.out.println("res.getResultBean().getResultList():"
-				+ res.getResultBean().getResultList());
-		return res.getResultBean().getResultList().get(0).getEpNo();
 	}
 
 	/**
@@ -460,185 +222,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			return null;
 		}
 
-	}
-
-	public static void main(String[] args) {
-		try {
-			// Create property file
-			File f = new File(
-					"C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-			// Create KMCClient with the property file
-			KMCClient client = KMCClientFactory.getInstance(f);
-
-			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
-					.getChallengeQuestions("78553333333L", 1));
-			// List<String> challs = null;
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs = (List<String>) res
-						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-				// setChallengeQues1(challs.get(0));
-				for (int i = 0; i < challs.size(); i++) {
-					System.out.println("Challange of " + (i + 1) + " is : "
-							+ challs.get(i));
-				}
-
-				break;
-
-			default:
-				System.err.println("API return error. Code was "
-						+ res.getStatusCode() + ". Message was : "
-						+ res.getStatusMessage());
-				return;
-			}
-
-			if (challs.size() == 0) {
-				System.err
-						.println("No challanges found for the user! Data signing failed!");
-				return;
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public static void main3(String[] args) {
-		try {
-			File f = new File(
-					"C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-			KMCClient client = KMCClientFactory.getInstance(f);
-
-			// Request service for user selected question for authentication
-
-			String test1 = "54322211114333";
-			String test2 = "680410061119";
-
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
-					.getChallengeQuestions(test2, 1));
-
-			System.out.println("res.getStatusCode():" + res.getStatusCode());
-			// List<String> challs = null;
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs = (List<String>) res
-						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-				if (challs.size() == 0) {
-					System.err.println("No challanges found for the user!");
-					// FacesContext.getCurrentInstance().addMessage(null, new
-					// FacesMessage(FacesMessage.SEVERITY_ERROR, "",
-					// "Signing error."));
-					// throw new EpException(MessageConst.ERROR_776051);
-					// return;
-				} else {
-					// setChallengeQues1(challs.get(0));
-					System.out.println("****" + challs.get(0));
-					RequestContext.getCurrentInstance().execute(
-							"spki_dlg.show()");
-				}
-
-				break;
-
-			default:
-				System.err
-						.println("GetChallengeQuestions API return error. Code was "
-								+ res.getStatusCode()
-								+ ". Message was : "
-								+ res.getStatusMessage());
-				// throw new EpException(MessageConst.ERROR_776051);
-				// return;
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	// ///hktan
-	public static void main1(String[] args) {
-		try {
-			byte[] signedData;
-			// Create property file
-			String challengeQues1 = new String("In what city you were born?");
-			String challengeAns1 = new String("welcome1");
-			File f = new File(
-					"C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-			// Create KMCClient with the property file
-
-			KMCClient client = KMCClientFactory.getInstance(f);
-			// Simulate user selected the question and answer accordingly
-			Map<Object, Object> challenges = new HashMap<Object, Object>();
-			challenges.put(challengeQues1, challengeAns1);
-
-			// Simulate the data ready to sign
-			String dataForSigning = "originalText";
-
-			String pin = "efgh1234";
-
-			// System.out.println("SIGN " + getDigiCertUserId() +
-			// getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() +
-			// getPassword());
-			// Request service to signData based on the answered challenges and
-			// data
-			IKMCAPIResponse res = client
-					.requestService(KMCRequestBuilder.signData("890823102233",
-							"STRONG HABIS", pin.toCharArray(), challenges,
-							new ByteArrayInputStream(dataForSigning.getBytes())));
-
-			System.out.println("res.getStatusCode()" + res.getStatusCode());
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				// RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-				FileOutputStream fos = new FileOutputStream("sign3333.bin");
-				fos.flush();
-				fos.write((byte[]) res
-						.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				fos.close();
-
-				/*
-				 * File ff = new File("sign3333.bin"); FileInputStream fis = new
-				 * FileInputStream(ff); byte[] buf = new byte[(int)
-				 * ff.length()]; DataInputStream dis = new DataInputStream(fis);
-				 * dis.readFully(buf); dis.close(); fis.close();
-				 */
-
-				signedData = (byte[]) res
-						.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
-				// System.out.println("Data signing successful. SIGNEDTEXT " +
-				// signedData);
-
-				IKMCAPIResponse res1 = client.requestService(KMCRequestBuilder
-						.verifyData(
-								new ByteArrayInputStream(dataForSigning
-										.getBytes()), signedData));
-				switch (res.getStatusCode()) {
-				case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-					System.out.println("Data signature is a valid signature");
-					break;
-				default:
-					System.err.println("API return error. Code was "
-							+ res1.getStatusCode() + " Message was : "
-							+ res1.getStatusMessage());
-					return;
-				}
-
-				break;
-
-			default:
-
-				System.err.println("API return error. Code was "
-						+ res.getStatusCode() + " Message was : "
-						+ res.getStatusMessage());
-				// throw new EpException(MessageConst.ERROR_776052);
-				// signedData = "DEFAULT SIGNED TEXT";
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	public String getChallengeQues1() {
@@ -748,63 +331,14 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void changeChallengeQuestions() {
-
-		try {
-			KMCClient client = getClient();
-
-			// Request service for user selected question for authentication
-
-			String loginId = new FacesScopes().getUserScreenName();
-
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setLoginId(loginId);
-			UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
-			if (resDTO.getPmUser() == null) {
-				// throw new EpException("PM User is null");
-			}
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
-					.getChallengeQuestions(resDTO.getPmUser()
-							.getIdentificationNo(), 1));
-			// List<String> challs = null;
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs = (List<String>) res
-						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-				if (challs.size() == 0) {
-					System.out.println("No challanges found for the user! ");
-					throw new EpException(MessageConst.ERROR_776051);
-
-				} else {
-
-					setChallengeQues1(challs.get(0));
-
-					this.setChallengeAns1("");
-					this.setPassword("");
-
-					// RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-				}
-
-				break;
-
-			default:
-				System.out
-						.println("GetChallengeQuestions API return error. Code was "
-								+ res.getStatusCode()
-								+ ". Message was : "
-								+ res.getStatusMessage());
-				// throw new EpException(res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776062);
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new EpException(ex.getMessage());
-
+		if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+			challs = TrustGateHelper.getInstance().getChallengeQuestion(
+					getLoginUser().getIdentificationNo(),getSupplier().getEpNo());
+		} else {
+			challs = DigiCertHelper.getInstance().getChallengeQuestion(
+					getLoginUser().getIdentificationNo());
 		}
+		setChallengeQues1(challs.get(0));
 	}
 
 	public SmSupplier getSupplier() {
@@ -832,13 +366,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public String getCertIssuer() {
 		if (StringUtils.isBlank(certIssuer)) {
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setEpNo(getSupplier().getEpNo());
-			reqDTO.setIdentificationNo(getLoginUser().getIdentificationNo());
-			certIssuer = SmServiceLookup.getPersonnelSO()
-					.getCertIssuerByUserIdNoAndEpNo(reqDTO).getCertIssuer();
-			certIssuer = certIssuer == null ? CommonConstants.DIGICERT
-					: certIssuer;
+			certIssuer = PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
+					getLoginUser().getIdentificationNo(), getSupplier()
+							.getEpNo());
 		}
 		return certIssuer;
 	}

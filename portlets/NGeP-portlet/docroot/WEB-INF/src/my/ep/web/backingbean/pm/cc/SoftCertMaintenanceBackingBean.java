@@ -3,26 +3,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constants.CommonConstants;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.web.constant.SPKIConst;
+import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.TrustGateHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
@@ -125,75 +122,57 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 		return res.getResultBean().getResultList().get(0).getEpNo();	
 	}
 	
-	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID=" + getDigiCertUserId() + "&token=" + encodedtoken;
-		externalContext.redirect(url);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url);	 
-	}
-	
-	public void RequestChallRespUpdate() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID=" + getDigiCertUserId() + "&token=" + encodedtoken;
-		externalContext.redirect(url2);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url2);	 
-	}
-	
-	public void RequestResetPIN() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID=" + getDigiCertUserId() + "&email=" + getSupplierEmail() + "&token=" + encodedtoken;
-		externalContext.redirect(url3);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url3);	 
-	}
-	
-	public void RequestRevokeCert(String digiCertUserId, String supplierEpNo)
-			throws IOException, PortalException, SystemException {
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setEpNo(supplierEpNo);
-		reqDTO.setIdentificationNo(digiCertUserId);
-		String certIssuer = SmServiceLookup.getPersonnelSO()
-				.getCertIssuerByUserIdNoAndEpNo(reqDTO).getCertIssuer();
-		if (!StringUtils.isBlank(certIssuer)
-				&& certIssuer.equals(CommonConstants.TRUSTGATE)) {
-			revokeTrustGate(digiCertUserId, supplierEpNo);
+	public void RequestChangePIN() throws IOException, PortalException,
+			SystemException {
+		String epNo = getSupplierEpNo();
+		String idNo = getDigiCertUserId();
+		String certIssuer = PmCommonUtil
+				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
+		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+			TrustGateHelper.getInstance().changePIN(idNo, epNo);
 		} else {
-			revokeDigiCert(digiCertUserId, supplierEpNo);
+			DigiCertHelper.getInstance().changePIN(idNo, epNo);
 		}
 	}
 	
-	public void revokeDigiCert(String digiCertUserId, String supplierEpNo) throws IOException{
-		log.info("INSIDE REVOKE DIGICERT!!!");
-		String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
-		externalContext.redirect(url4);
-		log.info(">>>>>>>>>>>>>>>>>DigicertUserId:"+digiCertUserId);
-		log.info(">>>>>>>>>>>>>>>>>OrgId:"+supplierEpNo);
-		log.info(">>>>>>>>>>>>>>>>>Token:"+encodedtoken);
-		log.info(">>>>>>>>>>>>>>>>>Encoded URL " + url4);
+	public void RequestChallRespUpdate() throws IOException, PortalException,
+			SystemException {
+		String epNo = getSupplierEpNo();
+		String idNo = getDigiCertUserId();
+		String certIssuer = PmCommonUtil
+				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
+		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+			TrustGateHelper.getInstance().updateChallResp(idNo, epNo);
+		} else {
+			DigiCertHelper.getInstance().updateChallResp(idNo, epNo);
+		}
 	}
-	
-	public void revokeTrustGate(String digiCertUserId, String supplierEpNo) throws IOException{
-		log.info("INSIDE REVOKE TRUSTGATE!!!");
-		String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
-		externalContext.redirect(url4);
-		log.info(">>>>>>>>>>>>>>>>>DigicertUserId:"+digiCertUserId);
-		log.info(">>>>>>>>>>>>>>>>>OrgId:"+supplierEpNo);
-		log.info(">>>>>>>>>>>>>>>>>Token:"+encodedtoken);
-		log.info(">>>>>>>>>>>>>>>>>Encoded URL " + url4);
+
+	public void RequestResetPIN() throws IOException, PortalException,
+			SystemException {
+		String epNo = getSupplierEpNo();
+		String idNo = getDigiCertUserId();
+		String certIssuer = PmCommonUtil
+				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
+		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+			TrustGateHelper.getInstance().resetPIN(idNo, epNo,
+					getSupplierEmail());
+		} else {
+			DigiCertHelper.getInstance().resetPIN(idNo, epNo,
+					getSupplierEmail());
+		}
+	}
+
+	public void RequestRevokeCert(String digiCertUserId, String supplierEpNo)
+			throws IOException, PortalException, SystemException {
+		String certIssuer = PmCommonUtil
+				.getCertIssuerByIdentificationNoAndEpNo(digiCertUserId,
+						supplierEpNo);
+		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+			TrustGateHelper.getInstance().revoke(digiCertUserId, supplierEpNo);
+		} else {
+			DigiCertHelper.getInstance().revoke(digiCertUserId, supplierEpNo);
+		}
 	}
 	
 
