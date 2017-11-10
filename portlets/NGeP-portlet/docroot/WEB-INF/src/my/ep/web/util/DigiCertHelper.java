@@ -1,0 +1,204 @@
+package my.ep.web.util;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
+import my.ep.constant.MessageConst;
+import my.ep.exception.EpException;
+import my.ep.web.constant.SPKIConst;
+
+import com.augtech.kmc.client.IKMCAPIResponse;
+import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
+import com.augtech.kmc.client.InvalidKMCAPIFieldException;
+import com.augtech.kmc.client.KMCAPIException;
+import com.augtech.kmc.client.KMCClient;
+import com.augtech.kmc.client.KMCClientFactory;
+import com.augtech.kmc.client.KMCRequestBuilder;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+
+public class DigiCertHelper {
+
+	private static DigiCertHelper instance;
+	private static KMCClient client;
+
+	public KMCClient getKMCClient() throws KMCAPIException {
+		URL resource = getClass().getResource(".");
+		String path = resource.getPath();
+
+		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
+		String filePath = substring + SPKIConst.DIGICERT_CONFIG_FILE_PATH;
+
+		File f = new File(filePath);
+		KMCClient client = KMCClientFactory.getInstance(f);
+		return client;
+
+	}
+
+	public String generateSecurityToken(String identificationNo, String epNo) {
+		String tok = null;
+		try {
+			KMCClient client = getClient();
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
+					.generateToken(identificationNo, epNo));
+			switch (res.getStatusCode()) {
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				tok = (String) res.get(GenSecToken.TOKEN);
+				break;
+
+			default:
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new EpException(ex.getMessage());
+		}
+
+		return tok;
+	}
+
+	public void revoke(String identificationNo, String epNo) throws IOException {
+		String token = generateSecurityToken(identificationNo, epNo);
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID="
+				+ identificationNo
+				+ "&orgid="
+				+ epNo
+				+ "&token="
+				+ encodedtoken;
+		externalContext.redirect(url4);
+	}
+
+	public void changePIN(String identificationNo, String epNo)
+			throws IOException, PortalException, SystemException {
+		String token = generateSecurityToken(identificationNo, epNo);
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="
+				+ identificationNo + "&token=" + encodedtoken;
+		externalContext.redirect(url);
+	}
+
+	public void updateChallResp(String identificationNo, String epNo)
+			throws IOException, PortalException, SystemException {
+		String token = generateSecurityToken(identificationNo, epNo);
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="
+				+ identificationNo + "&token=" + encodedtoken;
+		externalContext.redirect(url);
+	}
+
+	public void resetPIN(String identificationNo, String epNo, String email)
+			throws IOException, PortalException, SystemException {
+		String token = generateSecurityToken(identificationNo, epNo);
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="
+				+ identificationNo
+				+ "&email="
+				+ email
+				+ "&token="
+				+ encodedtoken;
+		externalContext.redirect(url);
+	}
+
+	public List<String> getChallengeQuestion(String identificationNo) {
+		List<String> retVal = new ArrayList<String>();
+		try {
+			KMCClient client = getClient();
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
+					.getChallengeQuestions(identificationNo, 1));
+
+			switch (res.getStatusCode()) {
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				retVal = (List<String>) res
+						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+
+				if (retVal.size() == 0) {
+					throw new EpException(MessageConst.ERROR_776051);
+				}
+				break;
+
+			default:
+				throw new EpException(MessageConst.ERROR_776062);
+			}
+
+		} catch (Exception ex) {
+			throw new EpException(ex.getMessage());
+
+		}
+		return retVal;
+	}
+
+	public byte[] getSignedData(String identificationNo, String epNo,
+			String pin, Map<Object, Object> challenges, String dataForSigning)
+			throws KMCAPIException, InvalidKMCAPIFieldException {
+		byte[] signedData = null;
+		KMCClient client = getClient();
+		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(
+				identificationNo, epNo, pin.toCharArray(), challenges,
+				new ByteArrayInputStream(dataForSigning.getBytes())));
+
+		switch (res.getStatusCode()) {
+		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+			signedData = (byte[]) res
+					.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
+			break;
+
+		default:
+			if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
+				throw new EpException(MessageConst.ERROR_776057);
+			} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
+				throw new EpException(MessageConst.ERROR_776058);
+			} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+				throw new EpException(MessageConst.ERROR_776059);
+			} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+				throw new EpException(MessageConst.ERROR_776060);
+			} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+				throw new EpException(MessageConst.ERROR_776061);
+			} else {
+				throw new EpException(MessageConst.ERROR_776062);
+			}
+
+		}
+		return signedData;
+	}
+
+	public static DigiCertHelper getInstance() {
+		if (instance == null) {
+			try {
+				instance = new DigiCertHelper();
+			} catch (Exception e) {
+
+			}
+		}
+		return instance;
+
+	}
+
+	public static KMCClient getClient() {
+		if (client == null) {
+			try {
+				client = getInstance().getKMCClient();
+			} catch (KMCAPIException e) {
+
+			}
+		}
+		return client;
+	}
+}
