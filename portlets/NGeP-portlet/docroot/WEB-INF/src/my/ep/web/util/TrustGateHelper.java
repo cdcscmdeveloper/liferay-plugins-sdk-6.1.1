@@ -35,23 +35,23 @@ public class TrustGateHelper {
 		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
 		String filePath = substring + SPKIConst.TRUSTGATE_CONFIG_FILE_PATH;
 
-		File f = new File("C:\\ePerolehanDemo\\epproject\\NGep-scheduler-client\\conf\\kmc-msctg-pv1.0.properties");
+		File f = new File(filePath);
 		KMCClient client = KMCClientFactory.getInstance(f);
 		return client;
 	}
 
 	public List<String> getChallengeQuestion(String identificationNo,
-			String epNo) {
+			String epNo, String selectedQuest) {
 		List<String> retVal = new ArrayList<String>();
 		try {
 			KMCClient client = getClient();
 			KMCRequestBuilder reqbuilder = getReqBuilder();
 			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
-					.getChallengeQuestions(identificationNo, 1, epNo);
+					.getChallengeQuestions(identificationNo, 10, epNo);
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				retVal = res.CHALLENGE_RESPONSES;
+				retVal = getChallQuest(selectedQuest, res.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
 					throw new EpException(MessageConst.ERROR_776051);
@@ -69,24 +69,55 @@ public class TrustGateHelper {
 		return retVal;
 	}
 
+	private List<String> getChallQuest(String selectedQuest,
+			List<String> questions) {
+		List<String> retVal = new ArrayList<String>();
+		for (String quest : questions) {
+			if (!quest.equals(selectedQuest)) {
+				retVal.add(quest);
+				break;
+			}
+		}
+		return retVal;
+	}
+
 	public byte[] getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
 		byte[] signedData = null;
-		KMCClient client = getClient();
-		KMCRequestBuilder reqbuilder = getReqBuilder();
-		IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(
-				identificationNo, epNo, pin.toCharArray(), challenges,
-				new ByteArrayInputStream(dataForSigning.getBytes()));
 
-		switch (res.getStatusCode()) {
-		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-			signedData = res.SIGNATURE;
-			break;
+		try {
+			KMCClient client = getClient();
+			KMCRequestBuilder reqbuilder = getReqBuilder();
+			IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(
+					identificationNo, epNo, pin.toCharArray(), challenges,
+					new ByteArrayInputStream(dataForSigning.getBytes()));
 
-		default:
-			throw new EpException(MessageConst.ERROR_776062);
+			switch (res.getStatusCode()) {
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				signedData = res.SIGNATURE;
+				break;
 
+			default:
+				if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
+					throw new EpException(MessageConst.ERROR_776057);
+				} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
+					throw new EpException(MessageConst.ERROR_776058);
+				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+					throw new EpException(MessageConst.ERROR_776059);
+				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+					throw new EpException(MessageConst.ERROR_776060);
+				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+					throw new EpException(MessageConst.ERROR_776061);
+				} else {
+					throw new EpException(MessageConst.ERROR_776062);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
 		}
+
 		return signedData;
 	}
 
@@ -94,7 +125,7 @@ public class TrustGateHelper {
 		String tok = null;
 		try {
 			KMCClient client = getClient();
-			KMCRequestBuilder reqbuilder = new KMCRequestBuilder();
+			KMCRequestBuilder reqbuilder = getReqBuilder();
 			IKMCAPIResponse.GenSecToken res = reqbuilder.generateToken(
 					identificationNo, epNo);
 			switch (res.getStatusCode()) {
@@ -126,7 +157,7 @@ public class TrustGateHelper {
 				+ encodedtoken;
 		externalContext.redirect(url4);
 	}
-	
+
 	public void resetPIN(String identificationNo, String epNo, String email)
 			throws IOException, PortalException, SystemException {
 		String token = generateSecurityToken(identificationNo, epNo);
@@ -148,7 +179,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="
+		String url = "https://digitalid.msctrustgate.com/cdc/changePIN/checkPin.jsp?userID="
 				+ identificationNo + "&token=" + encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -159,8 +190,12 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="
-				+ identificationNo + "&token=" + encodedtoken;
+		String url = "https://digitalid.msctrustgate.com/cdc/updateCR/checkPin.jsp?userID="
+				+ identificationNo
+				+ "&orgid="
+				+ epNo
+				+ "&token="
+				+ encodedtoken;
 		externalContext.redirect(url);
 	}
 
