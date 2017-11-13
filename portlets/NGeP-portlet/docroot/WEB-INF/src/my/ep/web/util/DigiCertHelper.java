@@ -146,35 +146,42 @@ public class DigiCertHelper {
 	}
 
 	public byte[] getSignedData(String identificationNo, String epNo,
-			String pin, Map<Object, Object> challenges, String dataForSigning)
-			throws KMCAPIException, InvalidKMCAPIFieldException {
+			String pin, Map<Object, Object> challenges, String dataForSigning) {
 		byte[] signedData = null;
-		KMCClient client = getClient();
-		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(
-				identificationNo, epNo, pin.toCharArray(), challenges,
-				new ByteArrayInputStream(dataForSigning.getBytes())));
 
-		switch (res.getStatusCode()) {
-		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-			signedData = (byte[]) res
-					.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
-			break;
+		try {
+			KMCClient client = getClient();
+			IKMCAPIResponse res = client
+					.requestService(KMCRequestBuilder.signData(
+							identificationNo, epNo, pin.toCharArray(),
+							challenges,
+							new ByteArrayInputStream(dataForSigning.getBytes())));
 
-		default:
-			if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
-				throw new EpException(MessageConst.ERROR_776057);
-			} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
-				throw new EpException(MessageConst.ERROR_776058);
-			} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-				throw new EpException(MessageConst.ERROR_776059);
-			} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-				throw new EpException(MessageConst.ERROR_776060);
-			} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-				throw new EpException(MessageConst.ERROR_776061);
-			} else {
-				throw new EpException(MessageConst.ERROR_776062);
+			switch (res.getStatusCode()) {
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				signedData = (byte[]) res
+						.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
+				break;
+
+			default:
+				if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
+					throw new EpException(MessageConst.ERROR_776057);
+				} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
+					throw new EpException(MessageConst.ERROR_776058);
+				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+					throw new EpException(MessageConst.ERROR_776059);
+				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+					throw new EpException(MessageConst.ERROR_776060);
+				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+					throw new EpException(MessageConst.ERROR_776061);
+				} else {
+					throw new EpException(MessageConst.ERROR_776062);
+				}
+
 			}
-
+		} catch (KMCAPIException | InvalidKMCAPIFieldException e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
 		}
 		return signedData;
 	}
