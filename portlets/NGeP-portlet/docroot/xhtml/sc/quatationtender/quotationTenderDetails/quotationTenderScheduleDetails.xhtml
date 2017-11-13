@@ -37,6 +37,10 @@
 													listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
 													update="scheduleDetalsPublishingClosing" />
 											</p:calendar>
+											<p:inputText id="rePublishTime" value="#{DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime())}" disabled="true" size="4"
+												style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+											</p:inputText>
 										</c:when>
 										<c:when test="#{isPublishDateEnable}">
 											<p:calendar label="#{lbl['lbl.sc.publish.date']}"
@@ -127,6 +131,11 @@
 											listener="#{qTScheduleDetailBackingBean.handleReschedulePublishClosingDate}"
 											update="@([id$=scheduleDetalsPublishingClosing], .amendButton)" />
 									</p:calendar>
+									<p:inputText id="reClosingTime" value="#{DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime())}" 
+										disabled="true" size="4"
+										style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+									</p:inputText>
 								</c:when>
 								<c:otherwise>
 									<p:inputText id="closingDate"
