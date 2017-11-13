@@ -111,7 +111,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo(),getSupplier().getEpNo());
+						getLoginUser().getIdentificationNo(),
+						getSupplier().getEpNo(), challengeQues1);
 			} else {
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo());
@@ -122,37 +123,29 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public byte[] spkiEnabledSignTransaction(String originalText) {
-		try {
-			if (getSupplier() == null) {
-				throw new EpException(MessageConst.ERROR_721018);
-			}
-			if (getLoginUser() == null
-					|| (getLoginUser() != null && getLoginUser().getUserId() == null)) {
-				throw new EpException(MessageConst.ERROR_721017);
-			}
+		if (getSupplier() == null) {
+			throw new EpException(MessageConst.ERROR_721018);
+		}
+		if (getLoginUser() == null
+				|| (getLoginUser() != null && getLoginUser().getUserId() == null)) {
+			throw new EpException(MessageConst.ERROR_721017);
+		}
 
-			Map<Object, Object> challenges = new HashMap<Object, Object>();
-			challenges.put(challengeQues1, challengeAns1);
+		Map<Object, Object> challenges = new HashMap<Object, Object>();
+		challenges.put(challengeQues1, challengeAns1);
 
-			String dataForSigning = originalText;
+		String dataForSigning = originalText;
 
-			String pin = getPassword();
+		String pin = getPassword();
 
-			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
-				signedData = TrustGateHelper.getInstance().getSignedData(
-						getLoginUser().getIdentificationNo(),
-						getSupplier().getEpNo(), pin,
-						challenges, dataForSigning);
-			} else {
-				signedData = DigiCertHelper.getInstance().getSignedData(
-						getLoginUser().getIdentificationNo(),
-						getSupplier().getEpNo(), pin,
-						challenges, dataForSigning);
-			}
-
-		} catch (Exception ex) {
-			throw new EpException(ex.getMessage());
-
+		if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+			signedData = TrustGateHelper.getInstance().getSignedData(
+					getLoginUser().getIdentificationNo(),
+					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+		} else {
+			signedData = DigiCertHelper.getInstance().getSignedData(
+					getLoginUser().getIdentificationNo(),
+					getSupplier().getEpNo(), pin, challenges, dataForSigning);
 		}
 		return signedData;
 	}
@@ -333,7 +326,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public void changeChallengeQuestions() {
 		if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
 			challs = TrustGateHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo(),getSupplier().getEpNo());
+					getLoginUser().getIdentificationNo(),
+					getSupplier().getEpNo(), challengeQues1);
 		} else {
 			challs = DigiCertHelper.getInstance().getChallengeQuestion(
 					getLoginUser().getIdentificationNo());
