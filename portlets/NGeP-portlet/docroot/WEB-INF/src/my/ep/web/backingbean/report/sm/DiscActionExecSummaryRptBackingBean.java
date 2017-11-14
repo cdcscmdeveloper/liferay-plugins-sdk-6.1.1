@@ -69,15 +69,11 @@ public class DiscActionExecSummaryRptBackingBean extends SmReportBackingBean<Dis
 					.getSupplierType());
 		}
 		
-		if(getManagedBean().getSelectedOrgProfile() != null){
-			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
-				log.info("Supplier ID>>>>>>" + getManagedBean()
-				.getSelectedOrgProfile().getSmSupplier().getSupplierId());
-			}
-		}
-		
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			log.info("Supplier ID>>>>>>" + getManagedBean()
+			.getSelectedOrgProfile().getSmSupplier().getSupplierId());
+			
 			params.put(SmReportConst.PARAM_DISC_SUPP_ID, getManagedBean()
 					.getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
 		}
