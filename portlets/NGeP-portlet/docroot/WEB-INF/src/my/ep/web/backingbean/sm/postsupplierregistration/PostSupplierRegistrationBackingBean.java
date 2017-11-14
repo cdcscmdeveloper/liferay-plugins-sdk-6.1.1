@@ -30,6 +30,7 @@ import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -42,6 +43,8 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -155,13 +158,25 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						}else{
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
-								if(wfStatus.getPmStatus() != null && 
-									(wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
-									wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
-									wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
+								PmStatus wfStat = wfStatus.getPmStatus();
+								if(wfStat != null && 
+									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
+									
 									log.info("*******Resubmit********");
 									path = RESUBMIT_APPLICATION + wfStatus.getDocId();
 									getManagedBean().setFlowStatus(3);
+									
+									if(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS){
+										log.info("*******PM_STATUS_REJECTED_BY_SYS********");
+										if(!checkSuccessPayment(wfStatus.getDocId())){
+											log.info("*******No SUCCESS PAYMENT********");
+											getManagedBean().setRejectedApplExist(false);
+											path = MOF_REG_PATH;
+											getManagedBean().setFlowStatus(1);
+										}
+									}
 								}else{
 									getManagedBean().setRejectedApplExist(false);
 									log.info("*******Not Resubmit********");
@@ -1031,6 +1046,18 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}
 		
 		return wfStatus;
+	}
+	
+	private boolean checkSuccessPayment(Long applId){
+		PaymentReqDTO reqDTO = new PaymentReqDTO();
+		reqDTO.setApplId(applId);
+		List<PyPaymentOrder> paymentOrders = SmServiceLookup.getPaymentSO().retrieveSuccPaymentByApplId(reqDTO).getPaymentOrders();
+	
+		if(paymentOrders.size() > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 }
