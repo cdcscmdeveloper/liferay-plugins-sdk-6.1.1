@@ -5604,6 +5604,14 @@ public class QTDetailBackingBean extends
 							proposalResDTO.getErrorMessage());
 				}
 			}
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
+							));
+		
 		}
 		finally{
 			
