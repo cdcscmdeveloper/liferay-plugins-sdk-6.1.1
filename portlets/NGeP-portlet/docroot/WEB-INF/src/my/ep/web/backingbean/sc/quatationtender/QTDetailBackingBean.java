@@ -5583,6 +5583,11 @@ public class QTDetailBackingBean extends
 	public void publishQT(ScQt scQt) {
 		
 		try{
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			scQt.setPublishDate(new Date());
+			reqDTO.setQtdetail(scQt);
+			scQt = getQtDetailSO().updateQTDetails(reqDTO).getQtDetail();
+			log.info("^^^^^ QT Publish time updated before publish to :"+scQt.getPublishDate());
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(scQt.getQtId());
 			ProposalResDTO proposalResDTO = getProposalSO()
@@ -5866,6 +5871,10 @@ public class QTDetailBackingBean extends
 	private IQTProposalSO getProposalSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+	}
+	private IQTDetailSO getQtDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
 	private void insertSuppliersAndSendNotification(Long qtId) {
