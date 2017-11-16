@@ -100,6 +100,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 		if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 			gstRate = new BigDecimal(roleResDTO.getRuleValueList().get(0).getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 		}
 		return gstRate;
 	}
