@@ -97,6 +97,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
@@ -863,6 +864,11 @@ public class QTDocumentsBackingBean extends
 		for (TplDocSection tplDocSection : docSectionCOllection) {
 			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
 			//log.info("===doc section name"+section.getSectionTitle()+"section content"+section.getSectionContent());
+			if(TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE.equalsIgnoreCase(section.getSectionTitle())){
+				String title=TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE+TemplateDocConst.PARAM_SPACE+getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), myLocale).toUpperCase();
+				section.setSectionName(title);
+				section.setSectionTitle(title);
+			}
 			section.setDocSectionId(null);
 			section.setParent(null); // Temporarily am setting null, need to
 										// confirm once
@@ -2840,6 +2846,7 @@ public class QTDocumentsBackingBean extends
 					.put(TemplateDocConst.PARAM_OFFICER_NAME, officerName);
 			docParamValues.put(TemplateDocConst.PARAM_TELEPHONE_NUM,
 					agencyPhoneNo);
+			docParamValues.put(TemplateDocConst.PARAM_AGENCY_EMAIL, facesScopes.getUserSessionBean().getEmail());
 			// docParamValues.put(TemplateDocConst.COMPANY_NAME, ptjName);
 			docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, agencyFaxNo);
 			docParamValues.put(
@@ -2850,6 +2857,41 @@ public class QTDocumentsBackingBean extends
 			BigDecimal contarctAmount = returnContractAmount();
 			docParamValues.put(TemplateDocConst.PARAM_CONTRACT_AMOUNT,
 					contarctAmount.toString());
+			docParamValues.put(TemplateDocConst.PARAM_QUOTATION_TENDER, getParameterDesc(scQt.getProcurementMode(), myLocale));
+			if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())){
+				docParamValues.put(TemplateDocConst.PARAM_FULFILMENT_TYPE, getParameterDesc(scQt.getFulfilmentType(), myLocale));
+				docParamValues.put(TemplateDocConst.PARAM_FULFILMENT_CONTENT, TemplateDocConst.PARAM_FULFILMENT_ONE_OFF_DATA);
+			}else{
+				docParamValues.put(TemplateDocConst.PARAM_FULFILMENT_TYPE, getParameterDesc(scQt.getFulfilmentType(), myLocale));
+				docParamValues.put(TemplateDocConst.PARAM_FULFILMENT_CONTENT, TemplateDocConst.PARAM_FULFILMENT_PERIODIC_DATA);
+			}
+			docParamValues.put(TemplateDocConst.PARAM_CONTRACT_PERIOD, scQt.getContractDuration() != null ? Integer.toString(scQt
+					.getContractDuration()) : "");
+			docParamValues.put(TemplateDocConst.PARAM_MINISTRY_NAME, retrieveMinistryByOrgProfileId(scQt.getPmOrgProfile()
+						.getOrgProfileId()));
+			QTDetailBackingBean detailBean=new QTDetailBackingBean();
+			detailBean.retrieveDeductionPaymentTabDtl();
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtDeductionList())){
+				StringBuilder paymentDeductions=new StringBuilder();
+				paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE);
+				paymentDeductions.append(TemplateDocConst.PARAM_NEW_LINE_CHARACTER);
+				for(int i=0;i<this.getManagedBean().getScQtDeductionList().size();i++){
+				ScQtDeduction deduction=this.getManagedBean().getScQtDeductionList().get(i);
+				int value=i+1;
+				paymentDeductions.append("("+value +")"+getParameterDesc(deduction.getDeductionType(), myLocale));
+				paymentDeductions.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER);
+				for(ScQtDeductionClause clause:deduction.getScQtDeductionClauses()){
+					paymentDeductions.append(clause.getClauseDesc());
+					paymentDeductions.append(TemplateDocConst.PARAM_NEW_LINE_CHARACTER);
+				}
+				}
+				docParamValues.put(TemplateDocConst.PARAM_PAYMENT_DEDUCTION, paymentDeductions.toString().replaceAll(
+						TemplateDocConst.PARAM_NEW_LINE_CHARACTER,
+						TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER));	
+			}else{
+				docParamValues.put(TemplateDocConst.PARAM_PAYMENT_DEDUCTION, TemplateDocConst.PARAM_PAYMENT_DEDUCTION_NOT_APPLIABLE);	
+			}
+			   
 			// docParamValues.put(TemplateDocConst.PARAM_BREAK_LINE,
 			// TemplateDocConst.PARAM_SPACE);
 			// docParamValues.put(TemplateDocConst.PARAM_PREFIX_POSTFIX,
