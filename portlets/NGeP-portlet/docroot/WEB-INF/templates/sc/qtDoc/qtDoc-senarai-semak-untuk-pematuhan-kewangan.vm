@@ -16,26 +16,26 @@
 			padding: 5px !important;
 		}
 		body{
-			font-family: "Helvetica";
-			font-size: 8pt;
+			font-family: "Arial";
+			font-size: 12pt;
 		}
 		.header {
-			color: #fff; 
+			 
 			font-family:'Arial', sans-serif;
-			font-size:16px;
+			font-size:12pt;
 			font-weight: bold;
 			text-align:left;
 		}
 		.standard{
 			color: #333; 
 			font-family:'Arial', sans-serif;
-			font-size:12px;
+			font-size:12pt;
 			text-align:left;
 		}
 		.title{
 			color: #fff; 
 			font-family:'Arial', sans-serif;
-			font-size:12px;
+			font-size:12pt;
 			font-weight: bold;
 			text-align:left;
 		}
@@ -79,7 +79,7 @@
 <table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
-			<th bgcolor="#a2a2a2" class="header">Senarai Semak Pematuhan Kewangan</th>
+			<th  class="header"><u>Senarai Semak Pematuhan Kewangan</u></th>
 		</tr>
 	</tbody>
 </table>
@@ -104,7 +104,7 @@
 		</tbody>
 	#end
 	#if ($isFinanceOff == "false")
-		<span style="font-family:'Arial', sans-serif;font-size:12px;text-align:left;color:#333;">
+		<span style="font-family:'Arial', sans-serif;font-size:12pt;text-align:left;color:#333;">
 		No document for compliance /Tiada dokumen untuk pematuhan </span>
 	#end
 </table>
