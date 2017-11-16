@@ -7,12 +7,12 @@
 		.standard{
 			color: #333; 
 			font-family:'Arial', sans-serif;
-			font-size:12px;
+			font-size:12pt;
 		}
 		.standard-bold{
 			color: #333; 
 			font-family:'Arial', sans-serif;
-			font-size:14px;
+			font-size:12pt;
 			font-weight: bold;
 		}
 				
@@ -31,23 +31,23 @@
 				<td rowspan="5"><img src='http://$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='124' height='100' />
 						</td>
 				<td><span
-					style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agency</span></td>
+					style="font-weight: bold; font-size: 12pt; font-family: Arial;">$agency</span></td>
 			</tr>
 			<tr>
 				<td><span
-					style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$ministry</span></td>
+					style="font-weight: bold; font-size: 12pt; font-family: Arial;">$ministry</span></td>
 			</tr>
 			<tr>
 				<td><span
-					style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agencyAddress</span></td>
+					style="font-weight: bold; font-size: 12pt; font-family: Arial;">$agencyAddress</span></td>
 			</tr>
 			<tr>
 				<td><span
-					style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agencyPhoneNo</span></td>
+					style="font-weight: bold; font-size: 12pt; font-family: Arial;">$agencyPhoneNo</span></td>
 			</tr>
 			<tr>
 				<td><span
-					style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agencyFaxNo</span></td>
+					style="font-weight: bold; font-size: 12pt; font-family: Arial;">$agencyFaxNo</span></td>
 			</tr>
 		</tbody>
 	</table>
@@ -56,8 +56,8 @@
 	<tbody>
 		<tr>
 			<td align="center"><span
-				style="font-weight: bold; font-size: 20px; font-family: Albertus Medium;">SURAT
-					SETUJU TERIMA</span> <br /></td>
+				style="font-weight: bold; font-size: 12pt; font-family: Arial;"><u>SURAT
+					SETUJU TERIMA</u></span> <br /></td>
 		</tr>
 		<tr>
 			<td align="right" class="standard">Rujukan: $fileNo <br /> --- SST NO ---- <br />

@@ -3,6 +3,12 @@
 	<style>
 		@page { size: A4 portrait;}
 		@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
+		
+		.standard{
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12pt;
+		}
 				
 		.footer {
 			display: block; text-align: center;
@@ -15,24 +21,24 @@
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td align="center">
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>SURAT AKUAN PEMBIDA</span>
+            <span style='font-weight:bold;font-size:12pt;font-family: Arial;'><u>SURAT AKUAN PEMBIDA</u></span>
             <br/>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>BAGI</span>
+            <span style='font-weight:bold;font-size:12pt;font-family: Arial;'>BAGI</span>
             <br/> <br/>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $title  $qtNo </span>
+            <span style='font-weight:bold;font-size:12pt;font-family: Arial;'> $title  $qtNo </span>
             <br/> <br/>
         </td>
     </tr>
 	<tr>
-		<td>
+		<td class="standard">
 			<p align="justify">Saya, ...Nama Wakil Syarikat... nombor K.P ...no. K.P...yang mewakili ...Nama Syarikat... nombor pendaftaran...MOF/PKK/CIDB/ROS/ROC/ROB...dengan ini mengistiharkan bahawa saya atau mana-mana individu dalam...Nama Kementerian/ Agensi...atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam sebut harga / tender* seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini </p>
 			<p align="justify">2. Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam...Nama Kementerian/Agensi...atau mana-mana individu lain sebagai sogokan untuk dipilih dalam sebut harga / tender* seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil.</p>
 			<ol type="2">2.1 Penarikan balik tawaran kontrak bagi sebut harga / tender* di atas; atau.</ol>
@@ -42,12 +48,12 @@
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td class="standard">
 			Yang Benar, <br /><br />
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td class="standard">
 			<br />
 			_______Tandatangan_____________ <br />
 			...Nama dan No. KP...<br />
@@ -55,12 +61,12 @@
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td class="standard">
 			Cop Syarikat  : <br /><br />
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td class="standard">
 			Catatan: * <ol type="i"> i) Potong mana yang tidak berkenaan </ol>
 					   <ol type="i"> ii) Surat akuan ini hendaklah dikemukakan bersama Surat Perwakilan Kuasa </ol>
 		</td>

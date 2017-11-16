@@ -80,7 +80,7 @@ public class MergeDocx {
 				text += obj.getSectionContent();
 			}
 						
-			text = insertNumberingAndIndentHtml(text,  obj.getSectionNumber(), obj.getSectionLevel());
+			text = insertNumberingAndIndentHtml(text,  obj.getSectionNumber()!=null? obj.getSectionNumber() : " ", obj.getSectionLevel());
 			
 			combinedContent += text;
 		}

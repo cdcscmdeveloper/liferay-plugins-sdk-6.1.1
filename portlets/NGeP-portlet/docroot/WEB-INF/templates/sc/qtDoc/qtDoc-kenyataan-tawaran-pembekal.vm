@@ -26,11 +26,11 @@ th{
 }
 .headerfont {
 	font-weight:bold;
-	font-size:13px;
+	font-size:12pt;
 	font-family: Arial;
 }
 .textfont {
-	font-size:13px;;
+	font-size:12pt;;
 	font-family: Arial;
 }
 </style>
@@ -45,11 +45,11 @@ th{
 				</tr>
 				<tr align="center">
 					<td><span
-						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$ministry</span></td>
+						style="font-weight: bold; font-size: 12pt; font-family: Arial;">$ministry</span></td>
 				</tr>
 				<tr align="center">
 					<td><span
-						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$ptj</span>
+						style="font-weight: bold; font-size: 12pt; font-family: Arial;">$ptj</span>
 						<br /></td>
 				</tr>
 			</tbody>
@@ -63,8 +63,8 @@ th{
 		</tr>
 		<tr>
 			<td>
-				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>KENYATAAN TAWARAN</u></span>
-				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan <span style="font-family:Arial;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KEMENTERIAN KEWANGAN MALAYSIA</span> dalam kod bidang yang berkaitan dan kriteria berkaitan seperti berikut:</span></p>
+				<span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>KENYATAAN TAWARAN</u></span>
+				<p><span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan <span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KEMENTERIAN KEWANGAN MALAYSIA</span> dalam kod bidang yang berkaitan dan kriteria berkaitan seperti berikut:</span></p>
 			</td>
 		</tr>
 		<tr>
@@ -73,16 +73,16 @@ th{
 			</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KETERANGAN TAWARAN :</span> $qtTitle</td>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KETERANGAN TAWARAN :</span> $qtTitle</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> $qtType</td>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> $qtType</td>
 		</tr>
 		#if($panel == "true")
 		#else
 			<tr>
 				<td align="left">
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KOD BIDANG :</span> <br /><br />
+					<span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KOD BIDANG :</span> <br /><br />
 				</td>
 			</tr>
 			<tr align='left'>
@@ -120,25 +120,25 @@ th{
 			</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TARIKH MULA TAWARAN :</span> $publishDate</td>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TARIKH MULA TAWARAN :</span> $publishDate</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TARIKH TUTUP TAWARAN :</span> $closingDate</td>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TARIKH TUTUP TAWARAN :</span> $closingDate</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
 		</tr>
 		#if($panel == "true")
 			
 		#else
 			<tr>
-				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> 
+				<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> 
 				</td>
 			</tr>
 			<tr>
 				<td>
 					#if ($locLevel == "true")
-						<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
+						<span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
 						<span class="headerfont"> Location </span>
 						<table width='100%' class="table2">
 						<span class="headerfont">
@@ -198,7 +198,7 @@ th{
 							</table>
 						#end
 						#if ($subLocLevel == "false")
-							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">T/B</span>
+							<span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">T/B</span>
 						#end
 					#end
 				</td>
@@ -208,7 +208,7 @@ th{
 		<tr align='left'>
 	        <td>
 				#if ( $bsvReq == 'true' )
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal yang berminat adalah diwajibkan hadir ke sesi lawatan tapak dan taklimat pada ketetapan berikut:</span></p>
+					<p style="text-align:justify;"><span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal yang berminat adalah diwajibkan hadir ke sesi lawatan tapak dan taklimat pada ketetapan berikut:</span></p>
 					#foreach( $zoneList in $zoneBeans )
 						<span class="headerfont">
 							#if ( $isZone)
@@ -284,10 +284,10 @@ th{
 	    </tr>
 		<tr align="left">
 			<td>#if ($fulfilmentType == "true")
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.8% (kosong perpuluhan lapan peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 9,600.00 (Ringgit Malaysia: Sembilan Ribu dan Enam Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia: Satu Juta Dua Ratus Ribu) atau lebih.</span></p>
+					<p style="text-align:justify;"><span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.8% (kosong perpuluhan lapan peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 9,600.00 (Ringgit Malaysia: Sembilan Ribu dan Enam Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia: Satu Juta Dua Ratus Ribu) atau lebih.</span></p>
 				#end 
 				#if ($fulfilmentType == "false")
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.4% (kosong perpuluhan empat peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 4,800.00 (Ringgit Malaysia : Empat Ribu dan Lapan Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia : Satu Juta Dua Ratus Ribu) atau lebih.</span></p>
+					<p style="text-align:justify;"><span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.4% (kosong perpuluhan empat peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 4,800.00 (Ringgit Malaysia : Empat Ribu dan Lapan Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia : Satu Juta Dua Ratus Ribu) atau lebih.</span></p>
 				#end
 			</td>
 		</tr>
