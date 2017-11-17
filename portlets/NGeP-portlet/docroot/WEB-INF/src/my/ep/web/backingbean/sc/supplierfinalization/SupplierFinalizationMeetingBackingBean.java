@@ -1370,12 +1370,16 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			MeetingResDTO resDTO = meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
-			String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
+			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
 			renewSesionObject();
+			String submitMessage=	ResourceBundleUtils
+					.getMessage("lbl.sc.sf.meeting.submit.message",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 			String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
 											  ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
-			commonMessageAcknowledmentPage(MessageConst.INFO_700026, qtParam, statusParam);
+			commonMessageAcknowledmentPage(MessageConst.INFO_700070,submitMessage, qtParam);
 		} finally {
 			meetingSO = null;
 		}
