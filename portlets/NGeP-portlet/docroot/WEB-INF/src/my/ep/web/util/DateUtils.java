@@ -11,6 +11,7 @@ import java.util.Locale;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
+import my.ep.util.ResourceBundleUtils;
 
 import org.apache.log4j.Logger;
 
@@ -401,25 +402,32 @@ public class DateUtils {
 	}
 	
 	public static String durationFormatter(long durationInMills) {
-
+	    String PARAM_SPACE=" ";
 		long diffMinutes = durationInMills / (60 * 1000) % 60;
 		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
 		DecimalFormat durationFormat = new DecimalFormat("#00");
 		String duration = "";
 		if (diffHours <= 24 && diffHours >= 2) {
-			duration = durationFormat.format(diffHours) + " Hours  "
-					+ durationFormat.format(diffMinutes) + " Minutes";
+			duration = durationFormat.format(diffHours)+PARAM_SPACE + formatterContent("lbl.sc.bidding.hours")
+					+ durationFormat.format(diffMinutes)+PARAM_SPACE + formatterContent("lbl.sc.bidding.minutes");
 		}
 
 		if (diffHours < 2 && diffHours >= 1) {
-			duration = durationFormat.format(diffHours) + " Hour  "
-					+ durationFormat.format(diffMinutes) + " Minutes";
+			duration = durationFormat.format(diffHours)+PARAM_SPACE + formatterContent("lbl.sc.bidding.hours")
+					+ durationFormat.format(diffMinutes)+PARAM_SPACE + formatterContent("lbl.sc.bidding.minutes");
 		}
 		if (diffHours < 1) {
-			duration = durationFormat.format(diffMinutes) + " Minutes";
+			duration = durationFormat.format(diffMinutes)+PARAM_SPACE + formatterContent("lbl.sc.bidding.minutes");
 		}
 
 		return duration;
+	}
+	
+	private static String formatterContent(String formatterData){
+		return ResourceBundleUtils
+			.getMessage(formatterData,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()).toLowerCase();
 	}
 	
 	/**
