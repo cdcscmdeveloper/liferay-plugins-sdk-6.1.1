@@ -61,6 +61,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -611,15 +612,19 @@ public class ConsolidationReportBackingBean extends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.submitConsolidationReport(reqDTO);
 			if (resDTO.isSuccessful()) {
+			String submitMessage=	ResourceBundleUtils
+				.getMessage("lbl.sc.consolidation.report.submit.message",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
 				String qtParam = getParameterDesc(
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + getManagedBean().getScQt().getQtNo();
-				String statusParam = getStatusDescById(getManagedBean()
-						.getCurrentStatusId());
+				//String statusParam = getStatusDescById(getManagedBean()
+						//.getCurrentStatusId());
 
-				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
-						qtParam, statusParam);
+				commonMessageAcknowledmentPage(MessageConst.INFO_700070,
+						submitMessage,qtParam);
 			}
 
 		} finally {
