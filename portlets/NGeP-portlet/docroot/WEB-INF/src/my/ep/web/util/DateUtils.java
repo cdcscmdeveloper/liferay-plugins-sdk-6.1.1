@@ -408,12 +408,12 @@ public class DateUtils {
 		DecimalFormat durationFormat = new DecimalFormat("#00");
 		String duration = "";
 		if (diffHours <= 24 && diffHours >= 2) {
-			duration = durationFormat.format(diffHours)+PARAM_SPACE + formatterContent("lbl.sc.bidding.hours")
+			duration = durationFormat.format(diffHours)+PARAM_SPACE + formatterContent("lbl.sc.bidding.hours")+PARAM_SPACE
 					+ durationFormat.format(diffMinutes)+PARAM_SPACE + formatterContent("lbl.sc.bidding.minutes");
 		}
 
 		if (diffHours < 2 && diffHours >= 1) {
-			duration = durationFormat.format(diffHours)+PARAM_SPACE + formatterContent("lbl.sc.bidding.hours")
+			duration = durationFormat.format(diffHours)+PARAM_SPACE + formatterContent("lbl.sc.bidding.hours")+PARAM_SPACE
 					+ durationFormat.format(diffMinutes)+PARAM_SPACE + formatterContent("lbl.sc.bidding.minutes");
 		}
 		if (diffHours < 1) {
