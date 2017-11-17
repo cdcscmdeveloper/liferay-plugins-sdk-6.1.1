@@ -177,8 +177,15 @@ public class ViewApplHistoryBackingBean extends
 						"confirmDialog.show()");
 			}
 		} else {
-			SmCommonUtil.redirectToExternalUrl(getManagedBean()
-					.getResubmitUrl());
+			if (SmApplicationUtil
+					.isRejectedApplValidForResubmission(getManagedBean()
+							.getSmAppl())) {
+				SmCommonUtil.redirectToExternalUrl(getManagedBean()
+						.getResubmitUrl());
+			} else {
+				throw new EpException(SmCommonUtil.getMessage(
+						"lbl.sm.resubmitExpired", null));
+			}
 		}
 	}
 
