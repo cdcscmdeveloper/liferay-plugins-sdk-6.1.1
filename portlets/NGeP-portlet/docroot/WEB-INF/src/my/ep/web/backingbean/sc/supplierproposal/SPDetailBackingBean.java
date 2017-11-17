@@ -4416,8 +4416,9 @@ public class SPDetailBackingBean extends
 					,qt.getProcurementMode().getParameterCode()));
 			qtSB.append(" - ");
 			qtSB.append(qt.getQtNo());
+			SimpleDateFormat closeDateFormat=new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT);
 			throw new EpException(MessageConst.ERROR_760461,
-					new String[] {qtSB.toString(),qt.getClosingDate().toString()});
+					new String[] {qtSB.toString(),closeDateFormat.format(qt.getClosingDate()).toString()});
 		}
 	}
 	
