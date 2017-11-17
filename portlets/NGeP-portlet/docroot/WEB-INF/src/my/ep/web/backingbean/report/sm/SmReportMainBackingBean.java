@@ -21,6 +21,7 @@ public class SmReportMainBackingBean extends
 	private static final String REPORT_MAIN = "/xhtml/reports/new/sm/smReportMain.xhtml";
 
 	public void preRender() {
+		renewSesionObject();
 		retrieveReportListByAuthorization(StringUtils
 				.upperCase(ModuleCodeConst.SUPPLIER_MANAGEMENT));
 
