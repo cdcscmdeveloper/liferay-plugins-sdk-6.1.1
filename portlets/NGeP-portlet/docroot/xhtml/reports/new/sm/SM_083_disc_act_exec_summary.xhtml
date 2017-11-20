@@ -29,7 +29,7 @@
 						id="discActStatus" value="#{discActionExecSummaryRptBB.managedBean.discActionStatus}"
 						style="width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
-					<f:selectItems value="#{discActionExecSummaryRptBB.managedBean.discActionStatusLs}" var="discAction" 
+					<f:selectItems value="#{discActionExecSummaryRptBB.retrieveDiscStatuses()}" var="discAction" 
 					itemLabel="#{discAction.statusName}" itemValue="#{discAction.pmStatus.statusId}" />
 					<p:ajax event="change" process="@this" partialSubmit="true" />
 				</p:selectOneMenu>
