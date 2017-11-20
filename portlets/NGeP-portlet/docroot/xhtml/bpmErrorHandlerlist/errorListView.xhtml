@@ -54,8 +54,8 @@
 				</p:column>
 
 				<p:column width="18%">
-					<f:facet name="header">#{lbl['lbl.bpm.process']}</f:facet>
-					#{errors.process}
+					<f:facet name="header">#{lbl['lbl.bpm.status']}</f:facet>
+					#{bpmErrorListBackingBean.applicationStatus(errors.docStatus)}
 				</p:column>
 
 				<p:column width="6%">
