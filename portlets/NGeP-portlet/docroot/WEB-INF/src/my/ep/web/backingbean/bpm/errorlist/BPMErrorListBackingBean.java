@@ -1,7 +1,5 @@
 package my.ep.web.backingbean.bpm.errorlist;
 
-import java.lang.reflect.Field;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -15,6 +13,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
+import my.ep.jaxb.error.data.ErrorDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -104,7 +103,7 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
 	}
-
+	
 	public void submitError(String taskId, String title){
 		log.info("............................submitTask");
 		
@@ -150,32 +149,33 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		
 		this.getManagedBean().setPayloadContent("");
 		
-		Object payload = null;
-		String payLoadString = null;
+		ErrorDataType pojo = null;
 		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
+		
 
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(getManagedBean().getToken());
 		reqDTO.setTaskId(taskId);
+		
 		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
 
 		if(resDTO.getPojo() != null){
-			payload = resDTO.getPojo();
-			payLoadString = printFieldValue(payload);
+			pojo = (ErrorDataType) resDTO.getPojo();
 		}
 
-		this.getManagedBean().setPayloadContent(payLoadString);
+		this.getManagedBean().setPayloadContent(pojo.getErrorDesc());
 		
 		refreshError();
 	}
-	
+	/*
 	public String printFieldValue(Object obj){
 		
 		String value = "";
 		
 		for(Field field : obj.getClass().getDeclaredFields()){
+		
 			field.setAccessible(true);
 			String name = field.getName();
 			Object object = null;
@@ -187,9 +187,10 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 			}
 			
 			value += name+"\t: "+object+"<br />";
+		
 		}
 		
 		return value;
 	}
-
+*/
 }
