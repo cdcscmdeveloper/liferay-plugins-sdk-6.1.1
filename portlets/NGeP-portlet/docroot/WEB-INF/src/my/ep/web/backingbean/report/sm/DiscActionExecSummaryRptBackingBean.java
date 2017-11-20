@@ -35,7 +35,7 @@ public class DiscActionExecSummaryRptBackingBean extends SmReportBackingBean<Dis
 
 	public DiscActionExecSummaryRptBackingBean(){
 		getDiscZoneByUser();
-		if(getManagedBean().getDiscActionStatusLs() == null ){
+		/*if(getManagedBean().getDiscActionStatusLs() == null ){
 			getManagedBean().setDiscActionStatusLs(new ArrayList<PmStatusDesc>());
 			if(getManagedBean().getDiscActionStatusLs().size() < 1){
 				List<PmStatusDesc> statusDescLs = SmCommonUtil.
@@ -50,7 +50,7 @@ public class DiscActionExecSummaryRptBackingBean extends SmReportBackingBean<Dis
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	public void generateReport() {
@@ -119,5 +119,22 @@ public class DiscActionExecSummaryRptBackingBean extends SmReportBackingBean<Dis
 		
 		log.info("User Zone>>>>>" + getManagedBean().getZone());
 		return getManagedBean().getZone();
+	}
+	
+	public List<PmStatusDesc> retrieveDiscStatuses(){
+		List<PmStatusDesc> statDescs = new ArrayList<PmStatusDesc>();
+		List<PmStatusDesc> statusDescLs = SmCommonUtil.
+				retrievePmStatusList(ModuleCodeConst.SUPPLIER_MANAGEMENT,DisciplinaryActionConst.DA_STATUS_DOC_TYPE,
+						new FacesScopes().getUserLocale().getLanguage());
+
+		if(statusDescLs.size() > 0){
+			for(PmStatusDesc status : statusDescLs){
+				if(Arrays.asList(discDropDownStatusArr).contains(status.getPmStatus().getStatusId())){
+					statDescs.add(status);
+				}
+			}
+		}
+
+		return statDescs;
 	}
 }
