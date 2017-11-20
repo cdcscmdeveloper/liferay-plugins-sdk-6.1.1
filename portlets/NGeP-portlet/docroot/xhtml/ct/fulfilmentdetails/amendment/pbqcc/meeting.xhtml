@@ -22,10 +22,14 @@
                                          listener="#{ctBackingBean.onRowUnselect}" update=":form:meetingDelBtn" />
               
                 <p:column selectionMode="multiple" style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>  
-                <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.date.of.meeting']}" styleClass="column-align-center" >
+                <p:column style="width:25%;white-space:normal;" styleClass="column-align-center" >
+			           <f:facet name="header">
+				             <h:outputText value="#{lbl['lbl.ct.date.of.meeting']}" styleClass="required"/>
+				        </f:facet>
 			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
 			              maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				   		  mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+				   		  required="true" label="#{lbl['lbl.ct.date.of.meeting']}"
 			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 			              disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
 			          </p:calendar>
@@ -36,6 +40,7 @@
 			             <h:outputText value="#{lbl['lbl.ct.location.of.meeting']}" styleClass="required" />
 			         </f:facet>
 				      <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;" maxlength="50"
+				      	required="true" label="#{lbl['lbl.ct.location.of.meeting']}"
 				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"/>
 			     </p:column> 
 			   
@@ -44,6 +49,7 @@
 			             <h:outputText value="#{lbl['lbl.ct.status']}" styleClass="required"/>
 			        </f:facet>
 				      <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}"  style="with:150px;"
+				      	required="true" label="#{lbl['lbl.ct.status']}"
 				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
 			              <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
 			          </p:selectOneMenu>
