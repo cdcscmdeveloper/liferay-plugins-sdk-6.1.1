@@ -949,7 +949,15 @@ public class SPDetailBackingBean extends
 				answers = getManagedBean().getTemplateSpecBean()
 						.getSpecAnswerList();
 			}
-
+            if(answers == null || answers.size() == 0){
+            	throw new EpException(MessageConst.ERROR_760463);	
+            }else{
+            	for(TplSpecAnswer answer:answers){
+            		if(answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)){
+            			throw new EpException(MessageConst.ERROR_760464);
+            		}
+            	}
+            }
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
