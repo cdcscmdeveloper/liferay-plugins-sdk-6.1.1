@@ -39,7 +39,7 @@
 				<p:column width="25%;" style="white-space:normal;">
 					<f:facet name="header">#{lbl['lbl.bpm.title']}</f:facet>
 					<p:commandLink
-						action="#{bpmErrorListBackingBean.onClickPayload(errors.taskId)}"
+						action="#{bpmErrorListBackingBean.onClickPayload(errors.title,errors.taskId)}"
 						oncomplete="payloadPopUp.show()" update="@form">
 							#{errors.title}
 					</p:commandLink>
@@ -72,9 +72,9 @@
 			</p:dataTable>
 
 			<p:dialog id="payloadPopUp" widgetVar="payloadPopUp"
-				header="Payload #{bpmErrorListBackingBean.managedBean.title}"
-				styleClass="screen-title" resizable="false" modal="true" width="800"
-				height="700">
+				header="#{bpmErrorListBackingBean.managedBean.errorMessageTitle}"
+				styleClass="screen-title" resizable="false" modal="true" width="400"
+				height="350">
 				<h:outputText
 					value="#{bpmErrorListBackingBean.managedBean.payloadContent}"
 					escape="false" />
