@@ -2208,10 +2208,16 @@ public class DirectLOABackingBean extends
 			}
 		}
 		loa.setScQt(scQt);
+		loa.setEstimatedPrice(scQt.getExpectedIntendedPrice());
 		loa.setProcurementMode(scQt.getProcurementMode());
+		loa.setProcurementTypeCatId(scQt.getProcurementTypeCatId());
 		
 		if (loa.getProcurementMode() == null) {
 			loa.setProcurementMode(new PmParameter());
+		}
+		
+		if (loa.getProcurementTypeCatId() == null) {
+			loa.setProcurementTypeCatId(new PmParameter());
 		}
 		
 		PmParameter qtTypeCode = null;
