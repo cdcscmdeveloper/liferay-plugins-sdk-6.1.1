@@ -246,9 +246,14 @@ public class SPDetailBackingBean extends
 						|| (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION
 								.equals(qtStatus.getStatusId()))) {
 					getManagedBean().setReadOnly(true);
+					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					getManagedBean().setReadOnly(isReadonly);
+					if(resDTO.getScQtProposal().isSubmitted()){
+						getManagedBean().setReadOnly(true);
+					}else{
+						getManagedBean().setReadOnly(isReadonly);
+					}
 					Date today = new Date();
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
@@ -4428,6 +4433,27 @@ public class SPDetailBackingBean extends
 			throw new EpException(MessageConst.ERROR_760461,
 					new String[] {qtSB.toString(),closeDateFormat.format(qt.getClosingDate()).toString()});
 		}
+	}
+	/**
+	 * Method to update scQTProposal to allow resubmit.
+	 */
+	public void updateProposal(){
+		getManagedBean().setReadOnly(false);
+		ScQtProposal proposal = this.getManagedBean().getQtProposal();
+		proposal.setSubmitted(false);
+		try{
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setScQtProposal(proposal);
+			ProposalResDTO resDTO = getProposalSO().updateQTProposalForReSubmit(reqDTO);
+			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
+		}
+		finally{
+			
+		}
+	}
+	
+	public boolean isProposalSubmitted(){
+		return this.getManagedBean().getQtProposal().isSubmitted();
 	}
 	
 }

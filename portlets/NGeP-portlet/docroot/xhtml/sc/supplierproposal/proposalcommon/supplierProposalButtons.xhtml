@@ -32,7 +32,12 @@
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
-					update="spkiOutputPanel" process="@form" /></td>
+					update="spkiOutputPanel" process="@form" />
+				<p:commandButton value="#{lbl['lbl.btn.update']}"
+					styleClass="BtnSpacing"  onstart="updateProposal.show()"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
+					update="@this" process="@this" partialSubmit="true"/>
+					</td>
 		</tr>
 	</table>
 
@@ -43,6 +48,27 @@
 			challengeQues1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{supplierProposalDetailBackingBean.enableAutoUpdate()}" />
+	</p:outputPanel>
+	<p:outputPanel id="updateProposalPopUp">
+		<p:dialog header="#{lbl['lbl.sc.dialog.confirm.update.proposal']}" width="400px"
+			height="125px" draggable="false" resizable="false" closable="false" closeOnEscape="flase"
+			styleClass="pop_up_top" widgetVar="updateProposal"
+			showEffect="fade" hideEffect="fade" modal="false"
+			id="updateProposal">
+			<div align="left" >
+			<h:outputText value="#{lbl['lbl.sc.proposal.update.instruction']}" style="white-space : normal;align - left;" />
+			</div>
+			<br/>
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				styleClass="BtnSpacing"
+				onstart="updateProposal.hide();" immediate="true" />
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" styleClass="BtnSpacing"
+				action="#{supplierProposalDetailBackingBean.updateProposal}" oncomplete="updateProposal.hide();"
+				process="@this" partialSubmit="true"
+				update="form" />
+		</div>
+		</p:dialog>
 	</p:outputPanel>
 
 </ui:composition>
