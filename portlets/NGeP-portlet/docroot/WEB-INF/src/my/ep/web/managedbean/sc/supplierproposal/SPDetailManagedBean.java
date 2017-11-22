@@ -191,25 +191,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private boolean agreeWithOthersTermsConditions;
 	private String integrityPact;
 	private String othersTermsConditions;
-	// Added by vidyasagarReddy
 	private String pageUrl;
 	private String docDefinitionKey;
 	private String checkListDefintionKey;
 	private List<ScQtProposal> selectMultipleProposalList;
-
 	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
-	
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
-
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
 
 	private String encryptionKey;
-	
 	private String previousPageUrl;	
 	private boolean isProcCategoryMedicine;
+	private boolean qtClosed = false;
 	
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
@@ -1806,6 +1802,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setReportDownloadFileName(String reportDownloadFileName) {
 		this.reportDownloadFileName = reportDownloadFileName;
+	}
+	
+	/**
+	 * @return the qtClosed
+	 */
+	public boolean isQtClosed() {
+		return qtClosed;
+	}
+
+	/**
+	 * @param qtClosed the qtClosed to set
+	 */
+	public void setQtClosed(boolean qtClosed) {
+		this.qtClosed = qtClosed;
 	}
 
 }
