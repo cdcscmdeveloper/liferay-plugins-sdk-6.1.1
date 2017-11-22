@@ -238,9 +238,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	/**
 	 * Catalog Items added to CatalogueMaintenance.
 	 * 
-	 * @return String(../catalogue/preRenderCatalogueMaintenanceFile.xhtml)  
+	 * @return String(../catalogue/preRenderCatalogueMaintenanceFile.xhtml)   
 	 */
-	public String addServiceToMaintain() {
+	public String addServiceToMaintain()  {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -258,8 +258,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
 
-		log.info("getSmSupplier"
-				+ smResDTO.getResultBean().getResultList().get(0));
+		
+		if(smResDTO.getResultBean()==null){
+			throw new EpException("Unable to get Supplier Profile");
+		}
+		
+		
+		
 
 		CodificationBackingBean bb = new CodificationBackingBean();
 
