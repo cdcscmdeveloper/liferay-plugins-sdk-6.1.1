@@ -183,6 +183,12 @@ public class QTFieldMapper {
 				new String[] { 
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD}),
+					
+		// QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE
+		QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE,
+				new String[] { 
+						QTFieldConst.FIELD_QT_CLOSING_DATE,
+						QTFieldConst.FIELD_QT_VALIDITY_PERIOD }),
 						
 		// QT Closed				
 		QT_CLOSED(QTStatusConst.QT_CLOSED,

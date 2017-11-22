@@ -34,7 +34,7 @@
 												showOn="button"
 												size="15">
 												<p:ajax event="dateSelect" process="@this"
-													listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
+													listener="#{qTScheduleDetailBackingBean.handleReschedulePublishedDate()}"
 													update="scheduleDetalsPublishingClosing" />
 											</p:calendar>
 											<p:inputText id="rePublishTime" value="#{DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime())}" disabled="true" size="4"
@@ -117,8 +117,9 @@
 					<table>
 					<tr>
 						<td>
+							<ui:param name="isClosingDateEnable" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CLOSING_DATE)}" />
 							<c:choose>
-								<c:when test="#{qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE}">
+								<c:when test="#{isClosingDateEnable and qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE}">
 									<p:calendar id="resClosingDate"
 										mindate="#{DateUtils.addDays(qTScheduleDetailBackingBean.managedBean.today, 1)}"
 										label="#{lbl['lbl.sc.closing.date']}"
