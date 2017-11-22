@@ -30,6 +30,7 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private List<WorklistItemVO> errorList;
 	private static Map bpmMap = null;
+	private String errorMessageTitle;
 	private String processName;
 	private String[] action;
 	private String errorId;
@@ -49,6 +50,8 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	
 	private List<SelectItem> docStatusList;
 	private int docStatus;
+	
+	private long docId;
 	
 	private PagingDataModel<WorklistItemVO> errorListDataModel = new errorPagingDataModel();
 
@@ -80,6 +83,20 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	 */
 	public static void setBpmMap(Map bpmMap) {
 		BPMErrorListManagedBean.bpmMap = bpmMap;
+	}
+
+	/**
+	 * @return the errorMessageTitle
+	 */
+	public String getErrorMessageTitle() {
+		return errorMessageTitle;
+	}
+
+	/**
+	 * @param errorMessageTitle the errorMessageTitle to set
+	 */
+	public void setErrorMessageTitle(String errorMessageTitle) {
+		this.errorMessageTitle = errorMessageTitle;
 	}
 
 	/**
@@ -333,6 +350,20 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	public void setDocStatus(int docStatus) {
 		this.docStatus = docStatus;
 	}
+	
+	/**
+	 * @return the docId
+	 */
+	public long getDocId() {
+		return docId;
+	}
+
+	/**
+	 * @param docId the docId to set
+	 */
+	public void setDocId(long docId) {
+		this.docId = docId;
+	}
 
 	/**
 	 * @return the errorListDataModel
@@ -390,6 +421,8 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 						setTitle(worklistItemVO.getTitle());
 					}
 				}
+				
+				
 				
 				if (responseDTO.getWorklistVO() != null) {
 					System.out.println("testing BPM******size="

@@ -145,9 +145,11 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		return "errorListView?faces-redirect=true";
 	}
 
-	public void onClickPayload(String taskId) throws JAXBException{
+	public void onClickPayload(String title,String taskId) throws JAXBException{
 		
+		this.getManagedBean().setErrorMessageTitle("");
 		this.getManagedBean().setPayloadContent("");
+		this.getManagedBean().setErrorMessageTitle(title);
 		
 		ErrorDataType pojo = null;
 		
@@ -161,10 +163,10 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		
 		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
 
-		if(resDTO.getPojo() != null){
+		if(resDTO != null){
 			pojo = (ErrorDataType) resDTO.getPojo();
 		}
-
+		
 		this.getManagedBean().setPayloadContent(pojo.getErrorDesc());
 		
 		refreshError();
