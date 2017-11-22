@@ -4357,7 +4357,9 @@ public class QTDetailBackingBean extends
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				Long currentStatusId = qtDetails.getQtStatus().getStatusId();
 				
-				if (QTStatusConst.QT_PENDING_PUBLICATION.equals(currentStatusId)) {
+				if (QTStatusConst.QT_PENDING_PUBLICATION.equals(currentStatusId) ||
+						QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(currentStatusId) ||
+						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(currentStatusId)) {
 					if (amendMentBean != null) {						
 						List<String> enableFields = QTFieldMapper.getEnableFieldsByStatus(currentStatusId,
 								true, !getManagedBean().isReadOnly());
