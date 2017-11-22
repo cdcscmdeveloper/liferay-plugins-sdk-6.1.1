@@ -334,7 +334,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				if(itemAddr.getDeliveredQty().doubleValue()>0){
 					if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
-						BigDecimal unitPriceCal=itemAddr.getUnitPrice();
+						BigDecimal unitPriceCal=itemAddr.getGstUnitPrice();
 						delAmtCal=unitPriceCal.multiply(itemAddr.getDeliveredQty());
 						itemAddr.setDeliveredAmt(delAmtCal.setScale(2, RoundingMode.HALF_UP));
 					}
@@ -590,24 +590,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().setFactoringCheck(id);
 		getFactoringCompanyDtl();
 		
-	}
-	
-	/**
-	 * Method calculate Order Amount based on order quantity and unit price.
-	 *
-	 * @param fulfilmentItemAddr the fulfilment item addr
-	 */
-	public void retrieveOrderAmount(FlFulfilmentItemAddr fulfilmentItemAddr){
-		double unitPrice = 0;
-		double ordQnty = 0;
-		double ordAmoun = 0;
-		if(null != fulfilmentItemAddr.getUnitPrice())
-			unitPrice= fulfilmentItemAddr.getUnitPrice().doubleValue();
-		if(null != fulfilmentItemAddr.getOrderedQty())
-			ordQnty = fulfilmentItemAddr.getOrderedQty().doubleValue();
-		ordAmoun =((unitPrice) * (ordQnty));
-		BigDecimal ordAmount=new BigDecimal(ordAmoun);
-		fulfilmentItemAddr.setOrderedAmt(ordAmount.setScale(2, RoundingMode.HALF_UP));
 	}
 	
 	/**
