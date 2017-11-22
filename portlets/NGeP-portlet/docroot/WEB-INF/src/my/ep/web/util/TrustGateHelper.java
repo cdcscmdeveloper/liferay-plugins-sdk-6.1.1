@@ -16,6 +16,8 @@ import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.web.constant.SPKIConst;
 
+import org.apache.log4j.Logger;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.msctg.cdc.pki.IKMCAPIResponse;
@@ -27,6 +29,7 @@ public class TrustGateHelper {
 	private static TrustGateHelper instance;
 	private static KMCClient client;
 	private static KMCRequestBuilder reqBuilder;
+	public static Logger log = Logger.getLogger(TrustGateHelper.class);
 
 	public KMCClient getKMCClient() {
 		URL resource = getClass().getResource(".");
@@ -115,7 +118,7 @@ public class TrustGateHelper {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(e.getMessage());
+			throw new EpException(MessageConst.ERROR_776062);
 		}
 
 		return signedData;
@@ -179,8 +182,8 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://digitalid.msctrustgate.com/cdc/changePIN/checkPin.jsp?userID="
-				+ identificationNo + "&token=" + encodedtoken;
+		String url = "https://digitalid.msctrustgate.com/cdc/changePIN/checkPin.jsp?secTkn="
+				+ encodedtoken;
 		externalContext.redirect(url);
 	}
 
@@ -190,11 +193,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://digitalid.msctrustgate.com/cdc/updateCR/checkPin.jsp?userID="
-				+ identificationNo
-				+ "&orgid="
-				+ epNo
-				+ "&token="
+		String url = "https://digitalid.msctrustgate.com/cdc/updateCR/checkPin.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
