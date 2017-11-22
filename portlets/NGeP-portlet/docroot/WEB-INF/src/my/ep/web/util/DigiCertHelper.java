@@ -181,7 +181,7 @@ public class DigiCertHelper {
 			}
 		} catch (KMCAPIException | InvalidKMCAPIFieldException e) {
 			e.printStackTrace();
-			throw new EpException(e.getMessage());
+			throw new EpException(MessageConst.ERROR_776062);
 		}
 		return signedData;
 	}
