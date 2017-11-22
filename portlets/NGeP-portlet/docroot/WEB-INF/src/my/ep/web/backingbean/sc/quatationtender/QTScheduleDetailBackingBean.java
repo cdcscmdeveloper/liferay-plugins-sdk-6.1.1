@@ -533,6 +533,39 @@ public class QTScheduleDetailBackingBean extends
 	}
 	
 	/**
+	 * To update publish date for reschedule
+	 */
+	public void handleReschedulePublishedDate() {
+		debugLogger("handleReschedulePublishedDate");
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		Date oldPublishDate = scQt.getPublishDate();
+		Date newPublishDate = scQt.getNewPublishDate();
+		if (newPublishDate != null) {
+			newPublishDate = DateUtils.setDefaultDateTime(newPublishDate);
+			scQt.setPublishDate(newPublishDate);
+			
+			if (!scQt.isBsvRequired()) {
+				scQt.setProposalStartDate(scQt.getPublishDate());
+			}
+			
+			updatePublishClosingDate(scQt);
+			
+			QtAmendMentBean amendMentBean = this.getManagedBean()
+					.getAmendMentBean();
+			if (null == amendMentBean) {
+				amendMentBean = new QtAmendMentBean();	
+				this.getManagedBean().setAmendMentBean(amendMentBean);
+			}
+			new QTBriefingSiteVisitBackingBean().putIntoAmendMentBeanIfChanged(
+					amendMentBean, 
+					QTFieldConst.FIELD_QT_PUBLISH_DATE, 
+					oldPublishDate, newPublishDate,
+					false);
+		}
+	}
+	
+	/**
 	 * To update closing date and proposal validity days for reschedule
 	 */
 	public void handleReschedulePublishClosingDate() {
@@ -541,7 +574,8 @@ public class QTScheduleDetailBackingBean extends
 		Date oldClosingDate = scQt.getClosingDate();
 		Date newClosingDate = scQt.getNewClosingDate();
 		if (newClosingDate != null) {
-			scQt.setClosingDate(DateUtils.setDefaultDateTime(newClosingDate));
+			newClosingDate = DateUtils.setDefaultDateTime(newClosingDate);
+			scQt.setClosingDate(newClosingDate);
 			if(scQt.isSampleReq()){
 				scQt.setSampleClosingDate(scQt.getClosingDate());
 			}
