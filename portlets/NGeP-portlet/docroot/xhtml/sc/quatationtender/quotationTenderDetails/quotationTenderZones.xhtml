@@ -104,7 +104,7 @@
 				<p:spacer width="1" />
 				<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
-				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,locationLevels"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,locationLevels,qtdetailsid"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
