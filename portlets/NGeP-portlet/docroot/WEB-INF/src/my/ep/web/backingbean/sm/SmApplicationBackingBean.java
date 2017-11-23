@@ -6617,6 +6617,7 @@ public class SmApplicationBackingBean extends
 		bank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		bank.setSmSupplierBranchBanks(new ArrayList<SmSupplierBranchBank>());
 		bank.setForHqFlg(1);
+		bank.setRevNo(1);
 		getManagedBean().setSelectedBank(bank);
 		getManagedBean().setBankStates(
 				SmCommonUtil.getStateList(getManagedBean().getSelectedBank()
