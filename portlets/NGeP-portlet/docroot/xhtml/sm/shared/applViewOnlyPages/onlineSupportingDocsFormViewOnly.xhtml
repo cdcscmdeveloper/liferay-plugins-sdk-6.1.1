@@ -34,21 +34,16 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.document.name']}" style="width : 20%;">
-				<p:outputLabel value="#{table.smApplDocFiles[0].fileName}"
-					style="float: left;white-space: normal;" rendered="#{not empty table.smApplDocFiles[0].fileName}"/>
-				<p:outputLabel value="#{lbl['lbl.sm.suppDoc.online.hardcopy']}"
-					style="float: left;white-space: normal;" rendered="#{empty table.smApplDocFiles[0].fileName}"/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.qt.nb.downloadDoc']}" style="width : 10%;text-align: center  !important;">
-				<p:commandLink rendered="#{not empty table.smApplDocFiles[0].fileName}"
-					action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].filePath)}"
-					update=":form" ajax="false">
-					<p:fileDownload value="#{viewSmApplBackingBean.file}" />
-					<p:graphicImage value="/css/images/design/download.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
+			<p:column headerText="#{lbl['lbl.pm.document.name']}" style="width : 30%;">
+				<p:dataList value="#{table.smApplDocFiles}" var="fileVar">
+					<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{fileVar.fileName}"
+						action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(fileVar.fileName,fileVar.filePath)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{viewSmApplBackingBean.file}" />
+					</p:commandLink>
+					<p:outputLabel value="#{lbl['lbl.sm.suppDoc.online.hardcopy']}"
+						style="float: left;white-space: normal;" rendered="#{empty fileVar.fileName}"/>
+				</p:dataList>
 			</p:column>
 		</p:dataTable>
 
