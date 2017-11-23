@@ -4012,8 +4012,8 @@ public class DirectLOABackingBean extends
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
 						//scLoaReportAttachment.setFileName(filename.toString());
-						generateDeclarationPdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+						/*generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);*/
 					}else if (SourcingConstants.DOC_DEF_KEY_SURAT_AKUAN_SYARIKAT
 							.equals(docDefinitionKey)){
 						//generateDeclarationOfOathFromVelocity(scLoaReportAttachment, scLoa);
