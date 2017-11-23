@@ -8,6 +8,9 @@
 	<p:messages id="bidRescheduleMessages"
 		autoUpdate="#{!(biddingBB.managedBean.autoUpdate)}" showDetail="true"
 		closable="true" showSummary="false" severity="error, info" />
+		
+	<ui:param name="isFailedQt"
+			value="#{biddingBB.managedBean.lastBidAction.actionType eq BiddingConst.BID_ACTION_TYPE_FAILED}" />	
 	<p:panel id="reScheduleOrRebid">
 		<table style="width: 100%">
 			<tr>
@@ -27,7 +30,7 @@
 										update="@this,newBidStart,reScheduleOrRebid"></p:ajax>
 								</p:selectOneRadio></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
-									value="#{lbl['lbl.sc.action.bidding.reschedule.tooltip']}" />
+									value="#{lbl[isFailedQt ? 'lbl.sc.action.bidding.failedqt.tooltip' : 'lbl.sc.action.bidding.reschedule.tooltip']}" />
 							</td>
 						</tr>
 					</table>
