@@ -1441,51 +1441,51 @@ public class SmCommonUtil {
 				&& compBasic.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
 			compBasic.setBumiPercent(compBasic
 					.getBumiEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setBumiPercentage(compBasic
 					.getBumiEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			log.debug("******* First Value of  setBumiPercent "
 					+ compBasic.getBumiPercent());
 			compBasic.setNonBumiPercent(compBasic
 					.getNonBumiEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setNonBumiPercentage(compBasic
 					.getNonBumiEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setForiegnerPercent(compBasic
 					.getForeignerEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setGovtUTPercent(compBasic
 					.getGovtUnitrustEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setGovtEquityPercent(compBasic
 					.getGovtEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setForiegnCompPercent(compBasic
 					.getForeignCompanyEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 			compBasic.setLocalCompPercent(compBasic
 					.getLocalCompanyEquity()
-					.divide(compBasic.getPaidUpCapital(), 4,
+					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+					.setScale(3, RoundingMode.HALF_UP));
 		}
 
 	}
@@ -1509,11 +1509,11 @@ public class SmCommonUtil {
 						.getShareAmt()
 						.divide(managedBean.getSmAppl().getSmCompanyBasic()
 								.getPaidUpCapital(), 8, RoundingMode.HALF_UP)
-						.multiply(mul).setScale(2, RoundingMode.HALF_UP));
+						.multiply(mul).setScale(3, RoundingMode.HALF_UP));
 			} else {
 				person.setShareAmt(new BigDecimal(0).setScale(2,
 						RoundingMode.HALF_UP));
-				person.setSharePercentage(new BigDecimal(0).setScale(2,
+				person.setSharePercentage(new BigDecimal(0).setScale(3,
 						RoundingMode.HALF_UP));
 			}
 		}
