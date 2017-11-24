@@ -72,8 +72,10 @@ public class QTProposalCloseSchedulingJob implements Job {
 			if (!closedQts.isEmpty()) {
 				for (ScQt closedQt : closedQts) {
 					try {
-						if (!closedQt.getClosingDate().before(
+						if (closedQt.getClosingDate().before(
 								DateUtils.getCurrentDate())) {
+							reSchedulePublicationForPublishFailQt(closedQt);
+						} else {
 							ScSchedulerHelper.getInstance()
 									.scheduleSimpleQTClosingJob(closedQt);
 							log.info("simple job was built to close proposal for QT with No: "
@@ -97,7 +99,7 @@ public class QTProposalCloseSchedulingJob implements Job {
 
 	}
 
-	/*private void reSchedulePublicationForPublishFailQt(ScQt qt) {
+	private void reSchedulePublicationForPublishFailQt(ScQt qt) {
 		if (proposalSO == null) {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -112,6 +114,6 @@ public class QTProposalCloseSchedulingJob implements Job {
 			log.info("Work flow status updated for proposal close failed QT with id"
 					+ qt.getQtId());
 		}
-	}*/
+	}
 	
 }
