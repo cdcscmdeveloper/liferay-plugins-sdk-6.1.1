@@ -44,13 +44,13 @@
         </p:column>
  
         <p:column style="width:30%;" styleClass="column-align-center">
-            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" />
+            <f:facet name="header"><h:outputText styleClass="required" />
             	#{lbl['lbl.ct.delivery.term']}
             	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.term']}"/>
             </f:facet>
              <p:treeNode type="zone">
              	<h:panelGrid columns="2" style="width:30%;" styleClass="zone-tree-node">
-	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="false" maxlength="4"
+	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true" maxlength="4"
 	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
 	                     disabled="#{ctBackingBean.managedBean.viewContract or 
 	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">

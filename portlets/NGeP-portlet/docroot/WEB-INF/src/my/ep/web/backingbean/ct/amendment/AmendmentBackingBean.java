@@ -1111,6 +1111,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_750033);
 			}
+			// Validation for delivery term 
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
+				!ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+				if(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getDeliveryTerm() <= 0){
+					setTabValue("FD");
+					throw new EpException(MessageConst.ERROR_100062);
+				}
+    		}
 			//Validation for PID
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
 					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid() && 
@@ -1162,7 +1170,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getZoneObjDetails();
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null) {
 					for (CtContractZone contractZone : ctBackingBean.getManagedBean().getContractVer().getCtContractZones()) {
-						if (contractZone.getDeliveryTerm() == 0) {
+						if (contractZone.getDeliveryTerm() <= 0) {
 							setTabValue("ZO");
 							throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
 						}
