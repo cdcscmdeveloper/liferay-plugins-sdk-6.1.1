@@ -603,7 +603,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
 			if (remark == null || remark.length() == 0) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -611,7 +610,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		} else {		
 			if (getManagedBean().getFactoring().getFileName() == null 
 					|| getManagedBean().getFactoring().getFileName().isEmpty()) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.agreement", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -619,7 +617,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (getManagedBean().isRemoveFactoring()){
 				if (getManagedBean().getFactoring().getRemoveFileName() == null 
 						|| getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.removal", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -627,7 +624,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}		
 			if (!getManagedBean().isAgreeFactoringClause()) {
 				if ((isSupplierRole() ||  isApproverRole()) && !getManagedBean().isRemoveFactoring()) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_750001);
 				}
 			}
@@ -641,7 +637,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) 
 					&& getManagedBean().getApproverModel().getTarget().size() == 0) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 			}
 		

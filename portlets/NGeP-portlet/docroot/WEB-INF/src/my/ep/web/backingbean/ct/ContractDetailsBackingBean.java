@@ -870,10 +870,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								 				CommonUtils commonUtils = new CommonUtils();
 								 				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
 								 						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-								 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-								 						setTabValue("IT");
+								 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+								 						setTabValue("AG");
 								 					}else{
-								 						setTabCentralValue("IT");
+								 						setTabCentralValue("AG");
 								 					}
 								 					throw new EpException(MessageConst.ERROR_750007, new String[] {nf.format(overallContractAmount)}); 
 								 					// Total ceiling value exceeded contract value. Please check your ceiling amount.
@@ -899,7 +899,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 										// Validation for minimum order quantity
 										if (item.getMinimumOrderQty() <= 0) {
 											item.setMinimumOrderQty(1);
-													if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+													if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 														setTabValue("IT");
 													} else {
 														setTabCentralValue("IT");
@@ -917,7 +917,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 												}
 								
 												if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
-														if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+														if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 																setTabValue("IT");
 														}else{
 															setTabCentralValue("IT");
