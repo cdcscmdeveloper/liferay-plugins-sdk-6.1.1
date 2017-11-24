@@ -66,7 +66,10 @@ public class QTPublishSchedulingJob implements Job {
 			if (!publisingQts.isEmpty()) {
 				for (ScQt qtToPublish : publisingQts) {
 					try{
-						if(!qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
+						if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
+							log.info("QT supposed to reschedule is :"+qtToPublish.getQtNo());
+							reSchedulePublicationForPublishFailQt(qtToPublish);
+						}else{
 							ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
 							log.info("Simple Job was Built to Publish QT with No: "+qtToPublish.getQtNo());
 						}
@@ -86,7 +89,7 @@ public class QTPublishSchedulingJob implements Job {
 
 	}
 	
-	/*private void reSchedulePublicationForPublishFailQt(ScQt qt){
+	private void reSchedulePublicationForPublishFailQt(ScQt qt){
 		if(proposalSO == null){
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -99,5 +102,5 @@ public class QTPublishSchedulingJob implements Job {
 		if(resDTO.isSuccessful()){
 			log.info("Work flow status updated for publish failed QT with id"+qt.getQtId());
 		}
-	}*/
+	}
 }
