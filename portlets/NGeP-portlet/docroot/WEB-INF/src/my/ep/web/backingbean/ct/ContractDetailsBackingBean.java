@@ -832,7 +832,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							ctBB.getZoneObjDetails();
 							if (ctBB.getManagedBean().getContractVer().getCtContractZones() != null) {
 								for (CtContractZone contractZone : ctBB.getManagedBean().getContractVer().getCtContractZones()) {
-									if (contractZone.getDeliveryTerm() == 0) {
+									if (contractZone.getDeliveryTerm() <= 0) {
 										getManagedBean().setSelectedTabIndex(1);
 										throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
 									}
