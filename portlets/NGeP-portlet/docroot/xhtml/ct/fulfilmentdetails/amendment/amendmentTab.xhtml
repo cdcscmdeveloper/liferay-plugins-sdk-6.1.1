@@ -86,17 +86,17 @@
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.fd']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq null}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'FD')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('FD')}" update=":form" />
 	
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.amendment']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq null}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AD')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('AD')}" update=":form" />
 	
 	 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()"  oncomplete="blockWidget.hide()" 
 		    rendered="#{(amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
 		   ctBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)) or (amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing)}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('ZO')}" update=":form" />
 		
 	 
 	    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.agency']}"
@@ -104,7 +104,7 @@
 			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange
 			and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
 			 and amendmentBackingBean.managedBean.ackFA eq null}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AG')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('AG')}" update=":form" />
 	      
 			 
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
@@ -112,14 +112,14 @@
 			 rendered="#{amendmentBackingBean.managedBean.ackFA eq null and 
 			((ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or  ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) 
 			or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}"
-			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+			 actionListener="#{amendmentBackingBean.setTabValue('IT')}" update=":form" />
 				
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
 		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
 		    rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and 
 		    ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
-			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'DE')}" update=":form" />
+			 actionListener="#{amendmentBackingBean.setTabValue('DE')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -127,22 +127,22 @@
 			and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange
 			and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SC')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('SC')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'LOD')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('LOD')}" update=":form" />
 	 
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.content']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'CNT')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('CNT')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.view.loa']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SLOA')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('SLOA')}" update=":form" />
 	
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -151,28 +151,28 @@
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq
 			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('PB')}" update=":form" />
 			
 	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.declaration']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SDEC')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('SDEC')}" update=":form" />
 			
 	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'MET')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('MET')}" update=":form" />
 	
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
 			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'DCN')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('DCN')}" update=":form" />
 	
 	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
+			actionListener="#{amendmentBackingBean.setTabValue('SE')}" update=":form" />
 	
 		</p:tabMenu>
 		 </td>
