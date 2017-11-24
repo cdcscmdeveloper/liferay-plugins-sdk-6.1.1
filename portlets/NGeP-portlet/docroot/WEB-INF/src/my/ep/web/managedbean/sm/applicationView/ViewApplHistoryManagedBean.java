@@ -105,10 +105,14 @@ public class ViewApplHistoryManagedBean extends
 		String retVal = statusOri;
 		if (st.getPmStatus() != null
 				&& st.getPmStatus().getStatusId() != null
-				&& st.getPmStatus()
+				&& (st.getPmStatus()
 						.getStatusId()
 						.compareTo(
-								SupplierManagementConst.PM_STATUS_CANCELLATION_APPROVED) == 0) {
+								SupplierManagementConst.PM_STATUS_CANCELLATION_APPROVED) == 0 || st
+						.getPmStatus()
+						.getStatusId()
+						.toString()
+						.equals(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM))) {
 			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
 					.getPmStatus().getStatusId());
 			if (sd != null) {

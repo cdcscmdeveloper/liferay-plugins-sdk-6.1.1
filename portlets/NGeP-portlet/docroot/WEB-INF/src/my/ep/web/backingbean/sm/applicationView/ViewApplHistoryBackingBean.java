@@ -227,19 +227,9 @@ public class ViewApplHistoryBackingBean extends
 				.getCurrentActiveWokFlowStatus(smAppl.getApplId());
 		if (sts != null && sts.getPmStatus() != null) {
 			smAppl.setWorkflowStatus(sts.getPmStatus());
+			smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
+					.getPmStatus()) : status);
 
-			// if status rejected by system, always show the status from
-			// workflow
-			if (sts.getPmStatus()
-					.getStatusId()
-					.toString()
-					.equals(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)) {
-				smAppl.setWorkflowStatusDesc(getApplicationStatus(sts
-						.getPmStatus()));
-			} else {
-				smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
-						.getPmStatus()) : status);
-			}
 			if (rejectedStatus.contains(sts.getPmStatus().getStatusId()
 					.toString())) {
 				getManagedBean().setResubmitUrl(
