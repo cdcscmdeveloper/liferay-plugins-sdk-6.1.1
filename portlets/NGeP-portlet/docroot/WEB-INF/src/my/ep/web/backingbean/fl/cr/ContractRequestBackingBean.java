@@ -2041,19 +2041,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(null == flItemAddr.getOrderedQty()){
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 			} else {
-				// skip the validation if the CR is from PID
-				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault()==null){
-					ContractItemResDTO itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
-					// Validation on service quantity without zone
-					if(itemResDTO.getCtItemMaxQuantity()!=null && itemResDTO.getCtItemMaxQuantity().getMaxQuantity()!=null) {	
-						if(flItemAddr.getOrderedQty().doubleValue() > itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
-							flItemAddr.setOrderedQty(BigDecimal.ZERO);
-							flItemAddr.setOrderedAmt(BigDecimal.ZERO);
-							throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
-						}	
-					}
-				}
-				
 				FlFulfilmentItemAddr oriItemAddr = flItemAddr;
 				if(getManagedBean().getItemAddrList()!=null && getManagedBean().getItemAddrList().contains(flItemAddr)){
 					FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
@@ -2072,18 +2059,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							oriItemAddr.setOrderedQty(BigDecimal.ZERO);
 							flItemAddr.setOrderedQty(BigDecimal.ZERO);
 							throw new EpException(MessageConst.ERROR_745056);
-						} else if (ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault() == null){ 
-							reqDTO.setContractZoneId(itemResDTO.getContractZoneId());
-							// Validation on service quantity with zone
-							itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
-							if(itemResDTO.getCtItemMaxQuantity()!=null && itemResDTO.getCtItemMaxQuantity().getMaxQuantity()!=null) {	
-								if(flItemAddr.getOrderedQty().doubleValue() > itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
-									flItemAddr.setOrderedQty(BigDecimal.ZERO);
-									flItemAddr.setOrderedAmt(BigDecimal.ZERO);
-									throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
-								}	
-							}							
-						}
+						} 
 					}
 				}
 				
@@ -5651,5 +5627,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setFeeVoteFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
 		}
 	
+	}
+	
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
 	}
 }

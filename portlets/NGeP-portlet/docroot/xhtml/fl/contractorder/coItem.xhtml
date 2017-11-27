@@ -9,6 +9,10 @@
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary1']}" escape="false"/> &#160;
 	<p:graphicImage value="/css/images/icon-expand.png" />&#160;
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary2']}" escape="false"/>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.items.spec.guideline']}" escape="false"  />
+	<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false" 
+				style="font-size:10px;font-style:italic" process="@this"
+				action="#{flOrderBB.downloadFile('/shared/FL/Item_And_Spec_Guideline.pdf')}"></p:commandLink>
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
