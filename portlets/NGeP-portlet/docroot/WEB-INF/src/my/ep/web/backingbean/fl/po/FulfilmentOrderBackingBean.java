@@ -1564,4 +1564,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			getManagedBean().setShowCommitmentNo(false);
 		}
 	}
+	
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
+	}
 }
