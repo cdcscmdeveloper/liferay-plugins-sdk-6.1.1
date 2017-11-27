@@ -619,21 +619,12 @@
 		
 		</p:panel>
 		
-		<p:dialog id="confirmDialog" widgetVar="confirmDialog"
-			header="#{lbl['lbl.sm.userprofile.confirmation']}" resizable="false"
-			width="600" height="200"
-			closable="false" modal="true">
+		<p:confirmDialog id="confirmDialog" closable="true"
+			message="#{smPersonnelBackingBean.managedBean.deactivateTerminateConfirmMsg}"
+			header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
+			widgetVar="confirmDialog">
 			
-			<table>
-				<tr>
-					<td align="center">
-						<h:graphicImage value="/css/images/design/exclamation.png" /> 
-						<p:outputLabel value="#{smPersonnelBackingBean.managedBean.deactivateTerminateConfirmMsg}" />
-					</td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
+			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
 					partialSubmit="true" onclick="confirmDialog.hide();"
 					onstart="blockWidget.show();"
@@ -642,8 +633,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
 					oncomplete="confirmDialog.hide();" />
 			</div>
-			
-		</p:dialog>
+		</p:confirmDialog>
 		
 	</ui:define>
 </ui:composition>
