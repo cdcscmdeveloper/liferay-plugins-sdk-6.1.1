@@ -159,6 +159,10 @@
 					process="@this"
 					update=":form:itemTaxGuideLineDialog"/>
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.items.spec.guideline']}" escape="false"  />
+			<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false"
+				style="font-size:10px;font-style:italic" process="@this"
+				action="#{contractRequestBackingBean.downloadFile('/shared/FL/Item_And_Spec_Guideline.pdf')}"></p:commandLink>
 			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.showItemAddrList}"
