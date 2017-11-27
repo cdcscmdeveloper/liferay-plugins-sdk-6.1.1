@@ -42,6 +42,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
@@ -104,6 +105,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	private BigDecimal tolerancePriceUpperBound;
 	private boolean toleranceCheck = Boolean.FALSE;
 	private String previousPageUrl = null;
+	private BigDecimal decrementBlockPercentage;
+	private String decrementBlockPopupMessage = "";
 
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
@@ -131,8 +134,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		IRuleSO ruleSO = null;
 
 		try {
-			ruleSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = getRuleSO();
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.BIDDING_TOLERANCE_PERCENTAGE);
 			RuleResDTO ruleResDTO = ruleSO
@@ -164,7 +166,29 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 			ruleSO = null;
 		}
 	}
-
+	
+	private void fetchDecBlkMaxPercentageRuleValue(){
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = getRuleSO();
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(RuleTypeConst.BIDDING_DECREMENT_BLOCK_PERCENTAGE);
+			RuleResDTO ruleResDTO = ruleSO
+					.getRuleValuesByRuleType(ruleReqDTO);
+			if (ruleResDTO.getRuleValueList() != null
+					&& ruleResDTO.getRuleValueList().size() != 0) {
+				PmConfigRuleValue configRulevalue = ruleResDTO
+						.getRuleValueList().get(0);
+				BigDecimal decremntBlockPercentageRuleValue = new BigDecimal(
+						configRulevalue.getRuleValue());
+				this.setDecrementBlockPercentage(decremntBlockPercentageRuleValue);
+				log.info("%%%%% Decremnt Block Percentage value is : "+decremntBlockPercentageRuleValue);
+			}
+		}finally{
+			
+		}
+	}
+	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -193,6 +217,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		PmUser supplierUser = (new FacesScopes().getUserSessionBean());
 		retrieveOnlineBiddingDtls(bidScheduleId, supplierUser.getUserId());
 		fetchTolerancePrice();
+		fetchDecBlkMaxPercentageRuleValue();
 	}
 
 	/**
@@ -454,7 +479,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 * 
 	 * @param scBidPrice
 	 */
-	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
+	/*public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
 
 		log.info("decrementAmountValueChangeListener");
 
@@ -513,7 +538,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
 	}
-
+*/
 	/**
 	 * Listener method for spinner component change events
 	 * 
@@ -639,9 +664,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		if (lastBidpriceTotal != null && newBidpriceTotal != null) {
 			this.index = this.getBidPrices().indexOf(scBidPrice);
 			Double diffPercentage = ((lastBidpriceTotal - newBidpriceTotal) / lastBidpriceTotal) * 100;
-			if (diffPercentage > 10) {
-
+			
+			if (diffPercentage > this.getDecrementBlockPercentage().doubleValue()) {
 				this.setScBidPrice(scBidPrice);
+				this.setDecrementBlockPopupMessage(ResourceBundleUtils.getMessage(
+						"lbl.sc.bidding.confirm.message",new String[]{this.getDecrementBlockPercentage().toString()},ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+				System.out.println("&&&&&"+ this.getDecrementBlockPopupMessage());
 				RequestContext.getCurrentInstance().execute(
 						"newBidPriceConfirm.show()");
 			} else {
@@ -1498,6 +1526,34 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		this.remainingTime = remainingTime;
 	}
 
+	/**
+	 * @return the decrementBlockPercentage
+	 */
+	public BigDecimal getDecrementBlockPercentage() {
+		return decrementBlockPercentage;
+	}
+
+	/**
+	 * @param decrementBlockPercentage the decrementBlockPercentage to set
+	 */
+	public void setDecrementBlockPercentage(BigDecimal decrementBlockPercentage) {
+		this.decrementBlockPercentage = decrementBlockPercentage;
+	}
+	
+	/**
+	 * @return the decrementBlockPopupMessage
+	 */
+	public String getDecrementBlockPopupMessage() {
+		return decrementBlockPopupMessage;
+	}
+
+	/**
+	 * @param decrementBlockPopupMessage the decrementBlockPopupMessage to set
+	 */
+	public void setDecrementBlockPopupMessage(String decrementBlockPopupMessage) {
+		this.decrementBlockPopupMessage = decrementBlockPopupMessage;
+	}
+
 	private String remainingTimeAfterPauseCalculator() {
 		if (this.scBidAction != null
 				&& this.scBidAction.getActionType().equalsIgnoreCase(
@@ -1519,4 +1575,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 			return "";
 		}
 	}
+
+	private IRuleSO getRuleSO(){
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+	}
+
 }
