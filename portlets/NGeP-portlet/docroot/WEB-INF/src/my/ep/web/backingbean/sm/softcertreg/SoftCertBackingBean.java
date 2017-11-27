@@ -156,6 +156,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void backToPersonnelListPage() {
 		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
+		getManagedBean().setSoftCertSelect(null);
+		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
 	}
 
 	/**
@@ -220,6 +222,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	public void navigateToRevokeUser() {
 		getManagedBean().setTargetPage(REVOKE_PAGE);
+		getManagedBean().setSoftCertSelect(null);
+		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
 	}
 
 	/**
