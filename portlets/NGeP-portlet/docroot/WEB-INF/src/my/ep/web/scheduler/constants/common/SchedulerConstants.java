@@ -36,16 +36,16 @@ public class SchedulerConstants {
 	public static final String SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB = "UPCOMING BIDSESSIONS REMINDER";
 	
 	// Sourcing Job description
-	public static final String SC_DAILY_JOB_DESCRIPTION = "Job to run daily at 11:55 PM";
-	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
-	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job to run daily at 11:55 PM to update qualified/disqualified suppliers";
-	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job to run daily at 12:05 AM";
-	public static final String SC_FAILOVER_HANDLER_JOB_DESCRIPTION = "Job to run once server started";
-	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run daily at 12:00 am to publish Qt's";
-	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run daily at 12:00 am to close proposal";
-	public static final String SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION  = "Job to Send Reminder for Quotation proposal validity";
-	public static final String SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION  = "Job to Send Reminder for Tender proposal validity";
-	public static final String SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB_DESCRIPTION = "Job to send reminder for upcoming bid sessions";
+	public static final String SC_DAILY_JOB_DESCRIPTION = "Job run daily at 23:55 to fetch data for eBidding that has been scheduled on the following day";
+	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job run every minute to update ebidding status for start, close and discruption bidding";
+	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job run daily at 23:55 to check and update qualified supplier data for quotation / tender after published";
+	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job run daily at 00:05 to send reminder when proposal validity period expired";
+	public static final String SC_FAILOVER_HANDLER_JOB_DESCRIPTION = "Job run upon server started to handle quotation / tender disruption scenarios";
+	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job run daily at 00:00 to pre-create scheduler for quotation / tender data that has been created on the day and scheduled for publishing date at 12:00 BREAKLINE For QT created after 00:00 until 12:00 on the day, system will create a real time scheduler in order to run at 12:00.";
+	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job run daily at 00:00 to pre-create scheduler for quotation / tender data that has been created on the day and scheduled for closing date at 12:00";
+	public static final String SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION  = "Job run daily 00:05 to send reminder to Desk Officer on quotation proposal validity remaining period (30, 14, 7, 3, 2, 1 days)";
+	public static final String SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION  = "Job run daily 00:05  to send reminder to Desk Officer on tender proposal validity remaining period (30, 14, 7, 3, 2, 1 days)";
+	public static final String SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB_DESCRIPTION = "Job run daily 00:05 to send reminder to supplier who participated in upcoming bid sessions for the day";
 	
 	// Contracts Module Constants
 	// CT Job Group ID
