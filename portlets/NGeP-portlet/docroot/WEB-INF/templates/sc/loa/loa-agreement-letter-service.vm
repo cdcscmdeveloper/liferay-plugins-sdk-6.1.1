@@ -13,64 +13,71 @@ p {
 
 .text_family {
 	font-family: Arial;
+	font-size: 15px;
 	font-weight: normal;
 	font-style: normal;
+	line-height: 20px;
 	text-decoration: none;
 	color: #333333;
 }
 
 .text_family_red {
 	font-family: Arial;
+	font-size: 15px;
 	font-weight: normal;
 	font-style: normal;
+	line-height: 20px;
 	text-decoration: none;
 	color: red;
 }
 
 .text_family_medium {
-	font-weight: Arial;
+	font-family: Arial;
 	font-weight: normal;
 	font-style: normal;
+	line-height: 20px;
 	text-decoration: none;
-	font-size: 16px;
+	font-size: 15px;
 	color: red;
 }
 
 .text_family_small {
-	font-weight: Arial;
+	font-family: Arial;
 	font-weight: normal;
 	font-style: normal;
+	line-height: 20px;
 	text-decoration: none;
-	font-size: 10px;
+	font-size: 9px;
 	color: red;
 }
 
 .text_family_bold {
 	font-family: Arial;
 	font-weight: bold;
-	font-size: 14px;
-	font-family: Albertus Medium;
+	font-size: 15px;
+	line-height: 20px;
 }
 
 .text_family_italic {
 	font-family: Arial;
 	font-style: italic;
-	font-size: 14px;
-	font-family: Albertus Medium;
+	font-size: 15px;
+	line-height: 20px;
 }
 
 .text_family_header {
-	font-weight: Arial;
-	font-size: 18px;
+	font-family: Arial;
+	font-size: 15px;
 	font-weight: bold;
-	font-family: Albertus Medium;
+	line-height: 20px;
 }
 
 .text_header_submenu {
 	font-family: Arial;
+	font-size: 15px;
 	font-weight: bold;
 	font-style: normal;
-	font-size: 14px;
+	line-height: 20px;
 	text-decoration: underline;
 }
 
@@ -79,6 +86,7 @@ p {
 	font-weight: bold;
 	font-style: normal;
 	font-size: 15px;
+	line-height: 20px;
 	text-decoration: underline;
 	color: red;
 }
@@ -88,6 +96,7 @@ p {
 	font-weight: bold;
 	font-style: normal;
 	font-size: 15px;
+	line-height: 20px;
 	text-decoration: none;
 	color: red;
 }
@@ -127,23 +136,28 @@ u {
 			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi *$headerTitle Perkhidmatan) <br /><br /><br /></span></td>
 		</tr>
 		<tr>
-			<td align="right">Rujukan Kami : $fileNo <br />Tarikh :
-				$govtSignDate <br /></td>
+			<td align="right"><span class="text_family">Rujukan Kami : $fileNo <br />Tarikh :
+				$govtSignDate <br /></span></td>
 		</tr>
 		<tr>
 			<td>
-				<span class="text_family_red">*PENGARAH URUSAN/ PENGURUS / PENGERUSI</span> <br />
+				<span class="text_family_red">*PENGARAH URUSAN/ PENGURUS / PENGERUSI </span><br />
+				<span class="text_family">
 				$supplierName <br />
 				$supplierAddressTable
 				(No. Pen. Kew : $mofNo) <br />
 				(No. Pen. CBP : $gstRegNo) <br />
+				</span>
 			</td>
 		</tr>
 	
 		<tr>
-			<td>Tuan, <br /> <br />  <span class="text_family_bold">$headerTitle Untuk : </span>
-				 $loaTitle <br />  <span class="text_family_bold"> No. *$headerTitle : </span>
-				$qtNo
+			<td>
+				<span class="text_family">Tuan, </span><br /> <br /> 
+				<span class="text_family_bold">$headerTitle Untuk : </span>
+				<span class="text_family">$loaTitle </span><br />  
+				<span class="text_family_bold"> No. *$headerTitle : </span>
+				<span class="text_family">$qtNo</span>
 			</td>
 		</tr>
 		<tr>
@@ -313,32 +327,32 @@ u {
 				</p>
 
 				<p>
-					<span class="text-family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan minimum peserta SL1M seramai $minSL1M orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+					<span class="text_family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan minimum peserta SL1M seramai $minSL1M orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 				</p>
 				<p>
 					<table width="50%" align="center">
 						<tr>
 							<td>
 							<p style="text-align:center">
-								<span class="text-family">1% X Harga Kontrak</span>
+								<span class="text_family">1% X Harga Kontrak</span>
 							</p>
 							<hr/>
 							<p style="text-align:center">
-								<span class="text-family">RM18,000*</span>
+								<span class="text_family">RM18,000*</span>
 							</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
 							<p style="text-align:center">
-								<span class="text-family">*Elaun SL1M (RM1,500 seorang x 12 bulan)</span>
+								<span class="text_family">*Elaun SL1M (RM1,500 seorang x 12 bulan)</span>
 							</p>
 							</td>
 						</tr>
 					</table>
 				</p>
 				<p>
-					<span class="text-family">7.	Bagi tujuan program SL1M ini, syarikat tuan adalah dikehendaki untuk:</span>
+					<span class="text_family">7.	Bagi tujuan program SL1M ini, syarikat tuan adalah dikehendaki untuk:</span>
 				</p>
 				
 				<div class="text_indent">
@@ -360,7 +374,7 @@ u {
 				</div>
 				
 				<p>
-					<span class="text-family">8.	Sekiranya syarikat tuan gagal mematuhi mana-mana terma di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
+					<span class="text_family">8.	Sekiranya syarikat tuan gagal mematuhi mana-mana terma di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
 				</p>
 				
 				<p>
