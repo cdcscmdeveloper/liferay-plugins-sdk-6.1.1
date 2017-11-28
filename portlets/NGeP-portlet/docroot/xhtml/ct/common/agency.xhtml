@@ -16,7 +16,7 @@
     	 	  <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	 	 	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
 	  		 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
-		    <br/>
+	  		 
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
        					value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   						selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
