@@ -819,6 +819,12 @@ public class CreateQtBackingBean extends
 						getManagedBean().getExistingSupplierLocationList());
 				
 				updateRestrictedTenderOpenFor(scQt);
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType()) && scQt.isZonal()) {
+					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+				}
 				
 			}
 			scQt.setZonal(false);
