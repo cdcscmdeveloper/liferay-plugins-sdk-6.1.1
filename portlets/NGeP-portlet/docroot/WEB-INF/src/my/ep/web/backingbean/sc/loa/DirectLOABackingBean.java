@@ -7310,6 +7310,8 @@ public class DirectLOABackingBean extends
 		
 		context.put("isZonal", scQt.isZonal());
 		
+		context.put("isSL1M", scLoa.isSl1mReq());
+		
 		String fileNo = "";
 		if(!StringUtils.isBlank(scQt.getFileNo())){
 			fileNo = scQt.getFileNo();
