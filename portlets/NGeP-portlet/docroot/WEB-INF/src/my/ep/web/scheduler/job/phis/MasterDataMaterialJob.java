@@ -31,7 +31,7 @@ public class MasterDataMaterialJob implements Job {
 			phisServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IPHISServiceSO.class);
-			phisServiceSO.createFilesforPHIS();
+			//phisServiceSO.createFilesforPHIS();
 			// please add resDTO to log better
 
 		} catch (Exception e) {
