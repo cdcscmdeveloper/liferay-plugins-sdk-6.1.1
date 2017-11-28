@@ -1553,6 +1553,9 @@ public class LOADetailBackingBean extends
 		boolean isZonal = scLoa.getScLoiLoa().isZonal();
 		context.put("isZonal", isZonal);
 		
+		boolean isSL1M = scLoa.isSl1mReq();
+		context.put("isSL1M", isSL1M);
+		
 		String fileNo = "";
 		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
 			fileNo = scLoiLoa.getFileNo();

@@ -180,7 +180,7 @@ u {
 						Surat ini suatu kontrak yang mengikat
 						terbentuk antara Kerajaan dengan syarikat tuan. 
 						#if($isAgreementReq == "true")
-							Satu dokumen kontrak hendaklah ditandatangani dalam kadar segera dengan
+							Satu dokumen kontrak hendaklah ditandatangani dengan kadar segera dengan
 							memasukkan semua terma sebagaimana dokumen *$subTitle
 							serta semua terma dalam <b><i>Lampiran A</i></b>. Sehingga dokumen
 							kontrak tersebut ditandatangani, surat ini hendaklah terus
@@ -326,31 +326,35 @@ u {
 					<span class="text_family">5.	Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
 				</p>
 
-				<p>
-					<span class="text_family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan minimum peserta SL1M seramai $minSL1M orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
-				</p>
-				<p>
-					<table width="50%" align="center">
-						<tr>
-							<td>
-							<p style="text-align:center">
-								<span class="text_family">1% X Harga Kontrak</span>
-							</p>
-							<hr/>
-							<p style="text-align:center">
-								<span class="text_family">RM18,000*</span>
-							</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-							<p style="text-align:center">
-								<span class="text_family">*Elaun SL1M (RM1,500 seorang x 12 bulan)</span>
-							</p>
-							</td>
-						</tr>
-					</table>
-				</p>
+				#if($isSL1M == "true")
+					<p>
+						<span class="text_family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan minimum peserta SL1M seramai $minSL1M orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+					</p>
+					<p>
+						<table width="50%" align="center" style="border-collapse: collapse;">
+							<tr>
+								<td style="border-bottom: 1px solid black;text-align: center;">
+									<span class="text_family">1% X Harga Kontrak</span>
+								</td>
+							</tr>
+							<tr>
+								<td style="border-top: 1px solid black;text-align: center;">
+									<span class="text_family">RM18,000*</span>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align:center">
+								<br/>
+									<span class="text_family">*Elaun SL1M (RM1,500 seorang x 12 bulan)</span>
+								</td>
+							</tr>
+						</table>
+					</p>
+				#else
+					<p>
+						<span class="text_family">6.	Syarikat tuan adalah digalakkan melaksanakan program Skim Latihan 1Malaysia (SL1M) seperti yang ditetapkan oleh Kerajaan.</span>
+					</p>
+				#end
 				<p>
 					<span class="text_family">7.	Bagi tujuan program SL1M ini, syarikat tuan adalah dikehendaki untuk:</span>
 				</p>
@@ -372,82 +376,155 @@ u {
 						<span class="text_family">(e)	mengemukakan laporan berkaitan pelaksanaan program SL1M kepada Sekretariat SL1M.</span>
 					</p>
 				</div>
-				
-				<p>
-					<span class="text_family">8.	Sekiranya syarikat tuan gagal mematuhi mana-mana terma di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
-				</p>
-				
-				<p>
-					<span class="text_family">9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan surat ini sekiranya:  </span></p>
+				#if ($isSL1M == "true")
+					<p>
+						<span class="text_family">8.	Sekiranya syarikat tuan gagal mematuhi mana-mana terma di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
+					</p>
+						
+					<p>
+						<span class="text_family">9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan surat ini sekiranya:  </span></p>
 
-				<div class="text_indent">
-					<p>
-						<span class="text_family">(a)	syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</span>
-					</p>
-					
-					<p>
-						<span class="text_family">(b)	syarikat tuan gagal mematuhi mana-mana terma yang dinyatakan  dalam Surat Akuan Pembida Berjaya; </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(c)	syarikat tuan telah membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau  melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai; </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(d)	syarikat tuan membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;</span>
-					</p>
-					
-					<p>
-						<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *$subTitle sehingga dokumen kontrak ditandatangani; </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(f)	syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu; </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen *$subTitle;</span>
-					</p>
-					
-					<p>
-						<span class="text_family">(i)	syarikat tuan/ pemilik/ rakan kongsi/ pengarah telah disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(j)	syarikat tuan digulungkan;</span>
-					</p>
-					
-					<p>
-						<span class="text_family">(k)	syarikat tuan membekal barang-barang yang tidak tulen, bukan baharu atau yang terpakai; </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(l)	syarikat tuan gagal mematuhi spesifikasi pembekalan yang ditetapkan; atau </span>
-					</p>
-					
-					<p>
-						<span class="text_family">(m)	terdapat perkara yang melibatkan kepentingan awam atau keselamatan dan kepentingan Negara. </span>
-					</p>
-				</div>
+					<div class="text_indent">
+						<p>
+							<span class="text_family">(a)	syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(b)	syarikat tuan gagal mematuhi mana-mana terma yang dinyatakan  dalam Surat Akuan Pembida Berjaya; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(c)	syarikat tuan telah membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau  melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(d)	syarikat tuan membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *$subTitle sehingga dokumen kontrak ditandatangani; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(f)	syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen *$subTitle;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(i)	syarikat tuan/ pemilik/ rakan kongsi/ pengarah telah disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(j)	syarikat tuan digulungkan;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(k)	syarikat tuan membekal barang-barang yang tidak tulen, bukan baharu atau yang terpakai; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(l)	syarikat tuan gagal mematuhi spesifikasi pembekalan yang ditetapkan; atau </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(m)	terdapat perkara yang melibatkan kepentingan awam atau keselamatan dan kepentingan Negara. </span>
+						</p>
+					</div>
 
-				
-				<p>
-					<span class="text_family">10.	Sekiranya surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 9, Kerajaan tidak akan bertanggungan bagi apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
-				</p>
+					
+					<p>
+						<span class="text_family">10.	Sekiranya surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 9, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+					</p>
 
-				
-				<p>
-					<span class="text_family">11.	Bersama-bersama surat ini disertakan Surat Akuan Pembida Berjaya dan Surat Akuan Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b>untuk ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini.  </span>
-				</p>
+					
+					<p>
+						<span class="text_family">11.	Bersama-bersama surat ini disertakan Surat Akuan Pembida Berjaya dan Surat Akuan Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b>untuk ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini.  </span>
+					</p>
 
-				<p>
-					<span class="text_family">12.	Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
-					Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
-				</p>
+					<p>
+						<span class="text_family">12.	Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
+						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
+					</p>
+				#else
+					<p>
+						<span class="text_family">8.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan surat ini sekiranya:  </span></p>
+
+					<div class="text_indent">
+						<p>
+							<span class="text_family">(a)	syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(b)	syarikat tuan gagal mematuhi mana-mana terma yang dinyatakan  dalam Surat Akuan Pembida Berjaya; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(c)	syarikat tuan telah membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau  melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(d)	syarikat tuan membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *$subTitle sehingga dokumen kontrak ditandatangani; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(f)	syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen *$subTitle;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(i)	syarikat tuan/ pemilik/ rakan kongsi/ pengarah telah disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(j)	syarikat tuan digulungkan;</span>
+						</p>
+						
+						<p>
+							<span class="text_family">(k)	syarikat tuan membekal barang-barang yang tidak tulen, bukan baharu atau yang terpakai; </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(l)	syarikat tuan gagal mematuhi spesifikasi pembekalan yang ditetapkan; atau </span>
+						</p>
+						
+						<p>
+							<span class="text_family">(m)	terdapat perkara yang melibatkan kepentingan awam atau keselamatan dan kepentingan Negara. </span>
+						</p>
+					</div>
+
+					
+					<p>
+						<span class="text_family">9.	Sekiranya surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 9, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+					</p>
+
+					
+					<p>
+						<span class="text_family">10.	Bersama-bersama surat ini disertakan Surat Akuan Pembida Berjaya dan Surat Akuan Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b>untuk ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini.  </span>
+					</p>
+
+					<p>
+						<span class="text_family">11.	Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
+						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
+					</p>
+				#end
 			</td>
 		</tr>
 		
@@ -799,17 +876,63 @@ u {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">10.1 Formula LAD </span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah 
-					dinyatakan secara jelas kepada syarikat dalam dokumen pelawaan.</td>
+					<td class="text_family_red">......................................</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
-						class="text_family_red">10.2 Kadar Asas Berdasarkan kadar
-							semasa pada tarikh LAD yang dikenakan</span></td>
+						class="text_family_red">10.2 Kadar Asas</span></td>
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">Berdasarkan kadar BLR pada tarikh tutup tender</td>
 				</tr>
-
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_red">10.3 Kadar Sehari</span></td>
+					<td class="text_family_red">:</td>
+					<td class="text_family_red">RM .................................</td>
+				</tr>
+				#if ($isSL1M == "true")
+					<tr>
+						<td colspan="3"><span class="text_header_submenu_red"> 11.
+							*Skim Latihan 1Malaysia (SL1M) (jika berkaitan)</span><br/>
+							<span class="text_family_red"><span class="text_family_small">
+							(Bagi perolehan yang telah melebihi nilai ambang berdasarkan 1PP/PK1.2)</span></span>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" class="submenu_padding" style="width:20%;"><span
+							class="text_family_red">11.1 Tertakluk kepada Pelaksanaan Program SL1M </span></td>
+						<td class="text_family_red">:</td>
+						<td class="text_family_red">Ya/Tidak 
+							<span class="text_family_small">(Berdasarkan nilai ambang yang ditetapkan dalam 1PP/PK1)</span></td>
+					</tr>
+					<tr>
+						<td align="left" class="submenu_padding" style="width:20%;"><span
+							class="text_family_red">11.2 Bilangan minimum peserta SL1M</span></td>
+						<td class="text_family_red">:</td>
+						<td class="text_family_red">......... peserta
+							<span class="text_family_small">Formula pergiraan:
+							<table width="50%" align="center" style="border-collapse: collapse;">
+								<tr>
+									<td style="border-bottom: 1px solid black;text-align: center;">
+										<span class="text_family_small">1% X Harga Kontrak</span>
+									</td>
+								</tr>
+								<tr>
+									<td style="border-top: 1px solid black;text-align: center;">
+										<span class="text_family_small">RM18,000*</span>
+									</td>
+								</tr>
+							</table>
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td align="right" colspan="3"><span class="text_family_red">
+						<span class="text_family_small">
+						*Elaun SL1M (RM1,500 seorang x 12 bulan)</span></span>
+						</td>
+					</tr>
+				#end
 				<tr>
 					<td colspan="3"><span class="text_family_red"> *<i>potong mana
 							yang tidak berkenaan</i></span></td>
@@ -854,18 +977,30 @@ u {
 						Bahagian GST<br/>
 						Aras 3 & 4, Blok A, Menara Tulus<br/>
 						No.22, Persiaran Perdana , Presint 3<br/>
-						<b>61200 PUTRAJAYA</b>
+						<b>61200 PUTRAJAYA</b><br/>
+						(u.p.: Pengarah Jabatan Pematuhan Cukai)
 					</span>
 				</p>
 				
 				<p style="text-align:left;">
 					<span class="text_family">
-						Sekretariat<br/>
-						Majlis Perundingan<br/>
-						Gaji Negara<br/>
+						*Sekretariat<br/>
+						Majlis Perundingan Gaji Negara<br/>
 						Kementerian Sumber Manusia<br/>
 						Aras 7, Blok D3, Kompleks D<br/>
 						<b>62530 PUTRAJAYA</b>
+					</span>
+				</p>
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						*Ketua Pengarah <br/>
+						Unit Perancang Ekonomi<br/>
+						Jabatan Perdana Menteri<br/>
+						Aras 2, Blok B5<br/>
+						Pusat Pentadbiran Kerajaan Persekutuan<br/>
+						<b>62502 PUTRAJAYA</b><br/>
+						(u.p.: Ketua Sekretariat SL1M)
 					</span>
 				</p>
 			</td>
