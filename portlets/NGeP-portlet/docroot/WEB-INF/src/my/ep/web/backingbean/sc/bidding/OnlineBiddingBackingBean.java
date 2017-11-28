@@ -183,6 +183,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 						configRulevalue.getRuleValue());
 				this.setDecrementBlockPercentage(decremntBlockPercentageRuleValue);
 				log.info("%%%%% Decremnt Block Percentage value is : "+decremntBlockPercentageRuleValue);
+				this.setDecrementBlockPopupMessage(ResourceBundleUtils.getMessage(
+						"lbl.sc.bidding.confirm.message",new String[]{this.getDecrementBlockPercentage().toString()},ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+				System.out.println("&&&&&"+ this.getDecrementBlockPopupMessage());
+			
 			}
 		}finally{
 			
@@ -667,9 +671,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 			
 			if (diffPercentage > this.getDecrementBlockPercentage().doubleValue()) {
 				this.setScBidPrice(scBidPrice);
-				this.setDecrementBlockPopupMessage(ResourceBundleUtils.getMessage(
-						"lbl.sc.bidding.confirm.message",new String[]{this.getDecrementBlockPercentage().toString()},ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-				System.out.println("&&&&&"+ this.getDecrementBlockPopupMessage());
 				RequestContext.getCurrentInstance().execute(
 						"newBidPriceConfirm.show()");
 			} else {
