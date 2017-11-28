@@ -242,7 +242,7 @@ public class SPDetailBackingBean extends
 			if (null != scQt.getClosingDate()) {
 				Date closingDate = scQt.getClosingDate();
 				PmStatus qtStatus = scQt.getQtStatus();
-				if (new Date(System.currentTimeMillis()).after(closingDate)
+				if (DateUtils.getCurrentDate().after(closingDate)
 						|| (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION
 								.equals(qtStatus.getStatusId()))) {
 					getManagedBean().setReadOnly(true);
@@ -3456,7 +3456,7 @@ public class SPDetailBackingBean extends
 		} catch (EpException e) {
 			String message = e.getMessage();
 
-			if (MessageConst.ERROR_760195.equals(message)) {
+			if (MessageConst.ERROR_760195.equals(message) || MessageConst.ERROR_760465.equals(message)) {
 
 				if (FacesContext.getCurrentInstance().getMessageList() != null
 						&& FacesContext.getCurrentInstance().getMessageList()
