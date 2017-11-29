@@ -32,6 +32,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -40,6 +41,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -49,6 +51,8 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -1377,6 +1381,7 @@ public class ApprovalBackingBean extends
 						}
 						
 					}
+					scQt=checkProcuremntCategoryMedicine(scQt);
 					scQt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 					
@@ -1398,7 +1403,28 @@ public class ApprovalBackingBean extends
 		
 		return approvalTypes;
 	}
-
+private ScQt checkProcuremntCategoryMedicine(ScQt scQt){
+	IQTSpecSO qtSpecSO =null;
+try{
+	 qtSpecSO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+	SpecificationReqDTO specReqDTO=new SpecificationReqDTO();
+	specReqDTO.setScQt(scQt);
+	SpecificationResDTO specResDTO=qtSpecSO.retriveSpecItemCount(specReqDTO);
+	log.info("itemCount"+specResDTO.getItemCount());
+	boolean isMedicine=isMultipleProposalCategory(scQt, null);
+	log.info("isMedicine"+isMedicine);
+	if(isMedicine || specResDTO.getItemCount()<=1){
+		scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);	
+	}else{
+		scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM);
+	}
+}finally{
+	qtSpecSO =null;
+}
+return scQt;
+}
 	private void revertToOldValues(ScQt scQt, List<ScQtApprovalRequest> approvalRequests) {
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
 			for (int i = 0; i < approvalRequests.size(); i++) {
