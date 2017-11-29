@@ -38,7 +38,7 @@ public class SchedulerConstants {
 	// Sourcing Job description
 	public static final String SC_DAILY_JOB_DESCRIPTION = "Job run daily at 23:55 to fetch data for eBidding that has been scheduled on the following day";
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job run every minute to update ebidding status for start, close and discruption bidding";
-	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job run daily at 23:55 to check and update qualified supplier data for quotation / tender after published";
+	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job run 3 times daily at 10:00, 17:00 and 23:55, to check and update qualified supplier data for quotation / tender after published.";
 	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job run daily at 00:05 to send reminder when proposal validity period expired";
 	public static final String SC_FAILOVER_HANDLER_JOB_DESCRIPTION = "Job run upon server started to handle quotation / tender disruption scenarios";
 	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job run daily at 00:00 to pre-create scheduler for QT data that has been created and scheduled for publishing date at 12:00 BRLN For QT created after 00:00 until 12:00 on the day, system will create a real time scheduler in order to run at 12:00.";
