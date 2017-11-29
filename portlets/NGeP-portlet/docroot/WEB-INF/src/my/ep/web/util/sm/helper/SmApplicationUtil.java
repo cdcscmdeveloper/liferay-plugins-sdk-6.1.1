@@ -2030,6 +2030,8 @@ public class SmApplicationUtil {
 			boolean validShrHldrsCap = true;
 			int i = 0;
 			BigDecimal perShrSum = new BigDecimal(0);
+			BigDecimal bumiShrSum = new BigDecimal(0);
+			BigDecimal foreignShrSum = new BigDecimal(0);
 			for (SmPersonnel per : managedBean.getSmapplShareHolders()) {
 				if (per.getShareAmt() == null
 						|| per.getShareAmt().compareTo(new BigDecimal(0)) == 0) {
@@ -2039,6 +2041,15 @@ public class SmApplicationUtil {
 					validShrHldrsCap = false;
 				} else {
 					perShrSum = perShrSum.add(per.getShareAmt());
+					if (per.getBumiFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						bumiShrSum = bumiShrSum.add(per.getShareAmt());
+					}
+					if (per.getPmCountry() != null
+							&& !per.getPmCountry()
+									.getCountryCode()
+									.equals(SupplierManagementConst.MALAYSIA_CODE)) {
+						foreignShrSum = foreignShrSum.add(per.getShareAmt());
+					}
 				}
 			}
 			if (!validShrHldrsCap) {
@@ -2067,6 +2078,24 @@ public class SmApplicationUtil {
 			// checking the personnel sum is exactly same as the sum of
 			// bumi +non bumi + non malaysian
 			if (perShrSum.compareTo(allPersCapSum) != 0) {
+				validAmt = false;
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				throw new EpException(MessageConst.ERROR_722554);
+			}
+			// check bumi share sum is exactly same as bumi equity
+			else if (bumiShrSum.compareTo(managedBean.getSmAppl()
+					.getSmCompanyBasic().getBumiEquity()) != 0) {
+				validAmt = false;
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				throw new EpException(MessageConst.ERROR_722554);
+			}
+			// check foreign share sum is exactly same as foreign equity
+			else if (foreignShrSum.compareTo(managedBean.getSmAppl()
+					.getSmCompanyBasic().getForeignerEquity()) != 0) {
 				validAmt = false;
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -2218,7 +2247,7 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722532,
 						new String[] { pers.getIdentificationNo() });
 			}
-			
+
 			String postCode = "";
 			for (SmPersonnelAddress addr : pers.getSmPersonnelAddresses()) {
 				if (addr.getAddressType() != null
@@ -4977,7 +5006,7 @@ public class SmApplicationUtil {
 				resDto = perSO.retrieveNonMalaysianShareHoldersByApplId(reqDto);
 				perType = SupplierManagementConst.PERSONNEL_TYPE_FRGNR;
 			} else {
-				if (managedBean.getSelectedShareHolder().getBumiFlg() == 1) {
+				if (managedBean.getSelectedShareHolder().getBumiFlgTrans() == 1) {
 					resDto = perSO.retrieveBumiShareHoldersByApplId(reqDto);
 					perType = SupplierManagementConst.PERSONNEL_TYPE_BUMI;
 				} else {
@@ -11576,13 +11605,11 @@ public class SmApplicationUtil {
 		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 		swReqDTO.setStatusIds(statusIds);
 		swReqDTO.setApplId(rejAppl.getApplId());
-		SmWorkflowStatus currWorkflow = SmServiceLookup
-				.getSmWorkFlowStatusSO()
+		SmWorkflowStatus currWorkflow = SmServiceLookup.getSmWorkFlowStatusSO()
 				.retrieveWorkflowByDocIdAndMultipleStatus(swReqDTO)
 				.getWorkflowStatus();
 		if (currWorkflow != null) {
-			Timestamp currentDate = new Timestamp(
-					System.currentTimeMillis());
+			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 			long diff = currentDate.getTime()
 					- currWorkflow.getCreatedDate().getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
