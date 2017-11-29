@@ -1602,15 +1602,12 @@ public class SmApplicationBackingBean extends
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-				boolean validSave = SmApplicationUtil.validateEquityOwnerCount(
-						getManagedBean(), currentTab, currentPageType);
-				if (validSave) {
-					validSave = SmApplicationUtil.validateEquityOwnerAmount(
-							getManagedBean(), currentTab, ruleHelper);
-				} else if (validSave) {
-					validSave = SmApplicationUtil.validateEquityCompanyAmount(
-							getManagedBean(), currentTab);
-				}
+				SmApplicationUtil.validateEquityOwnerCount(getManagedBean(),
+						currentTab, currentPageType);
+				SmApplicationUtil.validateEquityOwnerAmount(getManagedBean(),
+						currentTab, ruleHelper);
+				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
+						currentTab);
 			}
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
@@ -8501,13 +8498,13 @@ public class SmApplicationBackingBean extends
 			if (!getManagedBean().isShowTravelSoftwarePanel()
 					&& sec.isSupplierSystemVerified()) {
 				sec.setSupplierSystemVerified(false);
-				sec.setCheckCount(sec.getCheckCount() - 1);
 			}
 			if (!getManagedBean().isShowMachineryEquipmentPanel()
 					&& sec.isMachineryVerified()) {
 				sec.setMachineryVerified(false);
-				sec.setCheckCount(sec.getCheckCount() - 1);
 			}
+			
+			sec.setCheckCount(getTotalVerifiedSec(sec));
 			if (sec.getCheckCount() >= maxReviewCount
 					&& getManagedBean().isAllowedToApprove()) {
 				sec.setVerifiedAll(Boolean.TRUE);
@@ -8515,6 +8512,74 @@ public class SmApplicationBackingBean extends
 				sec.setVerifiedAll(Boolean.FALSE);
 			}
 		}
+	}
+
+	private int getTotalVerifiedSec(SmApplSectionReview sec) {
+		int retVal = 0;
+		if (sec.isAssocBodyVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isAssociateVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isBankVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isBasicVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isBranchVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isCaptialVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isCategoryVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isCertVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isEquityCompVerifed()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isExperienceVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isFactoryVerify()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isLicenseVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isMachineryVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isManufacturingVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isOfficeFacilityVerfied()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isPersonnelVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isShareholderVerifed()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isSitevisitVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isStaffVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isSupplierSystemVerified()) {
+			retVal = retVal + 1;
+		}
+		if (sec.isTrnsNetworkVerified()) {
+			retVal = retVal + 1;
+		}
+		return retVal;
 	}
 
 	private int getMaxSecCountByShowPanel() {
