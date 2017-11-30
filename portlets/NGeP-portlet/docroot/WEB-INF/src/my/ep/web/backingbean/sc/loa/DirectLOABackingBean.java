@@ -4223,6 +4223,7 @@ public class DirectLOABackingBean extends
 				.getTplSpecMaster());
 
 		this.getManagedBean().setProdTemplateSpecBean(bean);
+		this.getManagedBean().setProdFirst(0);
 		bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
 				.getSmSupplier());
 		if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
@@ -4247,6 +4248,7 @@ public class DirectLOABackingBean extends
 		serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
 				.getSmSupplier());
 		this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
+		this.getManagedBean().setServFirst(0);
 
 		if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
 				.isBrandNew()) {

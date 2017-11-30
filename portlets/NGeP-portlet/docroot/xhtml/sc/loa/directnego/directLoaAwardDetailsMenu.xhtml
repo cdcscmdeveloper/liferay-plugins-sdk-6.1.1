@@ -78,6 +78,7 @@
 
 	<h:panelGroup id="productAndServiceId">
 		<ac:templateSpec
+			first="#{directLOABackingBean.managedBean.prodFirst}"
 		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus}"
 			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
 			title="#{lbl['lbl.txt.product']}"
@@ -85,6 +86,7 @@
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
 
 		<ac:templateSpec
+			first="#{directLOABackingBean.managedBean.servFirst}"
 		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus}"
 			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
 			title="#{lbl['lbl.txt.service']}"
