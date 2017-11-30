@@ -267,11 +267,13 @@
 		<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
 			<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
-				update="questionTbl" partialSubmit="true" process="questionTbl">
+				update="questionTbl" partialSubmit="true" process="questionTbl"
+				oncomplete="#{addItemSpecOnComplete}">
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}"
-				update="questionTbl" partialSubmit="true" process="questionTbl">
+				update="questionTbl" partialSubmit="true" process="questionTbl"
+				oncomplete="#{addItemSpecOnComplete}">
 			</p:menuitem>
 		</p:menu>
 		<p:commandButton id="#{templateSpecId}delBtn" icon="ui-icon-delete"
