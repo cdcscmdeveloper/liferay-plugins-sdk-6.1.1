@@ -38,7 +38,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						new JobKey(SchedulerConstants.PHIS_VOT_FUND_JOB,
 								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 						MasterDataVotJob.class,
-						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerConstants.PHIS_PM_VOT_FUND_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
@@ -49,7 +49,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						new JobKey(SchedulerConstants.PHIS_VOT_FUND_DANA_JOB,
 								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 						MasterDataVotDanaJob.class,
-						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerConstants.PHIS_PM_DANA_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
@@ -60,7 +60,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						new JobKey(SchedulerConstants.PHIS_PROGRAM_JOB,
 								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 						MasterDataProgramJob.class,
-						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerConstants.PHIS_PM_PROGRAM_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
@@ -82,7 +82,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						new JobKey(SchedulerConstants.PHIS_KOD_JOB,
 								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 						MasterDataKodAkaunJob.class,
-						SchedulerConstants.PHIS_PM_JOB_DESC,
+						SchedulerConstants.PHIS_PM_KOD_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(

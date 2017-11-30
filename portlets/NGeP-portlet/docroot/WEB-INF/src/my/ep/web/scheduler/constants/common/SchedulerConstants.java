@@ -190,8 +190,11 @@ public class SchedulerConstants {
 	// PHIS OUT BOUND
 
 	public static final String EPERUNDING_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
-	public static final String PHIS_PM_JOB_DESC = "Job run every 5 minutes";
-	public static final String PHIS_DELIVERY_ADDRESS_JOB_DESC = "Job run every 5 minutes";
+	public static final String PHIS_PM_VOT_FUND_JOB_DESC = "Job run every 5 minutes to send Master Data VOT to PHIS.";
+	public static final String PHIS_PM_DANA_JOB_DESC = "Job run every 5 minutes to send Master Data Dana to PHIS.";
+	public static final String PHIS_PM_PROGRAM_JOB_DESC = "Job run every 5 minutes to send Master Data Program / Aktiviti to PHIS.";
+	public static final String PHIS_PM_KOD_JOB_DESC = "Job run every 5 minutes to send Master Data Kod Akaun to PHIS.";
+	public static final String PHIS_DELIVERY_ADDRESS_JOB_DESC = "Job run every 5 minutes to send Master Data Delivery Address to PHIS.";
 	public static final String PHIS_CM_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
 	public static final String PHIS_FL_JOB_DESC = "Job runs every 1 hour";
 	public static final String PHIS_MASTERDATA_MATERIAL_JOB_DESC = "Job runs every 1 hour";
