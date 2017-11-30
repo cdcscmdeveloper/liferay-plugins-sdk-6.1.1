@@ -289,6 +289,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
     /** The tracking dairy view. */
 	private boolean trackingDairyView;
 	
+	private int prodFirst;
+	private int servFirst;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1724,6 +1727,34 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setTrackingDairyView(boolean trackingDairyView) {
 		this.trackingDairyView = trackingDairyView;
+	}
+
+	/**
+	 * @return the prodFirst
+	 */
+	public int getProdFirst() {
+		return prodFirst;
+	}
+
+	/**
+	 * @param prodFirst the prodFirst to set
+	 */
+	public void setProdFirst(int prodFirst) {
+		this.prodFirst = prodFirst;
+	}
+
+	/**
+	 * @return the servFirst
+	 */
+	public int getServFirst() {
+		return servFirst;
+	}
+
+	/**
+	 * @param servFirst the servFirst to set
+	 */
+	public void setServFirst(int servFirst) {
+		this.servFirst = servFirst;
 	}
 	
 }
