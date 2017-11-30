@@ -47,7 +47,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_SEGMENT_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						SegmentSpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_SEGMENT_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -59,7 +59,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_FAMILY_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						FamilySpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_FAMILY_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -71,7 +71,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_CLASS_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						ClassSpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_CLASS_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -83,7 +83,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_COMMODITY_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						CommoditySpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_COMMODITY_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -94,7 +94,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_COLOR_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						ColorSpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_COLOR_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -105,7 +105,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_BRAND_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						BrandSpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_BRAND_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -116,7 +116,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_MEASUREMENT_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						MeasurementSpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_MEASUREMENT_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(
@@ -128,7 +128,7 @@ public class SpaSchedulerServlet extends HttpServlet {
 				new JobKey(SchedulerConstants.SPA_MASTER_DATA_TYPE_JOB,
 						SchedulerConstants.SPA_INTEGRATION_JOB_GROUP),
 						TypeSpaJob.class,
-						SchedulerConstants.SPA_JOB_DAILY_DESC,
+						SchedulerConstants.SPA_JOB_TYPE_DESC,
 						SchedulerPropertiesUtils
 						.getInstance()
 						.getProperty(

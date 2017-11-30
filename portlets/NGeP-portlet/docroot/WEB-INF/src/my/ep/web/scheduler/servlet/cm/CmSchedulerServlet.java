@@ -76,7 +76,7 @@ public class CmSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CM_DROP_SEQUENCE_JOB,
 				SchedulerConstants.CM_DROP_DOC_SEQ_JOB_GROUP),
 				CmDropSequenceJob.class,
-				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
+				SchedulerConstants.CM_DROP_SEQUENCE_JOB_DESC,
 				SchedulerPropertiesUtils
 				.getInstance()
 				.getProperty(
