@@ -13,6 +13,9 @@
 	<ui:param name="estimationPopup" value="#{templateSpecId}estimationPopup" />
 	<ui:param name="zoneTierPricePopup" value="#{templateSpecId}zoneTierPricePopup" />
 	<ui:param name="zoneQtyPopup" value="#{templateSpecId}zoneQtyPopup" />
+	<ui:param name="rowsPerPage" value="#{ac:convertAsInteger(50)}" />
+	<ui:param name="navToNextPage" value="#{templateSpecId}questionTblWidget.paginator.nextLink.click();" />
+	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
 	
 		<p:panel id="spg" header="#{title}" toggleable="true">
 			<h:panelGroup rendered="false">
@@ -100,10 +103,9 @@
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
 							 />
-				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
+				<p:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
-					
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
@@ -268,9 +270,9 @@
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
 							 />
-				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
+				<p:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
@@ -287,6 +289,9 @@
 					<ui:param name="isQuestion" value="true" />
 					
 						<c:if test="#{editable}">
+							<f:attribute name="rows" value="#{rowsPerPage}" />
+							<f:attribute name="first" value="#{initRow}" />
+							<ac:paginator for="questionTbl" />
 							<ui:decorate template="specColumnQuestion.xhtml" />
 							<ui:decorate template="specColumnQuestionAnswer.xhtml" />
 						</c:if>
