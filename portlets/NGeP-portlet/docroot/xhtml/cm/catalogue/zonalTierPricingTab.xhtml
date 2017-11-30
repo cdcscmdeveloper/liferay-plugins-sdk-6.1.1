@@ -91,7 +91,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{tier.startDate}" size="8" showOn="button" navigator="true"
-					rendered="#{tier.showFlag}"
+					rendered="#{tier.showFlag}" readonlyInput="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect"
@@ -117,7 +117,7 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{tier.endDate}" size="8" showOn="button" navigator="true"
-					rendered="#{tier.showFlag}"
+					rendered="#{tier.showFlag}" readonlyInput="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect"
