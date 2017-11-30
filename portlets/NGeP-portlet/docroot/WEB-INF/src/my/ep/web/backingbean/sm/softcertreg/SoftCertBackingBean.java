@@ -624,7 +624,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * Call SPKI Popup dialog
 	 */
 	public void onDisplaySpkiPopup() {
-		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		getManagedBean().getSpkiBackingBean().getChallengeQuestions(
+				getManagedBean().getSoftCertSelect().getIdentificationNo());
 		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 	}
 
@@ -643,8 +644,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				prepareOriginalText());
 		SpkiBackingBean spkiBackingBean = this.getManagedBean()
 				.getSpkiBackingBean();
-		byte[] signedData = spkiBackingBean
-				.spkiSignTransaction(prepareOriginalText());
+		byte[] signedData = spkiBackingBean.spkiSignTransaction(
+				prepareOriginalText(), getManagedBean().getSoftCertSelect()
+						.getIdentificationNo());
 		pmDigiSign.setSpkiSignedData(signedData);
 		getManagedBean().setDigiSign(pmDigiSign);
 		if (getManagedBean().getTargetPage() == PAYMENT_PAGE) {

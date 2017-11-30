@@ -121,8 +121,24 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
+	
+	public void getChallengeQuestions(String identificationNo) {
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+				challs = TrustGateHelper.getInstance().getChallengeQuestion(
+						identificationNo,
+						getSupplier().getEpNo(), challengeQues1);
+			} else {
+				challs = DigiCertHelper.getInstance().getChallengeQuestion(
+						identificationNo);
+			}
+			setChallengeQues1(challs.get(0));
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		}
+	}
 
-	public byte[] spkiEnabledSignTransaction(String originalText) {
+	public byte[] spkiEnabledSignTransaction(String originalText,
+			String identificationNo) {
 		if (getSupplier() == null) {
 			throw new EpException(MessageConst.ERROR_721018);
 		}
@@ -130,6 +146,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 				|| (getLoginUser() != null && getLoginUser().getUserId() == null)) {
 			throw new EpException(MessageConst.ERROR_721017);
 		}
+
+		identificationNo = StringUtils.isBlank(identificationNo) ? getLoginUser()
+				.getIdentificationNo() : identificationNo;
 
 		Map<Object, Object> challenges = new HashMap<Object, Object>();
 		challenges.put(challengeQues1, challengeAns1);
@@ -140,12 +159,12 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 		if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
 			signedData = TrustGateHelper.getInstance().getSignedData(
-					getLoginUser().getIdentificationNo(),
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+					identificationNo, getSupplier().getEpNo(), pin, challenges,
+					dataForSigning);
 		} else {
 			signedData = DigiCertHelper.getInstance().getSignedData(
-					getLoginUser().getIdentificationNo(),
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+					identificationNo, getSupplier().getEpNo(), pin, challenges,
+					dataForSigning);
 		}
 		return signedData;
 	}
@@ -153,7 +172,17 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public byte[] spkiSignTransaction(String originalText) {
 
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			return spkiEnabledSignTransaction(originalText);
+			return spkiEnabledSignTransaction(originalText, null);
+		} else {
+			return null;
+		}
+	}
+
+	public byte[] spkiSignTransaction(String originalText,
+			String identificationNo) {
+
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			return spkiEnabledSignTransaction(originalText, identificationNo);
 		} else {
 			return null;
 		}
