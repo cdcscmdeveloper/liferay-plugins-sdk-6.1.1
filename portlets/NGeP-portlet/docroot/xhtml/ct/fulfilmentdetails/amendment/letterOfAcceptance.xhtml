@@ -55,7 +55,8 @@
 				<h:panelGroup rendered="#{loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyAckOfLoaReceipt
 					or (loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance
 						and !amendmentBackingBean.managedBean.disableFinalAmendDetails)}">
-	   				<h:commandLink  action="#{amendmentBackingBean.downloadLOAContentFile(loaReportVar.docDefinitionKey)}" immediate="true">
+	   				<h:commandLink  action="#{amendmentBackingBean.downloadLOAContentFile(loaReportVar.docDefinitionKey)}" immediate="true"
+	   					disabled="#{loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance}">
 						<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 					</h:commandLink>
 					<ac:iconTooltip value="#{(loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance)
