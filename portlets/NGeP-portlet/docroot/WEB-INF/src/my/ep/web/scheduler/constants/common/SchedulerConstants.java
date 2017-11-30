@@ -267,7 +267,9 @@ public class SchedulerConstants {
 	// CM Related jobs
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB = "ITEM EXPIRED JOB";
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "CM JOB GROUP";
-	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
+	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run at 00:00 daily to remove the supplier catalogue items which are expired on the day before.";
+	public static final String CM_DROP_SEQUENCE_JOB_DESC = "Job run at 00:00 daily to generate sequence number for  prefix in codification document number.";
+	
 	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "CM JOB GROUP";
 	public static final String CM_DROP_SEQUENCE_JOB = "DROP SEQUENCE JOB";
 
