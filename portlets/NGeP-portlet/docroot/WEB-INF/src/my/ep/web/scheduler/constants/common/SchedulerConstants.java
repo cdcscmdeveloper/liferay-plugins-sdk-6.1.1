@@ -204,8 +204,16 @@ public class SchedulerConstants {
 	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job run once daily 12:15 AM";
 	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 1 AM";
 	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run every 3 minutes";
-	public static final String SPA_JOB_DESC = "Job run once daily after 12 AM";
+	public static final String SPA_JOB_DESC = "Job run once daily at 00:00 to send Master Data Masterial Information file";
 	public static final String SPA_JOB_DAILY_DESC = "Job run once daily after 12 AM";
+	public static final String SPA_JOB_MEASUREMENT_DESC = "Job run once daily after 00:10 to send Master Data Measurement file";
+	public static final String SPA_JOB_COMMODITY_DESC = "Job run once daily at 00:05 to send Master Data Commodity file";
+	public static final String SPA_JOB_FAMILY_DESC = "Job run once daily at 00:00 to send Master Data Family file";
+	public static final String SPA_JOB_TYPE_DESC = "Job run once daily at 00:10 to send Master Data Type file";
+	public static final String SPA_JOB_COLOR_DESC = "Job run once daily at 00:05 to send Master Data Color file";
+	public static final String SPA_JOB_BRAND_DESC = "Job run once daily at 00:10 to send Master Data Brand file";
+	public static final String SPA_JOB_CLASS_DESC = "Job run once daily at 00:05 to send Master Data Class file";
+	public static final String SPA_JOB_SEGMENT_DESC = "Job run once daily after 00:00 to send Master Data Segment file";
 	
 	
 	///GFMAS AUTO
