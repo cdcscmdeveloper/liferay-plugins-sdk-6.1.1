@@ -3459,7 +3459,8 @@ public class DirectLOABackingBean extends
 			this.getManagedBean().setTotalProgressivePayment(0);
 
 		}
-
+		checkFulFilmentType(this.getManagedBean().getScLoa());
+		calculateServiceTemplate();
 		this.getManagedBean().getScQt().setScQtSchedules(null);
 		this.getManagedBean().getScQt().setScQtProgressivePayments(null);
 		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
@@ -3468,7 +3469,28 @@ public class DirectLOABackingBean extends
 		checkAgreementMandatory();
 
 	}
-
+    private void checkFulFilmentType(ScLoa scLoa){
+    log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
+	PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
+	if(null!=fulfilMentType && 
+			ParameterConst.FULFILMENT_TYPE_ONE_OFF
+			.equals(fulfilMentType.getParameterCode())){
+			this.getManagedBean()
+			.getSpecTemplateSpecBean()
+			.getSpecMaster().setDurationMonth(
+				null);
+	}else{
+		this.getManagedBean()
+		.getSpecTemplateSpecBean()
+		.getSpecMaster()
+		.setDurationMonth(
+				scLoa.getContractDuration());
+	}
+	  log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster()
+				.getDurationMonth());
+}
 	/**
 	 * Gets the dropdown location values.display the Location level dropdown
 	 * values.
@@ -4309,6 +4331,47 @@ public class DirectLOABackingBean extends
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
 	
+	public void calculateServiceTemplate(){
+		log.info("start calculateServiceTemplate");
+		try{
+			TplSpecMaster serviceSpecMaster=this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
+			/*TemplateSpecBean serviceBean = new TemplateSpecBean(
+					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+			serviceBean.setSpecMaster(serviceSpecMaster);
+
+			serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+					.getSmSupplier());
+			this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
+			this.getManagedBean().setServFirst(0);*/
+			List<TplSpecAnswer> specAnswerList = null;
+
+			if (serviceSpecMaster.getTplSpecQuestions() != null) {
+				log.info("calculateServiceTemplateQuestionsNotNull");
+				specAnswerList = new ArrayList<TplSpecAnswer>();
+				for (TplSpecQuestion specQuestion : serviceSpecMaster
+						.getTplSpecQuestions()) {
+					if (specQuestion.getTplSpecAnswers() != null) {
+						specAnswerList.addAll(specQuestion.getTplSpecAnswers());
+					}
+				}
+			}
+			if (null!=specAnswerList && CollectionUtils.isNotEmpty(specAnswerList)) {
+				log.info("calculateServiceTemplateSpecAnswersNotNull");
+				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+				//backingBean.retrieveTemplateSpecMaster(serviceBean);
+				for(TplSpecAnswer specAnswer:specAnswerList){
+				backingBean.calcTotalAmount(this.getManagedBean().getSpecTemplateSpecBean(), specAnswer, true);
+				}
+				this.getManagedBean()
+						.getServicescQtDoc()
+						.setTplSpecMaster(
+								this.getManagedBean().getSpecTemplateSpecBean()
+										.getSpecMaster());
+			}	
+		}finally{
+			
+		}
+	}
 	/**
 	 * Page navigation from loa details page to qt loa list or dp loa list.
 	 */
@@ -6145,21 +6208,8 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		scLoa.setContractEffDate(null);
 		scLoa.setContractExpDate(null);
-		PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
-		if(null!=fulfilMentType && 
-			ParameterConst.FULFILMENT_TYPE_ONE_OFF
-			.equals(fulfilMentType.getParameterCode())){
-			this.getManagedBean()
-			.getSpecTemplateSpecBean()
-			.getSpecMaster().setDurationMonth(
-				null);
-	}else{
-		this.getManagedBean()
-		.getSpecTemplateSpecBean()
-		.getSpecMaster()
-		.setDurationMonth(
-				scLoa.getContractDuration());
-	}
+		checkFulFilmentType(this.getManagedBean().getScLoa());
+		calculateServiceTemplate();
 		updatePerformanceBond(scLoa);
 
 	}
