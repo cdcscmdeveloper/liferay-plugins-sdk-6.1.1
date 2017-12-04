@@ -1561,6 +1561,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
+			reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+			Map<Long, BigDecimal> previousSumQtyMap = itemSummarySO.retrieveContractAccumulatedQty(reqDTO);
 			
 			BigDecimal itemMaxQty = BigDecimal.ZERO;
 			BigDecimal prevSumQty = BigDecimal.ZERO;
@@ -1575,9 +1577,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
 				}
 				if(itemMaxQty!=null) {
-					reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
-					reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
-					prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+					prevSumQty = previousSumQtyMap.get(requestNoteItem.getRequestNoteItemId());
+					if(prevSumQty == null){
+						prevSumQty = BigDecimal.ZERO;
+					}
+//					reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+//					reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+//					prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+//					sumQty = requestItemQtyMap.get(requestNoteItem).add(prevSumQty);
+					
 					sumQty = requestItemQtyMap.get(requestNoteItem).add(prevSumQty);
 					if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
 						throw new EpException(MessageConst.ERROR_740038,new String[]{requestNoteItem.getItemName()});
@@ -1617,6 +1625,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			
+//			reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+//			Map<String, BigDecimal> previousSumQtyMap = itemSummarySO.(reqDTO);
+			
 			BigDecimal itemMaxQty = BigDecimal.ZERO;
 			BigDecimal prevSumQty = BigDecimal.ZERO;
 			BigDecimal sumQty = BigDecimal.ZERO;
@@ -1638,6 +1649,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
 						prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 						sumQty = zonalQtyMap.get(contractZoneId).add(prevSumQty);
+//						prevSumQty = previousSumQtyMap.get(requestNoteItem.getRequestNoteItemId()+"@"+contractZoneId);
+//						if(prevSumQty == null){
+//							prevSumQty = BigDecimal.ZERO;
+//						}
+//						sumQty = zonalQtyMap.get(contractZoneId).add(prevSumQty);
 						if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
 							throw new EpException(MessageConst.ERROR_740038,new String[]{requestNoteItem.getItemName()});
 						}
