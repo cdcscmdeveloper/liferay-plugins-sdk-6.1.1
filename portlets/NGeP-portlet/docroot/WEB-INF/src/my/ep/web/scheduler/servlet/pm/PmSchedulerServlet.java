@@ -119,7 +119,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						new JobKey(SchedulerConstants.GFMAS_MASTER_DATA_ERROR,
 								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 						MasterDataErrorInboundJob.class,
-						SchedulerConstants.GFMAS_PM_IN_JOB_DESC,
+						SchedulerConstants.GFMAS_PM_ERROR_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
