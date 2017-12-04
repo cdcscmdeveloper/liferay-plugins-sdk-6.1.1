@@ -188,9 +188,9 @@ public class SchedulerConstants {
 	public static final String GFMAS_PAYMENT_INFORMATION_INBOUND = "PAYMENT INFORMATION JOB(Inbound)";
 
 	// PHIS OUT BOUND
-
+	
 	public static final String EPERUNDING_DELETE_COMP_JOB_DESC = "Job run every day at 01:00 to list of deleted consultants to ePerunding";
-	public static final String EPERUNDING_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
+	public static final String EPERUNDING_INTEGRATION_JOB_DESC = "Job run every day at 01:00 to send eperunding data as below: BRLN 1) Consultant's profile BRLN 2) Associated Company BRLN 3) Company Owner BRLN 4) Equity Owner BRLN 5) Board of Directors BRLN 6) Management Personnel BRLN 7) Signatory BRLN 8) Branch Company BRLN 9) Registered Category BRLN 10) Government Project";
 	public static final String PHIS_PM_VOT_FUND_JOB_DESC = "Job run every 5 minutes to send Master Data VOT to PHIS.";
 	public static final String PHIS_PM_DANA_JOB_DESC = "Job run every 5 minutes to send Master Data Dana to PHIS.";
 	public static final String PHIS_PM_PROGRAM_JOB_DESC = "Job run every 5 minutes to send Master Data Program / Aktiviti to PHIS.";
