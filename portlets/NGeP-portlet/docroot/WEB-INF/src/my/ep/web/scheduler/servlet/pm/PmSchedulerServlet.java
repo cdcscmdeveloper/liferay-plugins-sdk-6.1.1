@@ -107,7 +107,7 @@ public class PmSchedulerServlet extends HttpServlet {
 								SchedulerConstants.GFMAS_MASTER_DATA_INBOUND,
 								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 						GfmasBatchPmInboundJob.class,
-						SchedulerConstants.GFMAS_PM_IN_JOB_DESC,
+						SchedulerConstants.GFMAS_MASTER_DATA_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(

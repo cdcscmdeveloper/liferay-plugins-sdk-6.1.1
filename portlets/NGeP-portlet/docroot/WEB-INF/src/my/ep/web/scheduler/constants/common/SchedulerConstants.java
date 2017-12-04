@@ -201,6 +201,7 @@ public class SchedulerConstants {
 	public static final String PHIS_MASTERDATA_MATERIAL_JOB_DESC = "Job runs every 1 hour";
 	public static final String GFMAS_RETRY_IN_JOB_DESC = "Job run once daily 2 AM";
 	public static final String GFMAS_PM_IN_JOB_DESC = "Job run every 5 minutes to send Master Data Material Information to PHIS.";
+	public static final String GFMAS_MASTER_DATA_JOB_DESC = "Job run every 5 minutes to retrieve 1GFMAS Master Data from 1GFMAS as below: BRLN 1) GLVOT BRLN 2) GLDNA BRLN 3) GLPRG BRLN 4) GLPRJ BRLN 5) GLGLC BRLN 6) GLPCG BRLN 7) GLSEG BRLN 8) GLPTJ BRLN 9) GLBAC BRLN 10) CMBNK";
 	public static final String GFMAS_PM_ERROR_JOB_DESC = "Job run every 5 minutes to send Master Data Error File.";
 	public static final String GFMAS_SM_IN_JOB_DESC = "Job run every 3 minutes";
 	public static final String GFMAS_SC_OUT_JOB_DESC = "Job run once daily 9 AM and 9 PM";
