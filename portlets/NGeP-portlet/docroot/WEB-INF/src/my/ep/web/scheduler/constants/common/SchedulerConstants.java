@@ -260,11 +260,11 @@ public class SchedulerConstants {
 	public static final String EPOL_SUPPLIER_USER_INFO_JOB = "SUPPLIER USER INFO JOB (Outbound)";
 
 	// EPOL Job Description
-	public static final String EPOL_GOVERNMENT_ENTITY_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
-	public static final String EPOL_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
-	public static final String EPOL_COMPANY_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
-	public static final String EPOL_CONTACT_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
-	public static final String EPOL_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
+	public static final String EPOL_GOVERNMENT_ENTITY_INFO_JOB_DESCRIPTION = "Job run every day at 01:00 to send government entities (like PTJ, Kump PTJ, Pengawai Pengawal, Ministry) to EPOL ";
+	public static final String EPOL_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "Job run every day at 01:00 to send government user information to EPOL ";
+	public static final String EPOL_COMPANY_INFO_JOB_DESCRIPTION = "Job run every day at 01:00 to send supplier company information to EPOL ";
+	public static final String EPOL_CONTACT_INFO_JOB_DESCRIPTION = "Job run every day at 01:00 to send supplier contact information to EPOL ";
+	public static final String EPOL_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "Job run every day at 01:00 to send supplier user information to EPOL ";
 	//TODO need to delete obsolete constants
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";
 	public static final String NOTIFICATION_INTEGRATION_JOB_GROUP = "NOTIFICATION INTEGRATION JOB";
