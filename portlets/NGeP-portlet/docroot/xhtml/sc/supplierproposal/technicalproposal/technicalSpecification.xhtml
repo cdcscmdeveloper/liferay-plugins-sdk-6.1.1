@@ -9,6 +9,8 @@
 
 
 	<h:panelGroup id="techspecificationid">
+	 <br/>
+	 <ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 			
