@@ -209,7 +209,7 @@ public class SchedulerConstants {
 	public static final String GFMAS_SM_OUT_JOB_DESC = "Job run every 3 minute";
 	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job run once daily 12:15 AM";
 	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 1 AM";
-	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run every 3 minutes";
+	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run every 3 minutes to send Master Data Material Information MMINF to 1GFMAS";
 	public static final String SPA_JOB_DESC = "Job run once daily at 00:00 to send Master Data Masterial Information file";
 	public static final String SPA_JOB_DAILY_DESC = "Job run once daily after 12 AM";
 	public static final String SPA_JOB_MEASUREMENT_DESC = "Job run once daily after 00:10 to send Master Data Measurement file";
