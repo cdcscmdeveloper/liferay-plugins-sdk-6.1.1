@@ -229,7 +229,7 @@ public class SmSchedulerServlet extends HttpServlet {
 								SchedulerConstants.EPERUNDING_DELETED_COMPANY_JOB,
 								SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 						DeletedCompanyJob.class,
-						SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
+						SchedulerConstants.EPERUNDING_DELETE_COMP_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
