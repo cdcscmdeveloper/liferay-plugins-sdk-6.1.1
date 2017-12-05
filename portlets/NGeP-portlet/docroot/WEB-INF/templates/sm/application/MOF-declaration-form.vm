@@ -97,7 +97,7 @@ body {margin-top: 0px;margin-left: 0px;}
 .tr17{height: 32px;}
 
 .t0{width: 266px;margin-left: 71px;margin-top: 10px;font: 11px 'sans-serif';}
-.t1{width: 661px;margin-left: 61px;margin-top: 45px;font: 11px 'sans-serif';}
+.t1{width: 661px;margin-left: 61px;margin-top: 20px;font: 11px 'sans-serif';}
 
 </style>
 </head>
