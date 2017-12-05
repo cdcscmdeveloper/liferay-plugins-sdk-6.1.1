@@ -54,10 +54,9 @@ public class BidSchedulesPoolingJob implements Job {
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			List<Long> cachedBiddingList = biddingSO.getBiddingListFromCache();
 			if (cachedBiddingList != null && !cachedBiddingList.isEmpty()) {
-				System.out
-						.println("^^^^^ printing cached bid Id list from job1");
+				log.info("^^^^^ printing cached bid Id list from job1");
 				for (Long cachedBiddingid : cachedBiddingList) {
-					System.out.println("^^^^^ cached bid Id from job1"
+					log.info("^^^^^ cached bid Id from BidSchedulesPoolingJob : "
 							+ cachedBiddingid);
 				}
 			}
@@ -91,7 +90,6 @@ public class BidSchedulesPoolingJob implements Job {
 
 		} catch (Exception e) {
 			log.info(e.getLocalizedMessage());
-			// TODO need to define error handling scenarios
 		} finally {
 			biddingSO = null;
 		}
