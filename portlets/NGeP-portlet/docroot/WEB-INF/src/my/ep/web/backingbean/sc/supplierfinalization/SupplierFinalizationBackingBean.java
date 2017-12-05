@@ -5928,10 +5928,11 @@ public class SupplierFinalizationBackingBean extends
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setQtId(qtId);
-				if (null != selectedZoneId &&  SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage)) {
+				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage))) {
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
 				reqDTO.setRequestItemId(selectedItemId);
+				reqDTO.setEvaluationStage(evaluationStage);
 				reqDTO.setSearchBean(searchBean);
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
