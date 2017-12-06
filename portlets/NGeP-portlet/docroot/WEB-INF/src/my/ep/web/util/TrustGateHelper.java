@@ -152,11 +152,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID="
-				+ identificationNo
-				+ "&orgid="
-				+ epNo
-				+ "&token="
+		String url4 = "https://digitalid.msctrustgate.com/cdc/requestRevoke/requestRevoke.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url4);
 	}
@@ -167,11 +163,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="
-				+ identificationNo
-				+ "&email="
-				+ email
-				+ "&token="
+		String url = "https://digitalid.msctrustgate.com/cdc/resetPIN/resetPIN.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
