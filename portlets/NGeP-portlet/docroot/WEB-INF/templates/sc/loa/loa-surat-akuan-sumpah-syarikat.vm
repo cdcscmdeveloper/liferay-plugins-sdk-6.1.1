@@ -22,13 +22,17 @@
 		.table1 {
 			margin-left:20px;
 		}
+		.table1 td {
+			vertical-align:top;
+			text-align:justify;
+		}
 		th{
 			background-color: #BCE18A;
 		}
 		p #font1, #font1{
 			text-align:justify;
 			font-family:Arial;
-			font-size:11px;
+			font-size:14.5px;
 			font-weight:normal;
 			font-style:normal;
 			text-decoration:none;
@@ -54,7 +58,7 @@
 	<table width='100%'>
 		<tr>
 			<td align='center'>
-				<span id='font1;'><b>SURAT AKUAN SUMPAH SYARIKAT</b></span>
+				<span id='font1'><b>SURAT AKUAN SUMPAH SYARIKAT</b></span>
 			</td>
 		</tr>
 	</table>
@@ -74,41 +78,41 @@
 					<tr>
 						<td><span id='font1'>(a)</span></td>
 						<td>
-							<p id='font1'>
+							<span id='font1'>
 							syarikat <b>TIDAK</b> membuat salah nyataan (misrepresentation) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;
-							</p>
+							</span>
 						</td>
 					</tr>
 					<tr>
 						<td><span id='font1'>(b)</span></td>
 						<td>
-							<p id='font1'>
+							<span id='font1'>
 							syarikat <b>TIDAK</b> membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;
-							</p>
+							</span>
 						</td>
 					</tr>
 					<tr>
 						<td><span id='font1'>(c)</span></td>
 						<td>
-							<p id='font1'>
+							<span id='font1'>
 							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apaapa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
-							</p>
+							</span>
 						</td>
 					</tr>
 						<tr>
 						<td><span id='font1'>(d)</span></td>
 						<td>
-							<p id='font1'>
+							<span id='font1'>
 							syarikat/ pemilik/ rakan kongsi/ pengarah <b>TIDAK</b> disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; dan
-							</p>
+							</span>
 						</td>
 					</tr>
 					<tr>
 						<td><span id='font1'>(e)</span></td>
 						<td>
-							<p id='font1'>
+							<span id='font1'>
 							syarikat <b>TIDAK</b> digulungkan.
-							</p>
+							</span>
 						</td>
 					</tr>
 				</table>
