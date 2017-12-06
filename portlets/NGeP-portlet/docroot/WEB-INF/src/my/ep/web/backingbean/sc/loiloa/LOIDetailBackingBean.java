@@ -2434,8 +2434,7 @@ public class LOIDetailBackingBean extends
 		
 		if (StringUtils.isNotBlank(committeeType) && 
 				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) &&
-				isDigiSigningRequired(committeeResDTO.getRoleCode(),
-						this.getManagedBean().getFcActivityList())) {
+				isDigiSigningRequired(committeeResDTO.getRoleCode(),this.getManagedBean().getFcActivityList())) {
 			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
@@ -2602,30 +2601,30 @@ public class LOIDetailBackingBean extends
 								.getDeletedScLoiReports());
 
 		// Save EC/TEC/FEC activities details.
-		List<ScQtCommitteeActivity> ecActivityList = new ArrayList<ScQtCommitteeActivity>();
+		List<ScQtCommitteeActivity> activityList = new ArrayList<ScQtCommitteeActivity>();
 		if (getManagedBean().getEcActivityList() != null) {
 			for (ScQtCommitteeActivity committeeActivity : getManagedBean()
 					.getEcActivityList()) {
-				ecActivityList.add(committeeActivity);
+				activityList.add(committeeActivity);
 			}
 		}
 		if (getManagedBean().getTecActivityList() != null) {
 			for (ScQtCommitteeActivity committeeActivity : getManagedBean()
 					.getTecActivityList()) {
-				ecActivityList.add(committeeActivity);
+				activityList.add(committeeActivity);
 			}
 		}
 		if (getManagedBean().getFecActivityList() != null) {
 			for (ScQtCommitteeActivity committeeActivity : getManagedBean()
 					.getFecActivityList()) {
-				ecActivityList.add(committeeActivity);
+				activityList.add(committeeActivity);
 			}
 		}
-		reqDTO.setEcActivityList(ecActivityList);
+		reqDTO.setEcActivityList(activityList);
 		
 		boolean multiLoiAttended = false;
 		
-		for(ScQtCommitteeActivity committee : ecActivityList){
+		for(ScQtCommitteeActivity committee : activityList){
 			if(committee.isMultiLoiAttended() 
 					|| this.getManagedBean().getSelectedMeetingAttList() != null){
 				multiLoiAttended = true;
