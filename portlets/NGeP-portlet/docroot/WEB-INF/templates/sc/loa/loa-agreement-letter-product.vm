@@ -13,7 +13,7 @@ p {
 
 .text_family {
 	font-family: Arial;
-	font-size: 15px;
+	font-size: 14.5px;
 	font-weight: normal;
 	font-style: normal;
 	line-height: 20px;
@@ -23,7 +23,7 @@ p {
 
 .text_family_red {
 	font-family: Arial;
-	font-size: 15px;
+	font-size: 14.5px;
 	font-weight: normal;
 	font-style: normal;
 	line-height: 20px;
@@ -37,7 +37,7 @@ p {
 	font-style: normal;
 	line-height: 20px;
 	text-decoration: none;
-	font-size: 15px;
+	font-size: 14.5px;
 	color: red;
 }
 
@@ -54,27 +54,27 @@ p {
 .text_family_bold {
 	font-family: Arial;
 	font-weight: bold;
-	font-size: 15px;
+	font-size: 14.5px;
 	line-height: 20px;
 }
 
 .text_family_italic {
 	font-family: Arial;
 	font-style: italic;
-	font-size: 15px;
+	font-size: 14.5px;
 	line-height: 20px;
 }
 
 .text_family_header {
 	font-family: Arial;
-	font-size: 15px;
+	font-size: 14.5px;
 	font-weight: bold;
 	line-height: 20px;
 }
 
 .text_header_submenu {
 	font-family: Arial;
-	font-size: 15px;
+	font-size: 14.5px;
 	font-weight: bold;
 	font-style: normal;
 	line-height: 20px;
@@ -85,7 +85,7 @@ p {
 	font-family: Arial;
 	font-weight: bold;
 	font-style: normal;
-	font-size: 15px;
+	font-size: 14.5px;
 	line-height: 20px;
 	text-decoration: underline;
 	color: red;
@@ -95,7 +95,7 @@ p {
 	font-family: Arial;
 	font-weight: bold;
 	font-style: normal;
-	font-size: 15px;
+	font-size: 14.5px;
 	line-height: 20px;
 	text-decoration: none;
 	color: red;
