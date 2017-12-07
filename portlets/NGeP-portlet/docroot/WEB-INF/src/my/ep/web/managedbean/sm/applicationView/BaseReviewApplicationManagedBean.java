@@ -216,7 +216,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		initSelectedFacility();
 		selectedMachine = new SmMachineDtl();
 		selectedManufacturer = new SmManufacturingDtl();
-		selectedManufacturer.setPmUom(new PmUom());
+//		selectedManufacturer.setPmUom(new PmUom());
 		selectedSignatoryBankAcct = new SmSupplierBank();
 		selectedBank = new SmSupplierBank();
 		selectedCompanyExperience = new SmCompanyExperience();
