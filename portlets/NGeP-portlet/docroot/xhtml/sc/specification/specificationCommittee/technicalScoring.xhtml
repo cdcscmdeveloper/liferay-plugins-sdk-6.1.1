@@ -186,6 +186,10 @@
 		header="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema']}"
 		rendered="#{specificationBackingBean.managedBean.technicalUserScoringSchema}"
 		toggleable="true">
+		<h:outputText styleClass="instruction"  rendered="#{specificationBackingBean.managedBean.technicalUserScoringSchema}"
+			value="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema.instructions']}"
+			escape="false" />
+			<br/>
 		<table>
 			<tr>
 
