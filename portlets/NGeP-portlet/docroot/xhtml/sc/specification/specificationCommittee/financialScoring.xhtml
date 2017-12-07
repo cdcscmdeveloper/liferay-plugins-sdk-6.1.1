@@ -303,6 +303,10 @@
 		header="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema']}"
 		rendered="#{specificationBackingBean.managedBean.financialUserScoringSchema}"
 		toggleable="true" id="financialAllUserScoringCheckistScUploadIds">
+		<h:outputText styleClass="instruction"  rendered="#{specificationBackingBean.managedBean.financialUserScoringSchema}"
+			value="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema.instructions']}"
+			escape="false" />
+			<br/>
 		<table>
 			<tr>
 
