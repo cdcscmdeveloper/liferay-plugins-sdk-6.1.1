@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showMachineryEquipmentPanel}" >
 		<p:outputPanel id="manuInfPan" layout="block">
 
 			<p:dataTable var="manBean" widgetVar="smManuDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -26,7 +26,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
-					<h:outputText value="#{manBean.pmUom.uomName}" rendered="#{not empty manBean.pmUom}"/>
+					<h:outputText value="#{manBean.uom}" rendered="#{not empty manBean.uom}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:manufactorDialog" process="@this" oncomplete="manufactorDialog.show()"
@@ -69,7 +69,7 @@
 	
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.manufacture.mesUnit']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.pmUom.uomName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.uom}" /></td>
 				</tr>
 	
 			</table>
