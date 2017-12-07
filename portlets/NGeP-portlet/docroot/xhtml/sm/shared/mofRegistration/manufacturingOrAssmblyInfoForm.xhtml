@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showMachineryEquipmentPanel}"  id="manufacturingMainPanelId">
 		<table style="width: 100%">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -64,7 +64,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
-					<h:outputText value="#{manBean.pmUom.uomName}" />
+					<h:outputText value="#{manBean.uom}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:manufactorDialog" process="@this"
@@ -177,15 +177,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td valign="top"><p:selectOneMenu
+					<td valign="top">
+						<p:inputText maxlength="20"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuMesUnit"
-							value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
-							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems value="#{backingBean.managedBean.uomSelectItems}"
-								var="select" itemLabel="select.label" itemValue="select.value" />
-						</p:selectOneMenu> <p:message id="smManuMesUnitMsg" for="smManuMesUnit"
+							value="#{backingBean.managedBean.selectedManufacturer.uom}" />
+						<p:message id="smManuMesUnitMsg" for="smManuMesUnit"
 							showSummary="true" showDetail="false" display="icon" /></td>
 	
 				</tr>
@@ -197,8 +194,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
 					partialSubmit="true" process="manufactorDialog"
-					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
-					update=":form:tt:manDt, @([id$=Msg]),:#{p:component('delManuBtnId')}" />
+					onclick="manuFacBlockWidget.show();" oncomplete="manuFacBlockWidget.hide();"
+					update=":#{p:component('manufacturingMainPanelId')}, @([id$=Msg]),:#{p:component('delManuBtnId')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelManuSaveorUpdate}" process="@this"
 					partialSubmit="true" />

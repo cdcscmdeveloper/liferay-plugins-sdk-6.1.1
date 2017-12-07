@@ -722,7 +722,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
 		selectedManufacturer = new SmManufacturingDtl();
-		selectedManufacturer.setPmUom(new PmUom());
+//		selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
 		selectedMachine.setCategoryType(new PmParameter());
 		selectedMachine.setMachine(new PmMachine());
