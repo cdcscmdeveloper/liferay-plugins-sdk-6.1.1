@@ -414,7 +414,8 @@
 					       		disabled="#{ctBackingBean.managedBean.viewContract}"
 					           	maxlength="#{ctBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
 						      	<f:converter converterId="dynamicNumberConverter" />
-								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />  
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" /> 
+								<p:ajax event="blur" update="@this"/>
 					       </p:inputText>
 				     </p:column>            
 			  
