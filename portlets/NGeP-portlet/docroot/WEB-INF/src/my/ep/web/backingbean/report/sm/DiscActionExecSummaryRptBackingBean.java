@@ -3,6 +3,8 @@ package my.ep.web.backingbean.report.sm;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -134,6 +136,13 @@ public class DiscActionExecSummaryRptBackingBean extends SmReportBackingBean<Dis
 				}
 			}
 		}
+		
+		Collections.sort(statDescs, new Comparator<PmStatusDesc>() {
+		    @Override
+		    public int compare(PmStatusDesc d1, PmStatusDesc d2) {
+		        return d1.getPmStatus().getStatusId().compareTo(d2.getPmStatus().getStatusId());
+		    }
+		});
 
 		return statDescs;
 	}
