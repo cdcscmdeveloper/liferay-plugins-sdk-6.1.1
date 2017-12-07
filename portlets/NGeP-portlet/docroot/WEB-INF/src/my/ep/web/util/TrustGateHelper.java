@@ -14,8 +14,10 @@ import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.SPKIConst;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -29,6 +31,7 @@ public class TrustGateHelper {
 	private static TrustGateHelper instance;
 	private static KMCClient client;
 	private static KMCRequestBuilder reqBuilder;
+	private static String dns;
 	public static Logger log = Logger.getLogger(TrustGateHelper.class);
 
 	public KMCClient getKMCClient() {
@@ -152,7 +155,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url4 = "https://digitalid.msctrustgate.com/cdc/requestRevoke/requestRevoke.jsp?secTkn="
+		String url4 = getDns() + "/cdc/requestRevoke/requestRevoke.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url4);
 	}
@@ -163,7 +166,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://digitalid.msctrustgate.com/cdc/resetPIN/resetPIN.jsp?secTkn="
+		String url = getDns() + "/cdc/resetPIN/resetPIN.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -174,7 +177,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://digitalid.msctrustgate.com/cdc/changePIN/checkPin.jsp?secTkn="
+		String url = getDns() + "/cdc/changePIN/checkPin.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -185,7 +188,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://digitalid.msctrustgate.com/cdc/updateCR/checkPin.jsp?secTkn="
+		String url = getDns() + "/cdc/updateCR/checkPin.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -222,5 +225,21 @@ public class TrustGateHelper {
 			}
 		}
 		return reqBuilder;
+	}
+
+	public static String getDns() {
+		if (StringUtils.isBlank(dns)) {
+			try {
+				dns = EpPropertiesUtils.getInstance().getProperty(
+						"trustgate.dns");
+				// default value
+				if (StringUtils.isBlank(dns)) {
+					dns = "https://digitalid.msctrustgate.com";
+				}
+			} catch (Exception e) {
+
+			}
+		}
+		return dns;
 	}
 }
