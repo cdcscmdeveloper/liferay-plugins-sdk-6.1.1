@@ -133,7 +133,7 @@ u {
 
 	<table border="0" cellpadding="5" cellspacing="5" width="100%">
 		<tr>
-			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi *$headerTitle Perkhidmatan) <br /><br /><br /></span></td>
+			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi $headerTitle Perkhidmatan) <br /><br /><br /></span></td>
 		</tr>
 		<tr>
 			<td align="right"><span class="text_family">Rujukan Kami : $fileNo <br />Tarikh :
@@ -156,7 +156,7 @@ u {
 				<span class="text_family">Tuan, </span><br /> <br /> 
 				<span class="text_family_bold">$headerTitle Untuk : </span>
 				<span class="text_family">$loaTitle </span><br />  
-				<span class="text_family_bold"> No. *$headerTitle : </span>
+				<span class="text_family_bold"> No. $headerTitle : </span>
 				<span class="text_family">$qtNo</span>
 			</td>
 		</tr>
@@ -164,10 +164,10 @@ u {
 			<td>
 				<p>
 					<span class="text_family">Dengan ini dimaklumkan bahawa
-						Kerajaan telah bersetuju menerima tawaran *$subTitle syarikat tuan
+						Kerajaan telah bersetuju menerima tawaran $subTitle syarikat tuan
 						dengan harga sebanyak Ringgit Malaysia $overallCtAmtWording (RM
 						$overallCtAmt) yang merupakan harga kontrak bagi tempoh
-						kontrak selama $contractDuration bulan tertakluk kepada dokumen *$subTitle
+						kontrak selama $contractDuration bulan tertakluk kepada dokumen $subTitle
 						yang menjadi sebahagian daripada perolehan ini dan Surat
 						Setuju Terima ini berserta dengan <b><i>Lampiran A</i></b> kepada Surat Setuju Terima 
 						iaitu maklumat terperinci kontrak(selepas ini disebut sebagai "Surat ini").
@@ -180,11 +180,13 @@ u {
 						Surat ini suatu kontrak yang mengikat
 						terbentuk antara Kerajaan dengan syarikat tuan. 
 						#if($isAgreementReq == "true")
-							Satu dokumen kontrak hendaklah ditandatangani dengan kadar segera dengan
-							memasukkan semua terma sebagaimana dokumen *$subTitle
+						<span class="text_family_red">
+							*Satu dokumen kontrak hendaklah ditandatangani dengan kadar segera dengan
+							memasukkan semua terma sebagaimana dokumen $subTitle
 							serta semua terma dalam <b><i>Lampiran A</i></b>. Sehingga dokumen
 							kontrak tersebut ditandatangani, surat ini hendaklah terus
 							mengikat kedua-dua pihak.
+						</span>
 						#end
 					</span>
 				</p>
@@ -221,7 +223,7 @@ u {
 				<div class="text_indent">
 
 							<p>
-								<span class="text_family_red">(a) Syarikat tuan belum berdaftar 
+								<span class="text_family_red">*(a) Syarikat tuan belum berdaftar 
 									dengan Jabatan Kastam Diraja Malaysia (JKDM), tetapi perkhidmatan bercukai													
 									syarikat tuan dalam bulan ini dan sebelas (11) bulan sebaik
 									sebelum bulan ini telah melebihi RM500,000.00, di mana syarikat tuan
@@ -229,14 +231,14 @@ u {
 							</p>
 							
 							<p>
-								<span class="text_family_red"> (b) perkhidmatan bercukai
+								<span class="text_family_red">*(b) perkhidmatan bercukai
 									syarikat tuan dalam bulan ini dan sebelas (11) bulan sebaik
 									sebelum bulan ini belum lagi melebihi RM500,000.00, tetapi syarikat tuan
 									berniat untuk berdaftar dengan JKDM secara sukarela; atau </span>
 							</p>
 							
 							<p>
-								<span class="text_family_red"> (c) syarikat tuan telah
+								<span class="text_family_red">*(c) syarikat tuan telah
 									berdaftar dengan JKDM, tetapi pendaftaran syarikat tuan hanya berkuat
 									kuasa selepas tarikh Surat ini dikeluarkan. </span>
 							</p>
@@ -256,7 +258,7 @@ u {
 
 				
 				<p>
-					<span class="text_family_red">3.2 Bagi perenggan 3 (c), sebaik
+					<span class="text_family_red">*3.2 Bagi perenggan 3 (c), sebaik
 						sahaja pendaftaran CBP syarikat tuan telah berkuat kuasa, syarikat tuan
 						adalah dikehendaki memaklumkan tarikh kuat kuasa pendaftaran
 						tersebut kepada Kerajaan untuk pelarasan harga kontrak, dalam
@@ -402,7 +404,7 @@ u {
 						</p>
 						
 						<p>
-							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *$subTitle sehingga dokumen kontrak ditandatangani; </span>
+							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $subTitle sehingga dokumen kontrak ditandatangani; </span>
 						</p>
 						
 						<p>
@@ -414,7 +416,7 @@ u {
 						</p>
 						
 						<p>
-							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen *$subTitle;</span>
+							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $subTitle;</span>
 						</p>
 						
 						<p>
@@ -474,7 +476,7 @@ u {
 						</p>
 						
 						<p>
-							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *$subTitle sehingga dokumen kontrak ditandatangani; </span>
+							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $subTitle sehingga dokumen kontrak ditandatangani; </span>
 						</p>
 						
 						<p>
@@ -486,7 +488,7 @@ u {
 						</p>
 						
 						<p>
-							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen *$subTitle;</span>
+							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $subTitle;</span>
 						</p>
 						
 						<p>
