@@ -12,8 +12,11 @@ import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.SPKIConst;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
@@ -30,6 +33,8 @@ public class DigiCertHelper {
 
 	private static DigiCertHelper instance;
 	private static KMCClient client;
+	private static String dns;
+	private static String revokeDns;
 
 	public KMCClient getKMCClient() throws KMCAPIException {
 		URL resource = getClass().getResource(".");
@@ -71,11 +76,8 @@ public class DigiCertHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url4 = "http://kmc-dev.digicert.com.my/RequestRevokeCert2.aspx?userID="
-				+ identificationNo
-				+ "&orgid="
-				+ epNo
-				+ "&token="
+		String url4 = getRevokeDns() + "/RequestRevokeCert2.aspx?userID="
+				+ identificationNo + "&orgid=" + epNo + "&token="
 				+ encodedtoken;
 		externalContext.redirect(url4);
 	}
@@ -86,7 +88,7 @@ public class DigiCertHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="
+		String url = getDns() + "/kmc/RequestChangePIN.aspx?userID="
 				+ identificationNo + "&token=" + encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -97,7 +99,7 @@ public class DigiCertHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="
+		String url = getDns() + "/kmc/RequestChallRespUpdate.aspx?userID="
 				+ identificationNo + "&token=" + encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -108,11 +110,8 @@ public class DigiCertHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="
-				+ identificationNo
-				+ "&email="
-				+ email
-				+ "&token="
+		String url = getDns() + "/kmc/RequestResetPIN.aspx?userID="
+				+ identificationNo + "&email=" + email + "&token="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -207,5 +206,37 @@ public class DigiCertHelper {
 			}
 		}
 		return client;
+	}
+
+	public static String getDns() {
+		if (StringUtils.isBlank(dns)) {
+			try {
+				dns = EpPropertiesUtils.getInstance().getProperty(
+						"digicert.dns");
+				// default value
+				if (StringUtils.isBlank(dns)) {
+					dns = "http://ep.posdigicert.com.my";
+				}
+			} catch (Exception e) {
+
+			}
+		}
+		return dns;
+	}
+
+	public static String getRevokeDns() {
+		if (StringUtils.isBlank(revokeDns)) {
+			try {
+				dns = EpPropertiesUtils.getInstance().getProperty(
+						"digicert.revoke.dns");
+				// default value
+				if (StringUtils.isBlank(dns)) {
+					dns = "http://ep.posdigicert.com.my";
+				}
+			} catch (Exception e) {
+
+			}
+		}
+		return dns;
 	}
 }
