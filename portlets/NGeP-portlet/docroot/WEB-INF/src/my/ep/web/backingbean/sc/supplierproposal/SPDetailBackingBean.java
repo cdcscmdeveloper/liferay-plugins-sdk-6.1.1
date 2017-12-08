@@ -249,9 +249,9 @@ public class SPDetailBackingBean extends
 					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					if(resDTO.getScQtProposal().isSubmitted()){
+					if (resDTO.getScQtProposal().isSubmitted()) {
 						getManagedBean().setReadOnly(true);
-					}else{
+					} else {
 						getManagedBean().setReadOnly(isReadonly);
 					}
 					Date today = new Date();
@@ -443,39 +443,38 @@ public class SPDetailBackingBean extends
 			}
 		}
 	}
-	
-	public void downloadProposalReport() throws Exception{
+
+	public void downloadProposalReport() throws Exception {
 		debugLogger("downloadProposalReport");
-		String  reportName = null;
-		//TODO 
+		String reportName = null;
+		// TODO
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtProposalReportAttachment();
-		StringBuilder fileName = new StringBuilder(
-				getManagedBean().getReportDownloadFileName());
+		StringBuilder fileName = new StringBuilder(getManagedBean()
+				.getReportDownloadFileName());
 		fileName.append(".pdf");
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		ScAttachment attachment = (ScAttachment)reportAttachment;
-		//TODO 
+		ScAttachment attachment = (ScAttachment) reportAttachment;
+		// TODO
 		populateAttachmentDetails(attachment);
 		reportName = ReportConst.SC_SUPPLIER_PROPOSAL_REPORT;
-		
+
 		Map<String, String> paramMap = new HashMap<String, String>();
-		try{
+		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQt(scQt);
 			paramMap.put("PKEY", SourcingConstants.ORACLE_ENCRYPTION_KEY);
 			paramMap.put("QT_ID", getManagedBean().getQt().getQtId().toString());
-			if(getManagedBean().getSmSupplier()== null){
+			if (getManagedBean().getSmSupplier() == null) {
 				retrievePaidUpCapitalNdDeclarationDtls();
 			}
-			paramMap.put("P_SUPP", getManagedBean().getSmSupplier().getSupplierId().toString());
-			
-			super.generatePdfFromOracle(reportName,
-				 paramMap, attachment,
-				true);
+			paramMap.put("P_SUPP", getManagedBean().getSmSupplier()
+					.getSupplierId().toString());
+
+			super.generatePdfFromOracle(reportName, paramMap, attachment, true);
 			downloadFile(attachment);
-		}catch(Exception e){
+		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
 	}
@@ -488,7 +487,7 @@ public class SPDetailBackingBean extends
 	private ProposalReqDTO populateProposalDetailsTosave() {
 
 		ProposalReqDTO reqDTO = null;
-		
+
 		List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
 				.getTecCheckDetailsList();
 		List<ScQtProposalChecklist> financialChecklist = getManagedBean()
@@ -923,6 +922,7 @@ public class SPDetailBackingBean extends
 							getManagedBean().getTemplateSpecBean());
 				}
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
+				List<TplSpecAnswer> tobeDeletedAnswers = new ArrayList<TplSpecAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
@@ -930,26 +930,30 @@ public class SPDetailBackingBean extends
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
-							boolean isContainPrice = false;
+							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom()
 												.compareTo(
 														BigDecimal.valueOf(0)) > 0) {
-									isContainPrice = true;
-									break;
+									answers.add(specAnswer);
+								}else if(specAnswer.getSpecAnswerId()!=null){
+									specAnswer.setDeleted(true);
+									toDeleteZoneAnswers.add(specAnswer);
 								}
 							}
-
-							if (isContainPrice) {
-								answers.addAll(templateSpecBean
-										.getSpecAnswerList());
+							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
+									.getSpecAnswerList().size())){
+								throw new EpException(MessageConst.ERROR_760464);
+							}else{
+								tobeDeletedAnswers.addAll(toDeleteZoneAnswers);
 							}
+							toDeleteZoneAnswers = null;
 						}
 					}
 				}
-
+				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 			} else {
 				answers = getManagedBean().getTemplateSpecBean()
 						.getSpecAnswerList();
@@ -1003,7 +1007,6 @@ public class SPDetailBackingBean extends
 					}
 				}
 			}
-
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
@@ -1122,11 +1125,12 @@ public class SPDetailBackingBean extends
 
 					if (!finProposalChecklist.isSubmitted()
 							|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-									.getCompliance()==ParameterConst.COMPLIANCE_STATUS__COMPLIANCE)) {
+									.getCompliance() == ParameterConst.COMPLIANCE_STATUS__COMPLIANCE)) {
 						finProposalChecklist
 								.setScQtProposalChecklistAttachment(null);
 						finProposalChecklist.setSubmitted(true);
-						finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+						finProposalChecklist
+								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 					} else {
 						finProposalChecklist
 								.setScQtProposalChecklistAttachment(null);
@@ -1134,13 +1138,15 @@ public class SPDetailBackingBean extends
 
 				} else if (finProposalChecklist.isSubmitted()
 						|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-								.getCompliance()==ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE)) {
+								.getCompliance() == ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE)) {
 					if (finProposalChecklist
 							.getScQtProposalChecklistAttachment() != null) {
-						finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						finProposalChecklist
+								.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 					} else {
 						finProposalChecklist.setSubmitted(false);
-						finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						finProposalChecklist
+								.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 					}
 				}
 			}
@@ -3456,7 +3462,8 @@ public class SPDetailBackingBean extends
 		} catch (EpException e) {
 			String message = e.getMessage();
 
-			if (MessageConst.ERROR_760195.equals(message) || MessageConst.ERROR_760465.equals(message)) {
+			if (MessageConst.ERROR_760195.equals(message)
+					|| MessageConst.ERROR_760465.equals(message)) {
 
 				if (FacesContext.getCurrentInstance().getMessageList() != null
 						&& FacesContext.getCurrentInstance().getMessageList()
@@ -4264,7 +4271,7 @@ public class SPDetailBackingBean extends
 
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
-					//zoneItem.setAjax(true);
+					// zoneItem.setAjax(true);
 					zoneItem.setTransient(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
@@ -4308,10 +4315,14 @@ public class SPDetailBackingBean extends
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
-				String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
-						
-				if(attachment != null && SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE.equals(docDefinitionKey)){
-					String custFileName = getDocTitleAsFileName((scQtDocReports.indexOf(scQtDocReport) + 1),
+				String docDefinitionKey = scQtDocReport.getPmDocument()
+						.getDocDefinitionKey();
+
+				if (attachment != null
+						&& SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
+								.equals(docDefinitionKey)) {
+					String custFileName = getDocTitleAsFileName(
+							(scQtDocReports.indexOf(scQtDocReport) + 1),
 							scQtDocReport.getTitle(), attachment.getFilePath());
 					if (custFileName != null) {
 						attachment.setFileName(custFileName);
@@ -4421,39 +4432,44 @@ public class SPDetailBackingBean extends
 			}
 		});
 	}
-	private void validateProposalCloseTime(ScQt qt){
-		if(qt.getClosingDate().before(DateUtils.getCurrentDate())){
+
+	private void validateProposalCloseTime(ScQt qt) {
+		if (qt.getClosingDate().before(DateUtils.getCurrentDate())) {
 			this.getManagedBean().setReadOnly(true);
 			StringBuilder qtSB = new StringBuilder();
-			qtSB.append(getParameterDesc(qt.getProcurementMode().getParameterType()
-					,qt.getProcurementMode().getParameterCode()));
+			qtSB.append(getParameterDesc(qt.getProcurementMode()
+					.getParameterType(), qt.getProcurementMode()
+					.getParameterCode()));
 			qtSB.append(" - ");
 			qtSB.append(qt.getQtNo());
-			SimpleDateFormat closeDateFormat=new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT);
-			throw new EpException(MessageConst.ERROR_760461,
-					new String[] {qtSB.toString(),closeDateFormat.format(qt.getClosingDate()).toString()});
+			SimpleDateFormat closeDateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATETIME_FORMAT);
+			throw new EpException(MessageConst.ERROR_760461, new String[] {
+					qtSB.toString(),
+					closeDateFormat.format(qt.getClosingDate()).toString() });
 		}
 	}
+
 	/**
 	 * Method to update scQTProposal to allow resubmit.
 	 */
-	public void updateProposal(){
+	public void updateProposal() {
 		getManagedBean().setReadOnly(false);
 		ScQtProposal proposal = this.getManagedBean().getQtProposal();
 		proposal.setSubmitted(false);
-		try{
+		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQtProposal(proposal);
-			ProposalResDTO resDTO = getProposalSO().updateQTProposalForReSubmit(reqDTO);
+			ProposalResDTO resDTO = getProposalSO()
+					.updateQTProposalForReSubmit(reqDTO);
 			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
-		}
-		finally{
-			
+		} finally {
+
 		}
 	}
-	
-	public boolean isProposalSubmitted(){
+
+	public boolean isProposalSubmitted() {
 		return this.getManagedBean().getQtProposal().isSubmitted();
 	}
-	
+
 }
