@@ -8503,7 +8503,7 @@ public class SmApplicationBackingBean extends
 					&& sec.isMachineryVerified()) {
 				sec.setMachineryVerified(false);
 			}
-			
+
 			sec.setCheckCount(getTotalVerifiedSec(sec));
 			if (sec.getCheckCount() >= maxReviewCount
 					&& getManagedBean().isAllowedToApprove()) {
@@ -10135,6 +10135,41 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			initMandatoryLicenseInfo(mandatoryLicenseDocs);
+
+			// sort by name
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getMandatoryDocs())) {
+				Collections.sort(getManagedBean().getMandatoryDocs(),
+						new Comparator<SmApplSupportDoc>() {
+							@Override
+							public int compare(final SmApplSupportDoc s1,
+									final SmApplSupportDoc s2) {
+								String docName1 = s1.getPmDocument() == null ? StringUtils.EMPTY
+										: s1.getPmDocument().getDocName();
+								String docName2 = s2.getPmDocument() == null ? StringUtils.EMPTY
+										: s2.getPmDocument().getDocName();
+								return (docName1).compareTo(docName2);
+							}
+						});
+			}
+
+			// sort by name
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getNonMandatoryDocs())) {
+				Collections.sort(getManagedBean().getNonMandatoryDocs(),
+						new Comparator<SmApplSupportDoc>() {
+							@Override
+							public int compare(final SmApplSupportDoc s1,
+									final SmApplSupportDoc s2) {
+								String docName1 = s1.getPmDocument() == null ? StringUtils.EMPTY
+										: s1.getPmDocument().getDocName();
+								String docName2 = s2.getPmDocument() == null ? StringUtils.EMPTY
+										: s2.getPmDocument().getDocName();
+								return (docName1).compareTo(docName2);
+							}
+						});
+			}
+
 		}
 	}
 
