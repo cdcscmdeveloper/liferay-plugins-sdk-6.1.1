@@ -474,6 +474,7 @@ public class QTScheduleDetailBackingBean extends
 			sampleSubmission.setScAddress(address);
 			this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
 			retrievePmStateList();
+			this.getManagedBean().setActionType(null);
 			RequestContext.getCurrentInstance().execute("sampledlg.show();");
 			this.getManagedBean().setRequired(Boolean.TRUE);
 		} else {
@@ -506,7 +507,7 @@ public class QTScheduleDetailBackingBean extends
 				sampleSubmission.setScAddress(this.getManagedBean()
 						.getScQtSampleSubmission().getScAddress());
 			}
-			this.getManagedBean().setSelectedSubmissionList(submissionList);
+			this.getManagedBean().setSelectedSubmissionList(null);
 		}
 
 		// this.getManagedBean().setScQtSampleSubmission(null);
