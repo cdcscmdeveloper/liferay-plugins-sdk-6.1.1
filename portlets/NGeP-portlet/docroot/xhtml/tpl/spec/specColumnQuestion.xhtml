@@ -164,7 +164,7 @@
 				<p:inputText id="monthUOM"
 					style="min-width:0px !important;width:22px; text-align:right;"
 					value="#{question.clUomPerMonth}"
-					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}"
+					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays or isUOMNoOfPerson) and isShowService}"
 					required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
