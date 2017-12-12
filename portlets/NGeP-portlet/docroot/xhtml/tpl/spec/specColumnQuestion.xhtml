@@ -104,6 +104,7 @@
 				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM"
 					headerText="#{lbl['lbl.sc.uom']}"
 					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
+					postUpdateListener="templateSpecBackingBean.uomValuesClearListener(templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}])"
 					value="#{question.clUom.uomCode}" conditionField="recordStatus^1"
 					rendered="#{isQuestionTypeItem}" required="#{!question.selected}"
 					label="#{lbl['lbl.tpl.spec.content.uom']}" size="8" readonly="true"
