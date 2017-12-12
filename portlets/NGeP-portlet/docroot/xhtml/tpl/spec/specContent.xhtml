@@ -123,6 +123,8 @@
 					<ui:param name="isQuestion" value="true" />
 					
 					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec) and editable}">
+						<f:attribute name="rows" value="#{rowsPerPage}" />
+						<ac:paginator for="questionTbl" />
 						<ui:decorate template="specColumnQuestion.xhtml" />
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
 					</c:if>
