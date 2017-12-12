@@ -290,11 +290,13 @@
 				at="left bottom">
 				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}"
 					action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
-					update="questionTbl" partialSubmit="true" process="questionTbl">
+					update="questionTbl" partialSubmit="true" process="questionTbl"
+					oncomplete="#{addItemSpecOnComplete}">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}"
 					action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}"
-					update="questionTbl" partialSubmit="true" process="questionTbl">
+					update="questionTbl" partialSubmit="true" process="questionTbl"
+					oncomplete="#{addItemSpecOnComplete}">
 				</p:menuitem>
 			</p:menu>
 			<p:commandButton id="addSpecBtn" icon="ui-icon-add"
@@ -302,14 +304,16 @@
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.spec.tooltip']}"
-				rendered="#{!newable and addNewSpec}" />
+				rendered="#{!newable and addNewSpec}"
+				oncomplete="#{addItemSpecOnComplete}" />
 		</c:if>
 		<c:if test="#{!isSpecificationReq}">
 			<p:commandButton id="addBtn" icon="ui-icon-add" rendered="#{newable}"
 				style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
 				update="questionTbl" partialSubmit="true" process="questionTbl"
-				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
+				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}"
+				oncomplete="#{addItemSpecOnComplete}" />
 		</c:if>
 		<p:commandButton id="#{templateSpecId}delBtn" icon="ui-icon-delete"
 			rendered="#{removable}"
