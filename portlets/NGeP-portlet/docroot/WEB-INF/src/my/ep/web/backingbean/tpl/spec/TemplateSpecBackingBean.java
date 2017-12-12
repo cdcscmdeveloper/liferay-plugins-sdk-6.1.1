@@ -2447,4 +2447,17 @@ public class TemplateSpecBackingBean extends
 				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 	}
 	
+	/**
+	 * To clear UomDetails.
+	 * 
+	 * @param SpecQuestion
+	 */
+	public void uomValuesClearListener(TplSpecQuestion SpecQuestion){
+		log.info("start uomValuesClearListener");
+		SpecQuestion.setClUomFrequency(null);
+		SpecQuestion.setClUomPerDay(null);
+		SpecQuestion.setClUomPerMonth(null);
+	}
+	
+	
 }
