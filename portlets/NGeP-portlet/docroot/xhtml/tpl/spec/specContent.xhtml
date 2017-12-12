@@ -274,6 +274,7 @@
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsAndAnswers" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
+					oncomplete="#{navToFirstPage}"
 							 />
 				<p:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
