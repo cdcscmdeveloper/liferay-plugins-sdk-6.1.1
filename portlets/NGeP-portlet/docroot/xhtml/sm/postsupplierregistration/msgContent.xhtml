@@ -92,7 +92,8 @@
 				<p:outputPanel
 					rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 					<c:choose>
-						<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
+						<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true || 
+						postSupplierRegBB.managedBean.displayRejectLabel == true}">
 							<p class="title">#{lbl['lbl.sm.basic.mof.title.rejected']}</p>
 						</c:when>
 						
@@ -178,7 +179,8 @@
 										<p:outputPanel
 											rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 											<c:choose>
-												<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
+												<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true and 
+												postSupplierRegBB.managedBean.successPayment == true}">
 													<c:choose>
 														<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
 															<ui:include
