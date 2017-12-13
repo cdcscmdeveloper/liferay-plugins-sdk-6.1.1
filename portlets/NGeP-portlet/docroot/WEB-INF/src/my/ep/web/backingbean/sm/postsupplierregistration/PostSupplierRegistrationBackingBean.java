@@ -44,6 +44,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.py.PyBill;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -129,20 +130,49 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			this.getManagedBean().setBannerImage(false);
 			getManagedBean().setSmAppl(appl);
 
-			boolean isRejectedApplExist = rejectedApplExist(supplier.getSupplierId());
+			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
+			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
+			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Active Appl
 			if(appl != null){
-				log.info("*****In Progress*********");			
+				log.info("*****In Progress*********" + isRejectedApplExist);			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
-				//desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
 				this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
+				log.info("*****workFlowStatus*********" + getManagedBean().getStatusDesc() + " " + workFlowStatus.getPmStatus().getStatusId());	
 				
-				showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist);
+				if(successPayment){
+					setSuccessPaymentFlag();
+					
+					//to check whether is resubmit
+					if(appl.isResubmit()){
+						getManagedBean().setRejectedApplExist(true);
+					}else{
+						//if refId for processing fee not equeal to current workflow doc id
+						//treat is as rejectedAppl
+						PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
+						if(pyBill != null){
+							if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
+								getManagedBean().setRejectedApplExist(false);
+								successPayment = false;
+							}else{
+								getManagedBean().setRejectedApplExist(true);
+							}
+						}else{
+							getManagedBean().setRejectedApplExist(false);
+						}
+					}
+				}
+				
+				showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist,successPayment);
 				path = TASK_LIST_PATH;
+				log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());	
+				
+				if(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L){
+					validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+				}
 
 			}else{
-				
 				//Self Request Supplier Admin
 				if(supplier.getRecordStatusFlg()==SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
 					path = basicAccountFlow(supplier);
@@ -154,7 +184,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							(workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED || 
 							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || 
 							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)){
-							path = mofSupplierFlowAfterApproval(supplier,isRejectedApplExist);
+							if(successPayment){
+								getManagedBean().setSuccessPayment(true);
+							}
+							
+							setRejectApplFlagByPayment(supplier,workFlowStatus);
+							
+							path = mofSupplierFlowAfterApproval(supplier,getManagedBean().isRejectedApplExist());
 						}else{
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
@@ -165,16 +201,18 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
 									
 									log.info("*******Resubmit********");
-									path = RESUBMIT_APPLICATION + wfStatus.getDocId();
+									//path = RESUBMIT_APPLICATION + wfStatus.getDocId();
 									getManagedBean().setFlowStatus(3);
+									path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 									
 									if(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS){
 										log.info("*******PM_STATUS_REJECTED_BY_SYS********");
-										if(!checkSuccessPayment(wfStatus.getDocId())){
+										if(!checkSuccessPaymentBySupplierId(supplier.getSupplierId())){
 											log.info("*******No SUCCESS PAYMENT********");
 											getManagedBean().setRejectedApplExist(false);
 											path = MOF_REG_PATH;
 											getManagedBean().setFlowStatus(1);
+											getManagedBean().setDisplayRejectLabel(true);
 										}
 									}
 								}else{
@@ -182,6 +220,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									log.info("*******Not Resubmit********");
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
+									
+									path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 								}
 							}else{
 								path = MOF_REG_PATH;
@@ -407,7 +447,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * show/ Hide the hyperlink based on statusCode
 	 * @param statusCode
 	 */
-	private void showHyperlink(Long statusCode, boolean isRejected){
+	private void showHyperlink(Long statusCode, boolean isRejected, boolean isResubmit){
 		Integer sc = statusCode.intValue();
 		
 		switch(sc){
@@ -432,6 +472,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 
@@ -441,6 +485,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 			
@@ -451,6 +499,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 		
@@ -460,6 +512,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 		
@@ -468,6 +524,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			getManagedBean().setHyperlink(false);
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 
@@ -477,6 +537,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 			
@@ -486,6 +550,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 		
@@ -495,6 +563,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 			
@@ -504,6 +576,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 		
@@ -513,6 +589,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 			
@@ -522,6 +602,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 		
@@ -531,6 +615,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 		
@@ -540,6 +628,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(isRejected){
 				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+				
+				if(!isResubmit){
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+				}
 			}
 			break;
 			
@@ -1009,8 +1101,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	}
 	
-	private boolean rejectedApplExist(Long supplierId){
-		boolean isRejectedApplExist = false;
+	private SmWorkflowStatus rejectedApplExist(Long supplierId){
+		//boolean isRejectedApplExist = false;
+		SmWorkflowStatus wf = null;
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		
@@ -1025,12 +1118,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		
 		if(resDTO.getWorkFlowStatusLs().size() > 0){
 			getManagedBean().setRejectedApplExist(true);
-			isRejectedApplExist = true;
+			wf = resDTO.getWorkFlowStatusLs().get(0);
 		}else{
 			getManagedBean().setRejectedApplExist(false);
 		}
 		
-		return isRejectedApplExist;
+		return wf;
 	}
 	
 	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
@@ -1048,7 +1141,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return wfStatus;
 	}
 	
-	private boolean checkSuccessPayment(Long applId){
+/*	private boolean checkSuccessPaymentWithApplId(Long applId){
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setApplId(applId);
 		List<PyPaymentOrder> paymentOrders = SmServiceLookup.getPaymentSO().retrieveSuccPaymentByApplId(reqDTO).getPaymentOrders();
@@ -1058,6 +1151,89 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}else{
 			return false;
 		}
+	}*/
+	
+	private boolean checkSuccessPaymentBySupplierId(Long supplierId){
+		PaymentReqDTO reqDTO = new PaymentReqDTO();
+		//reqDTO.setApplId(applId);
+		reqDTO.setSupplierId(supplierId);
+		List<PyPaymentOrder> paymentOrders = SmServiceLookup.getPaymentSO().retrieveSuccPaymentBySupplierId(reqDTO).getPaymentOrders();
+		log.info("checkSuccessPaymentBySupplierId>>>>>>>>>>" + paymentOrders.size());
+		
+		if(paymentOrders.size() > 0){
+			for(PyPaymentOrder pOrder : paymentOrders){
+				log.info("pOrder>>>>>>>>>>>" + pOrder.getPyPayment().getPyBill().getBillId());
+				log.info("pOrder billType>>>>>>>>>>>" + pOrder.getPyPayment().getPyBill().getBillType());
+			}
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	private PyBill getSuccessPaymentApplIdBySupplierId(Long supplierId){
+		PaymentReqDTO reqDTO = new PaymentReqDTO();
+		PyBill pyBill = null;
+		//reqDTO.setApplId(applId);
+		reqDTO.setSupplierId(supplierId);
+		List<PyPaymentOrder> paymentOrders = SmServiceLookup.getPaymentSO().retrieveSuccPaymentBySupplierId(reqDTO).getPaymentOrders();
+	
+		if(paymentOrders.size() > 0){
+			for(PyPaymentOrder pOrder : paymentOrders){
+				if(pOrder.getPyPayment().getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
+					pyBill = pOrder.getPyPayment().getPyBill();
+					break;
+				}
+			
+			}
+		}
+		
+		return pyBill;
+	}
+	
+	private String validPaymentForResubmission(Long supplierId, Long rejectedWfId){
+		boolean successPaymentDocId = checkSuccessPaymentBySupplierId(supplierId);
+		if(!successPaymentDocId){
+			log.info("*******No SUCCESS PAYMENT********");
+			getManagedBean().setRejectedApplExist(true);
+			getManagedBean().setDisplayRejectLabel(true);
+			getManagedBean().setFlowStatus(1);
+
+			return MOF_REG_PATH;
+		}else{
+			log.info("*******SUCCESS PAYMENT********" + RESUBMIT_APPLICATION + rejectedWfId);
+			getManagedBean().setRejectedApplExist(true);
+			getManagedBean().setDisplayRejectLabel(true);
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setSuccessPayment(true);
+			
+			
+
+			return RESUBMIT_APPLICATION + rejectedWfId;
+		}
+
+	}
+	
+	private void setRejectApplFlagByPayment(SmSupplier supplier, SmWorkflowStatus workFlowStatus){
+		//if refId for processing fee not equeal to current workflow doc id
+		//treat is as rejectedAppl
+		PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
+		if(pyBill != null){
+			if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
+				getManagedBean().setRejectedApplExist(false);
+	
+			}else{
+				getManagedBean().setRejectedApplExist(true);
+			}
+		}else{
+			getManagedBean().setRejectedApplExist(false);
+		}
+	}
+	
+	private void setSuccessPaymentFlag(){
+		getManagedBean().setRejectedApplExist(true);
+		getManagedBean().setDisplayRejectLabel(true);
+		getManagedBean().setSuccessPayment(true);
 	}
 	
 }
