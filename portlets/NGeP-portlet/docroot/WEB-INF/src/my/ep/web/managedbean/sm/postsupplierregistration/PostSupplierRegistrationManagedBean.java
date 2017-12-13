@@ -28,7 +28,9 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private SmAppl smAppl;
 	private String mofExpDateMsg;
 	private boolean rejectedApplExist;
-	
+	private boolean displayRejectLabel;
+	private boolean successPayment;
+
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
@@ -100,5 +102,20 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	public void setRejectedApplExist(boolean rejectedApplExist) {
 		this.rejectedApplExist = rejectedApplExist;
 	}
+	
+	public boolean isDisplayRejectLabel() {
+		return displayRejectLabel;
+	}
 
+	public void setDisplayRejectLabel(boolean displayRejectLabel) {
+		this.displayRejectLabel = displayRejectLabel;
+	}
+
+	public boolean isSuccessPayment() {
+		return successPayment;
+	}
+
+	public void setSuccessPayment(boolean successPayment) {
+		this.successPayment = successPayment;
+	}
 }
