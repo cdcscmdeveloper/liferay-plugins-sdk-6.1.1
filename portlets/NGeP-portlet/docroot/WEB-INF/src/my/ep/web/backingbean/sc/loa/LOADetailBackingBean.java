@@ -5713,7 +5713,7 @@ public class LOADetailBackingBean extends
 		debugLogger("downloadGuidelinePdf");
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		//pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
-		pbAttachment.setFileName("Guideline.docx");
+		pbAttachment.setFileName("Guideline.pdf");
 		
 		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
@@ -5727,7 +5727,7 @@ public class LOADetailBackingBean extends
 		theDir.mkdirs();
 
 		AttachmentFormat scFormat = new AttachmentDefaultFormat();
-		String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT,
+		String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_QT_SST_GUIDELINE,
 				pbAttachment.getPrefixFileName());
 
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
