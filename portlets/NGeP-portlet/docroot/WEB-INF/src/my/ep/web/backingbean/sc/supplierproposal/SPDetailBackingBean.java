@@ -15,10 +15,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -91,6 +93,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
@@ -923,6 +926,7 @@ public class SPDetailBackingBean extends
 				}
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
 				List<TplSpecAnswer> tobeDeletedAnswers = new ArrayList<TplSpecAnswer>();
+				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
@@ -946,7 +950,14 @@ public class SPDetailBackingBean extends
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
 									.getSpecAnswerList().size())){
 								throw new EpException(MessageConst.ERROR_760464);
-							}else{
+							}else if(!toDeleteZoneAnswers.isEmpty()){
+								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
+								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
+									TplSpecSuppAnswer specSupplierAnswer = specAnswer.getTplSpecSuppAnswer();
+									specSupplierAnswer.setDeleted(true);
+									zoneSpecSuppAnswersSet.add(specSupplierAnswer);
+								}
+								tobeDeletedSuppAnswers.addAll(zoneSpecSuppAnswersSet);
 								tobeDeletedAnswers.addAll(toDeleteZoneAnswers);
 							}
 							toDeleteZoneAnswers = null;
@@ -954,6 +965,7 @@ public class SPDetailBackingBean extends
 					}
 				}
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
+				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
 				answers = getManagedBean().getTemplateSpecBean()
 						.getSpecAnswerList();
