@@ -76,7 +76,7 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p:commandButton id="spkiSign"
-										value="#{lbl['lbl.btn.sign']}" 
+										value="#{lbl['lbl.btn.sign']}" update="spkiPanel"
 										onclick="spkiBlockWidget.show(); setRunEnableAutoUpdate(false);"
 										action="#{spkiBackingBean.spkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"
 										oncomplete="spkiBlockWidget.hide();" /> 
