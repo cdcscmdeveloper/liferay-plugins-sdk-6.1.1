@@ -69,7 +69,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private PmOrgProfile searchPtjProfile;
 	private String searchCircularNo;
 	private String searchCircularName;
-    private Date searchCtStartDate;
+	private Date searchCtStartDate;
 	private Date searchCtEndDate;
 	private String searchSupplierName;
 	private String searchLoaNo;
@@ -101,7 +101,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
 	private Long contractId;
-	
+
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
 	public int factoring = 99;
@@ -112,7 +112,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int  bondIndex = 113;
 	private int index;
 	private boolean trackingDiarySearch;
-	
+
 	/**
 	 * @return the taskName
 	 */
@@ -154,7 +154,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchContractNo(String searchContractNo) {
 		this.searchContractNo = searchContractNo;
 	}
-	
+
 	/**
 	 * @return the searchContractName
 	 */
@@ -182,7 +182,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchCircularNo(String searchCircularNo) {
 		this.searchCircularNo = searchCircularNo;
 	}
-	
+
 	/**
 	 * @return the searchCircularName
 	 */
@@ -196,12 +196,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchCircularName(String searchCircularName) {
 		this.searchCircularName = searchCircularName;
 	}
-	
+
 	/**
 	 * @return the searchCtPhysicalNo
 	 */
 	public String getSearchCtPhysicalNo() {
-		
+
 		return searchCtPhysicalNo;
 	}
 
@@ -211,7 +211,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchCtPhysicalNo(String searchCtPhysicalNo) {
 		this.searchCtPhysicalNo = searchCtPhysicalNo;
 	}
-	
+
 	/**
 	 * @return the searchContractStatus
 	 */
@@ -252,15 +252,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchCtStartDate(Date searchCtStartDate) {
 		this.searchCtStartDate = searchCtStartDate;
 	}
-	
+
 	/**
 	 * @return the searchLoaPhysicalNo
 	 */
 	public String getSearchLoaPhysicalNo() {
-		
+
 		return searchLoaPhysicalNo;
 	}
-	
+
 	/**
 	 * @param searchLoaPhysicalNo the searchLoaPhysicalNo to set
 	 */
@@ -309,7 +309,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchSupplierName(String searchSupplierName) {
 		this.searchSupplierName = searchSupplierName;
 	}
-	
+
 	/**
 	 * @return the searchLoaNo
 	 */
@@ -337,7 +337,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setExternalPageUrl(String externalPageUrl) {
 		this.externalPageUrl = externalPageUrl;
 	}
-	
+
 	/**
 	 * @return the warningPercentage
 	 */
@@ -407,7 +407,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
-	
+
 	/**
 	 * @return the loaContractVerId
 	 */
@@ -477,7 +477,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-	
+
 	/**
 	 * @return the remarkList
 	 */
@@ -500,7 +500,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public List<CtAttachment> getAttachmentList() {
 		if(attachmentList == null) {
-			   attachmentList = new ArrayList<CtAttachment>();
+			attachmentList = new ArrayList<CtAttachment>();
 		}
 		return attachmentList;
 	}
@@ -525,7 +525,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
 		this.finalListOfSideMenu = finalListOfSideMenu;
 	}
-	
+
 	/**
 	 * @return the loaContractVerList
 	 */
@@ -699,7 +699,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
+
 	/**
 	 * @return the pmDigiSign
 	 */
@@ -727,7 +727,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setSearchMinistryProfile(PmOrgProfile searchMinistryProfile) {
 		this.searchMinistryProfile = searchMinistryProfile;
 	}
-	
+
 	/**
 	 * @return the searchPtjGroupProfile
 	 */
@@ -837,7 +837,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		public ContractPagingDataModel() {
 			super("contractTbl", false);
 		}
-		
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -862,57 +862,57 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);	
 					SupplierSearchResDTO supplierSearchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-					
+
 					if (supplierSearchResDTO.getResultBean() != null && supplierSearchResDTO.getResultBean().getResultList() != null 
-			        		&& !supplierSearchResDTO.getResultBean().getResultList().isEmpty()) {
+							&& !supplierSearchResDTO.getResultBean().getResultList().isEmpty()) {
 						List<Long> supplierIdList = new ArrayList<Long>();
-		  		        for (SmSupplier supplier : supplierSearchResDTO.getResultBean().getResultList()) {
-		  		        	supplierIdList.add(supplier.getSupplierId());
-		  		        }
+						for (SmSupplier supplier : supplierSearchResDTO.getResultBean().getResultList()) {
+							supplierIdList.add(supplier.getSupplierId());
+						}
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("SUPPLIER_ID",SearchOperator.OPERATOR_IN.value(), 
 								supplierIdList));
 					}	
 				}
-				
+
 				if (StringUtils.isNotBlank(getSearchContractNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NO",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchContractNo());
+							getSearchContractNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if (StringUtils.isNotBlank(getSearchContractName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NAME",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchContractName());
+							getSearchContractName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				
+
 				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) && !fc.hasRoleUser(RoleCode.BPK_CCA.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);				
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
 				}else if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_CENTRAL);
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);		
-			    	} else if(fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && !fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
-			    		SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
-								ParameterConst.CONTRACT_TYPE_MINISTRY);
-							filterBean.setCaseInsensitive(true);
-							searchBean.getDataFilterBeans().add(filterBean);			
-			    	} else if(!fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
-			    		SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
-								ParameterConst.CONTRACT_TYPE_CENTRAL);
-							filterBean.setCaseInsensitive(true);
-							searchBean.getDataFilterBeans().add(filterBean);		
-			    	}
-			
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);		
+				} else if(fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && !fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
+					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+							ParameterConst.CONTRACT_TYPE_MINISTRY);
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);			
+				} else if(!fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
+					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+							ParameterConst.CONTRACT_TYPE_CENTRAL);
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);		
+				}
+
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
-					
+
 				} else if (getSearchPtjGroupProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_GROUP_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjGroupProfile().getOrgProfileId()));
@@ -922,13 +922,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				}
 				if (StringUtils.isNotBlank(getSearchCircularNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NO",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchCircularNo());
+							getSearchCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if (StringUtils.isNotBlank(getSearchCircularName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NAME",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchCircularName());
+							getSearchCircularName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
@@ -940,14 +940,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				}
 				if (StringUtils.isNotBlank(getSearchSupplierName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("COMPANY_NAME",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchSupplierName());
+							getSearchSupplierName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if (getSearchCtStartDate() != null && getSearchCtEndDate() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("EFF_DATE",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchCtStartDate()));	
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("EXP_DATE",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchCtEndDate()));		
-				
+
 				}
 				if (getSearchCtStartDate() != null && getSearchCtEndDate() == null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("EFF_DATE",SearchOperator.OPERATOR_EQUALS.value(), getSearchCtStartDate()));					
@@ -956,14 +956,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("EXP_DATE",SearchOperator.OPERATOR_EQUALS.value(), getSearchCtEndDate()));	
 				}
 				if (StringUtils.isNotBlank(getSearchCtPhysicalNo())) {
-				   	SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),
-				   									getSearchCtPhysicalNo().trim());
+					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),
+							getSearchCtPhysicalNo().trim());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (StringUtils.isNotBlank(getSearchLoaPhysicalNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("LOA_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchLoaPhysicalNo());
+							getSearchLoaPhysicalNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
@@ -974,12 +974,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 										"STATUS",
 										SearchOperator.OPERATOR_EQUALS.value(),
 										ContractConst.STATUS_COMPLETE),
-								new SearchFilterBean(
-										"STATUS",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										ContractConst.STATUS_INCOMPLETE,
-								SearchCondition.CONDITION_OR.value())));
-						
+										new SearchFilterBean(
+												"STATUS",
+												SearchOperator.OPERATOR_EQUALS.value(), 
+												ContractConst.STATUS_INCOMPLETE,
+												SearchCondition.CONDITION_OR.value())));
+
 					} else {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("STATUS", 
 								SearchOperator.OPERATOR_EQUALS.value(), getSearchStatus()));
@@ -989,12 +989,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
 					reqDTO.setParameterId(getSearchTerminationType());
 					reqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
-					
+
 					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 					String parameterCode = resDTO.getPmParameter().getParameterCode();
-					
+
 					if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_TERMINATE",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
@@ -1008,16 +1008,16 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 							SearchOperator.OPERATOR_EQUALS.value(), getSearchContractStatus()));
 				}
 				searchBean.setUseEntityClass(true);
-				
+
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
-				
+
 				reqDTO.setFromSupplier(isSupplierUser);
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
 				setSelectedTabIndex(0);
-					
+
 				if (resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
 				}

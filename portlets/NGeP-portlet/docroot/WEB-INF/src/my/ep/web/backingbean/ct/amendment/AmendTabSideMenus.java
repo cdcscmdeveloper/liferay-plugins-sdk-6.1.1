@@ -29,86 +29,86 @@ public class AmendTabSideMenus {
 	List<String> menuWithMeetings  = null;
 	List<String> menuWithDeclaration = null;
 	List<String> menuWithAmendSupplier = null;
-	
+
 	List<String> menuWithAgency = null;
 	List<String> menuDeduction= null;
 	List<String> menuSchedule = null;
-		
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the tab menu list.
 	 */
 	public AmendTabSideMenus() {
 		face = new FacesScopes();
-		   
+
 		if (menuWithAmendFulfilment == null) {
 			menuWithAmendFulfilment =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.fd", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+
 		if (menuWithAmendSetting == null) {
 			menuWithAmendSetting =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+
 		if (menuWithZone == null) {
 			menuWithZone=  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.zone", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithItem == null) {
 			menuWithItem =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithPrepareLoa ==  null) {
 			menuWithPrepareLoa =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithPrepareBond ==  null) {
 			menuWithPrepareBond =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithDecision == null) {
 			menuWithDecision =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithMeetings == null) {
 			menuWithMeetings =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithDeclaration == null) {
 			menuWithDeclaration =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		
+
 		if (menuDeduction == null) {
 			menuDeduction =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.deduction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		  
+
 		if (menuWithAgency == null) {
 			menuWithAgency =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.agency", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		
+
 		if (menuSchedule == null) {
 			menuSchedule =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		
-		  
+
+
 		if (menuWithAmendSupplier == null) {
 			menuWithAmendSupplier =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.view.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
-			}
+		}
 	}
 }

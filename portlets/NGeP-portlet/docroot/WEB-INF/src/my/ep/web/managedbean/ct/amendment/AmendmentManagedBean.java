@@ -86,7 +86,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> supplierList;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
-    private CtContractItem selectedServiceItem;
+	private CtContractItem selectedServiceItem;
 	private CtContractVer agreementContractVer;
 	private CtItemMaxQty ctItemMaxQty;
 	private CtItemPrice ctItemPrices;
@@ -97,31 +97,31 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
-	
+
 	@ManagedProperty(value="#{spkiBackingBean}")
-    private SpkiBackingBean spkiBackingBean;
-	
+	private SpkiBackingBean spkiBackingBean;
+
 	/**
 	 * @return the taskName
 	 */
 	public String getTaskName() {
 		return taskName;
 	}
-	
+
 	/**
 	 * @param taskName the taskName to set
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	
+
 	/**
 	 * @return the ackFA
 	 */
 	public String getAckFA() {
 		return ackFA;
 	}
-	
+
 	/**
 	 * @param ackFA the ackFA to set
 	 */
@@ -135,7 +135,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getCommitteeName() {
 		return committeeName;
 	}
-	
+
 	/**
 	 * @param committeeName the committeeName to set
 	 */
@@ -172,14 +172,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
-	
+
 	/**
 	 * @param fileDirectory the fileDirectory to set
 	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
-	
+
 	/**
 	 * @return the pbQcApproved
 	 */
@@ -192,7 +192,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setPbQcApproved(String pbQcApproved) {
 		this.pbQcApproved = pbQcApproved;
 	}	
-	
+
 	/**
 	 * @return the mofApproved
 	 */
@@ -213,7 +213,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
-	
+
 	/**
 	 * @param textBeforeSign the textBeforeSign to set
 	 */
@@ -226,7 +226,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getButtonAction() {
 		return buttonAction;
 	}
-	
+
 	/**
 	 * @param buttonAction the buttonAction to set
 	 */
@@ -239,7 +239,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getCommitteeType() {
 		return committeeType;
 	}
-	
+
 	/**
 	 * @param committeeType the committeeType to set
 	 */
@@ -259,21 +259,21 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setMeetingStatusId(Long meetingStatusId) {
 		this.meetingStatusId = meetingStatusId;
 	}
-	
+
 	/**
 	 * @return the secretaryId
 	 */
 	public Long getSecretaryId() {
 		return secretaryId;
 	}
-	
+
 	/**
 	 * @param secretaryId the secretaryId to set
 	 */
 	public void setSecretaryId(Long secretaryId) {
 		this.secretaryId = secretaryId;
 	}
-	
+
 	/**
 	 * @return the newAmendmentEffDate
 	 */
@@ -294,196 +294,196 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
-	
+
 	/**
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
-	
+
 	/**
 	 * @return the attachFileIndex
 	 */
 	public int getAttachFileIndex() {
 		return attachFileIndex;
 	}
-	
+
 	/**
 	 * @param attachFileIndex the attachFileIndex to set
 	 */
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
 	}
-	
+
 	/**
 	 * @return the itemProductExist
 	 */
 	public boolean isItemProductExist() {
 		return itemProductExist;
 	}
-	
+
 	/**
 	 * @param itemProductExist the itemProductExist to set
 	 */
 	public void setItemProductExist(boolean itemProductExist) {
 		this.itemProductExist = itemProductExist;
 	}
-	
+
 	/**
 	 * @return the itemServiceExist
 	 */
 	public boolean isItemServiceExist() {
 		return itemServiceExist;
 	}
-	
+
 	/**
 	 * @param itemServiceExist the itemServiceExist to set
 	 */
 	public void setItemServiceExist(boolean itemServiceExist) {
 		this.itemServiceExist = itemServiceExist;
 	}
-	
+
 	/**
 	 * @return the termAndConditionFlg
 	 */
 	public boolean isTermAndConditionFlg() {
 		return termAndConditionFlg;
 	}
-	
+
 	/**
 	 * @param termAndConditionFlg the termAndConditionFlg to set
 	 */
 	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
 		this.termAndConditionFlg = termAndConditionFlg;
 	}
-	
+
 	/**
 	 * @return the pbConfirmMeeting
 	 */
 	public boolean isPbConfirmMeeting() {
 		return pbConfirmMeeting;
 	}
-	
+
 	/**
 	 * @param pbConfirmMeeting the pbConfirmMeeting to set
 	 */
 	public void setPbConfirmMeeting(boolean pbConfirmMeeting) {
 		this.pbConfirmMeeting = pbConfirmMeeting;
 	}
-	
+
 	/**
 	 * @return the memberSignOff
 	 */
 	public boolean isMemberSignOff() {
 		return memberSignOff;
 	}
-	
+
 	/**
 	 * @param memberSignOff the memberSignOff to set
 	 */
 	public void setMemberSignOff(boolean memberSignOff) {
 		this.memberSignOff = memberSignOff;
 	}
-	
+
 	/**
 	 * @return the letterOfAcceptance
 	 */
 	public boolean isLetterOfAcceptance() {
 		return letterOfAcceptance;
 	}
-	
+
 	/**
 	 * @param letterOfAcceptance the letterOfAcceptance to set
 	 */
 	public void setLetterOfAcceptance(boolean letterOfAcceptance) {
 		this.letterOfAcceptance = letterOfAcceptance;
 	}
-	
+
 	/**
 	 * @return the prepareLOA
 	 */
 	public boolean isPrepareLOA() {
 		return prepareLOA;
 	}
-	
+
 	/**
 	 * @param prepareLOA the prepareLOA to set
 	 */
 	public void setPrepareLOA(boolean prepareLOA) {
 		this.prepareLOA = prepareLOA;
 	}
-	
+
 	/**
 	 * @return the signOffDecision
 	 */
 	public boolean isSignOffDecision() {
 		return signOffDecision;
 	}
-	
+
 	/**
 	 * @param signOffDecision the signOffDecision to set
 	 */
 	public void setSignOffDecision(boolean signOffDecision) {
 		this.signOffDecision = signOffDecision;
 	}
-	
+
 	/**
 	 * @return the signUpdateDecision
 	 */
 	public boolean isSignUpdateDecision() {
 		return signUpdateDecision;
 	}
-	
+
 	/**
 	 * @param signUpdateDecision the signUpdateDecision to set
 	 */
 	public void setSignUpdateDecision(boolean signUpdateDecision) {
 		this.signUpdateDecision = signUpdateDecision;
 	}
-	
+
 	/**
 	 * @return the decisionPbQcLOA
 	 */
 	public boolean isDecisionPbQcLOA() {
 		return decisionPbQcLOA;
 	}
-	
+
 	/**
 	 * @param decisionPbQcLOA the decisionPbQcLOA to set
 	 */
 	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
 		this.decisionPbQcLOA = decisionPbQcLOA;
 	}
-	
+
 	/**
 	 * @return the confirmMeeting
 	 */
 	public boolean isConfirmMeeting() {
 		return confirmMeeting;
 	}
-	
+
 	/**
 	 * @param confirmMeeting the confirmMeeting to set
 	 */
 	public void setConfirmMeeting(boolean confirmMeeting) {
 		this.confirmMeeting = confirmMeeting;
 	}
-	
+
 	/**
 	 * @return the selectAll
 	 */
 	public boolean isSelectAll() {
 		return selectAll;
 	}
-	
+
 	/**
 	 * @param selectAll the selectAll to set
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}	
-	
+
 	/**
 	 * @return the allowAcknowledge
 	 */
@@ -504,14 +504,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
-	
+
 	/**
 	 * @param autoUpdate the autoUpdate to set
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-	
+
 	/**
 	 * @return the disableEndorseAmendDetails
 	 */
@@ -532,7 +532,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public boolean isDisableFinalAmendDetails() {
 		return disableFinalAmendDetails;
 	}
-	
+
 	/**
 	 * @param disableFinalAmendDetails the disableFinalAmendDetails to set
 	 */
@@ -549,14 +549,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return remarkList;
 	}
-	
+
 	/**
 	 * @param remarkList the remarkList to set
 	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
-	
+
 	/**
 	 * @return the attachmentList
 	 */
@@ -566,14 +566,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return attachmentList;
 	}
-	
+
 	/**
 	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-	
+
 	/**
 	 * @return the amendHistoryList
 	 */
@@ -583,28 +583,28 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return amendHistoryList;
 	}
-	
+
 	/**
 	 * @param amendHistoryList the amendHistoryList to set
 	 */
 	public void setAmendHistoryList(List<CtContractVer> amendHistoryList) {
 		this.amendHistoryList = amendHistoryList;
 	}
-	
+
 	/**
 	 * @return the finalListOfSideMenu
 	 */
 	public List<String> getFinalListOfSideMenu() {
 		return finalListOfSideMenu;
 	}
-	
+
 	/**
 	 * @param finalListOfSideMenu the finalListOfSideMenu to set
 	 */
 	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
 		this.finalListOfSideMenu = finalListOfSideMenu;
 	}
-	
+
 	/**
 	 * @return the supplierList
 	 */
@@ -625,14 +625,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
-	
+
 	/**
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
-	
+
 	/**
 	 * @return the userMap
 	 */
@@ -642,28 +642,28 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return userMap;
 	}
-	
+
 	/**
 	 * @param userMap the userMap to set
 	 */
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
-	
+
 	/**
 	 * @return the selectedServiceItem
 	 */
 	public CtContractItem getSelectedServiceItem() {
 		return selectedServiceItem;
 	}
-	
+
 	/**
 	 * @param selectedServiceItem the selectedServiceItem to set
 	 */
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
 		this.selectedServiceItem = selectedServiceItem;
 	}
-	
+
 	/**
 	 * @return the agreementContractVer
 	 */
@@ -677,119 +677,119 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setAgreementContractVer(CtContractVer agreementContractVer) {
 		this.agreementContractVer = agreementContractVer;
 	}
-	
+
 	/**
 	 * @return the ctItemMaxQty
 	 */
 	public CtItemMaxQty getCtItemMaxQty() {
 		return ctItemMaxQty;
 	}
-	
+
 	/**
 	 * @param ctItemMaxQty the ctItemMaxQty to set
 	 */
 	public void setCtItemMaxQty(CtItemMaxQty ctItemMaxQty) {
 		this.ctItemMaxQty = ctItemMaxQty;
 	}
-	
+
 	/**
 	 * @return the ctItemPrices
 	 */
 	public CtItemPrice getCtItemPrices() {
 		return ctItemPrices;
 	}
-	
+
 	/**
 	 * @param ctItemPrices the ctItemPrices to set
 	 */
 	public void setCtItemPrices(CtItemPrice ctItemPrices) {
 		this.ctItemPrices = ctItemPrices;
 	}
-	
+
 	/**
 	 * @return the ctItemCeilingQtys
 	 */
 	public CtItemCeilingQty getCtItemCeilingQtys() {
 		return ctItemCeilingQtys;
 	}
-	
+
 	/**
 	 * @param ctItemCeilingQtys the ctItemCeilingQtys to set
 	 */
 	public void setCtItemCeilingQtys(CtItemCeilingQty ctItemCeilingQtys) {
 		this.ctItemCeilingQtys = ctItemCeilingQtys;
 	}
-	
+
 	/**
 	 * @return the selectedItem
 	 */
 	public CtContractItem getSelectedItem() {
 		return selectedItem;
 	}
-	
+
 	/**
 	 * @param selectedItem the selectedItem to set
 	 */
 	public void setSelectedItem(CtContractItem selectedItem) {
 		this.selectedItem = selectedItem;
 	}
-	
+
 	/**
 	 * @return the ctServiceItemPrices
 	 */
 	public CtItemPrice getCtServiceItemPrices() {
 		return ctServiceItemPrices;
 	}
-	
+
 	/**
 	 * @param ctServiceItemPrices the ctServiceItemPrices to set
 	 */
 	public void setCtServiceItemPrices(CtItemPrice ctServiceItemPrices) {
 		this.ctServiceItemPrices = ctServiceItemPrices;
 	}
-	
+
 	/**
 	 * @return the newCommitteMembers
 	 */
 	public CtCommitteeMember getNewCommitteMembers() {
 		return newCommitteMembers;
 	}
-	
+
 	/**
 	 * @param newCommitteMembers the newCommitteMembers to set
 	 */
 	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
 		this.newCommitteMembers = newCommitteMembers;
 	}
-	
+
 	/**
 	 * @return the selectedScLoaReports
 	 */
 	public ScLoaReport getSelectedScLoaReports() {
 		return selectedScLoaReports;
 	}
-	
+
 	/**
 	 * @param selectedScLoaReports the selectedScLoaReports to set
 	 */
 	public void setSelectedScLoaReports(ScLoaReport selectedScLoaReports) {
 		this.selectedScLoaReports = selectedScLoaReports;
 	}
-	
+
 	/**
 	 * @return the pmDigiSign
 	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
-	
+
 	/**
 	 * @param pmDigiSign the pmDigiSign to set
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
-	
+
 	/**
 	 * @return the spkiBackingBean
 	 */
