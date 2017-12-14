@@ -48,7 +48,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
-	
+
 	private String action;
 	private String searchContractType;
 	private String searchContractValue;
@@ -57,14 +57,14 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String orgTypeCode;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
-	
+
 	private int selectedTabIndex;
 	private Long ministryProfileId;
 	private Long officerProfileId;
 	private Long jabatanProfileId;
 	private Long ptjProfileId;
 	private boolean exmptedMinistryDD;
-	
+
 	private boolean updateAction = false;
 	private boolean viewContract = false;
 	private boolean chkItemZone;
@@ -76,8 +76,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean circularExtension;
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideActiveDel = true;
-	 private boolean selectAll;
-	
+	private boolean selectAll;
+
 	private TreeNode centralZoneTrees;
 	private PmDigiSign pmDigiSign;
 	private CtCircular circular;
@@ -101,49 +101,49 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<Long, PmUser> userMap;
 	private List<CtCircularPidReason> ctCircularPidReasons;
-	
+
 	/**
 	 * @return the updateAction
 	 */
 	public boolean isUpdateAction() {
 		return updateAction;
 	}
-	
+
 	/**
 	 * @param updateAction the updateAction to set
 	 */
 	public void setUpdateAction(boolean updateAction) {
 		this.updateAction = updateAction;
 	}
-	
+
 	/**
 	 * @return the circularVer
 	 */
 	public CtCircularVer getCircularVer() {
 		return circularVer;
 	}
-	
+
 	/**
 	 * @param circularVer the circularVer to set
 	 */
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
 	}
-	
+
 	/**
 	 * @return the approverModel
 	 */
 	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
-	
+
 	/**
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
-	
+
 	/**
 	 * @return the searchContractType
 	 */
@@ -157,7 +157,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setSearchContractType(String searchContractType) {
 		this.searchContractType = searchContractType;
 	}
-	
+
 	/**
 	 * @return the circular
 	 */
@@ -178,14 +178,14 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public CtCircular getCircular() {
 		return circular;
 	}
-	
+
 	/**
 	 * @param circular the circular to set
 	 */
 	public void setCircular(CtCircular circular) {
 		this.circular = circular;
 	}
-	
+
 	/**
 	 * @return the contractList
 	 */
@@ -195,14 +195,14 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		}
 		return contractList;
 	}
-	
+
 	/**
 	 * @param contractList the contractList to set
 	 */
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
 	}
-	
+
 	/**
 	 * @return the remarkList
 	 */
@@ -224,7 +224,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	 */
 	public List<CtAttachment> getAttachmentList() {
 		if(attachmentList == null)
-		   attachmentList = new ArrayList<CtAttachment>();
+			attachmentList = new ArrayList<CtAttachment>();
 		return attachmentList;
 	}
 
@@ -234,56 +234,56 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-	
+
 	/**
 	 * @return the userGroupMap
 	 */
 	public Map<Long, PmUserGroup> getUserGroupMap() {
 		return userGroupMap;
 	}
-	
+
 	/**
 	 * @param userGroupMap the userGroupMap to set
 	 */
 	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
 		this.userGroupMap = userGroupMap;
 	}
-	
+
 	/**
 	 * @return the selectedContactPersons
 	 */
 	public List<CtContactPerson> getSelectedContactPersons() {
 		return selectedContactPersons;
 	}
-	
+
 	/**
 	 * @param selectedContactPersons the selectedContactPersons to set
 	 */
 	public void setSelectedContactPersons(List<CtContactPerson> selectedContactPersons) {
 		this.selectedContactPersons = selectedContactPersons;
 	}
-	
+
 	/**
 	 * @return the selectedCancelCirculars
 	 */
 	public List<CtCancelCircular> getSelectedCancelCirculars() {
 		return selectedCancelCirculars;
 	}
-	
+
 	/**
 	 * @param selectedCancelCirculars the selectedCancelCirculars to set
 	 */
 	public void setSelectedCancelCirculars(List<CtCancelCircular> selectedCancelCirculars) {
 		this.selectedCancelCirculars = selectedCancelCirculars;
 	}
-	
-		/**
+
+	/**
 	 * @return the selectedCancelledCircularList
 	 */
 	public List<CtCancelCircular> getSelectedCancelledCircularList() {
 		return selectedCancelledCircularList;
 	}
-	
+
 	/**
 	 * @param selectedCancelledCircularList the selectedCancelledCircularList to set
 	 */
@@ -291,77 +291,77 @@ public class CentralContractManagedBean extends BaseManagedBean {
 			List<CtCancelCircular> selectedCancelledCircularList) {
 		this.selectedCancelledCircularList = selectedCancelledCircularList;
 	}
-	
+
 	/**
 	 * @return the cancelledCircularList
 	 */
 	public List<CtCancelCircular> getCancelledCircularList() {
 		return cancelledCircularList;
 	}
-	
+
 	/**
 	 * @param cancelledCircularList the cancelledCircularList to set
 	 */
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
 	}
-	
+
 	/**
 	 * @return the selectedExemptedOrgs
 	 */
 	public List<CtExemptedOrg> getSelectedExemptedOrgs() {
 		return selectedExemptedOrgs;
 	}
-	
+
 	/**
 	 * @param selectedExemptedOrgs the selectedExemptedOrgs to set
 	 */
 	public void setSelectedExemptedOrgs(List<CtExemptedOrg> selectedExemptedOrgs) {
 		this.selectedExemptedOrgs = selectedExemptedOrgs;
 	}
-	
+
 	/**
 	 * @return the selectedCircularContract
 	 */
 	public CtCircularContract getSelectedCircularContract() {
 		return selectedCircularContract;
 	}
-	
+
 	/**
 	 * @param selectedCircularContract the selectedCircularContract to set
 	 */
 	public void setSelectedCircularContract(CtCircularContract selectedCircularContract) {
 		this.selectedCircularContract = selectedCircularContract;
 	}
-	
+
 	/**
 	 * @return the selectedCircularItem
 	 */
 	public CtCircularItem getSelectedCircularItem() {
 		return selectedCircularItem;
 	}
-	
+
 	/**
 	 * @param selectedCircularItem the selectedCircularItem to set
 	 */
 	public void setSelectedCircularItem(CtCircularItem selectedCircularItem) {
 		this.selectedCircularItem = selectedCircularItem;
 	}
-	
+
 	/**
 	 * @return the selectedZoneItems
 	 */
 	public CtContractZone getSelectedZoneItems() {
 		return selectedZoneItems;
 	}
-	
+
 	/**
 	 * @param selectedZoneItems the selectedZoneItems to set
 	 */
 	public void setSelectedZoneItems(CtContractZone selectedZoneItems) {
 		this.selectedZoneItems = selectedZoneItems;
 	}
-	
+
 	/**
 	 * @return the zonePriceMap
 	 */
@@ -371,42 +371,42 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		}
 		return zonePriceMap;
 	}
-	
+
 	/**
 	 * @param zonePriceMap the zonePriceMap to set
 	 */
 	public void setZonePriceMap(Map<CtContractZone, List<CtItemPrice>> zonePriceMap) {
 		this.zonePriceMap = zonePriceMap;
 	}
-	
+
 	/**
 	 * @return the chkItemZone
 	 */
 	public boolean isChkItemZone() {
 		return chkItemZone;
 	}
-	
+
 	/**
 	 * @param chkItemZone the chkItemZone to set
 	 */
 	public void setChkItemZone(boolean chkItemZone) {
 		this.chkItemZone = chkItemZone;
 	}
-	
+
 	/**
 	 * @return the chkItemPrice
 	 */
 	public boolean isChkItemPrice() {
 		return chkItemPrice;
 	}
-	
+
 	/**
 	 * @param chkItemPrice the chkItemPrice to set
 	 */
 	public void setChkItemPrice(boolean chkItemPrice) {
 		this.chkItemPrice = chkItemPrice;
 	}
-	
+
 	/**
 	 * @return the userMap
 	 */
@@ -423,147 +423,147 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
-	
+
 	/**
 	 * @return the centralZoneTrees
 	 */
 	public TreeNode getCentralZoneTrees() {
 		return centralZoneTrees;
 	}
-	
+
 	/**
 	 * @param centralZoneTrees the centralZoneTrees to set
 	 */
 	public void setCentralZoneTrees(TreeNode centralZoneTrees) {
 		this.centralZoneTrees = centralZoneTrees;
 	}
-	
+
 	/**
 	 * @return the contractItemZones
 	 */
 	public List<CtContractZone> getContractItemZones() {
 		return contractItemZones;
 	}
-	
+
 	/**
 	 * @param contractItemZones the contractItemZones to set
 	 */
 	public void setContractItemZones(List<CtContractZone> contractItemZones) {
 		this.contractItemZones = contractItemZones;
 	}
-	
+
 	/**
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
-	
+
 	/**
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
-	
+
 	/**
 	 * @return the chkCancelPage
 	 */
 	public boolean isChkCancelPage() {
 		return chkCancelPage;
 	}
-	
+
 	/**
 	 * @param chkCancelPage the chkCancelPage to set
 	 */
 	public void setChkCancelPage(boolean chkCancelPage) {
 		this.chkCancelPage = chkCancelPage;
 	}
-	
+
 	/**
 	 * @return the action
 	 */
 	public String getAction() {
 		return action;
 	}
-	
+
 	/**
 	 * @param action the action to set
 	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
-	
+
 	/**
 	 * @return the orgProfiles
 	 */
 	public List<PmOrgProfile> getOrgProfiles() {
 		return orgProfiles;
 	}
-	
+
 	/**
 	 * @param orgProfiles the orgProfiles to set
 	 */
 	public void setOrgProfiles(List<PmOrgProfile> orgProfiles) {
 		this.orgProfiles = orgProfiles;
 	}
-	
+
 	/**
 	 * @return the viewContract
 	 */
 	public boolean isViewContract() {
 		return viewContract;
 	}
-	
+
 	/**
 	 * @param viewContract the viewContract to set
 	 */
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
 	}
-	
+
 	/**
 	 * @return the pmDigiSign
 	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
-	
+
 	/**
 	 * @param pmDigiSign the pmDigiSign to set
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
-	
+
 	/**
 	 * @return the autoUpdate
 	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
-	
+
 	/**
 	 * @param autoUpdate the autoUpdate to set
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-	
+
 	/**
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
-	
+
 	/**
 	 * @param textBeforeSign the textBeforeSign to set
 	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
-	
+
 	/**
 	 * @return the fileDirectory
 	 */
@@ -584,7 +584,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public boolean isFromCircularNotice() {
 		return fromCircularNotice;
 	}
-	
+
 	/**
 	 * @param fromCircularNotice the fromCircularNotice to set
 	 */
@@ -745,7 +745,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setOfficerProfileId(Long officerProfileId) {
 		this.officerProfileId = officerProfileId;
 	}
-	
+
 	/**
 	 * @return the ctCircularPidReasons
 	 */
@@ -817,7 +817,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.selectedOrgsProfile = selectedOrgsProfile;
 	}
 
-	
 
-	
+
+
 }

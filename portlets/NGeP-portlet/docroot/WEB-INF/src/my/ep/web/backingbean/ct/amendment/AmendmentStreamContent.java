@@ -32,7 +32,7 @@ import org.primefaces.model.StreamedContent;
 public class AmendmentStreamContent {
 
 	private StreamedContent loaStreamContent = null;
-	
+
 	/**
 	 * The method used to generate the pdf file and display on screen.
 	 * 

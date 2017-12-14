@@ -130,7 +130,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		if(ctBB == null){
 			ctBB = new ContractBackingBean();
 		}
-	
+
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
 		if (originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null) {
@@ -143,7 +143,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	private void initializeApproverList() {
 		if(getManagedBean().getApproverModel() == null) {
-			 getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(), new ArrayList<PmUser>()));
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(), new ArrayList<PmUser>()));
 		}
 	}	
 
@@ -201,73 +201,73 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {	   
- 
+
 		ContractSupplierReqDTO reqDTO = null;
-	    UserResDTO userResDTO = null;
-	    IUserSO userSO = null;
-	    
-	    HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-	    HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-	    String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
-	    String factoringId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-	    String supplierUserId = originalServletRequest.getParameter(ContractConst.SUPPLIER_USER_ID);
-    
-        if (!StringUtils.isEmpty(factoringId)) {
-        	reqDTO = new ContractSupplierReqDTO();
-    		reqDTO.setFactoringId(Long.parseLong(factoringId));
-    		setFactoringDetails(reqDTO);
-    		Long userId = null;
- 	 	     //Restrict If login user not the contract admin / supplier
-    		if (StringUtils.isEmpty(supplierUserId)) {
-    			String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-    					ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.MIN_CONTRACT_ADMIN.value() : RoleCode.BPK_CCA.value();			
-				CtActor ctActor = retrieveContractActor(
-						reqDTO.getFactoringId(),
-						ParameterConst.DOCTYPE_REQUEST_FACTORING,
-						roleCode);
-				userId = (ctActor != null) ? ctActor.getUser().getUserId() : null;
-    		} else {
-    			userId = Long.parseLong(supplierUserId);
-    		}
-			
- 	 	      if (userId == null || !getFacesScopes().getUserSessionBean().getUserId().equals(userId)) {
- 	 	    	  FacesContext fc = FacesContext.getCurrentInstance();
- 	 	    	  fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
-					  MessageUtils.getMessage(MessageConst.ERROR_700116,
-							   MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			          fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
-			        return;
- 	 	      }
- 	 	      getManagedBean().setViewOnly(true);
- 	 	      return;
-        }
-         if (taskId == null) {
-		         return;
-           }	
-          Object payLoad = super.getBpmTaskDetails(Object.class, null);
-	      getManagedBean().setAutoUpdate(true);		    
-	   	  
-	    // Change Bank Account
-	      if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
+		UserResDTO userResDTO = null;
+		IUserSO userSO = null;
 
-	    	  CTBankAccountDataType bankAccDataType= (CTBankAccountDataType) payLoad;
-	    	  UserReqDTO userReqDTO = new UserReqDTO();
-	    	  userReqDTO.setUserId(new Long(bankAccDataType.getSupplier().getUserId()));
-	    	  userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-	    	  userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-	    	  getManagedBean().setSupplierPmUser(userResDTO.getPmUser());
-			      
-	    	  ContractReqDTO ctReqDTO = new ContractReqDTO();
-	    	  ctReqDTO.setContractVerId(new Long(bankAccDataType.getDocId()));
-	    	  ctReqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
-	    	  setChangeBankDetails(ctReqDTO);       
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
+		String factoringId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+		String supplierUserId = originalServletRequest.getParameter(ContractConst.SUPPLIER_USER_ID);
 
-	      } else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {	// Factoring Request		            
-	    	  CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
-	    	  reqDTO = new ContractSupplierReqDTO();
-	    	  reqDTO.setFactoringId(new Long(dataType.getDocId()));
-	    	  setFactoringDetails(reqDTO);	
-	      }
+		if (!StringUtils.isEmpty(factoringId)) {
+			reqDTO = new ContractSupplierReqDTO();
+			reqDTO.setFactoringId(Long.parseLong(factoringId));
+			setFactoringDetails(reqDTO);
+			Long userId = null;
+			//Restrict If login user not the contract admin / supplier
+			if (StringUtils.isEmpty(supplierUserId)) {
+				String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.MIN_CONTRACT_ADMIN.value() : RoleCode.BPK_CCA.value();			
+						CtActor ctActor = retrieveContractActor(
+								reqDTO.getFactoringId(),
+								ParameterConst.DOCTYPE_REQUEST_FACTORING,
+								roleCode);
+						userId = (ctActor != null) ? ctActor.getUser().getUserId() : null;
+			} else {
+				userId = Long.parseLong(supplierUserId);
+			}
+
+			if (userId == null || !getFacesScopes().getUserSessionBean().getUserId().equals(userId)) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+						MessageUtils.getMessage(MessageConst.ERROR_700116,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+				return;
+			}
+			getManagedBean().setViewOnly(true);
+			return;
+		}
+		if (taskId == null) {
+			return;
+		}	
+		Object payLoad = super.getBpmTaskDetails(Object.class, null);
+		getManagedBean().setAutoUpdate(true);		    
+
+		// Change Bank Account
+		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
+
+			CTBankAccountDataType bankAccDataType= (CTBankAccountDataType) payLoad;
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(new Long(bankAccDataType.getSupplier().getUserId()));
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+			userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			getManagedBean().setSupplierPmUser(userResDTO.getPmUser());
+
+			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setContractVerId(new Long(bankAccDataType.getDocId()));
+			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+			setChangeBankDetails(ctReqDTO);       
+
+		} else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {	// Factoring Request		            
+			CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
+			reqDTO = new ContractSupplierReqDTO();
+			reqDTO.setFactoringId(new Long(dataType.getDocId()));
+			setFactoringDetails(reqDTO);	
+		}
 	}
 
 	/**
@@ -276,49 +276,49 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @return void
 	 * */
 	public void setChangeBankDetails(ContractReqDTO reqDTO) {
-		
+
 		IChangeBankAccSO changeBankAccSO = null;
 		ContractResDTO resDTO = null;
 		if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList() != null){
-       		ctBB.getManagedBean().getDeleteAttachmentList().clear();
-       	}
-	    try{
-	    	changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);
-	    	resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);	    
-	    	getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-	    	getManagedBean().setContractVer(resDTO.getCtContractVer());
-	    	getManagedBean().setCurentAccNoBankName(null);
-	    	
-	    	if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-	    		getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-	    		getPopulateBankAccountList();
-	    	}
-	    	
-	    	if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
-	    		getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
-			    	
-	    	getManagedBean().setRemarkList(resDTO.getCtRemarks());
-	    	getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			    	
-	    	if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-	    		String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
-	    		if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
-	    			account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
-	    		}
-	    		getManagedBean().setAccountNoAndName(account);
-	    	}	    
-	    	getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-	    			ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
-	    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-	    	ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), 
-	    			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-	    } catch (Exception e) {
-	    		e.printStackTrace();
-	    		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-	    }finally{
-	    		resDTO = null;
-	    		changeBankAccSO = null;
-	    }
+			ctBB.getManagedBean().getDeleteAttachmentList().clear();
+		}
+		try{
+			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);
+			resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);	    
+			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			getManagedBean().setContractVer(resDTO.getCtContractVer());
+			getManagedBean().setCurentAccNoBankName(null);
+
+			if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+				getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+				getPopulateBankAccountList();
+			}
+
+			if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
+				getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
+
+			getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+
+			if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+				String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+				if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
+					account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
+				}
+				getManagedBean().setAccountNoAndName(account);
+			}	    
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
+			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), 
+					getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}finally{
+			resDTO = null;
+			changeBankAccSO = null;
+		}
 	}
 	/**
 	 * The method used to set the factoring request details information while
@@ -351,28 +351,28 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			getManagedBean().setAccBankName(null);
 			getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + getManagedBean().getFactoring().getBankName());
-                
+
 			// Remove Factoring Request
 			if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				getManagedBean().setRemoveFactoring(true);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_REMOVE_FACTORING);
 			} else {
-            	getManagedBean().setRemoveFactoring(false);
+				getManagedBean().setRemoveFactoring(false);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-            }
-                
+			}
+
 			if (getManagedBean().getUserMap().size() == 0) {
 				initializeApproverList();
 			}
 			if (getManagedBean().getFactoring() == null) {
 				initializeFactoring();
 			}
-			
+
 			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
 				getManagedBean().getApproverModel().setSource(
 						getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
 								getManagedBean().getUserMap()));
-             
+
 				if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 					getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 					List<PmUser> invalidApproverList = new ArrayList<PmUser>();
@@ -398,17 +398,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 				}
 			}
-			
+
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-    		          ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getDocType(), getManagedBean().getCtContract().getContractNo()));
+					ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), 
 					getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-          
+
 		} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}finally{
 			contractSupplierSO = null;
 			resDTO = null;
@@ -436,7 +436,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setUserRole(getUserRole());
-    
+
 			if (isSupplierRole()) {
 				getContractAdminlist(); 
 				reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
@@ -444,7 +444,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			} else if (getManagedBean().getSupplierPmUser() != null) {
 				reqDTO.setSupplierPmUser(getManagedBean().getSupplierPmUser());
 			}
-    
+
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setCtContract(getManagedBean().getCtContract());
 			reqDTO.setCtContractVer(getManagedBean().getContractVer());
@@ -454,7 +454,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}    
-	
+
 			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IChangeBankAccSO.class);
 			resDTO = changeBankAccSO.saveChangeBankAccRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -468,7 +468,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 								MessageUtils.getMessage(messageId,
 										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,this.getManagedBean().getContractVer().getDocType()),
 										getManagedBean().getContractVer().getCtContract().getContractNo()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -481,7 +481,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		return null;
 	}
- 
+
 	/**
 	 * The method used for validating the change bank request information.
 	 * A warning or error message will display on screen when the validation
@@ -495,7 +495,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().setAutoUpdate(true);
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
-				getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
+					getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
 				throw new EpException(MessageConst.ERROR_750000);
 			}
 		}
@@ -530,16 +530,16 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
-	
+
 			if (isSupplierRole()) {
 				getContractAdminlist();
 				reqDTO.getContractAdminlist().addAll(getManagedBean().getContractAdminlist());
 			}
-		
+
 			getManagedBean().getFactoring().setCtContract(getManagedBean().getCtContract());
 			getManagedBean().getFactoring().setSmSupplier(getManagedBean().getCtContract().getSmSupplier());
 			getManagedBean().getFactoring().setLoa(getManagedBean().getCtContract().getLoa());
-	    
+
 			reqDTO.setFactoring(getManagedBean().getFactoring());
 			reqDTO.setCtContract(getManagedBean().getFactoring().getCtContract());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -550,14 +550,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setRemoveFactoring(getManagedBean().isRemoveFactoring());
 			reqDTO.setDocType(getManagedBean().getDocType());
-	    
+
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
 			supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
 			ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
-	    
+
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700043;
@@ -570,15 +570,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				}
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-	    					MessageUtils.getMessage(messageId,
-	    							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getDocType()),
-	    							this.getManagedBean().getFactoring().getLoa().getLoaNo() },
-	    							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		    
+								MessageUtils.getMessage(messageId,
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getDocType()),
+										this.getManagedBean().getFactoring().getLoa().getLoaNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
-			    		|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
 					renewSesionObject();
-						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
@@ -605,7 +605,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (remark == null || remark.length() == 0) {
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		} else {		
 			if (getManagedBean().getFactoring().getFileName() == null 
@@ -639,7 +639,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 			}
-		
+
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(getManagedBean().getContractNo());
@@ -670,37 +670,37 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @see    Exception
 	 */
 	public String changeBankRequestSignAction(String outcome) throws Exception {
-       	  StringBuilder sb = null;
-	      if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
-       			validateChangeBankRequest(outcome);		
-     			sb = new StringBuilder();
-    			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-    			sb.append(ContractConst.SEPRATE_LINE);
-        		sb.append(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
-        		sb.append(ContractConst.SEPRATE_LINE);
-        		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
-        		sb.append(ContractConst.SEPRATE_LINE);
-        		sb.append(getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo());
-    			getManagedBean().setTextBeforeSign(sb.toString());	
-    			getManagedBean().setButtonAction(outcome);
-    			getManagedBean().setAutoUpdate(Boolean.FALSE);
-    			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-				return null;
-	      } else  if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
-	    	  validateChangeBankRequest(outcome);	
-	    	  getManagedBean().setButtonAction(outcome);
-	    	  getManagedBean().setAutoUpdate(Boolean.FALSE);		
-	    	  if(hasGovtSellerRole()) {
-	    		  getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
-	    		  RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-	    	  } else {
-	    		  getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-	    		  RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-	    	  }
-	    	  return null;
-	      } else {
-	    	  return saveChangeBankRequest(outcome);
-	      }
+		StringBuilder sb = null;
+		if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
+			validateChangeBankRequest(outcome);		
+			sb = new StringBuilder();
+			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo());
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		} else  if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
+			validateChangeBankRequest(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);		
+			if(hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}
+			return null;
+		} else {
+			return saveChangeBankRequest(outcome);
+		}
 	}
 
 	/**
@@ -736,42 +736,42 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @see    Exception
 	 */
 	public String factoringRequestSignAction(String outcome) throws Exception {
-    	StringBuilder sb = null;
-	    if ((BpmOutcomeConst.BPM_APPROVE.equals(outcome) || 
-		   BpmOutcomeConst.BPM_REJECT.equals(outcome)) && !isSupplierRole()) {
-                validateFactoringRequest(outcome);
-                sb = new StringBuilder();
-                sb.append(getManagedBean().getContractNo());
-		        sb.append(ContractConst.SEPRATE_LINE);
-		        sb.append(getManagedBean().getDocType());
-		        sb.append(ContractConst.SEPRATE_LINE);
-		        sb.append(outcome);		
-		        sb.append(ContractConst.SEPRATE_LINE);
-		        sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());    
-		        getManagedBean().setTextBeforeSign(sb.toString());	
-		        getManagedBean().setButtonAction(outcome);
-		        getManagedBean().setAutoUpdate(Boolean.FALSE);
-		        RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		        return null;
-	    }  else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
-	    	validateFactoringRequest(outcome);	
-	    	getManagedBean().setButtonAction(outcome);
-	    	getManagedBean().setAutoUpdate(Boolean.FALSE);		
-	    	if(hasGovtSellerRole()) {
-	    		getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
-	    		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-	    	} else {
-	    		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-	    		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-	    	}					
-	    	return null;
-	    } else {
-	    	// No GPKI for CA acknowledge
-	    	if(BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)) {
-					validateFactoringRequest(outcome);
-	    	}
+		StringBuilder sb = null;
+		if ((BpmOutcomeConst.BPM_APPROVE.equals(outcome) || 
+				BpmOutcomeConst.BPM_REJECT.equals(outcome)) && !isSupplierRole()) {
+			validateFactoringRequest(outcome);
+			sb = new StringBuilder();
+			sb.append(getManagedBean().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(getManagedBean().getDocType());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(outcome);		
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());    
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}  else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
+			validateFactoringRequest(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);		
+			if(hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}					
+			return null;
+		} else {
+			// No GPKI for CA acknowledge
+			if(BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)) {
+				validateFactoringRequest(outcome);
+			}
 			return saveFactoringRequest(outcome);
-	    }
+		}
 	}
 
 	/**
@@ -806,7 +806,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		sb.append(getManagedBean().getCtContract().getContractNo());
 		sb.append(ContractConst.SEPRATE_LINE);
 		sb.append(getManagedBean().getDocType());
-	    sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ContractConst.SEPRATE_LINE);
 		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
 		sb.append(ContractConst.SEPRATE_LINE);
 		sb.append(getManagedBean().getCtContract().getSmSupplier().getRegNo());
@@ -824,49 +824,49 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	public SelectItem[] getPopulateBankAccountList() {		
 		SelectItem[] items = null;
 		ISupplierSearchSO supplierSearchSO = null;
-        SupplierSearchReqDTO reqDTO = null;
-        SupplierSearchResDTO resDTO = null;
-        try {
-         if (getManagedBean().getCtContract() != null) {
-        		int i = 0;
-        		supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-        		reqDTO = new SupplierSearchReqDTO();
-        		reqDTO.setSupplierId(getManagedBean().getCtContract().getSmSupplier().getSupplierId());
-        		if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() != null) {
-        			reqDTO.setBranchCode(getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode());
-        			resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchCode(reqDTO);
-        		}		            
-	           
-        		if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() == null || resDTO.getSmSupplierBankList().isEmpty()) {
-        			resDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(reqDTO);
-        		}
-	            
-        		items = new SelectItem[resDTO.getSmSupplierBankList().size()];
-        		for (SmSupplierBank smSupplierBank : resDTO.getSmSupplierBankList()) {
-        			String account = smSupplierBank.getAccountNo();
-        			if (smSupplierBank.getPmFinancialOrg() != null 
-        					&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
-        				account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
-        			}
-        			items[i++] = new SelectItem(smSupplierBank.getAccountNo(), account);
-        			if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
-        				getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
-        			}
-        			// Default the bank account no if only 1 bank account is available
-	            		
-        			if (resDTO.getSmSupplierBankList().size() == 1) {
-        				getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(smSupplierBank.getAccountNo());
-        				changeAccountActionListener();
-        			}
-        		}
-        		getManagedBean().setPopulateBankAccountList(items);	
-         	}
-      	  }  finally {
-        		supplierSearchSO = null;
-        		reqDTO = null;
-        		resDTO = null;
-        	}
-        return getManagedBean().getPopulateBankAccountList();
+		SupplierSearchReqDTO reqDTO = null;
+		SupplierSearchResDTO resDTO = null;
+		try {
+			if (getManagedBean().getCtContract() != null) {
+				int i = 0;
+				supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				reqDTO = new SupplierSearchReqDTO();
+				reqDTO.setSupplierId(getManagedBean().getCtContract().getSmSupplier().getSupplierId());
+				if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() != null) {
+					reqDTO.setBranchCode(getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode());
+					resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchCode(reqDTO);
+				}		            
+
+				if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() == null || resDTO.getSmSupplierBankList().isEmpty()) {
+					resDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(reqDTO);
+				}
+
+				items = new SelectItem[resDTO.getSmSupplierBankList().size()];
+				for (SmSupplierBank smSupplierBank : resDTO.getSmSupplierBankList()) {
+					String account = smSupplierBank.getAccountNo();
+					if (smSupplierBank.getPmFinancialOrg() != null 
+							&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
+						account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
+					}
+					items[i++] = new SelectItem(smSupplierBank.getAccountNo(), account);
+					if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
+						getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
+					}
+					// Default the bank account no if only 1 bank account is available
+
+					if (resDTO.getSmSupplierBankList().size() == 1) {
+						getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(smSupplierBank.getAccountNo());
+						changeAccountActionListener();
+					}
+				}
+				getManagedBean().setPopulateBankAccountList(items);	
+			}
+		}  finally {
+			supplierSearchSO = null;
+			reqDTO = null;
+			resDTO = null;
+		}
+		return getManagedBean().getPopulateBankAccountList();
 	}
 
 	/**
@@ -881,7 +881,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			IFinancialOrgSO financialOrgSO = null;
 			FinancialOrgReqDTO reqDTO = null;
 			FinancialOrgResDTO resDTO = null;
-        
+
 			try {
 				int i = 1;
 				financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
@@ -890,8 +890,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
 				items = new SelectItem[resDTO.getFinancialOrgList().size() + 1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-            		"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-            
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+
 				for (PmFinancialOrg pmFinancialOrg : resDTO.getFinancialOrgList()) {
 					items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(),	pmFinancialOrg.getFinOrgName());
 					getManagedBean().getFactoringCompMap().put(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());
@@ -914,7 +914,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().getContractVer().getCtContractValue().setBankName(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
-	
+
 		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 		if (supplierBank != null) {
 			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
@@ -944,28 +944,28 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = null;
 		FinancialOrgResDTO resDTO = null;
-   		getManagedBean().setAccBankName(null);
-   
-   		try {
-   			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
-   			reqDTO = new FinancialOrgReqDTO();
-   			getManagedBean().setAccBankName(null);
-   			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
-   				reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
-   				resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
-   				getManagedBean().getFactoring().setFinancialOrgName(getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()));
-   				getManagedBean().getFactoring().setFinancialOrgAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(resDTO.getPmAddressType()));
-			
-   				getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
-   				getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 				
-   				getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + getManagedBean().getFactoring().getBankName());	
-   			}
-   		} catch(Exception ex) {
-   			ex.printStackTrace();
-   		} finally {
-   			financialOrgSO = null;
-   			resDTO = null;
-   		}
+		getManagedBean().setAccBankName(null);
+
+		try {
+			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+			reqDTO = new FinancialOrgReqDTO();
+			getManagedBean().setAccBankName(null);
+			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
+				reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+				resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+				getManagedBean().getFactoring().setFinancialOrgName(getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()));
+				getManagedBean().getFactoring().setFinancialOrgAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(resDTO.getPmAddressType()));
+
+				getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+				getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 				
+				getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + getManagedBean().getFactoring().getBankName());	
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			financialOrgSO = null;
+			resDTO = null;
+		}
 	}
 
 	/**
@@ -975,17 +975,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @throws SystemException the system exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	 public String backAction() throws PortalException, SystemException, IOException {
-		 getManagedBean().setPopulateBankAccountList(null);
-		 getManagedBean().setListOfFinancialOrg(null);
-		 if (!getManagedBean().isViewOnly()) {
-			 return CONTRACT_MAINT_PAGE;
-		 } else { // view suspension from notification
-			 FacesContext.getCurrentInstance().getExternalContext().redirect(
-					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
-			 return null;
-		 }
-	 }
+	public String backAction() throws PortalException, SystemException, IOException {
+		getManagedBean().setPopulateBankAccountList(null);
+		getManagedBean().setListOfFinancialOrg(null);
+		if (!getManagedBean().isViewOnly()) {
+			return CONTRACT_MAINT_PAGE;
+		} else { // view suspension from notification
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			return null;
+		}
+	}
 
 	/**
 	 * The method used to set the upload index for
@@ -1013,11 +1013,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
-				
+
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();    	
-    
+
 		if (getManagedBean().getIndex() == 1) {
 			getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
 			getManagedBean().getFactoring().setFactoringPayFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
@@ -1088,7 +1088,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public boolean isLetterGenerated() {
 		if ((getManagedBean().getSelectedContract() != null 
-			|| (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) 
+				|| (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) 
 				&& getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null 
 				&& (getManagedBean().getFactoring().getAuthRefNo() != null  && !getManagedBean().getFactoring().getAuthRefNo().isEmpty())
 				&& getManagedBean().getFactoring().getEffDate() != null 
@@ -1096,7 +1096,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				&& getManagedBean().getFactoring().getAgreementDate() != null) {
 			return false;
 		} else {
-		return true;
+			return true;
 		}
 	}
 
@@ -1109,118 +1109,118 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		String vmFile = null;
 		String templateName = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	
+
 		try {			
-		       context = new VelocityContext();	
-		       if (isSupplierRole()) {
-		    	   vmFile = (!getManagedBean().isViewOnly()) ? ContractConst.DOCPATH_CT_FACTORING_SUPPLIER : ContractConst.DOCPATH_CT_FACTORING_CA;
-		       } else if (isContractAdmin() || isApproverRole()) {
-		    	   vmFile = ContractConst.DOCPATH_CT_FACTORING_CA;		    	   
-		       }
-		       templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE;
-		       if (vmFile !=null && templateName != null) {
-		    	   UserReqDTO userReqDTO =  new UserReqDTO();
-		    	   
-		    	   if (getManagedBean().getFactoring().getCreatedBy() == null) {
-		    		   userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		    		   context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
-		    		   context.put("supplierDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
-		    	   } else {
-		    		   userReqDTO.setUserId(getManagedBean().getFactoring().getCreatedBy());
-		    		   context.put("supplierOfficerName", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getUserName()); 
-		    		   context.put("supplierDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
-		    	   }
-    
-		    	   CtContractVer ctContractVer = getManagedBean().getContractVer();
-		    	   String supplierAddress = " ";
-		    	   String supplierTelNo = " ";
-		    	   String supplierFaksNo = " ";
-		    	   String ptjAddress = " ";
-		    	   if (ctContractVer.getCtContractValue().getSupplierAddress() != null) {
-		    		   supplierAddress = getFullAddress(ctContractVer.getCtContractValue().getSupplierAddress());
-		    		   supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-		    		   supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-		    		   supplierTelNo = ctContractVer.getCtContractValue().getSupplierAddress().getPhoneNoFull();
-		    		   supplierFaksNo = ctContractVer.getCtContractValue().getSupplierAddress().getFaxNoFull();
-		    	   }
-		    	   context.put("supplierAddress", supplierAddress);
-		    	   context.put("telNo", supplierTelNo);
-		    	   context.put("faxNo", supplierFaksNo);				
-		    	   context.put("refNo", getManagedBean().getFactoring().getAuthRefNo());
-		    	   context.put("currentDate", df.format(DateUtils.getCurrentDateWithoutTime()));
-		    	   context.put("ptjName",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-		    	   context.put("ministryName", retrieveMinistryByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+			context = new VelocityContext();	
+			if (isSupplierRole()) {
+				vmFile = (!getManagedBean().isViewOnly()) ? ContractConst.DOCPATH_CT_FACTORING_SUPPLIER : ContractConst.DOCPATH_CT_FACTORING_CA;
+			} else if (isContractAdmin() || isApproverRole()) {
+				vmFile = ContractConst.DOCPATH_CT_FACTORING_CA;		    	   
+			}
+			templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE;
+			if (vmFile !=null && templateName != null) {
+				UserReqDTO userReqDTO =  new UserReqDTO();
 
-		    	   if (ctContractVer.getOwnerOrgAddress() != null) {
-		    		   ptjAddress = getFullAddress(ctContractVer.getOwnerOrgAddress());
-		    		   ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
-		    		   ptjAddress = ptjAddress.replaceAll("&", "&#38;");
-		    	   }
-		    	   context.put("ptjAddress", ptjAddress);
-		    	   context.put("contractTitle", getManagedBean().getCtContract().getContractName());
-		    	   String contractPhysicalNo = getManagedBean().getCtContract().getContractNo();
-				   if (ctContractVer.getContractPhysicalNo() == null
-						   || ctContractVer.getContractPhysicalNo().isEmpty()) {
-					   contractPhysicalNo = contractPhysicalNo + " / " + ctContractVer.getCtContractValue().getLoaNo();
-				   } else {
-					   contractPhysicalNo = contractPhysicalNo + " / " + ctContractVer.getContractPhysicalNo();
-				   }
-				   context.put("contractPhysicalNo", contractPhysicalNo);
-		    	   context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
-		    	   context.put("agreementStartDate", df.format(getManagedBean().getFactoring().getAgreementDate()));
-		    	   context.put("factoringCompName", getFactoringCompany());
-		    	   if (getManagedBean().getFactoring().getFinancialOrgAddress() != null) {
-		    		   context.put("factoringBankAddress", getFullAddress(getManagedBean().getFactoring().getFinancialOrgAddress()).replaceAll("(\r\n|\n)", "<br/>"));
-		    	   } else {
-		    		   context.put("factoringBankAddress", " ");
-		    	   }
-		    	   if (getManagedBean().getAccBankName() != null) {
-		    		   context.put("factoringAccountNo", getManagedBean().getAccBankName());
-		    	   } else {
-		    		   context.put("factoringAccountNo", " ");
-		    	   }
-		    	   context.put("supplierName", ctContractVer.getCtContractValue().getSupplierName());
+				if (getManagedBean().getFactoring().getCreatedBy() == null) {
+					userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("supplierDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
+				} else {
+					userReqDTO.setUserId(getManagedBean().getFactoring().getCreatedBy());
+					context.put("supplierOfficerName", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getUserName()); 
+					context.put("supplierDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
+				}
 
-		    	   if (ContractConst.DOCPATH_CT_FACTORING_CA.equalsIgnoreCase(vmFile)) {
-		    		   PmUser user = null;
-		    		   if (getManagedBean().isViewOnly()) {
-		    			   String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-		    					   ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();			
-		    			   CtActor ctActor = retrieveContractActor(
-		    					   				getManagedBean().getFactoring().getFactoringId(),
-		    					   				ParameterConst.DOCTYPE_REQUEST_FACTORING,
-		    					   				roleCode);
-		    			   user = (ctActor != null) ? ctActor.getUser() : null;
-		    		   } else if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
-		    			   for (PmUser approver : getManagedBean().getApproverModel().getTarget()) {
-		    				   if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver.getUserId()) != null) {
-		    					   user = getManagedBean().getUserMap().get(approver.getUserId());
-		    					   break;
-		    				   }
-		    			   }
-		    		   } else {
-		    			   user = getFacesScopes().getUserSessionBean();
-		    		   }
-		    		   if (user != null) {
-		    			   context.put("approverName", user.getUserName());
-		    			   context.put("approverDesignation", user.getDesignation());
-		    		   } else {
-		    			   context.put("approverName", "");
-		    			   context.put("approverDesignation", "");						
-		    		   }
-		    	   }
-		    	   
-		    	   String filePath = getManagedBean().getFileDirectory();
-		    	   File file = new File(filePath);
-		    	   file.mkdirs();
-		    	   String fileName = templateName + ".pdf";
-		    	   AttachmentFormat attachmentFormat = null;
-		    	   attachmentFormat = new AttachmentDateFormat();
-		    	   filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
+				CtContractVer ctContractVer = getManagedBean().getContractVer();
+				String supplierAddress = " ";
+				String supplierTelNo = " ";
+				String supplierFaksNo = " ";
+				String ptjAddress = " ";
+				if (ctContractVer.getCtContractValue().getSupplierAddress() != null) {
+					supplierAddress = getFullAddress(ctContractVer.getCtContractValue().getSupplierAddress());
+					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+					supplierTelNo = ctContractVer.getCtContractValue().getSupplierAddress().getPhoneNoFull();
+					supplierFaksNo = ctContractVer.getCtContractValue().getSupplierAddress().getFaxNoFull();
+				}
+				context.put("supplierAddress", supplierAddress);
+				context.put("telNo", supplierTelNo);
+				context.put("faxNo", supplierFaksNo);				
+				context.put("refNo", getManagedBean().getFactoring().getAuthRefNo());
+				context.put("currentDate", df.format(DateUtils.getCurrentDateWithoutTime()));
+				context.put("ptjName",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				context.put("ministryName", retrieveMinistryByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 
-		    	   DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, new FileOutputStream(filePath));
-		    	   downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
-		       }
+				if (ctContractVer.getOwnerOrgAddress() != null) {
+					ptjAddress = getFullAddress(ctContractVer.getOwnerOrgAddress());
+					ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
+					ptjAddress = ptjAddress.replaceAll("&", "&#38;");
+				}
+				context.put("ptjAddress", ptjAddress);
+				context.put("contractTitle", getManagedBean().getCtContract().getContractName());
+				String contractPhysicalNo = getManagedBean().getCtContract().getContractNo();
+				if (ctContractVer.getContractPhysicalNo() == null
+						|| ctContractVer.getContractPhysicalNo().isEmpty()) {
+					contractPhysicalNo = contractPhysicalNo + " / " + ctContractVer.getCtContractValue().getLoaNo();
+				} else {
+					contractPhysicalNo = contractPhysicalNo + " / " + ctContractVer.getContractPhysicalNo();
+				}
+				context.put("contractPhysicalNo", contractPhysicalNo);
+				context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
+				context.put("agreementStartDate", df.format(getManagedBean().getFactoring().getAgreementDate()));
+				context.put("factoringCompName", getFactoringCompany());
+				if (getManagedBean().getFactoring().getFinancialOrgAddress() != null) {
+					context.put("factoringBankAddress", getFullAddress(getManagedBean().getFactoring().getFinancialOrgAddress()).replaceAll("(\r\n|\n)", "<br/>"));
+				} else {
+					context.put("factoringBankAddress", " ");
+				}
+				if (getManagedBean().getAccBankName() != null) {
+					context.put("factoringAccountNo", getManagedBean().getAccBankName());
+				} else {
+					context.put("factoringAccountNo", " ");
+				}
+				context.put("supplierName", ctContractVer.getCtContractValue().getSupplierName());
+
+				if (ContractConst.DOCPATH_CT_FACTORING_CA.equalsIgnoreCase(vmFile)) {
+					PmUser user = null;
+					if (getManagedBean().isViewOnly()) {
+						String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();			
+								CtActor ctActor = retrieveContractActor(
+										getManagedBean().getFactoring().getFactoringId(),
+										ParameterConst.DOCTYPE_REQUEST_FACTORING,
+										roleCode);
+								user = (ctActor != null) ? ctActor.getUser() : null;
+					} else if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
+						for (PmUser approver : getManagedBean().getApproverModel().getTarget()) {
+							if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver.getUserId()) != null) {
+								user = getManagedBean().getUserMap().get(approver.getUserId());
+								break;
+							}
+						}
+					} else {
+						user = getFacesScopes().getUserSessionBean();
+					}
+					if (user != null) {
+						context.put("approverName", user.getUserName());
+						context.put("approverDesignation", user.getDesignation());
+					} else {
+						context.put("approverName", "");
+						context.put("approverDesignation", "");						
+					}
+				}
+
+				String filePath = getManagedBean().getFileDirectory();
+				File file = new File(filePath);
+				file.mkdirs();
+				String fileName = templateName + ".pdf";
+				AttachmentFormat attachmentFormat = null;
+				attachmentFormat = new AttachmentDateFormat();
+				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
+
+				DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, new FileOutputStream(filePath));
+				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+			}
 		}  catch (Exception e) {
 			throw new EpException(e.toString());
 		} 
@@ -1259,7 +1259,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public String getChangeBankPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.request.change.bank.acc", 
-			ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
 		return portletTitle;
 	}
 
@@ -1275,34 +1275,34 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		try{
 			if (getManagedBean().getContractAdminlist() == null) {
 				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
-				
+
 				String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) 
-							? RoleCode.MIN_CONTRACT_ADMIN.value() 
+						? RoleCode.MIN_CONTRACT_ADMIN.value() 
 								: RoleCode.BPK_CCA.value();
-							
-				CtContractVer ctContractVer =
-						(getManagedBean().getCtContract().getLatestContractVer() != null)
-							? getManagedBean().getCtContract().getLatestContractVer()
-									:   getManagedBean().getCtContract().getCurrentContractVer();				
-				CtActor ctActor = retrieveContractActor(
-						ctContractVer.getContractVerId(),
-						ctContractVer.getDocType(),
-						roleCode);
-				
-				if (ctActor != null) {
-					getManagedBean().getContractAdminlist().add(ctActor.getUser());
-				} else {
-	      	  		userReqDTO = new UserReqDTO();	      	  		
-	      	  		userReqDTO.setRoleCode(roleCode);
-	      	  		userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-	      	  		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-	      	  		getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());			
-		      }
+
+						CtContractVer ctContractVer =
+								(getManagedBean().getCtContract().getLatestContractVer() != null)
+								? getManagedBean().getCtContract().getLatestContractVer()
+										:   getManagedBean().getCtContract().getCurrentContractVer();				
+								CtActor ctActor = retrieveContractActor(
+										ctContractVer.getContractVerId(),
+										ctContractVer.getDocType(),
+										roleCode);
+
+								if (ctActor != null) {
+									getManagedBean().getContractAdminlist().add(ctActor.getUser());
+								} else {
+									userReqDTO = new UserReqDTO();	      	  		
+									userReqDTO.setRoleCode(roleCode);
+									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());			
+								}
 			}
-	    } finally {
-	    	 userSO = null;
-	    }	
+		} finally {
+			userSO = null;
+		}	
 	}
 
 	/**
@@ -1327,46 +1327,46 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @return the role of login user
 	 */
 	private String getUserRole() {
-	
-	 String userRole = null;		
-	 if (getManagedBean().getTaskName() == null || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_CB_REQUEST_HT_NAME)
-			|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_HT_NAME)) {
-		         
-		          if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			              userRole = RoleCode.MOF_SUPPLIER_USER.value();
-		           } else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			              userRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
-		           } else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			              userRole = RoleCode.BASIC_SUPPLIER_USER.value();
-		           } else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			              userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
-		           }
-	
-	 } else if (getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME)
+
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_CB_REQUEST_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_HT_NAME)) {
+
+			if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				userRole = RoleCode.MOF_SUPPLIER_USER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+				userRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+				userRole = RoleCode.BASIC_SUPPLIER_USER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+			}
+
+		} else if (getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME))) {
-		        if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-				      ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-			             userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-		        } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-				        ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-			               userRole = RoleCode.BPK_CCA.value();			
-		        }
-	  } else if (getManagedBean().getTaskName() != null
-			&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME)) {			
-		         if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-				         ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-			               userRole = RoleCode.CT_APPROVER.value();
-		          } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-				           ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-			                  userRole = RoleCode.BPK_CC_APPROVER.value();
-		          }
-	    }
-	
-	     if (userRole == null) {
-		          throw new EpException(MessageConst.ERROR_750040);
-	      } else {
-		       return userRole;
-	      }
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();			
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME)) {			
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
 	}
 
 	/**

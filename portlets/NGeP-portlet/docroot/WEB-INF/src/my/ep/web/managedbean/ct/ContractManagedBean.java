@@ -42,7 +42,7 @@ import my.ep.web.util.FacesScopes;
 @ManagedBean(name="ctManagedBean")
 @SessionScoped
 public class ContractManagedBean extends BaseManagedBean {
-	
+
 	private static final long serialVersionUID = 1L;
 	private String fileDirectory;
 	private int attachFileIndex;
@@ -64,7 +64,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean directPurchase;
 	private boolean gstCheckingGUI;
 	private String branchInfoFilePath;
-	
+
 	/*Schedule start*/
 	private String frequencySchedule;
 	private boolean disableScheduleRadio;
@@ -73,7 +73,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean chkSchedule;
 	private boolean progSchedButtonDeactive;
 	private List<String> yearList;
-	
+
 	/*Deduction start*/
 	private CtDeduction selectedDeduction;
 	private boolean flgPaymentTracking;
@@ -81,16 +81,16 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
 	private boolean ownerOrgProfile = true;
-	
+
 	/*Payment tracking start*/
 	private BigDecimal gstTotalAmount;
 	private BigDecimal paidInvoiceAmt;
 	private double advancePaymentAmt;
 	private BigDecimal paidAdvancePaymentAmt;
-	
+
 	/*Zone start*/
 	private TreeNode ctZoneTrees;
-	
+
 	/*Agency start*/
 	private CtAgency selectedAgency;
 	private int index;
@@ -101,13 +101,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String ptjCodeNameSearchValues;
 	private List<PmAddressType> addressTypeList;
 	private List<CtContractItem> ctItemList;
-	
+
 	private CtContractAmount ctContractAmount;	
 	private boolean disableGstAmount;	
 	private boolean disableContractAmount = true;
 	private boolean bondWaiver;
 	private CtContractAmount ctTestBondWaiverAmount;	
-	
+
 	private boolean selectAll;
 	private CtPerformanceBond ctPerformanceBond;
 
@@ -119,7 +119,7 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	private boolean disableAmendDetails;
 	private CtCircularVer ctCircularVer;
-	 
+
 	private boolean updateContract = false;
 	private boolean serviceTaxAlertFlg = false;
 
@@ -132,49 +132,49 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, CtContractZone> updateZoneMap;	
 	private Map<Long, CtContractItem> updateItemMap;		  
 	private List<PmOrgProfile> agencySelected;
-	  
+
 	/**
 	 * @return the fileDirectory
 	 */
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
-	
+
 	/**
 	 * @param fileDirectory the fileDirectory to set
 	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}	
-	
+
 	/**
 	 * @return the attachFileIndex
 	 */
 	public int getAttachFileIndex() {
 		return attachFileIndex;
 	}
-	
+
 	/**
 	 * @param attachFileIndex the attachFileIndex to set
 	 */
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
 	}
-	
+
 	/**
 	 * @return the viewContract
 	 */
 	public boolean isViewContract() {
 		return viewContract;
 	}
-	
+
 	/**
 	 * @param viewContract the viewContract to set
 	 */
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
 	}
-	
+
 	/**
 	 * @return the remarkList
 	 */
@@ -184,14 +184,14 @@ public class ContractManagedBean extends BaseManagedBean {
 		}
 		return remarkList;
 	}
-	
+
 	/**
 	 * @param remarkList the remarkList to set
 	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
-	
+
 	/**
 	 * @return the attachmentList
 	 */
@@ -201,7 +201,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		}
 		return attachmentList;
 	}
-	
+
 	/**
 	 * @param attachmentList the attachmentList to set
 	 */
@@ -362,7 +362,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setBranchInfoFilePath(String branchInfoFilePath) {
 		this.branchInfoFilePath = branchInfoFilePath;
 	}	
-	
+
 	/**
 	 * @return the radioButtonSchedule
 	 */
@@ -382,7 +382,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setRadioButtonSchedule(Map<String, Object> radioButtonSchedule) {
 		this.radioButtonSchedule = radioButtonSchedule;
 	}
-	
+
 	/**
 	 * @return the frequencySchedule
 	 */
@@ -410,7 +410,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableScheduleRadio(boolean disableScheduleRadio) {
 		this.disableScheduleRadio = disableScheduleRadio;
 	}
-	
+
 	/**
 	 * @return the chkProgressive
 	 */
@@ -466,7 +466,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
-	
+
 	/**
 	 * @return the yearList
 	 */
@@ -480,7 +480,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setYearList(List<String> yearList) {
 		this.yearList = yearList;
 	}
-	
+
 	/**
 	 * @return the selectedDeduction
 	 */
@@ -522,7 +522,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setButtonHideActive(boolean buttonHideActive) {
 		ButtonHideActive = buttonHideActive;
 	}
-	
+
 	/**
 	 * @return the gstTotalAmount
 	 */
@@ -536,7 +536,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setGstTotalAmount(BigDecimal gstTotalAmount) {
 		this.gstTotalAmount = gstTotalAmount;
 	}
-	
+
 	/**
 	 * @return the paidInvoiceAmt
 	 */
@@ -550,7 +550,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setPaidInvoiceAmt(BigDecimal paidInvoiceAmt) {
 		this.paidInvoiceAmt = paidInvoiceAmt;
 	}
-	
+
 	/**
 	 * @return the advancePaymentAmt
 	 */
@@ -564,7 +564,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setAdvancePaymentAmt(double advancePaymentAmt) {
 		this.advancePaymentAmt = advancePaymentAmt;
 	}
-	
+
 	/**
 	 * @return the paidAdvancePaymentAmt
 	 */
@@ -578,7 +578,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setPaidAdvancePaymentAmt(BigDecimal paidAdvancePaymentAmt) {
 		this.paidAdvancePaymentAmt = paidAdvancePaymentAmt;
 	}
-	
+
 	/**
 	 * @return the ctZoneTrees
 	 */
@@ -592,7 +592,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtZoneTrees(TreeNode ctZoneTrees) {
 		this.ctZoneTrees = ctZoneTrees;
 	}
-	
+
 	/**
 	 * @return the index
 	 */
@@ -606,7 +606,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
+
 	/**
 	 * @return the selectedListOfAddress
 	 */
@@ -620,7 +620,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setSelectedListOfAddress(List<CtAgencyAddress> selectedListOfAddress) {
 		this.selectedListOfAddress = selectedListOfAddress;
 	}
-	
+
 	/**
 	 * @return the selectedAgency
 	 */
@@ -634,7 +634,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setSelectedAgency(CtAgency selectedAgency) {
 		this.selectedAgency = selectedAgency;
 	}	
-	
+
 	/**
 	 * @return the ptjCodeName
 	 */
@@ -662,7 +662,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
 		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
 	}
-	
+
 	/**
 	 * @return the ministryProfileId
 	 */
@@ -676,7 +676,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setMinistryProfileId(Long ministryProfileId) {
 		this.ministryProfileId = ministryProfileId;
 	}
-	
+
 	/**
 	 * @return the jabatanProfileId
 	 */
@@ -690,7 +690,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
 	}	
-	
+
 	/**
 	 * @return the addressTypeList
 	 */
@@ -704,7 +704,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setAddressTypeList(List<PmAddressType> addressTypeList) {
 		this.addressTypeList = addressTypeList;
 	}
-	
+
 	/**
 	 * @return the ctItemList
 	 */
@@ -721,7 +721,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtItemList(List<CtContractItem> ctItemList) {
 		this.ctItemList = ctItemList;
 	}
-	
+
 	/**
 	 * @return the ctContractAmount
 	 */
@@ -735,21 +735,21 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtContractAmount(CtContractAmount ctContractAmount) {
 		this.ctContractAmount = ctContractAmount;
 	}
-	
+
 	/**
 	 * @return boolean disableGstAmount
 	 */
 	public boolean isDisableGstAmount() {
 		return disableGstAmount;
 	}
- 
+
 	/**
 	 * @param disableGstAmount the disableGstAmount to set
 	 */
 	public void setDisableGstAmount(boolean disableGstAmount) {
 		this.disableGstAmount = disableGstAmount;
 	}
-		
+
 	/**
 	 * @return the disableContractAmount
 	 */
@@ -763,7 +763,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableContractAmount(boolean disableContractAmount) {
 		this.disableContractAmount = disableContractAmount;
 	}
-	
+
 	/**
 	 * @return the agreementContractVer
 	 */
@@ -777,7 +777,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setAgreementContractVer(CtContractVer agreementContractVer) {
 		this.agreementContractVer = agreementContractVer;
 	}
-	
+
 	/**
 	 * @return the selectAll
 	 */
@@ -791,7 +791,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
-	
+
 	/**
 	 * @return the ctPerformanceBond
 	 */
@@ -805,7 +805,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
 		this.ctPerformanceBond = ctPerformanceBond;
 	}
-	
+
 	/**
 	 * @return the selectedItem
 	 */
@@ -819,7 +819,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setSelectedItem(CtContractItem selectedItem) {
 		this.selectedItem = selectedItem;
 	}
-	
+
 	/**
 	 * @return the showItem
 	 */
@@ -833,7 +833,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setShowItem(String showItem) {
 		this.showItem = showItem;
 	}	
-	
+
 	/**
 	 * @return the showServiceItem
 	 */
@@ -892,7 +892,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableAmendDetails(boolean disableAmendDetails) {
 		this.disableAmendDetails = disableAmendDetails;
 	}
-	
+
 	/**
 	 * @return the ctCircularVer
 	 */
@@ -921,20 +921,6 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.updateContract = updateContract;
 	}
 
-	/**
-	 * @return the selectedPidReason
-	 *//*
-	public List<CtPidReason> getSelectedPidReason() {
-		return selectedPidReason;
-	}
-
-	*//**
-	 * @param selectedPidReason the selectedPidReason to set
-	 *//*
-	public void setSelectedPidReason(List<CtPidReason> selectedPidReason) {
-		this.selectedPidReason = selectedPidReason;
-	}
-*/
 	/**
 	 * @return the serviceTaxAlertFlg
 	 */
@@ -976,13 +962,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
-	
+
 	/**
 	 * @return the deleteAttachmentList
 	 */
 	public List<CtAttachment> getDeleteAttachmentList() {
 		if(deleteAttachmentList == null)
-			   deleteAttachmentList = new ArrayList<CtAttachment>();
+			deleteAttachmentList = new ArrayList<CtAttachment>();
 		return deleteAttachmentList;
 	}
 
@@ -1028,7 +1014,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setBondWaiver(boolean bondWaiver) {
 		this.bondWaiver = bondWaiver;
 	}
-	
+
 	public Map<String, CtAgency> getNewAgencyMap() {
 		if(newAgencyMap==null) {
 			newAgencyMap = new HashMap<String, CtAgency>();
@@ -1107,6 +1093,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setAgencySelected(List<PmOrgProfile> agencySelected) {
 		this.agencySelected = agencySelected;
 	}
-	
-	
+
+
 }

@@ -9,11 +9,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name="contractDashboardManagedBean")
 @SessionScoped
 public class ContractDashboardManagedBean extends BaseManagedBean {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private int lessThan30Days;
 	private int lessThan120Days;
 	private PmOrgProfile searchMinistryProfile;

@@ -30,9 +30,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @SessionScoped
 public class CustomerServiceManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private IPagingDataModel<VCtContract> customerServiceDataModel = new CustomerServicePagingDataModel();
 	private String ptjCode;
@@ -49,11 +46,11 @@ public class CustomerServiceManagedBean extends BaseManagedBean {
 	private int cotractStatus;
 	private int status;
 	private List<CustomerServiceEntity> customerServiceEntity;
-	
+
 	public String getPtjCode() {
 		return ptjCode;
 	}
-	
+
 	public void setPtjCode(String ptjCode) {
 		this.ptjCode = ptjCode;
 	}
@@ -61,7 +58,6 @@ public class CustomerServiceManagedBean extends BaseManagedBean {
 	public String getPtjName() {
 		return ptjName;
 	}
-
 
 	public void setPtjName(String ptjName) {
 		this.ptjName = ptjName;
@@ -113,7 +109,7 @@ public class CustomerServiceManagedBean extends BaseManagedBean {
 		public CustomerServicePagingDataModel() {
 			super("contractTbl", false);
 		}
-		
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -125,35 +121,35 @@ public class CustomerServiceManagedBean extends BaseManagedBean {
 		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
 			IContractSO contractSO = null;
 			try {
-				
+
 				if (StringUtils.isNotBlank(getContractNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NO",SearchOperator.OPERATOR_LIKE.value(), getContractNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if (getSearchPtjProfile() != null) {
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),getSearchPtjProfile().getOrgProfileId()));
-			
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),getSearchPtjProfile().getOrgProfileId()));
+
 				}if (StringUtils.isNotBlank(getContractTitle())) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("CONTRACT_TITLE", SearchOperator.OPERATOR_EQUALS.value(), getContractTitle()));
-			
+
 				}if (StringUtils.isNotBlank(getPhysicalContactNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),getPhysicalContactNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-			
+
 				if (getSearchContractStatus()> 0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("CONTRACT_STATUS", 
 							SearchOperator.OPERATOR_EQUALS.value(), getSearchContractStatus()));
 				}
 				searchBean.setUseEntityClass(true);
-				
+
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
-					
+
 				if (resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
 				}
@@ -225,7 +221,7 @@ public class CustomerServiceManagedBean extends BaseManagedBean {
 
 	public List<CustomerServiceEntity> getCustomerServiceEntity() {
 		if(customerServiceEntity == null){
-				customerServiceEntity = new ArrayList<CustomerServiceEntity>();
+			customerServiceEntity = new ArrayList<CustomerServiceEntity>();
 		}
 		return customerServiceEntity;
 	}
@@ -242,6 +238,4 @@ public class CustomerServiceManagedBean extends BaseManagedBean {
 	public void setPhysicalContactNo(String physicalContactNo) {
 		this.physicalContactNo = physicalContactNo;
 	}
-	
-	
 }

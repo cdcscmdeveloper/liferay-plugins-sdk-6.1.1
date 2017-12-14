@@ -50,8 +50,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
  * @since 19.05.2015
  * 
  */
-public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
-		extends BaseBackingBean<T> {
+public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends BaseBackingBean<T> {
 
 	/**
 	 * Logger instance.
@@ -76,18 +75,18 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		List<PmUser> sourceList = new ArrayList<PmUser>();
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = new UserResDTO();
-		
+
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			
+
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
 			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			
+
 			if (resDTO.getUserOrgList().size() > 0) {
 				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			}
-			
+
 			if (contractType.equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)) {							
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
@@ -95,7 +94,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 				reqDTO.setRoleCode(RoleCode.BPK_CC_APPROVER.value());
 			}			
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
-			
+
 			List<PmUser> list = resDTO.getUserList();			
 			for (PmUser user : list) {
 				sourceList.add(user);
@@ -109,7 +108,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		}
 		return sourceList;
 	}
-		
+
 	/**
 	 * Sort agency list.
 	 *
@@ -119,27 +118,27 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		Comparator<CtAgency> comparator = new Comparator<CtAgency>() {
 			@Override
 			public int compare(CtAgency obj1, CtAgency obj2) {
-			    String minstryName = retrieveMinistryByOrgProfileId(obj1.getOrgProfile().getOrgProfileId());
-		        String minstryName2 = retrieveMinistryByOrgProfileId(obj2.getOrgProfile().getOrgProfileId());
-		        int agency = minstryName.compareTo(minstryName2);
-		        if (agency != 0) {
-		        	return agency;
-		        } else  {
-		        	String ptjName = obj1.getOrgProfile().getOrgName();
-		        	String ptjName2 = obj2.getOrgProfile().getOrgName();
-		        	int ptj = ptjName.compareTo(ptjName2);
-		        	if (ptj != 0) {
-		        		return ptj;
-		        	} else {
-		        		Date date1 = ((CtAgency) obj1).getEffDate();
-		        		Date date2 = ((CtAgency) obj2).getEffDate();
-		        		int date = date1.compareTo(date2);
-		        		if (date != 0)
-		        			return date;
-		        		else
-		        			return 0;
-			    	}
-		        }
+				String minstryName = retrieveMinistryByOrgProfileId(obj1.getOrgProfile().getOrgProfileId());
+				String minstryName2 = retrieveMinistryByOrgProfileId(obj2.getOrgProfile().getOrgProfileId());
+				int agency = minstryName.compareTo(minstryName2);
+				if (agency != 0) {
+					return agency;
+				} else  {
+					String ptjName = obj1.getOrgProfile().getOrgName();
+					String ptjName2 = obj2.getOrgProfile().getOrgName();
+					int ptj = ptjName.compareTo(ptjName2);
+					if (ptj != 0) {
+						return ptj;
+					} else {
+						Date date1 = ((CtAgency) obj1).getEffDate();
+						Date date2 = ((CtAgency) obj2).getEffDate();
+						int date = date1.compareTo(date2);
+						if (date != 0)
+							return date;
+						else
+							return 0;
+					}
+				}
 			}
 		};
 		Collections.sort(ctAgencyList, comparator);
@@ -164,13 +163,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 						String ptjName =  obj1.getCtAgency().getOrgProfile().getOrgName();
 						String ptjName2 = obj2.getCtAgency().getOrgProfile().getOrgName();
 						int ptj = ptjName.compareTo(ptjName2);
-		              	if (ptj != 0) {
-		              		return ptj;
-		              	} else {
-		              		Date date1 = obj1.getEffDate();
-		              		Date date2 =  obj2.getEffDate();
-		              		return date1.compareTo(date2);
-		              	}
+						if (ptj != 0) {
+							return ptj;
+						} else {
+							Date date1 = obj1.getEffDate();
+							Date date2 =  obj2.getEffDate();
+							return date1.compareTo(date2);
+						}
 					}
 				} 
 				return 0;
@@ -213,23 +212,23 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 	public SelectItem[] getScheduleTypeDropDown() {
 		SelectItem[] items = null;
 		ISearchBean<PmParameterDesc> searchBean = null;
-		
+
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
 					ParameterTypeConst.SCHEDULE_TYPE, searchBean);
-			
-		    items = new SelectItem[parameterDescs.size()];
-		    int i = 0;
-		    for (PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterId(), 
-		    			parameterDesc.getCodeName());
-		    }
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(
+						parameterDesc.getPmParameter().getParameterId(), 
+						parameterDesc.getCodeName());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
-	    return items;
+		return items;
 	}
 
 	/**
@@ -238,7 +237,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 	 * @return Cancel Confirmation message
 	 */
 	public String getCancelConfirmationContent(String docType) {
-	 	return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
 	/**
@@ -249,11 +248,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 	public CtActor retrieveContractActor(Long docId, String docType, String roleCode) {
 		ICtActorSO ctActorSO = null;
 		CtActorResDTO ctActorResDTO = new CtActorResDTO();
-		
+
 		try {
 			ctActorSO = (ICtActorSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtActorSO.class);
-		    
+
 			CtActorReqDTO ctActorReqDTO = new CtActorReqDTO();
 			ctActorReqDTO.setDocId(docId);
 			ctActorReqDTO.setDocType(docType);

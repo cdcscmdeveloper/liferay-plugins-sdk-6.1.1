@@ -71,164 +71,164 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private CtFactoring factoring;
 	private PmUser supplierPmUser;
 	private PmDigiSign pmDigiSign;
-	
-    @ManagedProperty(value="#{spkiBackingBean}")
-    private SpkiBackingBean spkiBackingBean;
-	
+
+	@ManagedProperty(value="#{spkiBackingBean}")
+	private SpkiBackingBean spkiBackingBean;
+
 	/**
 	 * @return the contractNo
 	 */
 	public String getContractNo() {
 		return contractNo;
 	}
-	
+
 	/**
 	 * @param contractNo the contractNo to set
 	 */
 	public void setContractNo(String contractNo) {
 		this.contractNo = contractNo;
 	}
-	
+
 	/**
 	 * @return the contractName
 	 */
 	public String getContractName() {
 		return contractName;
 	}
-	
+
 	/**
 	 * @param contractName the contractName to set
 	 */
 	public void setContractName(String contractName) {
 		this.contractName = contractName;
 	}
-	
+
 	/**
 	 * @return the originalAccountNo
 	 */
 	public String getOriginalAccountNo() {
 		return originalAccountNo;
 	}
-	
+
 	/**
 	 * @param originalAccountNo the originalAccountNo to set
 	 */
 	public void setOriginalAccountNo(String originalAccountNo) {
 		this.originalAccountNo = originalAccountNo;
 	}
-	
+
 	/**
 	 * @return the accBankName
 	 */
 	public String getAccBankName() {
 		return accBankName;
 	}
-	
+
 	/**
 	 * @param accBankName the accBankName to set
 	 */
 	public void setAccBankName(String accBankName) {
 		this.accBankName = accBankName;
 	}
-	
+
 	/**
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
-	
+
 	/**
 	 * @param textBeforeSign the textBeforeSign to set
 	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
-	
+
 	/**
 	 * @return the buttonAction
 	 */
 	public String getButtonAction() {
 		return buttonAction;
 	}
-	
+
 	/**
 	 * @param buttonAction the buttonAction to set
 	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
-	
+
 	/**
 	 * @return the fileDirectory
 	 */
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
-	
+
 	/**
 	 * @param fileDirectory the fileDirectory to set
 	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
-	
+
 	/**
 	 * @return the accountNoAndName
 	 */
 	public String getAccountNoAndName() {
 		return accountNoAndName;
 	}
-	
+
 	/**
 	 * @param accountNoAndName the accountNoAndName to set
 	 */
 	public void setAccountNoAndName(String accountNoAndName) {
 		this.accountNoAndName = accountNoAndName;
 	}
-	
+
 	/**
 	 * @return the effDate
 	 */
 	public Date getEffDate() {
 		return effDate;
 	}
-	
+
 	/**
 	 * @param effDate the effDate to set
 	 */
 	public void setEffDate(Date effDate) {
 		this.effDate = effDate;
 	}
-	
+
 	/**
 	 * @return the expDate
 	 */
 	public Date getExpDate() {
 		return expDate;
 	}
-	
+
 	/**
 	 * @param expDate the expDate to set
 	 */
 	public void setExpDate(Date expDate) {
 		this.expDate = expDate;
 	}
-	
+
 	/**
 	 * @return the loaDate
 	 */
 	public Date getLoaDate() {
 		return loaDate;
 	}
-	
+
 	/**
 	 * @param loaDate the loaDate to set
 	 */
 	public void setLoaDate(Date loaDate) {
 		this.loaDate = loaDate;
 	}	
-	
+
 	/**
 	 * @return the index
 	 */
@@ -249,56 +249,56 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public boolean isRemoveFactoring() {
 		return removeFactoring;
 	}
-	
+
 	/**
 	 * @param removeFactoring the removeFactoring to set
 	 */
 	public void setRemoveFactoring(boolean removeFactoring) {
 		this.removeFactoring = removeFactoring;
 	}
-	
+
 	/**
 	 * @return the agreeFactoringClause
 	 */
 	public boolean isAgreeFactoringClause() {
 		return agreeFactoringClause;
 	}
-	
+
 	/**
 	 * @param agreeFactoringClause the agreeFactoringClause to set
 	 */
 	public void setAgreeFactoringClause(boolean agreeFactoringClause) {
 		this.agreeFactoringClause = agreeFactoringClause;
 	}
-	
+
 	/**
 	 * @return the viewOnly
 	 */
 	public boolean isViewOnly() {
 		return viewOnly;
 	}
-	
+
 	/**
 	 * @param viewOnly the viewOnly to set
 	 */
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
-	
+
 	/**
 	 * @return the autoUpdate
 	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
-	
+
 	/**
 	 * @param autoUpdate the autoUpdate to set
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-	
+
 	/**
 	 * @return the remarkList
 	 */
@@ -308,14 +308,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 		}
 		return remarkList;
 	}
-	
+
 	/**
 	 * @param remarkList the remarkList to set
 	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
-	
+
 	/**
 	 * @return the attachmentList
 	 */
@@ -325,42 +325,42 @@ public class SupplierManagedBean extends BaseManagedBean {
 		}
 		return attachmentList;
 	}
-	
+
 	/**
 	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-	
+
 	/**
 	 * @return the contractAdminlist
 	 */
 	public List<PmUser> getContractAdminlist() {
 		return contractAdminlist;
 	}
-	
+
 	/**
 	 * @param contractAdminlist the contractAdminlist to set
 	 */
 	public void setContractAdminlist(List<PmUser> contractAdminlist) {
 		this.contractAdminlist = contractAdminlist;
 	}
-	
+
 	/**
 	 * @return the approverModel
 	 */
 	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
-	
+
 	/**
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
-	
+
 	/**
 	 * @return the userMap
 	 */
@@ -370,14 +370,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 		}
 		return userMap;
 	}
-	
+
 	/**
 	 * @param userMap the userMap to set
 	 */
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
-	
+
 	/**
 	 * @return the factoringCompMap
 	 */
@@ -387,14 +387,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 		}
 		return factoringCompMap;
 	}
-	
+
 	/**
 	 * @param factoringCompMap the factoringCompMap to set
 	 */
 	public void setFactoringCompMap(Map<Long, String> factoringCompMap) {
 		this.factoringCompMap = factoringCompMap;
 	}
-	
+
 	/**
 	 * @return the supplierBankAccountMap
 	 */
@@ -404,28 +404,28 @@ public class SupplierManagedBean extends BaseManagedBean {
 		}
 		return supplierBankAccountMap;
 	}
-	
+
 	/**
 	 * @param supplierBankAccountMap the supplierBankAccountMap to set
 	 */
 	public void setSupplierBankAccountMap(Map<String, SmSupplierBank> supplierBankAccountMap) {
 		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
-	
+
 	/**
 	 * @return the listOfFinancialOrg
 	 */
 	public SelectItem[] getListOfFinancialOrg() {
 		return listOfFinancialOrg;
 	}
-	
+
 	/**
 	 * @param listOfFinancialOrg the listOfFinancialOrg to set
 	 */
 	public void setListOfFinancialOrg(SelectItem[] listOfFinancialOrg) {
 		this.listOfFinancialOrg = listOfFinancialOrg;
 	}
-	
+
 	/**
 	 * @return the populateBankAccountList
 	 */
@@ -439,84 +439,84 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setPopulateBankAccountList(SelectItem[] populateBankAccountList) {
 		this.populateBankAccountList = populateBankAccountList;
 	}
-	
+
 	/**
 	 * @return the selectedContract
 	 */
 	public CtContract getSelectedContract() {
 		return selectedContract;
 	}
-	
+
 	/**
 	 * @param selectedContract the selectedContract to set
 	 */
 	public void setSelectedContract(CtContract selectedContract) {
 		this.selectedContract = selectedContract;
 	}
-	
+
 	/**
 	 * @return the ctContract
 	 */
 	public CtContract getCtContract() {
 		return ctContract;
 	}
-	
+
 	/**
 	 * @param ctContract the ctContract to set
 	 */
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
-	
+
 	/**
 	 * @return the contractVer
 	 */
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
-	
+
 	/**
 	 * @param contractVer the contractVer to set
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
-	
+
 	/**
 	 * @return the factoring
 	 */
 	public CtFactoring getFactoring() {
 		return factoring;
 	}
-	
+
 	/**
 	 * @param factoring the factoring to set
 	 */
 	public void setFactoring(CtFactoring factoring) {
 		this.factoring = factoring;
 	}
-	
+
 	/**
 	 * @return the supplierPmUser
 	 */
 	public PmUser getSupplierPmUser() {
 		return supplierPmUser;
 	}
-	
+
 	/**
 	 * @param supplierPmUser the supplierPmUser to set
 	 */
 	public void setSupplierPmUser(PmUser supplierPmUser) {
 		this.supplierPmUser = supplierPmUser;
 	}
-	
+
 	/**
 	 * @return the pmDigiSign
 	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
-	
+
 	/**
 	 * @param pmDigiSign the pmDigiSign to set
 	 */

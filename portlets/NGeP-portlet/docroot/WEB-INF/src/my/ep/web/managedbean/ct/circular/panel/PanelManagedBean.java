@@ -50,18 +50,18 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class PanelManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	private String circularDocType;
 	private String action;
 	private String zoneName;
 	private String gotoPreviewPage;	
 	private String taskName;
-		
+
 	private Long itemCategoryId;
 	private Long panelCoverageId;
 	private int selectedTabIndex;
-	
+
 	private boolean editZone;
 	private boolean updateAction =false;
 	private boolean viewContract =false;
@@ -74,11 +74,11 @@ public class PanelManagedBean extends BaseManagedBean {
 	private int index = -1;
 	private boolean buttonHideActiveDel = true;
 	private boolean buttonHidePanelItemDel = true;
-	 private boolean selectAll;
-	
+	private boolean selectAll;
+
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode rootZoanlTree;
-	
+
 	private CtCircular circular;
 	private CtCircularVer circularVer;
 	private CtCancelCircularReq cancelCircularReq;
@@ -102,12 +102,12 @@ public class PanelManagedBean extends BaseManagedBean {
 	private Map<Long, PmUser> userMap;
 	private List<SmSupplier> supplierList; 
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
-	
+
 	//gpki signing
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate = true;
 	private String textBeforeSign;
-	
+
 	private String supplierBranch;
 	private SmSupplier smSupplier;
 	private SmCompanyBasic smCompanyBasic;
@@ -115,7 +115,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctPanelSupplier;
 	private SmMofAccount smMofAccount;
 	private List<CtCircularPidReason> ctCircularPidReasons;
-	
+
 	/**
 	 * @return the circular
 	 */
@@ -143,9 +143,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
 	}
-	
-	
-	
+
+
+
 	public List<CtCancelCircular> getSelectedCancelCircular() {
 		return selectedCancelCircular;
 	}
@@ -157,7 +157,7 @@ public class PanelManagedBean extends BaseManagedBean {
 			List<CtCancelCircular> selectedCancelCircular) {
 		this.selectedCancelCircular = selectedCancelCircular;
 	}
-	
+
 	/**
 	 * @return the supplierBankAccountMap
 	 */
@@ -167,7 +167,7 @@ public class PanelManagedBean extends BaseManagedBean {
 		}
 		return supplierBankAccountMap;
 	}
-	
+
 	/**
 	 * @param supplierBankAccountMap the supplierBankAccountMap to set
 	 */
@@ -203,7 +203,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSelectedPanelItems(CtPanelItem selectedPanelItems) {
 		this.selectedPanelItems = selectedPanelItems;
 	}
-	
+
 	/**
 	 * @return the selectedItemForSpec
 	 */
@@ -240,7 +240,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public boolean isDifferentModule() {
 		return differentModule;
 	}
-	
+
 	/**
 	 * @param differentModule the differentModule to set
 	 */
@@ -372,14 +372,14 @@ public class PanelManagedBean extends BaseManagedBean {
 	public List<CtContactPerson> getSelectedContactPersons() {
 		return selectedContactPersons;
 	}
-	
+
 	/**
 	 * @param selectedContactPersons the selectedContactPersons to set
 	 */
 	public void setSelectedContactPersons(List<CtContactPerson> selectedContactPersons) {
 		this.selectedContactPersons = selectedContactPersons;
 	}
-	
+
 	/**
 	 * @return the cancelledCircularList
 	 */
@@ -440,7 +440,7 @@ public class PanelManagedBean extends BaseManagedBean {
 			List<CtPanelSupplier> selectedPanelSuppliers) {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
 	}
-	
+
 	/**
 	 * @return the selectedPanelItemSpecs
 	 */
@@ -510,7 +510,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
+
 	/**
 	 * @return the userMap
 	 */
@@ -527,7 +527,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
-	
+
 	/**
 	 * @return the editZone
 	 */
@@ -667,14 +667,14 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setChkCancelPage(boolean chkCancelPage) {
 		this.chkCancelPage = chkCancelPage;
 	}
-	
+
 	/**
 	 * @return the viewContract
 	 */
 	public boolean isViewContract() {
 		return viewContract;
 	}
-	
+
 	/**
 	 * @param viewContract the viewContract to set
 	 */
@@ -716,7 +716,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public String getGotoPreviewPage() {
 		return gotoPreviewPage;
 	}
-	
+
 	/**
 	 * @param gotoPreviewPage the gotoPreviewPage to set
 	 */
@@ -751,7 +751,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
-	
+
 	/**
 	 * @return the fromCircularNotice
 	 */
@@ -765,7 +765,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setFromCircularNotice(boolean fromCircularNotice) {
 		this.fromCircularNotice = fromCircularNotice;
 	}
-		
+
 	/**
 	 * @return the supplierBranch
 	 */
@@ -849,7 +849,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
 	}
-	
+
 	/**
 	 * @return the ctCircularPidReasons
 	 */

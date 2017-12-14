@@ -99,7 +99,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 		return contractVer;
 	}
 
-  /**
+	/**
 	 * @param contractVer the contractVer to set
 	 */
 	public void setContractVer(CtContractVer contractVer) {
@@ -305,7 +305,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
-	
+
 	/**
 	 * @return the approverModel
 	 */

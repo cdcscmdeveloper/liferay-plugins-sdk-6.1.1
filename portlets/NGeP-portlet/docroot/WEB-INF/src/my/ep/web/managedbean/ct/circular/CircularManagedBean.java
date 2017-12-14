@@ -36,7 +36,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class CircularManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean readOnly = true;
 	private boolean trackingDiarySearch;
 	private String searchCircularNo;
@@ -51,14 +51,14 @@ public class CircularManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private int searchCircularStatus;
 	private IPagingDataModel<CtCircularVer> circularListingPagingDataModel = new CircularListingPagingDataModel();
-	
+
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
 		public CircularListingPagingDataModel() {
 			super("circularVerDt", isReadOnly());
 		}
-		
+
 		@Override
 		public ISearchResultBean<CtCircularVer> pageChangeListener(ISearchBean<CtCircularVer> searchBean) {
 			try {		
@@ -85,7 +85,7 @@ public class CircularManagedBean extends BaseManagedBean {
 					SearchFilterBean filterBean = new SearchFilterBean("ctCircular.recordStatus", SearchOperator.OPERATOR_EQUALS.value(),getSearchStatus());
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-				
+
 				String supplierNameField = null;
 				String itemNameField = null;
 				if(getSearchCircularDocType()!=null && getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
@@ -105,23 +105,23 @@ public class CircularManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}	
-				
+
 				if(getSearchStartDate()!=null && getSearchEndDate()!=null) {
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchStartDate()));	
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchEndDate()));		
-			    }
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchStartDate()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchEndDate()));		
+				}
 				if(getSearchStartDate()!=null && getSearchEndDate()==null) {
-				   searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchStartDate()));	
-			    }
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchStartDate()));	
+				}
 				if(getSearchStartDate()==null && getSearchEndDate()!=null) {
-			        searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchEndDate()));	
-			    }
-				
-			    CircularReqDTO reqDTO = new CircularReqDTO();
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchEndDate()));	
+				}
+
+				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
 				reqDTO.setFilterStatusId(getSearchStatusId());
 				reqDTO.setSearchCircularStatus(getSearchCircularStatus());
-				
+
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = null;
 				if(isReadOnly()) {
@@ -139,84 +139,84 @@ public class CircularManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * @return the searchCircularNo
 	 */
 	public String getSearchCircularNo() {
 		return searchCircularNo;
 	}
-	
+
 	/**
 	 * @param searchCircularNo the searchCircularNo to set
 	 */
 	public void setSearchCircularNo(String searchCircularNo) {
 		this.searchCircularNo = searchCircularNo;
 	}
-	
+
 	/**
 	 * @return the searchCircularName
 	 */
 	public String getSearchCircularName() {
 		return searchCircularName;
 	}
-	
+
 	/**
 	 * @param searchCircularName the searchCircularName to set
 	 */
 	public void setSearchCircularName(String searchCircularName) {
 		this.searchCircularName = searchCircularName;
 	}
-	
+
 	/**
 	 * @return the searchPhysicalCircularNo
 	 */
 	public String getSearchPhysicalCircularNo() {
 		return searchPhysicalCircularNo;
 	}
-	
+
 	/**
 	 * @param searchPhysicalCircularNo the searchPhysicalCircularNo to set
 	 */
 	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
 		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
 	}
-	
+
 	/**
 	 * @return the searchCircularDocType
 	 */
 	public String getSearchCircularDocType() {
 		return searchCircularDocType;
 	}
-	
+
 	/**
 	 * @param searchCircularDocType the searchCircularDocType to set
 	 */
 	public void setSearchCircularDocType(String searchCircularDocType) {
 		this.searchCircularDocType = searchCircularDocType;
 	}
-	
+
 	/**
 	 * @return the searchStatus
 	 */
 	public String getSearchStatus() {
 		return searchStatus;
 	}
-	
+
 	/**
 	 * @param searchStatus the searchStatus to set
 	 */
 	public void setSearchStatus(String searchStatus) {
 		this.searchStatus = searchStatus;
 	}
-	
+
 	/**
 	 * @return the circularListingPagingDataModel
 	 */
 	public IPagingDataModel<CtCircularVer> getCircularListingPagingDataModel() {
 		return circularListingPagingDataModel;
 	}
-	
+
 	/**
 	 * @param circularListingPagingDataModel the circularListingPagingDataModel to set
 	 */
@@ -224,105 +224,105 @@ public class CircularManagedBean extends BaseManagedBean {
 			IPagingDataModel<CtCircularVer> circularListingPagingDataModel) {
 		this.circularListingPagingDataModel = circularListingPagingDataModel;
 	}
-	
+
 	/**
 	 * @param circularListingPagingDataModel the circularListingPagingDataModel to reset
 	 */
 	public void resetCircularListingPagingDataModel() {
 		this.circularListingPagingDataModel = new CircularListingPagingDataModel();
 	}
-	
+
 	/**
 	 * @return the searchSupplierName
 	 */
 	public String getSearchSupplierName() {
 		return searchSupplierName;
 	}
-	
+
 	/**
 	 * @param searchSupplierName the searchSupplierName to set
 	 */
 	public void setSearchSupplierName(String searchSupplierName) {
 		this.searchSupplierName = searchSupplierName;
 	}
-	
+
 	/**
 	 * @return the searchItemName
 	 */
 	public String getSearchItemName() {
 		return searchItemName;
 	}
-	
+
 	/**
 	 * @param searchItemName the searchItemName to set
 	 */
 	public void setSearchItemName(String searchItemName) {
 		this.searchItemName = searchItemName;
 	}
-	
+
 	/**
 	 * @return the searchStartDate
 	 */
 	public Date getSearchStartDate() {
 		return searchStartDate;
 	}
-	
+
 	/**
 	 * @param searchStartDate the searchStartDate to set
 	 */
 	public void setSearchStartDate(Date searchStartDate) {
 		this.searchStartDate = searchStartDate;
 	}
-	
+
 	/**
 	 * @return the searchEndDate
 	 */
 	public Date getSearchEndDate() {
 		return searchEndDate;
 	}
-	
+
 	/**
 	 * @param searchEndDate the searchEndDate to set
 	 */
 	public void setSearchEndDate(Date searchEndDate) {
 		this.searchEndDate = searchEndDate;
 	}
-	
+
 	/**
 	 * @return the searchStatusId
 	 */
 	public Long getSearchStatusId() {
 		return searchStatusId;
 	}
-	
+
 	/**
 	 * @param searchStatusId the searchStatusId to set
 	 */
 	public void setSearchStatusId(Long searchStatusId) {
 		this.searchStatusId = searchStatusId;
 	}
-	
+
 	/**
 	 * @return the readOnly
 	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
-	
+
 	/**
 	 * @param readOnly the readOnly to set
 	 */
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}
-	
+
 	/**
 	 * @return the trackingDiarySearch
 	 */
 	public boolean isTrackingDiarySearch() {
 		return trackingDiarySearch;
 	}
-	
+
 	/**
 	 * @param trackingDiarySearch the trackingDiarySearch to set
 	 */

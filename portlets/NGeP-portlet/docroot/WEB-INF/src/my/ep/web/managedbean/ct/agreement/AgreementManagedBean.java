@@ -37,12 +37,12 @@ import org.primefaces.model.TreeNode;
 public class AgreementManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long ministryProfileId;
 	private Long officerProfileId;
 	private Long jabatanProfileId;
 	private Long ptjProfileId;
-	
+
 	private String[] action;	
 	private String taskId;
 	private String taskName;
@@ -93,70 +93,70 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public String[] getAction() {
 		return action;
 	}
-	
+
 	/**
 	 * @param action the action to set
 	 */
 	public void setAction(String[] action) {
 		this.action = action;
 	}
-	
+
 	/**
 	 * @return the taskId
 	 */
 	public String getTaskId() {
 		return taskId;
 	}
-	
+
 	/**
 	 * @param taskId the taskId to set
 	 */
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
-	
+
 	/**
 	 * @return the taskName
 	 */
 	public String getTaskName() {
 		return taskName;
 	}
-	
+
 	/**
 	 * @param taskName the taskName to set
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	
+
 	/**
 	 * @return the agreementType
 	 */
 	public String getAgreementType() {
 		return agreementType;
 	}
-	
+
 	/**
 	 * @param agreementType the agreementType to set
 	 */
 	public void setAgreementType(String agreementType) {
 		this.agreementType = agreementType;
 	}
-	
+
 	/**
 	 * @return the fileDirectory
 	 */
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
-	
+
 	/**
 	 * @param fileDirectory the fileDirectory to set
 	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
-	
+
 	/**
 	 * @return the textBeforeSign
 	 */
@@ -184,14 +184,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
-	
+
 	/**
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
-	
+
 	/**
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
@@ -222,14 +222,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return ctAgencySigner;
 	}
-	
+
 	/**
 	 * @param ctAgencySigner the ctAgencySigner to set
 	 */
 	public void setCtAgencySigner(List<CtAgreementParty> ctAgencySigner) {
 		this.ctAgencySigner = ctAgencySigner;
 	}
-	
+
 	/**
 	 * @return the ctSupplierSigner
 	 */
@@ -239,14 +239,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return ctSupplierSigner;
 	}
-	
+
 	/**
 	 * @param ctSupplierSigner the ctSupplierSigner to set
 	 */
 	public void setCtSupplierSigner(List<CtAgreementParty> ctSupplierSigner) {
 		this.ctSupplierSigner = ctSupplierSigner;
 	}
-	
+
 	/**
 	 * @return the ctSupplierWitness
 	 */
@@ -256,14 +256,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return ctSupplierWitness;
 	}
-	
+
 	/**
 	 * @param ctSupplierWitness the ctSupplierWitness to set
 	 */
 	public void setCtSupplierWitness(List<CtAgreementParty> ctSupplierWitness) {
 		this.ctSupplierWitness = ctSupplierWitness;
 	}
-	
+
 	/**
 	 * @return the ctSignAgencyWitness
 	 */
@@ -273,14 +273,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return ctSignAgencyWitness;
 	}
-	
+
 	/**
 	 * @param ctSignAgencyWitness the ctSignAgencyWitness to set
 	 */
 	public void setCtSignAgencyWitness(List<CtAgreementParty> ctSignAgencyWitness) {
 		this.ctSignAgencyWitness = ctSignAgencyWitness;
 	}
-	
+
 	/**
 	 * @return the remarkList
 	 */
@@ -290,14 +290,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return remarkList;
 	}
-	
+
 	/**
 	 * @param remarkList the remarkList to set
 	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
-	
+
 	/**
 	 * @return the attachmentList
 	 */
@@ -307,70 +307,70 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return attachmentList;
 	}
-	
+
 	/**
 	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-	
+
 	/**
 	 * @return the agencyOfficerIcNo
 	 */
 	public List<String> getAgencyOfficerIcNo() {
 		return agencyOfficerIcNo;
 	}
-	
+
 	/**
 	 * @param agencyOfficerIcNo the agencyOfficerIcNo to set
 	 */
 	public void setAgencyOfficerIcNo(List<String> agencyOfficerIcNo) {
 		this.agencyOfficerIcNo = agencyOfficerIcNo;
 	}
-	
+
 	/**
 	 * @return the agencyWitnessIcNo
 	 */
 	public List<String> getAgencyWitnessIcNo() {
 		return agencyWitnessIcNo;
 	}
-	
+
 	/**
 	 * @param agencyWitnessIcNo the agencyWitnessIcNo to set
 	 */
 	public void setAgencyWitnessIcNo(List<String> agencyWitnessIcNo) {
 		this.agencyWitnessIcNo = agencyWitnessIcNo;
 	}
-	
+
 	/**
 	 * @return the supplierOfficerIcNo
 	 */
 	public List<String> getSupplierOfficerIcNo() {
 		return supplierOfficerIcNo;
 	}
-	
+
 	/**
 	 * @param supplierOfficerIcNo the supplierOfficerIcNo to set
 	 */
 	public void setSupplierOfficerIcNo(List<String> supplierOfficerIcNo) {
 		this.supplierOfficerIcNo = supplierOfficerIcNo;
 	}
-	
+
 	/**
 	 * @return the supplierWitnessIcNo
 	 */
 	public List<String> getSupplierWitnessIcNo() {
 		return supplierWitnessIcNo;
 	}
-	
+
 	/**
 	 * @param supplierWitnessIcNo the supplierWitnessIcNo to set
 	 */
 	public void setSupplierWitnessIcNo(List<String> supplierWitnessIcNo) {
 		this.supplierWitnessIcNo = supplierWitnessIcNo;
 	}
-	
+
 	/**
 	 * @return the userMap
 	 */
@@ -380,28 +380,28 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return userMap;
 	}
-	
+
 	/**
 	 * @param userMap the userMap to set
 	 */
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
-	
+
 	/**
 	 * @return the approverModel
 	 */
 	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
-	
+
 	/**
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
-	
+
 	/**
 	 * @return the supplierUserMap
 	 */
@@ -411,56 +411,56 @@ public class AgreementManagedBean extends BaseManagedBean {
 		}
 		return supplierUserMap;
 	}
-	
+
 	/**
 	 * @param supplierUserMap the supplierUserMap to set
 	 */
 	public void setSupplierUserMap(Map<String, SmPersonnel> supplierUserMap) {
 		this.supplierUserMap = supplierUserMap;
 	}
-	
+
 	/**
 	 * @return the supplierSignerDropdown
 	 */
 	public SelectItem[] getSupplierSignerDropdown() {
 		return supplierSignerDropdown;
 	}
-	
+
 	/**
 	 * @param supplierSignerDropdown the supplierSignerDropdown to set
 	 */
 	public void setSupplierSignerDropdown(SelectItem[] supplierSignerDropdown) {
 		this.supplierSignerDropdown = supplierSignerDropdown;
 	}
-	
+
 	/**
 	 * @return the ctContract
 	 */
 	public CtContract getCtContract() {
 		return ctContract;
 	}
-	
+
 	/**
 	 * @param ctContract the ctContract to set
 	 */
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
-	
+
 	/**
 	 * @return the contractVer
 	 */
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
-	
+
 	/**
 	 * @param contractVer the contractVer to set
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
-	
+
 	/**
 	 * @return the agreementContractVer
 	 */
@@ -481,7 +481,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public CtAgreement getCtAgreement() {
 		return ctAgreement;
 	}
-	
+
 	/**
 	 * @param ctAgreement the ctAgreement to set
 	 */
@@ -614,7 +614,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
 	}
-		
+
 	/**
 	 * @return the finalAgreement
 	 */

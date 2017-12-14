@@ -23,7 +23,7 @@ public class PanelGroupItemManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean isLazy;
 	private String groupName;
 	private Long status;
@@ -35,49 +35,49 @@ public class PanelGroupItemManagedBean extends BaseManagedBean {
 	public boolean isLazy() {
 		return isLazy;
 	}
-	
+
 	/**
 	 * @param isLazy the isLazy to set
 	 */
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
 	}
-	
+
 	/**
 	 * @return the groupName
 	 */
 	public String getGroupName() {
 		return groupName;
 	}
-	
+
 	/**
 	 * @param groupName the groupName to set
 	 */
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	
+
 	/**
 	 * @return the status
 	 */
 	public Long getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * @param status the status to set
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * @return the ctPanelItemGroup
 	 */
 	public CtPanelItemGroup getCtPanelItemGroup() {
 		return ctPanelItemGroup;
 	}
-	
+
 	/**
 	 * @param ctPanelItemGroup the ctPanelItemGroup to set
 	 */

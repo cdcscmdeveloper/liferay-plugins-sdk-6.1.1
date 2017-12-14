@@ -13,8 +13,8 @@ import my.ep.persistence.entity.pm.common.PmState;
 
 public class PanelLocationHelper {
 	
-	public static <LOCATION_CLASS> List<PmState>	getStateFromLocationDTO(List<CtPanelZoneDtl> locationDTOs) {
-		List<PmState>	results	=	new ArrayList<PmState>();
+	public static <LOCATION_CLASS> List<PmState> getStateFromLocationDTO(List<CtPanelZoneDtl> locationDTOs) {
+		List<PmState> results =	new ArrayList<PmState>();
 		for(CtPanelZoneDtl locationDTO: locationDTOs){
 			if(locationDTO.getStateId() != null){
 				results.add(locationDTO.getStateId());

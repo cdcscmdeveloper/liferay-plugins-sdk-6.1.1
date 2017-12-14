@@ -19,8 +19,8 @@ public class CentralItemZones implements Serializable{
 	private static final long serialVersionUID = -8954854049553749821L;
 	private	String zone;
 	private	PmState	state;
-	private	PmDistrict	district;
-	private	PmCity	city;
+	private	PmDistrict district;
+	private	PmCity city;
 	private	int rowKey;
 	public CentralItemZones() {
 		super();
