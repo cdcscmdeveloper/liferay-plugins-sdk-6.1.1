@@ -35,15 +35,15 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SuspensionManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String taskName;
 	private String fileDirectory;
 	private String textBeforeSign;
 	private String buttonAction;
-	
+
 	private boolean autoUpdate = true;
 	private boolean viewOnly = false;
-	
+
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -97,7 +97,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
-	
+
 	/**
 	 * @return the remarkList
 	 */
@@ -244,7 +244,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setAgencyMap(HashMap<Long, CtAgency> agencyMap) {
 		this.agencyMap = agencyMap;
 	}
-	
+
 	/**
 	 * @return the itemMap
 	 */
@@ -261,7 +261,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setItemMap(HashMap<Long, CtContractItem> itemMap) {
 		this.itemMap = itemMap;
 	}
-	
+
 	/**
 	 * @return the approverModel
 	 */

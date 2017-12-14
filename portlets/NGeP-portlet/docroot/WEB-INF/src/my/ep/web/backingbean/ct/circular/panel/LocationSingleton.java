@@ -32,8 +32,8 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 public class LocationSingleton {
-	public	static	final	String	STATE_LEVEL = "S";
-	public	static	final	String	DISTRICT_LEVEL	=	"D";
+	public static final String STATE_LEVEL = "S";
+	public static final String DISTRICT_LEVEL =	"D";
 	private static LocationSingleton instance = null;
 	private Map<Long, List<PmState>> mapStates = new HashMap<Long, List<PmState>>();
 

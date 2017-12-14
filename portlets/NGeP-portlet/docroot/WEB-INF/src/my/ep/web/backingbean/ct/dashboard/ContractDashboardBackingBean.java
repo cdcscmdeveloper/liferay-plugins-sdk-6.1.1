@@ -43,11 +43,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashboardManagedBean>{
 
 	/**
-	  * The function constructor used for initializing the variable.
+	 * The function constructor used for initializing the variable.
 	 */
 	public ContractDashboardBackingBean(){
 	}
-	
+
 	@PostConstruct
 	public void init(){
 		defaultMinistryPtjSearchValue();
@@ -55,18 +55,18 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 		getManagedBean().setLessThan120Days(calculateTotalRecord(2));
 	}
 
-	 /**
+	/**
 	 * This method is used to forward 
 	 * page on contract maintenance after user click
-	* */
+	 * */
 	public void goToMaintenancePage() throws IOException {
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		String commonUrl;
 		try {
 			commonUrl = themeDisplay.getURLCurrent().substring(0,
-				themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
-						.getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
+							.getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			externalContext.redirect(commonUrl + "/" +ContractConst.NAV_TO_CONTRACT_MAINT);
@@ -90,22 +90,22 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 		cal.add(Calendar.DATE, days); 
 		return cal.getTime();
 	}
-	
-	 /**
+
+	/**
 	 * The method used to set the ministry 
 	 * profile id and PTJ profile id
 	 */
 	private void defaultMinistryPtjSearchValue() {
 		FacesScopes facesScopes = new FacesScopes();
 		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-			|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-			|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-			|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-			|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			this.getManagedBean().setSearchMinistryProfile(null);
 			this.getManagedBean().setSearchPtjGroupProfile(null);
 			this.getManagedBean().setSearchPtjProfile(null);
-		
+
 		} else {
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -115,13 +115,13 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
 				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 			}
-			
+
 			if (facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {			
 				this.getManagedBean().setSearchMinistryProfile(orgProfile);
 				this.getManagedBean().setSearchPtjGroupProfile(null);
 				this.getManagedBean().setSearchPtjProfile(null);
 			} else if (facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
+					|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
 				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
@@ -152,7 +152,7 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 			} else if (getManagedBean().getSearchMinistryProfile() != null) {
 				reqDTO.setUserOrgProfileID(getManagedBean().getSearchMinistryProfile().getOrgProfileId());
 			}
-				
+
 			ContractResDTO resDTO = contractSO.searchDashBoardContract(reqDTO);	
 			if (resDTO.isSuccessful()) {
 				return resDTO.getRecordCount();

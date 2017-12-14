@@ -11,24 +11,24 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 /** 
-* @author Alam
-* @since 26/9/2014
-*/
+ * @author Alam
+ * @since 26/9/2014
+ */
 public class LocationDTO implements Serializable{
 	private static final long serialVersionUID = -8954854049553749821L;
 	private	String zone;
 	private	String zoneId;
 	private Long zoneDtlId;
 	private	PmState	state;
-	private	PmDistrict	district;
-	private	PmCity	city;
+	private	PmDistrict district;
+	private	PmCity city;
 	private	PmDivision division;
-	private	String	locationName;
+	private	String locationName;
 	private	int rowKey;
 	private PmAddress address;
 	private	int	deliveryTerm;
 	private Long uomId;
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize object of class
@@ -36,7 +36,7 @@ public class LocationDTO implements Serializable{
 	public LocationDTO() {
 		super();
 	}
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the 
@@ -60,7 +60,7 @@ public class LocationDTO implements Serializable{
 		this.state = state;
 		this.zoneDtlId = zoneDtlId;
 	}
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the 
@@ -71,7 +71,7 @@ public class LocationDTO implements Serializable{
 		this.district = district;
 		this.zoneDtlId = zoneDtlId;
 	}
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the 
@@ -81,7 +81,7 @@ public class LocationDTO implements Serializable{
 		super();
 		this.city = city;
 	}
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the 
@@ -91,7 +91,7 @@ public class LocationDTO implements Serializable{
 		super();
 		this.division = division;
 	}
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the 
@@ -125,35 +125,35 @@ public class LocationDTO implements Serializable{
 		}
 		return locationName;
 	}
-	
+
 	/**
 	 * @param locationName the locationName to set
 	 */
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
 	}
-	
+
 	/**
 	 * @return the state
 	 */
 	public PmState getState() {
 		return state;
 	}
-	
+
 	/**
 	 * @param state the state to set
 	 */
 	public void setState(PmState state) {
 		this.state = state;
 	}
-	
+
 	/**
 	 * @return the district
 	 */
 	public PmDistrict getDistrict() {
 		return district;
 	}
-	
+
 	/**
 	 * @param district the district to set
 	 */
@@ -181,21 +181,21 @@ public class LocationDTO implements Serializable{
 	public PmDivision getDivision() {
 		return division;
 	}
-    
+
 	/**
 	 * @param division the division to set
 	 */
 	public void setDivision(PmDivision division) {
 		this.division = division;
 	}
-	
+
 	/**
 	 * @return the zone
 	 */
 	public String getZone() {
 		return zone;
 	}
-	
+
 	/**
 	 * @param zone the zone to set
 	 */
@@ -214,7 +214,7 @@ public class LocationDTO implements Serializable{
 	public void setAddress(PmAddress address) {
 		this.address = address;
 	}
-	
+
 	/**
 	 * @return the RowKey for hashcode
 	 */
@@ -244,7 +244,7 @@ public class LocationDTO implements Serializable{
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj)
@@ -253,89 +253,89 @@ public class LocationDTO implements Serializable{
 			return false;
 		if(getClass() != obj.getClass())
 			return false;
-		
+
 		LocationDTO other = (LocationDTO) obj;
 		if (zone == null) {
 			if (other.zone != null)
 				return false;
 		} else if (!zone.equals(other.zone))
 			return false;
-		
+
 		if (state == null) {
 			if (other.state != null)
 				return false;
 		} else if (!state.equals(other.state))
 			return false;
-		
+
 		if (district == null) {
 			if (other.district != null)
 				return false;
 		} else if (!district.equals(other.district))
 			return false;
-		
+
 		if (division == null) {
 			if (other.division != null)
 				return false;
 		} else if (!division.equals(other.division))
 			return false;
-		
+
 		if (city == null) {
 			if (other.city != null)
 				return false;
 		} else if (!city.equals(other.city))
 			return false;
-		
+
 		if (address == null) {
 			if(other.address != null)
 				return false;
 		} else if (!address.equals(other.address))
 			return false;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * @return the deliveryTerm
 	 */
 	public int getDeliveryTerm() {
 		return deliveryTerm;
 	}
-	
+
 	/**
 	 * @param deliveryTerm the deliveryTerm to set
 	 */
 	public void setDeliveryTerm(int deliveryTerm) {
 		this.deliveryTerm = deliveryTerm;
 	}
-	
+
 	/**
 	 * @return the uomId
 	 */
 	public Long getUomId() {
 		return uomId;
 	}
-	
+
 	/**
 	 * @param uomId the uomId to set
 	 */
 	public void setUomId(Long uomId) {
 		this.uomId = uomId;
 	}
-	
+
 	/**
 	 * @return the zoneId
 	 */
 	public String getZoneId() {
 		return zoneId;
 	}
-	
+
 	/**
 	 * @param zoneId the zoneId to set
 	 */
 	public void setZoneId(String zoneId) {
 		this.zoneId = zoneId;
 	}
-	
+
 	/**
 	 * @return the zoneDtlId
 	 */
