@@ -120,16 +120,18 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 				break;
 				
 			} else if (throwable instanceof IllegalStateException) {
-				if (throwable.getMessage().contains("Session already invalidated")) {
-					msgCode = MessageConst.ERROR_100054;
-					isValidationException = true;
-					navigateToErrorPage = true;
-					
-					break;	
-				} else if (throwable.getMessage().contains("EJB")) {
-					msgCode = throwable.getMessage();
-					
-					break;	
+				if (throwable.getMessage() != null) {
+					if (throwable.getMessage().contains("Session already invalidated")) {
+						msgCode = MessageConst.ERROR_100054;
+						isValidationException = true;
+						navigateToErrorPage = true;
+						
+						break;	
+					} else if (throwable.getMessage().contains("EJB")) {
+						msgCode = throwable.getMessage();
+						
+						break;	
+					}	
 				}
 				
 			} else if (throwable instanceof EpException) {
