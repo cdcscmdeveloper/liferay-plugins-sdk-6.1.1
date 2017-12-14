@@ -1265,35 +1265,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		getManagedBean().getCtAgreement().setSignedPageName(null);
 		getManagedBean().getCtAgreement().setSignedPagePath(null);
 	}
-
-	/**
-	 * The method used to download the sample agreement file
-	 * base on the quotation tender ID.
-	 * 
-	 * @throws IOException  if an input or output exception occurred
-	 * @see    IOException
-	 */
-	public void downloadSampleFile() throws IOException{
-		if(getManagedBean().getCtContract().getQuotationTender() == null 
-				|| getManagedBean().getCtContract().getQuotationTender().getQtId() == null) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_755001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			return;
-		}
-		
-		 IAgreementSO agreementSO = null;
-		 ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
-		 reqDTO.setQtid(getManagedBean().getCtContract().getQuotationTender().getQtId());
-		 agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-		 ContractAgreementResDTO resDTO = agreementSO.downloadSampleFile(reqDTO);
-		 if(resDTO.getScQtDocReport() != null && resDTO.getScQtDocReport().getScQtDocReportAttachment() != null) {
-	        downloadFile(resDTO.getScQtDocReport().getScQtDocReportAttachment().getFilePath(),resDTO.getScQtDocReport().getScQtDocReportAttachment().getFileName());
-	    } else {
-	    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_755001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-	    }
-	 }
 	
 	/**
 	 * The method used to download the attached file.
