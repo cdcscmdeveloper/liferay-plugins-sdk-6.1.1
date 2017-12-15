@@ -849,6 +849,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			for(FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
 				if(itemAddr.getScRequestItem().getRequestNoteItemId().equals(contractedItem.getScRequestItem().getRequestNoteItemId())) {
 					itemExisted = true;
+					flItemAddr = itemAddr;
 					if(getManagedBean().getSelectedDelAddr()!=null) {
 						messageId = MessageConst.INFO_745005;
 					} else {
@@ -3164,18 +3165,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/**
 	 * Update delivery date based on delivery Term and uomCode.
 	 */
-	public void updateDeliveryAddrDate() {
-		Date startDate = getManagedBean().getSelectedDelAddr().getStartDate();
+	public void updateDeliveryAddrDate(FlDeliveryAddress delAddr) {
+		Date startDate = delAddr.getStartDate();
 		int deliveryTerm = 0;
-		deliveryTerm = getManagedBean().getSelectedDelAddr().getDeliveryTerm();
+		deliveryTerm = delAddr.getDeliveryTerm();
 		
-		if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+		if(delAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			getManagedBean().getSelectedDelAddr().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-		}else if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			delAddr.setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+		}else if(delAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			getManagedBean().getSelectedDelAddr().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			delAddr.setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 		}
+		
 	}
 
 	/**
