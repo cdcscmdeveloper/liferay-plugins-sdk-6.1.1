@@ -121,13 +121,13 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
-	
+
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						identificationNo,
-						getSupplier().getEpNo(), challengeQues1);
+						identificationNo, getSupplier().getEpNo(),
+						challengeQues1);
 			} else {
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
@@ -388,11 +388,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public String getCertIssuer() {
-		if (StringUtils.isBlank(certIssuer)) {
-			certIssuer = PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
-					getLoginUser().getIdentificationNo(), getSupplier()
-							.getEpNo());
-		}
+		certIssuer = PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
+				getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
 		return certIssuer;
 	}
 
