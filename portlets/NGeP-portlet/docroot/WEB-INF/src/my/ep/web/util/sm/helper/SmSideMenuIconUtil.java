@@ -514,7 +514,8 @@ public class SmSideMenuIconUtil {
 					}
 				} else {
 					if (bean.isShowMachineryEquipmentPanel()
-							&& rev.isMachineryVerified()) {
+							&& (rev.isMachineryVerified() && rev
+									.isManufacturingVerified())) {
 						retVal = ICON_TICK;
 					} else if (bean.isShowTravelSoftwarePanel()
 							&& rev.isSupplierSystemVerified()) {
