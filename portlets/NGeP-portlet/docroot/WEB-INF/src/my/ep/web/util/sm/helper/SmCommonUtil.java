@@ -3213,7 +3213,7 @@ public class SmCommonUtil {
 					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
 							reqDTO).getSoftcertRequest();
 			if (softcertRequest != null
-					&& StringUtils.isNotBlank(softcertRequest.getReasonCode())) {
+					&& !StringUtils.isBlank(softcertRequest.getReasonCode())) {
 				personnel
 						.setSoftcertRejectCode(softcertRequest.getReasonCode());
 				if (softcertRequest.getReasonCode().equals(
