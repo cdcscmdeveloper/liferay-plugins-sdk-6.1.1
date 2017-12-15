@@ -53,7 +53,7 @@
 					size="8" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
-						listener="#{contractRequestBackingBean.updateDeliveryAddrDate}"
+						listener="#{contractRequestBackingBean.updateDeliveryAddrDate(address)}"
 						update="calEndDate" />
 				</p:calendar>
 				<h:outputText value="#{address.startDate}" style="float:right;" rendered="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
