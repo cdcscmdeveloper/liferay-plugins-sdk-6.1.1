@@ -16,13 +16,16 @@ import org.primefaces.model.DualListModel;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
@@ -122,6 +125,14 @@ public class SvcSiteAssignBackingBean extends
 			PmUser user = SmCommonUtil.getUserByUserId(getManagedBean().getSmAppl().getCreatedBy());
 			if(user == null){
 				throw new EpException("Supplier List cannot be null");
+			}else{
+				if(user.getUserId() == CommonConstants.SYSTEM_USER_ID){
+					user = getSupplierMOFAdmin();
+				}
+				
+				if(user == null){
+					throw new EpException("Supplier List cannot be null.");
+				}
 			}
 			log.info("Supplier Login ID = " + user.getLoginId());
 			bpmSupplierList.add(user.getLoginId());
@@ -410,4 +421,37 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}
 	}
+	
+	@SuppressWarnings("unused")
+	private PmUser getSupplierMOFAdmin(){
+		log.info("<<<<<<<< getSupplierMOFAdmin>>>>>>>>>>>>>>" + getManagedBean().getSmAppl().getApplId());
+		PmUser pmUser = null;
+		if(getManagedBean().getSmAppl().getSmPersonnels().size() > 0){
+			for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+				if(personnel.getEpRole() != null){
+					if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+						if(personnel.getPmUser() != null){
+							if(personnel.getPmUser().getUserId() != CommonConstants.SYSTEM_USER_ID && 
+									personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+								pmUser = personnel.getPmUser();
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if(pmUser != null){
+			log.info(">>>>>>>>>pmUser>>>>>>>" + pmUser != null ? pmUser.getUserId() : "No User Found");
+		}
+		
+		log.info("<<<<<<<< getSupplierMOFAdmin End>>>>>>>>>>>>>>");
+		
+		if(pmUser == null){
+			throw new EpException("MOF supplier admin not found");
+		}
+		
+		return pmUser;
+	} 
 }
