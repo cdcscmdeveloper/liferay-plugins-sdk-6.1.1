@@ -474,12 +474,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private boolean refreshDraftSuppItemFlag = true;
 
-	private int draftTabPageSize = 5;
-	private int pendingApprovalTabPageSize = 5;
-	private int approvedTabPageSize = 5;
-	private int publishTabPageSize = 5;
-	private int rejectedTabPageSize = 5;
-	private int expiredTabPageSize = 5;
+	private int draftTabPageSize = 10;
+	private int pendingApprovalTabPageSize = 10;
+	private int approvedTabPageSize = 10;
+	private int publishTabPageSize = 10;
+	private int rejectedTabPageSize = 10;
+	private int expiredTabPageSize = 10;
 
 	private List<CmSupplierItem> cloneCmSupplierItemLs;
 
