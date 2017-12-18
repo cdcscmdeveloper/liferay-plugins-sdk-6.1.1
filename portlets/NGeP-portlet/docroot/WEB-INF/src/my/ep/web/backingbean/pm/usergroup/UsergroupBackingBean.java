@@ -299,6 +299,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		if(orgProfile != null){
 			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
 				getManagedBean().getUserGroup().setPmOrgProfile(orgProfile);
+				getManagedBean().setOrgProfileId(orgProfile.getOrgProfileId());
 				getManagedBean().setDisabledOrg(true);
 				this.getManagedBean().setSelectGrp(true);
 			}
