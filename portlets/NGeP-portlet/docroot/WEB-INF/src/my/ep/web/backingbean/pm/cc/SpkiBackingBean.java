@@ -30,6 +30,7 @@ import my.ep.web.util.TrustGateHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -124,7 +125,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+			if (getCertIssuer(identificationNo).equals(SPKIConst.TRUSTGATE)) {
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
@@ -139,6 +140,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public byte[] spkiEnabledSignTransaction(String originalText,
 			String identificationNo) {
+		SpkiVO vo = null;
 		if (getSupplier() == null) {
 			throw new EpException(MessageConst.ERROR_721018);
 		}
@@ -157,14 +159,19 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 		String pin = getPassword();
 
-		if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
-			signedData = TrustGateHelper.getInstance().getSignedData(
+		if (getCertIssuer(identificationNo).equals(SPKIConst.TRUSTGATE)) {
+			vo = TrustGateHelper.getInstance().getSignedData(
 					identificationNo, getSupplier().getEpNo(), pin, challenges,
 					dataForSigning);
 		} else {
-			signedData = DigiCertHelper.getInstance().getSignedData(
+			vo = DigiCertHelper.getInstance().getSignedData(
 					identificationNo, getSupplier().getEpNo(), pin, challenges,
 					dataForSigning);
+		}
+		if(StringUtils.isBlank(vo.getErrMsg())){
+			signedData = vo.getSignedData();
+		}else{
+			throw new EpException(vo.getErrMsg());
 		}
 		return signedData;
 	}
@@ -388,9 +395,15 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public String getCertIssuer() {
-		certIssuer = PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
-				getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
+		if (StringUtils.isBlank(certIssuer)) {
+			certIssuer = getCertIssuer(getLoginUser().getIdentificationNo());
+		}
 		return certIssuer;
+	}
+
+	private String getCertIssuer(String identificationNo) {
+		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
+				identificationNo, getSupplier().getEpNo());
 	}
 
 }
