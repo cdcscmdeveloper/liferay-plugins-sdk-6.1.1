@@ -1490,7 +1490,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 * @return String(addCatalogItem)
 	 */
-	public String navigateToApprovalItemDet(int i) {
+	public String navigateToApprovalItemDet(int i) { 
 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IUserSO.class);
@@ -1514,6 +1514,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			catReqDTO.setSupplierItemId(this.getManagedBean().getApprovalSearchDataModel().getList().get(index).getSupplierItemId());
 			catResDTO = catalogueSO.retrieveSupplierItemById(catReqDTO);
+			
+		
 
 			statusReqDTO.setDocType("CMR");
 			statusReqDTO.setModuleCode("CM");
@@ -1533,6 +1535,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
 			 */
 			retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
+			//System.out.println("promotion price:"+catResDTO.getSupplierItem().getCmPromotionPricing().getPrice());
 			this.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
 
 
@@ -1561,8 +1564,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			catalogueSO = null;
 		}	
 
-		return "addCatalogItem";
-		//return "editCatalogItem";
+		//return "addCatalogItem";ddd
+		return "editCatalogItem";
 	}
 
 	/**
@@ -2191,8 +2194,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String cancelToMaintenanceFile() {
 
 		log.info("*********cancelToMaintenanceFile*************");
-
-		if(this.getManagedBean().getCloneCmSupplierItem()!=null && this.getManagedBean().getCloneIndex()>=0){
+		log.info("***********getCloneCmSupplierItem***********"+this.getManagedBean().getCloneCmSupplierItem());
+		log.info("***********getCloneIndex***********"+this.getManagedBean().getCloneIndex());
+		log.info("***********getTabActiveIndex***********"+this.getManagedBean().getTabActiveIndex());
+		
+		if(this.getManagedBean().getCloneCmSupplierItem()!=null && this.getManagedBean().getCloneIndex()>=0 && this.getManagedBean().getTabActiveIndex()==0){
 			this.getManagedBean().getDraftSearchDataModel().getList().set(this.getManagedBean().getCloneIndex(),this.getManagedBean().getCloneCmSupplierItem());
 		}
 		// this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getCloneCmSupplierItem());
@@ -10108,6 +10114,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	
+
 
 	
 	
