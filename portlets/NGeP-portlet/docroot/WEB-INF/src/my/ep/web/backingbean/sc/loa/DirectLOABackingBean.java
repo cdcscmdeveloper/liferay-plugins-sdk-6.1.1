@@ -1123,7 +1123,13 @@ public class DirectLOABackingBean extends
 				|| BpmOutcomeConst.BPM_SAVE.equals(outcome)) {
 			// check whether loa from s1 or s2.
 			// For s2
-
+			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && scLoa.getScLoiLoa().getPmOrgProfile() == null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] {
+						ResourceBundleUtils.getMessage("lbl.sc.ptj",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()), "" });
+			}
+			
 			if (scLoa.getScQtProgPayments() != null
 					&& scLoa.getScQtProgPayments().size() > 0) {
 				for (ScQtProgressivePayment progressivePayment : scLoa
