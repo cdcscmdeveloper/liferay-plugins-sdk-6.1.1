@@ -15,7 +15,9 @@ import javax.faces.context.FacesContext;
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
+import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -87,10 +89,10 @@ public class TrustGateHelper {
 		return retVal;
 	}
 
-	public byte[] getSignedData(String identificationNo, String epNo,
+	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
 		byte[] signedData = null;
-
+		SpkiVO vo = new SpkiVO();
 		try {
 			KMCClient client = getClient();
 			KMCRequestBuilder reqbuilder = getReqBuilder();
@@ -105,26 +107,47 @@ public class TrustGateHelper {
 
 			default:
 				if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
-					throw new EpException(MessageConst.ERROR_776057);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776057,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
-					throw new EpException(MessageConst.ERROR_776058);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776058,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-					throw new EpException(MessageConst.ERROR_776059);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776059,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-					throw new EpException(MessageConst.ERROR_776060);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776060,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-					throw new EpException(MessageConst.ERROR_776061);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776061,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else {
-					throw new EpException(MessageConst.ERROR_776062);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776062,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				}
 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_776062);
+			vo.setErrMsg(MessageUtils.getMessage(
+					MessageConst.ERROR_776062,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale()));
 		}
-
-		return signedData;
+		vo.setSignedData(signedData);
+		return vo;
 	}
 
 	public String generateSecurityToken(String identificationNo, String epNo) {

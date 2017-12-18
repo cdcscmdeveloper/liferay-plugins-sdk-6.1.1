@@ -765,7 +765,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setProfBodyItems(
 					SmApplicationUtil.getProfBodyItems());
 
-//			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
+			// getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
 
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
@@ -4836,23 +4836,23 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateManufacturerToSmAppl() {
-		/*if (getManagedBean().getSelectedManufacturer().getPmUom().getUomId() != null) {
-			for (PmUom uom : getManagedBean().getUomLs()) {
-				if (uom.getUomId().equals(
-						getManagedBean().getSelectedManufacturer().getPmUom()
-								.getUomId())) {
-					getManagedBean().getSelectedManufacturer().setPmUom(uom);
-					break;
-				}
-			}
-		}*/
+		/*
+		 * if (getManagedBean().getSelectedManufacturer().getPmUom().getUomId()
+		 * != null) { for (PmUom uom : getManagedBean().getUomLs()) { if
+		 * (uom.getUomId().equals(
+		 * getManagedBean().getSelectedManufacturer().getPmUom() .getUomId())) {
+		 * getManagedBean().getSelectedManufacturer().setPmUom(uom); break; } }
+		 * }
+		 */
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedManufacturer(), getManagedBean().getSmAppl()
 				.getSmManufacturingDtls());
-//		if (getManagedBean().getSelectedManufacturer().getManufacturingDtlId() == null) {
-//			RequestContext.getCurrentInstance().execute(
-//					"smManuDtWidVar.paginator.endLink.click()");
-//		}
+		// if
+		// (getManagedBean().getSelectedManufacturer().getManufacturingDtlId()
+		// == null) {
+		// RequestContext.getCurrentInstance().execute(
+		// "smManuDtWidVar.paginator.endLink.click()");
+		// }
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("manufactorDialog.hide()");
@@ -4887,17 +4887,17 @@ public class SmApplicationBackingBean extends
 	public void assignNewManufacturerBean() {
 		log.info("**** Add new Manufacturer *********");
 		SmManufacturingDtl manu = new SmManufacturingDtl();
-//		manu.setPmUom(new PmUom());
+		// manu.setPmUom(new PmUom());
 		manu.setRevNo(1);
 		manu.setSmAppl(getManagedBean().getSmAppl());
 		getManagedBean().setSelectedManufacturer(manu);
-//		getManagedBean().setUomSelectItems(
-//				SmApplicationUtil.getUomSelectItems());
+		// getManagedBean().setUomSelectItems(
+		// SmApplicationUtil.getUomSelectItems());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("manufactorDialog.show()");
-//		log.info("****** After **********"
-//				+ getManagedBean().getSelectedManufacturer().getPmUom()
-//						.getUomName());
+		// log.info("****** After **********"
+		// + getManagedBean().getSelectedManufacturer().getPmUom()
+		// .getUomName());
 
 	}
 
