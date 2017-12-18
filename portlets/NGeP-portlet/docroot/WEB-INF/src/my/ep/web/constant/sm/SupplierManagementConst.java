@@ -528,7 +528,7 @@ public class SupplierManagementConst {
 	public static final double MAX_EXP_RANGE = 99.11;
 
 	// PM Cert body
-	public static final String PM_CERT_BODY_OTHERS = "LL";
+	public static final String PM_CERT_BODY_OTHERS = "PB00010";
 
 	// delete pending application reason
 	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
