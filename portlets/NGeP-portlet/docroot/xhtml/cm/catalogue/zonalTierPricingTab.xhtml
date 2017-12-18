@@ -188,13 +188,12 @@
 
 		<div class="clear"></div>
 
-
+<h:panelGroup rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
+							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}">
 		<table style="width: 100%">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.cm.add']}"
 						id="addZonalTierButton" style="float:right;"
-						rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
-							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
 						disabled="#{catalogueBackingBean.disableAddZonalTier()}"
 						action="#{catalogueBackingBean.addNewZonalTierPricing()}"
 						update="cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton"
@@ -207,7 +206,7 @@
 					</p:tooltip></td>
 			</tr>
 		</table>
-
+</h:panelGroup>
 
 		<p:confirmDialog id="confirmDeleteZonalTierId"
 			message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
