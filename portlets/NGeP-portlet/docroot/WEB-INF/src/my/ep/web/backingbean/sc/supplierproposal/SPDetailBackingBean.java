@@ -908,7 +908,7 @@ public class SPDetailBackingBean extends
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
-		ProposalResDTO proposalResDTO = new ProposalResDTO();
+		ProposalResDTO proposalResDTO;
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		try {
