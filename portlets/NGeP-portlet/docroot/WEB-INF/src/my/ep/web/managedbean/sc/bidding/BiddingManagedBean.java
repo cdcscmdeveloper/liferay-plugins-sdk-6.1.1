@@ -22,6 +22,7 @@ import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.BiddingConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -29,6 +30,8 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -132,7 +135,14 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = Boolean.TRUE;
 	
 	private ScQt scQt;
-
+	
+	
+	//DO Org Prfile Related
+	
+	private PmOrgProfile ptjOrgProfile;
+	private PmOrgProfile ptjGroupProfile;
+	private PmOrgProfile ptjMinistryProfile;
+	
 	/**
 	 * Default Constructor
 	 */
@@ -1043,19 +1053,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 					bidSchSearchBean.getDataFilterBeans().add(docNOFilterBean);
 				}
 				
-				/*if (getSearchDocumentNo() != null
-						&& StringUtils
-								.isNotBlank((String) getSearchDocumentNo())) {
-
-					SearchFilterBean docIdFilterBean = new SearchFilterBean(
-							"scBid.docId",
-							SearchOperator.OPERATOR_IN.value(),
-							new ArrayList<Long>());
-					docIdFilterBean.setCaseInsensitive(true);
-
-					bidSchSearchBean.getDataFilterBeans().add(docIdFilterBean);
-				}*/
-
 				if (getSearchBidTitle() != null
 						&& StringUtils.isNotBlank((String) getSearchBidTitle())) {
 
@@ -1089,6 +1086,42 @@ public class BiddingManagedBean extends BaseManagedBean {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getSelectedStatusDesc()));
 				}
+				
+				PmOrgProfile ptjProfiles = getPtjOrgProfile();
+				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
+					// Filter By - PTJ
+					SearchFilterBean ptjBean = new SearchFilterBean(
+							"scBid.pmOrgProfile." + OrgProfileUtil
+								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ptjProfiles.getOrgProfileId());
+					bidSchSearchBean.getDataFilterBeans().add(ptjBean);
+				} else {
+					// Filter By - PTJ Group
+					PmOrgProfile ptjGroupProfile = getPtjGroupProfile();
+					if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
+						SearchFilterBean ptjGroupProfileBean = new SearchFilterBean(
+								"scBid.pmOrgProfile." + OrgProfileUtil
+									.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								ptjGroupProfile.getOrgProfileId());
+						bidSchSearchBean.getDataFilterBeans().add(ptjGroupProfileBean);
+					} else {
+						// Filter By - Ministry
+						PmOrgProfile ministryProfile = getPtjMinistryProfile();
+						if (ministryProfile != null
+								&& ministryProfile.getOrgProfileId() != null) {	
+							SearchFilterBean ministryProfileBean = new SearchFilterBean(
+									"scBid.pmOrgProfile." + OrgProfileUtil
+										.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ministryProfile.getOrgProfileId());
+							bidSchSearchBean.getDataFilterBeans().add(ministryProfileBean);
+						}
+					}
+					
+				}
+			
 
 				// Order by created date
 				bidSchSearchBean.getSortColumns().add(
@@ -1236,19 +1269,46 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the roleBasedQtIdList
-	 *//*
-	public List<Long> getRoleBasedQtIdList() {
-		return roleBasedQtIdList;
+	 * @return the ptjOrgProfile
+	 */
+	public PmOrgProfile getPtjOrgProfile() {
+		return ptjOrgProfile;
 	}
 
-	*//**
-	 * @param roleBasedQtIdList the roleBasedQtIdList to set
-	 *//*
-	public void setRoleBasedQtIdList(List<Long> roleBasedQtIdList) {
-		this.roleBasedQtIdList = roleBasedQtIdList;
+	/**
+	 * @param ptjOrgProfile the ptjOrgProfile to set
+	 */
+	public void setPtjOrgProfile(PmOrgProfile ptjOrgProfile) {
+		this.ptjOrgProfile = ptjOrgProfile;
 	}
-	*/
+
+	/**
+	 * @return the ptjGroupProfile
+	 */
+	public PmOrgProfile getPtjGroupProfile() {
+		return ptjGroupProfile;
+	}
+
+	/**
+	 * @param ptjGroupProfile the ptjGroupProfile to set
+	 */
+	public void setPtjGroupProfile(PmOrgProfile ptjGroupProfile) {
+		this.ptjGroupProfile = ptjGroupProfile;
+	}
+
+	/**
+	 * @return the ptjMinistryProfile
+	 */
+	public PmOrgProfile getPtjMinistryProfile() {
+		return ptjMinistryProfile;
+	}
+
+	/**
+	 * @param ptjMinistryProfile the ptjMinistryProfile to set
+	 */
+	public void setPtjMinistryProfile(PmOrgProfile ptjMinistryProfile) {
+		this.ptjMinistryProfile = ptjMinistryProfile;
+	}
 	
-
+	
 }

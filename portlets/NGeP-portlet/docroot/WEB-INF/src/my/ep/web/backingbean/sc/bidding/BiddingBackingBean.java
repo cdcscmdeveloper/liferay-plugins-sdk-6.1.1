@@ -24,17 +24,24 @@ import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BiddingConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
@@ -42,6 +49,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.component.datetime.DateTimeInput;
@@ -77,6 +85,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * Default Constructor
 	 */
 	public BiddingBackingBean() {
+		getDefaultPtjAndMinistryValues();
 		getStatusDescList();
 		if (this.getManagedBean() != null) {
 			if (this.getManagedBean().getSelectItems() == null) {
@@ -1156,4 +1165,78 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	public void closePopUpAction() {
 		this.getManagedBean().setAutoUpdate(true);
 	}
+	
+	/**
+	 * Gets the default ptj and ministry search values based on user role.
+	 */
+	private void getDefaultPtjAndMinistryValues() {
+
+		debugLogger("getDefaultPtjAndMinistryValues");
+		PmOrgProfile ministryProfile = new PmOrgProfile();
+		PmOrgProfile ptjGroupProfile = new PmOrgProfile();
+		PmOrgProfile ptjProfile = new PmOrgProfile();
+		
+		PmOrgProfile orgProfile = null;
+		try {
+			orgProfile = getOrgProfileByLoginUser();
+		} catch (EpException e) {
+			String msgCode = MessageConst.ERROR_770224;
+			FacesContext.getCurrentInstance().addMessage(
+					null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(msgCode, null,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())
+									+ " (" + msgCode + ")"));
+		}
+		if (orgProfile != null) {
+			String orgType = orgProfile.getOrgTypeCode().getParameterCode();
+			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
+				ministryProfile = orgProfile;
+			} else if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+				ptjGroupProfile = orgProfile;
+				ministryProfile = retrieveMinistryOrgProfile(
+						orgProfile.getOrgProfileId());
+			} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+				ptjProfile = orgProfile;
+				ptjGroupProfile = retrieveJabatanOrgProfile(
+						orgProfile.getOrgProfileId());
+				ministryProfile = retrieveMinistryOrgProfile(
+						orgProfile.getOrgProfileId());
+			}
+		}
+		this.getManagedBean().setPtjOrgProfile(ptjProfile);
+		this.getManagedBean().setPtjGroupProfile(ptjGroupProfile);
+		this.getManagedBean().setPtjMinistryProfile(ministryProfile);
+	}
+	
+	private PmOrgProfile getOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				if (resDTO.getUserOrgList() != null
+						&& resDTO.getUserOrgList().size() > 0) {
+					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+						if (pmUserOrg.getPmOrgProfile() != null) {
+							pmOrgProfile = pmUserOrg.getPmOrgProfile();
+							break;
+						}
+					}
+				}
+			} finally {
+				userSO = null;
+			}	
+		}
+		
+		return pmOrgProfile;
+	}
+
 }
