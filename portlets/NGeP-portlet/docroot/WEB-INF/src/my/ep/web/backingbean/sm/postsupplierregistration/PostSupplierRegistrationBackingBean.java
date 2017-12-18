@@ -1232,7 +1232,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	
 	private void setSuccessPaymentFlag(){
 		getManagedBean().setRejectedApplExist(true);
-		getManagedBean().setDisplayRejectLabel(true);
+		//getManagedBean().setDisplayRejectLabel(true);
 		getManagedBean().setSuccessPayment(true);
 	}
 	
