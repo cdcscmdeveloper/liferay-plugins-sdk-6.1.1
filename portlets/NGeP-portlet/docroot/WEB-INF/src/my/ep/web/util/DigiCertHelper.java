@@ -12,12 +12,14 @@ import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
+import my.ep.web.vo.SpkiVO;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
@@ -144,10 +146,10 @@ public class DigiCertHelper {
 		return retVal;
 	}
 
-	public byte[] getSignedData(String identificationNo, String epNo,
+	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
 		byte[] signedData = null;
-
+		SpkiVO vo = new SpkiVO();
 		try {
 			KMCClient client = getClient();
 			IKMCAPIResponse res = client
@@ -164,25 +166,46 @@ public class DigiCertHelper {
 
 			default:
 				if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
-					throw new EpException(MessageConst.ERROR_776057);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776057,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
-					throw new EpException(MessageConst.ERROR_776058);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776058,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-					throw new EpException(MessageConst.ERROR_776059);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776059,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-					throw new EpException(MessageConst.ERROR_776060);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776060,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-					throw new EpException(MessageConst.ERROR_776061);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776061,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else {
-					throw new EpException(MessageConst.ERROR_776062);
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_776062,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				}
 
 			}
 		} catch (KMCAPIException | InvalidKMCAPIFieldException e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_776062);
+			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale()));
 		}
-		return signedData;
+		vo.setSignedData(signedData);
+		return vo;
 	}
 
 	public static DigiCertHelper getInstance() {
@@ -227,16 +250,16 @@ public class DigiCertHelper {
 	public static String getRevokeDns() {
 		if (StringUtils.isBlank(revokeDns)) {
 			try {
-				dns = EpPropertiesUtils.getInstance().getProperty(
+				revokeDns = EpPropertiesUtils.getInstance().getProperty(
 						"digicert.revoke.dns");
 				// default value
 				if (StringUtils.isBlank(dns)) {
-					dns = "http://ep.posdigicert.com.my";
+					revokeDns = "http://ep.posdigicert.com.my";
 				}
 			} catch (Exception e) {
 
 			}
 		}
-		return dns;
+		return revokeDns;
 	}
 }
