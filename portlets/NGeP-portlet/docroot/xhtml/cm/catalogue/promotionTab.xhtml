@@ -37,7 +37,7 @@
 		<p:row>
 			
 			<p:column>
-				<p:inputText id="promotionPriceId" readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
+				<p:inputText id="promotionPriceId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" maxlength="18" style="text-align:right">
 					
 						<f:converter converterId="bigDecimalConverter" />
@@ -45,7 +45,7 @@
 					</p:inputText>
 			</p:column>
 			<p:column>
-				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
+				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
 					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					
@@ -53,7 +53,7 @@
 
 			</p:column>
 			<p:column>
-				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
+				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
 					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					
