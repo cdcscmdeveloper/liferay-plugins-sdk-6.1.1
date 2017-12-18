@@ -611,6 +611,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 			recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+			if(resDTO.getFulfilmentNote().getApproverId() != null){
+				recNoteBB.getManagedBean().setUserLoginId(resDTO.getFulfilmentNote().getApproverId());
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				recNoteBB.getManagedBean().setFrnCancellationProcess(true);
 			}
