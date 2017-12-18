@@ -12,8 +12,9 @@
 
 
 	<p:outputPanel id="priceTierPageID">
-	
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.cm.pricing.instrcution']}" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.cm.pricing.instrcution']}" />
 		<br />
 		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -50,19 +51,21 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText id="tierPriceId" value="#{price.price}" size="10" maxlength="18"
-					disabled="#{price.standardDisabled}" style="text-align:right">
+				<p:inputText id="tierPriceId" value="#{price.price}" size="10"
+					maxlength="18" disabled="#{price.standardDisabled}"
+					style="text-align:right">
 					<p:ajax process="@this"
 						listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}"
 						update="promoLink, cloneLink, deleteLink, errorLink, tierPriceId" />
-						<f:converter converterId="bigDecimalConverter" />
+					<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button" navigator="true" readonlyInput="true"
+				<p:calendar value="#{price.startDate}" showOn="button"
+					navigator="true" readonlyInput="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
@@ -88,7 +91,8 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" navigator="true" readonlyInput="true"
+				<p:calendar value="#{price.endDate}" showOn="button"
+					navigator="true" readonlyInput="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
@@ -159,26 +163,27 @@
 
 		<div class="clear"></div>
 
-
-		<table style="width: 100%">
-			<tr>
-				<td><p:commandButton value="#{lbl['lbl.cm.add']}"
-						id="addTierButton" style="float:right;"
-						rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || 
-							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
-						action="#{catalogueBackingBean.addNewTierPricing()}"
-						disabled="#{catalogueBackingBean.disableAddTier()}"
-						update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
-						process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
-				</td>
-				<td style="width: 20px"><p:graphicImage id="uidti"
-						value="/css/images/design/tooltips.png" /> <p:tooltip id="uidtt"
-						for="uidti">
-						<p:outputLabel escape="false"
-							value="#{lbl['lbl.cm.addnew.tooltip']}" />
-					</p:tooltip></td>
-			</tr>
-		</table>
+		<h:panelGroup
+			rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || 
+							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}">
+			<table style="width: 100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.cm.add']}"
+							id="addTierButton" style="float:right;"
+							action="#{catalogueBackingBean.addNewTierPricing()}"
+							disabled="#{catalogueBackingBean.disableAddTier()}"
+							update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
+							process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
+					</td>
+					<td style="width: 20px"><p:graphicImage id="uidti"
+							value="/css/images/design/tooltips.png" /> <p:tooltip id="uidtt"
+							for="uidti">
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.cm.addnew.tooltip']}" />
+						</p:tooltip></td>
+				</tr>
+			</table>
+		</h:panelGroup>
 
 		<p:confirmDialog id="confirmDeleteTierId"
 			message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
