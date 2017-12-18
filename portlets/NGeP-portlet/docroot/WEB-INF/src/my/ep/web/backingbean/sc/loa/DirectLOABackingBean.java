@@ -3644,18 +3644,21 @@ public class DirectLOABackingBean extends
 	 * @return the approval users
 	 */
 	public void getApprovalUsers() {
-		if (CollectionUtils.isEmpty(this.getManagedBean().getApproverList())) {
-			IUserSO userSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-			userReqDTO.setOrgProfileId(this.getManagedBean().getScQt()
-					.getPmOrgProfile().getOrgProfileId());
-			userReqDTO.setWithProfileGroup(true);
-			UserResDTO userResDTO = userSo
-					.retrieveUserListWithProfileGroupUserByRole(userReqDTO);
+		if(this.getManagedBean().getScQt()
+					.getPmOrgProfile() != null) {
+			if (CollectionUtils.isEmpty(this.getManagedBean().getApproverList())) {
+				IUserSO userSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+				userReqDTO.setOrgProfileId(this.getManagedBean().getScQt()
+						.getPmOrgProfile().getOrgProfileId());
+				userReqDTO.setWithProfileGroup(true);
+				UserResDTO userResDTO = userSo
+						.retrieveUserListWithProfileGroupUserByRole(userReqDTO);
 
-			this.getManagedBean().setApproverList(userResDTO.getUserList());
+				this.getManagedBean().setApproverList(userResDTO.getUserList());
+			}
 		}
 	}
 
@@ -6296,21 +6299,22 @@ public class DirectLOABackingBean extends
 	 * @param scLoa
 	 */
 	private void prepareSignerInfo() {
-
-		ScLoa scLoa = getManagedBean().getScLoa();
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-		if (scLoa.getLoaAmt() != null) {
-			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
-					scLoa.getGstAmt()));
+		if(getManagedBean().getScLoa().getScLoiLoa().getPmOrgProfile() != null) {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+			if (scLoa.getLoaAmt() != null) {
+				userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
+						scLoa.getGstAmt()));
+			}
+			userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
+					.getOrgProfileId());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+			getManagedBean().setContractSignerList(userResDTO.getUserList());
+			scLoa.setContractSigner(new PmUser());
 		}
-		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
-				.getOrgProfileId());
-		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-		getManagedBean().setContractSignerList(userResDTO.getUserList());
-		scLoa.setContractSigner(new PmUser());
 	}
 	
 	/**
