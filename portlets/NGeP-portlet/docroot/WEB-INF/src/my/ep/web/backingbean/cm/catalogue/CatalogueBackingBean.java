@@ -1598,8 +1598,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(3);//catMaintenance exclude draft
 		//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
-		return "addCatalogItem";
-		//return "editCatalogItem";
+		//return "addCatalogItem";
+		return "editCatalogItem";
 	}
 
 	/**
