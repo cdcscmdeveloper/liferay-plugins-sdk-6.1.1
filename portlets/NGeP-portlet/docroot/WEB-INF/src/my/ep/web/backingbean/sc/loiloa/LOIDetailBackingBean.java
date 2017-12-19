@@ -2622,24 +2622,27 @@ public class LOIDetailBackingBean extends
 		}
 		reqDTO.setEcActivityList(activityList);
 		
-		boolean multiLoiAttended = false;
-		
-		for(ScQtCommitteeActivity committee : activityList){
-			if(committee.isMultiLoiAttended() 
-					|| this.getManagedBean().getSelectedMeetingAttList() != null){
-				multiLoiAttended = true;
-			}
-		}
-		
-		for(ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee().getMeetingAttendances()){
-			if(meetingAttendance.isSelected()
-					|| meetingAttendance != null){
-				multiLoiAttended = true;
-			}
-		}
+		if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
+				.equals(statusId)) {
+			boolean multiLoiAttended = false;
 
-		if(!multiLoiAttended){
-			throw new EpException(MessageConst.ERROR_760462);
+			for(ScQtCommitteeActivity committee : activityList){
+				if(committee.isMultiLoiAttended() 
+						|| CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMeetingAttList())){
+					multiLoiAttended = true;
+				}
+			}
+
+			for(ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee().getMeetingAttendances()){
+				if(meetingAttendance.isSelected()
+						|| meetingAttendance != null){
+					multiLoiAttended = true;
+				}
+			}
+
+			if(!multiLoiAttended){
+				throw new EpException(MessageConst.ERROR_760462);
+			}
 		}
 
 //		boolean itemized = this.getManagedBean().isItemized();
