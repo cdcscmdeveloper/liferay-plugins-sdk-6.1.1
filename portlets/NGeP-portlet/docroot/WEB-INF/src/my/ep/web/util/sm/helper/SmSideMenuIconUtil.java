@@ -1079,12 +1079,13 @@ public class SmSideMenuIconUtil {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
-
+			
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
 					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
-					"approvedDate", "approvedByAp", "prevApprovedByAp" };
+					"approvedDate", "approvedByAp", "prevApprovedByAp",
+					"recordStatusFlg" };
 
 			// smSupplierCategory
 			if (isSupplier) {
@@ -1334,18 +1335,26 @@ public class SmSideMenuIconUtil {
 
 			// check if current exist in previous
 			for (SmChequeSignatory currChq : currChequeSignatories) {
-				if (getSmChequeSignatory(prevChequeSignatories,
-						currChq.getSmPersonnel()) == null) {
-					retVal = true;
-					break;
+				if (currChq.getSmPersonnel() != null
+						&& currChq.getSmPersonnel().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& currChq.getSmPersonnel().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					if (getSmChequeSignatory(prevChequeSignatories,
+							currChq.getSmPersonnel()) == null) {
+						retVal = true;
+						break;
+					}
 				}
 			}
 			// check if previous exist in current
 			for (SmChequeSignatory prevChq : prevChequeSignatories) {
-				if (getSmChequeSignatory(currChequeSignatories,
-						prevChq.getSmPersonnel()) == null) {
-					retVal = true;
-					break;
+				if (prevChq.getSmPersonnel() != null
+						&& prevChq.getSmPersonnel().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& prevChq.getSmPersonnel().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					if (getSmChequeSignatory(currChequeSignatories,
+							prevChq.getSmPersonnel()) == null) {
+						retVal = true;
+						break;
+					}
 				}
 			}
 		}

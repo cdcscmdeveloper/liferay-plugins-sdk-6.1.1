@@ -11845,7 +11845,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	private static void setCategoryNameForApprovedCategory(
+	public static void setCategoryNameForApprovedCategory(
 			SmSupplierCategory cat) {
 		CategoryCodeReqDTO reqDTO = null;
 		if (cat.getPmCategoryL1() != null
