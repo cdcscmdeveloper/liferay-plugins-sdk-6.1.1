@@ -103,12 +103,12 @@
 		<p:blockUI widgetVar="blockTreeTable" block="normalInvItemTbl" >
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-	<p:panelGrid columns="2" style="width:100%; border-style: hidden;" rendered="#{invoiceBackingBean.managedBean.taxInvoice}">
-		<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}" style="float:right; width:600px; border-style: hidden; text-align:right"></h:outputText>
-		<h:outputText value= "#{invoiceBackingBean.managedBean.invAmtGrandTotal + invoiceBackingBean.managedBean.oosInvAmtGrandTotal}" style="float:right; width:100px;border-style: hidden; text-align:right">
+	<p:panel style="width:98%; border-style: hidden;" rendered="#{invoiceBackingBean.managedBean.taxInvoice}">
+		<h:outputText value= "#{invoiceBackingBean.managedBean.invAmtGrandTotal + invoiceBackingBean.managedBean.oosInvAmtGrandTotal}" style="float:right; border-width: 0px; width:100px; text-align:right">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
-	</p:panelGrid>
+		<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}" style="float:right; width:600px; border-style: hidden; border-width: 0px; text-align:right"></h:outputText>
+	</p:panel>
 	</p:panel>
 		
 </ui:composition>
