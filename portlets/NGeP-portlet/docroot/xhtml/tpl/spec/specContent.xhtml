@@ -105,7 +105,7 @@
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
 					oncomplete="#{navToFirstPage}"
 							 />
-				<p:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
+				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
@@ -126,7 +126,7 @@
 					
 					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec) and editable}">
 						<f:attribute name="rows" value="#{rowsPerPage}" />
-						<ac:paginator for="questionTbl" />
+						<ui:decorate template="editablePaginator.xhtml" />
 						<ui:decorate template="specColumnQuestion.xhtml" />
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
 					</c:if>
@@ -142,7 +142,7 @@
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 						<ui:decorate template="specColumnReview.xhtml" />
 					</c:if>
-				</p:dataTable>
+				</ac:dataTable>
 				
 				<ui:include src="deleteConfirmPopup.xhtml" />
 				<ui:include src="tierQtyPopup.xhtml" />
@@ -296,36 +296,9 @@
 					<ui:param name="isQuestion" value="true" />
 					
 						<c:if test="#{editable}">
-							<f:facet name="{EditablePageLink}">
-								<p:commandButton id="firstBtn"
-									styleClass="ui-paginator-first-ed ui-state-default ui-corner-all"
-									icon="ui-icon ui-icon-seek-first"
-									partialSubmit="true" process="questionTbl" update="questionTbl"
-									action="#{dataTableBackingBean.navToFirstPage(templateSpecId)}"
-									/>
-								<p:commandButton id="prevBtn"
-									styleClass="ui-paginator-prev-ed ui-state-default ui-corner-all"
-									icon="ui-icon ui-icon-seek-prev"
-									partialSubmit="true" process="questionTbl" update="questionTbl"
-									action="#{dataTableBackingBean.navToPrevPage(templateSpecId)}"
-									/>
-								<p:commandButton id="nextBtn"
-									styleClass="ui-paginator-next-ed ui-state-default ui-corner-all"
-									icon="ui-icon ui-icon-seek-next"
-									partialSubmit="true" process="questionTbl" update="questionTbl"
-									action="#{dataTableBackingBean.navToNextPage(templateSpecId)}"
-									/>
-								<p:commandButton id="lastBtn"
-									styleClass="ui-paginator-last-ed ui-state-default ui-corner-all"
-									icon="ui-icon ui-icon-seek-end"
-									partialSubmit="true" process="questionTbl" update="questionTbl"
-									action="#{dataTableBackingBean.navToLastPage(templateSpecId)}"
-									/>
-							</f:facet>
 							<f:attribute name="rows" value="#{rowsPerPage}" />
 							<f:attribute name="first" value="#{initRow}" />
-							<ac:paginator for="questionTbl" />
-							<f:attribute name="paginatorTemplate" value="#{lbl['lbl.datatable.paginator.page']} {CurrentPageReport} {EditablePageLink}" />
+							<ui:decorate template="editablePaginator.xhtml" />
 							<ui:decorate template="specColumnQuestion.xhtml" />
 							<ui:decorate template="specColumnQuestionAnswer.xhtml" />
 						</c:if>
