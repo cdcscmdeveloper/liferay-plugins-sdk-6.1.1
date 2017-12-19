@@ -94,7 +94,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 
 	private CartesianChartModel historyPriceLinearModel;
 
-	private Long supplierCode;
+	private Integer supplierCode;
 
 	private List<BidPackageBean> bidPackages;
 	private BigDecimal lowestNonBumiOfferedPrice;
@@ -948,7 +948,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the supplierCode
 	 */
-	public Long getSupplierCode() {
+	public Integer getSupplierCode() {
 		return supplierCode;
 	}
 
@@ -956,7 +956,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	 * @param supplierCode
 	 *            the supplierCode to set
 	 */
-	public void setSupplierCode(Long supplierCode) {
+	public void setSupplierCode(Integer supplierCode) {
 		this.supplierCode = supplierCode;
 	}
 

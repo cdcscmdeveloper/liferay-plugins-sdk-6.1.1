@@ -80,7 +80,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 
-				<p:commandLink value="#{item.scBidSupplier.smSupplier.supplierId}"
+				<p:commandLink value="#{item.scBidSupplier.supplierNo}"
 					oncomplete="pricePop.show();"
 					actionListener="#{biddingBB.supplierItemPricePopupAction(item)}"
 					update="@([id$=itemPricePop])" />
