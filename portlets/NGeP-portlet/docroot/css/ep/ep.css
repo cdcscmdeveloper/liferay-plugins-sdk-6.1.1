@@ -1134,31 +1134,26 @@ important;
 	margin: 0px !important;
 }
 
-.ui-paginator-first,.ui-paginator-prev,.ui-paginator-next,.ui-paginator-last
-	{
-	float: right;
-	padding: 2px 0px 0px 0px !important;
-	border: 0px !important;
-	margin: 0px 1px 0px 2px !important;
-	background: none !important;
-	border-radius: 0px;
-	box-shadow: none;
-}
-
 .ui-paginator {
-	text-align: left !important;
-	padding: 5px 10px 3px 10px !important;
-	background: none !important;
-	font-family: Arial;
-	font-size: 11px;
-	color: #333333;
-	text-decoration: none;
-	border-top: 1px solid #B5D3F4;
-	border-bottom: 0px;
-	border-left: 0px;
-	border-right: 0px;
-	background-image: none;
-	background-repeat: repeat-x;
+	background: rgb(228, 227, 228); color: rgb(51, 51, 51);
+}
+.ui-paginator-page, .ui-paginator-prev, .ui-paginator-first, .ui-paginator-next, .ui-paginator-last, .ui-paginator-prev-ed, .ui-paginator-first-ed, .ui-paginator-next-ed, .ui-paginator-last-ed{
+	background: #fff !important;
+	border: 1px solid #cacaca !important;
+	margin: 0 1px !important;
+}
+.ui-paginator-page.ui-state-hover, .ui-paginator-prev:hover, .ui-paginator-first:hover, .ui-paginator-next:hover, .ui-paginator-last:hover, .ui-paginator-prev-ed:hover, .ui-paginator-first-ed:hover, .ui-paginator-next-ed:hover, .ui-paginator-last-ed:hover{
+	background: #cccb2b !important;
+	color: #000 !important;
+}
+.ui-paginator .ui-state-disabled{
+	background: #f1f2f2 !important;
+}
+.ui-paginator .ui-state-active {
+	background: #87a610  !important; color: #fff !important; font-weight: bold !important;
+}
+.ui-paginator-next.ui-state-disabled, .ui-paginator-last.ui-state-disabled, .ui-paginator-prev.ui-state-disabled, .ui-paginator-first.ui-state-disabled, .ui-paginator-next-ed.ui-state-disabled, .ui-paginator-last-ed.ui-state-disabled, .ui-paginator-prev-ed.ui-state-disabled, .ui-paginator-first-ed.ui-state-disabled {
+	opacity: 0.4 !important;
 }
 
 .ui-paginator-jtp-select {
@@ -1173,89 +1168,29 @@ important;
 	height: 20px;
 }
 
-.ui-icon-seek-first {
-	background-image: url('../images/paginator/pagination_first.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
-
-.ui-paginator-first.ui-state-hover>.ui-icon-seek-first {
-	background-image: url('../images/paginator/pagination_first_hover.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
-
-.ui-icon-seek-prev {
-	background-image: url('../images/paginator/pagination_pre.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
-
-.ui-paginator-prev.ui-state-hover>.ui-icon-seek-prev {
-	background-image: url('../images/paginator/pagination_pre_hover.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
-
-.ui-icon-seek-next {
-	background-image: url('../images/paginator/pagination_next.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
-
-.ui-paginator-next.ui-state-hover>.ui-icon-seek-next {
-	background-image: url('../images/paginator/pagination_next_hover.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
-
 .ui-icon-seek-end {
-	background-image: url('../images/paginator/pagination_last.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	width: 27 px !important;
-	height: 27 px !
-important;
+	background-position: center !important; background-image: url("../images/design/ico-last.png") !important;
 }
-
-.ui-paginator-last.ui-state-hover>.ui-icon-seek-end {
-	background-image: url('../images/paginator/pagination_last_hover.png')
-		!important;
-	background-position: center;
-	border-radius: 0 px;
-	width: 27 px !important;
-	height: 27 px !
-important;
+.ui-icon-seek-next {
+	background-position: center !important; background-image: url("../images/design/ico-next.png") !important;
 }
-
-.ui-datatable-scrollable-footer .ui-datatable-scrollable-header-box,.ui-datatable-scrollable-footer .ui-datatable-scrollable-header-box>table
-	{
-	width: 100% !important;
+.ui-icon-seek-prev {
+	background-position: center !important; background-image: url("../images/design/ico-previous.png") !important;
 }
-
-.ui-paginator .ui-paginator-next .ui-icon,.ui-paginator .ui-paginator-prev .ui-icon,.ui-paginator .ui-paginator-first .ui-icon,.ui-paginator .ui-paginator-last .ui-icon
-	{
-	height: 27px !important;
-	width: 27px !important;
+.ui-icon-seek-first {
+	background-position: center !important; background-image: url("../images/design/ico-first.png") !important;
+}
+.ui-icon-seek-end:active {
+	background-position: center !important; background-image: url("../images/design/ico-last.png") !important;
+}
+.ui-icon-seek-next:active {
+	background-position: center !important; background-image: url("../images/design/ico-next.png") !important;
+}
+.ui-icon-seek-prev:active {
+	background-position: center !important; background-image: url("../images/design/ico-previous.png") !important;
+}
+.ui-icon-seek-first:active {
+	background-position: center !important; background-image: url("../images/design/ico-first.png") !important;
 }
 
 /* End DataTable and Paginator */
