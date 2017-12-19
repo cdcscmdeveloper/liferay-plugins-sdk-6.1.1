@@ -169,7 +169,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());	
 				
 				if(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L){
-					validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+					if(rejectedWf != null){
+						validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+					}
 				}
 
 			}else{
