@@ -843,7 +843,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	public void supplierItemPricePopupAction(BidPackageBean packageItem) {
 
 		getManagedBean().setSupplierCode(
-				packageItem.getScBidSupplier().getSmSupplier().getSupplierId());
+				packageItem.getScBidSupplier().getSupplierNo());
 
 		IBiddingSO biddingSO = null;
 
