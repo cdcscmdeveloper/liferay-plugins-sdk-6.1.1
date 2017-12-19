@@ -1577,6 +1577,9 @@ public class SmApplicationBackingBean extends
 					.isPoUser())
 					&& currentPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+
+				// set back newly added and approved categories to main appl
+				// categories for appl type other than renew
 				for (SmSupplierCategory cat : getManagedBean()
 						.getActiveCategoryList()) {
 					log.info(" ***** Cat code is ****** " + cat.getPoDecFlg());
@@ -1594,6 +1597,30 @@ public class SmApplicationBackingBean extends
 						}
 					}
 
+				}
+
+				// set back newly added and approved categories to main appl
+				// categories for appl type renew
+				if (getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+						&& !EntityHelper.isCollectionEmpty(getManagedBean()
+								.getApprovedCategoryList())) {
+					for (SmSupplierCategory cat : getManagedBean()
+							.getApprovedCategoryList()) {
+						for (SmSupplierCategory parentCat : getManagedBean()
+								.getSmAppl().getSmSupplierCategories()) {
+							if (parentCat.getSupplierCategoryId().equals(
+									cat.getSupplierCategoryId())) {
+								getManagedBean()
+										.getSmAppl()
+										.getSmSupplierCategories()
+										.set(getManagedBean().getSmAppl()
+												.getSmSupplierCategories()
+												.indexOf(parentCat), cat);
+								break;
+							}
+						}
+					}
 				}
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
