@@ -3530,11 +3530,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractItemResDTO ciItemResDTO = null;
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+		reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 
 		if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
 			getManagedBean().setServiceItem(true);
 			reqDTO.setFetchMaxQty(true);
-			contractItemSO.getMaxQuantity(reqDTO);
 			if(flItemAddr.getScRequestItem().getTplSpecQuestion()!=null) {
 				getManagedBean().setUomFrequency(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
 				getManagedBean().setUomPerYear(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerYear());
@@ -3544,9 +3544,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 				ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
 				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
+				getManagedBean().setMinOrderQuantity(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity().doubleValue());
 			}
 			getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
-			getManagedBean().setMinOrderQuantity(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getMinimumOrderQty());
+			
 		} else {
 			// Try to get agency ceiling quantity for Item
 			reqDTO.setFetchMaxQty(true);
