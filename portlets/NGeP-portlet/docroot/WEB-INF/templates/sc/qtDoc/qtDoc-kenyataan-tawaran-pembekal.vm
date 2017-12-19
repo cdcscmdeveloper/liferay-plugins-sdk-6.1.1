@@ -63,7 +63,7 @@ th{
 		</tr>
 		<tr>
 			<td>
-				<span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>KENYATAAN TAWARAN</u></span>
+				<div align="center"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>KENYATAAN TAWARAN</u></span></div>
 				<p><span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan <span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KEMENTERIAN KEWANGAN MALAYSIA</span> dalam kod bidang yang berkaitan dan kriteria berkaitan seperti berikut:</span></p>
 			</td>
 		</tr>
@@ -90,10 +90,10 @@ th{
 					<table class="table2" width='100%'>
 						<span class="headerfont">
 						<tr>
-							<td>Kod Bidang</td>
-							<td>Bidang</td>
-							<td>Sub Bidang</td>
-							<td>Pecahan Sub Bidang</td>
+							<td bgcolor="#a2a2a2">Kod Bidang</td>
+							<td bgcolor="#a2a2a2">Bidang</td>
+							<td bgcolor="#a2a2a2">Sub Bidang</td>
+							<td bgcolor="#a2a2a2">Pecahan Sub Bidang</td>
 						</tr>
 						</span>
 						#foreach( $categoryResults in $categoryResults1 )
@@ -198,7 +198,7 @@ th{
 							</table>
 						#end
 						#if ($subLocLevel == "false")
-							<span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">T/B</span>
+							<span style="font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semua Negeri</span>
 						#end
 					#end
 				</td>
