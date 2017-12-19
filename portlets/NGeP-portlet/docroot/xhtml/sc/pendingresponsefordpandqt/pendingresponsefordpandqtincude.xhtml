@@ -44,7 +44,9 @@
 		</tr>
 		<tr>
 			<td class="tableWidth80 dashboarTable"><p:outputLabel value="#{lbl['lbl.sc.bidding']}" style="float:left;text-align:left;"></p:outputLabel></td>
-			<td class=" tableWidth20 dashboarTable"><h:outputText value="#{pendingResponseDpQtBB.managedBean.biddingCount}"></h:outputText></td>
+			<td class=" tableWidth20 dashboarTable"><h:outputText value="#{pendingResponseDpQtBB.managedBean.biddingCount}"></h:outputText>
+			<p:graphicImage id="bidAlertImage"  rendered="#{pendingResponseDpQtBB.managedBean.biddingCount != 0}"
+						value="#{CommonUIConstant.imagePathUptoDesign}/icon_alert.png"/></td>
 		</tr>
 		<tr>
 			<td class="tableWidth80 dashboarTable"><p:outputLabel value="#{lbl['lbl.ss.simple.quote.pending.response.redirect.dp.qt']}" style="float:left;text-align:left;"></p:outputLabel></td>
