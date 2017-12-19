@@ -114,7 +114,7 @@ p {text-align: justify;}
 			<td colspan="3"><br />__________________________________</td>
 		</tr>
 		<tr>
-			<td style ="width:100px">Nama Penuh</td>
+			<td style ="width:100px">Nama Penuh Saksi</td>
 			<td>:</td>
 			<td style="white-space: normal;">$supplierWitnessUser</td>
 
