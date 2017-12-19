@@ -68,7 +68,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		HttpSession session = httpServletRequest.getSession();
-
+		
+		log.info("session - paymentBpmTaskId>>>>>>>>>" + session.getAttribute("paymentBpmTaskId"));
+		log.info("session - paymentBpmPojo>>>>>>>>>" + session.getAttribute("paymentBpmPojo"));
+		
 		String paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		Object paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		SmAppl appl = (SmAppl)session.getAttribute("smAppl");
