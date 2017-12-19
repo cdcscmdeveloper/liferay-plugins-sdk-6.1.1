@@ -2300,7 +2300,7 @@ public class SmCommonUtil {
 	}
 
 	public static boolean validateGstRegNo(String value) {
-		if(!StringUtils.isBlank(value)){
+		if (!StringUtils.isBlank(value)) {
 			String gstNoPattern = "\\d+";
 			Pattern pattern;
 			Matcher matcher;
@@ -2692,6 +2692,7 @@ public class SmCommonUtil {
 		// main list loop by identificationNo and recordStatus and revNo
 		for (SmChequeSignatory tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
 					&& tmp.getSmPersonnel() != null
 					&& StringUtils.isNotBlank(tmp.getSmPersonnel()
 							.getIdentificationNo())
@@ -3965,14 +3966,15 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
 				}
 			}
-			
+
 			return resDTO.getStatusCode();
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException(message + "(ERR-" + ex.getMessage().toString() + ")");
+				throw new EpException(message + "(ERR-"
+						+ ex.getMessage().toString() + ")");
 			} else {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
@@ -4007,8 +4009,10 @@ public class SmCommonUtil {
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()+ ">>code>>" + resDTO.getStatusCode());
-			//log.info("resDTO.getResidentStatus()>>>>>>>>" + resDTO.getResidentStatus());
+			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
+					+ ">>code>>" + resDTO.getStatusCode());
+			// log.info("resDTO.getResidentStatus()>>>>>>>>" +
+			// resDTO.getResidentStatus());
 			if (!resDTO
 					.getSeverity()
 					.equalsIgnoreCase(
@@ -4021,8 +4025,9 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70032":
-					if (supplierType != null && 
-					supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+					if (supplierType != null
+							&& supplierType
+									.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 						throw new EpException(
 								MessageConst.ERROR_MYIDENTITY_70032_G2G);
 					} else {
@@ -4038,13 +4043,20 @@ public class SmCommonUtil {
 				case "70040":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
 				}
-			}else{
-				if(resDTO.getStatusCode().equals("70018")){
-					if(StringUtils.isNotBlank(resDTO.getResidentStatus()) &&
-							!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1) &&
-							!resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)){
-						if (supplierType != null && 
-								supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			} else {
+				if (resDTO.getStatusCode().equals("70018")) {
+					if (StringUtils.isNotBlank(resDTO.getResidentStatus())
+							&& !resDTO
+									.getResidentStatus()
+									.equalsIgnoreCase(
+											my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1)
+							&& !resDTO
+									.getResidentStatus()
+									.equalsIgnoreCase(
+											my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)) {
+						if (supplierType != null
+								&& supplierType
+										.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 							throw new EpException(
 									MessageConst.ERROR_MYIDENTITY_70032_G2G);
 						} else {
@@ -4055,12 +4067,13 @@ public class SmCommonUtil {
 				}
 			}
 		} catch (Exception ex) {
-			
+
 			String message = MessageUtils.getMessage(ex.getMessage(),
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException(message + "(" + ex.getMessage().toString() + ")");
+				throw new EpException(message + "("
+						+ ex.getMessage().toString() + ")");
 			} else {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
@@ -4914,10 +4927,10 @@ public class SmCommonUtil {
 				reqDTO.setCategoryType(null);
 				List<PmUser> retryPoList = SmServiceLookup.getPoRoleTaskSO()
 						.retrievePOUserListByRoleZone(reqDTO).getUserList();
-				
-				if(retryPoList.size() > 0){
+
+				if (retryPoList.size() > 0) {
 					return retryPoList.get(0);
-				}else{
+				} else {
 					throw new EpException(MessageConst.ERROR_721117);
 				}
 			}
@@ -4976,9 +4989,10 @@ public class SmCommonUtil {
 	public Integer retrievePoJobTypeWeight(String supplierType,
 			String applType, String categoryType) {
 		PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
-		ISearchBean<PmPoJobTypeRatio> searchBean = constructJobWeightSearchBean(supplierType, applType, categoryType);
+		ISearchBean<PmPoJobTypeRatio> searchBean = constructJobWeightSearchBean(
+				supplierType, applType, categoryType);
 		reqDTO.setSearchBean(searchBean);
-		
+
 		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -4989,14 +5003,16 @@ public class SmCommonUtil {
 			return resDTO.getResultBean().getResultList().get(0)
 					.getPoJobWeight().getWeightValue();
 		} else {
-			ISearchBean<PmPoJobTypeRatio> retrySearchBean = constructJobWeightSearchBean(supplierType, applType,null);
+			ISearchBean<PmPoJobTypeRatio> retrySearchBean = constructJobWeightSearchBean(
+					supplierType, applType, null);
 			reqDTO.setSearchBean(retrySearchBean);
-			
-			PoJobTypeRatioResDTO secResDTO = reqSO.retrieveJobTypeRatioList(reqDTO);
+
+			PoJobTypeRatioResDTO secResDTO = reqSO
+					.retrieveJobTypeRatioList(reqDTO);
 			if (secResDTO.getResultBean().getResultList().size() > 0) {
 				return secResDTO.getResultBean().getResultList().get(0)
 						.getPoJobWeight().getWeightValue();
-			}else{
+			} else {
 				throw new EpException(MessageConst.ERROR_721119);
 			}
 		}
@@ -5078,9 +5094,9 @@ public class SmCommonUtil {
 
 		return retVal;
 	}
-	
-	private ISearchBean<PmPoJobTypeRatio> constructJobWeightSearchBean(String supplierType,
-			String applType, String categoryType){
+
+	private ISearchBean<PmPoJobTypeRatio> constructJobWeightSearchBean(
+			String supplierType, String applType, String categoryType) {
 		ISearchBean<PmPoJobTypeRatio> searchBean = new SearchBean<PmPoJobTypeRatio>();
 		if (StringUtils.isNotBlank(supplierType)) {
 			searchBean.getDataFilterBeans().add(
@@ -5094,43 +5110,36 @@ public class SmCommonUtil {
 					new SearchFilterBean("applType",
 							SearchOperator.OPERATOR_EQUALS.value(), applType));
 		}
-		
-		if (StringUtils.isNotBlank(categoryType)) {
-			/*boolean catTypeNull = false;
-			if (supplierType
-					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) {
-				if (applType
-						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
-						|| applType
-								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI)) {
-					catTypeNull = true;
-				}
-			} else {
-				if (applType
-						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE)
-						|| applType
-								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
-					catTypeNull = true;
-				}
-			}
 
-			if (!catTypeNull) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("categoryType",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								categoryType));
-			} else {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("categoryType",
-								SearchOperator.OPERATOR_IS_NULL.value(), null));
-			}*/
-			
-			
+		if (StringUtils.isNotBlank(categoryType)) {
+			/*
+			 * boolean catTypeNull = false; if (supplierType
+			 * .equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR))
+			 * { if (applType
+			 * .equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst
+			 * .APPL_TYPE_UPDATE) || applType
+			 * .equalsIgnoreCase(my.ep.constant.sm
+			 * .SupplierManagementConst.APPL_TYPE_BUMI)) { catTypeNull = true; }
+			 * } else { if (applType
+			 * .equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst
+			 * .APPL_TYPE_UPDATE) || applType
+			 * .equalsIgnoreCase(my.ep.constant.sm
+			 * .SupplierManagementConst.APPL_TYPE_MOF)) { catTypeNull = true; }
+			 * }
+			 * 
+			 * if (!catTypeNull) { searchBean.getDataFilterBeans().add( new
+			 * SearchFilterBean("categoryType",
+			 * SearchOperator.OPERATOR_EQUALS.value(), categoryType)); } else {
+			 * searchBean.getDataFilterBeans().add( new
+			 * SearchFilterBean("categoryType",
+			 * SearchOperator.OPERATOR_IS_NULL.value(), null)); }
+			 */
+
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("categoryType",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							categoryType));
-		}else{
+		} else {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("categoryType",
 							SearchOperator.OPERATOR_IS_NULL.value(), null));
@@ -5142,37 +5151,39 @@ public class SmCommonUtil {
 						DbValueConst.RECORD_STATUS_ACTIVE));
 		return searchBean;
 	}
-	
-	public List<Long> getStateIdLsByZoneId(Long zoneId){
-		ZoneReqDTO reqDTO =  new ZoneReqDTO();
+
+	public List<Long> getStateIdLsByZoneId(Long zoneId) {
+		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		reqDTO.setZoneId(zoneId);
-		ZoneResDTO resDTO =SmServiceLookup.getZoneSO().retrieveZoneStateByZoneId(reqDTO);
+		ZoneResDTO resDTO = SmServiceLookup.getZoneSO()
+				.retrieveZoneStateByZoneId(reqDTO);
 		PmZone pmZone = resDTO.getPmZone();
-		
+
 		List<Long> zstateLs = new ArrayList<Long>();
-		
-		if(pmZone != null){
-			if(pmZone.getPmZoneStates().size() > 0){
-				for(PmZoneState zState : pmZone.getPmZoneStates()){
+
+		if (pmZone != null) {
+			if (pmZone.getPmZoneStates().size() > 0) {
+				for (PmZoneState zState : pmZone.getPmZoneStates()) {
 					zstateLs.add(zState.getPmState().getStateId());
 				}
 			}
 		}
-		
+
 		return zstateLs;
 	}
-	
-	public PmZone getUserZone(){
+
+	public PmZone getUserZone() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		//getManagedBean().setStateLs(null);
-		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
-		if(activeOrg.size() > 0){
+		// getManagedBean().setStateLs(null);
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser
+				.getUserId());
+		if (activeOrg.size() > 0) {
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
-			
+
 			return pmZone;
 		}
-		
+
 		return null;
 	}
 }
