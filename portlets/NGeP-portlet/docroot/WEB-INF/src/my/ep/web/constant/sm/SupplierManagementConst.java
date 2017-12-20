@@ -274,6 +274,7 @@ public class SupplierManagementConst {
 	public static final String PROCESSING_PAYMENT = "PF";
 	public static final String ONLINE_PAYMENT = "OL";
 	public static final String OFFLINE_PAYMENT = "OF";
+	public static final String RENEWAL_PROCESSING_PAYMENT = "RPF";
 
 	public static final String MOL_SUCCESS = my.ep.constant.sm.SupplierManagementConst.MOL_SUCCESS;
 	public static final String MOL_FAIL = my.ep.constant.sm.SupplierManagementConst.MOL_FAIL;
