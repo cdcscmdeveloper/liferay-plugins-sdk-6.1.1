@@ -788,7 +788,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			paymentDtl.setPyPaymentChargeLines(paymentChargeLineLs);
 			
-		}else if(itemCode.equals(SupplierManagementConst.PROCESSING_PAYMENT)){
+		}else if(itemCode.equals(SupplierManagementConst.PROCESSING_PAYMENT) || 
+				itemCode.equals(SupplierManagementConst.RENEWAL_PROCESSING_PAYMENT)){
 			List<PyPaymentChargeLine> paymentChargeLineLs = new ArrayList<PyPaymentChargeLine>();
 			PyPaymentChargeLine hChargeLine = new PyPaymentChargeLine();
 			
