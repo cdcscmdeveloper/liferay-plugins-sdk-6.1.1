@@ -116,6 +116,11 @@
 		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg"
 			style="height: 341px; width: 1120px;">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			
+			<p:blockUI block="abcde" widgetVar="abcdeblockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			<p:panel id="abcde">
 			<table>
 				<tr>
 					<td><h:outputText value="*" styleClass="mandatory" />#{lbl['lbl.sm.supportingdoc.subject']}</td>
@@ -133,11 +138,12 @@
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}">
+				<p:commandButton onclick="abcdeblockWidget.show();" oncomplete="abcdeblockWidget.hide();" value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}">
 					<f:param name="disableMsgAutoUpdate" value="true" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="inquiryDlg.hide();"></p:commandButton>
 			</div>
+			</p:panel>
 		</p:dialog>
 		
 
