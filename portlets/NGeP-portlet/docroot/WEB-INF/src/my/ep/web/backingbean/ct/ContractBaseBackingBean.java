@@ -52,6 +52,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
  */
 public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends BaseBackingBean<T> {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Logger instance.
 	 */
@@ -68,6 +69,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	/**
 	 * The method used to retrieve available approver(s).
 	 *
+	 * @param contractType the contract type
+	 * @param userMap      the user map
 	 * @return sourceList  the approver list
 	 */
 	public List<PmUser> getAvailableApproverList(String contractType, Map<Long, PmUser> userMap) {
@@ -234,6 +237,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	/**
 	 * Retrieve cancel confirmation message by passing in document type
 	 * 
+	 * @param docType the document type
 	 * @return Cancel Confirmation message
 	 */
 	public String getCancelConfirmationContent(String docType) {
@@ -242,8 +246,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
 	/**
 	 * Method used to retrieve actor by document Id, document type and role code.
-	 * @Param docId, docType, roleCode
-	 * @return CtActor
+	 * 
+	 * @param docId      document id
+	 * @param docType    document type
+	 * @param roleCode   role codde
+	 * @return CtActor   an object of contract actor
 	 */
 	public CtActor retrieveContractActor(Long docId, String docType, String roleCode) {
 		ICtActorSO ctActorSO = null;
