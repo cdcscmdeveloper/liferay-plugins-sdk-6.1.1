@@ -227,11 +227,19 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	public void searchReset(){
 		renewSesionObject();
 	}
-		
+	
+	/**
+	 * retrieve user name.
+	 */
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
 	}
 	
+	/**
+	 * to go back to previous screen.
+	 * 
+	 * @return customerService
+	 */
 	public String backToPervious() {
 		
 	return "customerService";
