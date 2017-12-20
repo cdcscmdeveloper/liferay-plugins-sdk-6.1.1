@@ -451,15 +451,19 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			setClassName("@(.pmSummaryPnlClass)");
 		}
 		if(selectedTabIndex==3){
-			validateDuplicateDeduction("");
-			validateDeductionAmt();
+			if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				validateDuplicateDeduction("");
+				validateDeductionAmt();
+			}
 			calPmSummary();
 			setClassName("@(.pmSummaryPnlClass)");
 		}
 		if(selectedTabIndex==4){
 			getNumberOfContractOrder();
-			validateDuplicateDeduction("");
-			validateDeductionAmt();
+			if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				validateDuplicateDeduction("");
+				validateDeductionAmt();
+			}
 			recalculateAdvancePayment();
 		}
 	}
@@ -1389,12 +1393,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				if(getManagedBean().getTaskId()==null) {
 					if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size()>0) {
+						getManagedBean().setShowDeductionTab(false);
 						for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
-							if(deduction.getCtDeduction() == null){
-								getManagedBean().setShowDeductionTab(false);
-								break;
-							}else{
+							if(deduction.getCtDeduction() != null){
 								getManagedBean().setShowDeductionTab(true);
+								break;
 							}
 						}
 					} 
