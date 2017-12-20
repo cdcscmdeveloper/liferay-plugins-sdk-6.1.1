@@ -551,12 +551,33 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
-			ctBB.chkBondWaivedAttachment();
+			chkBondWaivedAttachment();
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
 			resDTO = null;
 			contractSO = null;
+		}
+	}
+	
+	private void chkBondWaivedAttachment() {
+		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
+				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setDocId(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setDocType(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
+			reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
+			IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			List<CtAttachment> attachments = contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
+			if(attachments != null && attachments.size() > 0){
+				for(CtAttachment ctAttach : attachments){
+					for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
+						if(waivedAttach.getFilePath().equalsIgnoreCase(ctAttach.getFilePath())){
+							waivedAttach.setBondWaivedTrue(true);
+						}
+					}
+				}
+			}
 		}
 	}
 
