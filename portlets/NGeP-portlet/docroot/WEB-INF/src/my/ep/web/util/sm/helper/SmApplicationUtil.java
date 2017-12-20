@@ -2447,6 +2447,7 @@ public class SmApplicationUtil {
 		sec.setFactoryVerify(isVerifiedAll);
 		if (managedBean.isShowMachineryEquipmentPanel()) {
 			sec.setMachineryVerified(isVerifiedAll);
+			sec.setManufacturingVerified(isVerifiedAll);
 		}
 		sec.setAssocBodyVerified(isVerifiedAll);
 		if (managedBean.isShowTravelSoftwarePanel()) {
