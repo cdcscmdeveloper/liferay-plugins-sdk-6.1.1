@@ -172,6 +172,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 	}
 	
+	/**
+	 * Sort Approver User List
+	 * @param approver, approverGroupUserList, groupId
+	 * @return PmUser List
+	 */
 	protected List<PmUser> sortApproverUserList(List<PmUserGroupUser> approverGroupUserList, PmUser approver,Long groupId){
 		IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 		ArrayList<String> names = new ArrayList<String>();
@@ -313,6 +318,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			return false;		
 	}
 	
+	/**
+	 * Update Supplier Branch Address
+	 */
 	protected void updateSupplierBranchAddress(SmSupplierBranch supplierBranch,FlSupplierDtl supplierDtl){
 		FlAddress flAddress = supplierDtl.getFlAddress();
 		SmAddress smAddress = supplierBranch.getSmAddress();
@@ -356,6 +364,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				
 	}
 	
+	/**
+	 * Update Supplier Hq Address
+	 */
 	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl, SmSupplier supplier){
 		FlAddress flAddress = supplierDtl.getFlAddress();
 		for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
@@ -398,6 +409,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 	}
 	
+	/**
+	 * Convert Ct Address to FL Address 
+	 */
 	protected void convertCtAddressToFlAddress(FlFulfilmentRequest flRequest,FlSupplierDtl supplierDtl){
 		CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
 		if(ctSupplierDtl.getSupplierBranch() != null){
@@ -445,6 +459,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		supplierDtl.setFlAddress(flAddress);
 	}
 	
+	/**
+	 * Convert Pm Address to FL Address 
+	 * 
+	 * @return flAddress
+	 */
 	protected FlAddress convertPmAddressToFlAddress(PmAddress pmAddress){
 		FlAddress flAddress = new FlAddress();
 		flAddress.setAddressName(pmAddress.getAddressName());
@@ -470,6 +489,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return flAddress;
 	}
 	
+	/**
+	 * Convert Financial Account Address to FL Address 
+	 * 
+	 * @return flAddress
+	 */
 	protected FlAddress convertFinAccAddressToFlAddress(PmAddressType pmAddressType){
 		FlAddress flAddress = new FlAddress();
 		PmAddress pmAddress = pmAddressType.getPmAddress();
@@ -512,6 +536,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		
 	}
 	
+	/**
+	 * Convert Sm Address to FL Address 
+	 * 
+	 * @return flAddress
+	 */
 	protected FlAddress convertSmAddressToFlAddress(SmAddress smAddress,FlAddress flAddress){
 		if(smAddress == null){
 			return null;
