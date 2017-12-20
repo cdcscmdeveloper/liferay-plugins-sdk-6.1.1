@@ -2232,8 +2232,4 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		this.emptyTableList = emptyTableList;
 	}
 	
-	public void test(){
-		getManagedBean().getTaxSectionItemRoot();
-		getManagedBean().getTaxSectionItemRoot().getChildren();
-	}
 }
