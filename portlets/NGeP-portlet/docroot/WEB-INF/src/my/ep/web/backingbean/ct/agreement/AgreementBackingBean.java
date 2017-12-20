@@ -89,7 +89,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
@@ -821,7 +820,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	/**
 	 * The method used to check duplicated identification no of agreement parties.
 	 * A error will display on screen when there is duplicated identification no.
-	 *
 	 */
 	public void checkDuplicateAgreementParty() {
 		List<CtAgreementParty> ctAgreementPartyList = new ArrayList<CtAgreementParty>();
@@ -1599,7 +1597,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * The method used to generate agreement zip file.
-	 *
 	 */
 	private void generateAgreementFile() {
 		List<File> fileList = new ArrayList<File>();
@@ -1809,7 +1806,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
 
-	public String previewAction() {
+	private String previewAction() {
 		String combinedContentHtml ="";
 		PmOrgProfile pmOrgProfile = getManagedBean().getCtContract().getOwnerOrgProfile();
 
@@ -1922,112 +1919,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			e.printStackTrace();
 		}
 		return combinedContentHtml;
-	}
-
-	public static String mergePreviewAction(TreeNode root, String outputFileName, String action) throws Exception {
-		//action= P-Preview, S-Save
-		if(log.isDebugEnabled()){
-			log.debug("Start mergePreviewAction");
-		}
-
-		List<TplDocSection> inputStreamList = new ArrayList<TplDocSection>();
-		getDocSectionList(1,root,inputStreamList);
-
-		String combinedContent = "";
-		String combinedContentHtml="";
-		for (TplDocSection obj : inputStreamList) {
-			String text = "";
-			if(obj.getSectionTitle() != null && !obj.getSectionTitle().isEmpty()){
-				text += "<span><strong>" + obj.getSectionTitle() + "</strong></span><br />";
-			}
-
-			if(obj.getSectionContent() != null && !obj.getSectionContent().isEmpty()){
-
-				if(obj.getSectionContent().trim().startsWith("<p>") && obj.getSectionContent().trim().endsWith("</p>")){
-					obj.setSectionContent(obj.getSectionContent().trim().replaceFirst("<p>", "<span>"));
-					obj.setSectionContent(obj.getSectionContent().trim().substring(0,obj.getSectionContent().trim().length()-4)+ "</span>");
-				}
-				text += obj.getSectionContent();
-			}
-
-			text = insertNumberingAndIndentHtml(text,  obj.getSectionNumber(), obj.getSectionLevel());
-
-			combinedContent += text;
-		}
-
-		if(action.equals("P")){
-
-			//=========================== START PDF ======================================
-			//			log.info("combinedContent ==== " + combinedContent);
-
-			combinedContentHtml = "<html><body>" 
-					+ combinedContent + "</body></html>";	
-
-			//=========================== END PDF ======================================
-
-		}
-
-		if(action.equals("S")){
-			//			DocumentSettingsPart dsp = target.getMainDocumentPart().getDocumentSettingsPart();
-			//			ObjectFactory factory = new ObjectFactory();
-			//			CTDocProtect protection = factory.createCTDocProtect();
-			//			protection.setEdit(STDocProtect.READ_ONLY);
-			//			protection.setEnforcement(false);
-			//			dsp.getJaxbElement().setDocumentProtection(protection);					
-			//			target.save(new java.io.File(templateFilePath+outputFileName+".docx"));
-		}
-
-
-		if(log.isDebugEnabled()){
-			log.debug("End mergePreviewAction");
-		}
-		return combinedContentHtml;
-	}
-
-	private static String insertNumberingAndIndentHtml(String text, String indexKey, int templateLevel){		
-		String newText = "";
-		text = text.replaceAll("&nbsp;", "&#160;");
-		int width = 5 + (templateLevel-2)*3 ;
-
-		switch (templateLevel) {
-		case 1:
-			newText = "<table width=\"100%\"><tr><td width=\"5%\" valign=\"top\">" + indexKey + "</td><td width=\"95%\">" + text + "</td></tr></table>";
-			break;
-
-		default:
-			newText = "<table width=\"100%\"><tr><td width=\""+width+"%\">&#160;</td><td width=\"5%\" valign=\"top\">" + indexKey + "</td><td width=\""+(95-width)+"%\">" + text + "</td></tr></table>";
-
-		}
-		return newText;
-	}
-
-	/*
-	 * Method to create tree node for doc section
-	 * Method to make tree 
-	 * */
-	public static void getDocSectionList(int level,TreeNode node,List<TplDocSection> inputStreamList){
-		if(node != null && node.getData() != null){
-			for(TreeNode parent : node.getChildren()){
-				TplDocSection docSec = (TplDocSection)parent.getData();
-				docSec.setSectionLevel(level);
-				inputStreamList.add(docSec);
-				if(!parent.isLeaf()){
-					getDocSectionList(level+1,parent,inputStreamList);	
-				}
-			}
-		}
-	}
-
-	/*
-	 * Call method retrievePtjBylovCondition to 
-	 * retrieve value of ministry from lov
-	 * */
-	public String retrievePtjBylovCondition() {
-
-		String condition = "recordStatusFlg^1|";
-		condition = condition +OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
-		condition = condition + "^"+  retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
-		return condition;
 	}
 
 	/**
@@ -2248,12 +2139,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				profileId = getManagedBean().getMinistryProfileId();
 				agreementParty.setMinistryName(retrieveOrgProfileByProfileId(profileId));
 			}
-
-			/* if(getManagedBean().getOfficerProfileId() != null){
-			    	    profileId = getManagedBean().getOfficerProfileId();
-			    	    agreementParty.setPengawaiPengawalName(retrieveOrgProfileByProfileId(profileId));
-			         } 
-			 */
+			
 			if(getManagedBean().getJabatanProfileId() != null){
 				profileId = getManagedBean().getJabatanProfileId();
 				agreementParty.setJabatanName(retrieveOrgProfileByProfileId(profileId));
@@ -2356,9 +2242,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
+	 * Method to set boolean value for checkbox 	 
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectAllAgencySignerCheckBox(AjaxBehaviorEvent e) {
 
@@ -2379,8 +2266,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectOneAgencySignerCheckBox(AjaxBehaviorEvent e){
 
@@ -2400,7 +2288,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * The method used to delete the selected deduction clause.
+	 * The method used to delete the selected row
 	 */
 	public void deleteTableRow(String tableType) {
 		try {
@@ -2458,8 +2346,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for all checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectAllAgencyWitnessCheckBox(AjaxBehaviorEvent e){
 		for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSignAgencyWitness()) {
@@ -2479,8 +2368,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectOneAgencyWitnessCheckBox(AjaxBehaviorEvent e){
 
@@ -2501,8 +2391,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for all checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectAllSupplierSignerCheckBox(AjaxBehaviorEvent e) {
 
@@ -2523,8 +2414,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectOneSupplierSignerCheckBox(AjaxBehaviorEvent e){
 
@@ -2545,8 +2437,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for all checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectAllSupplierWitnessCheckBox(AjaxBehaviorEvent e){
 		for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSupplierWitness()) {
@@ -2566,8 +2459,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for single checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void selectOneSupplierWitnessCheckBox(AjaxBehaviorEvent e){
 
@@ -2588,8 +2482,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
@@ -2597,8 +2492,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void onRowSelect(SelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
@@ -2606,8 +2502,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	/**
 	 * Method to uncheck boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void onRowUnselect(UnselectEvent event) {
 		getManagedBean().setButtonHideActive(true);
