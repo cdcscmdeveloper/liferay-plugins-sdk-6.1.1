@@ -90,10 +90,10 @@ th{
 					<table class="table2" width='100%'>
 						<span class="headerfont">
 						<tr>
-							<td bgcolor="#a2a2a2">Kod Bidang</td>
-							<td bgcolor="#a2a2a2">Bidang</td>
-							<td bgcolor="#a2a2a2">Sub Bidang</td>
-							<td bgcolor="#a2a2a2">Pecahan Sub Bidang</td>
+							<td width="10%" bgcolor="#a2a2a2">Kod Bidang</td>
+							<td width="25%" bgcolor="#a2a2a2">Bidang</td>
+							<td  width="35%" bgcolor="#a2a2a2">Sub Bidang</td>
+							<td  width="30%" bgcolor="#a2a2a2">Pecahan Sub Bidang</td>
 						</tr>
 						</span>
 						#foreach( $categoryResults in $categoryResults1 )
