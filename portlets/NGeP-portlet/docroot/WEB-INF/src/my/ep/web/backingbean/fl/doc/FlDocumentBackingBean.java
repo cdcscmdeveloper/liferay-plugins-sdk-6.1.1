@@ -1263,6 +1263,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		}
 	}
 	
+	/**
+	 * retrieve user name
+	 */
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
 	}
