@@ -251,6 +251,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+					for(FlPaymentDeduction deduction : resDTO.getPaymentAdvice().getFlPaymentDeduction()){
+						CtDeduction ctDeduction = new CtDeduction();
+						if(deduction.getCtDeduction() != null){
+							ctDeduction.setDeductionType(deduction.getCtDeduction().getDeductionType());
+							ctDeduction.setDeductionId(deduction.getCtDeduction().getDeductionId());
+						}else{
+							ctDeduction.setDeductionType(new PmParameter());
+						}
+						deduction.setCtDeduction(ctDeduction);
+					}
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 					setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());					
 					flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -296,7 +306,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
-
+			for(FlPaymentDeduction deduction : paymentAdvice.getFlPaymentDeduction()){
+				CtDeduction ctDeduction = new CtDeduction();
+				if(deduction.getCtDeduction() != null){
+					ctDeduction.setDeductionType(deduction.getCtDeduction().getDeductionType());
+					ctDeduction.setDeductionId(deduction.getCtDeduction().getDeductionId());
+				}else{
+					ctDeduction.setDeductionType(new PmParameter());
+				}
+				deduction.setCtDeduction(ctDeduction);
+			}
+			
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			for(FlDeliveryOrder flDeliveryOrder : paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders()) {
@@ -1052,10 +1072,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * @param deduction the deduction
 	 */
 	public void retrieveClauses(FlPaymentDeduction deduction){
+		if(deduction.getCtDeduction().getDeductionId() == null){
+			getManagedBean().setCtDeductionClauseList(null);
+		}
 		if(deduction.getCtDeduction().getDeductionType().getParameterCode() != null){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(ctDeduction.getDeductionType().getParameterCode().equals(deduction.getCtDeduction().getDeductionType().getParameterCode())){
-					getManagedBean().setCtDeductionClauseList(ctDeduction.getCtDeductionClauses());
+					if(deduction.getCtDeduction().getDeductionId() != null){
+						if(ctDeduction.getDeductionId().equals(deduction.getCtDeduction().getDeductionId())){
+							getManagedBean().setCtDeductionClauseList(ctDeduction.getCtDeductionClauses());
+						}
+					}
 				}
 			}
 		}
@@ -1110,15 +1137,26 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			deduction.getCtDeduction().setDeductionType(resDTO.getPmParameter());
 		}
-		if(mapDeduction.getDeductionDesc() != null){
-			deduction.setDeductionDesc(mapDeduction.getDeductionDesc());
+		if(mapDeduction != null){
+			if(mapDeduction.getDeductionDesc() != null){
+				deduction.setDeductionDesc(mapDeduction.getDeductionDesc());
+			}
+		}else{
+			deduction.setDeductionDesc("");
 		}
+		
 //			deduction.setPmGlAccount(null);
 //			deduction.setPmVotFund(null);
 		if(deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(ctDeduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
-					deduction.setDeductionAmt(new BigDecimal(ctDeduction.getAmount()));
+					if(deduction.getCtDeduction().getDeductionId() != null){
+						if(ctDeduction.getDeductionId().equals(deduction.getCtDeduction().getDeductionId())){
+							deduction.setDeductionAmt(new BigDecimal(ctDeduction.getAmount()));
+						}
+					}else{
+						deduction.setDeductionAmt(new BigDecimal(0));
+					}
 				}
 			}
 		}else{
@@ -1431,14 +1469,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				return null;
 			}
 			if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
-				if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
-					
-				}
 				deductionTable.add(deduction);
 			}else if(!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
-				if(!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
-					
-				}
 				deductionTable.add(deduction);
 			}
 		}
