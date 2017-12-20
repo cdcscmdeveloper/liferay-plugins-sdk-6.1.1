@@ -2229,11 +2229,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 
 	/**
-	 * The method used to retrieve the fulfilement
+	 * The method used to retrieve the fulfilment
 	 *  details base on contract expire date or current date
 	 */
 	private void retrieveFulfilmentDetails() {
-		// Retrieve fulfilement details base on contract exp date
+		// Retrieve fulfilment details base on contract exp date
 		if (getManagedBean().getAsAtDate() == null) {
 			getManagedBean().setAsAtDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		}
