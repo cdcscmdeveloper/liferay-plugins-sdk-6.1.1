@@ -5315,6 +5315,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		 }
 	}
 	
+	/**
+	 * search criteria at the Contract list.
+	 * 
+	 */
 	public void searchContract(){
 		getManagedBean().getActiveContractDataModel().reloadData();
 	}
@@ -5352,17 +5356,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	
+	/**
+	 * retrieve account type.
+	 * @return parameter description by parameter type and search bean
+	 */
 	public List<PmParameterDesc> retrieveAccountType() {
 		log.info("retrieveAccountType");
 			return ParameterHelper.getInstance().getParameterDescListBySearchBean(
 					ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
 	}
 	
+	/**
+	 * on change of account type, the selectedAccClass and selectedGenObjCode to set.
+	 * 
+	 */
 	public void onChangeAccType(){
 		getManagedBean().getGlAccountSearchBean().setSelectedAccClass(null);
 		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
 	}
 	
+	/**
+	 * retrieve account class.
+	 * @return item
+	 */
 	public SelectItem[] retrieveAccountClass() {
 		log.info("retrieveAccountClass");
 		SelectItem[] items = null;	
@@ -5411,10 +5427,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		return items;
 	}
 	
+	/**
+	 * on change of account class, the selectedGenObjCode to set.
+	 * 
+	 */
 	public void onChangeAccClass(){
 		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
 	}
 	
+	/**
+	 * retrieve GoCode List.
+	 * @return item
+	 */
 	public SelectItem[] retrieveGoCodeList() {
 		log.info("retrieveGoCodeList");
 		SelectItem[] items = null;
@@ -5543,15 +5567,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		searchGlAccount = new SearchGlAccountPagingDataModel();
 	}
 	
+	/**
+	 * preloading Gl Account
+	 */
 	public void preLoadingGlAccount() {
 		log.info("preLoading GlAccount method");
 		this.resetGlAccountSearchBean();
 	}
 	
+	/**
+	 * Search Gl Account.
+	 */
 	public void searchGlAccount() {
 		searchGlAccount.reloadData();
 	}
 
+	/**
+	 * Search Gl Account from paging item data model.
+	 */	
 	public IPagingDataModel<VPmDo> getSearchGlAccount() {
 		return searchGlAccount;
 	}
@@ -5573,6 +5606,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.accCode = accCode;
 	}
 	
+	/**
+	 * Initialize Contract Request.
+	 * 
+	 * Method get contract order details and FL Manual Address.
+	 */
 	public void initializeCRBeans(){
 
 		if (getManagedBean().getFlRequest() == null) {
@@ -5632,6 +5670,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	}
 	
+	/**
+	 * download file FL Garis_Panduan_Item_dan_Spesifikasi.pdf.
+	 */
 	public void downloadFile(String filePath) throws IOException {
 		StringBuilder downloadPath = new StringBuilder();
 		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
