@@ -191,11 +191,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Constructor used to 
-	 * initialize file path directory
+	 * Constructor used to initialize file path directory
 	 */
 	public ContractBackingBean() {
-		//log.debug("ContractBackingBean.constructor()");
 		if (getManagedBean().getFileDirectory() == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
@@ -203,12 +201,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Constructor used for specifying the directory of file storage.
+	 * Constructor used for specifying the directory of file storage.	 
+	 * If the fileDirectory is null, default to temporary directory.
+	 * 
 	 * @param fileDirectory  the directory for file storage. 
-	 * If the fileDirectory is null, default to temporary directory
 	 */
 	public ContractBackingBean(String fileDirectory) {
-		//	log.debug("ContractBackingBean.constructor(fileDirectory)");
 		if (fileDirectory == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
@@ -394,6 +392,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to set the file index of attachment list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void setAttachFileIndex(int index) {
@@ -402,6 +401,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to delete attachment from the list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteAttachmentActionByIndex(int index) {
@@ -414,7 +414,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to delete attachment from the list.
-	 * @param index  file index of attachment list
+	 * 
+	 * @param ctAttachment  an object of attached file
 	 */
 	public void deleteAttachmentAction(CtAttachment ctAttachment) {
 		if (ctAttachment.getAttachmentId() != null){
@@ -425,19 +426,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete attachment from the list.
-	 * @param index  file index of attachment list
-	 */
-	public void deleteAttachmentAction(int index, List<CtAttachment> ctAttachmentList) {
-		CtAttachment attachment = ctAttachmentList.get(index);
-		if (attachment.getAttachmentId() != null){
-			getManagedBean().getDeleteAttachmentList().add(attachment);
-		}
-		ctAttachmentList.remove(index);
-	}
-
-	/**
-	 * The method used to delete agency from the datatable list.
+	 * The method used to delete agency attachment from the list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteAgncyAttachmentAction(int index) {
@@ -449,8 +439,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete agency from the datatable list.
-	 * @param index  file index of attachment list
+	 * The method used to delete bond waiver attachment from the list.
 	 */
 	public void deleteBondWaiverAttach() {
 		CtAttachment attachment = getManagedBean().getContractVer().getBondWaiverAttachments().get(getManagedBean().getAttachFileIndex());
@@ -464,7 +453,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete agency from the datatable list.
+	 * The method used to delete termination letter attachment from the list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteTerminationLetterAction(int index) {
@@ -476,7 +466,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete attachment for item from the list.
+	 * The method used to delete item attachment from the list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteItemAttachmentAction(int index) {
@@ -488,7 +479,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete deduct attachment from the list.
+	 * The method used to delete deduction attachment from the list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteDeductAttachmentAction(int index) {
@@ -501,6 +493,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to delete schedule attachment from the list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteScheduleAttachmentAction(int index){
@@ -513,6 +506,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to retrieve the address of supplier.
+	 * 
 	 * @param ajax event
 	 */
 	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
@@ -533,6 +527,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to retrieve the company name of supplier.
+	 * 
 	 * @param ajax event
 	 */
 	public void retrieveCompanyName(AjaxBehaviorEvent event) {
@@ -601,6 +596,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to check whether current date is before the GST relief due date (31/03/2017).
+	 * 
 	 * @return true, if current date is before or equal 31/03/2017
 	 *         false, if current date is after 31/03/2017
 	 */
@@ -638,6 +634,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to verify the login user is BPK CC approver 
 	 * or contract approver.
+	 * 
 	 * @return true, if login user is BPK CC approver or contract approver
 	 *         false, if login user is not BPK CC approver or contract approver
 	 */
@@ -692,6 +689,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to download file 
+	 * 
 	 * @param filePath  the filePath
 	 */
 	public void downloadFile(String filePath) throws IOException {
@@ -762,7 +760,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used for generating a list of available start month
 	 * as selection. 
-	 * @return selectItems the selection list of start month
+	 * 
+	 * @param tableStartYear  start year
+	 * @return selectItems    the selection list of start month
 	 */
 	public List<SelectItem> retrieveStartMonthList(String  tableStartYear) {
 		List<SelectItem> selectItems = null;
@@ -814,7 +814,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used for generating a list of available end month
 	 * as selection.
 	 * 
-	 * @return selectItems the selection list of end month
+	 * @param tableEndYear   end year
+	 * @return selectItems   the selection list of end month
 	 */
 	public List<SelectItem> retrieveEndMonthList(String tableEndYear) {
 		List<SelectItem> selectItems = null;
@@ -861,6 +862,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to convert the month index to
 	 * string text. 
+	 * 
 	 * @param index    the index of the month
 	 * @return months  the string text of the month
 	 */
@@ -982,6 +984,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used for generating a list of available year
 	 * as selection.
+	 * 
 	 * @return the selection list of year
 	 */
 	public List<String> getYearList() {	 
@@ -1165,9 +1168,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/* Implementation of contract deduction start*/
 	/**
-	 * This method used 
-	 * to get parameter code using parameter id
-	 * @param parameterObj
+	 * This method used to get parameter code using parameter id
+	 * 
+	 * @param parameterObj an object of pmparameter
 	 * @return String, parameter code
 	 */
 	public String getParameterCode(PmParameter parameterObj){
@@ -1178,9 +1181,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * This method used to retrieve 
-	 * deduction type from database 
-	 * @return menu item, List of deduction types
+	 * This method used to retrieve deduction type from database 
+	 * 
+	 * @return the selection list of deduction type
 	 */
 	public SelectItem[] retrieveParameterDescListByType() {
 
@@ -1213,8 +1216,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to validate deduction type
-	 * User can not selected same type of deduction again
+	 * The method used to validate deduction type.
+	 * User can not selected same type of deduction again.
 	 */	
 	public void validateDeductionType(CtDeduction deduction)  {
 
@@ -1236,8 +1239,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to add new deduction .
-	 * This method will generate new record in deduction 
+	 * The method used to add new deduction.
+	 * This method will generate new record in deduction.
 	 */	
 	public void addDeduction() {
 
@@ -1317,8 +1320,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 
@@ -1351,6 +1354,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
 	 * @return boolean value
 	 * */
@@ -1784,6 +1788,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to retrieve the condition for construct the LOV listing
+	 * 
 	 * @return the condition
 	 */
 	public String getDeliveryAddressCondition() {
@@ -1928,6 +1933,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to add a new agency record.
 	 * This method will generate a new record in agency
 	 * list, user allow to enter the agency details. 
+	 * 
+	 * @param selectedOnly   the boolean to indicate only selected agency to be added
 	 */
 	public void addAgencyDetails(boolean selectedOnly) {
 		List<CtAgency> ctAgencyList = null;
@@ -2304,8 +2311,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}	
 	}
-
-	public boolean chkHistoryOfAttachment(CtAttachment attachments){
+	
+	private boolean chkHistoryOfAttachment(CtAttachment attachments){
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setDocId(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
 		reqDTO.setDocType(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
@@ -2347,8 +2354,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllBond(AjaxBehaviorEvent e) { 
 
@@ -2369,8 +2376,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -2389,8 +2396,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllDeduction(AjaxBehaviorEvent e) {
 		getManagedBean().setButtonHideDedActive(true);
@@ -2408,8 +2415,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllDeductionClause(AjaxBehaviorEvent e) {
 
@@ -2430,8 +2437,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllScheduleDtl(AjaxBehaviorEvent e) {
 
@@ -2452,8 +2459,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -2472,8 +2479,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllPidDtl(AjaxBehaviorEvent e) {
 
@@ -2494,8 +2501,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -2514,8 +2521,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllProPaymentDtl(AjaxBehaviorEvent e) {
 
@@ -2536,8 +2543,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -2556,17 +2563,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllAgencyCheckbox(){
-
-		/*  FacesContext context = FacesContext.getCurrentInstance();
-	      Map<String, String> map = context.getExternalContext().getRequestParameterMap();
-	      String onSaleAllStr = (String) map.get("onCheckAllRow");
-	          boolean   onAgencyAllRow = Boolean.valueOf(onSaleAllStr.toLowerCase());
-	          getManagedBean().setSelectAll(onAgencyAllRow);*/
-
 		for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
 			if (getManagedBean().isSelectAll()) {
 				ctAgencies.setSelectedCheckBox(true);
@@ -2580,8 +2580,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -2898,6 +2898,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used for validating the ceiling quantity of items.
 	 * A warning message will display on screen when the total ceiling quantity is 
 	 * larger than the maximum quantity of the item.
+	 * 
+	 * @param ceilingQtyData   object of item ceiling quantity
 	 */
 	public void validateCeilingQty(CtItemCeilingQty ceilingQtyData) {
 		double totalCeilingQuantity = 0.0;
@@ -2915,6 +2917,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to validate the entered minimum order quantity.
+	 * 
+	 * @param ctContractItem   object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		if (ctContractItem.getMinimumOrderQty() <= 0) {
@@ -3000,7 +3004,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to validation 
-	 * for amendment if used selected other change
+	 * for amendment if user selected other change
+	 * 
+	 * @return true, if other change is selected
+	 *         false, if other change is not selected
 	 */
 	public boolean getValueFromAmendment(){
 		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
@@ -3063,6 +3070,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to find active circular 
 	 * record return boolean value in case record true
+	 *
+	 * @return true, if there is an active circular record
+	 *         false, if there isn't active circular record
 	 */
 	public boolean chkCircularActiveRecord(){
 		ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
@@ -3081,6 +3091,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to render the check box for company name
 	 * and supplier address if there are any updates from profile
 	 * management module.
+	 * 
+	 * @param ctContractVer   an object of contract version
 	 */
 	public void renderUpdateCheckbox(CtContractVer ctContractVer) {
 		getManagedBean().setUpdateCompanyName(false);
@@ -3118,9 +3130,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * This method used to retrieve 
-	 * deduction type from database 
-	 * @return menu item, List of deduction types
+	 * This method used to retrieve PID reason code from database 
+	 * 
+	 * @return the selection list of PID reason code
 	 */
 	public SelectItem[] getDropdownPidCodeValues() {
 
@@ -3167,8 +3179,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * This method used to add
 	 *  list of PID reason into data table
-	 * @param PmReason pmReason
-	 * @return void
 	 */		
 	public void addPurchaseInDefault(){
 		CtPidReason ctPidReasons = new CtPidReason();
@@ -3179,8 +3189,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * This method used to delete
 	 * selected PID reason types from datatables
-	 * @param List<PmReason> selectedPidReason
-	 * @return void
 	 */		
 	public void deletePidPurchase(){
 		try {
@@ -3202,9 +3210,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * This method used to compare
 	 * of purchase in default category reason equals other
-	 * @param Long reasonId
-	 * @return boolean
-	 */		
+	 * 
+	 * @param reasonId   selected PID reason id
+	 * @return true,     if selected PID reason code is equals other
+	 *         false,    if selected PID reason code is not equals other
+	 */	
 	public boolean PidPurchaseTypeOther(Long reasonId) {
 		if(reasonId == null || reasonId.intValue() == 0)
 			return false;
@@ -3233,6 +3243,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 	}
 
+	/**
+	 * This method used to validate the duplicated pid reason
+	 * 
+	 * @param reasonId   selected PID reason id
+	 */
 	public void validatePidReason(Long resonId){
 
 		if(resonId == null || resonId.intValue() == 0){
@@ -3255,6 +3270,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Route to Central Contract Circular Page. 
+	 * 
 	 * @param contractVerId
 	 * @return page url
 	 */
@@ -3318,8 +3334,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to verify loa/contract is with GST.
+	 * 
 	 * @param gstEffDate  the gst effective date
-	 * @return true, if loa/contract is with GST false, if loa/contract is without GST
+	 * @return true, if loa/contract is with GST
+	 * 		   false, if loa/contract is without GST
 	 */
 	public boolean isLoaContractWithGst(Date gstEffDate) {
 		if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
@@ -3330,6 +3348,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to retrieve GST Launch Date.
+	 * 
 	 * @return gst launch date
 	 */
 	public Date getGstLaunchDate() {
@@ -3344,6 +3363,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to retrieve GST Relief Due Date.
+	 * 
 	 * @return gst relief due date
 	 */
 	public Date getGstReliefDueDate() {
@@ -3380,8 +3400,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
@@ -3398,8 +3419,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Method to uncheck boolean value for checkbox 
-	 * @param pass ajax event type
 	 * Set boolean value false for user action 
+	 * 
+	 * @param pass ajax event type
 	 * */
 	public void onRowUnselect(UnselectEvent event) {
 		getManagedBean().setButtonHideActive(true);
@@ -3409,6 +3431,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used for generating a list of available display type
 	 * of product or service item as selection.
+	 * 
 	 * @return the selection list of display type
 	 */
 	public SelectItem[] getItemDisplayTypeDropdownList(String itemType) {
@@ -3454,8 +3477,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check / uncheck all checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectAllMinstryAgency(AjaxBehaviorEvent e) {
 		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
@@ -3477,8 +3500,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check/ uncheck single checkbox into data table
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneAgyCheckboxSelect(AjaxBehaviorEvent e) {
 		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
@@ -3500,7 +3523,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Get Full Delivery Address based on CtAddress
-	 * @param ctAddress
+	 * 
+	 * @param ctAddress   an object of contract address
 	 * @return full delivery address
 	 */
 	public String getFullDeliveryAddress(CtAddress ctAddress) {
@@ -3519,8 +3543,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to check if bond required for contract
-	 * @param ctContractVer
-	 * @return boolean value
+	 * 
+	 * @return true, if performance bond is required
+	 *         false, if performance bond is not required
 	 * */
 	public boolean isPerformanceBond(){
 		if(getManagedBean().getCtContractAmount() != null
@@ -3538,6 +3563,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * Function to convert date into string for view only
+	 * 
 	 * @param Date date
 	 * @return String date
 	 * */
@@ -3551,32 +3577,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return monthYear;
 	}
 
-	public void chkBondWaivedAttachment(){
-
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setDocId(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-			reqDTO.setDocType(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
-			reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
-			IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			List<CtAttachment> attachments = contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
-			if(attachments != null && attachments.size() > 0){
-				for(CtAttachment ctAttach : attachments){
-					chkBondWaivedAttachment(ctAttach);
-				}
-			}
-		}
-	}
-
-	public void chkBondWaivedAttachment(CtAttachment attach){
-		for(CtAttachment waivedAttach : getManagedBean().getContractVer().getBondWaiverAttachments()){
-			if(waivedAttach.getFilePath().equalsIgnoreCase(attach.getFilePath())){
-				waivedAttach.setBondWaivedTrue(true);
-			}
-		}
-	}
-
+	/**
+	 * The method used to check whether bond waiver attachment is uploaded in previous version.
+	 * 
+	 * @param  attachment     an object of attached file
+	 * @return true, if bond waiver attachment is attached
+	 *         false, if bond waiver attachment is not attached
+	 */
 	public boolean disableBondAttachmentBtn(){
 
 		boolean isEqual = false;
