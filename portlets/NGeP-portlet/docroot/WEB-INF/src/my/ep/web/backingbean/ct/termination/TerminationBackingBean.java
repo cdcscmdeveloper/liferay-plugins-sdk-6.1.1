@@ -1054,18 +1054,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(
 					selectedRecommendedAgency.getOrgProfile().getOrgName());
 		}
-	}	
-
-	/**
-	 * Method to convert date format into string format
-	 */
-	public String convertTime(Date time){ 
-		String str ="";
-		Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-		if(time == null)
-			return str;
-		return format.format(time); 
-	} 
+	}
 
 	/**
 	 * Method to set user role as per user login

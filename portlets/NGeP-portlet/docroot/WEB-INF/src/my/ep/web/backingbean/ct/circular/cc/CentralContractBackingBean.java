@@ -524,10 +524,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This method used to save central circular 
-	 * This method call validate function to validate circular details
-	 *  This method will navigate to acknowledgment page with
-	 *   a confirmation message once submit successfully
+	 * The method used to save the central circular.
+	 * This method will navigate to acknowledgment page with a 
+	 * confirmation message once submit successfully. 
+	 *
+	 * @param  action  the user action on this central circular
+	 * @return the navigate URL 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
 	 */
 	public String saveCircular(String action){
 
@@ -625,15 +629,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This method used to validate central circular details
+	 * The method used for validating the central circular information.
+	 * A warning or error message will display on screen when the validation
+	 * is failed. User required to modify the information accordingly
+	 * to proceed.
+	 *
+	 * @param  outcome  the user action on this contract. The validation 
+	 * 					will invoke base on the action
 	 */
 	public void validateCircular(String outcome) {
-		/*IQTAwardSO qtAwardSO = null;
-		 IContractSO contractSO = null;*/
 		try {
-			/*     qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
-		        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			 */        getManagedBean().setAutoUpdate(true);
+			 getManagedBean().setAutoUpdate(true);
 
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 					 && (getManagedBean().getCircularVer().getCircularFileName() == null || getManagedBean().getCircularVer().getCircularFileName().isEmpty()) ){
@@ -751,33 +757,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				 }
 			 }
-			 // SIR#13626: Removed rule validation
-			 //		        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			 //		        	AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
-			 //		        	ContractReqDTO contractReqDTO = new ContractReqDTO();
-			 //		        	for(CtCircularContract circularContrart : getManagedBean().getCircularVer().getCtCircularContracts()) {
-			 //		        		if (circularContrart.getCtContract().getQuotationTender() != null) {
-			 //			        		awardSupplierReqDTO.setQtId(circularContrart.getCtContract().getQuotationTender().getQtId());
-			 //			        		AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveNonRejectedLoaIdList(awardSupplierReqDTO);
-			 //				
-			 //			        		for(Long loaId : awardSupplierResDTO.getLoaIdList()) {
-			 //			        			contractReqDTO.setLoaId(loaId);
-			 //			        			CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
-			 //			        			if(ctContract==null || ctContract.getLatestContractVer()==null) { 
-			 //			        				getManagedBean().setSelectedTabIndex(1);
-			 //						            throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
-			 //			        			}
-			 //			        		}
-			 //		        		}
-			 //		        	}
-			 //		        }
 		}finally{
 
 		}
 	}
-
 	/**
-	 * This method used to upload circular letter into database
+	 * The method used to upload file.
+	 * 
+	 * @param  event      the upload event for file upload from screen
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
 	 */
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
@@ -807,8 +796,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
 		}
 	}
+
 	/**
-	 * This method used to download circular letter once approver login
+	 * The method used to download the attached file.
+	 * 
+	 * @param  type
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
 	 */
 	public void downloadFile(int type) throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
@@ -848,6 +842,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
+	/**
+	 * The method used to navigate to central circular screen.
+	 * 
+	 * @param contractVerId	the contract version id
+	 */
 	public void gotoCommonPage(Long contractVerId) {
 
 		CircularReqDTO reqDTO = new CircularReqDTO();
@@ -857,9 +856,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This  method used to retrieve list of active approver start
-	 * Setting selected and non selected approver value 
-	 * Retrieve approver for central circular
+	 * The method used to retrieve available approver(s).
+	 *
+	 * @return sourceList  the approver list
 	 */
 	private List<PmUser> getAvailableApproverList() {
 		IUserSO userSO = null;
@@ -898,8 +897,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}	
 
 	/**
-	 * This  method used to set drop down status 
-	 *  value for delete of central circular details
+	 * The method used for generating a list of sate as selection.
+	 * 
+	 * @return the selection list of state
 	 */
 	public SelectItem[] getStateDropdownValues() {
 		SelectItem[] items = null;
@@ -961,17 +961,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * The method for date conversion into string
-	 * */
-	public String convertTime(Date time){ 
-		String str ="";
-		Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-		if(time == null)
-			return str;
-		return format.format(time); 
-	}
-
-	/**
 	 * The method to retrieve list of item
 	 * return list object itemlist 
 	 * */
@@ -1007,6 +996,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 	/**
 	 * The method to retrieve list of active circular item 
+	 * 
+	 * @return activeItemList  the list of active item to be displayed 
 	 * */
 	public List<CtCircularItem> getActiveCircularItem() {
 		log.debug("CentralContractBackingBean.getActiveCircularItem()");
@@ -1125,8 +1116,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * The method used to navigate back maintenance page
-	 * */
+	 * The method used to navigate to previous screen.
+	 * 
+	 * @return the navigate URL 
+	 */
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
 			getManagedBean().setChkCancelPage(false);
@@ -1156,7 +1149,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * Method used to add exempted 
+	 * Method used to add selected exempted org profile(s)
+	 * 
+	 * @param orgProfiles	the selected list og org profile(s)
 	 */
 	public void addExemptedOrg(List<PmOrgProfile> orgProfiles){
 
@@ -1186,7 +1181,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * Method used to delete exempted 
+	 * Method used to delete the selected exempted org profile(s)
 	 */
 	public void deleteExemptedOrg(){
 		try {
@@ -1216,7 +1211,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * Method used to delete circular contract from contract list
+	 * Method used to delete selected circular contract from contract list
 	 */
 	public void deleteCircularContract(){
 		try {
@@ -1228,14 +1223,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
-	}
-
-	/**
-	 * Method used to set extension start date 
-	 * and extension end date for central circular
-	 */
-	public void extendStartEndDate(){
-
 	}
 
 	/**
@@ -1283,9 +1270,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * Method to authenticate user during submit of central circular
-	 * Navigate confirmation dialog for authenticate of login user
-	 * Call save central circular method once authentication done
+	 * The method used to authenticate user during submit the central circular.
+	 * This method will invoke a confirmation dialog for user authentication.
+	 * This method will call save central circular method once authentication success.
+	 * 
+	 * @param  outcome  the user action on this contract
+	 * @return result of the saveCircular process
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -1399,9 +1391,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * Call by ajax listener to set value of
-	 * @param officerProfileId  and jabatanProfileId
-	 * to set value null
+	 * Call by ajax listener to set value of jabatanProfileId
 	 */
 	public void settingMinistryListener(){
 		getManagedBean().setJabatanProfileId(null);
@@ -1433,13 +1423,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This method used to retrieve 
-	 * deduction type from database 
-	 * @return menu item, List of deduction types
+	 * The method used for generating a list of organization type as selection.
+	 * 
+	 * @return the selection list of organization type
 	 */
 	public SelectItem[] retrieveParameterDescListByType() {
 
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> parameterTypeList = new ArrayList<String> ();
 		parameterTypeList.add(OrganizationType.MINISTRY.value());
 		parameterTypeList.add(OrganizationType.DEPARTMENT.value());
@@ -1589,9 +1579,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * The method used to add a new exempted organization
-	 * This method will 
-	 * generate a new record in central circular
+	 * The method used to add a new exempted organization.
 	 */
 	public void addExemtedOrgDetails() {
 
@@ -1632,9 +1620,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This method used to retrieve 
-	 * deduction type from database 
-	 * @return menu item, List of deduction types
+	 * The method used for generating a list of PID reason as selection.
+	 * 
+	 * @return the selection list of PID reason
 	 */
 	public SelectItem[] getDropdownPidCodeValues() {
 
@@ -1678,10 +1666,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This method used to 
-	 * compare PID Reason other with other
-	 * @Reason Id reasonId
-	 * @return boolean value
+	 * This method used to compare
+	 * of purchase in default category reason equals other
+	 * 
+	 * @param reasonId   selected PID reason id
+	 * @return true,     if selected PID reason code is equals other
+	 *         false,    if selected PID reason code is not equals other
 	 */
 	public boolean PidPurchaseTypeOther(Long reasonId){
 
@@ -1711,8 +1701,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return false;
 	}
 
-	public void validatePidReason(Long resonId){
-
+	private void validatePidReason(Long resonId){
 		if(resonId == null || resonId.intValue() == 0){
 			return;
 		}
@@ -1732,8 +1721,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * This method used to
-	 *  add new record in datatable
+	 * This method used to add new PID reason record in datatable
 	 */
 	public void addPurchaseInDefault(){
 		CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
@@ -1741,6 +1729,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
 	}
 
+	/**
+	 * Function to check / uncheck all checkbox into PID reason datatable
+	 * 
+	 * @param pass ajax event type
+	 * */
 	public void selectAllPidReason(AjaxBehaviorEvent e) {
 
 		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()) {
@@ -1759,9 +1752,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
+	 * Function to check / uncheck single checkbox into PID reason datatable
+	 * 
 	 * @param pass ajax event type
-	 * Set boolean value for user action 
 	 * */
 	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
 
@@ -1781,7 +1774,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * The method used to delete the selected deduction clause.
+	 * The method used to delete the selected row(s)
 	 */
 	public void deleteTableRow(String tableType) {
 		try {

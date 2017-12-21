@@ -139,9 +139,6 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.docx4j.convert.out.pdf.PdfConversion;
-import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -3619,6 +3616,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used for generating a list of available display type
 	 * of product or service item as selection.
 	 * 
+	 * @param itemType	product or service item
 	 * @return the selection list of display type
 	 */
 	public SelectItem[] getItemDisplayTypeDropdownList(String itemType) {
@@ -4017,7 +4015,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 
 	/**
-	 * The method used to delete agency from the datatable list.
+	 * The method used to delete loa attachment from the datatable list.
+	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteLoaAttachment(int index) {
