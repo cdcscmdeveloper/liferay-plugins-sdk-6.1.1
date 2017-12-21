@@ -1,5 +1,4 @@
 /**
-
  * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.frn;
@@ -484,7 +483,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 		}
 	}
-	
+
+	/**
+	 * Initialize the rejection remarks
+	 */
 	public void initializeRejectionRemarks(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> rejectionRemarks,FlFulfilmentNoteItem noteItem,boolean isHideRemarks) {
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -739,7 +741,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 		}
 	}
-	
 	
 	/**
 	 * Page navigation to FLDoc search page in FRN.
@@ -1051,6 +1052,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}	
 
+	/**
+	 * Check user login is FL approver role
+	 *
+	 */
 	public boolean isFlFulfilmentApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
@@ -1193,12 +1198,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	
+	/**
+	 * retrieve the user name
+	 */
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
 	}
-	
-
-	
+		
 	/**
 	 * Check user authority.
 	 *
