@@ -62,7 +62,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdjustmentItemNodeVO;
 
-// TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Debit Adjustment Note.
  *
@@ -84,7 +83,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
 	private String className="@(.myDanClassName)";
-	
 	
 	/**
 	 * @return the className
@@ -264,7 +262,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		getManagedBean().setInvAmtTotal(sumInvoiceAmt);
 		getManagedBean().setDanAmtTotal(new BigDecimal(danAmount));
 	}
-	
 		
 	/**
 	 * call this method as user select charge line row
@@ -609,6 +606,5 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			return submitAction(outcome);
 		}
 		return null; 
-		
 	}
 }
