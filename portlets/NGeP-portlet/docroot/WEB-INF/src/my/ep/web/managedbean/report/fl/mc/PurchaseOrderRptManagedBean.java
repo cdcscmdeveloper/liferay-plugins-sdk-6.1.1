@@ -13,7 +13,7 @@ import javax.faces.model.SelectItem;
 import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 
 /**
- * Managed Bean for FlReport.
+ * Managed Bean for PurchaseOrderRpt.
  *
  * @author Jimmy
  * @since 26/4/2017
