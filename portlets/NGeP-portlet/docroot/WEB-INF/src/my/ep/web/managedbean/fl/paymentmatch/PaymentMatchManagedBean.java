@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.fl.paymentmatch;
 
@@ -30,7 +30,6 @@ import my.ep.web.bean.pm.VotSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.TaxInvoiceVO;
 
-// TODO: Auto-generated Javadoc
 /**
  * Payment Match Managed Bean.
  *
