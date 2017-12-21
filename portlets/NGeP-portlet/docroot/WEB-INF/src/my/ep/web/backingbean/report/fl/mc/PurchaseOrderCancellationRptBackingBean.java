@@ -18,7 +18,7 @@ import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.mc.PurchaseOrderRptManagedBean;
 /**
- * Backing Bean for ContractRequestRpt.
+ * Backing Bean for PurchaseOrderCancellationRpt.
  *
  * @author Jimmy
  * @since 16/5/2017
@@ -42,6 +42,9 @@ public class PurchaseOrderCancellationRptBackingBean extends FlReportBackingBean
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -98,6 +101,9 @@ public class PurchaseOrderCancellationRptBackingBean extends FlReportBackingBean
 		
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
 			getManagedBean().setMinistry(null);

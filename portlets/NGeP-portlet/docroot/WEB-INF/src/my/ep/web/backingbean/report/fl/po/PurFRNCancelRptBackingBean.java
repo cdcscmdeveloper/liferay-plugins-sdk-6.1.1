@@ -44,6 +44,9 @@ public class PurFRNCancelRptBackingBean extends FlReportBackingBean<PurFRNCancel
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -104,6 +107,9 @@ public class PurFRNCancelRptBackingBean extends FlReportBackingBean<PurFRNCancel
 		return null;
 	}
 	
+	/**
+	 * retrieve acknowledge officer list
+	 */
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
 		if(getManagedBean().getPtj() != null){
 			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -111,6 +117,9 @@ public class PurFRNCancelRptBackingBean extends FlReportBackingBean<PurFRNCancel
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setFrnNo(null);
 		resetSearchCriteriaValues();

@@ -44,6 +44,9 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -91,6 +94,9 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 		
 	}
 	
+	/**
+	 * retrieve approver list
+	 */
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtj() != null){
 			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -98,6 +104,9 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		resetSearchCriteriaValues();
 	}

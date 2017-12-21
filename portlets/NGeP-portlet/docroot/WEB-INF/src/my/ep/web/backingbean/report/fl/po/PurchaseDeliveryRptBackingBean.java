@@ -43,6 +43,9 @@ public class PurchaseDeliveryRptBackingBean extends FlReportBackingBean<Purchase
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -93,6 +96,9 @@ public class PurchaseDeliveryRptBackingBean extends FlReportBackingBean<Purchase
 		
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setSupplierDoRefNo(null);
 		getManagedBean().setDeliveryOrderNo(null);
