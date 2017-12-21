@@ -21,7 +21,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * ManagedBean for Stop Instruction.
  *
