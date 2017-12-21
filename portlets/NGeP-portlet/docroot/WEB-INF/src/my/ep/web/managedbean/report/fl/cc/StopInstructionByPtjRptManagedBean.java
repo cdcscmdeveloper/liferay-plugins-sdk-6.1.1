@@ -8,7 +8,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 /**
- * Managed Bean for FlReport.
+ * Managed Bean for StopInstructionByPtjRpt.
  *
  * @author KK LIM
  * @since 26/4/2017
