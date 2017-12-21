@@ -76,6 +76,7 @@ public class DigiCertHelper {
 	}
 
 	public void revoke(String identificationNo, String epNo) throws IOException {
+		log.info("DIGICERT REVOKE:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -88,6 +89,7 @@ public class DigiCertHelper {
 
 	public void changePIN(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
+		log.info("DIGICERT CHANGE PIN:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -99,6 +101,7 @@ public class DigiCertHelper {
 
 	public void updateChallResp(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
+		log.info("DIGICERT UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -110,6 +113,8 @@ public class DigiCertHelper {
 
 	public void resetPIN(String identificationNo, String epNo, String email)
 			throws IOException, PortalException, SystemException {
+		log.info("DIGICERT RESET PIN:" + identificationNo + "||" + epNo + "||"
+				+ email);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -121,6 +126,7 @@ public class DigiCertHelper {
 	}
 
 	public List<String> getChallengeQuestion(String identificationNo) {
+		log.info("DIGICERT GET CHALL QUEST:" + identificationNo);
 		List<String> retVal = new ArrayList<String>();
 		try {
 			KMCClient client = getClient();
@@ -205,6 +211,7 @@ public class DigiCertHelper {
 
 			}
 		} catch (KMCAPIException | InvalidKMCAPIFieldException e) {
+			log.info("DIGICERT ERROR SIGN MSG:" + e.getMessage());
 			e.printStackTrace();
 			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,

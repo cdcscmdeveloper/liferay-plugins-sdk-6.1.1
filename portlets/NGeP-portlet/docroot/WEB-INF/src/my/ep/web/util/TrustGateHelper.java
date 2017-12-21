@@ -50,6 +50,8 @@ public class TrustGateHelper {
 
 	public List<String> getChallengeQuestion(String identificationNo,
 			String epNo, String selectedQuest) {
+		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
+				+ "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		try {
 			KMCClient client = getClient();
@@ -178,6 +180,7 @@ public class TrustGateHelper {
 	}
 
 	public void revoke(String identificationNo, String epNo) throws IOException {
+		log.info("TRUSTGATE REVOKE:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -189,6 +192,8 @@ public class TrustGateHelper {
 
 	public void resetPIN(String identificationNo, String epNo, String email)
 			throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||"
+				+ email);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -200,6 +205,7 @@ public class TrustGateHelper {
 
 	public void changePIN(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE CHANGE PIN:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -211,6 +217,8 @@ public class TrustGateHelper {
 
 	public void updateChallResp(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||"
+				+ epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
