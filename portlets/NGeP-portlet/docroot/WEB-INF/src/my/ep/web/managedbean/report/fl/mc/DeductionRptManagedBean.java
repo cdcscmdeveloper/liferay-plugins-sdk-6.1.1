@@ -9,7 +9,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.fl.FlReportManagedBean;
 /**
- * Managed Bean for FlReport.
+ * Managed Bean for DeductionRpt.
  *
  * @author Jimmy
  * @since 26/4/2017
