@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -44,7 +43,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		renewSesionObject();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		SmSupplier supp = getSmSupplier(); 
+		SmSupplier supp = getSmSupplier();
+		supp = updateMofCertPendingCertGeneration(supp);
 		setExpiredMofAccountMessageIfApplicable(fc, supp);
 		
 		try{
@@ -104,6 +104,26 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				}*/
 			}
 		}
+	}
+	
+	/**
+	 * Update migrated supplier sm_mof_cert with pending mof cert generation
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @return SmSupplier
+	 */
+	private SmSupplier updateMofCertPendingCertGeneration(SmSupplier supplier) {
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+
+		VirtualCertResDTO resDTO = new VirtualCertResDTO();
+		resDTO = SmServiceLookup.getVirtualCertSO()
+				.updateMofCertForPendingCertGeneration(reqDTO);
+		if (resDTO.getSupplier() != null) {
+			supplier = resDTO.getSupplier();
+		}
+		return supplier;
 	}
 
 	/**
