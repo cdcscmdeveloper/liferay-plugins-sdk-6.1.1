@@ -650,7 +650,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return isContains;
 	}
 	
-	
 	/**
 	 * if any checkbox selected from delivery address  List,show the deleted button for 
 	 * <p>
@@ -805,7 +804,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			populateItemsForSelectedAddress();
 		}
 	}
-	
 	
 	/**
 	 * Select addr event.
@@ -3192,7 +3190,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	
-
 	/**
 	 * The Class UnitOfMeasurementPagingDataModel.
 	 */
@@ -3873,17 +3870,29 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	
+	/**
+	 * retrieve account type.
+	 * @return parameter description by parameter type and search bean
+	 */
 	public List<PmParameterDesc> retrieveAccountType() {
 		log.info("retrieveAccountType");
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
 				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
 	}
 	
+	/**
+	 * on change of account type, the selectedAccClass and selectedGenObjCode to set.
+	 * 
+	 */
 	public void onChangeAccType(){
 		getManagedBean().getGlAccountSearchBean().setSelectedAccClass(null);
 		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
 	}
 	
+	/**
+	 * retrieve account class.
+	 * @return item
+	 */
 	public SelectItem[] retrieveAccountClass() {
 		log.info("retrieveAccountClass");
 		SelectItem[] items = null;	
@@ -3932,10 +3941,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return items;
 	}
 	
+	/**
+	 * on change of account class, the selectedGenObjCode to set.
+	 * 
+	 */
 	public void onChangeAccClass(){
 		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
 	}
 	
+	/**
+	 * retrieve GoCode List.
+	 * @return item
+	 */
 	public SelectItem[] retrieveGoCodeList() {
 		log.info("retrieveGoCodeList");
 		SelectItem[] items = null;	
@@ -4064,15 +4081,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		searchGlAccount = new SearchGlAccountPagingDataModel();
 	}
 	
+	/**
+	 * preloading Gl Account
+	 */
 	public void preLoadingGlAccount() {
 		log.info("preLoading GlAccount method");
 		this.resetGlAccountSearchBean();
 	}
 	
+	/**
+	 * Search Gl Account.
+	 */
 	public void searchGlAccount() {
 		searchGlAccount.reloadData();
 	}
 
+	/**
+	 * Search Gl Account from paging item data model.
+	 */	
 	public IPagingDataModel<VPmDo> getSearchGlAccount() {
 		return searchGlAccount;
 	}
@@ -4094,6 +4120,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		this.accCode = accCode;
 	}
 	
+	/**
+	 * Initialize Purchase Request.
+	 * 
+	 * Method get order details and FL Manual Address.
+	 */
 	public void initializePRBeans(){
 		if(getManagedBean().getFeeVoteFund()==null) {
 			IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
