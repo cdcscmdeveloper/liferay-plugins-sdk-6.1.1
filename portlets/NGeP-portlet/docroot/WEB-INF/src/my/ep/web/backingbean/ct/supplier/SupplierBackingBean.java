@@ -271,10 +271,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
 
 	/**
-	 * This method used to set bank info slected by selectmenu
-	 * @param object reqDTO
-	 * @return void
-	 * */
+	 * The method used to set the change bank details information while
+	 * rendering the screen.
+	 * 
+	 * @param resDTO  the response data transfer object for change bank
+	 */
 	public void setChangeBankDetails(ContractReqDTO reqDTO) {
 
 		IChangeBankAccSO changeBankAccSO = null;
@@ -320,6 +321,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			changeBankAccSO = null;
 		}
 	}
+	
 	/**
 	 * The method used to set the factoring request details information while
 	 * rendering the screen.
@@ -1031,7 +1033,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		RequestContext.getCurrentInstance().execute("uploadFactoringDlg.hide()");
 	}
 
-	public void deleteFactoringAttachement() {
+	/**
+	 * The method used to delete the factoring attachment from the list.
+	 */
+	public void deleteFactoringAttachment() {
 		if (getManagedBean().isRemoveFactoring()) {
 			getManagedBean().getFactoring().setRemoveFileName(null);
 			getManagedBean().getFactoring().setRemoveFilePath(null);
