@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.fl.po;
 
 import java.io.IOException;
@@ -100,7 +103,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Fulfillment Order.
  *
@@ -589,7 +591,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		String id = (String) e.getComponent().getAttributes().get("value");
 		getManagedBean().setFactoringCheck(id);
 		getFactoringCompanyDtl();
-		
 	}
 	
 	/**
@@ -668,7 +669,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 		}
 	}
-		
 		
 	/**
 	 * Gets the portlet title.
@@ -1327,7 +1327,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().getPendingFlDataModel().reloadData();
 	}
 	
-	
 	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
@@ -1565,6 +1564,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 	}
 	
+	/**
+	 * download file Garis_Panduan_Item_dan_Spesifikasi.pdf.
+	 */
 	public void downloadFile(String filePath) throws IOException {
 		StringBuilder downloadPath = new StringBuilder();
 		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
