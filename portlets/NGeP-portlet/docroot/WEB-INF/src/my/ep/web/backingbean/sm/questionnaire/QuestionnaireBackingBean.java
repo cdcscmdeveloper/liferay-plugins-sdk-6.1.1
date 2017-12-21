@@ -94,10 +94,10 @@ public class QuestionnaireBackingBean extends
 		if (this.getManagedBean().getRejectedAppl() != null) {
 			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
 					SmCommonUtil.getMessage("lbl.sm.submit.questionaire.msg",
-							null), null);
+							null), null, null);
 		} else {
 			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
-					null, null);
+					null, null, null);
 		}
 
 		renewSesionObject();
