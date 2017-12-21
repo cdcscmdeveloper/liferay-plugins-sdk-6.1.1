@@ -61,12 +61,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return facesScopes;
 	}
 	
+	/**
+	 * retrieve report list by category
+	 */
 	public void retrieveReportListByCategory(String reportCategory) {
 		retrieveReportListByModuleCodeAndSubModule(
 				ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase(),
 				reportCategory);
 	}
 	
+	/**
+	 * On change of report name
+	 * 
+	 */
 	public void onChangeReportName(){
 
 		log.info("onChangeReportName");	
@@ -86,6 +93,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 //		}
 	}
 	
+	/**
+	 * generate FL report
+	 * 
+	 */
 	public void generateFlReport(LinkedHashMap<String, String> params){
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestSO.class);		
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
@@ -107,6 +118,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		//this.getManagedBean().setReportUrl(resDTO.getReportUrl());
 	}
 	
+	/**
+	 * reset search criteria values
+	 * 
+	 */
 	public void resetSearchCriteriaValues() {
 		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
 			getManagedBean().setMinistry(null);
@@ -143,6 +158,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return PmCommonUtil.getRecordStatusOptions();
 	}
 	
+	/**
+	 * get the Pm zone list
+	 * 
+	 */
 	public SelectItem[] getPmZoneList() {
 		return PmCommonUtil.getPmZoneListOptions();
 	}
@@ -371,6 +390,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 	}
 	
+	/**
+	 * set the default date from and date to
+	 *
+	 */
 	public void setDefaultDateFromAndDateTo() {
 		if (getManagedBean().getFromDate() == null
 				|| getManagedBean().getToDate() == null) {
@@ -419,10 +442,18 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null );
 	}
 	
+	/**
+	 * get the status drop down values
+	 *
+	 */
 	public SelectItem[]  getStatusDropDownValues(String docType){
 		return getStatusDropdownValues(ModuleCodeConst.ORDER_FULFILLMENT, docType);
 	}
 	
+	/**
+	 * get the requisitioner list
+	 *
+	 */
 	public List<SelectItem> getRequisitionerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IPMReportSO.class);
@@ -463,6 +494,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getRequisitionerList();
 	}
 	
+	/**
+	 * get the approver list
+	 *
+	 */
 	public List<SelectItem> getApproverList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
@@ -495,6 +530,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getApproverList();
 	}
 	
+	/**
+	 * get the receiving officer list
+	 *
+	 */
 	public List<SelectItem> getReceivingOfficerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
@@ -540,6 +579,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getReceivingOfficerList();
 	} 
 	
+	/**
+	 * get the acknowledge officer list
+	 *
+	 */
 	public List<SelectItem> getAcknowledgeOfficerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
@@ -585,6 +628,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return getManagedBean().getAcknowledgeOfficerList();
 	} 
 	
+	/**
+	 * get the payOfficer list
+	 *
+	 */
 	public List<SelectItem> getPayOfficerList(Long userId,Long ptjId){
 		if (null != userId) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
