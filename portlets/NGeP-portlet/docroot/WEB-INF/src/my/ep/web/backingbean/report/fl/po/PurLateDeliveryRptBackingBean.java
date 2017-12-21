@@ -44,6 +44,9 @@ public class PurLateDeliveryRptBackingBean extends FlReportBackingBean<PurLateDe
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -97,6 +100,9 @@ public class PurLateDeliveryRptBackingBean extends FlReportBackingBean<PurLateDe
 		
 	}
 	
+	/**
+	 * retrieve receiving officer list
+	 */
 	public List<SelectItem> retrieveReceivingOfficerList(){
 		if(getManagedBean().getPtj() != null){
 			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -104,6 +110,9 @@ public class PurLateDeliveryRptBackingBean extends FlReportBackingBean<PurLateDe
 		return null;
 	}
 	
+	/**
+	 * retrieve acknowledge officer list
+	 */
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
 		if(getManagedBean().getPtj() != null){
 			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -111,6 +120,9 @@ public class PurLateDeliveryRptBackingBean extends FlReportBackingBean<PurLateDe
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setDeliveryOrderNo(null);
 		getManagedBean().setSupplierDoRefNo(null);

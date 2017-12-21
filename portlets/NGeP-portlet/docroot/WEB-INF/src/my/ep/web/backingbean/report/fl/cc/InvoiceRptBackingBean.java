@@ -18,7 +18,7 @@ import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.cc.InvoiceRptManagedBean;
 /**
- * Backing Bean for ContractRequestRpt.
+ * Backing Bean for InvoiceRpt.
  *
  * @author KK LIM
  * @since 16/5/2017
@@ -42,6 +42,9 @@ public class InvoiceRptBackingBean extends FlReportBackingBean<InvoiceRptManaged
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -104,6 +107,9 @@ public class InvoiceRptBackingBean extends FlReportBackingBean<InvoiceRptManaged
 		
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		if(getManagedBean().isSupplier()){
 			getManagedBean().setMinistry(null);

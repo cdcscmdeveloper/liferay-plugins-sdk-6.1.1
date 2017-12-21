@@ -42,6 +42,9 @@ public class PurStopInstSuppRptBackingBean extends FlReportBackingBean<PurStopIn
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -89,6 +92,9 @@ public class PurStopInstSuppRptBackingBean extends FlReportBackingBean<PurStopIn
 		
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setSiNo(null);
 		resetSearchCriteriaValues();

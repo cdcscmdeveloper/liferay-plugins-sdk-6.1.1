@@ -20,7 +20,7 @@ import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.mc.StopInstructionByPtjRptManagedBean;
 /**
- * Backing Bean for ContractRequestRpt.
+ * Backing Bean for StopInstructionByPtjRpt.
  *
  * @author Jimmy
  * @since 16/5/2017
@@ -44,6 +44,9 @@ public class StopInstructionByPtjRptBackingBean extends FlReportBackingBean<Stop
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -106,6 +109,9 @@ public class StopInstructionByPtjRptBackingBean extends FlReportBackingBean<Stop
 		
 	}
 	
+	/**
+	 * retrieve approver list
+	 */
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtjGroup() != null){
 			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -113,6 +119,9 @@ public class StopInstructionByPtjRptBackingBean extends FlReportBackingBean<Stop
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
 			getManagedBean().setMinistry(null);

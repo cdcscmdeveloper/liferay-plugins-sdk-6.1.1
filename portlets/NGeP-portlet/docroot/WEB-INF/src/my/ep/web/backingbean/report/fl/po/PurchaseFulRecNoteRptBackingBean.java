@@ -44,6 +44,9 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -97,6 +100,9 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 		
 	}
 	
+	/**
+	 * retrieve receiving officer list
+	 */
 	public List<SelectItem> retrieveReceivingOfficerList(){
 		if(getManagedBean().getPtj() != null){
 			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -104,6 +110,9 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 		return null;
 	}
 	
+	/**
+	 * retrieve acknowledge officer list
+	 */
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
 		if(getManagedBean().getPtj() != null){
 			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -111,6 +120,9 @@ public class PurchaseFulRecNoteRptBackingBean extends FlReportBackingBean<Purcha
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setFrnNo(null);
 		resetSearchCriteriaValues();

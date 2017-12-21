@@ -44,6 +44,9 @@ public class PurStopInstPtjRptBackingBean extends FlReportBackingBean<PurStopIns
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -94,6 +97,9 @@ public class PurStopInstPtjRptBackingBean extends FlReportBackingBean<PurStopIns
 		
 	}
 	
+	/**
+	 * retrieve approver list
+	 */
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtj() != null){
 			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -101,6 +107,9 @@ public class PurStopInstPtjRptBackingBean extends FlReportBackingBean<PurStopIns
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setSiNo(null);
 		resetSearchCriteriaValues();
