@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2016 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.fl.customerService;
 
 import java.util.ArrayList;
@@ -11,7 +14,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
