@@ -91,6 +91,8 @@ public class TrustGateHelper {
 
 	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
+		log.info("TRUSTGATE SIGNING:" + identificationNo + "||" + epNo + "||"
+				+ pin + "||" + dataForSigning);
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
 		try {
@@ -99,6 +101,8 @@ public class TrustGateHelper {
 			IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(
 					identificationNo, epNo, pin.toCharArray(), challenges,
 					new ByteArrayInputStream(dataForSigning.getBytes()));
+
+			log.info("TRUSTGATE SIGNING STATUS CODE:" + res.getStatusCode());
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -141,8 +145,7 @@ public class TrustGateHelper {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			vo.setErrMsg(MessageUtils.getMessage(
-					MessageConst.ERROR_776062,
+			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale()));
 		}
