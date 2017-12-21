@@ -579,8 +579,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.addressTypesList = addressTypesList;
 	}*/
 
-	
-
 	/**
 	 * @return the selectedCtAddrTypeList
 	 *//*
@@ -665,8 +663,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setSelectedRowFlg(boolean selectedRowFlg) {
 		this.selectedRowFlg = selectedRowFlg;
 	}
-
-	
 
 	/**
 	 * Gets the request note with dtls list.
@@ -780,8 +776,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setSelectedAddressRows(List<FlDeliveryAddress> selectedAddressRows) {
 		this.selectedAddressRows = selectedAddressRows;
 	}
-
-	
 
 	/**
 	 * Gets the selected items rows.
@@ -1471,7 +1465,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setSubSetiaList(List<PmSubSetia> subSetiaList) {
 		this.subSetiaList = subSetiaList;
 	}
-
 
 	/**
 	 * Gets the prg activity list.
@@ -2340,8 +2333,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 			List<FlFulfilmentItemAddr> requestNoteItemList) {
 		this.requestNoteItemList = requestNoteItemList;
 	}
-
-
 
 	/**
 	 * Checks if is email validate.
