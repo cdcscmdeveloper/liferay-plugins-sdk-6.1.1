@@ -20,7 +20,7 @@ import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.cc.FRNCancellationRptManagedBean;
 /**
- * Backing Bean for ContractRequestRpt.
+ * Backing Bean for FRNCancellationRpt.
  *
  * @author KK LIM
  * @since 16/5/2017
@@ -44,6 +44,9 @@ public class FRNCancellationRptBackingBean extends FlReportBackingBean<FRNCancel
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -112,6 +115,9 @@ public class FRNCancellationRptBackingBean extends FlReportBackingBean<FRNCancel
 		
 	}
 	
+	/**
+	 * retrieve receiving officer list
+	 */
 	public List<SelectItem> retrieveReceivingOfficerList(){
 		if(getManagedBean().getPtjGroup() != null){
 			return getReceivingOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -119,6 +125,9 @@ public class FRNCancellationRptBackingBean extends FlReportBackingBean<FRNCancel
 		return null;
 	}
 	
+	/**
+	 * retrieve acknowledge officer list
+	 */
 	public List<SelectItem> retrieveAcknowledgeOfficerList(){
 		if(getManagedBean().getPtjGroup() != null){
 			return getAcknowledgeOfficerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -126,6 +135,9 @@ public class FRNCancellationRptBackingBean extends FlReportBackingBean<FRNCancel
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setFrnNo(null);
 		resetSearchCriteriaValues();

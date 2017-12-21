@@ -44,6 +44,9 @@ public class PurchaseRequestRejectionRptBackingBean extends FlReportBackingBean<
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -94,6 +97,9 @@ public class PurchaseRequestRejectionRptBackingBean extends FlReportBackingBean<
 		
 	}
 	
+	/**
+	 * retrieve requisitioner list
+	 */
 	public List<SelectItem> retrieveRequisitionerList(){
 		if(getManagedBean().getPtj() != null){
 			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -101,6 +107,9 @@ public class PurchaseRequestRejectionRptBackingBean extends FlReportBackingBean<
 		return null;
 	}
 	
+	/**
+	 * retrieve approver list
+	 */
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtj() != null){
 			return getApproverList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -108,6 +117,9 @@ public class PurchaseRequestRejectionRptBackingBean extends FlReportBackingBean<
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setPurchaseRequestNo(null);
 		resetSearchCriteriaValues();

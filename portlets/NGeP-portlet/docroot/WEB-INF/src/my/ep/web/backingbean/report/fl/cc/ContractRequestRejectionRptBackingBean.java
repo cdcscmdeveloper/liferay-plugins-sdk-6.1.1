@@ -46,7 +46,6 @@ public class ContractRequestRejectionRptBackingBean extends FlReportBackingBean<
 	
 	/**
 	 * generate report
-	 * 
 	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
@@ -112,7 +111,6 @@ public class ContractRequestRejectionRptBackingBean extends FlReportBackingBean<
 	
 	/**
 	 * retrieve requisitioner list
-	 * 
 	 */
 	public List<SelectItem> retrieveRequisitionerList(){
 		if(getManagedBean().getPtjGroup() != null){
@@ -123,7 +121,6 @@ public class ContractRequestRejectionRptBackingBean extends FlReportBackingBean<
 	
 	/**
 	 * retrieve approver list
-	 * 
 	 */
 	public List<SelectItem> retrieveApproverList(){
 		if(getManagedBean().getPtj() != null){
@@ -134,7 +131,6 @@ public class ContractRequestRejectionRptBackingBean extends FlReportBackingBean<
 	
 	/**
 	 * reset action
-	 * 
 	 */
 	public void resetAction(){
 		resetSearchCriteriaValues();;

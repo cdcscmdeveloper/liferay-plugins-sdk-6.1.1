@@ -46,7 +46,6 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 	
 	/**
 	 * generate report
-	 * 
 	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();

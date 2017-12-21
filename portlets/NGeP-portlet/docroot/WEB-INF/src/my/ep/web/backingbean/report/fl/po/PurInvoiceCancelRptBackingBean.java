@@ -42,6 +42,9 @@ public class PurInvoiceCancelRptBackingBean extends FlReportBackingBean<PurInvoi
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -92,6 +95,9 @@ public class PurInvoiceCancelRptBackingBean extends FlReportBackingBean<PurInvoi
 		
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setInvNo(null);
 		getManagedBean().setSupplierInvNo(null);

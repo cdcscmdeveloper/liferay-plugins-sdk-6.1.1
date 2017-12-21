@@ -44,6 +44,9 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		}
 	}
 	
+	/**
+	 * generate report
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -101,6 +104,9 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		generateFlReport(params);
 	}
 	
+	/**
+	 * retrieve requisitioner list
+	 */
 	public List<SelectItem> retrieveRequisitionerList(){
 		if(getManagedBean().getPtj() != null){
 			return getRequisitionerList(getFacesScopes().getUserSessionBean().getUserId(),getManagedBean().getPtj().getOrgProfileId());
@@ -108,6 +114,9 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 		return null;
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		resetSearchCriteriaValues();
 	}
