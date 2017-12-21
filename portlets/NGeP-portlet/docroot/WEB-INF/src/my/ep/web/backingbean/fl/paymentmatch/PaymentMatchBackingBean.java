@@ -449,7 +449,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			setClassName("@(.pmSummaryPnlClass)");
 		}
 		if(selectedTabIndex==3){
-			if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+			if(getManagedBean().getButtonVal()==null || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				validateDuplicateDeduction("");
 				validateDeductionAmt();
 			}
@@ -458,7 +458,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		if(selectedTabIndex==4){
 			getNumberOfContractOrder();
-			if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+			if(getManagedBean().getButtonVal()==null || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				validateDuplicateDeduction("");
 				validateDeductionAmt();
 			}
