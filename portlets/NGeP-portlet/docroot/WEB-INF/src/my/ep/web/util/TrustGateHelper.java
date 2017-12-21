@@ -144,6 +144,7 @@ public class TrustGateHelper {
 
 			}
 		} catch (Exception e) {
+			log.info("TRUSTGATE ERROR SIGN MSG:" + e.getMessage());
 			e.printStackTrace();
 			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
