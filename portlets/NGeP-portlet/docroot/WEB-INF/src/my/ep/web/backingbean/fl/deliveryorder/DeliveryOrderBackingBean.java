@@ -96,7 +96,6 @@ import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Create Delivery Order.
  *
@@ -586,7 +585,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().getSelectedItemRowCalList().add(selectedAddressItem);
 		getManagedBean().getSelectedItemRowCalList().size();
 		getManagedBean().setItemSelectedForCal("S");
-		
 	}
 	
 	/**
@@ -631,7 +629,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			delAmtCal = unitPriceCal.multiply(delQtyCal);
 			itemAddress.setDeliveredAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
 		}
-		
 	}
 	
 	/**
@@ -787,8 +784,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	
-	
-	
 	/**
 	 * Sets SuppDelOrdNoEnabled flag.
 	 *
@@ -869,7 +864,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		};
 		Collections.sort(flDelAddressList, comparator);
 	}
-	
 	
 	/**
 	 * Gets the amount section item row.
@@ -982,7 +976,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			return createDeliveryOrder(outcome);
 		}
 	}
-	
 	
 	/**
 	 * Validate delivery order before signing Action.
@@ -1485,5 +1478,4 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		List<FlDeliveryOrder> submittedDoList=delOrderSO.retrieveSubmittedDoList(addressId);
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
-	
 }
