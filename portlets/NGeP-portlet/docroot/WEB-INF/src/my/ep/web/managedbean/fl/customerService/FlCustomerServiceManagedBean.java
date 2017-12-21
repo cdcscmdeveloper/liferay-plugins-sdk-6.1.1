@@ -181,8 +181,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 		return new FacesScopes();
 	}
 	
-	
-	
 	/**
 	 * Gets the doc type list by role.
 	 *
@@ -402,8 +400,6 @@ public class FlCustomerServiceManagedBean extends BaseManagedBean {
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
-
-
 
 	/**
 	 * Gets the search order no.
