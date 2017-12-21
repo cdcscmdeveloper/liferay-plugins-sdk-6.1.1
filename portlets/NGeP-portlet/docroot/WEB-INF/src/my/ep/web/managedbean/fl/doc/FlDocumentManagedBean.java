@@ -13,8 +13,6 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-// TODO: Auto-generated Javadoc
-//BackingBEan
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;

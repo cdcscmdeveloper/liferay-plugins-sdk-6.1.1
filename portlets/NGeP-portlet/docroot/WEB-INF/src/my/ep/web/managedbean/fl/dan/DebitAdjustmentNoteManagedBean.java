@@ -19,7 +19,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Debit Adjustment Note.
  *
