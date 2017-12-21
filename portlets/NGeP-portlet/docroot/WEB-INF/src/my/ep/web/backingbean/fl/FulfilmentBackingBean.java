@@ -39,7 +39,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-// TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Fulfilment.
  *
@@ -358,5 +357,4 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 			getManagedBean().setRemarkList(remarkList);
 		}
 	}
-	
 }
