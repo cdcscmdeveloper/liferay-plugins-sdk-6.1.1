@@ -44,11 +44,16 @@ public class LocationSingleton {
 		return instance;
 	}
 
-
+	/**
+	 * update map states.
+	 */
 	public void updateMapStates(Long countryId, List<PmState> pmStates) {
 		mapStates.put(countryId, pmStates);
 	}
 
+	/**
+	 * isInitialization countryId.
+	 */
 	public Boolean isInitialization(Long countryId) {
 		if (mapStates.get(countryId) != null
 				&& mapStates.get(countryId).size() > 0) {
