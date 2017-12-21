@@ -22,7 +22,6 @@ import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Create Received Note.
  *
@@ -143,8 +142,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	public void setFlAttachment(FlAttachment flAttachment) {
 		this.flAttachment = flAttachment;
 	}
-
-	//public CreateDOManagedBean() {}
 
 	/**
 	 * Gets the selected addr row.

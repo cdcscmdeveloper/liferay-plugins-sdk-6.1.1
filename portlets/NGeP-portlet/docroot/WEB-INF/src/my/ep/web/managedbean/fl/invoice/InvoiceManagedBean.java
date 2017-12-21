@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.fl.invoice;
 
@@ -30,7 +30,6 @@ import my.ep.web.vo.TaxInvoiceVO;
 
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * Managed Bean for invoice.
  *

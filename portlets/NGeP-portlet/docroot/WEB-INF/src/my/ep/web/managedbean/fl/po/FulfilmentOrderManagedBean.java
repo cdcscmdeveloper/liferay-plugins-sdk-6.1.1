@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.fl.po;
 
 import java.math.BigDecimal;
@@ -40,7 +43,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Fulfillment Order.
  *
@@ -262,7 +264,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
 	
 	/* (non-Javadoc)
 	 * @see my.ep.web.managedbean.BaseManagedBean#getTaskName()
