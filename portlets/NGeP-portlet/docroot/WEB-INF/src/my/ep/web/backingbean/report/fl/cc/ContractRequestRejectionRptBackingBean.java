@@ -20,7 +20,7 @@ import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.cc.ContractRequestRejectionRptManagedBean;
 /**
- * Backing Bean for ContractRequestRpt.
+ * Backing Bean for ContractRequestRejectionRpt.
  *
  * @author KK LIM
  * @since 26/4/2017
