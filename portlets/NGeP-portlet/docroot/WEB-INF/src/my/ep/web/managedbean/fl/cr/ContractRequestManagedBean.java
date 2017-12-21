@@ -444,11 +444,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return flRequest;
 	}
 
-
 	public void setFlRequest(FlFulfilmentRequest flRequest) {
 		this.flRequest = flRequest;
 	}
-
 
 	/**
 	 * @return the selectedAddrRow
@@ -456,7 +454,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public FlDeliveryAddress getSelectedAddrRow() {
 		return selectedAddrRow;
 	}
-
 
 	/**
 	 * @param selectedAddrRow the selectedAddrRow to set
@@ -472,14 +469,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedDelAddr;
 	}
 
-
 	/**
 	 * @param selectedDelAddrList the selectedDelAddrList to set
 	 */
 	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
 		this.selectedDelAddr = selectedDelAddr;
 	}
-
 
 	/**
 	 * @return the ctContract
@@ -488,14 +483,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return ctContract;
 	}
 
-
 	/**
 	 * @param ctContract the ctContract to set
 	 */
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
-
 
 	/**
 	 * @return the contractList
@@ -504,14 +497,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return contractList;
 	}
 
-
 	/**
 	 * @param contractList the contractList to set
 	 */
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
 	}
-
 
 	/**
 	 * @return the selectedContract
@@ -520,7 +511,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedContract;
 	}
 
-
 	/**
 	 * @param selectedContract the selectedContract to set
 	 */
@@ -528,14 +518,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedContract = selectedContract;
 	}
 
-
 	/**
 	 * @return the selectedRowFlg
 	 */
 	public boolean isSelectedRowFlg() {
 		return selectedRowFlg;
 	}
-
 
 	/**
 	 * @param selectedRowFlg the selectedRowFlg to set
@@ -549,7 +537,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public boolean isCheckPtjFlg() {
 		return checkPtjFlg;
 	}
-
 
 	/**
 	 * @param checkPtjFlg the checkPtjFlg to set
@@ -565,14 +552,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return shippingInstr;
 	}
 
-
 	/**
 	 * @param shippingInstr the shippingInstr to set
 	 */
 	public void setShippingInstr(FlShippingInstr shippingInstr) {
 		this.shippingInstr = shippingInstr;
 	}
-
 
 	/**
 	 * @return the tempLogin
@@ -581,14 +566,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return tempLogin;
 	}
 
-
 	/**
 	 * @param tempLogin the tempLogin to set
 	 */
 	public void setTempLogin(String tempLogin) {
 		this.tempLogin = tempLogin;
 	}
-
 
 	/**
 	 * @return the docProcess
@@ -597,14 +580,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return docProcess;
 	}
 
-
 	/**
 	 * @param docProcess the docProcess to set
 	 */
 	public void setDocProcess(String docProcess) {
 		this.docProcess = docProcess;
 	}
-
 
 	/**
 	 * @return the flDocId
@@ -613,14 +594,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return flDocId;
 	}
 
-
 	/**
 	 * @param flDocId the flDocId to set
 	 */
 	public void setFlDocId(String flDocId) {
 		this.flDocId = flDocId;
 	}
-
 
 	/**
 	 * @return the buttonVal
@@ -629,14 +608,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return buttonVal;
 	}
 
-
 	/**
 	 * @param buttonVal the buttonVal to set
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
 	}
-
 
 	/**
 	 * @return the isMto
@@ -645,14 +622,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return isMto;
 	}
 
-
 	/**
 	 * @param isMto the isMto to set
 	 */
 	public void setMto(boolean isMto) {
 		this.isMto = isMto;
 	}
-
 
 	/**
 	 * @return the selectedPmAddrTypeList
@@ -661,14 +636,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedPmAddrTypeList;
 	}
 
-
 	/**
 	 * @param selectedPmAddrTypeList the selectedPmAddrTypeList to set
 	 */
 	public void setSelectedPmAddrTypeList(List<PmAddressType> selectedPmAddrTypeList) {
 		this.selectedPmAddrTypeList = selectedPmAddrTypeList;
 	}
-
 
 	/**
 	 * @return the contractedItemList
@@ -677,7 +650,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return contractedItemList;
 	}
 
-
 	/**
 	 * @param contractedItemList the contractedItemList to set
 	 */
@@ -685,14 +657,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.contractedItemList = contractedItemList;
 	}
 
-
 	/**
 	 * @return the selectedContractedItemList
 	 */
 	public List<CtContractItem> getSelectedContractedItemList() {
 		return selectedContractedItemList;
 	}
-
 
 	/**
 	 * @param selectedContractedItemList the selectedContractedItemList to set
@@ -702,7 +672,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedContractedItemList = selectedContractedItemList;
 	}
 
-
 	/**
 	 * @return the selectedItemRow
 	 */
@@ -710,14 +679,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedItemRow;
 	}
 
-
 	/**
 	 * @param selectedItemRow the selectedItemRow to set
 	 */
 	public void setSelectedItemRow(FlFulfilmentItem selectedItemRow) {
 		this.selectedItemRow = selectedItemRow;
 	}
-
 
 	/**
 	 * @return the approverMap
@@ -728,7 +695,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		}
 		return approverMap;
 	}
-
 
 	/**
 	 * @param approverMap the approverMap to set
@@ -744,14 +710,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return goId;
 	}
 
-
 	/**
 	 * @param goId the goId to set
 	 */
 	public void setGoId(Long goId) {
 		this.goId = goId;
 	}
-
 
 	/**
 	 * @return the soId
@@ -760,14 +724,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return soId;
 	}
 
-
 	/**
 	 * @param soId the soId to set
 	 */
 	public void setSoId(Long soId) {
 		this.soId = soId;
 	}
-
 
 	/**
 	 * @return the doId
@@ -776,14 +738,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return doId;
 	}
 
-
 	/**
 	 * @param doId the doId to set
 	 */
 	public void setDoId(Long doId) {
 		this.doId = doId;
 	}
-
 
 	/**
 	 * @return the subTotal
@@ -792,14 +752,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return subTotal;
 	}
 
-
 	/**
 	 * @param subTotal the subTotal to set
 	 */
 	public void setSubTotal(BigDecimal subTotal) {
 		this.subTotal = subTotal;
 	}
-
 
 	/**
 	 * @return the selectedItemAddr
@@ -808,14 +766,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedItemAddr;
 	}
 
-
 	/**
 	 * @param selectedItemAddr the selectedItemAddr to set
 	 */
 	public void setSelectedItemAddr(FlFulfilmentItemAddr selectedItemAddr) {
 		this.selectedItemAddr = selectedItemAddr;
 	}
-
 
 	/**
 	 * @return the selectedAddressRows
@@ -824,14 +780,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedAddressRows;
 	}
 
-
 	/**
 	 * @param selectedAddressRows the selectedAddressRows to set
 	 */
 	public void setSelectedAddressRows(List<FlDeliveryAddress> selectedAddressRows) {
 		this.selectedAddressRows = selectedAddressRows;
 	}
-
 
 	/**
 	 * @return the selectedItemsRows
@@ -840,14 +794,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return selectedItemsRows;
 	}
 
-
 	/**
 	 * @param selectedItemsRows the selectedItemsRows to set
 	 */
 	public void setSelectedItemsRows(List<FlFulfilmentItemAddr> selectedItemsRows) {
 		this.selectedItemsRows = selectedItemsRows;
 	}
-
 
 	/**
 	 * @return the isImportedItems
@@ -856,7 +808,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return isImportedItems;
 	}
 
-
 	/**
 	 * @param isImportedItems the isImportedItems to set
 	 */
@@ -864,14 +815,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.isImportedItems = isImportedItems;
 	}
 
-
 	/**
 	 * @return the pmOrgProfile
 	 */
 	public PmOrgProfile getPmOrgProfile() {
 		return pmOrgProfile;
 	}
-
 
 	/**
 	 * @param pmOrgProfile the pmOrgProfile to set
@@ -887,14 +836,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return pmUserOrg;
 	}
 
-
 	/**
 	 * @param pmUserOrg the pmUserOrg to set
 	 */
 	public void setPmUserOrg(PmUserOrg pmUserOrg) {
 		this.pmUserOrg = pmUserOrg;
 	}
-
 
 	/**
 	 * @return the requisitioner
@@ -903,14 +850,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return requisitioner;
 	}
 
-
 	/**
 	 * @param requisitioner the requisitioner to set
 	 */
 	public void setRequisitioner(String requisitioner) {
 		this.requisitioner = requisitioner;
 	}
-
 
 	/**
 	 * @return the approver
@@ -919,14 +864,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return approver;
 	}
 
-
 	/**
 	 * @param approver the approver to set
 	 */
 	public void setApprover(String approver) {
 		this.approver = approver;
 	}
-
 
 	/**
 	 * @return the docStatusId
@@ -935,14 +878,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return docStatusId;
 	}
 
-
 	/**
 	 * @param docStatusId the docStatusId to set
 	 */
 	public void setDocStatusId(Long docStatusId) {
 		this.docStatusId = docStatusId;
 	}
-
 
 	/**
 	 * @return the contractId
@@ -951,14 +892,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return contractId;
 	}
 
-
 	/**
 	 * @param contractId the contractId to set
 	 */
 	public void setContractId(Long contractId) {
 		this.contractId = contractId;
 	}
-
 
 	/**
 	 * @return the userGroupMap
@@ -967,14 +906,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return userGroupMap;
 	}
 
-
 	/**
 	 * @param userGroupMap the userGroupMap to set
 	 */
 	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
 		this.userGroupMap = userGroupMap;
 	}
-
 
 	/**
 	 * @return the agenciesList
@@ -983,14 +920,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return agenciesList;
 	}
 
-
 	/**
 	 * @param agenciesList the agenciesList to set
 	 */
 	public void setAgenciesList(List<Long> agenciesList) {
 		this.agenciesList = agenciesList;
 	}
-
 
 	/**
 	 * @return the testOrg
@@ -999,7 +934,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return testOrg;
 	}
 
-
 	/**
 	 * @param testOrg the testOrg to set
 	 */
@@ -1007,16 +941,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.testOrg = testOrg;
 	}
 
-
 	public List<VCtActiveContract> getActiveContractList() {
 		return activeContractList;
 	}
 
-
 	public void setActiveContractList(List<VCtActiveContract> activeContractList) {
 		this.activeContractList = activeContractList;
 	}
-
 
 	/**
 	 * @return the flManualAddress
@@ -1025,14 +956,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return flManualAddress;
 	}
 
-
 	/**
 	 * @param flManualAddress the flManualAddress to set
 	 */
 	public void setFlManualAddress(FlDeliveryAddress flManualAddress) {
 		this.flManualAddress = flManualAddress;
 	}
-
 
 	/**
 	 * @return the supplierAddress
@@ -1041,14 +970,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return supplierAddress;
 	}
 
-
 	/**
 	 * @param supplierAddress the supplierAddress to set
 	 */
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
 	}
-
 
 	/**
 	 * @return the receivingOffList
@@ -1057,7 +984,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return receivingOffList;
 	}
 
-
 	/**
 	 * @param receivingOffList the receivingOffList to set
 	 */
@@ -1065,14 +991,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.receivingOffList = receivingOffList;
 	}
 
-
 	/**
 	 * @return the chargeLineSelectedItemAddress
 	 */
 	public FlFulfilmentItemAddr getChargeLineSelectedItemAddress() {
 		return chargeLineSelectedItemAddress;
 	}
-
 
 	/**
 	 * @param chargeLineSelectedItemAddress the chargeLineSelectedItemAddress to set
@@ -1082,14 +1006,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.chargeLineSelectedItemAddress = chargeLineSelectedItemAddress;
 	}
 
-
 	/**
 	 * @return the selectedNodes
 	 */
 	public TreeNode[] getSelectedNodes() {
 		return selectedNodes;
 	}
-
 
 	/**
 	 * @param selectedNodes the selectedNodes to set
@@ -1098,14 +1020,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedNodes = selectedNodes;
 	}
 
-
 	/**
 	 * @return the selectedNode
 	 */
 	public TreeNode getSelectedNode() {
 		return selectedNode;
 	}
-
 
 	/**
 	 * @param selectedNode the selectedNode to set
@@ -1114,14 +1034,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedNode = selectedNode;
 	}
 
-
 	/**
 	 * @return the selectedItemChargeSection
 	 */
 	public FlFulfilmentItemAddr getSelectedItemChargeSection() {
 		return selectedItemChargeSection;
 	}
-
 
 	/**
 	 * @param selectedItemChargeSection the selectedItemChargeSection to set
@@ -1131,14 +1049,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedItemChargeSection = selectedItemChargeSection;
 	}
 
-
 	/**
 	 * @return the orderedAmtGrandTotal
 	 */
 	public BigDecimal getOrderedAmtGrandTotal() {
 		return orderedAmtGrandTotal;
 	}
-
 
 	/**
 	 * @param orderedAmtGrandTotal the orderedAmtGrandTotal to set
@@ -1147,14 +1063,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.orderedAmtGrandTotal = orderedAmtGrandTotal;
 	}
 
-
 	/**
 	 * @return the votFundList
 	 */
 	public List<PmVotFund> getVotFundList() {
 		return votFundList;
 	}
-
 
 	/**
 	 * @param votFundList the votFundList to set
@@ -1170,14 +1084,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return subSetiaList;
 	}
 
-
 	/**
 	 * @param subSetiaList the subSetiaList to set
 	 */
 	public void setSubSetiaList(List<PmSubSetia> subSetiaList) {
 		this.subSetiaList = subSetiaList;
 	}
-
 
 	/**
 	 * @return the prgActivityList
@@ -1186,14 +1098,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return prgActivityList;
 	}
 
-
 	/**
 	 * @param prgActivityList the prgActivityList to set
 	 */
 	public void setPrgActivityList(List<PmPrgActivity> prgActivityList) {
 		this.prgActivityList = prgActivityList;
 	}
-
 
 	/**
 	 * @return the manualAddrList
@@ -1202,14 +1112,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return manualAddrList;
 	}
 
-
 	/**
 	 * @param manualAddrList the manualAddrList to set
 	 */
 	public void setManualAddrList(List<SelectItem> manualAddrList) {
 		this.manualAddrList = manualAddrList;
 	}
-
 
 	/**
 	 * @return the votFundCode
@@ -1218,14 +1126,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return votFundCode;
 	}
 
-
 	/**
 	 * @param votFundCode the votFundCode to set
 	 */
 	public void setVotFundCode(String votFundCode) {
 		this.votFundCode = votFundCode;
 	}
-
 
 	/**
 	 * @return the projectCode
@@ -1234,14 +1140,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return projectCode;
 	}
 
-
 	/**
 	 * @param projectCode the projectCode to set
 	 */
 	public void setProjectCode(String projectCode) {
 		this.projectCode = projectCode;
 	}
-
 
 	/**
 	 * @return the setiaCode
@@ -1250,14 +1154,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return setiaCode;
 	}
 
-
 	/**
 	 * @param setiaCode the setiaCode to set
 	 */
 	public void setSetiaCode(String setiaCode) {
 		this.setiaCode = setiaCode;
 	}
-
 
 	/**
 	 * @return the subSetiaCode
@@ -1266,14 +1168,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return subSetiaCode;
 	}
 
-
 	/**
 	 * @param subSetiaCode the subSetiaCode to set
 	 */
 	public void setSubSetiaCode(String subSetiaCode) {
 		this.subSetiaCode = subSetiaCode;
 	}
-
 
 	/**
 	 * @return the prgActivityCode
@@ -1282,14 +1182,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return prgActivityCode;
 	}
 
-
 	/**
 	 * @param prgActivityCode the prgActivityCode to set
 	 */
 	public void setPrgActivityCode(String prgActivityCode) {
 		this.prgActivityCode = prgActivityCode;
 	}
-
 
 	/**
 	 * @return the votFundId
@@ -1298,15 +1196,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return votFundId;
 	}
 
-
 	/**
 	 * @param votFundId the votFundId to set
 	 */
 	public void setVotFundId(Long votFundId) {
 		this.votFundId = votFundId;
 	}
-
-
 
 	/**
 	 * @return the subSetiaId
@@ -1315,14 +1210,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return subSetiaId;
 	}
 
-
 	/**
 	 * @param subSetiaId the subSetiaId to set
 	 */
 	public void setSubSetiaId(Long subSetiaId) {
 		this.subSetiaId = subSetiaId;
 	}
-
 
 	/**
 	 * @return the prgActivityId
@@ -1331,14 +1224,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return prgActivityId;
 	}
 
-
 	/**
 	 * @param prgActivityId the prgActivityId to set
 	 */
 	public void setPrgActivityId(Long prgActivityId) {
 		this.prgActivityId = prgActivityId;
 	}
-
 
 	/**
 	 * @return the chargeLineItemRoot
@@ -1347,14 +1238,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return chargeLineItemRoot;
 	}
 
-
 	/**
 	 * @return the chargeCheck
 	 */
 	public String getChargeCheck() {
 		return chargeCheck;
 	}
-
 
 	/**
 	 * @param chargeCheck the chargeCheck to set
@@ -1363,14 +1252,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.chargeCheck = chargeCheck;
 	}
 
-
 	/**
 	 * @return the deleteButtonHide
 	 */
 	public boolean isDeleteButtonHide() {
 		return deleteButtonHide;
 	}
-
 
 	/**
 	 * @param deleteButtonHide the deleteButtonHide to set
@@ -1379,14 +1266,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.deleteButtonHide = deleteButtonHide;
 	}
 
-
 	/**
 	 * @return the termDays
 	 */
 	public String getTermDays() {
 		return termDays;
 	}
-
 
 	/**
 	 * @param termDays the termDays to set
@@ -1395,14 +1280,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.termDays = termDays;
 	}
 
-
 	/**
 	 * @return the countryList
 	 */
 	public List<PmCountry> getCountryList() {
 		return countryList;
 	}
-
 
 	/**
 	 * @param countryList the countryList to set
@@ -1411,14 +1294,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.countryList = countryList;
 	}
 
-
 	/**
 	 * @return the stateList
 	 */
 	public List<PmState> getStateList() {
 		return stateList;
 	}
-
 
 	/**
 	 * @param stateList the stateList to set
@@ -1427,14 +1308,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.stateList = stateList;
 	}
 
-
 	/**
 	 * @return the divisionList
 	 */
 	public List<PmDivision> getDivisionList() {
 		return divisionList;
 	}
-
 
 	/**
 	 * @param divisionList the divisionList to set
@@ -1443,14 +1322,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.divisionList = divisionList;
 	}
 
-
 	/**
 	 * @return the cityList
 	 */
 	public List<PmCity> getCityList() {
 		return cityList;
 	}
-
 
 	/**
 	 * @param cityList the cityList to set
@@ -1459,14 +1336,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.cityList = cityList;
 	}
 
-
 	/**
 	 * @return the districtList
 	 */
 	public List<PmDistrict> getDistrictList() {
 		return districtList;
 	}
-
 
 	/**
 	 * @param districtList the districtList to set
@@ -1475,14 +1350,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.districtList = districtList;
 	}
 
-
 	/**
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
-
 
 	/**
 	 * @param selectedTabIndex the selectedTabIndex to set
@@ -1491,14 +1364,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
-
 	/**
 	 * @return the required
 	 */
 	public boolean isRequired() {
 		return required;
 	}
-
 
 	/**
 	 * @param required the required to set
@@ -1507,14 +1378,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.required = required;
 	}
 
-
 	/**
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
 		return pmUser;
 	}
-
 
 	/**
 	 * @param pmUser the pmUser to set
@@ -1523,14 +1392,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.pmUser = pmUser;
 	}
 
-
 	/**
 	 * @return the glAccountList
 	 */
 	public List<PmGlAccount> getGlAccountList() {
 		return glAccountList;
 	}
-
 
 	/**
 	 * @param glAccountList the glAccountList to set
@@ -1539,14 +1406,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.glAccountList = glAccountList;
 	}
 
-
 	/**
 	 * @return the votFundType
 	 */
 	public String getVotFundType() {
 		return votFundType;
 	}
-
 
 	/**
 	 * @param votFundType the votFundType to set
@@ -1555,14 +1420,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.votFundType = votFundType;
 	}
 
-
 	/**
 	 * @return the assetIndCode
 	 */
 	public String getAssetIndCode() {
 		return assetIndCode;
 	}
-
 
 	/**
 	 * @param assetIndCode the assetIndCode to set
@@ -1571,14 +1434,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.assetIndCode = assetIndCode;
 	}
 
-
 	/**
 	 * @return the glAccountCode
 	 */
 	public String getGlAccountCode() {
 		return glAccountCode;
 	}
-
 
 	/**
 	 * @param glAccountCode the glAccountCode to set
@@ -1587,14 +1448,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.glAccountCode = glAccountCode;
 	}
 
-
 	/**
 	 * @return the assetIndId
 	 */
 	public Long getAssetIndId() {
 		return assetIndId;
 	}
-
 
 	/**
 	 * @param assetIndId the assetIndId to set
@@ -1603,14 +1462,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.assetIndId = assetIndId;
 	}
 
-
 	/**
 	 * @return the glAccountId
 	 */
 	public Long getGlAccountId() {
 		return glAccountId;
 	}
-
 
 	/**
 	 * @param glAccountId the glAccountId to set
@@ -1619,14 +1476,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.glAccountId = glAccountId;
 	}
 
-
 	/**
 	 * @return the financingTypeCode
 	 */
 	public String getFinancingTypeCode() {
 		return financingTypeCode;
 	}
-
 
 	/**
 	 * @param financingTypeCode the financingTypeCode to set
@@ -1635,14 +1490,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.financingTypeCode = financingTypeCode;
 	}
 
-
 	/**
 	 * @return the supplierBranchesList
 	 */
 	public List<SelectItem> getSupplierBranchesList() {
 		return supplierBranchesList;
 	}
-
 
 	/**
 	 * @param supplierBranchesList the supplierBranchesList to set
@@ -1658,14 +1511,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return deliveryTerm;
 	}
 
-
 	/**
 	 * @param deliveryTerm the deliveryTerm to set
 	 */
 	public void setDeliveryTerm(int deliveryTerm) {
 		this.deliveryTerm = deliveryTerm;
 	}
-
 
 	/**
 	 * @return the zonal
@@ -1674,14 +1525,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return zonal;
 	}
 
-
 	/**
 	 * @param zonal the zonal to set
 	 */
 	public void setZonal(boolean zonal) {
 		this.zonal = zonal;
 	}
-
 
 	/**
 	 * @return the manualAddressList
@@ -1690,14 +1539,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return manualAddressList;
 	}
 
-
 	/**
 	 * @param manualAddressList the manualAddressList to set
 	 */
 	public void setManualAddressList(List<PmAddressType> manualAddressList) {
 		this.manualAddressList = manualAddressList;
 	}
-
 
 	/**
 	 * @return the orgProfileIds
@@ -1706,14 +1553,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return orgProfileIds;
 	}
 
-
 	/**
 	 * @param orgProfileIds the orgProfileIds to set
 	 */
 	public void setOrgProfileIds(String orgProfileIds) {
 		this.orgProfileIds = orgProfileIds;
 	}
-
 
 	/**
 	 * @return the addressTypesList
@@ -1722,14 +1567,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return addressTypesList;
 	}
 
-
 	/**
 	 * @param addressTypesList the addressTypesList to set
 	 */
 	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
 		this.addressTypesList = addressTypesList;
 	}
-
 
 	/**
 	 * @return the manualAddressMap
@@ -1738,7 +1581,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return manualAddressMap;
 	}
 
-
 	/**
 	 * @param manualAddressMap the manualAddressMap to set
 	 */
@@ -1746,14 +1588,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.manualAddressMap = manualAddressMap;
 	}
 
-
 	/**
 	 * @return the selectedAddrTypeList
 	 */
 	public List<PmAddressType> getSelectedAddrTypeList() {
 		return selectedAddrTypeList;
 	}
-
 
 	/**
 	 * @param selectedAddrTypeList the selectedAddrTypeList to set
@@ -1769,14 +1609,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return fulfilmentRequisitioner;
 	}
 
-
 	/**
 	 * @param fulfilmentRequisitioner the fulfilmentRequisitioner to set
 	 */
 	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
 		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
 	}
-
 
 	/**
 	 * @return the maxDate
@@ -1785,7 +1623,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return maxDate;
 	}
 
-
 	/**
 	 * @param maxDate the maxDate to set
 	 */
@@ -1793,14 +1630,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.maxDate = maxDate;
 	}
 
-
 	/**
 	 * @param userGroupList the userGroupList to set
 	 */
 	public void setUserGroupList(List<PmUserGroup> userGroupList) {
 		this.userGroupList = userGroupList;
 	}
-
 
 	/**
 	 * @return the userGroupList
@@ -1812,14 +1647,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return userGroupList;
 	}
 
-
 	/**
 	 * @return the currentPtjGroupId
 	 */
 	public Long getCurrentPtjGroupId() {
 		return currentPtjGroupId;
 	}
-
 
 	/**
 	 * @param currentPtjGroupId the currentPtjGroupId to set
@@ -1828,14 +1661,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.currentPtjGroupId = currentPtjGroupId;
 	}
 
-
 	/**
 	 * @return the currentPreparedOrgId
 	 */
 	public Long getCurrentPreparedOrgId() {
 		return currentPreparedOrgId;
 	}
-
 
 	/**
 	 * @param currentPreparedOrgId the currentPreparedOrgId to set
