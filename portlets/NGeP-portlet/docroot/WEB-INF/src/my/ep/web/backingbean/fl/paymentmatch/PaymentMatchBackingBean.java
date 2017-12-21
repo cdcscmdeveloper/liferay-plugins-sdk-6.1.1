@@ -130,7 +130,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
-// TODO: Auto-generated Javadoc
 /**
  * Payment Match Backing Bean.
  *
@@ -157,7 +156,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl//receivednote/frnBasePage.xhtml";
 	private IPagingDataModel<Object[]> searchVot = new SearchVotPagingDataModel();
 	private IPagingDataModel<Object[]> searchFund = new SearchFundPagingDataModel();
-	
 	
 	/**
 	 * Gets the class name.
@@ -1860,6 +1858,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		return items;
 	}
 	
+	/**
+	 * search action Vot Fund
+	 */
 	public void searchAction(){
 		if(getManagedBean().getSelectedVotFundId() != null){
 			if(getManagedBean().getSelectedVotFundId() == 2){//Dana
@@ -1871,6 +1872,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		
 	}
 	
+	/**
+	 * reset action
+	 */
 	public void resetAction(){
 		getManagedBean().setSelectedFundObj(null);
 		getManagedBean().setSelectedVotObj(null);
@@ -2034,6 +2038,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		return items;
 	}
 	
+	/**
+	 * populate selected obj VotFund.
+	 */
 	public void populateSelectedObj(){
 		Object[] obj = null;
 		BigDecimal votFundId = null;
@@ -2088,6 +2095,4 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		return getManagedBean().getPopulateSubSetiaList();
 	}
 	
-	
 }
-
