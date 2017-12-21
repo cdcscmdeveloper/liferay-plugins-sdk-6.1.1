@@ -941,8 +941,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete the 
-	 * selected frequency schedule from schedule datatable.
+	 * The method used to delete the selected frequency schedule(s).
 	 */
 	public void deleteScheduleDetails() {
 		try {
@@ -962,8 +961,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete the 
-	 * progressive payment  from  datatable.
+	 * The method used to delete the selected progressive payment(s).
 	 */
 	public void deleteProgressiveDetails(){
 		try {
@@ -1250,8 +1248,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete the 
-	 * deduction list from datatable list.
+	 * The method used to delete the selected deduction(s).
 	 */
 	public void deleteDeductionDetails() {
 		try {
@@ -1282,7 +1279,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete the selected deduction clause.
+	 * The method used to delete the selected deduction clause(s).
 	 */
 	public void deleteClauseDetails() {
 		try {
@@ -1319,7 +1316,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into datatable.
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -1333,9 +1330,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into deduction datatable.
+	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneDeductCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -1353,10 +1350,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into deduction clause datatable
 	 * 
 	 * @param pass ajax event type
-	 * @return boolean value
 	 * */
 	public void selectOneClauseCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
@@ -1844,7 +1840,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete the selected agency.
+	 * The method used to delete the selected agency(s).
 	 */
 	public void deleteAgencyDetails() {
 		try {
@@ -2328,6 +2324,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return false;
 	}
+	
 	/**
 	 * The method used to upload bond exempted file.
 	 * 
@@ -2353,7 +2350,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into performance bond datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2375,7 +2372,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into performance bond datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2395,7 +2392,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into deduction datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2414,7 +2411,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into deduction clause datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2436,7 +2433,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into schedule datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2458,7 +2455,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into schedule datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2478,7 +2475,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into PID datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2500,7 +2497,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into PID datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2520,7 +2517,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into progressive payment datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2542,7 +2539,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into progressive payment datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2562,7 +2559,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into agency datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2579,7 +2576,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into agency datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2702,7 +2699,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to remove the selected performance bond(s).
+	 * The method used to delete the selected performance bond(s).
 	 */
 	public void removePerformanceBond() {
 		try {
@@ -3187,8 +3184,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * This method used to delete
-	 * selected PID reason types from datatables
+	 * This method used to delete the selected PID reason(s).
 	 */		
 	public void deletePidPurchase(){
 		try {
@@ -3476,7 +3472,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into data table
+	 * Function to check / uncheck all checkbox into agency datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -3499,7 +3495,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check/ uncheck single checkbox into data table
+	 * Function to check / uncheck single checkbox into agency datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
