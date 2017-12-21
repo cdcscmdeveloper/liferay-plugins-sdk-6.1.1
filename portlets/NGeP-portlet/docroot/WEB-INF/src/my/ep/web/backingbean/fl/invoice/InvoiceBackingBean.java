@@ -1130,8 +1130,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			calInvSummary();
 		}
 	}
-
-
 	
 	/**
 	 * Gets the populate bank account list based on branch name and supplier id.
@@ -1509,7 +1507,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		return null;
 	}
-	
 	
 	/**
 	 * Page navigation to FLDoc search page in INV.
