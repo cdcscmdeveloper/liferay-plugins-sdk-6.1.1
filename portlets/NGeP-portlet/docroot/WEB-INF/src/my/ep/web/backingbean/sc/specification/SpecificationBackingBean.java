@@ -12521,6 +12521,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						"technicalStandardChecklistDlgs.show()");
 			}
 
+		}else{
+			pmdocument = true;	
 		}
 		return pmdocument;
 	}
@@ -12552,6 +12554,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						"financialStandardChecklistDlgs.show()");
 			}
 
+		}else{
+			pmdocument = true;
+			
 		}
 		return pmdocument;
 	}
