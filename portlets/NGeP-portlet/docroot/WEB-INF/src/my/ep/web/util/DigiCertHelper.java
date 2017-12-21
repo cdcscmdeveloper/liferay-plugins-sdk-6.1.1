@@ -20,6 +20,7 @@ import my.ep.web.constant.SPKIConst;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
@@ -37,6 +38,7 @@ public class DigiCertHelper {
 	private static KMCClient client;
 	private static String dns;
 	private static String revokeDns;
+	public static Logger log = Logger.getLogger(DigiCertHelper.class);
 
 	public KMCClient getKMCClient() throws KMCAPIException {
 		URL resource = getClass().getResource(".");
@@ -148,6 +150,8 @@ public class DigiCertHelper {
 
 	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
+		log.info("DIGICERT SIGNING:" + identificationNo + "||" + epNo + "||"
+				+ pin + "||" + dataForSigning);
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
 		try {
@@ -157,6 +161,8 @@ public class DigiCertHelper {
 							identificationNo, epNo, pin.toCharArray(),
 							challenges,
 							new ByteArrayInputStream(dataForSigning.getBytes())));
+
+			log.info("DIGICERT SIGNING STATUS CODE:" + res.getStatusCode());
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
