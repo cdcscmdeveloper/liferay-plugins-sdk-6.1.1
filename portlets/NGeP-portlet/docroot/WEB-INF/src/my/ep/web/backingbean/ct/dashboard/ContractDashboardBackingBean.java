@@ -41,6 +41,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean(name="contractDashboardBackingBean")
 @ViewScoped
 public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashboardManagedBean>{
+	
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The function constructor used for initializing the variable.

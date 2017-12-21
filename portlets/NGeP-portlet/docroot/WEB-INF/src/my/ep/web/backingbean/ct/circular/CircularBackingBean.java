@@ -48,6 +48,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean
 @ViewScoped
 public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
+	
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The method used for searching the circular list.
@@ -241,6 +243,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 
 	/**
 	 * This  method used to fetch status of circular
+	 * 
+	 * @return the selection list of circular status
 	 */
 	public SelectItem[] getStatusDropdown() {
 		IStatusSO statusSO = null;
@@ -276,7 +280,6 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * Method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderSearch(boolean trackingDiarySearch) {
-		//renewSesionObject();
 		searchReset();
 		getManagedBean().setReadOnly(false);
 		getManagedBean().resetCircularListingPagingDataModel();
@@ -313,6 +316,10 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	/**
 	 * User need to make decision on circular maintenance page
 	 * Navigate to circular page as per user selection for update or view
+	 * 
+	 * @param action			the user action
+	 * @param circularVerId		the circular version id
+	 * @return the navigate URL 
 	 * */
 	public String gotoPage(String action, Long circularVerId) {
 
@@ -367,7 +374,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 
 	/**
 	 * Method used to check is it the login user have the Panel Circular Admin Role
-	 * return @param boolean 
+	 * 
+	 * @return true, if login user is panel administrator
+	 *         false, if login user is not panel administrator
 	 */
 	public boolean isPanelAdmin() {
 		return new FacesScopes().hasRoleUser(RoleCode.BPK_PCA.value());
@@ -375,7 +384,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 
 	/**
 	 * Method used to check is it the login user have the Cental Contract Admin Role
-	 * return @param boolean
+	 * 
+	 * @return true, if login user is central contract administrator
+	 *         false, if login user is not central contract administrator
 	 */
 	public boolean isCentralContractAdmin() {
 		return new FacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
@@ -383,7 +394,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 
 	/**
 	 * Method used to check is it the login user have the Auditor Role
-	 * return @param boolean
+	 * 
+	 * @return true, if login user is auditor
+	 *         false, if login user is not auditor
 	 */
 	public boolean isAuditor() {
 		return new FacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) ||  

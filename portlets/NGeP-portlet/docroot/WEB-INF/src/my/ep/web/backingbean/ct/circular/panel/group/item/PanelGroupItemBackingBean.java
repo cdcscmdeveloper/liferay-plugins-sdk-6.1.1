@@ -35,7 +35,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * Panel Group Item Backing Bean
+ * panel item group Backing Bean
  * 
  * @author Alam
  * @since 2/6/2015
@@ -50,9 +50,9 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 
 	/**
 	 * The method call by page to display list of status
-	 * for panel group item
+	 * for panel item group
 	 *
-	 * @return SelectItem list  
+	 * @return the selection list of status
 	 */
 	public static SelectItem[] getStatusList() {
 		SelectItem[] items =  new SelectItem[3];
@@ -66,8 +66,10 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	}
 
 	/**
-	 * The method used to update panel group item list
-	 * @return back to maintenance page
+	 * The method used to navigate to circular maintenance screen.
+	 * 
+	 * @param panelGroup  the object of panel item group
+	 * @return the navigate URL 
 	 */
 	public String goToMaintaincePage(CtPanelItemGroup panelGroup){
 		getManagedBean().setCtPanelItemGroup(panelGroup);
@@ -75,8 +77,9 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	}
 
 	/**
-	 * The method used to create panel group item list
-	 * @return back to maintenance page
+	 * The method used to navigate to create panel item group screen.
+	 * 
+	 * @return the navigate URL 
 	 */
 	public String createpanelGroupItem(){
 		CtPanelItemGroup panelItemGroup= new CtPanelItemGroup();
@@ -85,8 +88,9 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	}
 
 	/**
-	 * The method used to render page on previous page
-	 * @return back to search page
+	 * The method used to navigate to panel item group search screen.
+	 * 
+	 * @return the navigate URL 
 	 */
 	public String redirectItemSearch() {
 		return NAV_TO_MAIN;
@@ -95,6 +99,7 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	/**
 	 * The method used to validate / save / update the 
 	 * panel item group with confirmation message
+	 * 
 	 * @return the navigate URL 
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
@@ -136,7 +141,9 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 
 	/**
 	 * The method used to validate panel item group 
-	 * @return boolean value
+	 * 
+	 * @return true, if panel item group is existed
+	 *         false, if panel item group is not existed
 	 */
 	public boolean isExistPanelGroupItem(String groupItemName) {
 		IPanelGroupItemSO panelGroupItemSO = (IPanelGroupItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelGroupItemSO.class);
@@ -152,7 +159,7 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 
 	/**
 	 * The method used to reset the search criteria for 
-	 * panel group item.
+	 * panel item group.
 	 */
 	public void resetPanelGroupItemSearch(){
 		getManagedBean().setLazy(false);
@@ -175,6 +182,7 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	 * The method used for searching the panel item group
 	 * A warning message will display on screen when searching
 	 * with empty search criteria.
+	 * 
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
@@ -199,7 +207,7 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 	}
 
 	/**
-	 * Pagination for panel group item search list
+	 * Pagination for panel item group search list
 	 * @return list of item group
 	 */
 	private class PanelGroupItemPagingDataModel extends PagingDataModel<CtPanelItemGroup> {

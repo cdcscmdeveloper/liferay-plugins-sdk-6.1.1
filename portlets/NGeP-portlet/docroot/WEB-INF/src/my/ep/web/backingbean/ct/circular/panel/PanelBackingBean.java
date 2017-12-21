@@ -2558,10 +2558,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 
 	/**
-	 * This method used to 
-	 * compare PID Reason other with other
-	 * @Reason Id reasonId
-	 * @return boolean value
+	 * This method used to compare
+	 * of purchase in default category reason equals other
+	 * 
+	 * @param reasonId   selected PID reason id
+	 * @return true,     if selected PID reason code is equals other
+	 *         false,    if selected PID reason code is not equals other
 	 */
 	public boolean PidPurchaseTypeOther(Long reasonId){
 
@@ -2591,13 +2593,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return false;
 	}
 
-	/**
-	 * This method used to validate
-	 *  pid reason during selection of other by user
-	 *  @param Long reasonId
-	 *  @return boolean value
-	 * */
-	public void validatePidReason(Long resonId){
+	private void validatePidReason(Long resonId){
 
 		if(resonId == null || resonId.intValue() == 0){
 			return;
@@ -2766,39 +2762,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}	
 	}
 
-
-	/*public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
-
-		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()) {
-			if (getManagedBean().isSelectAll()) {
-				ctCancelCirculars.setSelectedCheckBox(true);
-		       }else {
-		    	   ctCancelCirculars.setSelectedCheckBox(false);
-		       }
-	}
-
-	 if((boolean) e.getComponent().getAttributes().get("value")){
-		 getManagedBean().setButtonHideActiveDel(false);
-	 }else{
-		 getManagedBean().setButtonHideActiveDel(true);
-	 }		
-    }
-
-    public void selectCancelCheckboxSelectList(AjaxBehaviorEvent e){
-    	getManagedBean().setSelectAll(false);
-    	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()){
-    		if(ctCancelCirculars.isSelectedCheckBox()){
-    			getManagedBean().setButtonHideActiveDel(false);
-    			return;
-    		}
-    	}
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideActiveDel(false);
-		}else{
-			getManagedBean().setButtonHideActiveDel(true);
-		}	
-    }*/
-
 	/**
 	 * Function to check / uncheck all checkbox into data table
 	 * @param pass ajax event type
@@ -2820,6 +2783,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 		}
 	}
+	
 	/**
 	 * The method used to delete the selected deduction clause.
 	 */
