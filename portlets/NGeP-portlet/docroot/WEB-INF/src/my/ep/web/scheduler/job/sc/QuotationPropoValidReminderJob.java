@@ -80,7 +80,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 					} else {
 						log.info("user not found.");
 					}
-					bean.setDocNo(qtId);
+					bean.setDocNo(objects[1].toString());
 					bean.setDueDate(propoValidityEndDate);
 					bean.setReciepts(userIds);
 					bean.setData(objects);

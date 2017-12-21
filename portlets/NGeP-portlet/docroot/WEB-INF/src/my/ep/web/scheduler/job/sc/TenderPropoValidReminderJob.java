@@ -81,7 +81,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 					} else {
 						log.info("user not found for qt id "+qtId);
 					}
-					bean.setDocNo(qtId);
+					bean.setDocNo(objects[1].toString());
 					bean.setDueDate(propoValidityEndDate);
 					bean.setReciepts(userIds);
 					bean.setData(objects);
