@@ -24,6 +24,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.type.pm.RoleCode;
@@ -31,6 +32,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -255,18 +257,21 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob {
 	 *
 	 * @return the max proposal valid days
 	 */
-	public Integer getMaxProposalValidDays() {
+	public List<Integer> getMaxProposalValidDays() {
+		List<Integer> maxProposalValidDays = new ArrayList<Integer>(); 
 		KpiReqDTO reqDTO = new KpiReqDTO();
 		reqDTO.setMaxKPIValue(Boolean.TRUE);
 		reqDTO.setKpiCode(getKpiCode());// days to send reminder
 		KpiResDTO resDTO = getKpiSO().retrieveKpiValueByModuleCodeAndKpiCode(
 				reqDTO);
 		if (resDTO.isSuccessful()) {
-			if(resDTO.getKpiValue() != null){
-				return resDTO.getKpiValue().getKpiValue();
+			if(CollectionUtils.isNotEmpty(resDTO.getKpiValues())){
+				for (PmKPIValue pmKPIValue : resDTO.getKpiValues()) {
+					maxProposalValidDays.add(pmKPIValue.getKpiValue());
+				}
 			}
 		}
-		return null;
+		return maxProposalValidDays;
 	}
 	private IPmKpiSO getKpiSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
