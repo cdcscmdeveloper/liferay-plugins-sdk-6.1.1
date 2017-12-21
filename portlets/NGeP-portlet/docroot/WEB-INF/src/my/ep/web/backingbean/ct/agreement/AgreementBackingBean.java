@@ -2242,8 +2242,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 	 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck all checkbox into agency signer datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2265,8 +2264,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck single checkbox into agency signer datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2288,7 +2286,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * The method used to delete the selected row
+	 * The method used to delete the selected row(s)
 	 */
 	public void deleteTableRow(String tableType) {
 		try {
@@ -2345,8 +2343,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for all checkbox 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck all checkbox into agency witness datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2367,8 +2364,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck single checkbox into agency witness datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2390,8 +2386,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for all checkbox 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck all checkbox into supplier signer datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2413,8 +2408,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck single checkbox into supplier signer datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2436,8 +2430,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for all checkbox 
-	 * Set boolean value for user action 
+	 * Function to check / uncheck all checkbox into supplier witness datatable
 	 * 
 	 * @param pass ajax event type
 	 * */
@@ -2458,8 +2451,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 
 	/**
-	 * Method to set boolean value for single checkbox 
-	 * Set boolean value for user action 
+	* Function to check / uncheck single checkbox into supplier witness datatable
 	 * 
 	 * @param pass ajax event type
 	 * */

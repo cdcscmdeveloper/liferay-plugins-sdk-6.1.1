@@ -59,6 +59,14 @@ public class AmendmentStreamContent {
 		return getLoaStreamContent();
 	}
 
+	/**
+	 * To get Attachement as a stream
+	 * 
+	 * @param filePath
+	 * @param contentType
+	 * @return StreamContent instance
+	 * @throws IOException
+	 */
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
 			String filePath, String contentType) throws IOException {
 		if (filePath != null) {
