@@ -177,8 +177,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.flAttachment = flAttachment;
 	}
 
-	//public CreateDOManagedBean() {}
-
 	/**
 	 * Gets the selected addr row.
 	 *
