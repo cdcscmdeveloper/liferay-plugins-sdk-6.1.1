@@ -103,7 +103,6 @@ public class AmendTabSideMenus {
 					ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
-
 		if (menuWithAmendSupplier == null) {
 			menuWithAmendSupplier =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),

@@ -1284,7 +1284,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used for controlling the tab menu
 	 * of central contract dynamically.
 	 * 
-	 * @param  currentTab  current selected tab index
 	 * @param  outputTab   current selected tab constant
 	 */
 	public void setTabCentralValue(String outputTab) {		
@@ -1432,7 +1431,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used for controlling the tab menu
 	 * of ministry contract dynamically.
 	 * 
-	 * @param  currentTab  current selected tab index
 	 * @param  outputTab   current selected tab constant
 	 */
 	public void setTabValue(String outputTab) {	 
@@ -1645,6 +1643,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to navigate to contract termination screen
 	 * for termination purpose.
 	 * 
+	 * @param contractId
 	 * @return the navigate URL 
 	 */
 	public String gotoTerminatePage(Long contractId ) {
@@ -2471,6 +2470,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	/**
 	 * Get PTJ Group condition for construct the LOV listing
+	 * 
 	 * @return String
 	 */
 	public String getPTJGroupCondition() {
@@ -2482,6 +2482,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	/**
 	 * Get PTJ condition for construct the LOV listing
+	 * 
 	 * @return String
 	 */
 	public String getPtjCondition() {
@@ -2516,6 +2517,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	/**
 	 * The method used for generating a list of available history of
 	 * loa contract version as selection.
+	 * 
 	 * @return loaContractVerList  the selection list
 	 */
 	public SelectItem[] getLoaContractVerList() {
@@ -2586,7 +2588,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to proceed for fulfilment with / without agreement
 	 * of migrated contract.
 	 * 
-	 * @param resDTO  the response data transfer object for contract
+	 * @param withAgreement  the flag to proceed with agreement
 	 */
 	public void proceedForFulfilment(boolean withAgreement) {
 		if (withAgreement) {

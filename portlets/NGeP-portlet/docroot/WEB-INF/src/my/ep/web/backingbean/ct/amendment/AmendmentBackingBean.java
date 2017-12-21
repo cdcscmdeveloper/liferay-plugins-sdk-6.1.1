@@ -403,11 +403,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
 				getManagedBean().setPbConfirmMeeting(true);
-				//					      if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null
-				//							    && !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().isEmpty()) {
-				//						          Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
-				//					      
-				//					      }
 				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
 					getManagedBean().setSignUpdateDecision(true);
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == null) {
@@ -1084,7 +1079,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * is failed. User required to modify the information accordingly
 	 * to proceed.
 	 *
-	 * @param  outcome  the user action on this contract. The validation 
+	 * @param  action	the user action on this contract. The validation 
 	 * 					will invoke base on the action
 	 */
 	public void validateContractAmendment(String action) throws EpException {
@@ -2250,6 +2245,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	/**
 	 * The method used for rendering the related information for
 	 * different amendment type.
+	 * 
+	 * @param value
 	 */
 	public boolean getAmendValue(int value) {		
 		if (value == 1 && (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange())) {
@@ -2365,6 +2362,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	/**
 	 * The method used to indicate the label 
 	 * flag for new price of product or service item.
+	 * 
+	 * @param ctContractItem	the object of contract item
 	 */
 	private void newItemPrice(CtContractItem ctContractItem) {
 		if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty()
@@ -2945,7 +2944,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 
 	/**
-	 * The method used to remove the selected meeting committee(s).
+	 * The method used to delete the selected meeting committee(s).
 	 */
 	public void removeCommitteeMembers(){
 		try {
@@ -3996,51 +3995,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		String fileFormat= attachmentFormat.format(item.getFileName(), null);
 		filePath = filePath + "/" + fileFormat;
 		CtAttachment attachment = new CtAttachment();
-		/*if(getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
-				  InputStream is = new ByteArrayInputStream(item.getContents());
-				  WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage .load(is);
-
-				    MainDocumentPart mdp = wordMLPackage.getMainDocumentPart();
-		            List<Relationship> hfRels = new ArrayList<Relationship>();
-		            for (Relationship rel : mdp.getRelationshipsPart().getRelationships().getRelationship() ) {
-
-		                if (rel.getType().equals(Namespaces.HYPERLINK)
-		                        || rel.getType().equals(Namespaces.RELATIONSHIPS)) {
-		                    hfRels.add(rel);
-		                }
-		            }
-		            for (Relationship rel : hfRels ) {
-		                mdp.getRelationshipsPart().removeRelationship(rel);
-		            }
-
-				    WordprocessingMLPackage wordMLPackage1 = WordprocessingMLPackage.createPackage();
-		            wordMLPackage1 = wordMLPackage.getMainDocumentPart().convertAltChunks();
-
-
-
-
-		            PdfSettings pdfSettings = new PdfSettings();
-		            org.docx4j.convert.out.pdf.PdfConversion conversion = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage1);
-			        OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
-			        conversion.output(out, pdfSettings);
-				    attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(getFileName(filePath)+".pdf"));
-				    attachment.setFileName(getFileName(fileFormat)+".pdf");
-		} else if (getFileExtension(item.getFileName()).equalsIgnoreCase("doc")	){
-			  WordprocessingMLPackage wordMLPackage = Doc.convert((FileInputStream) item.getInputstream());
-	          PdfSettings pdfSettings = new PdfSettings();
-	          org.docx4j.convert.out.pdf.PdfConversion conversion = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage);
-	          OutputStream out = new FileOutputStream(new File(getFileName(filePath)+".pdf"));
-	          conversion.output(out, pdfSettings);
-		}else {
-		 */
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		attachment.setFileName(item.getFileName());
-		//}
-
-
+		
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -4054,41 +4014,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
 			getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
 		}
-	}
-
-	//	private String getFileExtension( String fileName) {
-	//	    try {
-	//	        return fileName.substring(fileName.lastIndexOf(".") + 1);
-	//	    } catch (Exception e) {
-	//	        return "";
-	//	    }
-	//	}
-
-	public static String getFileName(String fileName) {
-		int index = fileName.lastIndexOf('.');
-		if (index == -1) {
-			return fileName;
-		} else {
-			return fileName.substring(0, index);
-		}
-	}
-
-	/**
-	 * The method used to convert the template into document file.
-	 * @throws Exception 
-	 */
-	protected  void convertPDFToDocFile(String filePath) throws Exception {
-
-		String outputfilepath;
-		outputfilepath = getFileName(filePath) + ".pdf";
-		InputStream is = new FileInputStream(new File(filePath));
-		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(is);
-
-		PdfSettings pdfSettings = new PdfSettings();
-		OutputStream out = new FileOutputStream(new File(outputfilepath));
-		PdfConversion converter = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage);
-		converter.output(out, pdfSettings);
-
 	}
 
 	/**
@@ -4812,6 +4737,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 	}
 
+	/**
+	 * Function to check / uncheck single checkbox into committee member datatable
+	 * 
+	 * @param pass ajax event type
+	 * */
 	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (PmUser pmUsers : getCommitteDataModel().getList()) {
@@ -4827,6 +4757,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}	
 	}
 
+	/**
+	 * Function to check / uncheck single checkbox into committee member datatable.
+	 * 
+	 * @param pass ajax event type
+	 * */
 	public void selectAllComitMem(AjaxBehaviorEvent e) {
 
 		for (PmUser pmUsers : getCommitteDataModel().getList()) {
