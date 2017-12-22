@@ -111,7 +111,6 @@
 							 />
 				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
-					onstart="#{templateSpecId}specBlockWidget.show();"
 					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
 					
 				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
@@ -287,7 +286,6 @@
 							 />
 				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
-					onstart="#{templateSpecId}specBlockWidget.show();"
 					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
 					
 				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
