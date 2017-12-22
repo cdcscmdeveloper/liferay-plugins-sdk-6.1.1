@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.paymentmatch;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -54,6 +55,7 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
@@ -109,6 +111,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
@@ -2093,6 +2096,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}
 		return getManagedBean().getPopulateSubSetiaList();
+	}
+	
+	/**
+	 * download file Panduan_Potongan_Bayaran.pdf.
+	 */
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
 	}
 	
 }
