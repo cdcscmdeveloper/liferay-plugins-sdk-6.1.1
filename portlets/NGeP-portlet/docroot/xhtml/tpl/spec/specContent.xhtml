@@ -17,8 +17,12 @@
 	<ui:param name="navToFirstPage" value="#{templateSpecId}questionTblWidget.paginator.firstLink.click();" />
 	<ui:param name="navToNextPage" value="#{templateSpecId}questionTblWidget.paginator.nextLink.click();" />
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
-	
-		<p:panel id="spg" header="#{title}" toggleable="true">
+
+	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+
+	<p:panel id="spg" header="#{title}" toggleable="true">
 			<h:panelGroup rendered="false">
 			Content Type: 
 			<p:selectOneMenu value="#{templateSpecBean.contentType}">
@@ -105,6 +109,10 @@
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
 					oncomplete="#{navToFirstPage}"
 							 />
+				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
+					partialSubmit="true" process="@this" update="@(.ac-paginator)"
+					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+					
 				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
@@ -276,6 +284,10 @@
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
 					oncomplete="#{navToFirstPage}"
 							 />
+				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
+					partialSubmit="true" process="@this" update="@(.ac-paginator)"
+					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+					
 				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

@@ -70,7 +70,8 @@ public class DataTableBackingBean extends BaseBackingBean {
 	public void navToFirstPage(String specComponentId) {
 		log.info("navToFirstPage");
 		RequestContext.getCurrentInstance().execute(
-				specComponentId + "questionTblWidget.paginator.setPage(0, false);");
+				specComponentId + "questionTblWidget.paginator.setPage(0, false); " +
+				specComponentId + "SpecReRender();");
 	}
 	
 	/**
@@ -82,7 +83,8 @@ public class DataTableBackingBean extends BaseBackingBean {
 	public void navToPrevPage(String specComponentId) {
 		log.info("navToPrevPage");
 		RequestContext.getCurrentInstance().execute(
-				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.page - 1, false);");
+				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.page - 1, false); " +
+				specComponentId + "SpecReRender();");
 	}
 	
 	/**
@@ -94,7 +96,8 @@ public class DataTableBackingBean extends BaseBackingBean {
 	public void navToNextPage(String specComponentId) {
 		log.info("navToNextPage");
 		RequestContext.getCurrentInstance().execute(
-				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.page + 1, false);");
+				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.page + 1, false); " +
+				specComponentId + "SpecReRender();");
 	}
 	
 	/**
@@ -106,7 +109,8 @@ public class DataTableBackingBean extends BaseBackingBean {
 	public void navToLastPage(String specComponentId) {
 		log.info("navToLastPage");
 		RequestContext.getCurrentInstance().execute(
-				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.pageCount - 1, false);");
+				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.pageCount - 1, false); " +
+				specComponentId + "SpecReRender();");
 	}
 }
 
