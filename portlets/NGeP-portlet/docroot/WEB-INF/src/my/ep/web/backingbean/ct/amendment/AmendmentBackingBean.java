@@ -4174,11 +4174,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 					templateFilePath.append(ContractConst.DOCNAME_SUPPLEMENTAL_CONTRACT_LETTER);
 
-					downloadFile(filePath.toString());
+					downloadFile(templateFilePath.toString());
 				} else {
 					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
-				}
-				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+				}			
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
