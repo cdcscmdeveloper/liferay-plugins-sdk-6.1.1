@@ -2579,13 +2579,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 	
 	/**
-	 * The method used to download Item and Specification Guideline file 
+	 * The method used to download Agreement Guideline file.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
 	 */
 	public void downloadAgreementGuideline() throws IOException {
-		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
-
-		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		StringBuilder filePath = new StringBuilder();
+		
+		filePath.append(EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR));					
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR));
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);

@@ -4162,10 +4162,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE)) {
 					//DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);					
 					// Download orginal template in doc format
-					String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
-							EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
-
-					StringBuilder templateFilePath = new StringBuilder(docRepoSharedDir);
+					StringBuilder templateFilePath = new StringBuilder();
+					
+					templateFilePath.append(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR));					
+					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+					templateFilePath.append(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR));
 					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 					templateFilePath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
 					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
