@@ -5,27 +5,38 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
+	<ui:param name="dataTable" value="#{ac:findComponentById(cc, 'questionTbl')}" />
 	<f:facet name="{EditablePageLink}">
+		<ui:param name="isFirstPage" value="#{dataTable.page == 0}" />
+		<ui:param name="isLastPage" value="#{(dataTable.page == (dataTable.pageCount - 1)) or (dataTable.page == 0 and dataTable.pageCount == 0)}" />
 		<p:commandButton id="firstBtn"
-			styleClass="ui-paginator-first-ed ui-state-default ui-corner-all"
-			icon="ui-icon ui-icon-seek-first" partialSubmit="true"
-			process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToFirstPage(templateSpecId)}" />
+			styleClass="ac-paginator ui-paginator-first-ed ui-state-default ui-corner-all #{isFirstPage ? 'ui-state-disabled' : ''}"
+			icon="ui-icon ui-icon-seek-first" 
+			partialSubmit="true" process="questionTbl" update="questionTbl"
+			action="#{dataTableBackingBean.navToFirstPage(templateSpecId)}"
+			disabled="#{isFirstPage}"
+			onstart="#{templateSpecId}specBlockWidget.show();" />
 		<p:commandButton id="prevBtn"
-			styleClass="ui-paginator-prev-ed ui-state-default ui-corner-all"
-			icon="ui-icon ui-icon-seek-prev" partialSubmit="true"
-			process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToPrevPage(templateSpecId)}" />
+			styleClass="ac-paginator ui-paginator-prev-ed ui-state-default ui-corner-all #{isFirstPage ? 'ui-state-disabled' : ''}"
+			icon="ui-icon ui-icon-seek-prev" 
+			partialSubmit="true" process="questionTbl" update="questionTbl"
+			action="#{dataTableBackingBean.navToPrevPage(templateSpecId)}"
+			disabled="#{isFirstPage}"
+			onstart="#{templateSpecId}specBlockWidget.show();" />
 		<p:commandButton id="nextBtn"
-			styleClass="ui-paginator-next-ed ui-state-default ui-corner-all"
-			icon="ui-icon ui-icon-seek-next" partialSubmit="true"
-			process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToNextPage(templateSpecId)}" />
+			styleClass="ac-paginator ui-paginator-next-ed ui-state-default ui-corner-all #{isLastPage ? 'ui-state-disabled' : ''}"
+			icon="ui-icon ui-icon-seek-next" 
+			partialSubmit="true" process="questionTbl" update="questionTbl"
+			action="#{dataTableBackingBean.navToNextPage(templateSpecId)}"
+			disabled="#{isLastPage}"
+			onstart="#{templateSpecId}specBlockWidget.show();" />
 		<p:commandButton id="lastBtn"
-			styleClass="ui-paginator-last-ed ui-state-default ui-corner-all"
-			icon="ui-icon ui-icon-seek-end" partialSubmit="true"
-			process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToLastPage(templateSpecId)}" />
+			styleClass="ac-paginator ui-paginator-last-ed ui-state-default ui-corner-all #{isLastPage ? 'ui-state-disabled' : ''}"
+			icon="ui-icon ui-icon-seek-end" 
+			partialSubmit="true" process="questionTbl" update="questionTbl"
+			action="#{dataTableBackingBean.navToLastPage(templateSpecId)}"
+			disabled="#{isLastPage}"
+			onstart="#{templateSpecId}specBlockWidget.show();" />
 	</f:facet>
 	<ac:paginator for="questionTbl" />
 	<f:attribute name="paginatorTemplate"
