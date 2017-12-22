@@ -13,34 +13,26 @@
 			styleClass="ac-paginator ui-paginator-first-ed ui-state-default ui-corner-all #{isFirstPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-first" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToFirstPage(templateSpecId)}"
-			disabled="#{isFirstPage}"
-			onstart="#{templateSpecId}specBlockWidget.show();"
-			oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+			action="#{templateSpecBackingBean.navToFirstPage(templateSpecId)}"
+			disabled="#{isFirstPage}" />
 		<p:commandButton id="prevBtn"
 			styleClass="ac-paginator ui-paginator-prev-ed ui-state-default ui-corner-all #{isFirstPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-prev" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToPrevPage(templateSpecId)}"
-			disabled="#{isFirstPage}"
-			onstart="#{templateSpecId}specBlockWidget.show();"
-			oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+			action="#{templateSpecBackingBean.navToPrevPage(templateSpecId)}"
+			disabled="#{isFirstPage}" />
 		<p:commandButton id="nextBtn"
 			styleClass="ac-paginator ui-paginator-next-ed ui-state-default ui-corner-all #{isLastPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-next" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToNextPage(templateSpecId)}"
-			disabled="#{isLastPage}"
-			onstart="#{templateSpecId}specBlockWidget.show();"
-			oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+			action="#{templateSpecBackingBean.navToNextPage(templateSpecId)}"
+			disabled="#{isLastPage}" />
 		<p:commandButton id="lastBtn"
 			styleClass="ac-paginator ui-paginator-last-ed ui-state-default ui-corner-all #{isLastPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-end" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
-			action="#{dataTableBackingBean.navToLastPage(templateSpecId)}"
-			disabled="#{isLastPage}"
-			onstart="#{templateSpecId}specBlockWidget.show();"
-			oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+			action="#{templateSpecBackingBean.navToLastPage(templateSpecId)}"
+			disabled="#{isLastPage}" />
 	</f:facet>
 	<ac:paginator for="questionTbl" />
 	<f:attribute name="paginatorTemplate"

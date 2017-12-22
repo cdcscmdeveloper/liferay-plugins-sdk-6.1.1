@@ -2459,5 +2459,60 @@ public class TemplateSpecBackingBean extends
 		SpecQuestion.setClUomPerMonth(null);
 	}
 	
+
 	
+	/**
+	 * Navigate to first page
+	 * 
+	 * @param specComponentId
+	 * 		the specification component id
+	 */
+	public void navToFirstPage(String specComponentId) {
+		log.info("navToFirstPage");
+		navToPage(specComponentId,
+				specComponentId + "questionTblWidget.paginator.setPage(0, false); ");
+	}
+	
+	/**
+	 * Navigate to previous page
+	 * 
+	 * @param specComponentId
+	 * 		the specification component id
+	 */
+	public void navToPrevPage(String specComponentId) {
+		log.info("navToPrevPage");
+		navToPage(specComponentId,
+				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.page - 1, false); ");
+	}
+	
+	/**
+	 * Navigate to next page
+	 * 
+	 * @param specComponentId
+	 * 		the specification component id
+	 */
+	public void navToNextPage(String specComponentId) {
+		log.info("navToNextPage");
+		navToPage(specComponentId,
+				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.page + 1, false); ");
+	}
+	
+	/**
+	 * Navigate to last page
+	 * 
+	 * @param specComponentId
+	 * 		the specification component id
+	 */
+	public void navToLastPage(String specComponentId) {
+		log.info("navToLastPage");
+		navToPage(specComponentId,
+				specComponentId + "questionTblWidget.paginator.setPage(" + specComponentId + "questionTblWidget.paginator.cfg.pageCount - 1, false); ");
+	}
+	
+	private void navToPage(String specComponentId, String navAction) {
+		RequestContext.getCurrentInstance().execute(
+				specComponentId + "specBlockWidget.show();" +
+				navAction +
+				specComponentId + "SpecReRender();");
+	}
 }
