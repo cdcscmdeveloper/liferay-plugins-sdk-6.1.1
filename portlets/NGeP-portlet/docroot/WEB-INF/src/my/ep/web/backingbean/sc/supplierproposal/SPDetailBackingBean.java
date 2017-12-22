@@ -942,7 +942,7 @@ public class SPDetailBackingBean extends
 												.compareTo(
 														BigDecimal.valueOf(0)) > 0) {
 									answers.add(specAnswer);
-								}else if(specAnswer.getSpecAnswerId()!=null){
+								}else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
