@@ -51,6 +51,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -87,6 +88,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -2574,5 +2576,21 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		} else {
 			return getManagedBean().getContractVer().getCtContractValue().getLoaPhysicalNo();
 		}
+	}
+	
+	/**
+	 * The method used to download Item and Specification Guideline file 
+	 */
+	public void downloadAgreementGuideline() throws IOException {
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ContractConst.DOCNAME_AGREEMENT_GUIDELINE);
+
+		downloadFile(filePath.toString());
 	}
 }
