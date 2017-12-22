@@ -50,6 +50,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -112,6 +113,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
@@ -4158,7 +4160,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			content = getContent(docDefinitionKey);
 			if (content != null) {
 				if (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE)) {
-					DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);
+					//DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);					
+					// Download orginal template in doc format
+					String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+
+					StringBuilder templateFilePath = new StringBuilder(docRepoSharedDir);
+					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+					templateFilePath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
+					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+					templateFilePath.append(ContractConst.DOCNAME_SUPPLEMENTAL_CONTRACT_LETTER);
+
+					downloadFile(filePath.toString());
 				} else {
 					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 				}
