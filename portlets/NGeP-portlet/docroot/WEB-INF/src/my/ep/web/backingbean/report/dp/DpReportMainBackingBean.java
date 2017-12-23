@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.report.dp;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
@@ -30,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
 @ManagedBean(name = "dpReportBackingBean")
 @ViewScoped
 public class DpReportMainBackingBean extends
-		DpReportBackingBean<DpReportMainManagedBean> {
+		DpReportBackingBean<DpReportMainManagedBean> implements Serializable {
 
 	/**
 	 * 
