@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.report.dp;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 
@@ -32,7 +33,9 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "rnDetailRptBackingBean")
 @ViewScoped
-public class RequestNoteDetailRptBackingBean extends DpReportBackingBean<RequestNoteDetailRptManagedBean>{
+public class RequestNoteDetailRptBackingBean extends DpReportBackingBean<RequestNoteDetailRptManagedBean>
+	implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger.getLogger(RequestNoteDetailRptBackingBean.class);
 	
