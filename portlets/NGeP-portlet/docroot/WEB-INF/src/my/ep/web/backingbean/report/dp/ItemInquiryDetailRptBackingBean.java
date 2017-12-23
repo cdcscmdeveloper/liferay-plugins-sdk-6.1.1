@@ -10,16 +10,13 @@
  */
 package my.ep.web.backingbean.report.dp;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
-import javax.naming.NamingException;
 
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.DpReportConst;
@@ -36,7 +33,9 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "itemInquiryDetailRptBackingBean")
 @ViewScoped
-public class ItemInquiryDetailRptBackingBean extends DpReportBackingBean<ItemInquiryDetailRptManagedBean>{
+public class ItemInquiryDetailRptBackingBean extends DpReportBackingBean<ItemInquiryDetailRptManagedBean>
+	implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger.getLogger(ItemInquiryDetailRptBackingBean.class);
 	

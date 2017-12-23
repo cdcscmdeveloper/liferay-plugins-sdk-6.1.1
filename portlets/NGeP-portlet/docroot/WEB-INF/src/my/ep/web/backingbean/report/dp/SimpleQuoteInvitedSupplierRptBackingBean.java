@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.report.dp;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +46,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "simpleQuoteInviteSupplierRptBackingBean")
 @ViewScoped
 public class SimpleQuoteInvitedSupplierRptBackingBean extends
-		DpReportBackingBean<SimpleQuoteInvitedSupplierRptManagedBean> {
+		DpReportBackingBean<SimpleQuoteInvitedSupplierRptManagedBean> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(SimpleQuoteInvitedSupplierRptBackingBean.class);

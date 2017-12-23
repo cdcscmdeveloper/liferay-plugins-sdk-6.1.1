@@ -11,6 +11,7 @@
 package my.ep.web.backingbean.report.dp;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 @ManagedBean(name = "loaContentRptBackingBean")
 @ViewScoped
 public class LetterOfAcceptanceContentRptBackingBean extends
-		DpReportBackingBean<LetterOfAcceptanceContentRptManagedBean> {
+		DpReportBackingBean<LetterOfAcceptanceContentRptManagedBean> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(LetterOfAcceptanceContentRptBackingBean.class);
