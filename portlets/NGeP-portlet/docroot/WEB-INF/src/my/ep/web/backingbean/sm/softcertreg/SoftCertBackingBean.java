@@ -646,8 +646,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		SpkiBackingBean spkiBackingBean = this.getManagedBean()
 				.getSpkiBackingBean();
 		byte[] signedData = spkiBackingBean.spkiSignTransaction(
-				prepareOriginalText(), getManagedBean().getSoftCertSelect()
-						.getIdentificationNo());
+				prepareOriginalText(), getManagedBean()
+						.getLoginUserPersonnelInfo().getIdentificationNo());
 		pmDigiSign.setSpkiSignedData(signedData);
 		getManagedBean().setDigiSign(pmDigiSign);
 		if (getManagedBean().getTargetPage() == PAYMENT_PAGE) {
