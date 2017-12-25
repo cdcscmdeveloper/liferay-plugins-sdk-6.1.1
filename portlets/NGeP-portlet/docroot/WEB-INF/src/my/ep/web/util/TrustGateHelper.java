@@ -185,7 +185,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url4 = getDns() + "/cdc/requestRevoke/requestRevoke.jsp?secTkn="
+		String url4 = getDns() + "/requestRevoke/requestRevoke.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url4);
 	}
@@ -198,7 +198,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = getDns() + "/cdc/resetPIN/resetPIN.jsp?secTkn="
+		String url = getDns() + "/resetPIN/resetPIN.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -210,7 +210,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = getDns() + "/cdc/changePIN/checkPin.jsp?secTkn="
+		String url = getDns() + "/changePIN/checkPin.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
@@ -223,7 +223,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = getDns() + "/cdc/updateCR/checkPin.jsp?secTkn="
+		String url = getDns() + "/updateCR/checkPin.jsp?secTkn="
 				+ encodedtoken;
 		externalContext.redirect(url);
 	}
