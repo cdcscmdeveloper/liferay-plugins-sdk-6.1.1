@@ -168,7 +168,8 @@ public class DigiCertHelper {
 							challenges,
 							new ByteArrayInputStream(dataForSigning.getBytes())));
 
-			log.info("DIGICERT SIGNING STATUS CODE:" + res.getStatusCode());
+			log.info("DIGICERT SIGNING STATUS CODE:" + res.getStatusCode()
+					+ " MESSAGE:" + res.getStatusMessage());
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
