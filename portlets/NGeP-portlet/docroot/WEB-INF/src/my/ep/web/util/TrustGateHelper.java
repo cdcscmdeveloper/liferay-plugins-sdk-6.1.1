@@ -154,6 +154,7 @@ public class TrustGateHelper {
 					new FacesScopes().getUserLocale()));
 		}
 		vo.setSignedData(signedData);
+		log.info("TRUSTGATE SIGNED DATA:" + signedData);
 		return vo;
 	}
 
