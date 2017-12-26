@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.pr;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -4182,5 +4183,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
 		getManagedBean().setDeleteButtonHide(true);
+	}
+	
+	/**
+	 * download file Garis Panduan Penetapan Item Bercukai.pdf.
+	 */
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
 	}
 }
