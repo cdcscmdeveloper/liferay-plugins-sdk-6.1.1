@@ -9,25 +9,25 @@
 	<f:facet name="{EditablePageLink}">
 		<ui:param name="isFirstPage" value="#{dataTable.page == 0}" />
 		<ui:param name="isLastPage" value="#{(dataTable.page == (dataTable.pageCount - 1)) or (dataTable.page == 0 and dataTable.pageCount == 0)}" />
-		<p:commandButton id="firstBtn"
+		<p:commandButton id="firstBtn" widgetVar="#{templateSpecId}firstBtnWG"
 			styleClass="ac-paginator ui-paginator-first-ed ui-state-default ui-corner-all #{isFirstPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-first" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
 			action="#{templateSpecBackingBean.navToFirstPage(templateSpecId)}"
 			disabled="#{isFirstPage}" />
-		<p:commandButton id="prevBtn"
+		<p:commandButton id="prevBtn" widgetVar="#{templateSpecId}prevBtnWG"
 			styleClass="ac-paginator ui-paginator-prev-ed ui-state-default ui-corner-all #{isFirstPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-prev" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
 			action="#{templateSpecBackingBean.navToPrevPage(templateSpecId)}"
 			disabled="#{isFirstPage}" />
-		<p:commandButton id="nextBtn"
+		<p:commandButton id="nextBtn" widgetVar="#{templateSpecId}nextBtnWG"
 			styleClass="ac-paginator ui-paginator-next-ed ui-state-default ui-corner-all #{isLastPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-next" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"
 			action="#{templateSpecBackingBean.navToNextPage(templateSpecId)}"
 			disabled="#{isLastPage}" />
-		<p:commandButton id="lastBtn"
+		<p:commandButton id="lastBtn" widgetVar="#{templateSpecId}lastBtnWG"
 			styleClass="ac-paginator ui-paginator-last-ed ui-state-default ui-corner-all #{isLastPage ? 'ui-state-disabled' : ''}"
 			icon="ui-icon ui-icon-seek-end" 
 			partialSubmit="true" process="questionTbl" update="questionTbl"

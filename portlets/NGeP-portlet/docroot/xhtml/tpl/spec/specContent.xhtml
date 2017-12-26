@@ -14,8 +14,8 @@
 	<ui:param name="zoneTierPricePopup" value="#{templateSpecId}zoneTierPricePopup" />
 	<ui:param name="zoneQtyPopup" value="#{templateSpecId}zoneQtyPopup" />
 	<ui:param name="rowsPerPage" value="#{ac:convertAsInteger(50)}" />
-	<ui:param name="navToFirstPage" value="#{templateSpecId}questionTblWidget.paginator.firstLink.click();" />
-	<ui:param name="navToNextPage" value="#{templateSpecId}questionTblWidget.paginator.nextLink.click();" />
+	<ui:param name="navToFirstPage" value="#{templateSpecId}firstBtnWG.getJQ().click();" />
+	<ui:param name="navToNextPage" value="#{templateSpecId}nextBtnWG.getJQ().click();" />
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
 
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
