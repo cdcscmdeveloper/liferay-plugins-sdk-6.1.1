@@ -62,16 +62,23 @@
 
 					<h:panelGroup id="spkiPanel">
 						<p:messages id="dlgMessages" showDetail="true" escape="false" autoUpdate="true" closable="true" />
-		
-						<h:panelGrid columns="2" cellpadding="3">
-							<h:outputLabel style="white-space: normal;"
-								value="#{cc.attrs.challengeQues1}" />
-							<p:inputText id="answerId" value="#{cc.attrs.challengeAns1}" onkeypress="blockEnter();" />
-
-							<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-							<p:password id="password" value="#{cc.attrs.password}" onkeypress="blockEnter();" />
-
-						</h:panelGrid>
+						
+						<table>
+							<tr>
+								<td>
+									<p:outputLabel style="white-space: normal;" value="#{cc.attrs.challengeQues1}" />
+									<p:outputLabel value="*" styleClass="mandatory" />
+								</td>
+								<td><p:inputText id="answerId" value="#{cc.attrs.challengeAns1}" onkeypress="blockEnter();" /></td>
+							</tr>
+							<tr>
+								<td>
+									<p:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
+									<p:outputLabel value="*" styleClass="mandatory" />
+								</td>
+								<td><p:password id="password" value="#{cc.attrs.password}" onkeypress="blockEnter();" /></td>
+							</tr>
+						</table>
 
 						<table style="width: 100%">
 							<tr>
