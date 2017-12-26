@@ -218,6 +218,7 @@ public class DigiCertHelper {
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale()));
 		}
+		log.info("DIGICERT SIGNED DATA:"+signedData);
 		vo.setSignedData(signedData);
 		return vo;
 	}
