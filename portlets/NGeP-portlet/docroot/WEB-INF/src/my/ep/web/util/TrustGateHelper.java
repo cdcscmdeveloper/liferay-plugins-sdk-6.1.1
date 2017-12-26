@@ -104,7 +104,8 @@ public class TrustGateHelper {
 					identificationNo, epNo, pin.toCharArray(), challenges,
 					new ByteArrayInputStream(dataForSigning.getBytes()));
 
-			log.info("TRUSTGATE SIGNING STATUS CODE:" + res.getStatusCode());
+			log.info("TRUSTGATE SIGNING STATUS CODE:" + res.getStatusCode()
+					+ " MESSAGE:" + res.getStatusMessage());
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -198,8 +199,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = getDns() + "/resetPIN/resetPIN.jsp?secTkn="
-				+ encodedtoken;
+		String url = getDns() + "/resetPIN/resetPIN.jsp?secTkn=" + encodedtoken;
 		externalContext.redirect(url);
 	}
 
@@ -223,8 +223,7 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url = getDns() + "/updateCR/checkPin.jsp?secTkn="
-				+ encodedtoken;
+		String url = getDns() + "/updateCR/checkPin.jsp?secTkn=" + encodedtoken;
 		externalContext.redirect(url);
 	}
 
