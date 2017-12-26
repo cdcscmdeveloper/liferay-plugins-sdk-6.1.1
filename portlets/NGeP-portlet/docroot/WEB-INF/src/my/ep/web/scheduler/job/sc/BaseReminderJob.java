@@ -174,7 +174,7 @@ public abstract class BaseReminderJob implements Job {
 			}
 
 			if (subjectParamList != null && !subjectParamList.isEmpty()) {
-				ntfReqDTO.setSubParaArr(paramList.toArray(new String[subjectParamList.size()]));
+				ntfReqDTO.setSubParaArr(subjectParamList.toArray(new String[subjectParamList.size()]));
 			} else {
 				log.info("Subject params not found.");
 			}
