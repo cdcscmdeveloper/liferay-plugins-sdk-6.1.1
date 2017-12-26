@@ -223,7 +223,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
 									
-									path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+									if(rejectedWf != null){
+										validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+									}
 								}
 							}else{
 								path = MOF_REG_PATH;
