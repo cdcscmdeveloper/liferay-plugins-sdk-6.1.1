@@ -22,6 +22,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SPKIConst;
 import my.ep.web.util.DigiCertHelper;
@@ -30,6 +31,7 @@ import my.ep.web.util.TrustGateHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -141,12 +143,32 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public byte[] spkiEnabledSignTransaction(String originalText,
 			String identificationNo) {
 		SpkiVO vo = null;
+		String pin = getPassword();
 		if (getSupplier() == null) {
 			throw new EpException(MessageConst.ERROR_721018);
 		}
 		if (getLoginUser() == null
 				|| (getLoginUser() != null && getLoginUser().getUserId() == null)) {
 			throw new EpException(MessageConst.ERROR_721017);
+		}
+		if (StringUtils.isBlank(pin) && StringUtils.isBlank(challengeAns1)) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.cc.spki.title",
+					null));
+		}
+		if (StringUtils.isBlank(pin)) {
+			throw new EpException(MessageUtils.getMessage(
+					MessageConst.ERROR_721110, new String[] { SmCommonUtil
+							.getMessage("lbl.cc.spki.pin", null) },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+							.getUserLocale()));
+		}
+		if (StringUtils.isBlank(challengeAns1)) {
+			throw new EpException(MessageUtils.getMessage(
+					MessageConst.ERROR_721110,
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.cc.spki.challresp.answer", null) },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+							.getUserLocale()));
 		}
 
 		identificationNo = StringUtils.isBlank(identificationNo) ? getLoginUser()
@@ -157,20 +179,16 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 		String dataForSigning = originalText;
 
-		String pin = getPassword();
-
 		if (getCertIssuer(identificationNo).equals(SPKIConst.TRUSTGATE)) {
-			vo = TrustGateHelper.getInstance().getSignedData(
-					identificationNo, getSupplier().getEpNo(), pin, challenges,
-					dataForSigning);
+			vo = TrustGateHelper.getInstance().getSignedData(identificationNo,
+					getSupplier().getEpNo(), pin, challenges, dataForSigning);
 		} else {
-			vo = DigiCertHelper.getInstance().getSignedData(
-					identificationNo, getSupplier().getEpNo(), pin, challenges,
-					dataForSigning);
+			vo = DigiCertHelper.getInstance().getSignedData(identificationNo,
+					getSupplier().getEpNo(), pin, challenges, dataForSigning);
 		}
-		if(StringUtils.isBlank(vo.getErrMsg())){
+		if (StringUtils.isBlank(vo.getErrMsg())) {
 			signedData = vo.getSignedData();
-		}else{
+		} else {
 			throw new EpException(vo.getErrMsg());
 		}
 		return signedData;
