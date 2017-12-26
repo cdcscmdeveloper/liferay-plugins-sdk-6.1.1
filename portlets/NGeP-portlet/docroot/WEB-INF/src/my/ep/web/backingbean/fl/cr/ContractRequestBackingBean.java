@@ -5671,7 +5671,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	/**
-	 * download file FL Garis_Panduan_Item_dan_Spesifikasi.pdf.
+	 * download file FL Garis_Panduan_Item_dan_Spesifikasi.pdf and Garis Panduan Penetapan Item Bercukai.pdf.
 	 */
 	public void downloadFile(String filePath) throws IOException {
 		StringBuilder downloadPath = new StringBuilder();
