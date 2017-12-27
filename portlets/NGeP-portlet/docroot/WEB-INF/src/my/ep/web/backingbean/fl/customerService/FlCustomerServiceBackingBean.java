@@ -15,23 +15,28 @@ import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -57,7 +62,6 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger.getLogger(FlCustomerServiceBackingBean.class);
-	private String sysUserId = "weblogic";
 	
 	/**
 	 * Advance search.
@@ -123,6 +127,8 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	 */
 	public String navigateToPage(String docType, String flDocId,Long statusId,String docNo,String ordrNo){
 		
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		String navgPage="/xhtml/fl/customerservice/customerServiceViewResult.xhtml";
@@ -134,12 +140,22 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		getManagedBean().setViewMinistry(retrieveMinistryByOrgProfileId(getManagedBean().getPtj().getOrgProfileId()));
 		getManagedBean().setViewPtjName(getManagedBean().getPtj().getOrgName());
 		getManagedBean().setViewPtjCode(getManagedBean().getPtj().getOrgCode());
+		
+		// need to use RN number if PR is pending creation
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST) && statusId.longValue()==FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION.longValue()) {
+			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			flReqDTO.setFlDocNo(docNo);
+			FulfilmentResDTO flResDTO = fulfilmentRequestSO.retrieveFulfilmentRequestByDocNo(flReqDTO);
+			docNo = flResDTO.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo();
+		}
+		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		 Object ctxToken = bpmSO.authenticate(sysUserId);
+		 Object ctxToken = bpmSO.authenticate(prop.getProperty(EpPropertiesConst.BPM_PRINCIPAL));
 		 getManagedBean().getCustomerServiceEntity().clear();
 		 BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 		 bpmReqDTO.setDocNumber(docNo);
-		 bpmReqDTO.setUserId(sysUserId);
+		 bpmReqDTO.setUserId(prop.getProperty(EpPropertiesConst.BPM_PRINCIPAL));
 		 bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 		 bpmReqDTO.setCtxToken(ctxToken);
 		 BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
@@ -216,7 +232,7 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 				 ||FulfilmentStatusConst.PR_AWAITING_1GFMAS.longValue() == statusId
 				 ||FulfilmentStatusConst.SD_AWAITING_1GFMAS_RESPONSE.longValue() == statusId){
 				 CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
-				 custServiceEntity.setOfficerName("GFMAS");
+				 custServiceEntity.setOfficerName("1GFMAS");
 				 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 		 }
 		
