@@ -885,10 +885,20 @@ public class SPDetailBackingBean extends
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
+		ScQtProposalChecklist completedFinSpec = null;
+		for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+					.equals(finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()) &&
+					finProposalChecklist.isSubmitted() &&
+					!finProposalChecklist.equals(scQtProposalChecklist)) {
+				completedFinSpec = finProposalChecklist;
+				break;
+			}
+		}
 
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
-		ProposalResDTO proposalResDTO = saveTemplateSpecDtls();
+		ProposalResDTO proposalResDTO = saveTemplateSpecDtls(completedFinSpec);
 
 		if (proposalResDTO.isSuccessful()) {
 			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
@@ -903,7 +913,7 @@ public class SPDetailBackingBean extends
 	 * 
 	 * @return the proposal res DTO
 	 */
-	private ProposalResDTO saveTemplateSpecDtls() {
+	private ProposalResDTO saveTemplateSpecDtls(ScQtProposalChecklist completedFinSpec) {
 		debugLogger("saveTempleateSpecDtls");
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
@@ -1022,6 +1032,9 @@ public class SPDetailBackingBean extends
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
+			proposalReqDTO.setCompletedProposalChecklist(completedFinSpec);
+			proposalReqDTO.setSupplierId(getManagedBean().getSupplierId());
+			
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
 		} catch (Exception e) {
 			scQtProposalChecklist.setSubmitted(false);
