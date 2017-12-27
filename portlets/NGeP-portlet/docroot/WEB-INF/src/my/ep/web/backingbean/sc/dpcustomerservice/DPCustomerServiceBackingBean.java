@@ -38,6 +38,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -63,6 +64,7 @@ import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.directpurchase.DpCustomerServiceSearchBean;
@@ -353,8 +355,12 @@ try{
 	 }
      }
 	docNumList.add(docNo);
-	Object token = getBpmSO().authenticate(BPM_SYS_USER);
-	reqDTO.setUserId(BPM_SYS_USER);
+	
+	String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
+			EpPropertiesConst.BPM_PRINCIPAL);
+	
+	Object token = getBpmSO().authenticate(bpmUserLogin);
+	reqDTO.setUserId(bpmUserLogin);
 	reqDTO.setDocNumberList(docNumList);
 	reqDTO.setCtxToken(token);
 	reqDTO.setState(BpmConstants.STATE_ASSIGNED);
