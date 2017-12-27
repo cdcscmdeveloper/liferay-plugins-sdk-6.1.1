@@ -253,7 +253,7 @@ public class DigiCertHelper {
 						"digicert.dns");
 				// default value
 				if (StringUtils.isBlank(dns)) {
-					dns = "http://ep.posdigicert.com.my";
+					dns = "https://ep.posdigicert.com.my";
 				}
 			} catch (Exception e) {
 
@@ -269,7 +269,7 @@ public class DigiCertHelper {
 						"digicert.revoke.dns");
 				// default value
 				if (StringUtils.isBlank(revokeDns)) {
-					revokeDns = "http://ep.posdigicert.com.my";
+					revokeDns = "https://ep.posdigicert.com.my";
 				}
 			} catch (Exception e) {
 
