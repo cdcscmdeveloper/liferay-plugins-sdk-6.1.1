@@ -268,7 +268,7 @@ public class DigiCertHelper {
 				revokeDns = EpPropertiesUtils.getInstance().getProperty(
 						"digicert.revoke.dns");
 				// default value
-				if (StringUtils.isBlank(dns)) {
+				if (StringUtils.isBlank(revokeDns)) {
 					revokeDns = "http://ep.posdigicert.com.my";
 				}
 			} catch (Exception e) {
