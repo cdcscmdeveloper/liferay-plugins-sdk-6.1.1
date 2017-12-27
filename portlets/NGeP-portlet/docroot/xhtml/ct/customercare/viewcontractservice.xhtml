@@ -82,7 +82,7 @@
 									</td>
 									<td colspan="3">
 										<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-											disabled="true" rows="2" style="width:800px; margin-bottom:5px;"  
+											disabled="true" rows="3" style="width:800px; margin-bottom:5px;"  
 											value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContract.contractName}" />
 									</td>					
 						   </tr>
@@ -121,16 +121,26 @@
                 	  <td> <table style="width:610px">
 									           <tr>
 														<td><p:inputText style="width:150px" disabled="true"
-														         value="#{customerServiceBackingBean.chkContractStatusType(customerServiceBackingBean.managedBean.cotractStatus)}"/></td>
+														         value="#{customerServiceBackingBean.getContractStatusDesc(customerServiceBackingBean.managedBean.cotractStatus)}"/></td>
 														
 											</tr>
 									</table>
 							</td>
                 	  </tr>
-                	  <br/>
                 	  <tr>
-							   <td class="columnWidth15" valign="top">   <br/>
-							  				<p:outputLabel  id="tasksid"  value="#{lbl['lbl.ct.customer.service.tasks']}" /> </td>
+                	  <td><p:outputLabel value="#{lbl['lbl.ct.doc.contract.status']}" /></td>
+                	  <td> <table style="width:610px">
+									           <tr>
+														<td><p:inputText style="width:150px" disabled="true"
+														         value="#{customerServiceBackingBean.chkContractStatusType(customerServiceBackingBean.managedBean.status)}"/>
+														         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" /></td>
+														
+											</tr>
+									</table>
+							</td>
+                	  </tr>
+                	  <tr>
+							   <td class="columnWidth15"></td>
 							  		 <td>
 							  				 <table style="width:620px">
 									           <tr>
@@ -144,10 +154,6 @@
 			               	  												 <p:column style="width:45%;white-space:normal;" 
 			               	  												     headerText="#{lbl['lbl.ct.customer.service.table.officer']}" >
 				                											  	  <h:outputText value="#{officerInfo.officerName}"  style="float:left;"/>
-			               													  </p:column>
-			               		  											 <p:column style="width:53%;white-space:normal;" 
-			               		  											     headerText="#{lbl['lbl.ct.customer.service.table.officer.status']}" >
-				                	 										 	  <h:outputText value="#{officerInfo.documentStatusDesc}"  style="float:left;"/>
 			               													  </p:column>
                 												</p:dataTable>
                 									</td>

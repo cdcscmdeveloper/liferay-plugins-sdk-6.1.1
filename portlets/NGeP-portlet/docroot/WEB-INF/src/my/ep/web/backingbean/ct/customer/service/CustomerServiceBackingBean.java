@@ -7,22 +7,17 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-//import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-/*import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;*/
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -31,11 +26,13 @@ import my.ep.constants.BpmConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -51,12 +48,7 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 	private static final long serialVersionUID = 1L;
 	private static final String SERVICE_VIEW_PAGE = "/xhtml/ct/customercare/viewcontractservice.xhtml?faces-redirect=true";
 	private static final String CONTRACT_SERVICE_PAGE = "/xhtml/ct/customercare/customerservice.xhtml?faces-redirect=true";
-	private String sysUserId = "weblogic";
-
-	public CustomerServiceBackingBean(){
-
-	}
-
+	
 	/**
 	 * The method used to clear the previous viewed information before
 	 * rendering the contract search screen.
@@ -99,6 +91,12 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		getManagedBean().getCustomerServiceDataModel().resetData();
 	}
 
+	/**
+	 * The method used to navigate to customer service screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	public String gotoViewPage(VCtContract ctContract, int status, int contractStatus){
 
 		getManagedBean().setCotractStatus(contractStatus);
@@ -114,15 +112,17 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		String sysUserId = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL);
 		Object ctxToken = bpmSO.authenticate(sysUserId);
 		getManagedBean().getCustomerServiceEntity().clear();
 		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 		bpmReqDTO.setUserId(sysUserId);
 		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-		if(ctContract.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && 
-				ContractStatusConst.FD_PENDING_CONTRACT_CREATION.intValue() == getManagedBean().getCtContractVer().getCtWorkflowStatus().getPmStatus().getStatusId().intValue()){
+		if (ctContract.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)
+				&& ContractStatusConst.FD_PENDING_CONTRACT_CREATION.intValue() == getManagedBean().getCtContractVer().getCtWorkflowStatus().getPmStatus().getStatusId().intValue()) {
 			bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getLoa().getLoaNo());
-		} else if(ctContract.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && ctContract.getAgStatus() == 2){
+		} else if (ctContract.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)
+				&& ctContract.getAgStatus() == 2) {
 			bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getLoa().getLoaNo());
 		}
 
@@ -130,78 +130,63 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 
 		List<WorklistItemVO>  worklistItemVo = new ArrayList<WorklistItemVO>();
-		if(bpmResDTO.getWorklistVO().getWorklistItem()!=null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
+		if (bpmResDTO.getWorklistVO().getWorklistItem() != null && bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
 			worklistItemVo.addAll(bpmResDTO.getWorklistVO().getWorklistItem());
 		}
 		bpmReqDTO.setDocNumber(getManagedBean().getCtContractVer().getCtContract().getContractNo());
 		BpmResponseDTO bpmResDTO1 = bpmSO.getTasksByDocNumber(bpmReqDTO);
 
-		if(bpmResDTO1.getWorklistVO().getWorklistItem()!=null && bpmResDTO1.getWorklistVO().getWorklistItem().size() > 0) {
+		if (bpmResDTO1.getWorklistVO().getWorklistItem()!=null && bpmResDTO1.getWorklistVO().getWorklistItem().size() > 0) {
 			worklistItemVo.addAll(bpmResDTO1.getWorklistVO().getWorklistItem());
 		}
-
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		for(WorklistItemVO worklistItemVO : worklistItemVo){
-			CustomerServiceEntity custServiceEntity = new CustomerServiceEntity();
-
-			/*Retrieve status for document*/
-			bpmReqDTO = new BpmRequestDTO();
-			bpmReqDTO.setCtxToken(ctxToken);
-			bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
-			bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
-
-
-			/*Retrieve assign user name*/
+		
+		if (worklistItemVo != null && worklistItemVo.size() > 0) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqUserDTO = new UserReqDTO();
-			StringBuilder concat =  new StringBuilder();
-			if(bpmResDTO.isGroupTask() && bpmResDTO.isClaimed() && bpmResDTO.getUserList() != null){
-				for(String userlist : bpmResDTO.getUserList()){
-					reqUserDTO.setLoginId(userlist);
-					concat.append(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName()+",");
+			CustomerServiceEntity custServiceEntity = null;
+			
+			// Pending supplier LOA acknowledgement
+			if (ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.intValue() == getManagedBean().getCtContractVer().getCtWorkflowStatus().getPmStatus().getStatusId().intValue()) {
+				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+				SupplierSearchResDTO supplierSearchResDTO = null; 
+				for (WorklistItemVO worklistItemVO : worklistItemVo) {
+					custServiceEntity = new CustomerServiceEntity();
+					 if (worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()) {
+						 for (String loginId : worklistItemVO.getAssignees()) {
+							 reqUserDTO.setLoginId(loginId);
+							 UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
+							 if (null != userResDTO && null != userResDTO.getPmUser()) {
+								 supplierSearchReqDTO.setUserId(userResDTO.getPmUser().getUserId());
+								 supplierSearchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+								 if (supplierSearchResDTO.getResultBean() != null) {
+									 custServiceEntity.setOfficerName(supplierSearchResDTO.getResultBean().getResultList().get(0).getCompanyName());
+									 break;
+								 }
+							 }
+						 }
+						 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+					 }
 				}
 			} else {
-				for(String Assignees : worklistItemVO.getAssignees()){
-					reqUserDTO.setLoginId(Assignees);
-					concat.append(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName()+",");
-				}
+				for (WorklistItemVO worklistItemVO : worklistItemVo) {
+					custServiceEntity = new CustomerServiceEntity();
+					if(worklistItemVO.getAssignees() != null && !worklistItemVO.getAssignees().isEmpty()) {
+						for (String assignee : worklistItemVO.getAssignees()) {
+							 custServiceEntity = new CustomerServiceEntity();
+							 reqUserDTO.setLoginId(assignee);
+							 UserResDTO userResDTO =	userSO.retrieveUserByLoginId(reqUserDTO);
+							 if (null != userResDTO && null != userResDTO.getPmUser()) {
+								 custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+								 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+							 }
+						 }
+					 }
+				 }	
 			}
-
-			custServiceEntity.setOfficerName(RemoveLastString(concat.toString()));
-			custServiceEntity.setDocumentStatusDesc(getPmStatusDesc(bpmResDTO.getDocStatus()));
-			getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
-		}	
-
+		}			
 		return SERVICE_VIEW_PAGE;
 	}
-
-	public String RemoveLastString(String str) {
-		if (str.charAt(str.length()-1)==','){
-			str = str.replace(str.substring(str.length()-1), "");
-			return str;
-		} else{
-			return str;
-		}
-	}
-
-	/**
-	 * Sets the pm status desc.
-	 * 
-	 * @param statusId
-	 *  - pm status id passed as String
-	 */
-	private String getPmStatusDesc(Integer docStatus) {
-
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(new Long(docStatus));
-		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
-		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-			return resDTO.getPmStatusDesc().getStatusName();
-		}
-		return "";
-	}
-
 
 	/**
 	 * The method used to retrieve the contract status of the contract.
@@ -235,18 +220,6 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		} else {
 			return ResourceBundleUtils.getMessage("lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
-
-
-		/*if (status == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
-			    return ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if(status == ContractConst.CONTRACT_STATUS_INACTIVE){
-			return ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if(status == ContractConst.CONTRACT_STATUS_EXPIRED){
-			return ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if(status == ContractConst.CONTRACT_STATUS_TERMINATED){
-			return ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		}
-		return null;*/
 	}
 
 	/**
@@ -280,12 +253,15 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		return items;
 	}
 
+	/**
+	 * The method used reset PTJ profile value
+	 */
 	public void resetPtjProfile() {
 		getManagedBean().setSearchPtjProfile(null);
 	}
 
 	/**
-	 * The method used to navigate to contract details screen
+	 * The method used to navigate to customer service screen
 	 * for view purpose.
 	 * 
 	 * @return the navigate URL 
@@ -294,24 +270,12 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 		return SERVICE_VIEW_PAGE;
 	}
 
+	/**
+	 * The method used to navigate to contract's customer service screen
+	 * 
+	 * @return the navigate URL 
+	 */
 	public String gotoBackPage() throws IOException {
-
-		/*	try {
-
-				FacesScopes facesScope = new FacesScopes();
-				ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-				String commonUrl = themeDisplay.getURLCurrent().substring(
-						0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
-								.getFriendlyURL())	+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
-				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(commonUrl + "/" +CONTRACT_SERVICE_PAGE);
-
-		} catch (PortalException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}*/
-
 		return CONTRACT_SERVICE_PAGE;
 	}
 }
