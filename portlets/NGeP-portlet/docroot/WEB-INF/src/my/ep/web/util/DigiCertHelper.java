@@ -81,7 +81,7 @@ public class DigiCertHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		String url4 = getRevokeDns() + "/RequestRevokeCert.aspx?userID="
+		String url4 = getRevokeDns() + "/kmc/RequestRevokeCert.aspx?userID="
 				+ identificationNo + "&orgid=" + epNo + "&token="
 				+ encodedtoken;
 		externalContext.redirect(url4);
