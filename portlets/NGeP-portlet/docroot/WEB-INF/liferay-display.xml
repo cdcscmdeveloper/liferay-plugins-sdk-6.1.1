@@ -168,6 +168,7 @@
 			<portlet id="dpCustomerService" />
 			<portlet id="qtCustomerService" />
 			<portlet id="scSpecificationCommitteeEndorsement" />
+			<portlet id="scQuotationTenderSearchTechSupp" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
