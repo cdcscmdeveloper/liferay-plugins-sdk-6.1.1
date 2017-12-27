@@ -3494,8 +3494,10 @@ public class SmApplicationBackingBean extends
 					.getEntityBySinglePropertyFromList(getManagedBean()
 							.getSelectedCert().getPmCertBody().getCertBodyId(),
 							getManagedBean().getCertBodyLs(), "certBodyId");
-			getManagedBean().getSelectedCert().setCertName(
-					certBody.getDescription());
+			if (certBody != null) {
+				getManagedBean().getSelectedCert().setCertName(
+						certBody.getDescription());
+			}
 		}
 
 	}
