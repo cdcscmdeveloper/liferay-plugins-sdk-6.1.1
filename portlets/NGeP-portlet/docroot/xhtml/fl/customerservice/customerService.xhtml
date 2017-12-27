@@ -155,7 +155,7 @@
 				</p:column>  
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}" 
 					style="text-align: center;width:7%;">
-					<p:commandLink 
+					<p:commandLink onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{flCustomerServiceBackingBean.navigateToPage(flDocument.docType,flDocument.docId,flDocument.statusId,flDocument.docNo,flDocument.orderNo)}"
 							style="padding-left:10px">
 							<p:graphicImage value="/css/images/design/ico-view.png" />
