@@ -36,6 +36,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -65,6 +66,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -200,8 +202,12 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	    this.getManagedBean().setCustomerScQt(scQt);
        
 	    BpmRequestDTO reqDTO=new BpmRequestDTO();
-	    Object token = getBpmSO().authenticate(BPM_SYS_USER);
-		reqDTO.setUserId(BPM_SYS_USER);
+	    
+	    String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.BPM_PRINCIPAL);
+		
+		Object token = getBpmSO().authenticate(bpmUserLogin);
+		reqDTO.setUserId(bpmUserLogin);
 		docNumberList.add(scQt.getQtNo());
 		reqDTO.setDocNumberList(docNumberList);
 		reqDTO.setCtxToken(token);
