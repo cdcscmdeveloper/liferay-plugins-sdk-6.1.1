@@ -3490,23 +3490,12 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.getMessage("lbl.txt.na", null));
 		if (getManagedBean().getSelectedCert() != null
 				&& getManagedBean().getSelectedCert().getPmCertBody() != null) {
-			PmDocument docCert = SmApplicationUtil
-					.getCertDocByCertBodyId(getManagedBean().getSelectedCert()
-							.getPmCertBody().getCertBodyId());
-			if (docCert != null) {
-				getManagedBean().getSelectedCert().setCertName(
-						docCert.getDocName());
-			} else {
-				PmCertBody certBody = (PmCertBody) EntityHelper
-						.getEntityBySinglePropertyFromList(getManagedBean()
-								.getSelectedCert().getPmCertBody()
-								.getCertBodyId(), getManagedBean()
-								.getCertBodyLs(), "certBodyId");
-				if (!StringUtils.isBlank(certBody.getDescription())) {
-					getManagedBean().getSelectedCert().setCertName(
-							certBody.getDescription());
-				}
-			}
+			PmCertBody certBody = (PmCertBody) EntityHelper
+					.getEntityBySinglePropertyFromList(getManagedBean()
+							.getSelectedCert().getPmCertBody().getCertBodyId(),
+							getManagedBean().getCertBodyLs(), "certBodyId");
+			getManagedBean().getSelectedCert().setCertName(
+					certBody.getDescription());
 		}
 
 	}
