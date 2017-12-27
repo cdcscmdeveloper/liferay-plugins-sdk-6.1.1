@@ -2724,6 +2724,13 @@
 	 	<css-class-wrapper>scquotationtendersearch-portlet</css-class-wrapper>
 	 </portlet>
 	 <portlet>
+	 	<portlet-name>scQuotationTenderSearchTechSupp</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<instanceable>false</instanceable>
+	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+	 	<css-class-wrapper>scquotationtendersearch-techsupp-portlet</css-class-wrapper>
+	 </portlet>
+	 <portlet>
 	 	<portlet-name>scConsolidationReport</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<instanceable>false</instanceable>
