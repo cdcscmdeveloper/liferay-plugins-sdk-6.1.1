@@ -118,7 +118,7 @@
 							   	                 </p:inputText>
 							   	           </c:if>
 							   	           <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
-							   	                  <h:outputText  value="#{contactPersonsVar.name}" style="float:left;" />
+							   	                  <h:outputText  value="#{contactPersonsVar.name}" style="float:left;text-align:left;" />
 							   	            </c:if>
 						                </p:column>
 						                <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;" styleClass="column-align-center">
@@ -129,7 +129,7 @@
 							   	                 </p:inputText>
 								               </c:if>
 							   	                      <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
-							   	                              <h:outputText  value="#{contactPersonsVar.address}" style="float:left;"/>
+							   	                              <h:outputText  value="#{contactPersonsVar.address}" style="float:left;text-align:left;"/>
 							   	                      </c:if>
 						                   </p:column>
 						
@@ -147,7 +147,7 @@
 							   	                 </p:inputText>
 							                       </c:if>
 							   	                      <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
-							   	                              <h:outputText  value="#{contactPersonsVar.email}" style="float:left;" />
+							   	                              <h:outputText  value="#{contactPersonsVar.email}" style="float:left;text-align:left;" />
 							   	                      </c:if>
 						                    </p:column>
 						
@@ -220,7 +220,7 @@ rowKey="#{exemptedOrgsVar}" >
 		                   </p:column>
 		                   <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.name']}" 
 		                         style="width:65%;" styleClass="column-align-center">
-		                               <h:outputText value="#{exemptedOrgsVar.orgProfile.orgName}" style="float:left;"/>
+		                               <h:outputText value="#{exemptedOrgsVar.orgProfile.orgName}" style="float:left;text-align:left;"/>
 		                   </p:column>
 	       </p:dataTable>
 	     
