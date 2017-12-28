@@ -46,6 +46,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
@@ -97,7 +98,6 @@ public class DPCustomerServiceBackingBean extends SourcingBaseBackingBean<DPCust
 	private static final String NAV_DP_CUSTOMER_SERVICE_VIEW="/xhtml/sc/directpurchase/customerservice/dpCustomerServiceView.xhtml";
 	private static final String NAV_DP_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/directpurchase/customerservice/dpCustomerServiceMainView.xhtml";
 	private static final String LOI_LOA_DOC_TYPE="PR";
-	private static final String BPM_SYS_USER="weblogic";
 
 	/**
 	 * Instantiates a new DP CustomerService backing bean.
@@ -376,8 +376,11 @@ try{
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
     	 	UserReqDTO reqUserDTO = new UserReqDTO();
 	 		reqUserDTO.setLoginId(worklistItem.getAssignees().get(i));
-    	 	custServiceEntity.setOfficerName(userSO.retrieveUserByLoginId(reqUserDTO).getPmUser().getUserName());
-			
+	 		UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
+		 	if(null != userResDTO && null != userResDTO.getPmUser()){
+		 		log.info("====user name==="+ userResDTO.getPmUser().getUserName());
+	    	 	custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
+		 	}
     	 	reqDTO = new BpmRequestDTO();
     	 	reqDTO.setCtxToken(token);
     	 	reqDTO.setTaskId(worklistItem.getTaskId());
