@@ -99,7 +99,6 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	//private IPagingDataModel<ScQt> qtCustomerServiceDataModel = new QTCustomerServiceSearchQtDataModel();
 	private static final String NAV_QT_CUSTOMER_SERVICE_VIEW="/xhtml/sc/qtcustomerservice/qtCustomerServiceViewMain.xhtml";
 	private static final String NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/qtcustomerservice/qtcustomerServiceSearchview.xhtml";
-	private static final String BPM_SYS_USER="weblogic";
 	
 	
 	public QTCustomerServiceBackingBean(){
