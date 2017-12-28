@@ -254,8 +254,7 @@
 							<p:commandLink oncomplete="reqItemInfo.show();" process="@this"  
 					action="#{contractRequestBackingBean.reqItemInfoList(item)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
-					<p:graphicImage value="/css/images/ico-info.png"
-						title="#{lbl['lbl.fl.request.item.info']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.request.item.info.contract']}" escape="false"/>	
 					</p:commandLink>
 					</p:inputText>
 					<p:message for="orderedQty" display="icon" />
