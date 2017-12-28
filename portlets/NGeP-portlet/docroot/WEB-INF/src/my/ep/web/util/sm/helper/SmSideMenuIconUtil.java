@@ -17,11 +17,13 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
@@ -123,23 +125,24 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
-						bean.getSmAppl())) {
+						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
 				// used to check got changes to display supporting doc
 				if (step3PersonnelHasDifference(true,
-						bean.getLatestApproveAppl(), bean.getSmAppl())) {
+						bean.getLatestApproveAppl(), bean.getSmAppl(),
+						bean.getDowngradeMofAcc())) {
 					bean.getSupplierEditVO().setSuppEditPersonnel(true);
 				}
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
-						bean.getSupplierAppl())) {
+						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
-						bean.getSmAppl())) {
+						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
 				}
 			} else if (bean.isApproverUser()) {
@@ -147,15 +150,15 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditPersonnel(false);
 				bean.getEditVO().setAppEditPersonnel(false);
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
-						bean.getSupplierAppl())) {
+						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
-						bean.getPoAppl())) {
+						bean.getPoAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
 				}
 				if (step3PersonnelHasDifference(false, bean.getPoAppl(),
-						bean.getSmAppl())) {
+						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setAppEditPersonnel(true);
 				}
 			}
@@ -731,7 +734,7 @@ public class SmSideMenuIconUtil {
 	}
 
 	private static boolean step3PersonnelHasDifference(boolean isSupplier,
-			SmAppl applPrev, SmAppl applCurr) {
+			SmAppl applPrev, SmAppl applCurr, SmMofAccount downgradeMofAcc) {
 		boolean retVal = false;
 		String[] excludeProps = new String[] { "smPersonnel" };
 		String[] primitive = null;
@@ -758,10 +761,22 @@ public class SmSideMenuIconUtil {
 							.getEntityByMultiplePropertiesFromList(
 									currPersonnel, applPrev.getSmPersonnels(),
 									primitive, null, null);
-					retVal = EntityHelper.isObjectDifference(prevPersonnel,
-							currPersonnel, new String[] { "shareAmt",
-									"sharePercentage", "softcert",
-									"softcertFlg" });
+
+					if (downgradeMofAcc != null
+							&& currPersonnel.getEpRole() != null
+							&& currPersonnel.getEpRole().equals(
+									RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+						retVal = EntityHelper.isObjectDifference(prevPersonnel,
+								currPersonnel, new String[] { "shareAmt",
+										"sharePercentage", "softcert",
+										"softcertFlg", "epRole" });
+					} else {
+						retVal = EntityHelper.isObjectDifference(prevPersonnel,
+								currPersonnel, new String[] { "shareAmt",
+										"sharePercentage", "softcert",
+										"softcertFlg" });
+					}
+
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
 								+ currPersonnel.getName()
@@ -1079,7 +1094,7 @@ public class SmSideMenuIconUtil {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
-			
+
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",

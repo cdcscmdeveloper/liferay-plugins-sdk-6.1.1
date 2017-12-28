@@ -56,6 +56,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -1182,7 +1183,7 @@ public class SmApplicationBackingBean extends
 		}
 		List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
 				.getSmMofAccounts();
-		if (accounts != null && !accounts.isEmpty()) {
+		if (!EntityHelper.isCollectionEmpty(accounts)) {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						getManagedBean().getSmSupplier().getSmAppl()
@@ -1193,6 +1194,13 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+
+		// init downgradeMofToBasic
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		SmMofAccount downgradeMofAcc = SmServiceLookup.getMofAccountSO()
+				.retrieveDowngradeMofAcc(reqDTO).getMofAccount();
+		getManagedBean().setDowngradeMofAcc(downgradeMofAcc);
 
 		// init GST information
 		initGst();
