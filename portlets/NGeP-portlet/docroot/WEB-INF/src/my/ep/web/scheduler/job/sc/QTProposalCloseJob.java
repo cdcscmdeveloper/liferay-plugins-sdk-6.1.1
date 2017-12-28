@@ -65,8 +65,7 @@ public class QTProposalCloseJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		debugLogger("Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
-		//TODO remove before live
-		log.info("Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
+		log.info("##### Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
 		
@@ -110,6 +109,7 @@ public class QTProposalCloseJob implements Job {
 			proposalSO = null;
 		}
 		debugLogger("End execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
+		log.info("##### Finish execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
 	}
 
 	private void insertProposalAmount(Long qtId) {

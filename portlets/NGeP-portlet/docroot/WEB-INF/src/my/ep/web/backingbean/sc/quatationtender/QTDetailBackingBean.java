@@ -5486,7 +5486,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void closeProposal(ScQt scQt) {
 		log.info("closeProposal-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
-		
+		log.info("##### Proposal Close started @"+DateUtils.getCurrentDate());
 		IQTProposalSO qtProposalSO = null;
 		try {
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -5529,6 +5529,7 @@ public class QTDetailBackingBean extends
 		} finally {
 			qtProposalSO = null;
 		}
+		log.info("##### Proposal Close completed @"+DateUtils.getCurrentDate());
 	}
 	
 	/**
