@@ -53,8 +53,9 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 	public void preRenderErrorView(){
 		log.info("............................preRenderErrorView");
-
-		Object token = getBPMAuthenticationCtxToken();
+		
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
 		this.getManagedBean().setToken(token);
 		this.getManagedBean().setViewBy("");
 		this.getManagedBean().setDocNo("");
@@ -83,12 +84,12 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "errorListView");
 	}
 
-	public Object getBPMAuthenticationCtxToken() {
+	/*public Object getBPMAuthenticationCtxToken() {
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		Object ctxToken = bpmSO.authenticate("weblogic");
+		Object ctxToken = bpmSO.authenticate("TECHNICAL USER");
 		return ctxToken;
-	}
+	}*/
 
 	public void refreshNormalErrorList(){
 		this.getManagedBean().getErrorListDataModel().reloadData();
@@ -112,13 +113,16 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-
+		
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setTaskId(taskId);
-		reqDTO.setCtxToken(getManagedBean().getToken());
-		reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		if(taskId != null){
+			reqDTO.setCtxToken(getManagedBean().getToken());
+			reqDTO.setTaskId(taskId);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 
-		BpmResponseDTO resDTO = bpmSO.updateTask(reqDTO);
+			resDTO = bpmSO.updateTask(reqDTO);
+		}
 
 
 		this.getManagedBean().getErrorListDataModel().reloadData();
@@ -151,15 +155,24 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		this.getManagedBean().setPayloadContent("");
 		this.getManagedBean().setErrorMessageTitle(title);
 		
+		ErrorDataType pojo = getPojo(taskId);
+		
+		this.getManagedBean().setPayloadContent(pojo.getErrorDesc());
+		
+		refreshError();
+	}
+	
+	private ErrorDataType getPojo(String taskId){
 		ErrorDataType pojo = null;
 		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		
-
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(getManagedBean().getToken());
 		reqDTO.setTaskId(taskId);
+		
+		System.out.println("ctx toke :" + this.getManagedBean().getToken());
 		
 		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
 
@@ -167,32 +180,7 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 			pojo = (ErrorDataType) resDTO.getPojo();
 		}
 		
-		this.getManagedBean().setPayloadContent(pojo.getErrorDesc());
-		
-		refreshError();
+		return pojo;
 	}
-	/*
-	public String printFieldValue(Object obj){
-		
-		String value = "";
-		
-		for(Field field : obj.getClass().getDeclaredFields()){
-		
-			field.setAccessible(true);
-			String name = field.getName();
-			Object object = null;
-			
-			try {
-				object = field.get(obj);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			
-			value += name+"\t: "+object+"<br />";
-		
-		}
-		
-		return value;
-	}
-*/
+	
 }
