@@ -56,6 +56,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -179,6 +180,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> selectedShareHolders;
 	private SmPersonnel selectedShareHolder;
 	private SmPersonnel selectedPrevShareHolder;
+	private SmMofAccount downgradeMofAcc;
 
 	private List<SmStaffExperience> selectedShrHldrJobFunctions;
 	private SmStaffExperience selectedJobFunction;
@@ -3974,5 +3976,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDiscplinaryActionMsg(String discplinaryActionMsg) {
 		this.discplinaryActionMsg = discplinaryActionMsg;
+	}
+
+	public SmMofAccount getDowngradeMofAcc() {
+		return downgradeMofAcc;
+	}
+
+	public void setDowngradeMofAcc(SmMofAccount downgradeMofAcc) {
+		this.downgradeMofAcc = downgradeMofAcc;
 	}
 }
