@@ -145,23 +145,20 @@
 								<p:graphicImage value="/css/images/design/ico-action.png" title="#{lbl['lbl.quartz.execute.job']}" />
 							</p:commandLink>
 						</p:outputPanel>
-						<ui:remove>
-							&#160;
-							<p:commandLink id="updateActionId"
-								partialSubmit="true"
-								process="@this" action="#{schedulerManagerBB.onUpdateJob(jobBean)}"
-								update=":#{p:component('addJobDialog')}" onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()">
-								<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
-							</p:commandLink>
-						</ui:remove>
+						&#160;
+						<p:commandLink id="updateActionId"
+							partialSubmit="true"
+							process="@this" action="#{schedulerManagerBB.onUpdateJob(jobBean)}"
+							update=":#{p:component('addJobDialog')}" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
+						</p:commandLink>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{empty jobBean.trigger}">
 						<h:outputText value="#{lbl['lbl.quartz.action.not.available']}" />
 					</p:outputPanel>
 					&#160;
-					
-					<ui:remove>
+
 					<p:commandLink id="deleteActionId"
 						partialSubmit="true"
 						process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
@@ -169,21 +166,20 @@
 						oncomplete="blockWidget.hide()">
 						<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
 					</p:commandLink>
-					</ui:remove>
 				</p:column>
 
 			</p:dataTable>
 		</p:panel>
 		
 		<br />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					process="@this" partialSubmit="true" onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()" 
-					action="#{schedulerManagerBB.onAddJob()}"
-					update="@form" />
-			</div>
-			<br />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				process="@this" partialSubmit="true" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()" 
+				action="#{schedulerManagerBB.onAddJob()}"
+				update="@form" />
+		</div>
+		<br />
 		
 		<p:outputPanel rendered="#{not empty schedulerManagerBB.managedBean.epSchedulerProblemJobList}">
 			<p:panel header="#{lbl['lbl.quartz.alert.jobs']}" toggleable="true" id="jobAlertListPanelId">
