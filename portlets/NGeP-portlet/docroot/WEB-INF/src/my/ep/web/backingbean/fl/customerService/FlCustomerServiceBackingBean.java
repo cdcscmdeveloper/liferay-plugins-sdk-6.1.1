@@ -187,10 +187,6 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 						 }
 						 getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
 					 }
-					 bpmReqDTO = new BpmRequestDTO();
-					 bpmReqDTO.setCtxToken(ctxToken);
-					 bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
-					 bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
 				 }
 			 }else{
 				 for(WorklistItemVO worklistItemVO : bpmResDTO.getWorklistVO().getWorklistItem()){
@@ -214,11 +210,6 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 							 }
 						 }
 					 }
-					 bpmReqDTO = new BpmRequestDTO();
-					 bpmReqDTO.setCtxToken(ctxToken);
-					 bpmReqDTO.setTaskId(worklistItemVO.getTaskId());
-					 bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
-
 				 }	
 			 }
 		 }
