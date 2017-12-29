@@ -301,14 +301,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		BigDecimal amountPerPersonnel = BigDecimal.ZERO;
 		int i = 0;
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
-
-			// for G2G supplier all softcert request is free
-			if (!StringUtils.isBlank(getManagedBean().getSmAppl()
-					.getSupplierType())
-					&& getManagedBean()
-							.getSmAppl()
-							.getSupplierType()
-							.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
 				if (StringUtils.isNotBlank(personnel.getEpRole())
 						&& personnel.getEpRole().equals(
 								RoleCode.SUPPLIER_TEMP.value())) {
@@ -322,50 +315,34 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					personnel.setFreeSoftCert(true);
 				}
 			} else {
-				if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
-					if (StringUtils.isNotBlank(personnel.getEpRole())
-							&& personnel.getEpRole().equals(
-									RoleCode.SUPPLIER_TEMP.value())) {
-						getManagedBean().setSupplierTmpPersonnel(personnel);
-					}
-					if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
-						personnel.setFreeSoftCert(false);
-						amountPerPersonnel = SmRuleHelper.getInstance()
-								.getSoftCertFee();
-					} else {
-						personnel.setFreeSoftCert(true);
-					}
-				} else {
-					if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
-						personnel.setFreeSoftCert(true);
-					} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-						if (personnel.getSoftcertRejectCode() != null) {
-							if (personnel
-									.getSoftcertRejectCode()
-									.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)
-									|| personnel
-											.getSoftcertRejectCode()
-											.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
-								personnel.setFreeSoftCert(false);
-								amountPerPersonnel = SmRuleHelper.getInstance()
-										.getSoftCertFee();
-							} else {
-								personnel.setFreeSoftCert(true);
-							}
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+					personnel.setFreeSoftCert(true);
+				} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+					if (personnel.getSoftcertRejectCode() != null) {
+						if (personnel
+								.getSoftcertRejectCode()
+								.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_FRAUD)
+								|| personnel
+										.getSoftcertRejectCode()
+										.equals(my.ep.constant.sm.SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
+							personnel.setFreeSoftCert(false);
+							amountPerPersonnel = SmRuleHelper.getInstance()
+									.getSoftCertFee();
 						} else {
 							personnel.setFreeSoftCert(true);
 						}
 					} else {
-						amountPerPersonnel = SmRuleHelper.getInstance()
-								.getSoftCertFee();
+						personnel.setFreeSoftCert(true);
 					}
-					this.getManagedBean()
-							.getPaymentMap()
-							.put(personnel.getPersonnelId(), amountPerPersonnel);
-					amount = amount.add(amountPerPersonnel);
+				} else {
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
 				}
-				i++;
+				this.getManagedBean().getPaymentMap()
+						.put(personnel.getPersonnelId(), amountPerPersonnel);
+				amount = amount.add(amountPerPersonnel);
 			}
+			i++;
 		}
 		BigDecimal gst = amount.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
 				: getManagedBean().getGstRate().divide(new BigDecimal(100))
