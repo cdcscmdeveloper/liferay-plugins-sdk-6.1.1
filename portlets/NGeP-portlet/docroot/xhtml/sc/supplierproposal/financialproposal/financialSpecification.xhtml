@@ -21,6 +21,13 @@
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 			</TD>
 		</tr>
+		<tr>
+			<TD><h:outputText styleClass="instruction"
+					value="3. #{lbl['lbl.sc.sp.zonal.templatespec.instructions']}"
+					escape="false"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal and !supplierProposalDetailBackingBean.managedBean.readOnly}" />
+			</TD>
+		</tr>
 	</table>
 
 	<c:if test="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}">
