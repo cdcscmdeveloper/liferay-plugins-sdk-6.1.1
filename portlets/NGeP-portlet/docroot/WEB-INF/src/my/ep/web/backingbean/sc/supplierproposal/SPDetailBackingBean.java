@@ -1036,10 +1036,15 @@ public class SPDetailBackingBean extends
 			proposalReqDTO.setSupplierId(getManagedBean().getSupplierId());
 			
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
-		} catch (Exception e) {
+		} catch (EpException e) {
+			scQtProposalChecklist.setSubmitted(false);
+			throw e;
+		} 
+		catch (Exception e) {
 			scQtProposalChecklist.setSubmitted(false);
 			throw new EpException(e.getMessage());
-		} finally {
+		}
+		finally {
 			proposalSO = null;
 		}
 		return proposalResDTO;
