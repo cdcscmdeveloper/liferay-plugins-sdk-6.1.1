@@ -92,7 +92,6 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 	 * @return the document type drop down
 	 */
 	public SelectItem[] getDocumentTypeDropDown() {
-		
 		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
 		try {
 			SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FULFILMENT_DOCUMENT_TYPE);
@@ -101,8 +100,12 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 		    for(SelectItem selectItem : items) {
 		    	itemList.add(selectItem);
 		    }
-			List<String> flDocTypes = getManagedBean().getDocTypeListByRole();
-			List<String> selectedItemCode = new ArrayList<String>();
+		    
+		    List<String> flDocTypes = new ArrayList<String>();
+		    if (getManagedBean().getSearchOrderType()!= null) {
+		    	flDocTypes = getManagedBean().getDocTypeListByRole();
+		    }
+		    List<String> selectedItemCode = new ArrayList<String>();
 		    for(SelectItem selectItem : itemList) {
 		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
 		    		selectedItemCode.add(selectItem.getValue().toString());
