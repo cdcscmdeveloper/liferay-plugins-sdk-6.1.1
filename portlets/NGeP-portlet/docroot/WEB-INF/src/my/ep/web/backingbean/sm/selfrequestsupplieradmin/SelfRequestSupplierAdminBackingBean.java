@@ -2,6 +2,8 @@ package my.ep.web.backingbean.sm.selfrequestsupplieradmin;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -79,6 +81,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 											null) })));
 		} else {
 			List<SmPersonnel> filteredPersonnels = new ArrayList<SmPersonnel>();
+			SmPersonnel tmp = null;
 			for (SmPersonnel per : getManagedBean().getSupplier().getSmAppl()
 					.getSmPersonnels()) {
 				if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
@@ -88,9 +91,35 @@ public class SelfRequestSupplierAdminBackingBean extends
 						&& per.getIdentificationType() != null
 						&& per.getIdentificationType().getParameterCode()
 								.equals(SupplierManagementConst.NEW_IC)) {
-					filteredPersonnels.add(per);
+					if ((SmPersonnel) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									per.getIdentificationNo(),
+									filteredPersonnels, "identificationNo") == null) {
+						tmp = SmCommonUtil
+								.getSmPersonnelByRevNoAndIdentificationNo(
+										getManagedBean().getSupplier()
+												.getSmAppl().getSmPersonnels(),
+										per, 2);
+						if (tmp == null) {
+							tmp = SmCommonUtil
+									.getSmPersonnelByRevNoAndIdentificationNo(
+											getManagedBean().getSupplier()
+													.getSmAppl()
+													.getSmPersonnels(), per, 2);
+						}
+						if (tmp != null) {
+							filteredPersonnels.add(per);
+						}
+					}
 				}
 			}
+
+			Collections.sort(filteredPersonnels, new Comparator<SmPersonnel>() {
+				@Override
+				public int compare(final SmPersonnel s1, final SmPersonnel s2) {
+					return (s1.getName()).compareTo(s2.getName());
+				}
+			});
 			SmCommonUtil.setExternalContextSessionMap(
 					SupplierManagementConst.KEY_MAP_PERSONNEL_LIST,
 					filteredPersonnels);
@@ -167,7 +196,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !getManagedBean()
 				.getSupplier().getSmAppl().getSmCompanyBasic().isWithFederal())) ? false
 				: true;
-		
+
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
 		reqDTO.setSoftcertCatalogueReqd(isSoftcertCatlogueReqd);
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
