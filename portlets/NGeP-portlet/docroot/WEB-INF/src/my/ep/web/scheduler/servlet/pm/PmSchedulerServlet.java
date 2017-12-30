@@ -66,17 +66,17 @@ public class PmSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROGRAM));
 
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.PHIS_PROJECT_JOB,
-//								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-//						MasterDataProjectJob.class,
-//						SchedulerConstants.PHIS_PM_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROJECT));
-//
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.PHIS_PROJECT_JOB,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataProjectJob.class,
+						SchedulerConstants.PHIS_PROJECT_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROJECT));
+
 		EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(SchedulerConstants.PHIS_KOD_JOB,

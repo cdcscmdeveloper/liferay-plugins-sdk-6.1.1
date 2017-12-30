@@ -222,6 +222,9 @@ public class SchedulerConstants {
 	public static final String SPA_JOB_SEGMENT_DESC = "Job run once daily after 00:00 to send Master Data Segment file";
 	
 	
+	public static final String PHIS_PROJECT_JOB_DESC ="Job run every 5 minutes to send Master Data Projek / Setia / Sub Setia / Cara Pembiayaan to PHIS.";
+	
+	
 	///GFMAS AUTO
 	public static final String GFMAS_KPTJ_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLPCG Files";
 	public static final String GFMAS_VOT_INTEGRATION_JOB_DESC = "Job run every 5 minutes to process 1GFMAS GLVOT Files";
