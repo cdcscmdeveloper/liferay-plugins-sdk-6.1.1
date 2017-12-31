@@ -1497,7 +1497,7 @@ public class NoticeBoardBackingBean extends
 	private SearchFilterBean getSearchFilterBeanByDataBean(String searchField,
 			NoticeBoardSearchDataBean searchDataBean) {
 		SearchFilterBean searchFilterBean = new SearchFilterBean();
-
+		
 		if (searchDataBean.isToday()) {
 			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
 					.value());
@@ -1507,10 +1507,20 @@ public class NoticeBoardBackingBean extends
 					.value());
 			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(), 1));
 		} else if (searchDataBean.getPassDays() != null) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+			
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
 					.value());
-			searchFilterBean.setSearchValue(DateUtils.addDays(new Date(),
-					searchDataBean.getPassDays()));
+			Integer noOfPassedDays = -searchDataBean.getPassDays();
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY,0);
+			calendar.set(Calendar.MINUTE,0);
+			calendar.set(Calendar.SECOND,0);
+			calendar.set(Calendar.MILLISECOND,0);
+			calendar.add(Calendar.DATE, noOfPassedDays);
+			Date publishDateFrom = calendar.getTime();
+			searchFilterBean.setSearchValue(new SearchBetweenValue<Date>(
+					publishDateFrom, new Date()));
+			
 		} else if (searchDataBean.getFromDate() != null
 				&& searchDataBean.getToDate() != null) {
 			
@@ -1531,12 +1541,11 @@ public class NoticeBoardBackingBean extends
 		if (searchFilterBean.getSearchValue() == null) {
 			return null;
 		}
-
+		
 		searchFilterBean.setSearchField(searchField);
-
 		return searchFilterBean;
 	}
-
+	
 	/**
 	 * Will be called up on tab change in offered price screen.
 	 * 
@@ -2849,10 +2858,8 @@ public class NoticeBoardBackingBean extends
 	 */
 	public Date retriveDatesforOrgProfile(Date publishDate,Date createdDate){
 		if(publishDate==null){
-			log.info("===========createdDate====="+createdDate);
 			return createdDate;
 		}
-		log.info("===========publishDate====="+publishDate);
 		return publishDate;
 		
 	}
