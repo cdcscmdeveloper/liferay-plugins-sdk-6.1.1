@@ -202,6 +202,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setBaseUrl(SmCommonUtil.getBasePortalUrl());
+		reqDTO.setMofStatus(getManagedBean().getSupplier().getSmMofAccounts().get(0).getRecordStatusFlg()); 
 
 		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
 				reqDTO);
@@ -271,8 +272,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 				// set mof account message status
 				SmMofAccount mofAcc = getManagedBean().getSupplier()
 						.getSmMofAccounts().get(0);
-
-				if (mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+ 
+				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
+						|| mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
 						&& mofAcc.getExpDate() != null) {
 					Calendar c = Calendar.getInstance();
 					c.setTime(mofAcc.getExpDate());
