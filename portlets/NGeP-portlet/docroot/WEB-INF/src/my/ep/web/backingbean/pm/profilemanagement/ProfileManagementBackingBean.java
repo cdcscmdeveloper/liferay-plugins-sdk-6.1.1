@@ -3926,8 +3926,21 @@ public class ProfileManagementBackingBean extends
 			if(ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())){
 				reqDTO.setSupplierUser(true);
 			}
-			
-			reqDTO.setDeactivateRequired(true);
+			boolean deactivateRequired = true;
+			if(!user.isBrandNew() && userOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
+				List<PmUserOrg> userOrgs = PmCommonUtil.retrieveAllUserOrg(user.getUserId());
+				if(userOrgs != null && !userOrgs.isEmpty()){
+					for(PmUserOrg uo : userOrgs){
+						if(uo.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE 
+								&& !uo.getUserOrgId().equals(userOrg.getUserOrgId())){
+							deactivateRequired = false;
+							break;
+						}
+					}
+				}
+			}
+			logger.info("deactivateRequired : " + deactivateRequired);
+			reqDTO.setDeactivateRequired(deactivateRequired);
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
