@@ -287,6 +287,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 								System.out.println("user.getLoginId():"+user.getLoginId());
 								reqDTO.getCdAdminList().add(user.getLoginId());
 							}
+						}else{
+							throw new EpException("User no found!");
 						}
 
 
@@ -301,7 +303,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 								System.out.println("user.getLoginId():"+user.getLoginId());
 								reqDTO.getCmAdminList().add(user.getLoginId());
 							}
+						}else{
+							throw new EpException("User no found!");
 						}
+
 					}
 
 
@@ -441,6 +446,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						System.out.println("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdAdminList().add(user.getLoginId());
 					}
+				}else{
+					throw new EpException("User no found!");
 				}
 
 				resDTO = unspscSO.addCodificationRequest(reqDTO);
@@ -511,6 +518,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						System.out.println("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdAdminList().add(user.getLoginId());
 					}
+				}else{
+					throw new EpException("User no found!");
 				}
 
 
@@ -530,6 +539,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						System.out.println("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdcList().add(user.getLoginId());
 					}
+				}else{
+					throw new EpException("User no found!");
 				}
 			}
 
@@ -551,6 +562,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						System.out.println("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdAdminList().add(user.getLoginId());
 					}
+				}else{
+					throw new EpException("User no found!");
 				}
 
 			}			
@@ -570,6 +583,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						System.out.println("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdcList().add(user.getLoginId());
 					}
+				}else{
+					throw new EpException("User no found!");
 				}
 			}
 		}
@@ -1487,6 +1502,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							System.out.println("user.getLoginId():"+user.getLoginId());
 							reqDTO.getCdAdminList().add(user.getLoginId());
 						}
+					}else{
+						throw new EpException("User no found!");
 					}
 				}else{
 					
@@ -1498,6 +1515,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							System.out.println("user.getLoginId():"+user.getLoginId());
 							reqDTO.getCdcList().add(user.getLoginId());
 						}
+					}else{
+						throw new EpException("User no found!");
 					}
 					
 				}
@@ -1909,6 +1928,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					System.out.println("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdAdminList().add(user.getLoginId());
 				}
+			}else{
+				throw new EpException("No user found!");
 			}
 
 
@@ -1923,6 +1944,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					System.out.println("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCmAdminList().add(user.getLoginId());
 				}
+			}else{
+				throw new EpException("No user found!");
 			}
 		}
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
