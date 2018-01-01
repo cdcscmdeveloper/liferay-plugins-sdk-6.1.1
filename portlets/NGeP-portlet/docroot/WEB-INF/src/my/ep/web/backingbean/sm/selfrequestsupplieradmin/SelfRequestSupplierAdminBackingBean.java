@@ -105,7 +105,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 									.getSmPersonnelByRevNoAndIdentificationNo(
 											getManagedBean().getSupplier()
 													.getSmAppl()
-													.getSmPersonnels(), per, 2);
+													.getSmPersonnels(), per, 1);
 						}
 						if (tmp != null) {
 							filteredPersonnels.add(per);
