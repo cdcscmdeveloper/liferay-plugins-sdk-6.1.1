@@ -1681,104 +1681,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return "extensionCodeSingleCreation.xhtml";
 	}
 
-	/*
-	 * public String saveExtCode(){
-	 * 
-	 * ICodificationSO unspscSO = (ICodificationSO)
-	 * BusinessDelegate.getInstance(
-	 * ).getServiceObject("cm",ICodificationSO.class);
-	 * 
-	 * CodificationReqDTO reqDTO = new CodificationReqDTO(); CodificationResDTO
-	 * resDTO = null; FacesScopes face = new FacesScopes(); byte[] token
-	 * =face.getBPMAuthenticationCtxToken(); CmItem item = new CmItem();
-	 * 
-	 * System.out.println("this.getManagedBean().getRequestCode().getTempCode():"
-	 * +this.getManagedBean().getRequestCode().getTempCode());
-	 * reqDTO.setUnspscCode
-	 * (this.getManagedBean().getRequestCode().getTempCode()); resDTO =
-	 * unspscSO.searchCommodityObj(reqDTO);
-	 * 
-	 * 
-	 * 
-	 * AlphanumericGenerator brandCode = new AlphanumericGenerator(false,
-	 * "000"); AlphanumericGenerator typeCode = new AlphanumericGenerator(false,
-	 * "00"); AlphanumericGenerator measurementCode = new
-	 * AlphanumericGenerator(false, "000"); AlphanumericGenerator colorCode =
-	 * new AlphanumericGenerator(false, "00");
-	 * 
-	 * String brand = brandCode.nextStringIdentifier(); String type =
-	 * typeCode.nextStringIdentifier(); String measurement =
-	 * measurementCode.nextStringIdentifier(); String color =
-	 * colorCode.nextStringIdentifier(); log.info("brand:"+brand);
-	 * 
-	 * //////////brand//////////
-	 * System.out.println("getUnspscCode:"+resDTO.getCommodityObj
-	 * ().getUnspscCode()); CmBrand cmBrand = new CmBrand();
-	 * 
-	 * log.info("****************************************************");
-	 * cmBrand.
-	 * setBrandName(this.getManagedBean().getRequestCode().getBrandName());
-	 * cmBrand.setBrandCode(brand);
-	 * cmBrand.setUnspscId(resDTO.getCommodityObj());
-	 * cmBrand.setRecordStatus(true); reqDTO.setCmBrand(cmBrand);
-	 * 
-	 * //CodificationResDTO resBrandDTO = unspscSO.addNewBrand(reqDTO);
-	 * //item.setCmBrand(resBrandDTO.getCmBrand());
-	 * /////////////type////////////////// CmType cmType = new CmType();
-	 * 
-	 * cmType.setTypeName(this.getManagedBean().getRequestCode().getTypeName());
-	 * cmType.setTypeCode(type); cmType.setUnspscId(resDTO.getCommodityObj());
-	 * cmType.setRecordStatus(true);
-	 * 
-	 * reqDTO.setCmType(cmType); //CodificationResDTO resTypeDTO =
-	 * unspscSO.addNewType(reqDTO); //item.setCmType(resTypeDTO.getCmType());
-	 * /////////////measurement///////////////////////////
-	 * 
-	 * CmMeasurement cmMeasurement = new CmMeasurement();
-	 * 
-	 * cmMeasurement.setMeasurementName(this.getManagedBean().getRequestCode().
-	 * getMeasurementName()); cmMeasurement.setMeasurementCode(measurement);
-	 * cmMeasurement.setUnspscId(resDTO.getCommodityObj());
-	 * cmMeasurement.setRecordStatus(true);
-	 * 
-	 * reqDTO.setCmMeasurement(cmMeasurement); //CodificationResDTO
-	 * resMeasurementDTO = unspscSO.addNewMeasurement(reqDTO);
-	 * //item.setCmMeasurement(resMeasurementDTO.getCmMeasurement());
-	 * //////////////////////////////////////
-	 * 
-	 * CmColor cmColor = new CmColor();
-	 * cmColor.setColorName(this.getManagedBean(
-	 * ).getRequestCode().getColorName()); cmColor.setColorCode(color);
-	 * cmColor.setRecordStatus(true); reqDTO.setCmColor(cmColor);
-	 * 
-	 * //CodificationResDTO resColorDTO = unspscSO.addNewColor(reqDTO);
-	 * //item.setCmColor(resColorDTO.getCmColor());
-	 * System.out.println("************New Extension End***************");
-	 * 
-	 * String extensionCode = type+brand+measurement+color;
-	 * 
-	 * log.info("extensionCode:"+extensionCode);
-	 * 
-	 * 
-	 * item.setRecordStatus(true); item.setCmUnspsc(resDTO.getCommodityObj());
-	 * item.setExtensionCode(extensionCode); reqDTO.setCmItem(item);
-	 * reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-	 * reqDTO.setTaskId(this.getManagedBean().getTaskId());
-	 * reqDTO.setToken(token); reqDTO.setOutCome("CREATE"); resDTO =
-	 * unspscSO.addNewItem(reqDTO);
-	 * 
-	 * System.out.println("****************save Item End******************");
-	 * 
-	 * 
-	 * FacesContext facesContext = FacesContext.getCurrentInstance();
-	 * facesContext.addMessage(null, new
-	 * FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
-	 * 
-	 * //return "taskListView"; return "BPMtesting";
-	 * 
-	 * }
-	 */
-
 	public void addMoreRequest() {
 		log.info(".................addMoreRequest...................");
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
@@ -2254,12 +2156,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Object obj = res.getPojo();
 
 
-		// try {
 
-		System.out.println("face.getUserScreenName()"
-				+ face.getUserScreenName());
-
-		Map temp = new HashMap();
+		/*Map temp = new HashMap();
 
 		temp.put("user003", "user003");
 		temp.put("user051", "user051");
@@ -2283,9 +2181,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 
 			}
-		}
+		}*/
 
-		// /////////////////////////////////////
+	
 
 		if (this.getManagedBean().getReviewExtCodeList() != null
 				&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
@@ -2582,6 +2480,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					System.out.println("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdcList().add(user.getLoginId());
 				}
+			}else{
+				throw new EpException("No user found!");
 			}
 
 		}
@@ -2601,6 +2501,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					System.out.println("user.getLoginId():"+user.getLoginId());
 					reqDTO.getEpList().add(user.getLoginId());
 				}
+			}else{
+				throw new EpException("No user found!");
 			}
 
 		}
@@ -2620,6 +2522,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					System.out.println("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdAdminList().add(user.getLoginId());
 				}
+			}else{
+				throw new EpException("No user found!");
 			}
 		}
 	}
@@ -3613,5 +3517,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().getRequestExtCodeList().remove(index);
 
 	}
+	
+	
+
 
 }
