@@ -2,6 +2,7 @@ package my.ep.web.scheduler.job.cm;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -35,7 +36,15 @@ public class CmUpdateExpiredItemJob implements Job {
 			reqSO = (ICatalogueSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
 							ICatalogueSO.class);
-			reqSO.updateExpiredItem();
+			
+			
+			for(int i=0; i<100;i++){
+				CatalogueResDTO resDTO = reqSO.updateExpiredItem();
+				
+				if(resDTO.getTotalRecord()==0){
+					break;
+				}
+			}
 			// please add resDTO to log better
 
 		} catch (Exception e) {
