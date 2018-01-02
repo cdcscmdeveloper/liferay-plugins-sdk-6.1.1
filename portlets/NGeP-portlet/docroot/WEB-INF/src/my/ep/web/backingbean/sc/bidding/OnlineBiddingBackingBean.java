@@ -167,6 +167,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		}
 	}
 	
+	/**
+	 * Method to fetch online bidding rule values
+	 */
 	private void fetchDecBlkMaxPercentageRuleValue(){
 		IRuleSO ruleSO = null;
 		try {
@@ -349,7 +352,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
 								.length());
 
-		System.out.println("commonUrl" + commonUrl);
+		log.info("commonUrl" + commonUrl);
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -481,71 +484,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	/**
 	 * Listener method for spinner component change events
 	 * 
-	 * @param scBidPrice
-	 */
-	/*public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
-
-		log.info("decrementAmountValueChangeListener");
-
-		if (scBidPrice.getNewPrice() != null) {
-			if (-1 == scBidPrice.getNewPrice().compareTo(
-					scBidPrice.getScBidSupplierItem().getScBidItem()
-							.getDecrementAmt())) {
-				int index = getBidPrices().indexOf(scBidPrice);
-				scBidPrice.setNewPrice(new BigDecimal(0.0d));
-				getBidPrices().set(index, scBidPrice);
-				throw new EpException(MessageConst.ERROR_760301);
-
-			} else if (1 == scBidPrice.getNewPrice().compareTo(
-					scBidPrice.getScBidSupplierItem().getScBidItem()
-							.getDecrementAmt())) {
-
-				BigDecimal lastBidPrice = scBidPrice.getBidPrice() == null ? scBidPrice
-						.getScBidSupplierItem().getItemStartPrice()
-						: scBidPrice.getBidPrice();
-				if (1 == scBidPrice.getNewPrice().compareTo(lastBidPrice)) {
-					int index = getBidPrices().indexOf(scBidPrice);
-					scBidPrice.setNewPrice(new BigDecimal(0.0d));
-					getBidPrices().set(index, scBidPrice);
-					throw new EpException(MessageConst.ERROR_760302);
-				} else if (scBidPrice
-						.getNewPrice()
-						.remainder(
-								scBidPrice.getScBidSupplierItem()
-										.getScBidItem().getDecrementAmt())
-						.compareTo(new BigDecimal(0.0d)) != 0) {
-					int index = getBidPrices().indexOf(scBidPrice);
-					scBidPrice.setNewPrice(new BigDecimal(0.0d));
-					getBidPrices().set(index, scBidPrice);
-					throw new EpException(MessageConst.ERROR_760301);
-				}
-
-			}
-		}
-		ScBidPrice newBidPrice = new ScBidPrice();
-		BigDecimal newPrice = null;
-
-		if (scBidPrice.getBidPrice() == null
-				&& scBidPrice.getNewPrice() != null) {
-			newPrice = scBidPrice.getScBidSupplierItem().getItemStartPrice()
-					.subtract(scBidPrice.getNewPrice());
-		}
-
-		else if (scBidPrice.getBidPrice() != null
-				&& scBidPrice.getNewPrice() != null) {
-			newPrice = scBidPrice.getBidPrice().subtract(
-					scBidPrice.getNewPrice());
-		}
-		newBidPrice.setBidPrice(newPrice);
-		newBidPrice.setScBidSupplierItem(scBidPrice.getScBidSupplierItem());
-		scBidPrice.setNewBidPrice(newBidPrice);
-		int index = getBidPrices().indexOf(scBidPrice);
-		getBidPrices().set(index, scBidPrice);
-	}
-*/
-	/**
-	 * Listener method for spinner component change events
-	 * 
 	 * @param component
 	 * @param newValue
 	 */
@@ -605,9 +543,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 * @param scBidPrice
 	 */
 	public void confirmAndSubmitBidPrice(ScBidPrice scBidPrice) {
-
-		System.out.println("########inside confirmAndSubmitBIdPrice######"
-				+ scBidPrice);
 
 		log.info("confirmAndSubmitBIdPrice");
 		BigDecimal newPrice = null;
@@ -827,7 +762,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 			}
 		}
 
-		System.out.println("getItemNewBidPriceTotal" + newBidPriceTotal);
 		this.setItemNewBidPriceTotal(newBidPriceTotal);
 
 		return itemNewBidPriceTotal;
@@ -1555,6 +1489,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		this.decrementBlockPopupMessage = decrementBlockPopupMessage;
 	}
 
+	/**
+	 * Method to calculate remaining time after bid has been paused
+	 * @return
+	 */
 	private String remainingTimeAfterPauseCalculator() {
 		if (this.scBidAction != null
 				&& this.scBidAction.getActionType().equalsIgnoreCase(
@@ -1577,6 +1515,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		}
 	}
 
+	/**
+	 * To get RuleSO
+	 * @return
+	 */
 	private IRuleSO getRuleSO(){
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
