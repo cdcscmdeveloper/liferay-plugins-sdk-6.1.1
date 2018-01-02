@@ -407,7 +407,7 @@
 								value="#{lbl['lbl.pm.profiles.userdetails.username']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 						<td><p:inputText styleClass="ppDisplayTextL" id="itUserName"
-								disabled="#{isSupplierOrgType}"
+								disabled="#{isSupplierOrgType or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0}"
 								maxlength="80" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
@@ -492,6 +492,7 @@
 								label="#{lbl['lbl.pm.profiles.userdetails.email']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.email}"
 								styleClass="ppDisplayTextL"
+								disabled="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0}"
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
 									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
@@ -554,7 +555,7 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.orgUnitStatusChange()}"
 									partialSubmit="true" process="@this"
-									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
+									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr,:form:opUserProfileDet" />
 
 							</p:selectOneMenu></td>
 						
