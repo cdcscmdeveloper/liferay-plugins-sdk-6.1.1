@@ -10,18 +10,19 @@
 */
 package my.ep.web.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmAddress;
 
 /**
  * The Class SuppliersReviewSearchBean.
  */
-public class SuppliersReviewSearchBean {
+public class SuppliersReviewSearchBean implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @param args
 	 */
