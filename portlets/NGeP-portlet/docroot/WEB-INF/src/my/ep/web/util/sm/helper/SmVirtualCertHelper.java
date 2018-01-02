@@ -61,7 +61,7 @@ public class SmVirtualCertHelper {
 				log.info("****mCertLs****" + mCertLs.size());
 				// if both is null, generate the pdf and save the file name and path
 				if(mCert != null){
-					log.info("****MCert****" + mCert);
+					log.info("****MCert****" + mCert.getMofCertId());
 					if(deleteCategory && !mCert.isBumiCert()){
 						genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert, true);
 					}else{
@@ -158,7 +158,7 @@ public class SmVirtualCertHelper {
 				SmMofCert mofcert = updateMOFCertFilePath(cert);
 				return mofcert;
 			}else{
-				log.info("****genReport****" + urlConnection.getContentType());
+				log.info("****genReport contentType****" + urlConnection.getContentType());
 			}
 			//commonDownload(finalFile, fileName);
 		}catch(Exception ex){
