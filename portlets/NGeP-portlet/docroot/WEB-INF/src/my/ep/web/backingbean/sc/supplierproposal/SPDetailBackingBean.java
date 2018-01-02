@@ -447,10 +447,13 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Listener method to download supplier proposal report
+	 * @throws Exception
+	 */
 	public void downloadProposalReport() throws Exception {
 		debugLogger("downloadProposalReport");
 		String reportName = null;
-		// TODO
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtProposalReportAttachment();
 		StringBuilder fileName = new StringBuilder(getManagedBean()
@@ -459,7 +462,6 @@ public class SPDetailBackingBean extends
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
 		ScAttachment attachment = (ScAttachment) reportAttachment;
-		// TODO
 		populateAttachmentDetails(attachment);
 		reportName = ReportConst.SC_SUPPLIER_PROPOSAL_REPORT;
 
@@ -1401,7 +1403,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Method to no of employees involved details
+	 * Method to save no of employees involved details
 	 * 
 	 * @param isCompleted
 	 * @return navigation path
@@ -4446,6 +4448,10 @@ public class SPDetailBackingBean extends
 
 	}
 
+	/**
+	 * Method to sort checklist's as per display sequence order
+	 * @param checkList
+	 */
 	private void checklistSorting(List<ScQtProposalChecklist> checkList) {
 		Collections.sort(checkList, new Comparator<ScQtProposalChecklist>() {
 			public int compare(ScQtProposalChecklist checklist1,
@@ -4463,6 +4469,10 @@ public class SPDetailBackingBean extends
 		});
 	}
 
+	/**
+	 * validation method for proposal close time
+	 * @param qt
+	 */
 	private void validateProposalCloseTime(ScQt qt) {
 		if (qt.getClosingDate().before(DateUtils.getCurrentDate())) {
 			this.getManagedBean().setReadOnly(true);
@@ -4498,6 +4508,10 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Method to to fetch proposal submission.
+	 * @return
+	 */
 	public boolean isProposalSubmitted() {
 		return this.getManagedBean().getQtProposal().isSubmitted();
 	}
