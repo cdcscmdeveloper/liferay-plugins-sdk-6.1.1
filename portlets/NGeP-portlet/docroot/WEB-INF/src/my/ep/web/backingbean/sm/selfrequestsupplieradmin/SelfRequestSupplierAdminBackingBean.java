@@ -82,33 +82,39 @@ public class SelfRequestSupplierAdminBackingBean extends
 		} else {
 			List<SmPersonnel> filteredPersonnels = new ArrayList<SmPersonnel>();
 			SmPersonnel tmp = null;
-			for (SmPersonnel per : getManagedBean().getSupplier().getSmAppl()
-					.getSmPersonnels()) {
-				if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-						&& per.getPmUser() == null
-						&& StringUtils.isBlank(per.getEpRole())
-						&& per.getIdentificationTypeId() != null
-						&& per.getIdentificationType() != null
-						&& per.getIdentificationType().getParameterCode()
-								.equals(SupplierManagementConst.NEW_IC)) {
-					if ((SmPersonnel) EntityHelper
-							.getEntityBySinglePropertyFromList(
-									per.getIdentificationNo(),
-									filteredPersonnels, "identificationNo") == null) {
-						tmp = SmCommonUtil
-								.getSmPersonnelByRevNoAndIdentificationNo(
-										getManagedBean().getSupplier()
-												.getSmAppl().getSmPersonnels(),
-										per, 2);
-						if (tmp == null) {
+			if (getManagedBean().getSupplier() != null
+					&& getManagedBean().getSupplier().getSmAppl() != null
+					&& !EntityHelper.isCollectionEmpty(getManagedBean()
+							.getSupplier().getSmAppl().getSmPersonnels())) {
+				for (SmPersonnel per : getManagedBean().getSupplier()
+						.getSmAppl().getSmPersonnels()) {
+					if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							&& per.getPmUser() == null
+							&& StringUtils.isBlank(per.getEpRole())
+							&& per.getIdentificationTypeId() != null
+							&& per.getIdentificationType() != null
+							&& per.getIdentificationType().getParameterCode()
+									.equals(SupplierManagementConst.NEW_IC)) {
+						if ((SmPersonnel) EntityHelper
+								.getEntityBySinglePropertyFromList(
+										per.getIdentificationNo(),
+										filteredPersonnels, "identificationNo") == null) {
 							tmp = SmCommonUtil
 									.getSmPersonnelByRevNoAndIdentificationNo(
 											getManagedBean().getSupplier()
 													.getSmAppl()
-													.getSmPersonnels(), per, 1);
-						}
-						if (tmp != null) {
-							filteredPersonnels.add(per);
+													.getSmPersonnels(), per, 2);
+							if (tmp == null) {
+								tmp = SmCommonUtil
+										.getSmPersonnelByRevNoAndIdentificationNo(
+												getManagedBean().getSupplier()
+														.getSmAppl()
+														.getSmPersonnels(),
+												per, 1);
+							}
+							if (tmp != null) {
+								filteredPersonnels.add(per);
+							}
 						}
 					}
 				}
@@ -202,7 +208,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setBaseUrl(SmCommonUtil.getBasePortalUrl());
-		reqDTO.setMofStatus(getManagedBean().getSupplier().getSmMofAccounts().get(0).getRecordStatusFlg()); 
+		reqDTO.setMofStatus(getManagedBean().getSupplier().getSmMofAccounts()
+				.get(0).getRecordStatusFlg());
 
 		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
 				reqDTO);
@@ -272,9 +279,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 				// set mof account message status
 				SmMofAccount mofAcc = getManagedBean().getSupplier()
 						.getSmMofAccounts().get(0);
- 
-				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
-						|| mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
+
+				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || mofAcc
+						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
 						&& mofAcc.getExpDate() != null) {
 					Calendar c = Calendar.getInstance();
 					c.setTime(mofAcc.getExpDate());
