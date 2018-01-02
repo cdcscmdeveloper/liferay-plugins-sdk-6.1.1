@@ -526,15 +526,7 @@ public class ScheduleBiddingBackingBean extends
 		this.getManagedBean().setRowSelectedBid(scBidSchedule);
 	}
 
-	private String durationFormatter(long durationInMills) {
-
-		long diffMinutes = durationInMills / (60 * 1000) % 60;
-		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
-		DecimalFormat durationFormat = new DecimalFormat("#00");
-		String duration = durationFormat.format(diffHours) + ":"
-				+ durationFormat.format(diffMinutes);
-		return duration;
-	}
+	
 
 	/**
 	 * Method to submit bidding details
@@ -677,6 +669,11 @@ public class ScheduleBiddingBackingBean extends
 		return itemSubTotal;
 	}
 
+	/**
+	 * Listener method to display item details.
+	 * @param requestItem
+	 * @param awardedQty
+	 */
 	public void itemDetailsPopupAction(ScRequestItem requestItem,
 			BigDecimal awardedQty) {
 		this.getManagedBean().setRequestItem(requestItem);
