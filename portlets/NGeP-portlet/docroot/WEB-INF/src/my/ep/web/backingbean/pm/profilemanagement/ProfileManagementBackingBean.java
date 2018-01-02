@@ -3083,10 +3083,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				UserReqDTO userOrgReqDTO = new UserReqDTO();
 				userOrgReqDTO.setUserId(user.getUserId());
 				userOrgReqDTO.setExcludeOrgType(OrganizationType.SUPPLIER.value());
-				userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
 				userOrgReqDTO.setUserOrgChecking(true);
 				if(!pmUserOrg.isBrandNew() && pmUserOrg.getUserOrgId() != null){
 					userOrgReqDTO.setUserOrgId(pmUserOrg.getUserOrgId());
+					userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
 				}
 
 				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
