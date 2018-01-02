@@ -49,11 +49,15 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
 					<div align="center">
-					<p:commandButton
+					<p:commandButton rendered="#{(not empty mofCert.fileName) and (not empty mofCert.filePath)}"
 						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
 						ajax="false">
 						<p:fileDownload value="#{virtualCertBackingBean.printVirtualCert(mofCert)}" />
 					</p:commandButton>
+					
+					<h:outputText
+						rendered="#{(empty mofCert.fileName) or (empty mofCert.filePath)}"
+						value="#{lbl['lbl.sm.virtual.cert.inprogress']}" />
 					</div>
 				</p:column>
 			</p:dataTable>
