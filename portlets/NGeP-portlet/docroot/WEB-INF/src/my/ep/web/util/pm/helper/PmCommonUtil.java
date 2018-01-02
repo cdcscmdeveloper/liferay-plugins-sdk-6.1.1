@@ -2767,5 +2767,16 @@ public class PmCommonUtil implements Serializable{
 				: certIssuer;
 		return certIssuer;
 	}
+	
+	public static PmUserRole findUserRoleByUserRoleId(Long userRoleId) {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserRoleId(userRoleId);
+
+		UserResDTO resDTO = userSO.findUserRoleByUserRoleId(reqDTO);
+		return resDTO.getUserRole();
+	}
 
 }
