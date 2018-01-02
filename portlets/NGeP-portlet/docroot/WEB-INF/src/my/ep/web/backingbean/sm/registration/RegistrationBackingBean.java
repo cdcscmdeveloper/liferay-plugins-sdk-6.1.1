@@ -2276,7 +2276,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	public void handleFileUpload(List<SmGstSupplierDoc> mainDocList,
 			SmGstSupplierDoc doc, FileUploadEvent event) {
-		if (event != null) {
+		if (event != null && doc!=null) {
 			String tempPath = String.valueOf((new Date()).getTime());
 			String filePath = SmCommonUtil
 					.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
