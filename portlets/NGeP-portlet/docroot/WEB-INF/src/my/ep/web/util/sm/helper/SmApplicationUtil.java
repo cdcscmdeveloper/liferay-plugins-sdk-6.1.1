@@ -2041,7 +2041,7 @@ public class SmApplicationUtil {
 					validShrHldrsCap = false;
 				} else {
 					perShrSum = perShrSum.add(per.getShareAmt());
-					if (per.getBumiFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (per.getBumiFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						bumiShrSum = bumiShrSum.add(per.getShareAmt());
 					}
 					if (per.getPmCountry() != null
@@ -7260,7 +7260,7 @@ public class SmApplicationUtil {
 				reqSO = null;
 			}
 			long dayBal = 0;
-			if(smAppl.getDraftExpiryDate()!=null){
+			if (smAppl.getDraftExpiryDate() != null) {
 				dayBal = DateUtils.getDaysDifference(new Date(),
 						smAppl.getDraftExpiryDate()) + 1;
 			}
@@ -10938,6 +10938,11 @@ public class SmApplicationUtil {
 			}
 		}
 
+		if (bean.getSelectedJobFunction().getFromYear() == null
+				|| bean.getSelectedJobFunction().getToYear() == null) {
+			throw new EpException(MessageConst.ERROR_722539);
+		}
+
 		if (bean.getSelectedJobFunction().getFromYear()
 				.compareTo(bean.getSelectedJobFunction().getToYear()) > 0) {
 			throw new EpException(MessageConst.ERROR_722531);
@@ -11846,8 +11851,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static void setCategoryNameForApprovedCategory(
-			SmSupplierCategory cat) {
+	public static void setCategoryNameForApprovedCategory(SmSupplierCategory cat) {
 		CategoryCodeReqDTO reqDTO = null;
 		if (cat.getPmCategoryL1() != null
 				&& cat.getPmCategoryL1().getCategoryL1Id() != null) {
