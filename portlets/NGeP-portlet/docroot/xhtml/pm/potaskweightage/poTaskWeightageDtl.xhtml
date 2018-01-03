@@ -21,8 +21,10 @@
 			<p:commandButton id="backBtn"  style="left;"
 				action="#{poTaskWeightageBB.returnToPoUserMain}" value="#{lbl['lbl.btn.back']}"/>
 				
-			<p:commandButton id="btnSave" style="float:right;" update="@form"
-				action="#{poTaskWeightageBB.updateUser()}" value="#{lbl['lbl.btn.save']}"/>
+			<p:commandButton id="btnSave" style="float:right;" update="pnlPoRoleTask"
+				action="#{poTaskWeightageBB.updateUser()}" value="#{lbl['lbl.btn.save']}">
+				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
 	</div>
 	<div style="clear: both;"></div>
 	
@@ -76,7 +78,7 @@
 				<h:outputText value="#{poTaskWeightageBB.getParameterDesc(ParameterTypeConst.supplierTypes,roleTask.supplierType)}" rendered="#{!roleTask.brandNew}" />
 				<p:selectOneMenu  value="#{roleTask.supplierType}" rendered="#{roleTask.brandNew}"
 					label = "#{lbl['lbl.pm.po.task.supplier.type']}"
-					required="#{!empty param['disableRTValidation']}">
+					required="#{!empty param['disableValidation']}">
 						<p:ajax event="change" listener="#{poTaskWeightageBB.supplierTypeOnChange(roleTask)}" update="poRoleTaskDtTbl" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="#{SupplierManagementConst.SUPP_TYPE_CONTRACTOR}"></f:selectItem>
@@ -88,7 +90,7 @@
 				<h:outputText value="#{poTaskWeightageBB.getApplDesc(roleTask.applType)}" rendered="#{!roleTask.brandNew}" />
 				
 				<p:selectOneMenu  value="#{roleTask.applType}" rendered="#{roleTask.brandNew}"
-					disabled="#{empty roleTask.supplierType}" required="#{!empty param['disableRTValidation']}" label="#{lbl['lbl.pm.po.task.appl.type']}" >
+					disabled="#{empty roleTask.supplierType}" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.po.task.appl.type']}" >
 						<p:ajax event="change" listener="#{poTaskWeightageBB.applTypeOnChange(roleTask)}" 
 							update="poRoleTaskDtTbl" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -100,7 +102,7 @@
 			
 			<p:column headerText="#{lbl['lbl.pm.po.task.category.type']}">
 					<p:selectOneMenu value="#{roleTask.categoryType}" rendered="#{roleTask.brandNew}"
-						disabled="#{poTaskWeightageBB.disabledCategory(roleTask)}" 
+						disabled="#{poTaskWeightageBB.disabledCategory(roleTask)}" required="#{!empty param['disableValidation']}" 
 						label="#{lbl['lbl.pm.po.task.category.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.norm']}"
@@ -118,7 +120,7 @@
 			
 			<p:column headerText="#{lbl['lbl.pm.recordstatus']}">
 				<p:selectOneMenu value="#{roleTask.recordStatusFlg}"
-					required="#{!empty param['disableRTValidation']}">
+					required="#{!empty param['disableValidation']}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
 				</p:selectOneMenu>
@@ -136,7 +138,7 @@
 	<div style="text-align: right;">
 			<p:commandButton id="btnAdd" action="#{poTaskWeightageBB.validateAddRoleTask(true)}" value="#{lbl['lbl.btn.add']}" 
 			update="poRoleTaskDtTbl" oncomplete="paginatorGoToLastPage();">
-				<f:param name="disableRTValidation" value="true" />
+				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
 	</div>
 	 
