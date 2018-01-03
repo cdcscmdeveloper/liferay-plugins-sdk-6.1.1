@@ -51,7 +51,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	 */
 	
 	public void generateReport(LinkedHashMap<String, String> params) {
-		log.info("generateReport");
+		log.debug("generateReport");
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -75,7 +75,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			RequestContext.getCurrentInstance().execute(
 					"rptConfirmationDlg.show()");
 			
-			log.info("Report URL: "+resDTO.getReportUrl());
+			log.debug("Report URL: "+resDTO.getReportUrl());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
