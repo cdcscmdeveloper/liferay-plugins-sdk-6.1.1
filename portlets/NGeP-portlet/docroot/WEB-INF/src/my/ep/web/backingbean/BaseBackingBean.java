@@ -1074,19 +1074,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			
 			log.info("Error found while downloading reports.");
 			log.error(e);
-			e.printStackTrace();
+//			e.printStackTrace();
 			
 		}
 
-		OutputStream out = response.getOutputStream();
-		byte[] buffer = new byte[4096];
-		int bytesRead;
-		while ((bytesRead = docInputStream.read(buffer)) != -1) {
-			out.write(buffer, 0, bytesRead);
-			buffer = new byte[4096];
+		OutputStream out = null;
+		try {		
+
+			out = response.getOutputStream();
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = docInputStream.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+		} catch(Exception e) {
+			log.error(e);
+		} finally {
+			out.close();
+			docInputStream.close();
 		}
-		out.close();
-		docInputStream.close();
+
 	}
 	
 	/**
