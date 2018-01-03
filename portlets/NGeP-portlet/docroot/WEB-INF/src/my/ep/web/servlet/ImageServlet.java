@@ -63,8 +63,12 @@ public class ImageServlet extends HttpServlet {
 		} catch (FileNotFoundException e) {
 			log.error("File Not Found: " + e.getMessage());
 		} finally {
-	        fileInputStream.close();
-	        output.close();			
+			if(fileInputStream!=null) {
+				fileInputStream.close();
+			}
+			if(output!=null) {
+				output.close();		
+			}
 		}
 	}
 }
