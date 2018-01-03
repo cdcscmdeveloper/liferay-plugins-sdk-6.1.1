@@ -3,6 +3,7 @@ package my.ep.web.util.sm.helper;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -109,13 +110,16 @@ public class SmVirtualCertHelper {
 	 * @param cert
 	 * @return SmMofCert
 	 */
-	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert, boolean isDeleteCategory) {
+	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert, boolean isDeleteCategory) throws IOException {
 		Date fileTimeStamp = new Date();
 		SimpleDateFormat dateFt = new SimpleDateFormat ("_yyyyMMdd_Hmmss");
 		String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
 		String fileName = String.valueOf(cert.getMofCertId()) + dateFt.format(fileTimeStamp).toString() + CERT_EXT;
 		String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		filePath += "/" + path;
+		
+		BufferedInputStream buf = null;
+		OutputStream out = null;
 		
 		try{
 			String reportUrl = generateReportURL(reportFile, paramMap);
@@ -128,7 +132,7 @@ public class SmVirtualCertHelper {
 			
 			
 			if(urlConnection.getContentType().equalsIgnoreCase(HTTP_HEADER_TYPE_PDF)){
-				BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
+				buf = new BufferedInputStream(urlConnection.getInputStream());
 				//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
 
 				log.info("Content Type>>>>" + urlConnection.getContentType());
@@ -142,16 +146,13 @@ public class SmVirtualCertHelper {
 				}
 
 				String finalFile = filePath + "/" + fileName;
-				OutputStream out =  new FileOutputStream(new File(finalFile));
+				out =  new FileOutputStream(new File(finalFile));
 
 				byte[] b = new byte[128];
 				int size;
 				while ((size = buf.read(b, 0, b.length)) != -1) {
 					out.write(b, 0, size);
 				}
-				buf.close();
-				out.close();
-
 				//update MOF Cert with file path & name
 				cert.setFilePath(path);
 				cert.setFileName(fileName);
@@ -168,6 +169,9 @@ public class SmVirtualCertHelper {
 				cert.setFileName(fileName);
 				updateMOFCertFilePath(cert);
 			}
+		} finally {
+			buf.close();
+			out.close();
 		}
 		
 		return null;
