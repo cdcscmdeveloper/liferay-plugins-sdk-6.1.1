@@ -471,7 +471,11 @@ public class SelfRequestSupplierAdminBackingBean extends
 				null);
 		String errMsg = StringUtils.EMPTY;
 
-		if (!StringUtils.isBlank(icNo)) {
+		if (!StringUtils.isBlank(icNo)
+				&& getManagedBean().getSupplier() != null
+				&& getManagedBean().getSupplier().getSmAppl() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean()
+						.getSupplier().getSmAppl().getSmPersonnels())) {
 			SmPersonnel per = (SmPersonnel) EntityHelper
 					.getEntityBySinglePropertyFromList(icNo, getManagedBean()
 							.getSupplier().getSmAppl().getSmPersonnels(),
@@ -506,14 +510,19 @@ public class SelfRequestSupplierAdminBackingBean extends
 					new String[] { SmCommonUtil.getMessage(
 							"lbl.sm.selfrequest.suppadmin.name", null) });
 		} else {
-			SmPersonnel personnel = (SmPersonnel) EntityHelper
-					.getEntityBySinglePropertyFromList(getManagedBean()
-							.getSelectedAdmin().getName(), getManagedBean()
-							.getSupplier().getSmAppl().getSmPersonnels(),
-							"name");
-			if (personnel == null) {
-				retVal = SmCommonUtil.getMessage(
-						"lbl.sm.selfrequest.suppadmin.name.invalid", null);
+			if (getManagedBean().getSupplier() != null
+					&& getManagedBean().getSupplier().getSmAppl() != null
+					&& !EntityHelper.isCollectionEmpty(getManagedBean()
+							.getSupplier().getSmAppl().getSmPersonnels())) {
+				SmPersonnel personnel = (SmPersonnel) EntityHelper
+						.getEntityBySinglePropertyFromList(getManagedBean()
+								.getSelectedAdmin().getName(), getManagedBean()
+								.getSupplier().getSmAppl().getSmPersonnels(),
+								"name");
+				if (personnel == null) {
+					retVal = SmCommonUtil.getMessage(
+							"lbl.sm.selfrequest.suppadmin.name.invalid", null);
+				}
 			}
 		}
 		return retVal;
