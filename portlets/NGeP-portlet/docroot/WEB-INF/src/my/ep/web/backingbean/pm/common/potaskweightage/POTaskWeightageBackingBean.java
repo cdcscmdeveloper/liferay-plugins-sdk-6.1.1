@@ -301,6 +301,8 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 				if(ProfileManagementConst.CONTRACTOR_EXCLUDE_APPL_LIST.contains(roleTask.getApplType())){
 					return true;
 				}
+			}else{
+				return true;
 			}
 		}else{
 			return true;
