@@ -533,6 +533,7 @@ public class SupplierManagementConst {
 
 	// delete pending application reason
 	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
+	public static final String DPA_REASON_OTHERS_1 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1;
 
 	// Pm category facility types
 	public static final long CATEGORY_TYPE_ID_TRANSPORTATION = 203;
