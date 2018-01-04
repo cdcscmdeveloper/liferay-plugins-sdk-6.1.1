@@ -2801,6 +2801,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					// }
 				} else if (pmUserOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 					// TODO : remove role.brandNew first!
+					for(PmUserRole role : pmUserOrg.getPmUserRoles()){
+						logger.info("pmUserOrg : RECORD_STATUS_SUSPENDED -> deleteRoleList : " + role.getPmRole().getRoleCode() + "|RoleStatus :" + role.getPmRole().getRecordStatusFlg());
+					}
 					deleteRoleList.addAll(pmUserOrg.getPmUserRoles());
 				}
 			}
@@ -2821,6 +2824,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				reqDTO.setNewRoleList(newRoleList);
 				reqDTO.setRemoveRoleList(deleteRoleList);
+				
+				if(newRoleList != null){
+					for(PmUserRole newRole : newRoleList){
+						logger.info("newRoleList : " + newRole.getPmRole().getRoleCode() + "|RoleStatus :" + newRole.getPmRole().getRecordStatusFlg());
+					}
+				}
+				
+				if(deleteRoleList != null){
+					for(PmUserRole deleteRole : deleteRoleList){
+						logger.info("deleteRoleList : " + deleteRole.getPmRole().getRoleCode() + "|RoleStatus :" + deleteRole.getPmRole().getRecordStatusFlg());
+					}
+				}
+				
 			}
 		}
 	}
