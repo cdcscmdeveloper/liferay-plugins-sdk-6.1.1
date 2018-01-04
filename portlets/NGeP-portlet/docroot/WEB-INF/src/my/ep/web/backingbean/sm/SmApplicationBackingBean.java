@@ -2404,8 +2404,10 @@ public class SmApplicationBackingBean extends
 						.retrieveReasonById(reqDTO).getPmReason();
 				if (reason != null
 						&& !StringUtils.isBlank(reason.getReasonCode())
-						&& reason.getReasonCode().equals(
-								SupplierManagementConst.DPA_REASON_OTHERS)) {
+						&& reason.getReasonCode().equalsIgnoreCase(
+								SupplierManagementConst.DPA_REASON_OTHERS) || 
+						reason.getReasonCode().equalsIgnoreCase(
+								SupplierManagementConst.DPA_REASON_OTHERS_1)) {
 					retVal = true;
 					break;
 				}
