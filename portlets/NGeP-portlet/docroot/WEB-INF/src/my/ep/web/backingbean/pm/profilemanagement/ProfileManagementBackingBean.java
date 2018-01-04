@@ -1153,12 +1153,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 						throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
 					} else {
+						logger.info("orgUnitStatusChange : inactive userOrgId :" + this.getManagedBean().getSelectedUserOrg().getUserOrgId());
 						this.getManagedBean().getSelectedUserOrg().setExpDateDisplay(null);
 						this.getManagedBean().getSelectedUser().setHasActiveOrg(false);
 
 						if (this.getManagedBean().getSelectedUserOrg() != null
 								&& this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null) {
 							for (PmUserRole pmUserRoles : this.getManagedBean().getSelectedUserOrg().getPmUserRoles()) {
+								logger.info("orgUnitStatusChange : inactive userRoleId :" + pmUserRoles.getUserRoleId());
 								pmUserRoles.setRecordStatusFlg(status);
 								userRoleStatusChange(pmUserRoles);
 							}
