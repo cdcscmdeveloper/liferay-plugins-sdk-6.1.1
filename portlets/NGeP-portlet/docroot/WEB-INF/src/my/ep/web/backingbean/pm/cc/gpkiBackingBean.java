@@ -95,11 +95,7 @@ public class gpkiBackingBean implements Serializable {
 		UserResDTO resDTO = new UserResDTO();
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
 		System.out.println("serialNo====================================: " + serialNo);
-		System.out.println("subjectDN====================================: "
-				+ subjectDN);
-		System.out.println("userId====================================: "
-				+ subjectDN.substring(subjectDN.indexOf("=") + 1,
-						subjectDN.indexOf(",")));
+		System.out.println("subjectDN====================================: "+ subjectDN);
 		System.out.println("getIdentificationNo=====================================: "
 				+ resDTO.getPmUser().getLoginId());
 		System.out.println("ContextualCompositeMethodExpression  2");
@@ -114,9 +110,20 @@ public class gpkiBackingBean implements Serializable {
 		try {
 			this.setNonSigningException(null);
 			if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
-				if (subjectDN.substring(subjectDN.indexOf("=") + 1,
-						subjectDN.indexOf(",")).equals(
-						resDTO.getPmUser().getIdentificationNo())) {
+				
+				String[] split = subjectDN.split(",");
+				String icNo = "";
+				for(int i =0; i<split.length; i++){
+					if(split[i].contains("SERIALNUMBER")){
+						System.out.println(""+split[i]);
+						String icno = split[i];
+						System.out.println(""+icno.substring(icno.indexOf("=")+1, icno.length()));	
+						icNo = icno.substring(icno.indexOf("=")+1, icno.length());
+						break;
+					}	
+				}
+
+				if (icNo.equals(resDTO.getPmUser().getIdentificationNo())) {
 					pmDigiSign.setCreatedBy(userId);
 					pmDigiSign.setCreatedDate(date);
 					pmDigiSign.setOriginalData(textBeforeSign);
@@ -221,5 +228,6 @@ public class gpkiBackingBean implements Serializable {
 	public void setNonSigningException(Exception nonSigningException) {
 		this.nonSigningException = nonSigningException;
 	}
+	
 
 }
