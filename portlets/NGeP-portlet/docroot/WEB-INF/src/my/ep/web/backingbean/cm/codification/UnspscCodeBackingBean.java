@@ -179,7 +179,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	public String submitForRequest(String action){
 
 		
-			System.out.println("action:" + action);
+			log.info("action:" + action);
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance()
@@ -277,14 +277,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 					if(isCatalogueAdmin()){
-						System.out.println("**isCatalogueAdmin***");
+						log.info("**isCatalogueAdmin***");
 						UserReqDTO userReqDTO = new UserReqDTO();
 						userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
 						UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 						if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 							for(PmUser user :userResDTO.getUserList()){
-								System.out.println("user.getLoginId():"+user.getLoginId());
+								log.info("user.getLoginId():"+user.getLoginId());
 								reqDTO.getCdAdminList().add(user.getLoginId());
 							}
 						}else{
@@ -293,14 +293,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 					}else{
-						System.out.println("**supplier***");
+						log.info("**supplier***");
 						UserReqDTO userReqDTO = new UserReqDTO();
 						userReqDTO.setRoleCode(RoleCode.CM_ADMIN.value());
 						UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 						if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 							for(PmUser user :userResDTO.getUserList()){
-								System.out.println("user.getLoginId():"+user.getLoginId());
+								log.info("user.getLoginId():"+user.getLoginId());
 								reqDTO.getCmAdminList().add(user.getLoginId());
 							}
 						}else{
@@ -384,7 +384,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if (!(this.getManagedBean().getRequestCode()
 						.getCmRecommendCodes() != null && this.getManagedBean()
 						.getRequestCode().getCmRecommendCodes().size() > 0)) {
-					System.out.println("**********warning***************");
+					log.info("**********warning***************");
 
 					FacesContext facesContext = FacesContext
 							.getCurrentInstance();
@@ -414,7 +414,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			}
 
-			System.out.println("size:"
+			log.info("size:"
 					+ this.getManagedBean().getRequestCode()
 					.getCmRecommendCodes().size());
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
@@ -443,7 +443,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 					for(PmUser user :userResDTO.getUserList()){
-						System.out.println("user.getLoginId():"+user.getLoginId());
+						log.info("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdAdminList().add(user.getLoginId());
 					}
 				}else{
@@ -462,7 +462,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			} else {
 				log.info("***update***");
-				System.out.println("size:"
+				log.info("size:"
 						+ reqDTO.getRequestCode().getCmRecommendCodes().size());
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				reqDTO.setUserName(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
@@ -515,7 +515,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 					for(PmUser user :userResDTO.getUserList()){
-						System.out.println("user.getLoginId():"+user.getLoginId());
+						log.info("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdAdminList().add(user.getLoginId());
 					}
 				}else{
@@ -536,7 +536,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 					for(PmUser user :userResDTO.getUserList()){
-						System.out.println("user.getLoginId():"+user.getLoginId());
+						log.info("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdcList().add(user.getLoginId());
 					}
 				}else{
@@ -559,7 +559,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 					for(PmUser user :userResDTO.getUserList()){
-						System.out.println("user.getLoginId():"+user.getLoginId());
+						log.info("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdAdminList().add(user.getLoginId());
 					}
 				}else{
@@ -580,7 +580,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 					for(PmUser user :userResDTO.getUserList()){
-						System.out.println("user.getLoginId():"+user.getLoginId());
+						log.info("user.getLoginId():"+user.getLoginId());
 						reqDTO.getCdcList().add(user.getLoginId());
 					}
 				}else{
@@ -596,7 +596,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			if(this.getManagedBean().getSelectedRecommendCode().getUnspscTitle()!=null && this.getManagedBean().getSelectedRecommendCode().getUnspscCode()!=null){
 				this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
 			}
-			System.out.println("getUnspscTitle:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
+			log.info("getUnspscTitle:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
 
 			System.out
 			.println("this.getManagedBean().getRequestCode().getCmRecommendCodes().size()"
@@ -641,7 +641,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			CodificationResDTO resDTO = null;
 
 			log.info("***update***");
-			System.out.println("size:"
+			log.info("size:"
 					+ reqDTO.getRequestCode().getCmRecommendCodes().size());
 
 			log.info("tracking diary for Catalog_Admin:selectSubmitRecommend");
@@ -1019,7 +1019,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 			if (outcome.equalsIgnoreCase("SUBMIT")) {
-				System.out.println("***this.getManagedBean().isNewSegment()"
+				log.info("***this.getManagedBean().isNewSegment()"
 						+ this.getManagedBean().isNewSegment());
 
 				if (this.getManagedBean().getSelectedLovUnspscSegment()
@@ -1409,7 +1409,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						.getUnspscCode()).substring(0, 2);
 
 				String tempCode = check02 + check24 + check46 + check68;
-				System.out.println("tempCode:" + tempCode);
+				log.info("tempCode:" + tempCode);
 				this.getManagedBean().getRequestCode().setTempCode(tempCode);
 				this.getManagedBean()
 				.getRequestCode()
@@ -1432,7 +1432,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				reqDTO.setToken(token);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setOutCome(outcome);
-				System.out.println("**********savetempCode************");
+				log.info("**********savetempCode************");
 
 				reqDTO.setCodeCommittees("user003,user051");
 				reqDTO.setService(!bb.productCode(tempCode));
@@ -1499,7 +1499,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 					if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 						for(PmUser user :userResDTO.getUserList()){
-							System.out.println("user.getLoginId():"+user.getLoginId());
+							log.info("user.getLoginId():"+user.getLoginId());
 							reqDTO.getCdAdminList().add(user.getLoginId());
 						}
 					}else{
@@ -1512,7 +1512,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 					if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 						for(PmUser user :userResDTO.getUserList()){
-							System.out.println("user.getLoginId():"+user.getLoginId());
+							log.info("user.getLoginId():"+user.getLoginId());
 							reqDTO.getCdcList().add(user.getLoginId());
 						}
 					}else{
@@ -1531,7 +1531,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if (!(this.getManagedBean().getRequestCode()
 						.getCmRecommendCodes() != null && this.getManagedBean()
 						.getRequestCode().getCmRecommendCodes().size() > 0)) {
-					System.out.println("**********warning***************");
+					log.info("**********warning***************");
 
 					FacesContext facesContext = FacesContext
 							.getCurrentInstance();
@@ -1776,7 +1776,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			////////////////check brand
 			if(code.isRequestBrand()){
 				if(!brandMap.containsKey(code.getBrandName())){
-					System.out.println("********1st time create new************");
+					log.info("********1st time create new************");
 
 					brandMap.put(code.getBrandName(),code.getBrandName());
 				}else{
@@ -1795,7 +1795,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			if(code.isRequestType()){
 				if(!typeMap.containsKey(code.getTypeName())){
-					System.out.println("********1st time create new************");
+					log.info("********1st time create new************");
 
 					typeMap.put(code.getTypeName(),code.getTypeName());
 				}else{
@@ -1814,7 +1814,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			if(code.isRequestMeasurement()){
 				if(!meaMap.containsKey(code.getMeasurementName())){
-					System.out.println("********1st time create new************");
+					log.info("********1st time create new************");
 
 					meaMap.put(code.getMeasurementName(),code.getMeasurementName());
 				}else{
@@ -1833,7 +1833,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			if(code.isRequestColor()){
 				if(!colorMap.containsKey(code.getColorName())){
-					System.out.println("********1st time create new************");
+					log.info("********1st time create new************");
 
 					colorMap.put(code.getColorName(),code.getColorName());
 				}else{
@@ -1879,7 +1879,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			throw new EpException("Fail to get SmSupplier");
 		}
 
-		System.out.println("getSmSupplier"
+		log.info("getSmSupplier"
 				+ smResDTO.getResultBean().getResultList().get(0));
 
 
@@ -1918,14 +1918,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 
 		if(isCatalogueAdmin()){
-			System.out.println("**isCatalogueAdmin***");
+			log.info("**isCatalogueAdmin***");
 
 			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 				for(PmUser user :userResDTO.getUserList()){
-					System.out.println("user.getLoginId():"+user.getLoginId());
+					log.info("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdAdminList().add(user.getLoginId());
 				}
 			}else{
@@ -1934,14 +1934,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 		}else{
-			System.out.println("**supplier***");
+			log.info("**supplier***");
 
 			userReqDTO.setRoleCode(RoleCode.CM_ADMIN.value());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 				for(PmUser user :userResDTO.getUserList()){
-					System.out.println("user.getLoginId():"+user.getLoginId());
+					log.info("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCmAdminList().add(user.getLoginId());
 				}
 			}else{
@@ -2159,7 +2159,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 
 	public String submitToReviewExt(String action) {
-		System.out.println("***action***" + action);
+		log.info("***action***" + action);
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
@@ -2186,10 +2186,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		temp.put("user051", "user051");
 
 		if (face.hasRoleUser("CM_ADMIN")) {
-			System.out.println("*******CM ADMIN*********");
+			log.info("*******CM ADMIN*********");
 			reqDTO.setCodeCommittees("user003,user051");
 		} else if (face.hasRoleUser("CD_COMMITTEE")) {
-			System.out.println("*******CD_COMMITTEE*********:" + temp.size());
+			log.info("*******CD_COMMITTEE*********:" + temp.size());
 			if (!temp.isEmpty() && temp.size() > 0) {
 
 				Iterator itMap = temp.entrySet().iterator();
@@ -2294,10 +2294,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		reqDTO.setToken(token);
 		reqDTO.setPojo(obj);
 
-		System.out.println("getCodeCommittees" + reqDTO.getCodeCommittees());
-		System.out.println("consensus" + reqDTO.isConsensus());
+		log.info("getCodeCommittees" + reqDTO.getCodeCommittees());
+		log.info("consensus" + reqDTO.isConsensus());
 
-		System.out.println("action" + action);
+		log.info("action" + action);
 
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate
@@ -2335,11 +2335,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			for (CmRequestCode code : this.getManagedBean()
 					.getReviewExtCodeList()) {
 
-				System.out.println("code.isRemarkRequired"
+				log.info("code.isRemarkRequired"
 						+ code.isRemarkRequired());
-				System.out.println("code.isRemarkRequiredII"
+				log.info("code.isRemarkRequiredII"
 						+ code.isRemarkRequiredII());
-				System.out.println("******getReviewedBrandNameII********"
+				log.info("******getReviewedBrandNameII********"
 						+ code.getReviewedBrandNameII());
 				if (code.getReviewedBrandNameII() != null
 						&& code.getReviewedBrandNameII().trim().length() > 0) {
@@ -2379,7 +2379,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							.getMeasurementRemarkII().trim().length() > 0)
 							|| (code.getColorRemarkII() != null && code
 							.getColorRemarkII().trim().length() > 0)) {
-						System.out.println("remark added!!");
+						log.info("remark added!!");
 						code.setRemarkRequiredII(false);
 
 					}
@@ -2395,7 +2395,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						return "reviewApproveExtensionCodeII";
 					}
 				} else {
-					System.out.println("******else********");
+					log.info("******else********");
 					// //////checking for redundant values
 					if (code.isRequestType()
 							&& (code.getTypeRemark() != null && code
@@ -2427,7 +2427,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							.getMeasurementRemark().trim().length() > 0)
 							|| (code.getColorRemark() != null && code
 							.getColorRemark().trim().length() > 0)) {
-						System.out.println("remark added!!");
+						log.info("remark added!!");
 						code.setRemarkRequired(false);
 
 					}
@@ -2477,7 +2477,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
 
-		System.out.println("***************b4 return**************");
+		log.info("***************b4 return**************");
 		return "/xhtml/common/acknowledge.xhtml";
 	}
 
@@ -2500,7 +2500,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 				for(PmUser user :userResDTO.getUserList()){
-					System.out.println("user.getLoginId():"+user.getLoginId());
+					log.info("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdcList().add(user.getLoginId());
 				}
 			}else{
@@ -2521,7 +2521,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 				for(PmUser user :userResDTO.getUserList()){
-					System.out.println("user.getLoginId():"+user.getLoginId());
+					log.info("user.getLoginId():"+user.getLoginId());
 					reqDTO.getEpList().add(user.getLoginId());
 				}
 			}else{
@@ -2542,7 +2542,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
 				for(PmUser user :userResDTO.getUserList()){
-					System.out.println("user.getLoginId():"+user.getLoginId());
+					log.info("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdAdminList().add(user.getLoginId());
 				}
 			}else{
@@ -2554,14 +2554,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	/*public void preRenderExtensionMaintenanceView() {
 
-		System.out.println("**********preRenderExtensionView**************");
+		log.info("**********preRenderExtensionView**************");
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:" + taskId);
+		log.info("taskId:" + taskId);
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
@@ -2593,7 +2593,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	 */
 	public void preRenderExtensionView() {
 
-		System.out.println("**********preRenderExtensionView**************");
+		log.info("**********preRenderExtensionView**************");
 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IUserSO.class);
@@ -2606,8 +2606,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		String claim = originalServletRequest.getParameter("claim");
-		System.out.println("taskId:" + taskId);
-		System.out.println("claim:" + claim);
+		log.info("taskId:" + taskId);
+		log.info("claim:" + claim);
 
 		Boolean b = Boolean.valueOf(claim);
 		bb.getManagedBean().setClaim(b);
@@ -2630,7 +2630,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		CDRequestDataType unspsc = (CDRequestDataType) obj;
 
-		System.out.println("********isPublished******"+unspsc.isPublished());
+		log.info("********isPublished******"+unspsc.isPublished());
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
@@ -2644,7 +2644,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
 			for (String itemId : unspsc.getItemId()) {
-				System.out.println("itemId:" + itemId);
+				log.info("itemId:" + itemId);
 
 				if(itemId!=null && itemId.trim().length()>0){
 
@@ -2716,10 +2716,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			/*for (CmRequestRemark remark : code.getCmRequestRemarks()) {
 
 				userReqDTO.setUserId(remark.getChangedBy());
-				System.out.println("remark.getChangedBy()"
+				log.info("remark.getChangedBy()"
 						+ remark.getChangedBy());
 				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
-				System.out.println("userResDTO.getPmUser().getUserName():"
+				log.info("userResDTO.getPmUser().getUserName():"
 						+ userResDTO.getPmUser().getUserName());
 				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
 			}*/
@@ -2758,7 +2758,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						.getPmStatusDesc().getStatusName() : "Review");
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		System.out.println("********res.getTaskName()********"
+		log.info("********res.getTaskName()********"
 				+ res.getTaskName());
 		if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
 
@@ -2810,7 +2810,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 	public void claimTask()  {
-		System.out.println("**********claimTask");
+		log.info("**********claimTask");
 
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -2851,8 +2851,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		String claim = originalServletRequest.getParameter("claim");
-		System.out.println("taskId:" + taskId);
-		System.out.println("claim:" + claim);
+		log.info("taskId:" + taskId);
+		log.info("claim:" + claim);
 
 		Boolean b = Boolean.valueOf(claim);
 		bb.getManagedBean().setClaim(b);
@@ -3045,9 +3045,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		CmRequestRemark remark = new CmRequestRemark();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		System.out.println("pmUser:" + pmUser);
+		log.info("pmUser:" + pmUser);
 		if (pmUser != null) {
-			System.out.println("pmUser.getUserName():" + pmUser.getUserName());
+			log.info("pmUser.getUserName():" + pmUser.getUserName());
 			remark.setCreatedUser(pmUser.getUserName());
 		}
 
@@ -3067,19 +3067,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	/*public void selectRecommendCode() {
 
-		System.out.println("this.getManagedBean().getSelectedRecommendCode():"+this.getManagedBean().getSelectedRecommendCode().isBrandNew());
-		System.out.println("this.getManagedBean().getSelectedRecommendCode()title:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
+		log.info("this.getManagedBean().getSelectedRecommendCode():"+this.getManagedBean().getSelectedRecommendCode().isBrandNew());
+		log.info("this.getManagedBean().getSelectedRecommendCode()title:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
 
 
 		this.getManagedBean().getRequestCode().getCmRecommendCodes().set(0, this.getManagedBean().getSelectedRecommendCode());
 
-		System.out.println("size:"+this.getManagedBean().getRequestCode().getCmRecommendCodes().size());
+		log.info("size:"+this.getManagedBean().getRequestCode().getCmRecommendCodes().size());
 		if(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>1){
 			this.getManagedBean().getRequestCode().getCmRecommendCodes().remove(1);
 		}
 
 		for(CmRecommendCode code1: this.getManagedBean().getRequestCode().getCmRecommendCodes()){
-			System.out.println("getUnspscTitle:"+code1.getUnspscTitle());
+			log.info("getUnspscTitle:"+code1.getUnspscTitle());
 		}
 
 	}
@@ -3096,7 +3096,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public List<CmType> autoCompleteType(String query) {
 
-		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmType> suggestions = new ArrayList<CmType>();
 
 		log.info("this.getManagedBean().getTypeList() = "
@@ -3117,7 +3117,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public List<CmBrand> autoCompleteBrand(String query) {
 
-		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmBrand> suggestions = new ArrayList<CmBrand>();
 
 		for (CmBrand brand : this.getManagedBean().getBrandList()) {
@@ -3134,7 +3134,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public List<CmMeasurement> autoCompleteMeasurement(String query) {
 
-		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();
 
 		for (CmMeasurement brand : this.getManagedBean().getMeasurementList()) {
@@ -3151,7 +3151,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public List<CmColor> autoCompleteColor(String query) {
 
-		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmColor> suggestions = new ArrayList<CmColor>();
 
 		for (CmColor color : this.getManagedBean().getColorList()) {
@@ -3410,7 +3410,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 		}
 
-		System.out.println("getExtensionConfirmationMsg:"+this.getManagedBean().getExtensionConfirmationMsg());
+		log.info("getExtensionConfirmationMsg:"+this.getManagedBean().getExtensionConfirmationMsg());
 
 
 	}
@@ -3473,7 +3473,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 			if(code.isRequestBrand()){
-				System.out.println("********isRequestBrand*****"+this.getManagedBean().getRequestExtCode().isRequestBrand());
+				log.info("********isRequestBrand*****"+this.getManagedBean().getRequestExtCode().isRequestBrand());
 				this.getManagedBean().setSelectedBrand(null);
 				this.getManagedBean().setBrandDisable(false);  //text box
 
