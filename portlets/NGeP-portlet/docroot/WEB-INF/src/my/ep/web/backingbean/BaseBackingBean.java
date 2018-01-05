@@ -1781,6 +1781,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public StreamedContent getCaptchaTextImage() {
 		StreamedContent graphicText = null;
+		ByteArrayOutputStream os = null;
 		try {
 			BufferedImage bufferedImg = new BufferedImage(100, 25,
 					BufferedImage.TYPE_BYTE_BINARY);
@@ -1793,7 +1794,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			g2.setFont(font);
 
 			g2.drawString(captchaText, 15, 20);
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			os = new ByteArrayOutputStream();
 			ImageIO.write(bufferedImg, "png", os);
 			graphicText = new DefaultStreamedContent(new ByteArrayInputStream(
 					os.toByteArray()), "image/png");
@@ -1804,7 +1805,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						+ graphicText.getStream());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			try {
+				if(os!=null) {
+					os.close();
+				}
+			} catch (IOException e) {
+				log.error(e);
+			}
 		}
 		return graphicText;
 	}
