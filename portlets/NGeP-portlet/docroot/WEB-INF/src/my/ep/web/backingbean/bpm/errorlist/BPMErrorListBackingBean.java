@@ -151,13 +151,20 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 	public void onClickPayload(String title,String taskId) throws JAXBException{
 		
+		StringBuilder errorDisplay = new StringBuilder();
+		
 		this.getManagedBean().setErrorMessageTitle("");
 		this.getManagedBean().setPayloadContent("");
 		this.getManagedBean().setErrorMessageTitle(title);
 		
 		ErrorDataType pojo = getPojo(taskId);
 		
-		this.getManagedBean().setPayloadContent(pojo.getErrorDesc());
+		errorDisplay.append("DocId: " + pojo.getDocId());
+		errorDisplay.append("<br/>ErrorCode: " + pojo.getErrorCode());
+		errorDisplay.append("<br/>ErrorDesc: " + pojo.getErrorDesc());
+		errorDisplay.append("<br/>RequestUID: " + pojo.getRqUID());
+		
+		this.getManagedBean().setPayloadContent(errorDisplay.toString());
 		
 		refreshError();
 	}
