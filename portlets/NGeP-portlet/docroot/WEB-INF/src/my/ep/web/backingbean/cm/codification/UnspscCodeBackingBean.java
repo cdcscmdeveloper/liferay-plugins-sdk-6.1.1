@@ -1434,7 +1434,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				reqDTO.setOutCome(outcome);
 				log.info("**********savetempCode************");
 
-				reqDTO.setCodeCommittees("user003,user051");
+				//reqDTO.setCodeCommittees("user003,user051");
 				reqDTO.setService(!bb.productCode(tempCode));
 
 				if (!(this.getManagedBean().getSelectedLovUnspsc()
