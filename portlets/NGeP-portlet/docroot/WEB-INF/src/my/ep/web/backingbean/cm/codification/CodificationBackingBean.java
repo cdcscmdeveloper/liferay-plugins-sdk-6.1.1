@@ -712,8 +712,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if (resDTO.isSuccessful()) {
 			CmUnspsc commodity = resDTO.getCommodityObj();
 
-			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
-			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
 			this.getManagedBean().setSelectedUNSPSCObj(commodity);
 
 			this.getManagedBean().setClassCode(
@@ -765,8 +763,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		resDTO = unspscSO.searchColor(reqDTO);
 
 		for (CmColor color : resDTO.getColorList()) {
-			// log.info("color:"+color);
-			// log.info("color:"+color.getColorId());
 			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
 				this.getManagedBean()
 				.getColorCriteria()
@@ -869,7 +865,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
-		// log.info("index:"+obj);
+		
 		log.info("length:" + objects);
 
 		ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
@@ -2422,6 +2418,17 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			reqDTO.setOutCome("REQUEST_EXTENSION");
 
 		}
+		
+		
+		if(!unspscBB.getManagedBean().getRequestCode().isRequestBrand() &&
+				!unspscBB.getManagedBean().getRequestCode().isRequestColor() &&
+						!unspscBB.getManagedBean().getRequestCode().isRequestMeasurement() &&
+							!unspscBB.getManagedBean().getRequestCode().isRequestType()){
+			
+			throw  new EpException (MessageUtils.getMessage(MessageConst.ERROR_716018,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
+		}
 
 		reqDTO.getRequestExtList().add(
 				unspscBB.getManagedBean().getRequestCode());
@@ -2438,6 +2445,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				reqDTO.getCdcList().add(user.getLoginId());
 			}
 		}
+		
+		
+		
+		
 		
 		resDTO = unspscSO.updateExtensionRequest(reqDTO);
 		
