@@ -113,13 +113,20 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
     	Template template = getVelocityEngine().getTemplate("templates" + velocityTemplate);
     	log.info("template: " + template);
     	
-    	StringWriter output = new StringWriter();
-    	
-    	template.merge(context, output);
-    	
-    	debugLogger("html output: " + output);
-    	
-    	return output.toString();
+    	StringWriter output = null;
+    	try {
+    		output = new StringWriter();
+        	template.merge(context, output);
+        	debugLogger("html output: " + output);
+        	return output.toString();
+    	} finally {
+    		if(input!=null) {
+    			input.close();
+    		}
+    		if(output!=null) {
+    			output.close();
+    		}
+    	}
     }
 	
 	/**
