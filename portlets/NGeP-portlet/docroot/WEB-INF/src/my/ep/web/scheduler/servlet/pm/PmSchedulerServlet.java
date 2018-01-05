@@ -114,16 +114,16 @@ public class PmSchedulerServlet extends HttpServlet {
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_1GFMAS_MASTER_DATA_INBOUND));
 
 		// 1GFMAS integration Jobs
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.GFMAS_MASTER_DATA_ERROR,
-								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-						MasterDataErrorInboundJob.class,
-						SchedulerConstants.GFMAS_PM_ERROR_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_1GFMAS_MASTER_DATA_ERROR));
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(SchedulerConstants.GFMAS_MASTER_DATA_ERROR,
+//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+//						MasterDataErrorInboundJob.class,
+//						SchedulerConstants.GFMAS_PM_ERROR_JOB_DESC,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_1GFMAS_MASTER_DATA_ERROR));
 
 		// Update Expired Access Application Workflow Status
 		EpSchedulerHelper
