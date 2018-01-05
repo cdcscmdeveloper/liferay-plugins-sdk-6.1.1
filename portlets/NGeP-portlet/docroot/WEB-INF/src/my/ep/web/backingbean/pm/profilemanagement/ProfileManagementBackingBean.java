@@ -2801,10 +2801,15 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					// }
 				} else if (pmUserOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 					// TODO : remove role.brandNew first!
-					for(PmUserRole role : pmUserOrg.getPmUserRoles()){
-						logger.info("pmUserOrg : RECORD_STATUS_SUSPENDED -> deleteRoleList : " + role.getPmRole().getRoleCode() + "|RoleStatus :" + role.getPmRole().getRecordStatusFlg());
+					logger.info("pmUserOrg : RECORD_STATUS_SUSPENDED -> deleteRoleList :");
+					for(PmUserRole role : pmUserOrg.getPmUserRoles()){		
+						role.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						if (isUserRoleModified(role)) {
+							deleteRoleList.add(role);
+							logger.info("pmUserOrg : RECORD_STATUS_SUSPENDED DELETE OLD: " + role.getPmRole().getRoleCode());
+						}
 					}
-					deleteRoleList.addAll(pmUserOrg.getPmUserRoles());
+					//deleteRoleList.addAll(pmUserOrg.getPmUserRoles());
 				}
 			}
 			if (activeUserOrgId > 0 || isChanged) {
