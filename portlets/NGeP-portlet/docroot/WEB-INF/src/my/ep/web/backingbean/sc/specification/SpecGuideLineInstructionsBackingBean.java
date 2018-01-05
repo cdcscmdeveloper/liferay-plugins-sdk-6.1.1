@@ -70,6 +70,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 
 	
 	/**
+	 * this method used to get the SpecGuideLineContent.
 	 * @return the sampleLabelStreamContent
 	 */
 	public StreamedContent getSpecGuideLineStreamContent() throws Exception {
