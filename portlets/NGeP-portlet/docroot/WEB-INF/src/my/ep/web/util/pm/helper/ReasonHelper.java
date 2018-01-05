@@ -4,9 +4,7 @@
 package my.ep.web.util.pm.helper;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -43,10 +41,10 @@ public class ReasonHelper implements Serializable {
 	public static final String KEY_SEPARATOR = "_";
 
 	private static ReasonHelper instance;
-	private static Map<String, PmReasonDesc> reasonDescMap = new HashMap<String, PmReasonDesc>();
+//	private static Map<String, PmReasonDesc> reasonDescMap = new HashMap<String, PmReasonDesc>();
 	// Map of Pmreason with reasonId
-	private static Map<String, PmReasonDesc> reasonMap = new HashMap<String, PmReasonDesc>();
-	private static Map<String, List<PmReasonDesc>> reasonListMap = new HashMap<String, List<PmReasonDesc>>();
+//	private static Map<String, PmReasonDesc> reasonMap = new HashMap<String, PmReasonDesc>();
+//	private static Map<String, List<PmReasonDesc>> reasonListMap = new HashMap<String, List<PmReasonDesc>>();
 
 	/**
 	 * Get singleton of ReasonHelper
@@ -57,7 +55,7 @@ public class ReasonHelper implements Serializable {
 		if (instance == null) {
 			instance = new ReasonHelper();
 		}
-		getReasonMapsFromCache();
+//		getReasonMapsFromCache();
 		return instance;
 	}
 
@@ -78,11 +76,11 @@ public class ReasonHelper implements Serializable {
 		debugLogger("key: " + key);
 
 		// Get the reason description list from map.
-		List<PmReasonDesc> list = reasonListMap.get(key);
+		List<PmReasonDesc> list = null;//reasonListMap.get(key);
 
 		debugLogger("list: " + list);
 
-		if (list == null) {
+//		if (list == null) {
 			IReasonSO reasonSO;
 
 			try {
@@ -111,12 +109,12 @@ public class ReasonHelper implements Serializable {
 					reasonKey = getReasonDescKey(categoryId,
 							reason.getReasonCode(), languageCode);
 
-					reasonDescMap.put(reasonKey, pmReasonDesc);
+//					reasonDescMap.put(reasonKey, pmReasonDesc);
 				}
 
 				// Put reason description list into map.
-				reasonListMap.put(key, list);
-				updateReasonMapsCache(null, reasonDescMap, reasonListMap);
+//				reasonListMap.put(key, list);
+//				updateReasonMapsCache(null, reasonDescMap, reasonListMap);
 				debugLogger("put into list: " + list);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -124,7 +122,7 @@ public class ReasonHelper implements Serializable {
 			} finally {
 				reasonSO = null;
 			}
-		}
+//		}
 
 		return list;
 	}
@@ -166,9 +164,9 @@ public class ReasonHelper implements Serializable {
 		String key = getReasonKey(reasonId, languageCode).toString();
 
 		// Get the status description list from map.
-		PmReasonDesc reasonDesc = reasonMap.get(key);
+		PmReasonDesc reasonDesc = null;//reasonMap.get(key);
 
-		if (reasonDesc == null) {
+//		if (reasonDesc == null) {
 			IReasonSO reasonSO;
 
 			try {
@@ -185,8 +183,8 @@ public class ReasonHelper implements Serializable {
 				reasonDesc = resDTO.getReasonDesc();
 
 				// Put status description into map.
-				reasonMap.put(key, reasonDesc);
-				updateReasonMapsCache(reasonMap, null, null);
+//				reasonMap.put(key, reasonDesc);
+//				updateReasonMapsCache(reasonMap, null, null);
 				debugLogger("put into list: " + reasonDesc);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -194,7 +192,7 @@ public class ReasonHelper implements Serializable {
 			} finally {
 				reasonSO = null;
 			}
-		}
+//		}
 
 		return reasonDesc;
 	}
@@ -228,9 +226,9 @@ public class ReasonHelper implements Serializable {
 		debugLogger("key: " + key);
 
 		// Get the reason description list from map.
-		PmReasonDesc pmReasonDesc = reasonDescMap.get(key);
+		PmReasonDesc pmReasonDesc = null;//reasonDescMap.get(key);
 
-		if (pmReasonDesc == null) {
+//		if (pmReasonDesc == null) {
 			IReasonSO reasonSO;
 
 			try {
@@ -268,15 +266,15 @@ public class ReasonHelper implements Serializable {
 				}
 
 				// Put reason description list into map.
-				reasonDescMap.put(key, pmReasonDesc);
-				updateReasonMapsCache(null, reasonDescMap, null);
+//				reasonDescMap.put(key, pmReasonDesc);
+//				updateReasonMapsCache(null, reasonDescMap, null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			} finally {
 				reasonSO = null;
 			}
-		}
+//		}
 
 		return pmReasonDesc;
 	}
@@ -292,9 +290,9 @@ public class ReasonHelper implements Serializable {
 		debugLogger("key: " + key);
 
 		// Get the reason description list from map.
-		PmReasonDesc pmReasonDesc = reasonDescMap.get(key);
+		PmReason pmReason = null;//reasonDescMap.get(key);
 
-		if (pmReasonDesc == null) {
+		//if (pmReasonDesc == null) {
 			IReasonSO reasonSO;
 
 			try {
@@ -304,25 +302,25 @@ public class ReasonHelper implements Serializable {
 				ReasonReqDTO reqDTO = new ReasonReqDTO();
 				reqDTO.setReasonCategoryId(categoryId);
 				reqDTO.setReasonCode(reasonCode);
-				reqDTO.setLanguage(languageCode);
+//				reqDTO.setLanguage(languageCode);
 
 				// Get reason description list from db.
 
-				pmReasonDesc = reasonSO.retrieveReasonDescById(reqDTO)
-						.getReasonDesc();
+				pmReason = reasonSO.retrieveReasonByReasonCode(reqDTO)
+						.getPmReason();
 
 				// Put reason description list into map.
-				reasonDescMap.put(key, pmReasonDesc);
-				updateReasonMapsCache(null, reasonDescMap, null);
+				//reasonDescMap.put(key, pmReasonDesc);
+//				updateReasonMapsCache(null, reasonDescMap, null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			} finally {
 				reasonSO = null;
 			}
-		}
+		//}
 
-		return pmReasonDesc.getPmReason();
+		return pmReason;
 	}
 
 	private void debugLogger(Object message) {
@@ -343,7 +341,7 @@ public class ReasonHelper implements Serializable {
 				.toString();
 	}
 
-	private static void getReasonMapsFromCache() {
+	/*private static void getReasonMapsFromCache() {
 		log.info("getReasonMapsFromCache");
 		IReasonSO reasonSO;
 
@@ -445,6 +443,6 @@ public class ReasonHelper implements Serializable {
 		} finally {
 			reasonSO = null;
 		}
-	}
+	}*/
 
 }
