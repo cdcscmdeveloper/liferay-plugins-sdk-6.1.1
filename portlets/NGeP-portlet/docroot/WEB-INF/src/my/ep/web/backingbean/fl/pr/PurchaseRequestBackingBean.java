@@ -3824,6 +3824,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				fulfilmentRequestSO = null;
 			}
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();

@@ -235,7 +235,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		BigDecimal sumRecalledAmt = new BigDecimal(0);
 		String danAmount = null;
 		if(adjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
-			
 			for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
 				sumOrderedAmt =sumOrderedAmt.add(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt());
 				sumInvoiceAmt = sumInvoiceAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt());
@@ -253,7 +252,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 				if(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt() != null && adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt().doubleValue()>0){
 					sumRecalledAmt = sumRecalledAmt.add(adjustmentItem.getFlInvoiceItemSummary().getRecalledAmt());
 				}
-				
 			}
 			sumDanAmt = sumOrderedAmt.subtract(sumRecalledAmt).subtract(sumInvoiceAmt);
 			danAmount=sumDanAmt.toString().replace("-", "");
@@ -500,6 +498,8 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				adjustmentSO = null;
 			}
 			getManagedBean().setSelectedTabIndex(0);
 			setAdjustmentNote(resDTO);
