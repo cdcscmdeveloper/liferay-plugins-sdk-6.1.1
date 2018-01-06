@@ -216,8 +216,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {
-
-		System.out.println("**********preRenderView**************");
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -321,8 +319,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void preRenderViewCancelReq() {
 		ICircularSO circularSO = null;
 		try {
-
-			System.out.println("**********preRenderView**************");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
