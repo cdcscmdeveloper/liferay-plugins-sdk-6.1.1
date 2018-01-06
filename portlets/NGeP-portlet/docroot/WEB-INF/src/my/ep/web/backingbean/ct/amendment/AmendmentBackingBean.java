@@ -4105,6 +4105,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * as pdf file.
 	 */
 	public void downloadSampleBondLetter() {
+		FileOutputStream fileOutputStream = null;
+		
 		try {
 			String filePath = getManagedBean().getFileDirectory();		      
 			File file = new File(filePath);
@@ -4125,9 +4127,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("bondAmountWord", "..................................................");
 				context.put("expiryPeriod", "..........................");	
 
+				fileOutputStream = new FileOutputStream(filePath);
 				DocumentGenerator.getInstance().generatePdfFromVelocity(
 						SourcingConstants.LOA_BOND_LETTER, context,
-						new FileOutputStream(filePath));
+						fileOutputStream);
 			}			
 			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);			
 		} catch (FileNotFoundException e) {
@@ -4136,6 +4139,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				if (fileOutputStream != null) {
+					fileOutputStream.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -4145,7 +4157,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void downloadLOAContentFile(String docDefinitionKey) throws Exception {
 
 		AttachmentFormat attachmentFormat = null;
-
+		FileOutputStream fileOutputStream = null;
 		try {
 			String fileName = (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE))
 					? "SuratBerkaitanKontrakTambahan.docx" : "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
@@ -4176,7 +4188,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 					downloadFile(templateFilePath.toString());
 				} else {
-					DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
+					fileOutputStream = new FileOutputStream(filePath);
+					DocumentGenerator.getInstance().generatePdf(fileOutputStream, content);
 					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 				}			
 			}
@@ -4184,8 +4197,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
-
 			attachmentFormat = null;
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
 		}
 	}
 
@@ -4220,19 +4235,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		String filePath = getManagedBean().getFileDirectory();		      
 		File file = new File(filePath);
 		file.mkdirs();
-
+		FileOutputStream fileOutputStream = null;
 		String fileName = "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
-		if (isCompleted) {
-			AttachmentDateFormat attachmentFormat = new AttachmentDateFormat();
-			filePath = getManagedBean().getFileDirectory() +  "/" + attachmentFormat.format(fileName, null);
-		} else {
-			filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
-		}
-		String content = null;	
-		content = getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
-		if (content != null) {
-			DocumentGenerator.getInstance().generatePdf(
-					new FileOutputStream(filePath), content);
+		try {
+			if (isCompleted) {
+				AttachmentDateFormat attachmentFormat = new AttachmentDateFormat();
+				filePath = getManagedBean().getFileDirectory() +  "/" + attachmentFormat.format(fileName, null);
+			} else {
+				filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+			}
+			String content = null;	
+			content = getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
+			if (content != null) {
+				fileOutputStream = new FileOutputStream(filePath);
+				DocumentGenerator.getInstance().generatePdf(
+						fileOutputStream, content);
+			}
+		} finally {
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
 		}
 		return filePath;
 	}

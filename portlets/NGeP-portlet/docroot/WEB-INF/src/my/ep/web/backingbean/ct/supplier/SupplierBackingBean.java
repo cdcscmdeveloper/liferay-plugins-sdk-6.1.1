@@ -1016,9 +1016,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		file.mkdirs();
 		filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
 
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
-		fileOuputStream.write(item.getContents());
-		fileOuputStream.close();    	
+		FileOutputStream fileOutputStream = new FileOutputStream(filePath); 
+		fileOutputStream.write(item.getContents());
+		fileOutputStream.close();    	
 
 		if (getManagedBean().getIndex() == 1) {
 			getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
@@ -1114,7 +1114,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		String vmFile = null;
 		String templateName = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
+		FileOutputStream fileOutputStream =  null;
 		try {			
 			context = new VelocityContext();	
 			if (isSupplierRole()) {
@@ -1219,16 +1219,24 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				File file = new File(filePath);
 				file.mkdirs();
 				String fileName = templateName + ".pdf";
-				AttachmentFormat attachmentFormat = null;
-				attachmentFormat = new AttachmentDateFormat();
+				AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
-
-				DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, new FileOutputStream(filePath));
+				fileOutputStream = new FileOutputStream(filePath);
+				DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, fileOutputStream);
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 			}
 		}  catch (Exception e) {
 			throw new EpException(e.toString());
-		} 
+		} finally {
+			try {
+				if(fileOutputStream != null) {
+					fileOutputStream.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**

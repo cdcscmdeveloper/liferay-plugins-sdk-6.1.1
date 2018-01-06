@@ -586,7 +586,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			} 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
