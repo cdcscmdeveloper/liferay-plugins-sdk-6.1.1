@@ -1793,6 +1793,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				paymentSO = null;
 			}
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();

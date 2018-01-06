@@ -1002,53 +1002,56 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			renewSesionObject();
 			try {
 				resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+
+
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				getManagedBean().setSelectedTabIndex(0);
+				//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+
+				reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+				getManagedBean().setPmUser(reqDTO.getPmUser());
+				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+				getManagedBean().setDocMaintainRemarks(true);
+				getManagedBean().setAcknowledged(true);
+				if(getManagedBean().getAcknowledgeDate() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
+					if(actor != null){
+						getManagedBean().setAcknowledgeDate(actor.getActionDate());
+					}
+				}
+				if(getManagedBean().getFlApprover() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+					if(actor != null){
+						getManagedBean().setFlApprover(actor.getUser());
+					}
+				}
+
+				flBB.getManagedBean().setHideRemarks(true);
+				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+				for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+					if(noteItem.getFulfilmentNoteItemId() != null){
+						reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+						reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+						resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+						noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+						initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+					}else{
+						noteItem.getRejectionRemarks().add(new FlRemark());
+					}
+				}
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				receivedNoteSO = null;
 			}
-			
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			getManagedBean().setSelectedTabIndex(0);
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
-			getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
-			getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
-			getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
-			
-			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-			getManagedBean().setPmUser(reqDTO.getPmUser());
-			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
-			getManagedBean().setDocMaintainRemarks(true);
-			getManagedBean().setAcknowledged(true);
-			if(getManagedBean().getAcknowledgeDate() == null){
-				FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
-				if(actor != null){
-					getManagedBean().setAcknowledgeDate(actor.getActionDate());
-				}
-			}
-			if(getManagedBean().getFlApprover() == null){
-				FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-				if(actor != null){
-					getManagedBean().setFlApprover(actor.getUser());
-				}
-			}
-			
-			flBB.getManagedBean().setHideRemarks(true);
-			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
-			for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
-				if(noteItem.getFulfilmentNoteItemId() != null){
-					reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
-					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
-					resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
-					noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
-					initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
-				}else{
-					noteItem.getRejectionRemarks().add(new FlRemark());
-				}
-			}
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
 		}
 	}	
 

@@ -105,7 +105,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "createDOBackingBean")
 @RequestScoped
 public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<DeliveryOrderManagedBean> {
-	
+	 
 	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
 	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
@@ -176,6 +176,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		FacesScopes facesScopes = new FacesScopes();
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
+		IUserGroupSO userGroupSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			String actionName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
@@ -260,7 +261,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-				IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+				userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 			
 				if(null == getManagedBean().getSupplierDoRef()){
 					//TODO
@@ -381,6 +382,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}
 		} finally {
 			deliveryOrderSO = null;
+			userGroupSO = null;
 		}
 		return null;
 	}
@@ -1309,9 +1311,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		IDeliveryOrderSO doSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		
+
 		String doId = originalServletRequest.getParameter("doId");
-		
+
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		if(doId!=null) {
@@ -1322,27 +1324,30 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			renewSesionObject();
 			try {
 				resDTO = doSO.retrieveDeliveryOrderById(reqDTO);
-			} catch (EpException e) {
+
+
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				getManagedBean().setSelectedTabIndex(0);
+				//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
+				getManagedBean().setDocMaintainRemarks(true);
+				getManagedBean().getFulfilmentOrder().setStatus(doSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
+				flBB.getManagedBean().setHideRemarks(true);
+				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doBasePage?faces-redirect=true");
+			}catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				doSO = null;
 			}
-			
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			getManagedBean().setSelectedTabIndex(0);
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
-			getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-			getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
-			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-			getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
-			getManagedBean().setDocMaintainRemarks(true);
-			getManagedBean().getFulfilmentOrder().setStatus(doSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
-			flBB.getManagedBean().setHideRemarks(true);
-			flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doBasePage?faces-redirect=true");
-		}
-	}	
+		}	
+	}
 	
 	/**
 	 * Show 1GFMAS error

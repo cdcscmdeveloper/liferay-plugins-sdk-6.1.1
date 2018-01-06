@@ -186,6 +186,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
 		IAdjustmentSO adjustmentSO = null;
+		IFulfilmentRequestSO requestSO = null;
+		IFulfilmentSO fulfilmentSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -193,6 +195,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+			requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			
 			// Need to call this as user may not click on summary menu
 			calInvSummary();
 			// Check is it DAN exist
@@ -217,8 +222,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			List<PmUser> listOfApprover = null;
 			if(reqDTO.isDan()){
-				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
 				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverLimit(sumItemAmt);
@@ -249,8 +252,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
-				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				// dunno what's the purpose of the above code
@@ -394,6 +395,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}finally {
 			invoiceSO = null;
+			adjustmentSO = null;
+			requestSO = null;
+			fulfilmentSO = null;
 		}
 		return null;
 	}
@@ -683,6 +687,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				invoiceSO = null;
 			}
 			getManagedBean().setInvoiceId(resDTO.getInvoice().getInvoiceId());
 			getManagedBean().setSelectedTabIndex(0);
