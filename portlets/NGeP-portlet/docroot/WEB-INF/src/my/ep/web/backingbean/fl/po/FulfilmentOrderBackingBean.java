@@ -1112,6 +1112,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				} catch (EpException e) {
 					handleException(e);
 					return;
+				}finally{
+					orderSO = null;
 				}
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -1157,6 +1159,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				} catch (EpException e) {
 					handleException(e);
 					return;
+				}finally{
+					fulfilmentOrderSO = null;
 				}
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);

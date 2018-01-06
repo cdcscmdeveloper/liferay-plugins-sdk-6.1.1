@@ -381,6 +381,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 		}  finally {
 			iFulfilmentRequestSO = null;
+			userSO = null;
 		}
 		return null;
 	}
@@ -5143,6 +5144,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				fulfilmentRequestSO = null;
 			}
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();

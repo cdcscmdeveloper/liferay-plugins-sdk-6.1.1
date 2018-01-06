@@ -110,10 +110,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	public static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
 	public static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	
-	private IFulfilmentOrderSO getFulfilmentOrderSO() {
-		return (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-	}
-	
 	/**
 	 * save,submit Stop Instruction.
 	 *
@@ -125,73 +121,78 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String saveStopInstruction(String action) throws IOException {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		
-		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FlStopInstr flStopInstr = getManagedBean().getStopInstr();
+		IFulfilmentOrderSO orderSO = null;
+		try {
+			orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlStopInstr flStopInstr = getManagedBean().getStopInstr();
 
-		reqDTO.setStopIns(flStopInstr);
-		reqDTO.setTaskId(getManagedBean().getTaskId());
-		reqDTO.setOutcome(action);
-		reqDTO.setToken(token);
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setApproverUserList(getManagedBean().getApproverList());
-		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-		reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-	
-		FulfilmentResDTO resDTO = null;
-		reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
-		
-		if(getManagedBean().getPmDigiSign() != null){
-			reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-		}
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
-			Map<String, String> paramMap = new HashMap<String, String>();
-			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
-			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-			reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_STOP_DELIVERY,paramMap)+ "'>"+getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo()+"</a>");
-		}
-		if(getManagedBean().isCoGstr() && getManagedBean().isIssuanceCogstrCheck()){
-			reqDTO.setCoGstr(true);
+			reqDTO.setStopIns(flStopInstr);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setOutcome(action);
+			reqDTO.setToken(token);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(getUserRole());
+			reqDTO.setApproverUserList(getManagedBean().getApproverList());
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+
+			FulfilmentResDTO resDTO = null;
+			reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
+
+			if(getManagedBean().getPmDigiSign() != null){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
-		resDTO = getFulfilmentOrderSO().stopFulfilment(reqDTO);
-		
-		if(resDTO.isSuccessful()) {
-			String messageId = MessageConst.INFO_700005;
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_STOP_DELIVERY,paramMap)+ "'>"+getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo()+"</a>");
+			}
+			if(getManagedBean().isCoGstr() && getManagedBean().isIssuanceCogstrCheck()){
+				reqDTO.setCoGstr(true);
+			}
+			resDTO = orderSO.stopFulfilment(reqDTO);
 
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-				messageId = MessageConst.INFO_700004;
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				messageId = MessageConst.INFO_700008;
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				messageId = MessageConst.INFO_700010;
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || reqDTO.isApprover()) {
-				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
-					messageId = MessageConst.INFO_745011;
-				}else{
-					messageId = MessageConst.INFO_745015;
-				}
-			} 
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(messageId, 
-							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_STOP_DELIVERY), resDTO.getFlStopInstr().getStopInstrNo()}, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		} else {
-			throw new EpException(MessageConst.ERROR_700020);
-		}
-		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || getManagedBean().getTaskId() == null) { 
-			renewSesionObject();
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
-		}else{
-			reqDTO.setFlOrderId(resDTO.getFlStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
-			reqDTO.setStopRequestId(resDTO.getFlStopInstr().getStopInstrId());
-			resDTO=getFulfilmentOrderSO().retrieveStopInstruction(reqDTO);
-			String buttonVal = getManagedBean().getButtonVal();
-			setStopInstrFields(resDTO);
-			getManagedBean().setButtonVal(buttonVal);
-			return null;
+			if(resDTO.isSuccessful()) {
+				String messageId = MessageConst.INFO_700005;
+
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700004;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					messageId = MessageConst.INFO_700008;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messageId = MessageConst.INFO_700010;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || reqDTO.isApprover()) {
+					if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
+						messageId = MessageConst.INFO_745011;
+					}else{
+						messageId = MessageConst.INFO_745015;
+					}
+				} 
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_STOP_DELIVERY), resDTO.getFlStopInstr().getStopInstrNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || getManagedBean().getTaskId() == null) { 
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}else{
+				reqDTO.setFlOrderId(resDTO.getFlStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+				reqDTO.setStopRequestId(resDTO.getFlStopInstr().getStopInstrId());
+				resDTO= orderSO.retrieveStopInstruction(reqDTO);
+				String buttonVal = getManagedBean().getButtonVal();
+				setStopInstrFields(resDTO);
+				getManagedBean().setButtonVal(buttonVal);
+				return null;
+			}
+		}finally{
+			orderSO = null;
 		}
 	}
 
@@ -236,12 +237,13 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		String taskId = originalServletRequest.getParameter("taskId");
 		if(taskId != null) {
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			FLStopFullfillmentDataType stopFlData = super.getBpmTaskDetails(FLStopFullfillmentDataType.class, null);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setFlOrderId(stopFlData.getOrderId());
 			flReqDTO.setStopRequestId(stopFlData.getStopRequestId().longValue());
 			
-			FulfilmentResDTO resDTO = getFulfilmentOrderSO().retrieveStopInstruction(flReqDTO);
+			FulfilmentResDTO resDTO = orderSO.retrieveStopInstruction(flReqDTO);
 			if(resDTO.getFlStopInstr().getPmReason()==null) {
 				resDTO.getFlStopInstr().setPmReason(new PmReason());
 			}
@@ -807,7 +809,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String stopInstrId = originalServletRequest.getParameter("stopInstructionId");
-		
+		IFulfilmentOrderSO orderSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		if(stopInstrId!=null) {
@@ -816,10 +818,13 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			renewSesionObject();
 			try {
-				resDTO = getFulfilmentOrderSO().retrieveStopInstruction(reqDTO);
+				orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+				resDTO = orderSO.retrieveStopInstruction(reqDTO);
 			} catch (EpException e) {
 				handleException(e);
 				return;
+			}finally{
+				orderSO = null;
 			}
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
