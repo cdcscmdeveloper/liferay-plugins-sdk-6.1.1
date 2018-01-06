@@ -888,27 +888,33 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 	 
 	    return pdfTable;
 	}
+	
 	private void writePDFToResponse(ExternalContext externalContext, ByteArrayOutputStream baos, String fileName) {
+		OutputStream out = null;
 	    try {
-	    	
-	    	
-
-	            PortletResponse portletResponse = (PortletResponse) externalContext.getResponse();
-	            HttpServletResponse res = com.liferay.portal.util.PortalUtil
-	                    .getHttpServletResponse(portletResponse);
-	            res.setContentType("application/msword");
-	            res.setHeader("Expires", "0");
-	            res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-	            res.setHeader("Pragma", "public");
-	            res.setHeader("Content-disposition", "attachment;filename=" + fileName + ".docx");
-	            res.setContentLength(baos.size());
-	            OutputStream out = res.getOutputStream();
-			 	        baos.writeTo(out);
-			        res.flushBuffer();
-			        out.flush();
-			    } catch (Exception e) {
-			        //e.printStackTrace();
-			    }
+	    	PortletResponse portletResponse = (PortletResponse) externalContext.getResponse();
+	    	HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+	    	res.setContentType("application/msword");
+	    	res.setHeader("Expires", "0");
+	    	res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+	    	res.setHeader("Pragma", "public");
+	    	res.setHeader("Content-disposition", "attachment;filename=" + fileName + ".docx");
+	    	res.setContentLength(baos.size());
+	    	out = res.getOutputStream();
+	    	baos.writeTo(out);
+	    	res.flushBuffer();
+	    	out.flush();
+	    } catch (Exception e) {
+	    	//e.printStackTrace();
+	    } finally {
+	    	try {
+	    		if(out!=null) {
+	    			out.close();
+	    		}
+			} catch (IOException e) {
+				log.error(e);
+			}
+	    }
 	}
 	
 	
@@ -928,19 +934,26 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 	}
 	
 	public void createPDF() throws Exception {
-		String filePath = DocumentRepositoryUtils.getBaseDir()+Calendar.getInstance().get(Calendar.YEAR)+"/temp";
-		File file = new File(filePath);
-		file.mkdirs();
-		
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);;
-		String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), "", "P");
-		html = html.replaceAll("&#160;","");
-		html = html.replaceAll("&lt;","(");
-		html = html.replaceAll("&gt;",")");
-		System.out.println("********************* html******************"+ html);
-		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), html);
-		downloadFile(filePath);
+		OutputStream os = null;
+		try {
+			String filePath = DocumentRepositoryUtils.getBaseDir()+Calendar.getInstance().get(Calendar.YEAR)+"/temp";
+			File file = new File(filePath);
+			file.mkdirs();
+			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+			filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);;
+			String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), "", "P");
+			html = html.replaceAll("&#160;","");
+			html = html.replaceAll("&lt;","(");
+			html = html.replaceAll("&gt;",")");
+			System.out.println("********************* html******************"+ html);
+			os = new FileOutputStream(filePath);
+			DocumentGenerator.getInstance().generatePdf(os, html);
+			downloadFile(filePath);
+		} finally {
+			if(os!=null) {
+				os.close();
+			}
+		}
 	}
 	
 	public String getUserNameById(Long userId) {
