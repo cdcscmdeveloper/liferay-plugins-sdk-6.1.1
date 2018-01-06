@@ -884,6 +884,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 
 		resDTO = unspscSO.saveCommodityList(reqDTO);
+		
+		file.close();
 
 	}
 
