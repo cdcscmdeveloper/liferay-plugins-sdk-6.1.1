@@ -64,6 +64,13 @@
 		<managed-bean-class>my.ep.web.util.EpPortletUtil</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+
+	<managed-bean>
+		<description>Document Repository Util class</description>
+		<managed-bean-name>DocumentRepositoryUtils</managed-bean-name>
+		<managed-bean-class>my.ep.web.util.DocumentRepositoryUtils </managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 	
 	<managed-bean>
 		<description>Date Util class</description>
