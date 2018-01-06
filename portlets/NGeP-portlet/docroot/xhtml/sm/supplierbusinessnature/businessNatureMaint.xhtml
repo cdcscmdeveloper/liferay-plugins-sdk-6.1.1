@@ -71,7 +71,7 @@
 				action="#{registrationBackingBean.addBusinessNature}" />
 			</ui:remove>
 			#{lbl['lbl.sm.payment.click']}
-						<p:commandLink value="#{lbl['lbl.sm.payment.here']}" ajax="false" action="#{supplierBusinessNatureBackingBean.downloadFile('/shared/SM/Piawaian_Klasifikasi_Industri_Malaysia_2008.pdf')}"></p:commandLink>
+						<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Piawaian_Klasifikasi_Industri_Malaysia_2008.pdf">#{lbl['lbl.sm.payment.here']}</a>
 			#{lbl['lbl.sm.download.natureofbusiness']}
 			
 		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
