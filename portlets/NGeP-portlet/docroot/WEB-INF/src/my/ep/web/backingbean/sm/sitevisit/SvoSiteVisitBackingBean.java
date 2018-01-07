@@ -1111,19 +1111,29 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		File svSectionE = null;
 		
-		List<InputStream> mergeList = new ArrayList<InputStream>();     
-		mergeList.add(new FileInputStream(svCover));
-		mergeList.add(new FileInputStream(svPreDetails));
-		mergeList.add(new FileInputStream(svCompInfo));
-		mergeList.add(new FileInputStream(svSectionA));
-		mergeList.add(new FileInputStream(svSectionB));
-		mergeList.add(new FileInputStream(svSectionC));
-		mergeList.add(new FileInputStream(svSectionD));
+		List<InputStream> mergeList = new ArrayList<InputStream>();  
+		FileInputStream fCover = new FileInputStream(svCover);
+		FileInputStream fPreDetails = new FileInputStream(svPreDetails);
+		FileInputStream fCompInfo = new FileInputStream(svCompInfo);
+		FileInputStream fSectionA = new FileInputStream(svSectionA);
+		FileInputStream fSectionB = new FileInputStream(svSectionB);
+		FileInputStream fSectionC = new FileInputStream(svSectionC);
+		FileInputStream fSectionD = new FileInputStream(svSectionD);
+		FileInputStream fSectionE = null;
+		
+		mergeList.add(fCover);
+		mergeList.add(fPreDetails);
+		mergeList.add(fCompInfo);
+		mergeList.add(fSectionA);
+		mergeList.add(fSectionB);
+		mergeList.add(fSectionC);
+		mergeList.add(fSectionD);
 		
 		if(isSectionE){
 			String sectionE = commonSiteVisitSectionE(svTask,review);
 			svSectionE = new File(sectionE);
-			mergeList.add(new FileInputStream(svSectionE));
+			fSectionE = new FileInputStream(svSectionE);
+			mergeList.add(fSectionE);
 		}
 		
 		String fileName = fileInitName + "SV.pdf";
@@ -1158,6 +1168,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
         	
         } catch (IOException e) {
         	e.printStackTrace();
+        }finally{
+        	fCover.close();
+    		fPreDetails.close();
+    		fCompInfo.close();
+    		fSectionA.close();
+    		fSectionB.close();
+    		fSectionC.close();
+    		fSectionD.close();
+    		fSectionE.close();
         }
         
         log.info("**********END downloadSiteVisitTemplate***********");
