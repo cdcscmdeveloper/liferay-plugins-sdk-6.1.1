@@ -5717,6 +5717,7 @@ public class DirectLOABackingBean extends
 			List<JadualHargaBean> productList,
 			List<JadualHargaBean> serviceList, boolean isS1OrS2)
 			throws Exception {
+		InputStream inputStream = null;
 		try {
 			/*
 			 * FileInputStream inputStream = new FileInputStream(new File(
@@ -5727,7 +5728,7 @@ public class DirectLOABackingBean extends
 
 			final String templatePath = "templates"
 					+ SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
-			InputStream inputStream = this.getClass().getClassLoader()
+			inputStream = this.getClass().getClassLoader()
 					.getResourceAsStream(templatePath);
 			if (inputStream != null) {
 				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
@@ -5835,6 +5836,9 @@ public class DirectLOABackingBean extends
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(inputStream != null) {
+			inputStream.close();
+		}
 	}
 
 	private List<ItemBean> convertSpecQuestionToSpecAnswer(
@@ -5884,6 +5888,7 @@ public class DirectLOABackingBean extends
 	private void generateSpecification(ScAttachment attachment,
 			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
 			throws Exception {
+		InputStream inputStream = null;
 		try {
 			/*
 			 * FileInputStream inputStream = new FileInputStream(new File(
@@ -5894,7 +5899,7 @@ public class DirectLOABackingBean extends
 
 			final String templatePath = "templates"
 					+ SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
-			InputStream inputStream = this.getClass().getClassLoader()
+			inputStream = this.getClass().getClassLoader()
 					.getResourceAsStream(templatePath);
 			if (inputStream != null) {
 				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
@@ -6038,6 +6043,9 @@ public class DirectLOABackingBean extends
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		if(inputStream != null) {
+			inputStream.close();
 		}
 	}
 
