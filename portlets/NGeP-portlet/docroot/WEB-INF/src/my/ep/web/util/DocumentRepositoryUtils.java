@@ -68,5 +68,9 @@ public class DocumentRepositoryUtils {
 	
 	public String getBaseRepo() {
 		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/";
-	}	
+	}
+	
+	public String getBaseReportRepo() {
+		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR)+"/";
+	}
 }
