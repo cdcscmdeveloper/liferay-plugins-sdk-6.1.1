@@ -3993,6 +3993,7 @@ public class LOADetailBackingBean extends
 			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList, boolean isS1OrS2)
 					throws Exception {
 		if (serviceList.size() > 0 || productList.size() > 0) {
+			InputStream inputStream = null;
 			try {
 				/*FileInputStream inputStream = new FileInputStream(new File(
 						FacesContext.getCurrentInstance().getExternalContext()
@@ -4000,7 +4001,7 @@ public class LOADetailBackingBean extends
 						+ "/sc/loa/jadual-harga.xlsx"));*/
 
 				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
-				InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
+				inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
 				if (inputStream != null) {
 					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
 					
@@ -4105,6 +4106,9 @@ public class LOADetailBackingBean extends
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			if(inputStream != null) {
+				inputStream.close();
+			}
 		}
 	}
 
@@ -4158,6 +4162,7 @@ public class LOADetailBackingBean extends
 			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
 					throws Exception {
 		if (serviceList.size() > 0 || productList.size() > 0) {
+			InputStream inputStream = null;
 			try {
 				/*FileInputStream inputStream = new FileInputStream(new File(
 						FacesContext.getCurrentInstance().getExternalContext()
@@ -4165,7 +4170,7 @@ public class LOADetailBackingBean extends
 						+ "/sc/loa/specification.xlsx"));*/
 
 				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
-				InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
+				inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
 				if (inputStream != null) {
 					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
 					boolean emptyProductList = false;
@@ -4262,6 +4267,9 @@ public class LOADetailBackingBean extends
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			if(inputStream != null) {
+				inputStream.close();
 			}
 		}
 	}
