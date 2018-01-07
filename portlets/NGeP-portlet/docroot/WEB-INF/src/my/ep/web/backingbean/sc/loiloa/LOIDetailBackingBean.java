@@ -3162,10 +3162,26 @@ public class LOIDetailBackingBean extends
 			}
 			context.put("isBiddingAward", isBiddingAward);
 
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-					SourcingConstants.LOI_LETTER, context,
-					new FileOutputStream(getActualFilePath(attachment)));
+			FileOutputStream fos = null;
 			
+			try {
+				fos = new FileOutputStream(getActualFilePath(attachment));
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOI_LETTER, context, 
+						fos);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (fos != null) {
+						fos.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -4211,9 +4227,27 @@ public class LOIDetailBackingBean extends
 		context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
 		context.put("itemized", getManagedBean().isItemized());
 		context.put("isZonal", getManagedBean().isZonal());
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				"/sc/loi/loi-negotiationRecommendation.vm", context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					"/sc/loi/loi-negotiationRecommendation.vm", context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private BigDecimal calculateAfterNegoSubTotal(List<ScLoiLoaItem> scLoiLoaItems, 
@@ -4265,9 +4299,26 @@ public class LOIDetailBackingBean extends
 		context.put("scLois", lois);
 		context.put("status", QTStatusConst.LOI_REJECTED);
 		context.put("bean", this);
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -4372,9 +4423,26 @@ public class LOIDetailBackingBean extends
 		context.put("meetingAttendances", meetingAttendancesList);
 		context.put("bean", this);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				"/sc/loi/loi-negotiationCommittee.vm", context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					"/sc/loi/loi-negotiationCommittee.vm", context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -4401,9 +4469,26 @@ public class LOIDetailBackingBean extends
 		context.put("loiList", getManagedBean().getLois());
 		context.put("rejectedStatus", "62406");
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				"/sc/loi/loi-negotiationLocation.vm", context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					"/sc/loi/loi-negotiationLocation.vm", context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -4478,9 +4563,26 @@ public class LOIDetailBackingBean extends
 		}
 		context.put("statusSupplierSize", totalStatusSuppliers);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				"/sc/loi/loi-offeredAndQTDetails.vm", context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					"/sc/loi/loi-offeredAndQTDetails.vm", context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -4521,9 +4623,26 @@ public class LOIDetailBackingBean extends
 		debugLogger("ptjName generateCoverPdfFromVelocity"+ptjName);
 		context.put("agency",ptjName);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOI_COVER, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOI_COVER, context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
