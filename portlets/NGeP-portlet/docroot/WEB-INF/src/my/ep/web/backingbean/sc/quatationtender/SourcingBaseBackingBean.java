@@ -209,17 +209,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
-
-		if (fileBytes != null) {
-			attachment.setFileName(fileName);
-			attachment.setFileDesc("File uploded");
-
-			populateAttachmentDetails(attachment);
-
-			FileOutputStream fos;
-			fos = new FileOutputStream(getActualFilePath(attachment));
-			fos.write(fileBytes);
-			fos.close();
+		FileOutputStream fos = null;
+		try{
+			if (fileBytes != null) {
+				attachment.setFileName(fileName);
+				attachment.setFileDesc("File uploded");
+				populateAttachmentDetails(attachment);
+				fos = new FileOutputStream(getActualFilePath(attachment));
+				fos.write(fileBytes);
+			}
+		}
+		finally{
+			if(fos != null){
+				fos.close();
+			}
 		}
 	}
 
@@ -417,32 +420,39 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
+		OutputStream out = null;
+		
+		try{
+			response.setHeader("Pragma", "no-cache");
+			response.setDateHeader("Expires", 0);
+			// response.setContentType("application/vnd.ms-excel");
+			// response.setHeader("Content-Transfer-Encoding", "binary");
+			// to fix firefox issue of space
+			String finalFileName = fileName.replaceAll("\\s+",
+					QTConstants.REPLACE_CHAR);
+			log.info("finalFileName: " + finalFileName);
+			response.setHeader("Content-Disposition", "attachment; filename="
+					+ finalFileName);
+			response.setContentType("application/octet-stream");
+			response.flushBuffer();
 
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		// response.setContentType("application/vnd.ms-excel");
-		// response.setHeader("Content-Transfer-Encoding", "binary");
-		// to fix firefox issue of space
-		String finalFileName = fileName.replaceAll("\\s+",
-				QTConstants.REPLACE_CHAR);
-		log.info("finalFileName: " + finalFileName);
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ finalFileName);
-		response.setContentType("application/octet-stream");
-		response.flushBuffer();
+			out = response.getOutputStream();
 
-		OutputStream out = response.getOutputStream();
-
-		byte[] buffer = new byte[4096];
-		int bytesRead;
-		while ((bytesRead = input.read(buffer)) != -1) {
-			out.write(buffer, 0, bytesRead);
-			buffer = new byte[4096];
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+			out.flush();
+			FacesContext.getCurrentInstance().responseComplete();
 		}
-		input.close();
-		out.flush();
-		out.close();
-		FacesContext.getCurrentInstance().responseComplete();
+		finally{
+			input.close();
+			if(out != null){
+				out.close();
+			}
+		}
 	}
 
 	/**
@@ -455,7 +465,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(
 			String zipFileName, List<ATTACHMENT> scAttachments)
 			throws IOException {
-		
 		PortletResponse portalresponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil
@@ -468,44 +477,52 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				response.getOutputStream()));
 		try {
 			for (ScAttachment scAttachment : scAttachments) {
+				// Get the file
+				FileInputStream fis = null;
+				BufferedInputStream fif = null;
+				try{
+					if (null != scAttachment
+							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
+						File file = new File(getActualFilePath(scAttachment));
 
-				if (null != scAttachment
-						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-					File file = new File(getActualFilePath(scAttachment));
-
-					if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-						zos.putNextEntry(new ZipEntry(scAttachment.getTempFileName() + "." + extension));
-					} else {
-						zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+						if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+							String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+							zos.putNextEntry(new ZipEntry(scAttachment.getTempFileName() + "." + extension));
+						} else {
+							zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+						}
+						
+						try {
+							fis = new FileInputStream(file);
+						} catch (FileNotFoundException fnfe) {
+							zos.write(("ERROR: Could not find file " + file
+									.getName()).getBytes());
+							continue;
+						}
+						 fif = new BufferedInputStream(fis);
+						// Write the contents of the file
+						int data = 0;
+						while ((data = fif.read()) != -1) {
+							zos.write(data);
+						}
 					}
-
-					// Get the file
-					FileInputStream fis = null;
-					try {
-						fis = new FileInputStream(file);
-					} catch (FileNotFoundException fnfe) {
-						zos.write(("ERROR: Could not find file " + file
-								.getName()).getBytes());
-						zos.closeEntry();
-						continue;
+				}
+				finally{
+					if(fis != null){
+						fis.close();
 					}
-					BufferedInputStream fif = new BufferedInputStream(fis);
-					// Write the contents of the file
-					int data = 0;
-					while ((data = fif.read()) != -1) {
-						zos.write(data);
+					if(fif != null){
+						fif.close();
 					}
-					fif.close();
 					zos.closeEntry();
 				}
 			}
+			
 		} catch (Exception ex) {
 
 		} finally {
 			zos.close();
 			response.flushBuffer();
-
 			FacesContext.getCurrentInstance().responseComplete();
 		}
 	}
@@ -538,6 +555,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			e.printStackTrace();
 		} catch (Docx4JException e) {
 			e.printStackTrace();
+		}finally{
+			wordMLPackage = null;
 		}
 		log.info("Exit converthtmlToDocFile(..)");
 	}
@@ -762,30 +781,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
 			ATTACHMENT scAttachment, String contentType) throws IOException {
-		if (scAttachment != null) {
-			File file = new File(getActualFilePath(scAttachment));
-			ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
-			FileInputStream in = new FileInputStream(file);
-			byte[] buf = new byte[512];
-			int len;
-			while (true) {
-				len = in.read(buf);
-				if (len == -1) {
-					break;
+		ByteArrayOutputStream tmpOut = null;
+		FileInputStream in = null;
+		try{
+			if (scAttachment != null) {
+				File file = new File(getActualFilePath(scAttachment));
+				tmpOut = new ByteArrayOutputStream();
+				in = new FileInputStream(file);
+				byte[] buf = new byte[512];
+				int len;
+				while (true) {
+					len = in.read(buf);
+					if (len == -1) {
+						break;
+					}
+					tmpOut.write(buf, 0, len);
 				}
-				tmpOut.write(buf, 0, len);
+				in.close();
+				tmpOut.close();
+				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+						tmpOut.size());
+
+				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+
+				return new DefaultStreamedContent(stream, contentType);
+			} else {
+				return null;
 			}
-			in.close();
-			tmpOut.close();
-			ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-					tmpOut.size());
-
-			ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
-
-			return new DefaultStreamedContent(stream, contentType);
-		} else {
-			return null;
+		}finally{
+			//TODO baffled to close tmpOut
 		}
+		
 	}
 
 	protected List<PmParameterDesc> retrieveParametersBySearchBean(
@@ -836,47 +862,59 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
-		if (!isDirectDownload) {
-			res.setHeader("Content-Disposition", "attachment; filename="
-					+ attachment.getFileName());
-			res.setHeader("Content-Transfer-Encoding", "binary");
-			res.setContentType("application/octet-stream");
-			res.flushBuffer();
-			out = res.getOutputStream();
-		}
-
-		File localFile = new File(getActualFilePath(attachment));
-
-		if (reportUrl.toString() != null) {
-			InputStream input = null;
-			try {
-				URL obj = new URL(reportUrl.toString());
-				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-			} catch (ConnectException e) {
-				throw new EpException(MessageConst.ERROR_100058);
+		InputStream input = null;
+		FileOutputStream fos = null;
+		try{
+			if (!isDirectDownload) {
+				res.setHeader("Content-Disposition", "attachment; filename="
+						+ attachment.getFileName());
+				res.setHeader("Content-Transfer-Encoding", "binary");
+				res.setContentType("application/octet-stream");
+				res.flushBuffer();
+				out = res.getOutputStream();
 			}
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			byte[] buf = new byte[1024];
-			try {
-				for (int readNum; (readNum = input.read(buf)) != -1;) {
-					bos.write(buf, 0, readNum);
+
+			File localFile = new File(getActualFilePath(attachment));
+
+			if (reportUrl.toString() != null) {
+				try {
+					URL obj = new URL(reportUrl.toString());
+					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (ConnectException e) {
+					throw new EpException(MessageConst.ERROR_100058);
 				}
-			} catch (IOException ex) {
-				ex.printStackTrace();
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] buf = new byte[1024];
+				try {
+					for (int readNum; (readNum = input.read(buf)) != -1;) {
+						bos.write(buf, 0, readNum);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				byte[] bytes = bos.toByteArray();
+				fos = new FileOutputStream(localFile);
+				fos.write(bytes);
+				fos.flush();
 			}
-			byte[] bytes = bos.toByteArray();
-			FileOutputStream fos = new FileOutputStream(localFile);
-			fos.write(bytes);
-			fos.flush();
-			fos.close();
-			input.close();
+			if (!isDirectDownload) {
+				out.flush();
+				
+			}
+			return localFile;
+		}finally{
+			if(fos != null){
+				fos.close();
+			}
+			if(input != null){
+				input.close();
+			}
+			if(out != null){
+				out.close();
+			}
 		}
-		if (!isDirectDownload) {
-			out.flush();
-			out.close();
-		}
-		return localFile;
+		
 	}
 
 	/**
