@@ -45,7 +45,11 @@ public class MolPayServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		log.info("******Servlet Testing doGet*********");
 		PrintWriter out = res.getWriter();
-		out.print("CBTOKEN:MPSTATOK");
+		try{
+			out.print("CBTOKEN:MPSTATOK");
+		}finally{
+			out.close();
+		}
 
 		//res.sendRedirect("http://localhost:8080/web/guest/svo-site-visit");
 	}
@@ -203,7 +207,12 @@ public class MolPayServlet extends HttpServlet {
 							
 							log.info("Curl IPN - CBTOKEN:MPSTATOK " + nbcb);
 							PrintWriter out = res.getWriter();
-							out.print("CBTOKEN:MPSTATOK");
+							try{
+								out.print("CBTOKEN:MPSTATOK");
+							}finally{
+								out.close();
+							}
+							
 						}else if(nbcb.equals("2")){
 							log.info("Curl IPN - nbcb " + nbcb);
 							try {
