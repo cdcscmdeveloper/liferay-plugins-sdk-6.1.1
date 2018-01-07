@@ -143,8 +143,12 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	public void generatePdfFromVelocity(String velocityTemplate, VelocityContext context, OutputStream os) throws Exception {
 		log.info("velocityTemplate: " + velocityTemplate);
 		String html = getHtmlFromVelocity(velocityTemplate, context);
+		try{
+			generatePdf(os, html);
+		}finally{
+			os.close();
+		}
 		
-		generatePdf(os, html);
 	}
 	
 	/**
