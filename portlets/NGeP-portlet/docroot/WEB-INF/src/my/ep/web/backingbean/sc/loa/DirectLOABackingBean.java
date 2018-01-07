@@ -4918,10 +4918,27 @@ public class DirectLOABackingBean extends
 		}
 		context.put("gstAmt", gstAmount);
 		context.put("overallctAmt", overallctAmt);
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_CONTRACT_SUMMARY, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOA_CONTRACT_SUMMARY, context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -5408,9 +5425,24 @@ public class DirectLOABackingBean extends
 
 		populateAttachmentDetails(attachment);
 
-		DocumentGenerator.getInstance().generatePdf(
-				new FileOutputStream(getActualFilePath(attachment)),
-				termsConditions);
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdf(fos, termsConditions);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -5554,9 +5586,26 @@ public class DirectLOABackingBean extends
 
 		}
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 
@@ -6039,9 +6088,25 @@ public class DirectLOABackingBean extends
 		context.put("scLois", lois);
 		context.put("bean", this);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOI_NEGOTIONATION_RESULT, context, fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -7233,10 +7298,25 @@ public class DirectLOABackingBean extends
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
 		
+		FileOutputStream fos = null;
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_ACKNOWLEDGEMENT_OF_LOA_RECEIPT, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOA_ACKNOWLEDGEMENT_OF_LOA_RECEIPT, context, fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void generateDeclarationOfOathFromVelocity(ScAttachment attachment,
@@ -7257,9 +7337,25 @@ public class DirectLOABackingBean extends
 			}
 		}
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_SURAT_AKUAN_SUMPAH_SYARIKAT, context, 
-				new FileOutputStream(getActualFilePath(attachment)));
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOA_SURAT_AKUAN_SUMPAH_SYARIKAT, context, fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
