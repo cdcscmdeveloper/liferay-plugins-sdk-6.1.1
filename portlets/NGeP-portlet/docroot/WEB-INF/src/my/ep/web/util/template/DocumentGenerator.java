@@ -160,21 +160,24 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		debugLogger("generatePdf");
 		
 		ITextRenderer render = new ITextRenderer();
-		
-        if (html != null) {
-        	html = html.replaceAll("&amp;nbsp;", "");
-        	html = html.replaceAll("&amp;", "&amp;amp;")
-        			   .replaceAll("&", "&amp;");
-        	html = html.replaceAll("&amp;#62", "&#62");
-          	html = html.replaceAll("&amp;#60", "&#60");
-        	 
-            render.setDocumentFromString(html);
-            render.layout();
-            render.createPDF(os);
-        }
-        
-        os.flush();
-		os.close();
+		try{
+			 if (html != null) {
+		        	html = html.replaceAll("&amp;nbsp;", "");
+		        	html = html.replaceAll("&amp;", "&amp;amp;")
+		        			   .replaceAll("&", "&amp;");
+		        	html = html.replaceAll("&amp;#62", "&#62");
+		          	html = html.replaceAll("&amp;#60", "&#60");
+		        	 
+		            render.setDocumentFromString(html);
+		            render.layout();
+		            render.createPDF(os);
+		        }
+		        
+		        os.flush();
+		}finally{
+			render = null;
+			os.close();
+		}
 	}
 	
 	/**
@@ -206,13 +209,16 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 */
 	public void generateDocxtoHtml(String filePath, String html) throws Exception {
 		debugLogger("generateDoc");
-		
            WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
-		    NumberingDefinitionsPart ndp = new NumberingDefinitionsPart();
-		    wordMLPackage.getMainDocumentPart().addTargetPart(ndp);
-		    ndp.unmarshalDefaultNumbering();
-		    wordMLPackage.getMainDocumentPart().addAltChunk(AltChunkType.Xhtml, html.getBytes());  
-		    wordMLPackage.save(new java.io.File(filePath));
+           try{
+        	   NumberingDefinitionsPart ndp = new NumberingDefinitionsPart();
+        	   wordMLPackage.getMainDocumentPart().addTargetPart(ndp);
+   		    	ndp.unmarshalDefaultNumbering();
+   		    	wordMLPackage.getMainDocumentPart().addAltChunk(AltChunkType.Xhtml, html.getBytes());  
+   		    	wordMLPackage.save(new java.io.File(filePath));
+           }finally{
+        	   wordMLPackage = null;
+           }
 	}
 	
 	/**
@@ -226,25 +232,31 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 */
 	public void generateDoc(String filePath, String html) throws Exception {
 		debugLogger("generateDoc");
-		
 		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
-        AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html")); 
-         afiPart.setBinaryData(html.getBytes()); 
-         afiPart.setContentType(new ContentType("text/html")); 
-         Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart); 
-         // .. the bit in document body 
-         CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk(); 
-         ac.setId(altChunkRel.getId() ); 
-         wordMLPackage.getMainDocumentPart().addObject(ac); 
-         wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html"); 
-         wordMLPackage.save(new java.io.File(filePath));
+		try{
+	        AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html")); 
+	         afiPart.setBinaryData(html.getBytes()); 
+	         afiPart.setContentType(new ContentType("text/html")); 
+	         Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart); 
+	         // .. the bit in document body 
+	         CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk(); 
+	         ac.setId(altChunkRel.getId() ); 
+	         wordMLPackage.getMainDocumentPart().addObject(ac); 
+	         wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html"); 
+	         wordMLPackage.save(new java.io.File(filePath));
+		}
+		finally{
+			// TODO not sure about the WordprocessingML_Package API 
+			wordMLPackage = null;
+		}
+		
 	}
 	
 	/**
 	 * The method used to convert the template into document file.
 	 */
 	public static void convertHtmlToDocFile(String content, String filePath, String docNo) {
-		WordprocessingMLPackage wordMLPackage;
+		WordprocessingMLPackage wordMLPackage = null;
 		try {
 			wordMLPackage = WordprocessingMLPackage.createPackage();
 			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
@@ -263,6 +275,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			e.printStackTrace();
 		} catch (Docx4JException e) {
 			e.printStackTrace();
+		}finally{
+			if(wordMLPackage != null){
+				wordMLPackage = null;
+			}
 		}
 	}
 
