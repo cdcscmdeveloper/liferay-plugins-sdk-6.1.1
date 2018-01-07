@@ -283,7 +283,7 @@ public class SpecificationBackingBean extends
 			committeSO.sendCommitteEndorseNotification(reqDTO);
 
 		} finally {
-
+			committeSO = null;
 		}
 	}
 
@@ -802,7 +802,7 @@ public class SpecificationBackingBean extends
 			}
 			specReqDTO.setScoreSettings(scoreSetting);
 			specReqDTO.setScQt(scQtRecommendation);
-
+			scoreSetting=null;
 			break;
 
 		case 7:
@@ -1330,7 +1330,7 @@ public class SpecificationBackingBean extends
 
 			//qtTemplateSO.saveOrUpdateTemplateDoc(docReqDTO);
 		} finally {
-
+			parameterSo = null;
 		}
 
 	}
@@ -1475,6 +1475,7 @@ public class SpecificationBackingBean extends
 				}
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
+				localcheckList=null;
 			}
 		} finally {
 			specSo = null;
@@ -1561,6 +1562,7 @@ public class SpecificationBackingBean extends
 								return true;
 							}
 						}
+						templateSpecSO=null;
 					}
 				}
 			}
