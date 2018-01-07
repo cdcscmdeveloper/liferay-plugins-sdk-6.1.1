@@ -1091,8 +1091,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		} catch(Exception e) {
 			log.error(e);
 		} finally {
-			out.close();
-			docInputStream.close();
+			if (out != null) {
+				out.close();
+			}
+			if (docInputStream != null) {
+				docInputStream.close();	
+			}
 		}
 
 	}
