@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.requestnote;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -137,8 +138,6 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
 // TODO: Auto-generated Javadoc
 
@@ -3429,10 +3428,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 		sortMarketSummaryList(requestNoteVOList);
 		context.put("requestNoteVOList", requestNoteVOList);		
-    	DocumentGenerator.getInstance().generatePdfFromVelocity(
-    			"/sc/directPurchase/market-summary.vm", 
-    			context, 
-    			new FileOutputStream(getActualFilePath(attachment)));
+    	
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+	    			"/sc/directPurchase/market-summary.vm", 
+	    			context, 
+	    			fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -3495,10 +3512,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		sortMarketSummaryList(requestNoteVOList);
 		context.put("requestNoteVOList", requestNoteVOList);		
-    	DocumentGenerator.getInstance().generatePdfFromVelocity(
-    			"/sc/directPurchase/pi-report.vm", 
-    			context, 
-    			new FileOutputStream(getActualFilePath(attachment)));
+    	
+		FileOutputStream fos = null;
+		
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+	    			"/sc/directPurchase/pi-report.vm", 
+	    			context, 
+	    			fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
