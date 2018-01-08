@@ -65,11 +65,11 @@ public class QTProposalCloseJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		debugLogger("Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
-		log.info("##### Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
+		log.debug("##### Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
 		
-		log.info("#$#$#$#$ Proposal being closed for QT with id:: "+qtId);
+		log.debug("#$#$#$#$ Proposal being closed for QT with id:: "+qtId);
 
 		try {
 			if (proposalSO == null) {
@@ -86,21 +86,21 @@ public class QTProposalCloseJob implements Job {
 					.updateProposalWorkFlowStatus(proposalReqDTO);
 			
 			if (proposalResDTO.isSuccessful()) {
-				log.info("$$$$$ qt Work Flow status update suceessful from QTProposalCloseJob job");
+				log.debug("$$$$$ qt Work Flow status update suceessful from QTProposalCloseJob job");
 				insertProposalAmount(qtId);
 			} else {
-				log.info("$$$$$ qt Work Flow status update unsuceessful from QTProposalCloseJob job");
+				log.debug("$$$$$ qt Work Flow status update unsuceessful from QTProposalCloseJob job");
 				updateQtAsDisrupted(qtId,
 						QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
 						proposalResDTO.getErrorMessage());
 			}
 			}else if(qt.getClosingDate().before(getCompareTime())){
-				log.info("%%%%% QT not Closed ontime and updated to closing reschedule");
+				log.debug("%%%%% QT not Closed ontime and updated to closing reschedule");
 				reSchedulePublicationForPublishFailQt(qtId);
 			}
 
 		} catch (Exception e) {
-			log.info("$$$$$ qt Work Flow status updated failed from QTProposalCloseJob job");
+			log.debug("$$$$$ qt Work Flow status updated failed from QTProposalCloseJob job");
 			log.error(e.getLocalizedMessage());
 			e.printStackTrace();
 			reSchedulePublicationForPublishFailQt(qtId);
@@ -109,7 +109,7 @@ public class QTProposalCloseJob implements Job {
 			proposalSO = null;
 		}
 		debugLogger("End execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
-		log.info("##### Finish execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
+		log.debug("##### Finish execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
 	}
 
 	private void insertProposalAmount(Long qtId) {
@@ -125,11 +125,11 @@ public class QTProposalCloseJob implements Job {
 					.closeQtAndSaveProposalAmount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				log.info("$$$$$ Insert Proposal amount Successful for the QT No :"
+				log.debug("$$$$$ Insert Proposal amount Successful for the QT No :"
 						+ qtId);
 				updateBPMPostProposalClose(reqDTO);
 			} else {
-				log.info("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
+				log.debug("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
 						+ qtId);
 				updateQtAsDisrupted(
 						qtId,
@@ -138,7 +138,7 @@ public class QTProposalCloseJob implements Job {
 			}
 
 		} catch (Exception e) {
-			log.info("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
+			log.debug("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
 					+ qtId);
 			log.error(e.getLocalizedMessage());
 			String errorMessage = null;
@@ -168,17 +168,17 @@ public class QTProposalCloseJob implements Job {
 			NoticeBoardResDTO resDTO = noticeBoardSO
 					.updateBpmForPublishAndProposalClose(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("$$$$$ BPM Update after Proposal Close successful for the QT Id :"
+				log.debug("$$$$$ BPM Update after Proposal Close successful for the QT Id :"
 						+ qtId);
 			} else {
-				log.info("$$$$$ BPM Update after Proposal Close unsuccessful for the QT Id :"
+				log.debug("$$$$$ BPM Update after Proposal Close unsuccessful for the QT Id :"
 						+ qtId);
 				updateQtAsDisrupted(qtId,
 						QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION, 
 						resDTO.getErrorMessage());
 			}
 		} catch (Exception e) {
-			log.info("$$$$$ BPM Update after Proposal Close failed for the QT Id :"
+			log.debug("$$$$$ BPM Update after Proposal Close failed for the QT Id :"
 					+ qtId);
 			log.error(e.getLocalizedMessage());
 			e.printStackTrace();
@@ -224,7 +224,7 @@ public class QTProposalCloseJob implements Job {
 		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
 		if(resDTO.isSuccessful()){
-			log.info("Work flow status updated for proposal close failed QT with id"+qtId);
+			log.debug("Work flow status updated for proposal close failed QT with id"+qtId);
 		}
 	}
 	private Date getCompareTime() {
