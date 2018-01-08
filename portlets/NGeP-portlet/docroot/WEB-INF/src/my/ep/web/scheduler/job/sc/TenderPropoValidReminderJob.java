@@ -41,12 +41,12 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 			.getLogger(TenderPropoValidReminderJob.class);
 
 	public TenderPropoValidReminderJob() {
-		log.info("inside TenderPropoValidReminderJob");
+		log.debug("inside TenderPropoValidReminderJob");
 	}
 
 	@Override
 	public List<ReminderBean> getReminderBeans() {
-		log.info("Tender getReminderBeans");
+		log.debug("Tender getReminderBeans");
 		IQTDetailSO detailSO = null;
 		List<ReminderBean> beans = null;
 		try {
@@ -55,14 +55,14 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_TENDER);
 			reqDTO.setPropoValidEndAtMaxDays(getMaxProposalValidDays());
-			log.info("max propo validity days :"+reqDTO.getPropoValidEndAtMaxDays());
+			log.debug("max propo validity days :"+reqDTO.getPropoValidEndAtMaxDays());
 			reqDTO.setStatusIds(qtStatusListInBetween(
 					QTStatusConst.QT_BRIEFING_SITE_VISIT,
 					QTStatusConst.QT_PENDING_LOA));
 			QuationTenderResDTO resDTO = detailSO
 					.getQTDetailsByStatusIds(reqDTO);
 
-			log.info("Tender Reminder @ QT List Size : "+resDTO.getQtDetailsArray().size());
+			log.debug("Tender Reminder @ QT List Size : "+resDTO.getQtDetailsArray().size());
 
 			if (resDTO.isSuccessful()) {
 				beans = new ArrayList<ReminderBean>();
@@ -79,7 +79,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 					if (actorDO.getUserId() != null) {
 						userIds.add(actorDO.getUserId().toString());
 					} else {
-						log.info("user not found for qt id "+qtId);
+						log.debug("user not found for qt id "+qtId);
 					}
 					bean.setDocNo(objects[1].toString());
 					bean.setDueDate(propoValidityEndDate);
@@ -213,7 +213,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 				preferredLanguage = pmUser.getPreferredLanguage();
 			}
 		} else {
-			log.info("user not found.");
+			log.debug("user not found.");
 		}
 
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -228,7 +228,7 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 
 		// 9. Total Days left 
 		paramList.add(String.valueOf(reminders));
-		log.info("Tender paramList Size : "+paramList.size());
+		log.debug("Tender paramList Size : "+paramList.size());
 		return paramList;
 	}
 	
