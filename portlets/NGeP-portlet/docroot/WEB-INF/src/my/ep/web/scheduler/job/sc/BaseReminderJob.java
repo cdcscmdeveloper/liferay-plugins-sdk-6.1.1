@@ -89,7 +89,7 @@ public abstract class BaseReminderJob implements Job {
 	 */
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		log.info("execute BaseReminderJob");
+		log.debug("execute BaseReminderJob");
 		List<ReminderBean> beans = getReminderBeans();
 		List<String> paramList = null;
 		if (beans != null && !beans.isEmpty()) {
@@ -118,9 +118,9 @@ public abstract class BaseReminderJob implements Job {
 							subjectParamList);
 				}
 			}
-			log.info("End BaseReminderJob");
+			log.debug("End BaseReminderJob");
 		} else {
-			log.info("reminder beans is either null or empty");
+			log.debug("reminder beans is either null or empty");
 		}
 
 	}
@@ -138,7 +138,7 @@ public abstract class BaseReminderJob implements Job {
 	 */
 	private boolean sendReminder(String templateId, ReminderBean reminderBean,
 			List<String> paramList, List<String> subjectParamList) {
-		log.info("sendReminder -  Doc No :" + reminderBean.getDocNo());
+		log.debug("sendReminder -  Doc No :" + reminderBean.getDocNo());
 
 		// NTF
 		INtfClientSO ntfClientSO = null;
@@ -153,7 +153,7 @@ public abstract class BaseReminderJob implements Job {
 			if (StringUtils.isNotBlank(templateId)) {
 				ntfReqDTO.setTemplateId(templateId);
 			} else {
-				log.info("TemplateId not found.");
+				log.debug("TemplateId not found.");
 			}
 
 			// Receivers
@@ -163,20 +163,20 @@ public abstract class BaseReminderJob implements Job {
 						.size(), String[].class);
 				ntfReqDTO.setUserIdArr(userIdsArray);
 			} else {
-				log.info("Receivers not found.");
+				log.debug("Receivers not found.");
 			}
 
 			// Params.
 			if (CollectionUtils.isNotEmpty(paramList)) {
 				ntfReqDTO.setCntParaArr(paramList.toArray(new String[paramList.size()]));
 			} else {
-				log.info("Params not found.");
+				log.debug("Params not found.");
 			}
 
 			if (subjectParamList != null && !subjectParamList.isEmpty()) {
 				ntfReqDTO.setSubParaArr(subjectParamList.toArray(new String[subjectParamList.size()]));
 			} else {
-				log.info("Subject params not found.");
+				log.debug("Subject params not found.");
 			}
 
 			ntfResDTO = ntfClientSO.processAndPublish(ntfReqDTO);
@@ -208,7 +208,7 @@ public abstract class BaseReminderJob implements Job {
 				reminders.add(value.getKpiValue().longValue());
 			}
 		}
-		log.info("reminders :"+reminders.size());
+		log.debug("reminders :"+reminders.size());
 		return reminders;
 	}
 
