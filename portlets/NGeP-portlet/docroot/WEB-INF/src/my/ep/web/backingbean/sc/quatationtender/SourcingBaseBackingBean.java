@@ -400,7 +400,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			downloadFileByInputStream(input, fileName);
 		}
-
+         //input has been closed in the called method bcoz here in catch they alternative 
 		// use to upload back to database
 		File file = new File(filePath);
 		return file;
@@ -448,7 +448,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			FacesContext.getCurrentInstance().responseComplete();
 		}
 		finally{
-			input.close();
+			if(input!= null){
+				input.close();
+			}
 			if(out != null){
 				out.close();
 			}
