@@ -328,7 +328,7 @@ public class EvaluationBackingBean extends
 			}
 
 		} finally {
-
+			evaluationSO=null;
 		}
 	}
 
@@ -422,7 +422,7 @@ public class EvaluationBackingBean extends
 			}
 
 		} finally {
-
+			evaluationSO=null;
 		}
 
 	}
@@ -577,7 +577,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+			evaluationSO = null;
 		}
 	}
 
@@ -1182,7 +1182,7 @@ public class EvaluationBackingBean extends
 			
 
 		} finally {
-
+			evaluationSo = null;
 		}
 	}
 
@@ -1243,7 +1243,7 @@ public class EvaluationBackingBean extends
 			updateSummaryGeneratedStatus();
 
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -1570,7 +1570,7 @@ public class EvaluationBackingBean extends
 							null, evalstage));
 
 		} finally {
-
+			evaluationSO = null;
 		}
 
 	}
@@ -1733,7 +1733,8 @@ public class EvaluationBackingBean extends
 				checklistSorting(this.getManagedBean().getEvaluationStgTechnicalCheckList());
 				}
 			checkTechnicalSuppliersQualified();
-
+			localCheckList=null;
+			evalstage=null;
 		} finally {
 			evaluationSO = null;
 			resDTO = null;
@@ -1884,6 +1885,8 @@ public class EvaluationBackingBean extends
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgfinancialCheckList())){
 				checklistSorting(this.getManagedBean().getEvaluationStgfinancialCheckList());
 				}
+			localCheckList=null;
+			evalstage=null;
 		} finally {
 			evaluationSO = null;
 
@@ -2153,7 +2156,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setPassingScore(resDTO.getPassingScore());
 
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -2207,7 +2210,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -2261,7 +2264,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -2311,7 +2314,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -2902,7 +2905,7 @@ public class EvaluationBackingBean extends
 
 			}
 		} finally {
-
+			 evaluationSo = null;
 		}
 	}
 
@@ -3134,7 +3137,8 @@ public class EvaluationBackingBean extends
 
 			}
 		} finally {
-
+			 templateSpecSo=null;;
+			 zoneSpecresDTO=null;
 		}
 
 	}
@@ -3306,7 +3310,7 @@ public class EvaluationBackingBean extends
 
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -3593,6 +3597,12 @@ public class EvaluationBackingBean extends
 				String docDefinationKey = proposalCheckList.getScQtCheckList()
 						.getPmDocument().getDocDefinitionKey();
 				this.getManagedBean().setDocDefinitionKey(docDefinationKey);
+				this.getManagedBean().setTechGovProposalScore(
+						null);
+				this.getManagedBean().setTechnicalGovNoOfContracts(
+						null);
+				this.getManagedBean().setTechnicalGovNoOfYears(
+						null);
 				this.getManagedBean().setTechGovProposalScore(
 						new ArrayList<ScQtProposalScore>());
 				this.getManagedBean().setTechnicalGovNoOfContracts(
@@ -4091,7 +4101,7 @@ public class EvaluationBackingBean extends
 			}
 
 		} finally {
-
+			evaluationSO = null;
 		}
 
 		this.getManagedBean().setProposalPage(proposalPage);
@@ -4282,6 +4292,12 @@ public class EvaluationBackingBean extends
 						.getPmDocument().getDocDefinitionKey();
 				this.getManagedBean().setDocDefinitionKey(docDefinationKey);
 				this.getManagedBean().setTechGovProposalScore(
+						null);
+				this.getManagedBean().setTechnicalGovNoOfContracts(
+						null);
+				this.getManagedBean().setTechnicalGovNoOfYears(
+						null);
+				this.getManagedBean().setTechGovProposalScore(
 						new ArrayList<ScQtProposalScore>());
 				this.getManagedBean().setTechnicalGovNoOfContracts(
 						new ArrayList<ScQtCheckListScore>());
@@ -4289,6 +4305,7 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setChecklistScoreType(null);
 				this.getManagedBean().setTechnicalGovNoOfYears(
 						new ArrayList<ScQtCheckListScore>());
+				
 				// this.getManagedBean().setNoOfContractsProposalScore(null);
 
 				if (QTConstants.FINANCIAL_GOV_CODE
@@ -5042,7 +5059,8 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+          templateSpecSO=null;
+          evaluationSO=null;
 		}
 		this.getManagedBean().setProposalPage(proposalPage);
 		this.getManagedBean().setEvaluationPage(evaluationPage);
@@ -5262,7 +5280,7 @@ public class EvaluationBackingBean extends
 					new SummarySupplierPagingDataModel("disQualifiedListId",
 							false, false, null, evalReqDTO.getResultStages()));
 		} finally {
-
+			evaluationSo = null;
 		}
 	}
 
@@ -5765,7 +5783,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -5896,7 +5914,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -6421,7 +6439,7 @@ public class EvaluationBackingBean extends
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
 		} finally {
-
+			evaluationSo = null;
 		}
 	}
 
@@ -6446,7 +6464,7 @@ public class EvaluationBackingBean extends
 			}
 
 		} finally {
-
+			evaluationSO = null;
 		}
 
 	}
@@ -7212,7 +7230,7 @@ private void retriveCommitteeRemarksList(){
 										new FacesScopes().getUserLocale())));
 			}
 		} finally {
-
+			evaluationSO=null;
 		}
 
 	}
@@ -7360,9 +7378,10 @@ private void retriveCommitteeRemarksList(){
 	 * evaluation stage.
 	 */
 	public void saveProposalScoreDtls() {
+		IQTEvaluationSO evaluationSO;
 		try {
 
-			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance()
+		 evaluationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			// int index = this.getManagedBean().getTechindex();
@@ -7453,7 +7472,7 @@ private void retriveCommitteeRemarksList(){
 									new FacesScopes().getUserLocale())));
 			
 		} finally {
-
+			evaluationSO=null;
 		}
 
 	}
@@ -7592,7 +7611,7 @@ private void retriveCommitteeRemarksList(){
 			}
 			  log.info("end EvaluationReportAttachment downaload"+DateUtils.getCurrentDate());
 		} finally {
-
+			evaluationSO = null;
 		}
 
 	}
@@ -7788,7 +7807,7 @@ private void retriveCommitteeRemarksList(){
 
 			this.getManagedBean().setScQtChecklist(resDTO.getCheckList());
 		} finally {
-
+			evaluationSO = null;
 		}
 
 	}
@@ -7826,7 +7845,7 @@ private void retriveCommitteeRemarksList(){
 			committeSO.sendCommitteEndorseNotification(reqDTO);
 
 		} finally {
-
+			committeSO = null;
 		}
 	}
 
@@ -8070,7 +8089,7 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 		}
-
+		committeSO=null;
 		return null;
 
 	}
@@ -8221,6 +8240,7 @@ private void retriveCommitteeRemarksList(){
 				this.getManagedBean().setMemberOnly(true);
 			}
 		}
+		committeSO=null;
 		if (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
 				.getManagedBean().getCurrentStatusId())
 				|| QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL.equals(this
@@ -10378,7 +10398,7 @@ private void retriveCommitteeRemarksList(){
 			
 
 		} finally {
-
+			evaluationSo=null;
 		}
 
 	}
@@ -11351,7 +11371,7 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -11453,7 +11473,7 @@ private void retriveCommitteeRemarksList(){
 
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -11522,7 +11542,7 @@ private void retriveCommitteeRemarksList(){
 
 			}
 		} finally {
-
+			evaluationSo = null;
 		}
 
 	}
@@ -11655,7 +11675,7 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 		}finally{
-			
+			evaluationSO = null;
 		}
 		
 	}
