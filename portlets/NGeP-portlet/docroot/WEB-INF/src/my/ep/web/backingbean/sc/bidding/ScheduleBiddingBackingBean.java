@@ -100,14 +100,6 @@ public class ScheduleBiddingBackingBean extends
 			for (long duration = startHour; duration <= endHour; duration++) {				
 				items.add(new SelectItem(duration, duration+""));
 			}
-			/*
-			 * getManagedBean().getBidMinDuration()+" "+
-			 * ResourceBundleUtils.getMessage( "lbl.txt.hour",
-			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())
-			 * getManagedBean().getBidMaxDuration()+" "+
-			 * ResourceBundleUtils.getMessage( "lbl.txt.hours",
-			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())
-			 */
 			getManagedBean().setSelectItems(items.toArray(new SelectItem[items.size()]));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -201,28 +193,23 @@ public class ScheduleBiddingBackingBean extends
 	public void addContactAction() {
 
 		try {
-			log.info(" **** enter addContactAction *** ");
-
+			log.debug(" **** enter addContactAction *** ");
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
-
 			if (null == contactList) {
 				contactList = new ArrayList<ScBidContactPerson>();
 			}
-
 			ScBidContactPerson scBidContactPerson = new ScBidContactPerson();
 			scBidContactPerson.setScBid(getManagedBean().getScBid());
 			contactList.add(scBidContactPerson);
 			this.getManagedBean().setScBidContactPersonList(contactList);
-			log.info(" **** ScBidContactPersonList Size *** "
+			log.debug(" **** ScBidContactPersonList Size *** "
 					+ getManagedBean().getScBidContactPersonList().size());
 			getManagedBean().setSelectedAllBidContacts(false);
 		}
-
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -253,9 +240,10 @@ public class ScheduleBiddingBackingBean extends
 	 * method to delete contact person from the list
 	 */
 	public void deleteContactDetails() {
+		
+		List<ScBidContactPerson> toDeleteContacts = new ArrayList<ScBidContactPerson>();
 		try {
 			getManagedBean().getScBidContactPersonList();
-			List<ScBidContactPerson> toDeleteContacts = new ArrayList<ScBidContactPerson>();
 			for (ScBidContactPerson contact : getManagedBean()
 					.getScBidContactPersonList()) {
 				if (contact.isSelected()) {
@@ -265,11 +253,13 @@ public class ScheduleBiddingBackingBean extends
 			if (CollectionUtils.isNotEmpty(toDeleteContacts)) {
 				getManagedBean().getScBidContactPersonList().removeAll(
 						toDeleteContacts);
-				toDeleteContacts = null;
 			}
 			getManagedBean().setSelectedAllBidContacts(false);
 		} catch (Exception e) {
 			log.info(e.getLocalizedMessage());
+		}
+		finally{
+			toDeleteContacts = null;
 		}
 	}
 
@@ -350,46 +340,49 @@ public class ScheduleBiddingBackingBean extends
 
 		debugLogger("retriveItemsToBid");
 		IScheduleBiddingSO scheduleBiddingSO = null;
+		try{
+			scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
+			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+			reqDTO.setQtID(qtId);
+			reqDTO.setRecommandIds(recommandIds);
+			reqDTO.setUserId(userId);
+			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
+					.retrieveBidScduleDetials(reqDTO);
 
-		scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
-		ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-		reqDTO.setQtID(qtId);
-		reqDTO.setRecommandIds(recommandIds);
-		reqDTO.setUserId(userId);
-		ScheduleBiddingResDTO resDTO = scheduleBiddingSO
-				.retrieveBidScduleDetials(reqDTO);
-
-		if (resDTO.isSuccessful()) {
-			getManagedBean().setScQt(resDTO.getScQT());
-			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
-			getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
-			getManagedBean().setScBid(resDTO.getScBid());
-			getManagedBean().setBidItemList(resDTO.getBidItemsList());
-			getManagedBean().setBidMinDuration(resDTO.getMinDuration());
-			getManagedBean().setBidMaxDuration(resDTO.getMaxDuration());
-			if (resDTO.getScQT().isZonal()) {
-				getManagedBean().setRowSelectedBid(
-						resDTO.getBidSchedules().get(0));
-				getManagedBean().setSelectedBidItem(
-						resDTO.getBidSchedules().get(0).getScBidItems().get(0));
+			if (resDTO.isSuccessful()) {
+				getManagedBean().setScQt(resDTO.getScQT());
+				getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
+				getManagedBean().setScBid(resDTO.getScBid());
+				getManagedBean().setBidItemList(resDTO.getBidItemsList());
+				getManagedBean().setBidMinDuration(resDTO.getMinDuration());
+				getManagedBean().setBidMaxDuration(resDTO.getMaxDuration());
+				if (resDTO.getScQT().isZonal()) {
+					getManagedBean().setRowSelectedBid(
+							resDTO.getBidSchedules().get(0));
+					getManagedBean().setSelectedBidItem(
+							resDTO.getBidSchedules().get(0).getScBidItems().get(0));
+				}
+				if (!(resDTO.getScQT().isZonal())
+						&& ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
+								.getScQtFinalization().getRecommendedTypeId()
+								.getParameterCode())) {
+					getManagedBean().setRowSelectedBid(new ScBidSchedule());
+					getManagedBean().setSelectedBidItem(
+							resDTO.getBidItemsList().get(0));
+				}
+				if (!(resDTO.getScQT().isZonal())
+						&& ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(resDTO
+								.getScQtFinalization().getRecommendedTypeId()
+								.getParameterCode())) {
+					getManagedBean().setSelectedBidItem(
+							resDTO.getBidSchedules().get(0).getScBidItems().get(0));
+				}
+				retrieveParticipantsListAction();
 			}
-			if (!(resDTO.getScQT().isZonal())
-					&& ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
-							.getScQtFinalization().getRecommendedTypeId()
-							.getParameterCode())) {
-				getManagedBean().setRowSelectedBid(new ScBidSchedule());
-				getManagedBean().setSelectedBidItem(
-						resDTO.getBidItemsList().get(0));
-			}
-			if (!(resDTO.getScQT().isZonal())
-					&& ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(resDTO
-							.getScQtFinalization().getRecommendedTypeId()
-							.getParameterCode())) {
-				getManagedBean().setSelectedBidItem(
-						resDTO.getBidSchedules().get(0).getScBidItems().get(0));
-			}
-			retrieveParticipantsListAction();
+		}finally{
+			scheduleBiddingSO = null;
 		}
 	}
 
@@ -643,13 +636,6 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
-	/**
-	 * Listener method to get bid participant list
-	 */
-
-	public void getParticipantsListAction(ScBidSchedule bidSchedule) {
-
-	}
 
 	/**
 	 * Method to calculate Item unit price sub total.
