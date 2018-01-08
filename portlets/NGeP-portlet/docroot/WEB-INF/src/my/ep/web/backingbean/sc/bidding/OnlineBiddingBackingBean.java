@@ -185,14 +185,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 				BigDecimal decremntBlockPercentageRuleValue = new BigDecimal(
 						configRulevalue.getRuleValue());
 				this.setDecrementBlockPercentage(decremntBlockPercentageRuleValue);
-				log.info("%%%%% Decremnt Block Percentage value is : "+decremntBlockPercentageRuleValue);
+				log.debug("%%%%% Decremnt Block Percentage value is : "+decremntBlockPercentageRuleValue);
 				this.setDecrementBlockPopupMessage(ResourceBundleUtils.getMessage(
 						"lbl.sc.bidding.confirm.message",new String[]{this.getDecrementBlockPercentage().toString()},ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-				System.out.println("&&&&&"+ this.getDecrementBlockPopupMessage());
-			
 			}
 		}finally{
-			
+			ruleSO = null;
 		}
 	}
 	
@@ -323,8 +321,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	public void selectedBidChangeListener() throws PortalException,
 			SystemException, IOException {
-		log.info("selectedBidChangeListener");
-
+		log.debug("selectedBidChangeListener");
 		navigateUsingExternalContext(selectedBidScheduleId);
 	}
 
@@ -352,7 +349,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
 								.length());
 
-		log.info("commonUrl" + commonUrl);
+		log.debug("commonUrl" + commonUrl);
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -372,7 +369,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	public void pollListener() throws PortalException, SystemException,
 			IOException {
-		log.info("pollListener - start");
+		log.debug("pollListener - start");
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
 		if (getScBidSchedule().getPmStatus().getStatusId()
@@ -473,12 +470,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 * @param scBidPrice
 	 */
 	public void itemDetialsPopupAction(ScBidPrice scBidPrice) {
-		log.info("itemDetialsPopupAction");
-
+		log.debug("itemDetialsPopupAction");
 		setScBidPrice(scBidPrice);
-		
 		scBidPrice.getScBidSupplierItem().getScBidItem().getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-
 	}
 
 	/**
@@ -490,7 +484,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	public void decrementAmountValueChangeListener(UIComponent component,
 			Object newValue) {
 
-		log.info("decrementAmountValueChangeListener");
+		log.debug("decrementAmountValueChangeListener");
 
 		Object scBidPriceObj = component.getNamingContainer().getAttributes()
 				.get("scBidPrice");
@@ -544,7 +538,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	public void confirmAndSubmitBidPrice(ScBidPrice scBidPrice) {
 
-		log.info("confirmAndSubmitBIdPrice");
+		log.debug("confirmAndSubmitBIdPrice");
 		BigDecimal newPrice = null;
 		Double lastBidpriceTotal = null;
 		Double newBidpriceTotal = null;
@@ -620,7 +614,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 * Action method to update bid price and calculate rank.
 	 */
 	public void updateBidPriceAndCalculateRank() {
-		log.info("updateBidPriceNDcalculateRank");
+		log.debug("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
 		priceItemToPersist = this.getScBidPrice().getNewBidPrice();
 		priceItemToPersist.setBidTotalPrice(TemplateSpecHelper.getInstance().calcTotalAmount(
@@ -670,7 +664,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	public void biddStatusNotificationAction() throws PortalException,
 			SystemException, IOException {
-		log.info("biddStatusNotificationAction");
+		log.debug("biddStatusNotificationAction");
 		navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
 
 	}
@@ -1028,12 +1022,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	public Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
 		if (publishDate == null) {
-			log.info("===========createdDate=====" + createdDate);
 			return createdDate;
 		}
-		log.info("===========publishDate=====" + publishDate);
 		return publishDate;
-
 	}
 
 	/**
