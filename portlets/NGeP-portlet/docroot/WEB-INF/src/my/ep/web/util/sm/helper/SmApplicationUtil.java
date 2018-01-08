@@ -3629,8 +3629,13 @@ public class SmApplicationUtil {
 
 			if (smSupplier.getSmAppl() != null
 					&& !smSupplier.getSmAppl().isQuestionnaire()
-					&& !applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+					&& !StringUtils.isBlank(smSupplier.getSmAppl()
+							.getApplType())
+					&& !smSupplier
+							.getSmAppl()
+							.getApplType()
+							.equalsIgnoreCase(
+									ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 				result = true;
 				throw new EpException(MessageConst.ERROR_722576);
 			}
