@@ -20,7 +20,7 @@
 			</td>
 			<td class="tdContent">
 				<p:selectOneMenu value="#{categoryStatRptBB.managedBean.regStatus}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
 					<f:selectItems value="#{categoryStatRptBB.managedBean.regStatusLs}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true" />
 				</p:selectOneMenu>
