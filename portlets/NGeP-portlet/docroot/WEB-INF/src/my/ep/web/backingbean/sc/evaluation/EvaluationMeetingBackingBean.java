@@ -352,6 +352,7 @@ public class EvaluationMeetingBackingBean extends
 			}
 		} finally {
 			meetingSO = null;
+			qtDetailSo=null;
 		}
 
 	}
@@ -714,13 +715,19 @@ public class EvaluationMeetingBackingBean extends
 	 *            the met req dt o
 	 */
 	private void checkCommitteeFormation(MeetingReqDTO metReqDtO) {
-		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTMeetingSO.class);
+		IQTMeetingSO meetingso ;
+		try{
+			meetingso = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTMeetingSO.class);
 		metReqDtO.setUser(new FacesScopes().getUserSessionBean());
 		metReqDtO.setUserLocale(new FacesScopes().getUserLocale());
 		metReqDtO.setCommitteType(this.getManagedBean().getCommitteeType());
 		meetingso.validateCommitteDtls(metReqDtO);
+		}finally{
+			meetingso =null;
+		}
+		
 	}
 
 	/**
@@ -728,11 +735,11 @@ public class EvaluationMeetingBackingBean extends
 	 * members information.
 	 */
 	public void saveCommitteeAction() {
-
+		IQTMeetingSO meetingso;
 		try {
 			MeetingReqDTO metReqDtO = prepareMeetingDtls();
 			checkCommitteeFormation(metReqDtO);
-			IQTMeetingSO meetingso = BusinessDelegate.getInstance()
+			 meetingso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTMeetingSO.class);
 
@@ -772,7 +779,7 @@ public class EvaluationMeetingBackingBean extends
 													new FacesScopes()
 															.getUserLocale())));
 		} finally {
-
+			meetingso=null;
 		}
 	}
 
@@ -935,8 +942,9 @@ public class EvaluationMeetingBackingBean extends
 		reqDTO.setQtId(scQt.getQtId());
 		reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			 committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO
@@ -954,7 +962,7 @@ public class EvaluationMeetingBackingBean extends
 			}
 
 		} finally {
-
+			committeSO=null;
 		}
 	}
 
@@ -1160,7 +1168,7 @@ public class EvaluationMeetingBackingBean extends
 		 */
 		public ISearchResultBean<ScQt> pageChangeListener(
 				ISearchBean<ScQt> searchBean) {
-
+			IQTDetailSO detailSO;
 			try {
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 
@@ -1373,7 +1381,7 @@ public class EvaluationMeetingBackingBean extends
 				reqDTO.setQtSearchBean(searchBean);
 
 				QuationTenderResDTO dto = null;
-				IQTDetailSO detailSO;
+			
 
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -1386,7 +1394,7 @@ public class EvaluationMeetingBackingBean extends
 					return dto.getQtResultBean();
 				}
 			} finally {
-
+				detailSO=null;
 			}
 
 			return null;
@@ -1518,11 +1526,12 @@ public class EvaluationMeetingBackingBean extends
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
 	public String submitMettingDetails(String outCome) {
+		IQTMeetingSO meetingso;
 		try {
 
 			FacesScopes facesScopes = new FacesScopes();
 
-			IQTMeetingSO meetingso = BusinessDelegate.getInstance()
+			 meetingso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = prepareMeetingDtls();
@@ -1555,7 +1564,7 @@ public class EvaluationMeetingBackingBean extends
 													new FacesScopes()
 															.getUserLocale())));
 		} finally {
-
+			meetingso=null;
 		}
 
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -1804,7 +1813,7 @@ public class EvaluationMeetingBackingBean extends
 			}
 
 		} finally {
-
+			committeSO=null;
 		}
 
 	}
