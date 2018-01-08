@@ -67,12 +67,12 @@ public class QTPublishJob implements Job {
 		debugLogger("Start execute from QTPublishJob @"
 				+ DateUtils.getCurrentDate());
 		//TODO remove before live
-		log.info("Start execute from QTPublishJob @"
+		log.debug("Start execute from QTPublishJob @"
 				+ DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap
 				.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
-		log.info("from execute to publish QT with qtId " + qtId);
+		log.debug("from execute to publish QT with qtId " + qtId);
 
 		try {
 
@@ -90,10 +90,10 @@ public class QTPublishJob implements Job {
 				// skip publish QT call if QT is waiting to sign off pending specchanges.
 				if (!proposalResDTO.isSpecChanged()) {
 					if (proposalResDTO.isSuccessful()) {
-						log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
+						log.debug("$$$$$ qt Work Flow status updated suceessfull for Publish");
 						insertSuppliersAndSendNotification(qtId);
 					} else {
-						log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
+						log.debug("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
 						updateQtAsDisrupted(
 								qtId,
 								QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
@@ -101,11 +101,11 @@ public class QTPublishJob implements Job {
 					}
 				}
 			}else if(qt.getPublishDate().before(getCompareTime())){
-				log.info("$$$$$ qtPublish job executed after the Actual publish time or pulish failed before");
+				log.debug("$$$$$ qtPublish job executed after the Actual publish time or pulish failed before");
 				reSchedulePublicationForPublishFailQt(qtId);
 			}
 		} catch (Exception e) {
-			log.info("$$$$$ qt Work Flow status updated failed for Publish");
+			log.debug("$$$$$ qt Work Flow status updated failed for Publish");
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
 			reSchedulePublicationForPublishFailQt(qtId);
@@ -136,11 +136,11 @@ public class QTPublishJob implements Job {
 						.publishQtAndInsertSuppliers(reqDTO);
 
 				if (resDTO.isSuccessful()) {
-					log.info("$$$$$ Insert Supplier and send notification successful for the QT Id :"
+					log.debug("$$$$$ Insert Supplier and send notification successful for the QT Id :"
 							+ qtId);
 					updateQtPublishBpmTask(qtId);
 				} else {
-					log.info("$$$$$ Insert Supplier and send notification unsuccessful for the QT Id :"
+					log.debug("$$$$$ Insert Supplier and send notification unsuccessful for the QT Id :"
 							+ qtId);
 					updateQtAsDisrupted(
 							qtId,
@@ -149,7 +149,7 @@ public class QTPublishJob implements Job {
 				}
 			}
 		} catch (Exception e) {
-			log.info("$$$$$ Insert Supplier and send notification failed at"
+			log.debug("$$$$$ Insert Supplier and send notification failed at"
 					+ DateUtils.getCurrentDate());
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
@@ -181,17 +181,17 @@ public class QTPublishJob implements Job {
 			NoticeBoardResDTO resDTO = noticeBoardSO
 					.updateBpmForPublishAndProposalClose(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("$$$$$ BPM Update after Publish successful for the QT Id :"
+				log.debug("$$$$$ BPM Update after Publish successful for the QT Id :"
 						+ qtId);
 			} else {
-				log.info("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
+				log.debug("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
 						+ qtId);
 				updateQtAsDisrupted(qtId,
 						QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION,
 						resDTO.getErrorMessage());
 			}
 		} catch (Exception e) {
-			log.info("$$$$$ BPM Update after Publish failed for the QT Id :"
+			log.debug("$$$$$ BPM Update after Publish failed for the QT Id :"
 					+ qtId);
 			String errorMessage = null;
 			e.printStackTrace();
