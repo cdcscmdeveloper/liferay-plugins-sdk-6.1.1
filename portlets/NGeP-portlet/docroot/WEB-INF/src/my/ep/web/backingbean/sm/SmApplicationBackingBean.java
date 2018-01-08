@@ -46,6 +46,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -7855,7 +7856,23 @@ public class SmApplicationBackingBean extends
 			reqDTO.setUserList(getManagedBean().getSupplierToPOList());
 		} else {
 			log.info("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
-			reqDTO.setUserList(new ArrayList<String>());
+			if (this.getManagedBean().getSmAppl().getCreatedBy() != null) {
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getManagedBean().getSmAppl()
+						.getCreatedBy());
+				PmUser user = SmServiceLookup.getUserSO()
+						.retrieveUserByUserId(userReqDTO).getPmUser();
+				if (user == null || StringUtils.isBlank(user.getLoginId())) {
+					throw new EpException(
+							"Internal service error: No user to send to BPM!");
+				} else {
+					reqDTO.setUserList(new ArrayList<String>());
+					reqDTO.getUserList().add(user.getLoginId());
+				}
+			} else {
+				throw new EpException(
+						"Internal service error: No user to send to BPM!");
+			}
 		}
 
 		if (this.getManagedBean()
