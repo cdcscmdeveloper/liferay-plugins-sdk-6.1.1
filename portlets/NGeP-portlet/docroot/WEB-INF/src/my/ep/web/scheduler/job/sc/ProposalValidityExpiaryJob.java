@@ -41,10 +41,10 @@ public class ProposalValidityExpiaryJob implements Job {
 			ProposalResDTO resDTO = qtProposalSO
 					.proposalValidityExpiary(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("%$%$%$ ProposalValidityExpiaryJob job executed successfully @"
+				log.debug("%$%$%$ ProposalValidityExpiaryJob job executed successfully @"
 						+ DateUtils.getCurrentDate());
 			}else{
-				log.info("%$%$%$ ProposalValidityExpiaryJob job execution failed @"
+				log.debug("%$%$%$ ProposalValidityExpiaryJob job execution failed @"
 						+ DateUtils.getCurrentDate());
 			}
 
