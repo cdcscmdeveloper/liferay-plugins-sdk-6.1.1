@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -230,8 +231,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 	private void validate() {
 
 		// validate ic length
-		if (getManagedBean().getIdentificationType().getParameterCode()
-				.equals(SupplierManagementConst.NEW_IC)) {
+		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+		paramReqDTO.setParameterId(getManagedBean().getReactivateBasic()
+				.getNewIdentificationType());
+		PmParameter idno = SmServiceLookup.getParameterSO()
+				.retrieveParameterById(paramReqDTO).getPmParameter();
+		if (idno.getParameterCode().equals(SupplierManagementConst.NEW_IC)) {
 			if (getManagedBean().getReactivateBasic().getNewIdentificationNo()
 					.length() < 12) {
 				throw new EpException(MessageConst.ERROR_722532,
