@@ -174,29 +174,29 @@ public class SmSchedulerServlet extends HttpServlet {
 //								.getProperty(
 //										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_VENDOR_OUTBOUND));
 
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(
-//								SchedulerConstants.GFMAS_ERR_RECEIPT_INFORMATION,
-//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-//						ErrorReceiptInformationJob.class,
-//						SchedulerConstants.GFMAS_SM_RECEIPT_IN_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_ERR_RECEIPT_INFORMATION));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.GFMAS_ERR_RECEIPT_INFORMATION,
+								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+						ErrorReceiptInformationJob.class,
+						SchedulerConstants.GFMAS_SM_RECEIPT_IN_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_ERR_RECEIPT_INFORMATION));
 
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(
-//								SchedulerConstants.GFMAS_RECEIPT_INFORMATION,
-//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-//						ReceiptInformationJob.class,
-//						SchedulerConstants.GFMAS_SM_RECEIPT_OUT_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_RECEIPT_INFORMATION));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.GFMAS_RECEIPT_INFORMATION,
+								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+						ReceiptInformationJob.class,
+						SchedulerConstants.GFMAS_SM_RECEIPT_OUT_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_RECEIPT_INFORMATION));
 
 //		EpSchedulerHelper
 //				.scheduleJob(
