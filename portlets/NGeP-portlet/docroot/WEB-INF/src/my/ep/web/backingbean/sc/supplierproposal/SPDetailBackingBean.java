@@ -206,13 +206,13 @@ public class SPDetailBackingBean extends
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
 			boolean isReadonly) {
 		debugLogger("retrieveProposalChecklistDtls");
-
+		IQTProposalSO proposalSO;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
-
-			ProposalResDTO resDTO = getProposalSO()
+			proposalSO = getProposalSO();
+			ProposalResDTO resDTO = proposalSO
 					.retrieveProposalDtlBySupplierId(reqDTO);
 
 			ScQt scQt = resDTO.getScQt();
@@ -296,6 +296,7 @@ public class SPDetailBackingBean extends
 			}
 
 		} finally {
+			proposalSO = null;
 		}
 	}
 
@@ -1825,36 +1826,43 @@ public class SPDetailBackingBean extends
 	private void uploadAttachmentWithEncryption(String encryptionKey,
 			UploadedFile file, ScAttachment attachment)
 			throws FileNotFoundException, IOException {
-		try {
-			String fileName = file.getFileName();
-			if (fileName.contains("\\")) {
-				int lastIndex = fileName.lastIndexOf("\\");
-				fileName = fileName.substring(lastIndex + 1, fileName.length());
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		try{
+			try {
+				String fileName = file.getFileName();
+				if (fileName.contains("\\")) {
+					int lastIndex = fileName.lastIndexOf("\\");
+					fileName = fileName.substring(lastIndex + 1, fileName.length());
+				}
+				// byte[] fileBytes = file.getContents();
+				fis = (FileInputStream) file.getInputstream();
+				attachment.setFileName(fileName);
+				attachment.setFileDesc("File uploded");
+				populateAttachmentDetails(attachment);
+				fos = new FileOutputStream(getActualFilePath(attachment));
+				// fos.write(fileBytes);
+				BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(
+						encryptionKey);
+				bc.InitEncryptCipher();
+				bc.CBCEncryptFile(fis, fos);
+			} catch (Exception e) {
+				throw new EpException(e.getLocalizedMessage());
 			}
 
-			// byte[] fileBytes = file.getContents();
-			FileInputStream fis = (FileInputStream) file.getInputstream();
-			attachment.setFileName(fileName);
-			attachment.setFileDesc("File uploded");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"The file was uploaded successfully.", null);
 
-			populateAttachmentDetails(attachment);
-
-			FileOutputStream fos;
-			fos = new FileOutputStream(getActualFilePath(attachment));
-			// fos.write(fileBytes);
-			// fos.close();
-			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(
-					encryptionKey);
-			bc.InitEncryptCipher();
-			bc.CBCEncryptFile(fis, fos);
-		} catch (Exception e) {
-			throw new EpException(e.getLocalizedMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}finally{
+			if(fis!=null){
+				fis.close();
+			}
+			if(fos!=null){
+				fos.close();
+			}
 		}
-
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"The file was uploaded successfully.", null);
-
-		FacesContext.getCurrentInstance().addMessage(null, message);
+		
 	}
 
 	/**
@@ -4497,14 +4505,16 @@ public class SPDetailBackingBean extends
 		getManagedBean().setReadOnly(false);
 		ScQtProposal proposal = this.getManagedBean().getQtProposal();
 		proposal.setSubmitted(false);
+		IQTProposalSO proposalSO;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQtProposal(proposal);
-			ProposalResDTO resDTO = getProposalSO()
+			 proposalSO = getProposalSO();
+			ProposalResDTO resDTO = proposalSO
 					.updateQTProposalForReSubmit(reqDTO);
 			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
 		} finally {
-
+			proposalSO = null;
 		}
 	}
 
