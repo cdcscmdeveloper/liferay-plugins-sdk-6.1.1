@@ -54,9 +54,9 @@ public class BidSchedulesPoolingJob implements Job {
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			List<Long> cachedBiddingList = biddingSO.getBiddingListFromCache();
 			if (cachedBiddingList != null && !cachedBiddingList.isEmpty()) {
-				log.info("^^^^^ printing cached bid Id list from job1");
+				log.debug("^^^^^ printing cached bid Id list from job1");
 				for (Long cachedBiddingid : cachedBiddingList) {
-					log.info("^^^^^ cached bid Id from BidSchedulesPoolingJob : "
+					log.debug("^^^^^ cached bid Id from BidSchedulesPoolingJob : "
 							+ cachedBiddingid);
 				}
 			}
@@ -65,7 +65,7 @@ public class BidSchedulesPoolingJob implements Job {
 					.retriveSchedulerJobBidSchedulesList(reqDTO);
 			if (resDTO.isSuccessful()) {
 				if (resDTO.getActiveBidSchedules() != null) {
-					log.info("jobBidSchedulesList size is"
+					log.debug("jobBidSchedulesList size is"
 							+ resDTO.getActiveBidSchedules().size());
 					List<Long> jobBidScheduleIdList = new ArrayList<Long>();
 					if (resDTO.getActiveBidSchedules() != null) {
@@ -77,7 +77,7 @@ public class BidSchedulesPoolingJob implements Job {
 						// to add active bidSchedule id list to cache
 						biddingSO.updateBiddingListToCache(jobBidScheduleIdList);
 					}else{
-						log.info("%$%$%$ Active bid Schedules for next day not found");
+						log.debug("%$%$%$ Active bid Schedules for next day not found");
 					}
 				}
 
