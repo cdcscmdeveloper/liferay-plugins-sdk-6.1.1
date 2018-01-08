@@ -4054,6 +4054,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSpecType(specType);
 		this.getManagedBean().setToBeRemoveList(
+				null);
+		this.getManagedBean().setToBeRemoveList(
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
@@ -4184,6 +4186,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				 this.getManagedBean().setCriteriaType(0);
                  this.getManagedBean().setOtherCriteriaType(0);
 				this.getManagedBean().setCompanyScoreType(null);
+				this.getManagedBean().setCheckListScore(
+						null);
+				this.getManagedBean().setScoringForYears(
+						null);
+				this.getManagedBean().setToBeRemoveList(
+						null);
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setScoringForYears(
@@ -4579,6 +4587,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSpecType(specType);
 		this.getManagedBean().setToBeRemoveList(
+				null);
+		this.getManagedBean().setToBeRemoveList(
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
@@ -4645,12 +4655,18 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				setUserDetails(checkList);
 				 this.getManagedBean().setCriteriaType(0);
                  this.getManagedBean().setOtherCriteriaType(0);
+                 this.getManagedBean().setCheckListScore(
+ 						null);
+ 				this.getManagedBean().setScoringForYears(
+ 						null);
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setScoringForYears(
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setChecklistScoreType(null);
 				this.getManagedBean().setCompanyScoreType(null);
+				this.getManagedBean().setToBeRemoveList(
+						null);
 				this.getManagedBean().setToBeRemoveList(
 						new ArrayList<ScQtCheckListScore>());
 				if (QTConstants.FINANCIAL_GOV_CODE.equalsIgnoreCase(checkList
