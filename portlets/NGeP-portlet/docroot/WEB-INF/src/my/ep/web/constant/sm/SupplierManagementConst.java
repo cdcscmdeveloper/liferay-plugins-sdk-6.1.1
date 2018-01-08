@@ -532,8 +532,14 @@ public class SupplierManagementConst {
 	public static final String PM_CERT_BODY_OTHERS = "PB00010";
 
 	// delete pending application reason
+	public static final List<String> DPA_REASON_OTHERS_LIST = Arrays
+			.asList(new String[] {
+					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS,
+					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1,
+					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2 });
 	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
 	public static final String DPA_REASON_OTHERS_1 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1;
+	public static final String DPA_REASON_OTHERS_2 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2;
 
 	// Pm category facility types
 	public static final long CATEGORY_TYPE_ID_TRANSPORTATION = 203;
