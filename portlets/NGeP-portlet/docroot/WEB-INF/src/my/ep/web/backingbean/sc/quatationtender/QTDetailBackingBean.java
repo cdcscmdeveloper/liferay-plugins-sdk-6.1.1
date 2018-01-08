@@ -2229,6 +2229,7 @@ public class QTDetailBackingBean extends
 
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
+		ICommitteSO committeSO;
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
 			Object payLoad = getManagedBean().getPayLoad();
@@ -2293,7 +2294,7 @@ public class QTDetailBackingBean extends
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
 				
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				 committeSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ICommitteSO.class);
 				updateApprovalRequestDtls(qt.getScQtApprovals(),
@@ -2316,7 +2317,7 @@ public class QTDetailBackingBean extends
 					.equalsIgnoreCase(taskName)) {
 				validateFCSecretaryDtl(qt.getFinalizationCommitte(), qt.getFinalizationSecratery());
 				
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				 committeSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
@@ -2387,6 +2388,7 @@ public class QTDetailBackingBean extends
 			}
 		} finally {
 			detailSO = null;
+			committeSO=null;
 		}
 		return null;
 	}
@@ -2773,7 +2775,7 @@ public class QTDetailBackingBean extends
 				}
 			}
 		} finally {
-
+			QtDetailsSO=null;
 		}
 	}
 	
@@ -2866,6 +2868,7 @@ public class QTDetailBackingBean extends
 				}
 			}
 		} finally {
+			panelSupplierSO=null;
 		}
 	}
 
@@ -3511,6 +3514,7 @@ public class QTDetailBackingBean extends
 			}
 		} finally {
 			committeSO = null;
+			parameterSO=null;
 		}
 		return qtCommitte;
 	}
@@ -4492,7 +4496,7 @@ public class QTDetailBackingBean extends
 			return "/xhtml/sc/quatationtender/cancelqtdetails.xhtml";
 
 		} finally {
-
+			detailSO=null;
 		}
 
 	}
@@ -5782,7 +5786,7 @@ public class QTDetailBackingBean extends
 		}
 		}
 		}finally{
-			
+			meetingso=null;
 		}
 	}
 	
@@ -5931,6 +5935,8 @@ public class QTDetailBackingBean extends
 			updateQtAsDisrupted(qtId,
 					QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION,
 					errorMessage);
+		}finally{
+			noticeBoardSO=null;
 		}
 	}
 
@@ -5970,6 +5976,8 @@ public class QTDetailBackingBean extends
 			}
 			updateQtAsDisrupted(qtId,
 					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION, errorMessage);
+		}finally{
+			noticeBoardSO=null;
 		}
 	}
 	
