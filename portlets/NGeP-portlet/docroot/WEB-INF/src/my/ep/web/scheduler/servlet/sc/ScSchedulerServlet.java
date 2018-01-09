@@ -37,16 +37,16 @@ public class ScSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// Sc Daily job
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.SC_DAILY_JOB,
-//								SchedulerConstants.SC_JOB_GROUP),
-//						BidSchedulesPoolingJob.class,
-//						SchedulerConstants.SC_DAILY_JOB_DESCRIPTION,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.SC_DAILY_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+						BidSchedulesPoolingJob.class,
+						SchedulerConstants.SC_DAILY_JOB_DESCRIPTION,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));
 
 		// daily Job to be run at server startup
 
@@ -57,17 +57,17 @@ public class ScSchedulerServlet extends HttpServlet {
 				SchedulerConstants.SC_DAILY_JOB_DESCRIPTION);
 
 		// Sc Continous job
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
-//								SchedulerConstants.SC_JOB_GROUP),
-//						ContinuousBidSchedulerJob.class,
-//						SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
-//						new JobDataMap(new HashMap<String, List<Long>>()));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+						ContinuousBidSchedulerJob.class,
+						SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
+						new JobDataMap(new HashMap<String, List<Long>>()));
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper
