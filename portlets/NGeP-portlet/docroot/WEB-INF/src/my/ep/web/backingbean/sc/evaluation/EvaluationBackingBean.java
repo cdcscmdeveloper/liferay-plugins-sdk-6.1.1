@@ -3509,6 +3509,8 @@ public class EvaluationBackingBean extends
 				resDTO = evaluationSO
 						.retrieveSpecificationDetailsByProposal(reqDTO);
 				this.getManagedBean().setEvaluationComplianceList(
+						null);
+				this.getManagedBean().setEvaluationComplianceList(
 						new ArrayList<ScQtProposalChecklist>());
 				if (null != resDTO.getComplainceList()
 
@@ -4253,7 +4255,8 @@ public class EvaluationBackingBean extends
 				 * templateSpecBean.setSpecAnswerList(specresDTO1
 				 * .getSpecAnswerList());
 				 */
-
+				this.getManagedBean().setSpecItemScoringList(
+						null);
 				this.getManagedBean().setSpecItemScoringList(
 						new ArrayList<TplSpecScoring>());
 				Map<Long, TplSpecScoring> distinctScoring = new HashMap<Long, TplSpecScoring>();
