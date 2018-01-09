@@ -536,7 +536,8 @@ public class SupplierManagementConst {
 			.asList(new String[] {
 					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS,
 					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1,
-					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2 });
+					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2,
+					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_3});
 	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
 	public static final String DPA_REASON_OTHERS_1 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1;
 	public static final String DPA_REASON_OTHERS_2 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2;
