@@ -3552,6 +3552,8 @@ public class EvaluationBackingBean extends
 				reqDTO.setProposalChecklist(proposalCheckList);
 				resDTO = evaluationSO.retrieveSampleDetails(reqDTO);
 				this.getManagedBean().setTechGovProposalScore(
+						null);
+				this.getManagedBean().setTechGovProposalScore(
 						new ArrayList<ScQtProposalScore>());
 
 				if (resDTO.getItemResultBean().getTotalRecord() > 0) {
@@ -3915,8 +3917,10 @@ public class EvaluationBackingBean extends
 
 					resDTO = evaluationSO
 							.retrieveCheckListScoreNProposalScores(reqDTO);
+					/*this.getManagedBean().setTechGovProposalScore(
+							null);
 					this.getManagedBean().setTechGovProposalScore(
-							new ArrayList<ScQtProposalScore>());
+							new ArrayList<ScQtProposalScore>());*/
 					List<ScQtCheckListScore> technicalStaff = new ArrayList<ScQtCheckListScore>();
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
@@ -4570,9 +4574,10 @@ public class EvaluationBackingBean extends
 
 					resDTO = evaluationSO
 							.retrieveCheckListScoreNProposalScores(reqDTO);
-
+					/*this.getManagedBean().setTechGovProposalScore(
+							null);
 					this.getManagedBean().setTechGovProposalScore(
-							new ArrayList<ScQtProposalScore>());
+							new ArrayList<ScQtProposalScore>());*/
 					List<ScQtCheckListScore> creditFacility = new ArrayList<ScQtCheckListScore>();
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
@@ -4654,8 +4659,10 @@ public class EvaluationBackingBean extends
 
 					resDTO = evaluationSO
 							.retrieveCheckListScoreNProposalScores(reqDTO);
+				/*	this.getManagedBean().setTechGovProposalScore(
+							null);
 					this.getManagedBean().setTechGovProposalScore(
-							new ArrayList<ScQtProposalScore>());
+							new ArrayList<ScQtProposalScore>());*/
 
 					List<ScQtCheckListScore> cashOhHand = new ArrayList<ScQtCheckListScore>();
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
@@ -4742,8 +4749,10 @@ public class EvaluationBackingBean extends
 					reqDTO.setProposalChecklist(proposalCheckList);
 					resDTO = evaluationSO
 							.retrieveCheckListScoreNProposalScores(reqDTO);
+				/*	this.getManagedBean().setTechGovProposalScore(
+							null);
 					this.getManagedBean().setTechGovProposalScore(
-							new ArrayList<ScQtProposalScore>());
+							new ArrayList<ScQtProposalScore>());*/
 					List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
 					List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
