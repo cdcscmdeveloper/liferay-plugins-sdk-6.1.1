@@ -37,7 +37,7 @@ public class ScSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// Sc Daily job
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(SchedulerConstants.SC_DAILY_JOB,
 								SchedulerConstants.SC_JOB_GROUP),
@@ -46,18 +46,17 @@ public class ScSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));*/
 
 		// daily Job to be run at server startup
 
-		EpSchedulerHelper.runJobOnce(new JobKey(
+		/*EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_DAILY_JOB,
-				SchedulerConstants.SC_JOB_GROUP), 
-				BidSchedulesPoolingJob.class,
-				SchedulerConstants.SC_DAILY_JOB_DESCRIPTION);
+				SchedulerConstants.SC_JOB_GROUP), BidSchedulesPoolingJob.class,
+				SchedulerConstants.SC_DAILY_JOB_DESCRIPTION);*/
 
 		// Sc Continous job
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
 								SchedulerConstants.SC_JOB_GROUP),
@@ -67,7 +66,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
-						new JobDataMap(new HashMap<String, List<Long>>()));
+						new JobDataMap(new HashMap<String, List<Long>>()));*/
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper
@@ -94,22 +93,21 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_PROPOSAL_VALIDITY_EXPIRY));
 
-//		EpSchedulerHelper
-//				.scheduleJob(
-//						new JobKey(SchedulerConstants.GFMAS_SST_INFORMATION,
-//								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-//						SSTInformationJob.class,
-//						SchedulerConstants.GFMAS_SC_OUT_JOB_DESC,
-//						SchedulerPropertiesUtils
-//								.getInstance()
-//								.getProperty(
-//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_1GFMAS_SC_OUTBOUND));
+		// EpSchedulerHelper
+		// .scheduleJob(
+		// new JobKey(SchedulerConstants.GFMAS_SST_INFORMATION,
+		// SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+		// SSTInformationJob.class,
+		// SchedulerConstants.GFMAS_SC_OUT_JOB_DESC,
+		// SchedulerPropertiesUtils
+		// .getInstance()
+		// .getProperty(
+		// EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_1GFMAS_SC_OUTBOUND));
 
 		// failover handler Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
-				SchedulerConstants.SC_JOB_GROUP), 
-				ScFailoverHandlerJob.class,
+				SchedulerConstants.SC_JOB_GROUP), ScFailoverHandlerJob.class,
 				SchedulerConstants.SC_FAILOVER_HANDLER_JOB_DESCRIPTION);
 
 		// Sc Qt Publish job
@@ -127,8 +125,7 @@ public class ScSchedulerServlet extends HttpServlet {
 		// Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_QT_PUBLISH_JOB,
-				SchedulerConstants.SC_JOB_GROUP), 
-				QTPublishSchedulingJob.class,
+				SchedulerConstants.SC_JOB_GROUP), QTPublishSchedulingJob.class,
 				SchedulerConstants.SC_QT_PUBLISH_JOB_DESCRIPTION);
 		// Qt Proposal Close job
 
@@ -162,28 +159,28 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
 		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(
-						SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB,
-						SchedulerConstants.SC_JOB_GROUP),
-				TenderPropoValidReminderJob.class,
-				SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION,
-				SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
-		
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+						TenderPropoValidReminderJob.class,
+						SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
+
 		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(
-						SchedulerConstants.SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB,
-						SchedulerConstants.SC_JOB_GROUP),
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
 						BidParticipationReminderJob.class,
-				SchedulerConstants.SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB_DESCRIPTION,
-				SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPCOMING_BIDS_REMINDER));
+						SchedulerConstants.SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB_DESCRIPTION,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPCOMING_BIDS_REMINDER));
 
 	}
 }
