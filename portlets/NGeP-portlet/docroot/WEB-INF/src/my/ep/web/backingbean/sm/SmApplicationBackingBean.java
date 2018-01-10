@@ -6664,8 +6664,6 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 			}
 			getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-			log.info(" **** SUPPORTING DOC MODE ****"
-					+ bpmAppl.getSupportingDocMode());
 
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
@@ -6690,8 +6688,6 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
 
-			log.info(" ****** The task list id ss *********"
-					+ getManagedBean().getTaskId());
 			if (getManagedBean().getTaskId() != null
 					&& !getManagedBean().getTaskId().equalsIgnoreCase("")) {
 				log.info("***** Update the task *******");
@@ -6752,7 +6748,6 @@ public class SmApplicationBackingBean extends
 					PmUser pmUser = new FacesScopes().getUserSessionBean();
 					reqDTO.getUserList().add(pmUser.getLoginId());
 				}
-				log.info("Login user added to the user list to BPM");
 			}
 
 			if (this.getManagedBean().getPmDigiSign() != null) {
@@ -6767,6 +6762,10 @@ public class SmApplicationBackingBean extends
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getCompanyBasicGst());
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
+
+			log.info("supplier declare submit bpmTask for applNo:"
+					+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
+					+ getManagedBean().getTaskId());
 			resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		} finally {
 			regSo = null;
@@ -6815,7 +6814,6 @@ public class SmApplicationBackingBean extends
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateSupportingDocs();
 		} else {
-			log.info("*** Remove unnecessary files for the sm supporting docs **** ");
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
 				if (doc.getSmApplDocFiles() != null
@@ -6849,6 +6847,8 @@ public class SmApplicationBackingBean extends
 
 		}
 
+		log.info("supplier declare applNo:"
+				+ getManagedBean().getSmAppl().getApplNo());
 		initiateSmApplicationTask();
 		String msgConst = "";
 		String urlParam = SmCommonUtil.getBasePortalUrl()
@@ -6862,7 +6862,6 @@ public class SmApplicationBackingBean extends
 		} else {
 			msgConst = MessageConst.INFO_721225;
 		}
-		log.info("Message value === " + msgConst);
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -11268,26 +11267,30 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void validateCategoryOtherDescription() {
-		System.out.println("Selected Category size: "
-				+ this.getManagedBean().getActiveCategoryList().size());
-		for (SmSupplierCategory cat : this.getManagedBean()
-				.getActiveCategoryList()) {
-			if (cat.getPmCategoryL3().getCategoryL3Code().equals("99")) {
-				if (cat.getOtherDesc() == null
-						|| cat.getOtherDesc().trim().length() == 0) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("<br/>")
-							// .append(++i)
-							// .append(".) ")
-							.append(cat.getPmCategoryL1().getCategoryL1Code())
-							.append(cat.getPmCategoryL2().getCategoryL2Code())
-							.append(cat.getPmCategoryL3().getCategoryL3Code());
+		if (!EntityHelper.isCollectionEmpty(this.getManagedBean()
+				.getActiveCategoryList())) {
+			for (SmSupplierCategory cat : this.getManagedBean()
+					.getActiveCategoryList()) {
+				if (cat.getPmCategoryL3().getCategoryL3Code().equals("99")) {
+					if (cat.getOtherDesc() == null
+							|| cat.getOtherDesc().trim().length() == 0) {
+						StringBuilder sb = new StringBuilder();
+						sb.append("<br/>")
+								// .append(++i)
+								// .append(".) ")
+								.append(cat.getPmCategoryL1()
+										.getCategoryL1Code())
+								.append(cat.getPmCategoryL2()
+										.getCategoryL2Code())
+								.append(cat.getPmCategoryL3()
+										.getCategoryL3Code());
 
-					throw new EpException(MessageConst.ERROR_722514,
-							new String[] { sb.toString() });
+						throw new EpException(MessageConst.ERROR_722514,
+								new String[] { sb.toString() });
+					}
 				}
 			}
+			RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 		}
-		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 	}
 }
