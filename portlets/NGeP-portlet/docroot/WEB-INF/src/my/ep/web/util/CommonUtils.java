@@ -190,4 +190,13 @@ public class CommonUtils {
 		}
 		return formattedDate;
 	}
+	
+	/**
+	 * Convert the single quote & double quote to avoid break query issue 
+	 * @param value
+	 * @return String
+	 */
+	public String getQueryString(String value) {
+		return value.replaceAll("'", "''").replaceAll("\"", "\"\"");
+	}
 }
