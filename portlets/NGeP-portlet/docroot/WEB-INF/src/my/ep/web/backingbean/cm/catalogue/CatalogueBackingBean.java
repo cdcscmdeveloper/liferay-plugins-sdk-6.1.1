@@ -5780,6 +5780,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}finally {
 			stateSO = null;
 		}
+		
+		setCatTypeAndTabIndex("XC", 4);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -9016,6 +9018,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}finally {
 			stateSO = null;
 		}
+		setCatTypeAndTabIndex("XC", 4);
 	}
 
 	/**
