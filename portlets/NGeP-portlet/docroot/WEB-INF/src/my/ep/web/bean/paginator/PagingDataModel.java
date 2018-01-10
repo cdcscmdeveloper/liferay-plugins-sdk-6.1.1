@@ -336,7 +336,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		if(log.isDebugEnabled()) {
 			log.debug(message);
 		}
-		log.info(message);
+		//log.info(message);
 	}
 
 	/**
