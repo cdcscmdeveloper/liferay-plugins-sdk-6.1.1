@@ -2243,7 +2243,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					resDTO = unspscSO.searchColorObj(reqDTO);
 					
 					if(resDTO.getColorList()!=null && resDTO.getColorList().size()>0){
-						throw new EpException("Color Name already exist in system. Please check properly");
+						throw new EpException(MessageUtils
+								.getMessage(MessageConst.ERROR_715068, new String[] { ""
+										+ code.getColorName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale()));
 					}
 					
 				}
@@ -2275,7 +2279,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					resDTO = unspscSO.searchBrandObj(reqDTO);
 					
 					if(resDTO.getBrandList()!=null &&resDTO.getBrandList().size()>0){
-						throw new EpException("Brand Name already exist in system. Please check properly");
+						
+						throw new EpException(MessageUtils
+								.getMessage(MessageConst.ERROR_715068, new String[] { ""
+										+ code.getBrandName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale()));
 					}
 					
 				}
@@ -2305,7 +2314,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					resDTO = unspscSO.searchTypeObj(reqDTO);
 					
 					if(resDTO.getTypeList()!=null && resDTO.getTypeList().size()>0){
-						throw new EpException("Type Name already exist in system. Please check properly");
+						throw new EpException(MessageUtils
+								.getMessage(MessageConst.ERROR_715068, new String[] { ""
+										+ code.getTypeName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale()));
 					}
 				}
 
@@ -2339,7 +2352,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					resDTO = unspscSO.searchMeasurementObj(reqDTO);
 					
 					if(resDTO.getMeasurementList()!=null && resDTO.getMeasurementList().size()>0){
-						throw new EpException("Measurement Name already exist in system. Please check properly");
+						throw new EpException(MessageUtils
+								.getMessage(MessageConst.ERROR_715068, new String[] { ""
+										+ code.getMeasurementName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale()));
 					}
 					
 					
@@ -3599,6 +3616,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().getRequestExtCodeList().remove(index);
 
 	}
+	
+	
+	
+
+	
 	
 	
 
