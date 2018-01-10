@@ -495,6 +495,8 @@ public class CreateQtBackingBean extends
 					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
 					 this.getManagedBean()
 						.setDeliveryLocRemoveList(null);
+					 this.getManagedBean().setDeliveryLocBean(
+								null);
 					deleteDeliveryAdreesZoneDetails(scQt);
 				}
 			}
@@ -829,6 +831,8 @@ public class CreateQtBackingBean extends
 					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
 					this.getManagedBean()
 					.setDeliveryLocRemoveList(null);
+					this.getManagedBean().setDeliveryLocBean(
+							null);
 				deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
 				}
 				
@@ -1327,6 +1331,8 @@ public class CreateQtBackingBean extends
 			updateFinacialSpecStatus();
 			 this.getManagedBean()
 				.setDeliveryLocRemoveList(null);
+			 this.getManagedBean().setDeliveryLocBean(
+						null);
 			deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
 			}
 		
@@ -1790,6 +1796,8 @@ public class CreateQtBackingBean extends
 			updateFinacialSpecStatus();
 			this.getManagedBean()
 			.setDeliveryLocRemoveList(null);
+			this.getManagedBean().setDeliveryLocBean(
+					null);
 		deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
 			}
 		}
