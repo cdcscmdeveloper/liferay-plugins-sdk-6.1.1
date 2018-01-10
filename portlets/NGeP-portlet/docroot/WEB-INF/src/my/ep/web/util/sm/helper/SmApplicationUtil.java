@@ -3627,6 +3627,9 @@ public class SmApplicationUtil {
 
 			SmSupplier smSupplier = resDto.getSmSupplier();
 
+			log.info("validate before proceed regNo:" + smSupplier.getRegNo()
+					+ " isBumi:" + smSupplier.isBumi());
+
 			// not allowed to proceed if not answer questionaire except for
 			// bumi application and basic supplier admin role (happen for
 			// expired mof downgrade to basic)
