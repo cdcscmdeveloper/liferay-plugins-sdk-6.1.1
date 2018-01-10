@@ -2230,6 +2230,22 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					code.setColorId(code.getColorNameDD());
 					code.setRequestColor(false);
 
+				}else{
+					
+					
+					ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+					colorFilterBean.setSearchField("colorName");
+					colorFilterBean.setSearchValue(code.getColorName());
+					searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+
+					reqDTO.setColorSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchColorObj(reqDTO);
+					
+					if(resDTO.getColorList()!=null && resDTO.getColorList().size()>0){
+						throw new EpException("Color Name already exist in system. Please check properly");
+					}
+					
 				}
 
 				if (code.getBrandNameDD() != null) {
@@ -2248,6 +2264,20 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					code.setBrandId(code.getBrandNameDD());
 					code.setRequestBrand(false);
 
+				}else{
+					ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
+					brandFilterBean.setSearchField("brandName");
+					brandFilterBean.setSearchValue(code.getBrandName());
+					searchBeanColor.getDataFilterBeans().add(brandFilterBean);
+
+					reqDTO.setBrandSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchBrandObj(reqDTO);
+					
+					if(resDTO.getBrandList()!=null &&resDTO.getBrandList().size()>0){
+						throw new EpException("Brand Name already exist in system. Please check properly");
+					}
+					
 				}
 
 				if (code.getTypeNameDD() != null) {
@@ -2264,6 +2294,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					code.setTypeName(resDTO.getTypeList().get(0).getTypeName());
 					code.setTypeId(code.getTypeNameDD());
 					code.setRequestType(false);
+				}else{
+					ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
+					typeFilterBean.setSearchField("typeName");
+					typeFilterBean.setSearchValue(code.getTypeName());
+					searchBeanColor.getDataFilterBeans().add(typeFilterBean);
+
+					reqDTO.setTypeSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchTypeObj(reqDTO);
+					
+					if(resDTO.getTypeList()!=null && resDTO.getTypeList().size()>0){
+						throw new EpException("Type Name already exist in system. Please check properly");
+					}
 				}
 
 				if (code.getMeasurementNameDD() != null) {
@@ -2283,6 +2326,23 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							.getMeasurementName());
 					code.setMeasurementId(code.getMeasurementNameDD());
 					code.setRequestMeasurement(false);
+				}else{
+					
+					ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
+					measurementFilterBean.setSearchField("measurementName");
+					measurementFilterBean.setSearchValue(code.getMeasurementName());
+					searchBeanColor.getDataFilterBeans().add(
+							measurementFilterBean);
+
+					reqDTO.setMeasurementSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchMeasurementObj(reqDTO);
+					
+					if(resDTO.getMeasurementList()!=null && resDTO.getMeasurementList().size()>0){
+						throw new EpException("Measurement Name already exist in system. Please check properly");
+					}
+					
+					
 				}
 
 				reqDTO.getRequestExtList().add(code);
@@ -2295,9 +2355,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		reqDTO.setOutCome(action);
 		reqDTO.setToken(token);
 		reqDTO.setPojo(obj);
-
-		log.info("getCodeCommittees" + reqDTO.getCodeCommittees());
-		log.info("consensus" + reqDTO.isConsensus());
 
 		log.info("action" + action);
 
