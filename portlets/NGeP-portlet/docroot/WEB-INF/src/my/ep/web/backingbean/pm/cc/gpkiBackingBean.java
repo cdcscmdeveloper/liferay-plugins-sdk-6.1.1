@@ -16,6 +16,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -113,17 +114,28 @@ public class gpkiBackingBean implements Serializable {
 				
 				String[] split = subjectDN.split(",");
 				String icNo = "";
+				String snicNo = "";
 				for(int i =0; i<split.length; i++){
 					if(split[i].contains("SERIALNUMBER")){
 						System.out.println(""+split[i]);
 						String icno = split[i];
 						System.out.println(""+icno.substring(icno.indexOf("=")+1, icno.length()));	
 						icNo = icno.substring(icno.indexOf("=")+1, icno.length());
+					}
+					
+					if(split[i].contains("SN")){
+						System.out.println(""+split[i]);
+						String snicno = split[i];
+						System.out.println(""+snicno.substring(snicno.indexOf("=")+1, snicno.length()));	
+						snicNo = snicno.substring(snicno.indexOf("=")+1, snicno.length());
+					}
+					
+					if (StringUtils.isNotBlank(icNo) && StringUtils.isNotBlank(snicNo)) {
 						break;
 					}	
 				}
-
-				if (icNo.equals(resDTO.getPmUser().getIdentificationNo())) {
+				 
+				if (icNo.equals(resDTO.getPmUser().getIdentificationNo()) || snicNo.equals(resDTO.getPmUser().getIdentificationNo())) {
 					pmDigiSign.setCreatedBy(userId);
 					pmDigiSign.setCreatedDate(date);
 					pmDigiSign.setOriginalData(textBeforeSign);
