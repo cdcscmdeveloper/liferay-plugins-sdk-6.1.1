@@ -3627,6 +3627,17 @@ public class SmApplicationUtil {
 
 			SmSupplier smSupplier = resDto.getSmSupplier();
 
+			// not allowed to proceed if not answer questionaire except for
+			// bumi application and basic supplier admin role (happen for
+			// expired mof downgrade to basic)
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			SmPersonnel suppAdmin = null;
+			if (userId != null
+					&& smSupplier.getSmAppl().getSmPersonnels() != null) {
+				suppAdmin = (SmPersonnel) EntityHelper
+						.getEntityBySinglePropertyFromList(userId, smSupplier
+								.getSmAppl().getSmPersonnels(), "pmUser");
+			}
 			if (smSupplier.getSmAppl() != null
 					&& !smSupplier.getSmAppl().isQuestionnaire()
 					&& !StringUtils.isBlank(smSupplier.getSmAppl()
@@ -3635,7 +3646,11 @@ public class SmApplicationUtil {
 							.getSmAppl()
 							.getApplType()
 							.equalsIgnoreCase(
-									ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+									ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+					&& suppAdmin != null
+					&& !StringUtils.isBlank(suppAdmin.getEpRole())
+					&& !suppAdmin.getEpRole().equals(
+							RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 				result = true;
 				throw new EpException(MessageConst.ERROR_722576);
 			}
