@@ -493,6 +493,9 @@ public class CreateQtBackingBean extends
 						&& "SC".equalsIgnoreCase(this.getManagedBean()
 								.getLoginRoleType())) {
 					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+					 this.getManagedBean()
+						.setDeliveryLocRemoveList(null);
+					deleteDeliveryAdreesZoneDetails(scQt);
 				}
 			}
 		}
@@ -824,6 +827,9 @@ public class CreateQtBackingBean extends
 						&& "SC".equalsIgnoreCase(this.getManagedBean()
 								.getLoginRoleType()) && scQt.isZonal()) {
 					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+					this.getManagedBean()
+					.setDeliveryLocRemoveList(null);
+				deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
 				}
 				
 			}
@@ -1319,6 +1325,9 @@ public class CreateQtBackingBean extends
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
 							.getLoginRoleType())) {
 			updateFinacialSpecStatus();
+			 this.getManagedBean()
+				.setDeliveryLocRemoveList(null);
+			deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
 			}
 		
 		}
@@ -1779,6 +1788,9 @@ public class CreateQtBackingBean extends
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
 							.getLoginRoleType())) {
 			updateFinacialSpecStatus();
+			this.getManagedBean()
+			.setDeliveryLocRemoveList(null);
+		deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
 			}
 		}
 		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
@@ -2083,6 +2095,19 @@ public class CreateQtBackingBean extends
 	 */
 	public void panelConformationDelete() {
 		setDataNull();
+		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
+				.getScQtSupplierCriteria();
+		if (null != zoneSupplierCriteria
+				&& zoneSupplierCriteria.isBrandNew() == false && null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+			if (null != this.getManagedBean().getLoginRoleType()
+					&& !"".equals(this.getManagedBean().getLoginRoleType())
+					&& "SC".equalsIgnoreCase(this.getManagedBean()
+							.getLoginRoleType())) {
+				 this.getManagedBean()
+					.setDeliveryLocRemoveList(null);
+		deleteDeliveryAdreesZoneDetails(getManagedBean().getQt());
+			}
+		}
 		removespecDtls();
 		
 		ScQt scQt = this.getManagedBean().getQt();
