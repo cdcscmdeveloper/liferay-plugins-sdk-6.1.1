@@ -2213,7 +2213,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							reqDTO.setColorSearchBean(searchBeanColor);
 	
 							resDTO = unspscSO.searchColorObj(reqDTO);
-	
+							
+							RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
 							if(resDTO.getColorList()!=null && resDTO.getColorList().size()>0){
 								throw new EpException(MessageUtils
 										.getMessage(MessageConst.ERROR_715068, new String[] { ""
@@ -2254,6 +2255,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	
 							if(resDTO.getBrandList()!=null &&resDTO.getBrandList().size()>0){
 	
+								RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
 								throw new EpException(MessageUtils
 										.getMessage(MessageConst.ERROR_715068, new String[] { ""
 												+ code.getBrandName() },
@@ -2290,6 +2292,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	
 							resDTO = unspscSO.searchTypeObj(reqDTO);
 	
+							RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
 							if(resDTO.getTypeList()!=null && resDTO.getTypeList().size()>0){
 								throw new EpException(MessageUtils
 										.getMessage(MessageConst.ERROR_715068, new String[] { ""
@@ -2330,6 +2333,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	
 							resDTO = unspscSO.searchMeasurementObj(reqDTO);
 	
+							RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
 							if(resDTO.getMeasurementList()!=null && resDTO.getMeasurementList().size()>0){
 								throw new EpException(MessageUtils
 										.getMessage(MessageConst.ERROR_715068, new String[] { ""
