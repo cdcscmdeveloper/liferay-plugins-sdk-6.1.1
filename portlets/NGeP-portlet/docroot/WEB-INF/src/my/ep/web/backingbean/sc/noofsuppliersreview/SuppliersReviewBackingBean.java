@@ -77,6 +77,11 @@ public class SuppliersReviewBackingBean extends
 		} else {
 			new LogKey(1L);
 		}
+		SuppliersReviewSearchBean	 suppliserSearchBean=this.getManagedBean().getSuppliersReviewSearchBean();
+		if(null==suppliserSearchBean){
+			this.getManagedBean().setSuppliersReviewSearchBean(new SuppliersReviewSearchBean());
+			retrievePmStateList();
+		}
 
 	}
 
