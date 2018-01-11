@@ -1305,12 +1305,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel payPersonnel : getManagedBean()
 					.getSoftCertPayList()) {
+				log.info("payPersonnel: " + payPersonnel.getName() + " : " + payPersonnel.getIdentificationNo());
+				log.info("login Personnel: " + getManagedBean().getLoginUserPersonnelInfo().getName() + " : " + getManagedBean().getLoginUserPersonnelInfo().getIdentificationNo());
+				
 				if (getManagedBean().getLoginUserPersonnelInfo() != null
 						&& !getManagedBean()
 								.getLoginUserPersonnelInfo()
-								.getIdentificationNo()
+								.getIdentificationNo().trim()
 								.equalsIgnoreCase(
-										payPersonnel.getIdentificationNo())) {
+										payPersonnel.getIdentificationNo().trim())) {
 					applyForOthers = true;
 				}
 			}
