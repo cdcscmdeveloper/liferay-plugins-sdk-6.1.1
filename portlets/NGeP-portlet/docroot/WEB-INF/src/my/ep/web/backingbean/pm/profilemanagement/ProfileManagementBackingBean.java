@@ -3507,7 +3507,29 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);
 
 			}
-			fillUserInfoFromUserOrg(user, userOrg);
+			
+			//Having other active user org?
+			boolean deactivateRequired = true;
+			//if inactive user org, check whether the user has another active user org.
+			if (!user.isBrandNew() && userOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				List<PmUserOrg> userOrgs = PmCommonUtil.retrieveAllUserOrg(user.getUserId());
+				if (userOrgs != null && !userOrgs.isEmpty()) {
+					for (PmUserOrg uo : userOrgs) {
+						if (uo.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+								&& !uo.getUserOrgId().equals(userOrg.getUserOrgId())) {
+							deactivateRequired = false;
+							break;
+						}
+					}
+				}
+			}
+			logger.info("deactivateRequired : " + deactivateRequired);
+			reqDTO.setDeactivateRequired(deactivateRequired);
+			
+			if(deactivateRequired){
+				fillUserInfoFromUserOrg(user, userOrg);
+			}
+			
 
 			if (isNewUser) {
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
@@ -3544,21 +3566,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())) {
 				reqDTO.setSupplierUser(true);
 			}
-			boolean deactivateRequired = true;
-			if (!user.isBrandNew() && userOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				List<PmUserOrg> userOrgs = PmCommonUtil.retrieveAllUserOrg(user.getUserId());
-				if (userOrgs != null && !userOrgs.isEmpty()) {
-					for (PmUserOrg uo : userOrgs) {
-						if (uo.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
-								&& !uo.getUserOrgId().equals(userOrg.getUserOrgId())) {
-							deactivateRequired = false;
-							break;
-						}
-					}
-				}
-			}
-			logger.info("deactivateRequired : " + deactivateRequired);
-			reqDTO.setDeactivateRequired(deactivateRequired);
+			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
