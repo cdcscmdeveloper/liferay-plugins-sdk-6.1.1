@@ -547,8 +547,9 @@ public class QTCommitteBackingBean extends
 		reqDTO.setCommitteeType(this.getManagedBean().getCommType());
 		reqDTO.setQtId(scQt.getQtId());
 		CommitteResDTO resDTO = new CommitteResDTO();
+		ICommitteSO committeSO =null;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO
@@ -563,6 +564,7 @@ public class QTCommitteBackingBean extends
 						resDTO.getCommMemberResultBean().getResultList());
 			}
 		} finally {
+			committeSO =null;
 		}
 	}
 
@@ -691,8 +693,9 @@ public class QTCommitteBackingBean extends
 		}
 		reqDTO.setCommitteeTypes(committeeTypes);
 		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO =null;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			 committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO.retrieveCommittesByQtId(reqDTO);
@@ -706,6 +709,7 @@ public class QTCommitteBackingBean extends
 						searchcommitteeNode);
 			}
 		} finally {
+			committeSO =null;
 
 		}
 	}
@@ -2315,6 +2319,7 @@ public class QTCommitteBackingBean extends
 				committeeType=	paramDesc.getCodeName();
 			}
 		}
+		parameterSo = null;
 		return committeeType;
 	}
 	
@@ -2402,6 +2407,7 @@ public class QTCommitteBackingBean extends
 			committeReqDTO.setApprovalFlow(true);
 		}
 		committeSO.validateEvaluationMethodMembers(committeReqDTO);
+		committeSO =null;
 	}
 	
 	/**
