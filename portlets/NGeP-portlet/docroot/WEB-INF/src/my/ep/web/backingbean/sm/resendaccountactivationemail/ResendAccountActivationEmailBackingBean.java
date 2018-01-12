@@ -121,8 +121,7 @@ public class ResendAccountActivationEmailBackingBean extends
 							suppAdminIdentificationNo)
 							&& selectedPersonnel
 									.getRecordStatusFlg()
-									.equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-							&& expiredActivationDate.after(today)) {
+									.equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
 						RequestContext.getCurrentInstance().execute(
 								"confirmDialog.show();");
 
