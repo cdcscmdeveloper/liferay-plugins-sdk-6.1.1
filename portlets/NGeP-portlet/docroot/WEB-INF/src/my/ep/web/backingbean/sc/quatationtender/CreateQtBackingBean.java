@@ -215,6 +215,7 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().setQt(resDTO.getScQt());
 		this.getManagedBean().setScQtCheckSt2techProposal(null);
 		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+		specSO=null;
 	}
 	/**
 	 * Panel conformation.change panel(Yes/No) radion button in business owner.
@@ -1174,7 +1175,8 @@ public class CreateQtBackingBean extends
 					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
 			this.getManagedBean().setStatecode(locationLevelCode);
 		} finally {
-
+			 parameterSo = null;
+			 countrySo = null;
 		}
 
 	}
@@ -1282,7 +1284,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setAutoUpdate(false);
 			RequestContext.getCurrentInstance().execute("ZoneGeneral.show()");
 		} finally {
-
+			 countrySo = null;
 		}
 
 	}
@@ -2038,6 +2040,7 @@ public class CreateQtBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 								e.getMessage()));
 			}
+			orgProfile=null;
 			return items;
 			// return getDropdownCodeValues(committeeRole);
 		}
