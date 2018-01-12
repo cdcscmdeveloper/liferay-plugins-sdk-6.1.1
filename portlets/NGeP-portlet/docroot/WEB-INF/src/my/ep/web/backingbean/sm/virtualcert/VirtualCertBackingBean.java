@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.virtualcert;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -233,8 +234,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		OutputStream out = null;
 		
 		try {
-			URLConnection uc = new URL(filePath).openConnection();
-			docInputStream = new BufferedInputStream(uc.getInputStream());
+//			URLConnection uc = new URL(filePath).openConnection();
+			docInputStream = new FileInputStream(filePath);
 			
 			out = response.getOutputStream();
 			byte[] buffer = new byte[4096];
