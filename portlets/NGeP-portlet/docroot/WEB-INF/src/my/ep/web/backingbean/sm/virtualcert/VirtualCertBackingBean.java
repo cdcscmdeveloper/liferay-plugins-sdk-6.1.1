@@ -1,15 +1,24 @@
 package my.ep.web.backingbean.sm.virtualcert;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -21,6 +30,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
@@ -31,6 +41,8 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "virtualCertBackingBean")
 @RequestScoped
@@ -179,15 +191,66 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 * @throws IOException
 	 */
 	public void printVirtualCert(SmMofCert cert) throws IOException{
-		if(cert.getFileName() != null || cert.getFilePath() != null){
-			String file = cert.getFilePath() + "/" + cert.getFileName();
-			commonDownload(file,cert.getFileName());
-		}else{
-			SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
-					SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
-					SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
-			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
-			commonDownload(newfile,mofCert.getFileName());
+		try {
+			if(cert.getFileName() != null || cert.getFilePath() != null){
+				String file = cert.getFilePath() + "/" + cert.getFileName();
+				commonDownloadWithReturnException(file,cert.getFileName());
+			}else{
+				SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
+						SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
+						SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
+				String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
+				commonDownloadWithReturnException(newfile,mofCert.getFileName());
+			}
+		} catch(MalformedURLException mue) {
+			cert.setFileName(null);
+			cert.setFilePath(null);
+			SmVirtualCertHelper.getInstance().updateMOFCertFilePath(cert);
+		}
+	}
+	
+	
+	public void commonDownloadWithReturnException(String filePath, String displayFileName) throws IOException{
+		
+		String basePath = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath = basePath + "/" + filePath;
+		
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
+		
+		InputStream docInputStream = null;
+		OutputStream out = null;
+		
+		try {
+			URLConnection uc = new URL(filePath).openConnection();
+			docInputStream = new BufferedInputStream(uc.getInputStream());
+			
+			out = response.getOutputStream();
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = docInputStream.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+			out.close();
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (docInputStream != null) {
+				docInputStream.close();	
+			}
 		}
 	}
 
