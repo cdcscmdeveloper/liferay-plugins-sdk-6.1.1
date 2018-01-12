@@ -137,8 +137,10 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void retrievePmStateList() {
 		debugLogger("retrievePmStateList");
-		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+		ICountrySO countrySo = null;
+		try{
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 		if (null == this.getManagedBean().getStates()) {
 			CountryReqDTO countryReqDTo = new CountryReqDTO();
 			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
@@ -151,6 +153,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			this.getManagedBean().setStates(stateList);
 		}
 		retrievePmDivisions();
+		}finally{
+			countrySo = null;	
+		}
 	}
 
 	/**
@@ -158,6 +163,8 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
+		IDistrictSO reqSO = null;
+		try{
 		if (null != this.getManagedBean().getQtBriefing()) {
 			this.getManagedBean().setDistricts(null);
 
@@ -170,7 +177,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			if (!this.getManagedBean().isState() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
-				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
+				 reqSO = (IDistrictSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDistrictSO.class);
@@ -181,7 +188,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			} else if (divisionId != null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setDivisionId(divisionId);
-				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
+				 reqSO = (IDistrictSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDistrictSO.class);
@@ -192,6 +199,9 @@ public class QTBriefingSiteVisitBackingBean extends
 
 		}
 		retrievePmCityList();
+		}finally{
+			reqSO = null;	
+		}
 	}
 
 	/**
@@ -199,6 +209,8 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void retrievePmCityList() {
 		this.getManagedBean().setCitys(null);
+		ICitySO reqSO =null;
+		try{
 		if (null != this.getManagedBean().getQtBriefing()) {
 			Long districtId = this.getManagedBean().getQtBriefing()
 					.getAddress().getPmDistrict().getDistrictId();
@@ -206,12 +218,15 @@ public class QTBriefingSiteVisitBackingBean extends
 			if (null != districtId) {
 				CityReqDTO reqDTO = new CityReqDTO();
 				reqDTO.setDistrictId(districtId);
-				ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				 reqSO = (ICitySO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								ICitySO.class);
 				CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 				this.getManagedBean().setCitys(resDTO.getCityList());
 			}
+		}
+		}finally{
+			reqSO =null;	
 		}
 	}
 
@@ -503,10 +518,11 @@ public class QTBriefingSiteVisitBackingBean extends
 
 		List<ScQtBsvAttendance> attanedList = briefingRegistration
 				.getBsvAttendance();
-		
+		IQTBriefingSO briefingSO =null;
+		try{
 		if (null == attanedList && null != briefingRegistration
 				&& null != briefingRegistration.getBsvRegistrationId()) {
-			IQTBriefingSO briefingSO = BusinessDelegate.getInstance()
+			 briefingSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
@@ -521,13 +537,13 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		if (null == attanedList || attanedList.isEmpty()) {
 			attanedList = new ArrayList<ScQtBsvAttendance>();
-			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
+			briefingSO  = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			reqDTO.setSupplierId(briefingRegistration.getSupplier()
 					.getSupplierId());
-			BriefingResDTO resDTO = bsvSo
+			BriefingResDTO resDTO = briefingSO
 					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
 			List<SmPersonnel> personals = resDTO.getPersonals();
 			log.debug("Personal list size**************" + personals.size());
@@ -552,6 +568,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		this.getManagedBean().getSelectedbriefRegistration()
 			.setBsvAttendance(attanedList);
+		}finally{
+			briefingSO=null;	
+		}
 	}
 
 	/**
