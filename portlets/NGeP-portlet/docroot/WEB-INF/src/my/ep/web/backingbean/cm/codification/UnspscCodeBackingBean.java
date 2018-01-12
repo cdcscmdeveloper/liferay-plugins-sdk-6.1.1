@@ -2204,7 +2204,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 					}else{
 
-						if(!action.equalsIgnoreCase("PUBLISH") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
 							ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 							colorFilterBean.setSearchField("colorName");
 							colorFilterBean.setSearchValue(code.getColorName());
@@ -2243,7 +2243,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						code.setRequestBrand(false);
 
 					}else{
-						if(!action.equalsIgnoreCase("PUBLISH") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
 							ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
 							brandFilterBean.setSearchField("brandName");
 							brandFilterBean.setSearchValue(code.getBrandName());
@@ -2282,7 +2282,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						code.setRequestType(false);
 					}else{
 						
-						if(!action.equalsIgnoreCase("PUBLISH") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
 							ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
 							typeFilterBean.setSearchField("typeName");
 							typeFilterBean.setSearchValue(code.getTypeName());
@@ -2322,7 +2322,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						code.setRequestMeasurement(false);
 					}else{
 
-						if(!action.equalsIgnoreCase("PUBLISH") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
 							ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
 							measurementFilterBean.setSearchField("measurementName");
 							measurementFilterBean.setSearchValue(code.getMeasurementName());
