@@ -436,7 +436,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The cat type filter bean. */
 	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(
-			SearchOperator.OPERATOR_EQUALS.value());
+			SearchOperator.OPERATOR_EQUALS.value(), "XC");
 	
 	private boolean g2gFlag = false;
 
@@ -447,7 +447,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String uploadDir = EpPropertiesUtils.getInstance().getProperty(
 			EpPropertiesConst.UPLOAD_URL);
 
-	private int resultTabActiveIndex;
+	private int resultTabActiveIndex = 4;
 
 	private Long itemToDelete;
 
