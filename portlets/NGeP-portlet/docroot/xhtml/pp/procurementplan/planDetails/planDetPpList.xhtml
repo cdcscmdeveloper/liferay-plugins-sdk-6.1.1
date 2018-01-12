@@ -97,7 +97,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
         		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
         			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
 					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
-			 		style="width: 95%;" maxlength="1000" required="#{!empty param['disableValidation']}">
+			 		style="width: 95%;" maxlength="200" required="#{!empty param['disableValidation']}">
 			 		<p:ajax event="change" process="@this" />
 		 		</p:inputTextarea>
 		 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
