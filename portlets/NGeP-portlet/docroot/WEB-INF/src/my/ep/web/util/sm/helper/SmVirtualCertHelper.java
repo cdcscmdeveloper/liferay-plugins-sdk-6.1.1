@@ -203,7 +203,7 @@ public class SmVirtualCertHelper {
 		return paramMap;
 	}
 	
-	private SmMofCert updateMOFCertFilePath(SmMofCert mofCert){
+	public SmMofCert updateMOFCertFilePath(SmMofCert mofCert){
 		IVirtualCertSO virtualCertSO = SmServiceLookup.getVirtualCertSO();
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setMofCert(mofCert);
