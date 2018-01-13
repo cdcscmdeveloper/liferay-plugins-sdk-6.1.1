@@ -4557,14 +4557,27 @@ public class SmCommonUtil {
 			for (SmApplRejectReason rej : rejectReasons) {
 				if (rej.getPmReason() != null
 						&& rej.getPmReason().getPmReasonDescs() != null) {
+					
 					try {
 						for (PmReasonDesc desc : rej.getPmReason()
 								.getPmReasonDescs()) {
+
 							if (desc.getPmLanguage() != null
 									&& desc.getPmLanguage().getLanguageCode()
 											.equalsIgnoreCase("en")) {
-								sbEng.append(i + ") " + desc.getReasonDesc())
-										.append("<br />");
+								sbEng.append(i + ") " + desc.getReasonDesc());
+								
+								if (rej.getPmReason() != null
+										&& !StringUtils.isBlank(rej.getPmReason().getReasonCode())
+										&& SupplierManagementConst.DPA_REASON_OTHERS_LIST
+												.contains(rej.getPmReason().getReasonCode())) {
+
+									String remark = SmApplicationUtil.getSmRemarksByDocTypeAndId(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT, rej.getSmAppl().getApplId());
+									sbEng.append(" - ");
+									sbEng.append(remark);
+								}
+								
+								sbEng.append("<br />");
 							} else {
 								sbMs.append(i + ") " + desc.getReasonDesc())
 										.append("<br />");
