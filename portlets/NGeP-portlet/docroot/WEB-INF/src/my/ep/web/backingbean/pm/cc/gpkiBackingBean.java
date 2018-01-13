@@ -115,6 +115,8 @@ public class gpkiBackingBean implements Serializable {
 				String[] split = subjectDN.split(",");
 				String icNo = "";
 				String snicNo = "";
+				String surnameIcNo = "";
+				
 				for(int i =0; i<split.length; i++){
 					if(split[i].contains("SERIALNUMBER")){
 						System.out.println(""+split[i]);
@@ -130,12 +132,18 @@ public class gpkiBackingBean implements Serializable {
 						snicNo = snicno.substring(snicno.indexOf("=")+1, snicno.length());
 					}
 					
-					if (StringUtils.isNotBlank(icNo) && StringUtils.isNotBlank(snicNo)) {
-						break;
-					}	
+					if(split[i].contains("SURNAME")){
+						System.out.println(""+split[i]);
+						String surnameIcno = split[i];
+						System.out.println(""+surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length()));	
+						surnameIcNo = surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length());
+					}
+	
 				}
 				 
-				if (icNo.equals(resDTO.getPmUser().getIdentificationNo()) || snicNo.equals(resDTO.getPmUser().getIdentificationNo())) {
+				if (icNo.equals(resDTO.getPmUser().getIdentificationNo()) || 
+						snicNo.equals(resDTO.getPmUser().getIdentificationNo()) ||
+							surnameIcNo.equals(resDTO.getPmUser().getIdentificationNo())) {
 					pmDigiSign.setCreatedBy(userId);
 					pmDigiSign.setCreatedDate(date);
 					pmDigiSign.setOriginalData(textBeforeSign);
