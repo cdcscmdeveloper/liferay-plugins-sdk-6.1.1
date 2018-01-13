@@ -72,6 +72,7 @@ public class ViewApplHistoryBackingBean extends
 			getManagedBean().getTrackingDiary().setTrackingDiaryParam(
 					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
 					getManagedBean().getSmAppl().getApplId(), false);
+			getManagedBean().getTrackingDiary().getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
 		}
 	}
 
@@ -264,6 +265,7 @@ public class ViewApplHistoryBackingBean extends
 			getRegistrationBackingBean().getManagedBean().setViewMode(true);
 			getRegistrationBackingBean().viewOnlineAccount();
 		} else {
+			getManagedBean().setTabActiveIndex(0);
 			viewApplication(smAppl);
 			initBumiRecommendNote();
 			initVirtualCert();
