@@ -83,16 +83,14 @@ public class SmCustomerServiceBackingBean extends
 			mofStatus = SmCommonUtil.getMessage("lbl.sm.mof.status.deleted",
 					null);
 		} else {
-			if (getManagedBean().getSmMofAccount() != null
-					|| getManagedBean().getSmMofCert() != null) {
-				if (getManagedBean().getSmMofAccount() != null) {
-					if (getManagedBean().getSmMofAccount().getExpDate()
-							.after(new Date())) {
-						mofStatus = SmCommonUtil.getMessage(
-								"lbl.sm.mof.status.expired", null);
-					}
-				} else if (getManagedBean().getSmMofCert() != null) {
-
+			Date currDate = new Date();
+			if (getManagedBean().getSmMofAccount() != null) {
+				if (currDate.after(getManagedBean().getSmMofAccount()
+						.getExpDate())) {
+					mofStatus = SmCommonUtil.getMessage(
+							"lbl.sm.mof.status.expired", null);
+				} else {
+					mofStatus = SmCommonUtil.getMessage("lbl.txt.active", null);
 				}
 			}
 		}
@@ -152,7 +150,7 @@ public class SmCustomerServiceBackingBean extends
 	 * Perform search supplier application history
 	 */
 	public void search() {
-		if(getManagedBean().isSearchCriteriaEmpty()){
+		if (getManagedBean().isSearchCriteriaEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -180,12 +178,12 @@ public class SmCustomerServiceBackingBean extends
 	 */
 	private void retrieveSupplierCatalogueStatusCountBySupplierId(
 			Long supplierId) {
-		
+
 		getManagedBean().setNoOfCatApproved(0);
 		getManagedBean().setNoOfCatRejected(0);
 		getManagedBean().setNoOfCatExpired(0);
 		getManagedBean().setNoOfCatPublished(0);
-		
+
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		reqDTO.setSupplierId(supplierId);
 
