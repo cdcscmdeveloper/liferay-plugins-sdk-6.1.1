@@ -265,6 +265,8 @@ public class SuppliersReviewBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770005);
+		}finally{
+			suppliersReviewSO=null;
 		}
 
 	}
