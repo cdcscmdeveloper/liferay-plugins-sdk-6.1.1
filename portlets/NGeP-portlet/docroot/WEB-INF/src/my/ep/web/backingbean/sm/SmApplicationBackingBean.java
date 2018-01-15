@@ -1203,6 +1203,12 @@ public class SmApplicationBackingBean extends
 				.retrieveDowngradeMofAcc(reqDTO).getMofAccount();
 		getManagedBean().setDowngradeMofAcc(downgradeMofAcc);
 
+		// init mof account
+		getManagedBean().setMofAccount(
+				SmCommonUtil.getMofAccountBySuppIdAndSuppType(getManagedBean()
+						.getSmSupplier().getSupplierId(), getManagedBean()
+						.getSmAppl().getSupplierType()));
+
 		// init GST information
 		initGst();
 
@@ -4401,8 +4407,17 @@ public class SmApplicationBackingBean extends
 		cancelCalDate.setTime(cancelDate);
 		cancelCalDate.add(Calendar.YEAR, SmRuleHelper.getInstance()
 				.getYearsAllowedToAddDeletedCatCode());
+
 		if (new Date().after(cancelCalDate.getTime())) {
 			retVal = true;
+		} else {
+			if (getManagedBean().getMofAccount() != null
+					&& getManagedBean().getMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& getManagedBean().getMofAccount().getEffDate() != null
+					&& getManagedBean().getMofAccount().getEffDate()
+							.after(cancelDate)) {
+				retVal = true;
+			}
 		}
 		return retVal;
 	}
