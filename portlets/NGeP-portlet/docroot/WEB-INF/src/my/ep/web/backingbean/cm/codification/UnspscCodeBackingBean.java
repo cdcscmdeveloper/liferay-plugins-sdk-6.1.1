@@ -96,6 +96,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean measurementFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
+	
+	
+	
+	private SearchFilterBean unspscIdFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
 
 	public UnspscCodeBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -2180,6 +2185,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
 		Object obj = res.getPojo();
 
+		CodificationReqDTO reqUnspscDTO = new CodificationReqDTO();
+		
+		
 		
 
 			if (this.getManagedBean().getReviewExtCodeList() != null
@@ -2187,6 +2195,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				for (CmRequestCode code : this.getManagedBean()
 						.getReviewExtCodeList()) {
+					
+					
+					reqUnspscDTO.setUnspscCode(code.getTempCode());
+					CodificationResDTO unspscDTO = unspscSO.searchUnspscObj(reqUnspscDTO);
+					
+					long unspscId = unspscDTO.getUnspscObj().getUnspscId();
+					
+					
 
 					if (code.getColorNameDD() != null) {
 						ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
@@ -2204,7 +2220,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 					}else{
 
-						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin() && code.isRequestColor()){
 							ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 							colorFilterBean.setSearchField("colorName");
 							colorFilterBean.setSearchValue(code.getColorName());
@@ -2243,11 +2259,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						code.setRequestBrand(false);
 
 					}else{
-						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin() && code.isRequestBrand()){
 							ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
 							brandFilterBean.setSearchField("brandName");
 							brandFilterBean.setSearchValue(code.getBrandName());
 							searchBeanColor.getDataFilterBeans().add(brandFilterBean);
+							
+							
+							unspscIdFilterBean.setSearchField("unspscId.unspscId");
+							unspscIdFilterBean.setSearchValue(unspscId);
+							searchBeanColor.getDataFilterBeans().add(unspscIdFilterBean);
 	
 							reqDTO.setBrandSearchBean(searchBeanColor);
 	
@@ -2282,11 +2303,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						code.setRequestType(false);
 					}else{
 						
-						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin() && code.isRequestType()){
 							ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
 							typeFilterBean.setSearchField("typeName");
 							typeFilterBean.setSearchValue(code.getTypeName());
 							searchBeanColor.getDataFilterBeans().add(typeFilterBean);
+							
+							
+							unspscIdFilterBean.setSearchField("unspscId.unspscId");
+							unspscIdFilterBean.setSearchValue(unspscId);
+							searchBeanColor.getDataFilterBeans().add(unspscIdFilterBean);
+							
 	
 							reqDTO.setTypeSearchBean(searchBeanColor);
 	
@@ -2322,12 +2349,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						code.setRequestMeasurement(false);
 					}else{
 
-						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()){
+						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()&& code.isRequestMeasurement()){
 							ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
 							measurementFilterBean.setSearchField("measurementName");
 							measurementFilterBean.setSearchValue(code.getMeasurementName());
-							searchBeanColor.getDataFilterBeans().add(
-									measurementFilterBean);
+							searchBeanColor.getDataFilterBeans().add(measurementFilterBean);
+							
+							
+							unspscIdFilterBean.setSearchField("unspscId.unspscId");
+							unspscIdFilterBean.setSearchValue(unspscId);
+							searchBeanColor.getDataFilterBeans().add(unspscIdFilterBean);
 	
 							reqDTO.setMeasurementSearchBean(searchBeanColor);
 	
@@ -3601,6 +3632,22 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().getRequestExtCodeList().remove(index);
 
 	}
+
+	/**
+	 * @return the unspscIdFilterBean
+	 */
+	public SearchFilterBean getUnspscIdFilterBean() {
+		return unspscIdFilterBean;
+	}
+
+	/**
+	 * @param unspscIdFilterBean the unspscIdFilterBean to set
+	 */
+	public void setUnspscIdFilterBean(SearchFilterBean unspscIdFilterBean) {
+		this.unspscIdFilterBean = unspscIdFilterBean;
+	}
+	
+	
 
 
 
