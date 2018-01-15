@@ -111,7 +111,7 @@ public class SuppliersReviewBackingBean extends
 	 * Pre loading suppliers review.
 	 */
 	public void preLoadingSuppliersReview() {
-		log.info("preLoadingSuppliersReview method");
+		log.debug("preLoadingSuppliersReview method");
 		this.resetSuppliersReviewSearchBean();
 		retrievePmStateList();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -161,11 +161,13 @@ public class SuppliersReviewBackingBean extends
 	public List<PmState> retrievePmStateList() {
 
 		debugLogger("in retrievePmStateList");
-
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+		IStateSO stateSO =null;
+		List<PmState> stateList = null;
+         try{
+		 stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
-		List<PmState> stateList = new ArrayList<PmState>();
+		 stateList = new ArrayList<PmState>();
 		StateResDTO stateResDTO = stateSO.retrievePmStateList();
 		for (PmState pmState : stateResDTO.getStateList()) {
 			if (!pmState.getStateName().contains(ParameterConst.PM_STATE_VALUE)) {
@@ -174,6 +176,9 @@ public class SuppliersReviewBackingBean extends
 		}
 		this.getManagedBean().getSuppliersReviewSearchBean()
 				.setStatesList(stateList);
+         }finally{
+        	 stateSO =null; 
+         }
 		return stateList;
 	}
 
