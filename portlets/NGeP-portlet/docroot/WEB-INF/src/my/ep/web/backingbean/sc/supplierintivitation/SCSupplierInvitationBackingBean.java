@@ -100,7 +100,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	 */
 	public void preRenderView() {
 		
-		log.info("preRenderView");
+		log.debug("preRenderView");
 		
 		supplierInvitationModel.reloadData();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -225,7 +225,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			externalContext.redirect(navigationUrl.toString());
-			log.info("getNavigationUrl =="+navigationUrl.toString());
+			log.debug("getNavigationUrl =="+navigationUrl.toString());
 		} catch (IOException e) {
 			log.error(e);
 		} catch (PortalException e) {
@@ -334,7 +334,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	public Long retriveParameterId(String type){
 		IParameterSO parameterSo=null;
 		Long returnId=0L;
-		log.info("====type ==="+type);
+		log.debug("====type ==="+type);
 		try{
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -347,7 +347,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				returnId=invitationTyperesDTO.getPmParameter().getParameterId();
 				
 			}
-			log.info("====returnId ==="+returnId);
+			log.debug("====returnId ==="+returnId);
 			
 		}finally{
 			parameterSo=null;
