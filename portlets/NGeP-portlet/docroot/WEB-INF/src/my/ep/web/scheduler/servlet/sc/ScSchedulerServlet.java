@@ -104,12 +104,6 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_1GFMAS_SC_OUTBOUND));
 
-		// failover handler Job to be run at server startup
-		boolean sucess = EpSchedulerHelper.runJobOnce(new JobKey(
-				SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
-				SchedulerConstants.SC_JOB_GROUP), ScFailoverHandlerJob.class,
-				SchedulerConstants.SC_FAILOVER_HANDLER_JOB_DESCRIPTION);
-		log.info("+++++ ScFailoverHandlerJob triggred successfully? "+sucess);
 
 		// Sc Qt Publish job
 		EpSchedulerHelper
@@ -182,6 +176,13 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPCOMING_BIDS_REMINDER));
+		
+		// failover handler Job to be run at server startup
+				boolean success = EpSchedulerHelper.runJobOnce(new JobKey(
+						SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
+						SchedulerConstants.SC_JOB_GROUP), ScFailoverHandlerJob.class,
+						SchedulerConstants.SC_FAILOVER_HANDLER_JOB_DESCRIPTION);
+				log.info("+++++ ScFailoverHandlerJob triggred successfully? "+success);
 
 	}
 }
