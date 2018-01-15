@@ -370,7 +370,7 @@ public class BSVAttendanceBackingBean extends
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
-
+			qTBriefingSO = null;
 		}
 		return null;
 
@@ -574,6 +574,8 @@ public class BSVAttendanceBackingBean extends
 							"Unable to process now", ""
 
 					));
+		}finally{
+			briefingSO=null;
 		}
 		return null;
 	}
@@ -921,10 +923,11 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 
 		List<ScQtBsvAttendance> attanedList = briefingRegistration
 				.getBsvAttendance();
-
+		IQTBriefingSO briefingSO =null;
+		try{
 		if (null == attanedList && null != briefingRegistration
 				&& null != briefingRegistration.getBsvRegistrationId()) {
-			IQTBriefingSO briefingSO = BusinessDelegate.getInstance()
+			 briefingSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
@@ -939,13 +942,13 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 
 		if (null == attanedList || attanedList.isEmpty()) {
 			attanedList = new ArrayList<ScQtBsvAttendance>();
-			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
+			briefingSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			reqDTO.setSupplierId(briefingRegistration.getSupplier()
 					.getSupplierId());
-			BriefingResDTO resDTO = bsvSo
+			BriefingResDTO resDTO = briefingSO
 					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
 			List<SmPersonnel> personals = resDTO.getPersonals();
 			log.debug("Personal list size**************" + personals.size());
@@ -967,7 +970,10 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				attanedList.add(briefingAttendance);
 			}
 		}
-
+		}finally{
+			briefingSO=null;	
+		}
+		
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(attanedList);
 
