@@ -369,16 +369,21 @@ public class NoticeBoardBackingBean extends
 	 */
 	public List<PmOrgProfile> retriveOrgProfilesForMinistryLevel() {
 		
-		log.info("populate Ministry List");
-
+		log.debug("populate Ministry List");
+		IOrgProfileSO orgProfileSO =null;
+		OrgProfileResDTO resDTO ;
+          try{
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 		// reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+		 orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
-		OrgProfileResDTO resDTO = orgProfileSO
+		 resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(reqDTO);
+          }finally{
+        	  orgProfileSO=null;  
+          }
 
 		return resDTO.getOrgProfileList();
 
@@ -390,8 +395,9 @@ public class NoticeBoardBackingBean extends
 	public void retriveLocationByStates() {
 
 		if (this.getManagedBean().getLocationRootNode() == null) {
+			IStateSO stateSO =null;
 			try {
-				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				 stateSO = (IStateSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
 				StateReqDTO reqDTO = new StateReqDTO();
@@ -412,6 +418,7 @@ public class NoticeBoardBackingBean extends
 					this.getManagedBean().setLocationRootNode(node);
 				}
 			} finally {
+				stateSO =null;
 			}
 
 		}
@@ -587,14 +594,15 @@ public class NoticeBoardBackingBean extends
 	public void onNodeExpand(NodeExpandEvent event) {
 
 		Object obj = event.getTreeNode().getData();
-
+		IDistrictSO districtSO;
+        try{
 		if (event.getTreeNode().getChildCount() <= 0) {
 
 			if (obj instanceof PmState) {
 				this.getManagedBean().setLocationSearchBean(null);
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(((PmState) obj).getStateId());
-				IDistrictSO districtSO = BusinessDelegate.getInstance()
+				 districtSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDistrictSO.class);
 				DistrictResDTO resDTO = districtSO
@@ -608,6 +616,9 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 		}
+        }finally{
+        	districtSO=null;
+        }
 	}
 
 	/**
@@ -1048,6 +1059,7 @@ public class NoticeBoardBackingBean extends
 			
 			
 		} finally {
+			qtNoticeBoardSO = null;
 		}
 		return PRICE_SCHEDULE_PAGE;
 	}
@@ -1127,7 +1139,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setProposalURL(proposalURL.toString());
 			}
 		} finally {
-
+			boardSO = null;
 		}
 
 	}
@@ -1137,7 +1149,8 @@ public class NoticeBoardBackingBean extends
 	 * populate list of department.
 	 * */
 	public void handleMinistryProfileChanged() {
-
+		IOrgProfileSO orgProfileSO =null;
+      try{
 		Long parentOrgProfileId = this.getManagedBean().getMinistryProfile()
 				.getOrgProfileId();
 		if (parentOrgProfileId != null) {
@@ -1145,7 +1158,7 @@ public class NoticeBoardBackingBean extends
 			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+			 orgProfileSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
@@ -1157,6 +1170,9 @@ public class NoticeBoardBackingBean extends
 		}
 
 		this.getManagedBean().getPtjProfile().setOrgProfileId(null);
+      }finally{
+    	  orgProfileSO=null;  
+      }
 
 	}
 
@@ -1553,10 +1569,11 @@ public class NoticeBoardBackingBean extends
 	 *        the instance of TabChangeEvent
 	 */
 	public void offeredPriceTabChange(TabChangeEvent changeEvent) {
-
+		IQTNoticeBoardSO qtNoticeBoardSO;
+       try{
 		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
+		 qtNoticeBoardSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTNoticeBoardSO.class);
 		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -1568,6 +1585,9 @@ public class NoticeBoardBackingBean extends
 
 		this.getManagedBean().setQualificationBean(
 				resDTO.getQualificationBean());
+       }finally{
+    	    qtNoticeBoardSO=null;
+       }
 
 	}
 
@@ -1783,7 +1803,7 @@ public class NoticeBoardBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760185);
 		}
-
+		qtBriefingSO=null;
 	}
 
 	/**
@@ -1870,6 +1890,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setAwardedItems(awardedItemList);
 			
 		} finally {
+			qtNoticeBoardSO = null;
 		}
 
 		return VIEW_AWARD_SUPP_PAGE;
@@ -2300,6 +2321,8 @@ public class NoticeBoardBackingBean extends
 				}
 				bsvRegistration.setBsvAttendance(bsvAttandances);
 				scQtBsvDtl.setTempRegistration(bsvRegistration);
+				briefingSO=null;
+				supplierSearchSo=null;
 			}
 			setSlectedHeaderName(null);
 			this.getManagedBean().setBriefingDtls(scQtBsvDtl);
@@ -2664,9 +2687,11 @@ public class NoticeBoardBackingBean extends
 	 */
 	private boolean hasSupplierRegisterAlready(ScQtBsvDtl bsvDetail, boolean isContain) {
 		
-		IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTBriefingSO.class);
+		IQTBriefingSO briefingSO;
+		try{
+			 briefingSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
 		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 		briefingReqDTO.setQtBriefingId(bsvDetail.getQtBsvDtlId());
 		briefingReqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
@@ -2697,6 +2722,9 @@ public class NoticeBoardBackingBean extends
 			}
 		} else {
 			isContain = false;
+		}
+		}finally{
+			briefingSO=null;
 		}
 		return isContain;
 	}
@@ -3005,10 +3033,10 @@ public class NoticeBoardBackingBean extends
 	 */
 	public SelectItem[] getMinistryDropdown() {		
 		SelectItem[] items = null;
-
+		IOrgProfileSO orgProfileSO;
 		try {
 			int i = 1;
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+			 orgProfileSO = (IOrgProfileSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
@@ -3034,6 +3062,8 @@ public class NoticeBoardBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
+		}finally{
+			orgProfileSO=null;
 		}
 		return null;
 	}
@@ -3045,12 +3075,12 @@ public class NoticeBoardBackingBean extends
 	 */
 	public SelectItem[] getJabatanDropdown() {		
 		SelectItem[] items = null;
-
+		IOrgProfileSO orgProfileSO;
 		try {
 			int i = 1;
 			if (getManagedBean().getMinistryProfile() != null
 					&& getManagedBean().getMinistryProfile().getOrgProfileId() != null) {
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				 orgProfileSO = (IOrgProfileSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
@@ -3082,6 +3112,8 @@ public class NoticeBoardBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
+		}finally{
+			orgProfileSO=null;
 		}
 		return null;
 	}
@@ -3093,12 +3125,12 @@ public class NoticeBoardBackingBean extends
 	 */
 	public SelectItem[] getPTJDropdown() {		
 		SelectItem[] items = null;
-
+		IOrgProfileSO orgProfileSO;
 		try {
 			int i = 1;
 			if (getManagedBean().getPtjGroupProfile() != null
 					&& getManagedBean().getPtjGroupProfile().getOrgProfileId() != null) {
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				 orgProfileSO = (IOrgProfileSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
@@ -3130,6 +3162,8 @@ public class NoticeBoardBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
+		}finally{
+			orgProfileSO=null;
 		}
 		return null;
 	}
