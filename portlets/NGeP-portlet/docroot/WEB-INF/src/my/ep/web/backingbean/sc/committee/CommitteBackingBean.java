@@ -648,9 +648,10 @@ public class CommitteBackingBean extends
 										.getCommitteeType().getParameterCode());
 		
 		CommitteResDTO resDTO = null;
+		ICommitteSO committeSo = null;
 
 		try {
-			ICommitteSO committeSo = BusinessDelegate.getInstance()
+			 committeSo = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSo.updateCommitteDetails(committeReqDTO);
@@ -697,7 +698,7 @@ public class CommitteBackingBean extends
 				}
 			}
 		} finally {
-
+			committeSo = null;
 		}
 		return null;
 	}
@@ -890,6 +891,7 @@ public class CommitteBackingBean extends
 						committeeRemarks);
 
 			} finally {
+				committeSO=null;
 			}
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
@@ -943,6 +945,7 @@ public class CommitteBackingBean extends
 				this.getManagedBean().setCommitteeQTDataModel(
 						new committeeQTPagingDataModel("qtDetailsId", getManagedBean().getScCommittee()));
 			} finally {
+				committeSO=null;
 			}
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
@@ -981,6 +984,7 @@ public class CommitteBackingBean extends
 				this.getManagedBean().setQtCommittee(qtCommitte);
 				this.getManagedBean().setScCommittee(qtCommitte.getScCommittee());
 			} finally {
+				committeSO=null;
 			}
 			// showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
@@ -1228,8 +1232,9 @@ public class CommitteBackingBean extends
 		 */
 		reqDTO.setQtId(scQt.getQtId());
 		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO =null;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			 committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO
@@ -1248,7 +1253,7 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setCloneCommitteMemebers(commMembers);
 			
 		} finally{
-			
+			committeSO =null;
 		}
 	}
 
@@ -1274,6 +1279,7 @@ public class CommitteBackingBean extends
 		 * this.getManagedBean().getQt().getScQtCommittees
 		 * ().get(0).getScCommittee().getCommitteStatus().getStatusId());
 		 */
+		detailSO=null;
 		System.out.println("ProcurementMode : "
 				+ this.getManagedBean().getQt().getProcurementMode());
 	}
@@ -2061,6 +2067,7 @@ public class CommitteBackingBean extends
 						.getParentOrgProfile());
 
 		}
+		iUserSO=null;
 		getManagedBean().setMinstryList(minstryProfiles);
 		getManagedBean().setCommitteMember(committeeMember);
 
@@ -2154,6 +2161,7 @@ public class CommitteBackingBean extends
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(reqDTO);
 		this.getManagedBean().setMinstryList(resDTO.getOrgProfileList());
+		orgProfileSO=null;
 
 	}
 
