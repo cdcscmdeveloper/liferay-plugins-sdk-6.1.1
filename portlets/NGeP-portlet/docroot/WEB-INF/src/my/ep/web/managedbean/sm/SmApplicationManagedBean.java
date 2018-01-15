@@ -181,6 +181,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmPersonnel selectedShareHolder;
 	private SmPersonnel selectedPrevShareHolder;
 	private SmMofAccount downgradeMofAcc;
+	private SmMofAccount mofAccount;
 
 	private List<SmStaffExperience> selectedShrHldrJobFunctions;
 	private SmStaffExperience selectedJobFunction;
@@ -3984,5 +3985,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDowngradeMofAcc(SmMofAccount downgradeMofAcc) {
 		this.downgradeMofAcc = downgradeMofAcc;
+	}
+
+	public SmMofAccount getMofAccount() {
+		return mofAccount;
+	}
+
+	public void setMofAccount(SmMofAccount mofAccount) {
+		this.mofAccount = mofAccount;
 	}
 }
