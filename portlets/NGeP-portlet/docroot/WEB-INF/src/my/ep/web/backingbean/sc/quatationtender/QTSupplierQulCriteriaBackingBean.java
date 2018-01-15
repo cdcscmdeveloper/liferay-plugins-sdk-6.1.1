@@ -817,6 +817,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			// this.getManagedBean().setIndex(i);
 		} finally {
 			parameterSo = null;
+			countrySo = null;
 		}
 	}
 
@@ -891,7 +892,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 			RequestContext.getCurrentInstance().execute("ZoneLocation.show()");
 		} finally {
-
+			countrySo = null;
 		}
 	}
 
