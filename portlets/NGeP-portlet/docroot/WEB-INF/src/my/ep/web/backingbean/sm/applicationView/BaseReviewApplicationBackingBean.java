@@ -490,9 +490,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		if (getManagedBean().isViewSupplierProfile()) {
 			getManagedBean().setSmMofCert(getMofCert());
-			if (getManagedBean().getSmMofCert() == null) {
-				getManagedBean().setSmMofAccount(getSingleSmMofAccount());
-			}
+			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		}
 		// init current regsitration status description
 		PmStatusDesc statusDesc = SmApplicationUtil
