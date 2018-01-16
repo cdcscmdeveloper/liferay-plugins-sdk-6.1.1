@@ -6816,8 +6816,6 @@ public class SmApplicationUtil {
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
 						.getEpRole().equalsIgnoreCase(
 								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
-						|| (personnel.isPrevApprovedDirector() || personnel
-								.isPrevApprovedEquityOwner())
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
 					iterator.remove();
 				}
