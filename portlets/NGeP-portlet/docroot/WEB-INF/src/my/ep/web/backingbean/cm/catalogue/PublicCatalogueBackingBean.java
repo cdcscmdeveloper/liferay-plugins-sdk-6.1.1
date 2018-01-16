@@ -133,6 +133,14 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 			throw new EpException(MessageConst.ERROR_716008);
 		}
+		
+		if(this.getManagedBean().getItemName() != null && this.getManagedBean().getItemName().trim().length()>0){
+
+			if(this.getManagedBean().getItemName().trim().length()<2){
+				throw new EpException(MessageConst.ERROR_716019);
+			}
+		}
+		
 
 
 		this.getManagedBean().setCatalogueList(null);
