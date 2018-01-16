@@ -185,7 +185,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void searchNoticeBoard() {
 		
-		log.info("*** searchNoticeBoard **** ");
+		log.debug("*** searchNoticeBoard **** ");
 		qtDataModel.reloadData();
 	}
 
@@ -197,7 +197,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void onTabChange(TabChangeEvent event) {
 		
-		log.info("*** TabChange Event **** ");
+		log.debug("*** TabChange Event **** ");
 		PmParameterDesc desc = (PmParameterDesc) event.getData();
 		this.getManagedBean().setSelectedTab(
 				desc.getPmParameter().getParameterCode());
@@ -213,7 +213,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void retrieveQTDetails(Long qtId) {
 		
-		log.info("** Qtn / TenderDetsils **");
+		log.debug("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage(MAIN_PAGE);
@@ -428,7 +428,7 @@ public class NoticeBoardBackingBean extends
 	 * Cancel button for Notice Board
 	 */
 	public void backBtn() {
-		log.info("** Back Button **");
+		log.debug("** Back Button **");
 		this.getManagedBean().setMofNumber(null);
 		this.getManagedBean().setCompanyName(null);
 		String pageUrl = "/xhtml/sc/noticeboard/resultview/"
@@ -447,7 +447,7 @@ public class NoticeBoardBackingBean extends
 	 * return the quotation tender details page.
 	 */
 	public String qtnTenderDocs() {
-		log.info("** qtnTenderDocs **");
+		log.debug("** qtnTenderDocs **");
 		this.getManagedBean().setTabIndex(2);
 		return NAV_TO_QTN_TENDER_DETAILS_PAGE;
 	}
@@ -459,7 +459,7 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 */
 	public void hideFields(String sectionName, String day) {
-		log.info("inside update date field");
+		log.debug("inside update date field");
 		if (NoticeBoardSection.PUBLISHDETAILS.name().equalsIgnoreCase(
 				sectionName)) {
 			if (day.equalsIgnoreCase("today")) {
@@ -504,7 +504,7 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 */
 	public void showFields(String sectionName, String day) {
-		log.info("inside show date field");
+		log.debug("inside show date field");
 		if (NoticeBoardSection.PUBLISHDETAILS.name().equalsIgnoreCase(
 				sectionName)) {
 			this.getManagedBean().setPublishSearchDataBean(
@@ -572,7 +572,7 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 */
 	public void onNodeCollapse(NodeCollapseEvent event) {
-		System.out.println("collapse @@@@@@@@@@@@@ " + event.getTreeNode());
+		log.debug("collapse @@@@@@@@@@@@@ " + event.getTreeNode());
 	}
 
 	/**
@@ -582,7 +582,7 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 */
 	public void onNodeUnselect(NodeUnselectEvent event) {
-		System.out.println("unselect @@@@@@@@@@@@@ " + event.getTreeNode());
+		log.debug("unselect @@@@@@@@@@@@@ " + event.getTreeNode());
 	}
 
 	/**
@@ -1905,7 +1905,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
 
-		log.info("downloadAllQTDocuments in Notice Board");
+		log.debug("downloadAllQTDocuments in Notice Board");
 		IQTDocumentSO qtDocumentSO;
 		QTDocumentResDTO resDTO = null;
 		List<ScQtDocReport> scQtDocReports = null;
@@ -2062,7 +2062,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
 		
-		log.info("** download Report  in NOtice Board**");
+		log.debug("** download Report  in NOtice Board**");
 		downloadFile(scQtDocReport.getScQtDocReportAttachment());
 	}
 

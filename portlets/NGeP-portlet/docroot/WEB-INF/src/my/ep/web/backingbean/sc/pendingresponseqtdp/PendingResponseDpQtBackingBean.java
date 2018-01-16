@@ -59,239 +59,254 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "pendingResponseDpQtBB")
 @RequestScoped
 public class PendingResponseDpQtBackingBean extends
-SourcingBaseBackingBean<PendingResponseDpQtManagedBean> {
+		SourcingBaseBackingBean<PendingResponseDpQtManagedBean> {
 	/** The Constant log. */
 	private static final Logger log = EpLogger
-			.getLogger(PendingResponseDpQtBackingBean.class);	
-	
-	
-	
-public PendingResponseDpQtBackingBean(){
-		
-}
-@PostConstruct	
-public void init(){
-	
-}
+			.getLogger(PendingResponseDpQtBackingBean.class);
 
-private void searchQuotationTenderCount(String type){
-	log.info("start searchQuotationTenderCount"+type);
-	ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
-	// BSV
-	ISearchBean<Object[]> searchBean=new SearchBean<Object[]>();
-		
+	public PendingResponseDpQtBackingBean() {
+
+	}
+
+	@PostConstruct
+	public void init() {
+
+	}
+
+	private void searchQuotationTenderCount(String type) {
+		log.debug("start searchQuotationTenderCount" + type);
+		ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
+		// BSV
+		ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
+
 		PmParameter parameter = getParameterByTypeAndCode(
-				ParameterTypeConst.SC_PROCUREMENT_MODE,type);
+				ParameterTypeConst.SC_PROCUREMENT_MODE, type);
 		// QT Proposal
 		reqDTO.setStatusId(QTStatusConst.QT_PROPOSAL_PREPARATION);
-		reqDTO.setParameterId(parameter != null?parameter.getParameterId():null);
-	
-	
-	ISCSupplierInvitationSO invitationSO = null;
-	ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
-	try {
-		invitationSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
-		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		if(userId != null){
-			reqDTO.setUserId(userId);
-			reqDTO.setSearchBean(searchBean);
-			resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
-			if(null!=resDTO.getSupplierInvitationList() && null!=resDTO.getSupplierInvitationList().getResultList()){
-				if(SourcingConstants.SIT_QUOTATION.equalsIgnoreCase(type)){
-				this.getManagedBean().setQuotationCount(resDTO.getSupplierInvitationList().getResultList().size());
-				}else if(SourcingConstants.SIT_TENDER.equalsIgnoreCase(type)){
-					this.getManagedBean().setTenderCount(resDTO.getSupplierInvitationList().getResultList().size());
+		reqDTO.setParameterId(parameter != null ? parameter.getParameterId()
+				: null);
+
+		ISCSupplierInvitationSO invitationSO = null;
+		ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
+		try {
+			invitationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION,
+					ISCSupplierInvitationSO.class);
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			if (userId != null) {
+				reqDTO.setUserId(userId);
+				reqDTO.setSearchBean(searchBean);
+				resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
+				if (null != resDTO.getSupplierInvitationList()
+						&& null != resDTO.getSupplierInvitationList()
+								.getResultList()) {
+					if (SourcingConstants.SIT_QUOTATION.equalsIgnoreCase(type)) {
+						this.getManagedBean().setQuotationCount(
+								resDTO.getSupplierInvitationList()
+										.getResultList().size());
+					} else if (SourcingConstants.SIT_TENDER
+							.equalsIgnoreCase(type)) {
+						this.getManagedBean().setTenderCount(
+								resDTO.getSupplierInvitationList()
+										.getResultList().size());
+					}
+
 				}
-				
 			}
+			log.debug("end searchQuotationTenderCount" + type);
+		} finally {
+			invitationSO = null;
 		}
-		log.info("end searchQuotationTenderCount"+type);
-	} finally{
-		invitationSO = null;
 	}
-}
 
+	private void searchBriefingSiteVisitCount() {
+		log.debug("start searchBriefingSiteVisitCount");
+		ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
+		// BSV
+		ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
 
-private void searchBriefingSiteVisitCount(){
-	log.info("start searchBriefingSiteVisitCount");
-	ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
-	// BSV
-	ISearchBean<Object[]> searchBean=new SearchBean<Object[]>();
-		
-	reqDTO.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
-	
-	ISCSupplierInvitationSO invitationSO = null;
-	ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
-	try {
-		invitationSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
-		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		if(userId != null){
-			reqDTO.setUserId(userId);
-			reqDTO.setSearchBean(searchBean);
-			resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
-			if(null!=resDTO.getSupplierInvitationList() && null!=resDTO.getSupplierInvitationList().getResultList()){
-					this.getManagedBean().setBriefingSiteVisitCount(resDTO.getSupplierInvitationList().getResultList().size());
-					
+		reqDTO.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+
+		ISCSupplierInvitationSO invitationSO = null;
+		ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
+		try {
+			invitationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION,
+					ISCSupplierInvitationSO.class);
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			if (userId != null) {
+				reqDTO.setUserId(userId);
+				reqDTO.setSearchBean(searchBean);
+				resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
+				if (null != resDTO.getSupplierInvitationList()
+						&& null != resDTO.getSupplierInvitationList()
+								.getResultList()) {
+					this.getManagedBean().setBriefingSiteVisitCount(
+							resDTO.getSupplierInvitationList().getResultList()
+									.size());
+
 				}
-				
-			}
-		log.info("end searchBriefingSiteVisitCount");
-		
-	} finally{
-		invitationSO = null;
-	}
-}
 
-private void searchBiddingCount(){
-	log.info("start searchBiddingCount");
-	ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
-	// BSV
-	ISearchBean<Object[]> searchBean=new SearchBean<Object[]>();
-		
-	List<Long> bidStatusIds = new ArrayList<Long>();
-	bidStatusIds.add(QTStatusConst.SF_PENDING_BIDDING);
-	searchBean.getDataFilterBeans().add(
-			new SearchFilterBean("bidStatus.STATUS_ID",
-					SearchOperator.OPERATOR_IN.value(), bidStatusIds));
-	
-	searchBean.getDataFilterBeans().add(
-			new SearchFilterBean("bidschedule.END_DATE",
-					SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
-					
-	searchBean.getSortColumns().add(
-			new SearchOrderBean(
-					"to_char(bidschedule.START_DATE,'yyyy-MM-dd')", false));
-	
-	ISCSupplierInvitationSO invitationSO = null;
-	ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
-	try {
-		invitationSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
-		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		if(userId != null){
-			reqDTO.setUserId(userId);
-			reqDTO.setSearchBean(searchBean);
-			resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
-			if(null!=resDTO.getSupplierInvitationList() && null!=resDTO.getSupplierInvitationList().getResultList()){
-					this.getManagedBean().setBiddingCount(resDTO.getSupplierInvitationList().getResultList().size());
+			}
+			log.debug("end searchBriefingSiteVisitCount");
+
+		} finally {
+			invitationSO = null;
+		}
+	}
+
+	private void searchBiddingCount() {
+		log.debug("start searchBiddingCount");
+		ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
+		// BSV
+		ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
+
+		List<Long> bidStatusIds = new ArrayList<Long>();
+		bidStatusIds.add(QTStatusConst.SF_PENDING_BIDDING);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("bidStatus.STATUS_ID",
+						SearchOperator.OPERATOR_IN.value(), bidStatusIds));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("bidschedule.END_DATE",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+						new Date()));
+
+		searchBean.getSortColumns().add(
+				new SearchOrderBean(
+						"to_char(bidschedule.START_DATE,'yyyy-MM-dd')", false));
+
+		ISCSupplierInvitationSO invitationSO = null;
+		ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
+		try {
+			invitationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION,
+					ISCSupplierInvitationSO.class);
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			if (userId != null) {
+				reqDTO.setUserId(userId);
+				reqDTO.setSearchBean(searchBean);
+				resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
+				if (null != resDTO.getSupplierInvitationList()
+						&& null != resDTO.getSupplierInvitationList()
+								.getResultList()) {
+					this.getManagedBean().setBiddingCount(
+							resDTO.getSupplierInvitationList().getResultList()
+									.size());
 				}
-				
+
 			}
-		log.info("end searchBiddingCount");
-		
-	} finally{
-		invitationSO = null;
+			log.debug("end searchBiddingCount");
+
+		} finally {
+			invitationSO = null;
+		}
 	}
-}
 
+	private void searchSimpleQuoteCount() {
+		log.debug("start searchSimpleQuoteCount");
+		ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
+		// BSV
+		ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
 
+		List<Long> sqStatusIds = new ArrayList<Long>();
+		sqStatusIds.add(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("sqStatus.STATUS_ID",
+						SearchOperator.OPERATOR_IN.value(), sqStatusIds));
 
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("quote.END_DATE",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+						new Date()));
 
+		searchBean.getSortColumns().add(
+				new SearchOrderBean("to_char(quote.CREATED_DATE,'yyyy-MM-dd')",
+						false));
 
-
-
-private void searchSimpleQuoteCount(){
-	log.info("start searchSimpleQuoteCount");
-	ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
-	// BSV
-	ISearchBean<Object[]> searchBean=new SearchBean<Object[]>();
-		
-	List<Long> sqStatusIds = new ArrayList<Long>();
-	sqStatusIds.add(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
-	searchBean.getDataFilterBeans().add(
-			new SearchFilterBean("sqStatus.STATUS_ID",
-					SearchOperator.OPERATOR_IN.value(), sqStatusIds));
-	
-	searchBean.getDataFilterBeans().add(
-			new SearchFilterBean("quote.END_DATE",
-					SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
-	
-	searchBean.getSortColumns().add(
-			new SearchOrderBean(
-					"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
-	
-	ISCSupplierInvitationSO invitationSO = null;
-	ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
-	try {
-		invitationSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
-		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		if(userId != null){
-			reqDTO.setUserId(userId);
-			reqDTO.setSearchBean(searchBean);
-			resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
-			if(null!=resDTO.getSupplierInvitationList() && null!=resDTO.getSupplierInvitationList().getResultList()){
-					this.getManagedBean().setSimpleQuoteCount(resDTO.getSupplierInvitationList().getResultList().size());
+		ISCSupplierInvitationSO invitationSO = null;
+		ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
+		try {
+			invitationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION,
+					ISCSupplierInvitationSO.class);
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			if (userId != null) {
+				reqDTO.setUserId(userId);
+				reqDTO.setSearchBean(searchBean);
+				resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
+				if (null != resDTO.getSupplierInvitationList()
+						&& null != resDTO.getSupplierInvitationList()
+								.getResultList()) {
+					this.getManagedBean().setSimpleQuoteCount(
+							resDTO.getSupplierInvitationList().getResultList()
+									.size());
 				}
-				
+
 			}
-		log.info("end searchSimpleQuoteCount");
-		
-	} finally{
-		invitationSO = null;
+			log.debug("end searchSimpleQuoteCount");
+
+		} finally {
+			invitationSO = null;
+		}
 	}
-}
 
+	/**
+	 * navigate to suppliers page
+	 */
+	public void navigatetoSupplierredirect() {
+		ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+		try {
+			String commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
 
-/**
- * navigate to suppliers page
- */
-public void  navigatetoSupplierredirect(){
-	ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
-	.getRequestScope(WebKeys.THEME_DISPLAY);
-try {
-String commonUrl = themeDisplay.getURLCurrent().substring(
-		0,
-		themeDisplay.getURLCurrent().indexOf(
-				themeDisplay.getLayout().getGroup()
-						.getFriendlyURL())
-				+ themeDisplay.getLayout().getGroup()
-						.getFriendlyURL().length());
-
-System.out.println("$$$$$$$$$$$ commonUrl" + commonUrl);
-
-String screenUrl =String.valueOf(SourcingConstants.NAV_PAGE_PROPOSAL_INVITATION);
-StringBuilder navigationUrl = new StringBuilder();
-navigationUrl.append(commonUrl).append("/").append(screenUrl);
-ExternalContext externalContext = FacesContext.getCurrentInstance()
-		.getExternalContext();
-externalContext.redirect(navigationUrl.toString());
-log.info("getNavigationUrl ==" + navigationUrl.toString());
-} catch (IOException e) {
-log.error(e);
-} catch (PortalException e) {
-log.error(e);
-} catch (SystemException e) {
-log.error(e);
-}
-}
-
-/**
- * navigate to PreRenderResponse page
- */
-public void preRenderPendingResposeDpQt() {
-	
-	try {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		searchQuotationTenderCount(SourcingConstants.SIT_QUOTATION);
-		searchQuotationTenderCount(SourcingConstants.SIT_TENDER);
-		searchBriefingSiteVisitCount();
-		searchBiddingCount();
-		searchSimpleQuoteCount();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						QTConstants.PENDING_RESPONSE_DP_QT);
-
-	} finally {
-		
+			String screenUrl = String
+					.valueOf(SourcingConstants.NAV_PAGE_PROPOSAL_INVITATION);
+			StringBuilder navigationUrl = new StringBuilder();
+			navigationUrl.append(commonUrl).append("/").append(screenUrl);
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.redirect(navigationUrl.toString());
+			log.info("getNavigationUrl ==" + navigationUrl.toString());
+		} catch (IOException e) {
+			log.error(e);
+		} catch (PortalException e) {
+			log.error(e);
+		} catch (SystemException e) {
+			log.error(e);
+		}
 	}
-}
+
+	/**
+	 * navigate to PreRenderResponse page
+	 */
+	public void preRenderPendingResposeDpQt() {
+
+		try {
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			searchQuotationTenderCount(SourcingConstants.SIT_QUOTATION);
+			searchQuotationTenderCount(SourcingConstants.SIT_TENDER);
+			searchBriefingSiteVisitCount();
+			searchBiddingCount();
+			searchSimpleQuoteCount();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.PENDING_RESPONSE_DP_QT);
+
+		} finally {
+
+		}
+	}
 
 }
