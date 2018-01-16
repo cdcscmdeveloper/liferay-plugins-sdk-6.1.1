@@ -86,7 +86,6 @@ public class OnlineBiddingStatusCountBackingBean extends
 							+ themeDisplay.getLayout().getGroup()
 									.getFriendlyURL().length());
 
-			System.out.println("$$$$$$$$$$$ commonUrl" + commonUrl);
 
 			String screenUrl =String.valueOf(SourcingConstants.NAV_PAGE_BIDDING_MANAGEMENT);
 			StringBuilder navigationUrl = new StringBuilder();
@@ -155,7 +154,7 @@ public class OnlineBiddingStatusCountBackingBean extends
 
 	public int searchAllStatusBiddingCount(String status) {
 		IBiddingSO biddingSO = null;
-		log.info("=====start searchAllStatusBiddingCount====" + status);
+		log.debug("=====start searchAllStatusBiddingCount====" + status);
 		int count = 0;
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -183,7 +182,7 @@ public class OnlineBiddingStatusCountBackingBean extends
 				count = resDTO.getBidSchResultBean().getResultList().size();
 			}
 
-			log.info("=====end searchAllStatusBiddingCount====" + status);
+			log.debug("=====end searchAllStatusBiddingCount====" + status);
 		} finally {
 			biddingSO = null;
 		}
