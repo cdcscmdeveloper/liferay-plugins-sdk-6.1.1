@@ -11871,8 +11871,15 @@ public class SmApplicationUtil {
 		if (regStatus != null) {
 			smAppl.setPmStatus(regStatus.getPmStatus());
 			smAppl.setPmRegStatus(regStatus);
-			smAppl.getSmSupplier().setBumi(regStatus.isBumiAppl());
-			smAppl.setBumi(smAppl.getSmSupplier().isBumi());
+			if (smAppl.getApplType() != null
+					&& smAppl.getApplType().equals(
+							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				smAppl.getSmSupplier().setBumi(true);
+				smAppl.setBumi(true);
+			} else {
+				smAppl.getSmSupplier().setBumi(regStatus.isBumiAppl());
+				smAppl.setBumi(smAppl.getSmSupplier().isBumi());
+			}
 		}
 	}
 
