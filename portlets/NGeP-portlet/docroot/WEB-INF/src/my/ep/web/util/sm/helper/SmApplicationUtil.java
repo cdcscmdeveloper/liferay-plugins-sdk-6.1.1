@@ -1582,10 +1582,12 @@ public class SmApplicationUtil {
 				if (per.isClerical() && !StringUtils.isBlank(per.getEpfNo())) {
 					staffCount = staffCount + 1;
 
-				} else if (per.isProf() && !StringUtils.isBlank(per.getEpfNo())) {
+				} 
+				if (per.isProf() && !StringUtils.isBlank(per.getEpfNo())) {
 					profCount = profCount + 1;
 
-				} else if (per.isSemiProf()
+				} 
+				if (per.isSemiProf()
 						&& !StringUtils.isBlank(per.getEpfNo())) {
 					semiProfCount = semiProfCount + 1;
 				}
