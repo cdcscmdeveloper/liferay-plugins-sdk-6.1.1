@@ -110,7 +110,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void retrieveBriefingSiteVisitList(Long qtId) {
 
-		log.info("** retrieveBriefingSiteVisitList **");
+		log.debug("** retrieveBriefingSiteVisitList **");
 		IQTBriefingSO qTBriefingSO = null;
 
 		try {
@@ -244,7 +244,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public String registerSupplier(ScQtBsvDtl briefing) {
 
-		log.info("** attendanceRegistration **");
+		log.debug("** attendanceRegistration **");
 		this.getManagedBean().setPreviousPage(BSV_MAIN_PAGE);
 		getregistrationDetails(briefing, false);
 
@@ -594,7 +594,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public String backBtn() {
 
-		log.info("** Back Button **");
+		log.debug("** Back Button **");
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
 		retrieveBriefingSiteVisitList(this.getManagedBean().getScQt().getQtId());
 		return this.getManagedBean().getPreviousPage()
@@ -1349,7 +1349,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	 */
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
-		log.info("handleFileUpload - START");
+		log.debug("handleFileUpload - START");
 		if (event.getFile() != null) {
 			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
 			ScQtApproval scQtApproval = getManagedBean().getScQtApproval();
@@ -1363,7 +1363,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 			getManagedBean().setScQtApprovalAttachments(attachments);
 			uploadAttachment(event.getFile(), attachment);
 		}
-		log.info("handleFileUpload - END");
+		log.debug("handleFileUpload - END");
 	}
 	
 	/**
