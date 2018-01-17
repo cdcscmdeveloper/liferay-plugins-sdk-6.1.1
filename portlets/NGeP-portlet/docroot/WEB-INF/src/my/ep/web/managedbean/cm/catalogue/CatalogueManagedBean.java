@@ -1415,6 +1415,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			hasSearchValue = true;
 		}
 		log.info("hasSearchValue: " + hasSearchValue);
+		
+		
+		if (StringUtils.isNotBlank((String) itemNameFilterBean.getSearchValue())) {
+			if(((String) itemNameFilterBean.getSearchValue()).trim().length()<3){
+				throw new EpException(MessageConst.ERROR_716019);
+			}
+		}
+		
+		
+		
 
 		if (!hasSearchValue) {
 			throw new EpException(MessageConst.ERROR_716006);
