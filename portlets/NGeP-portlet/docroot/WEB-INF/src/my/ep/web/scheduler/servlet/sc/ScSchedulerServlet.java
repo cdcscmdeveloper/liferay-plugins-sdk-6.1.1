@@ -38,7 +38,7 @@ public class ScSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// Sc Daily job
-		EpSchedulerHelper
+		/*EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(SchedulerConstants.SC_DAILY_JOB,
 								SchedulerConstants.SC_JOB_GROUP),
@@ -67,7 +67,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
-						new JobDataMap(new HashMap<String, List<Long>>()));
+						new JobDataMap(new HashMap<String, List<Long>>()));*/
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper
