@@ -261,7 +261,7 @@ public class SpecificationBackingBean extends
 	 */
 	public SpecificationBackingBean() {
 
-		log.info("@@@@@@@@@@" + this.getManagedBean());
+		log.debug("@@@@@@@@@@" + this.getManagedBean());
 	}
 
 	/**
@@ -1007,7 +1007,7 @@ public class SpecificationBackingBean extends
 	 */
 	private void retriveSupplierQualificationCriteria(String type) {
 		
-		log.info("retriveBusinessOwnerQualificationCriteri - START");
+		log.debug("retriveBusinessOwnerQualificationCriteri - START");
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveSuppQualificationTabDtl();
 	}
@@ -2296,7 +2296,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * information and display in Specification committee.
 	 */
 	private void retriveDeliveryDetails() {
-		log.info("retriveDeliveryDetails - START");
+		log.debug("retriveDeliveryDetails - START");
 		IQTSpecSO specSo = null;
 		try {
 			if (this.getManagedBean().getDeliveryNonZoneList() == null
@@ -2342,7 +2342,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			specSo = null;
 		}
-		log.info("retriveDeliveryDetails - END");
+		log.debug("retriveDeliveryDetails - END");
 	}
 
 	/**
@@ -2350,7 +2350,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * Addresses.
 	 */
 	private void retriveStateList() {
-		log.info("retriveStateList - START");
+		log.debug("retriveStateList - START");
 		IStateSO stateSo = null;
 		StateResDTO resDto = null;
 		ICountrySO countrySo = null;
@@ -2379,7 +2379,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			stateSo = null;
 		}
-		log.info("retriveStateList - END");
+		log.debug("retriveStateList - END");
 	}
 
 	/**
@@ -2390,7 +2390,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 *            (Long stateId).
 	 */
 	public void districtBystate(AjaxBehaviorEvent event) {
-		log.info("districtBystate - START");
+		log.debug("districtBystate - START");
 		IDistrictSO districtSo = null;
 		DistrictResDTO resDto = null;
 		try {
@@ -2492,7 +2492,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			districtSo = null;
 		}
-		log.info("districtBystate - END");
+		log.debug("districtBystate - END");
 	}
 
 	/**
@@ -2779,7 +2779,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					&& QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH
 							.equals(this.getManagedBean()
 									.getCurrentStatusId())){
-				log.info("60034L"+this.getManagedBean().getCurrentStatusId());
+				log.debug("60034L"+this.getManagedBean().getCurrentStatusId());
 				if(CollectionUtils.isNotEmpty(committeeActivities)){
 					for(ScQtCommitteeActivity activity:committeeActivities){
 						if (!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
@@ -3744,8 +3744,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void scheduleTypeChange(ScQt scqt) {
 
 		String scheduleType = scqt.getScheduleType();
-		log.info("display schedule type" + scheduleType);
-		log.info("display fulfilment  type"
+		log.debug("display schedule type" + scheduleType);
+		log.debug("display fulfilment  type"
 				+ this.getManagedBean().getFulfilmentType());
 		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
 				.equalsIgnoreCase(scheduleType)) {
@@ -5658,7 +5658,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			st2technicalproposalList1.setScoringReq(false);
 			Integer checkListSequence=checkTechnicalORFinancialAddChecklistSequence(st2technicalproposalList);
-			log.info("========== technical return checklist sequence===="+checkListSequence);
+			log.debug("========== technical return checklist sequence===="+checkListSequence);
 			st2technicalproposalList1
 					.setChecklistSeq(checkListSequence);
 
@@ -5841,7 +5841,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 *            (TplSpecZoneDtl zoneDetail).
 	 */
 	public void deliveryList(TplSpecZoneDtl zoneDetail) {
-		log.info("deliveryList - START");
+		log.debug("deliveryList - START");
 		IOrgProfileSO orgProfileSO = null;
 
 		getManagedBean().setStateId(null);
@@ -5867,10 +5867,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			OrgProfileReqDTO ptjreqDTO = new OrgProfileReqDTO();
 			ptjreqDTO.setOrgProfileId(this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId());
 			boolean value=isQTStatusPublished(this.getManagedBean().getCurrentStatusId());
-			log.info("====publish date==="+this.getManagedBean().getQt().getPublishDate());
-			log.info("====created date==="+this.getManagedBean().getQt().getCreatedDate());
+			log.debug("====publish date==="+this.getManagedBean().getQt().getPublishDate());
+			log.debug("====created date==="+this.getManagedBean().getQt().getCreatedDate());
 			Date date=value?this.getManagedBean().getQt().getPublishDate() : this.getManagedBean().getQt().getCreatedDate();
-			log.info("====passing date==="+date);
+			log.debug("====passing date==="+date);
 			ptjreqDTO.setCreateDate(date);
 			PmOrgProfile orgProfileptj = orgProfileSO.retrieveOrgProfileByProfileId(
 					ptjreqDTO).getPmOrgProfile();
@@ -5932,9 +5932,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			pmStates =null;
 		} else {
 			retriveStateList();
-			log.info("Non Zonal");
+			log.debug("Non Zonal");
 		}
-		log.info("deliveryList - END");
+		log.debug("deliveryList - END");
 	}
 
 	/**
@@ -6226,7 +6226,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 *            the delivery zone name
 	 */
 	public void deleteDeliveryZone() {
-		log.info("deleteDeliveryZone - START");
+		log.debug("deleteDeliveryZone - START");
 		if (getManagedBean().getQt().isZonal()) {
 			String deliveryZoneName = "";
 			if (null != this.getManagedBean().getTplSpecZoneDtl()) {
@@ -6329,7 +6329,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
 		}
 
-		log.info("deleteDeliveryZone - END");
+		log.debug("deleteDeliveryZone - END");
 	}
 
 	/**
@@ -7026,7 +7026,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
-				log.info("backing bean saveCheckListScores toBeremoveCheckLists  size=="
+				log.debug("backing bean saveCheckListScores toBeremoveCheckLists  size=="
 						+ checklistRemoveList.size());
 			}
 			if (null != checkList && null != checkList.getScQtCheckListValue()) {
@@ -7271,7 +7271,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
-				log.info("backing bean saveBankCheckListScores toBeremoveCheckLists  size=="
+				log.debug("backing bean saveBankCheckListScores toBeremoveCheckLists  size=="
 						+ checklistRemoveList.size());
 			}
 
@@ -10546,7 +10546,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public String gpkiSignAction(PmDigiSign digiSign) {
 		SpecificationResDTO resDTO=null;
 		if(null!= this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
-			log.info("====maintenance flow====");
+			log.debug("====maintenance flow====");
 			resDTO=loadSpecMaintenanceBPmDetails(this
 				.getManagedBean().getLocalOutCome(), digiSign);
 		}
@@ -11958,7 +11958,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					.getSmCompanyAddresses()) {
 				if (AddressType.CONTACT_ADDRESS.value().equals(
 						smCompanyAddress.getAddressType())) {
-					log.info("found hq address");
+					log.debug("found hq address");
 					getManagedBean().setSupplierBranch("HQ");
 					getManagedBean().setSupplierAddress(
 							smCompanyAddress.getSmAddress());
@@ -13526,8 +13526,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					locallocationLevel=locationLevel;
 					localPanelCoverage=panelCoverage;
 				}
-				log.info("===panelCoverage"+panelCoverage+"localPanelCoverage"+localPanelCoverage);
-				log.info("===locationLevel"+locationLevel+"locallocationLevel"+locallocationLevel);
+				log.debug("===panelCoverage"+panelCoverage+"localPanelCoverage"+localPanelCoverage);
+				log.debug("===locationLevel"+locationLevel+"locallocationLevel"+locallocationLevel);
 			}
 			
 		}
@@ -13637,7 +13637,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		StringBuilder docNo = new StringBuilder();
 		docNo.append(ckecklistSequence);
 		docNo.append(String.format("%1$0" + (6 - docNo.length()) + "d", runningNo));
-		log.info("============display doc num====="+docNo.toString());
+		log.debug("============display doc num====="+docNo.toString());
 		return new Integer(docNo.toString());
 	}
 	
@@ -13703,9 +13703,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return navigate to acknowledgement page.
 	 */
 	public String submitSpecMaintenanceDtls(String action){
-		log.info("start submitSpecMaintenanceDtls"+action);
+		log.debug("start submitSpecMaintenanceDtls"+action);
 		this.getManagedBean().setLocalOutCome(action);
-		log.info("end submitSpecMaintenanceDtls"+action);
+		log.debug("end submitSpecMaintenanceDtls"+action);
 		SpecificationResDTO resDTO=
 				updateSpecCommitteMaintenaceDtls(action,null);
 		resDTO.setSuccessful(Boolean.TRUE);
@@ -13734,7 +13734,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	private SpecificationResDTO updateSpecCommitteMaintenaceDtls(String action,
 			PmDigiSign digiSign) {
-		log.info("start updateSpecCommitteMaintenaceDtls"+action);
+		log.debug("start updateSpecCommitteMaintenaceDtls"+action);
 		SpecificationResDTO resDTO=new SpecificationResDTO();
 		ScQt scQt=this.getManagedBean().getQt();
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
@@ -13766,7 +13766,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			specSO = null;
 		}
-		log.info("end updateSpecCommitteMaintenaceDtls"+action);
+		log.debug("end updateSpecCommitteMaintenaceDtls"+action);
 		return resDTO;
 		
 		
@@ -13783,7 +13783,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * 
 	 */
 	private void loadPrepareSpecCommitteeMaintenanceDetails(Long qtId) {
-		log.info("start loadPrepareSpecCommitteeMaintenanceDetails");
+		log.debug("start loadPrepareSpecCommitteeMaintenanceDetails");
 
 		retriveSpecdetails(qtId);
 
@@ -13798,7 +13798,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		retriveCommitteeEndorsment();
 		
 		if (!this.getManagedBean().isReadOnly() && getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen())) {
-			log.info("if condition loadPrepareSpecCommitteeMaintenanceDetails");
+			log.debug("if condition loadPrepareSpecCommitteeMaintenanceDetails");
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
 			validateTechnicalPassingScoring(this.getManagedBean()
@@ -13825,7 +13825,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			//setFinancialChecklistEvaluationStatus(this.getManagedBean()
 					//.getScQtCheckSt2financeProposalList());
 		}
-		log.info("end loadPrepareSpecCommitteeMaintenanceDetails");
+		log.debug("end loadPrepareSpecCommitteeMaintenanceDetails");
 		// this.getManagedBean().setActiveIndex(0);
 
 	}
@@ -13913,7 +13913,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setSpecMaintenanceScreen(getSpecMaintenance());
       retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
       if(null!=this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
-    	  log.info("spec maintenance status id==="+this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+    	  log.debug("spec maintenance status id==="+this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
     	  this.getManagedBean().setCurrentStatusId(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
       }
       committeSO =null;   
@@ -13934,7 +13934,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return navigate to acknowledgement page.
 	 */
 	public String specCommitteMaintenanceBpmTask(String action){
-		log.info("start specCommitteMaintenanceBpmTask");
+		log.debug("start specCommitteMaintenanceBpmTask");
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -14095,7 +14095,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	
 	private SpecificationResDTO loadSpecMaintenanceBPmDetails(String action,
 			PmDigiSign digiSign) {
-		log.info("start loadSpecMaintenanceBPmDetails"+action);
+		log.debug("start loadSpecMaintenanceBPmDetails"+action);
 		SpecificationResDTO resDTO=new SpecificationResDTO();
 		ScQt scQt=this.getManagedBean().getQt();
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
@@ -14126,14 +14126,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			specSO = null;
 		}
-		log.info("end updateSpecCommitteMaintenaceDtls"+action);
+		log.debug("end updateSpecCommitteMaintenaceDtls"+action);
 		return resDTO;
 		
 		
 	}
 	
 	private void retrieveStatusByTypeAndId(String docType, Long docId) {
-		log.info("Start retrieveStatusByTypeAndId");
+		log.debug("Start retrieveStatusByTypeAndId");
 		IScWorkFlowStatusSO workFlowStatusSO;
 		try {
 			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
@@ -14159,7 +14159,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return navigate to acknowledgement page.
 	 */
 	public String reviseSpecificationCommitteeEndorsmentMaintenance() {
-		log.info("start reviseSpecificationCommitteeEndorsmentMaintenance");
+		log.debug("start reviseSpecificationCommitteeEndorsmentMaintenance");
 		SpecificationResDTO resDTO = loadSpecMaintenanceBPmDetails(this
 				.getManagedBean().getLocalOutCome(), null);
 		if (resDTO.isSuccessful()) {
@@ -14298,12 +14298,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if(this.getManagedBean().getQt().isPanel()){
 			boolean isSpecAvilable=	isAtleastTechnicalSpec( this.getManagedBean()
 							.getScQtCheckSt2techProposal());
-			log.info("isSpecAvilable"+isSpecAvilable);
+			log.debug("isSpecAvilable"+isSpecAvilable);
 			if(!isSpecAvilable){
-				log.info("isSpecAvilable"+false);
+				log.debug("isSpecAvilable"+false);
 				getManagedBean().setZoneGeneralTrees(
 						new ArrayList<TreeNode>());
-				log.info("zonetrees"+getManagedBean().getZoneGeneralTrees().size());
+				log.debug("zonetrees"+getManagedBean().getZoneGeneralTrees().size());
 			}
 				}
 	}
@@ -14318,7 +14318,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					break;
 				}
 			}
-			log.info("checkFinancialSpecEstimations count"+count);
+			log.debug("checkFinancialSpecEstimations count"+count);
 			if(count==0){
 				BigDecimal totalSpecEstimatedAmount=null;
 				if (totalSpecEstimatedAmount == null) {
@@ -14338,7 +14338,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 					}
 				}
-				log.info("totalSpecEstimatedAmount"+totalSpecEstimatedAmount);
+				log.debug("totalSpecEstimatedAmount"+totalSpecEstimatedAmount);
 				
 				// Intended Price
 				if (qt.isPanel()) {

@@ -348,7 +348,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
 	renewSesionObject();
-	log.info("start editSpecificationMaintenance");
+	log.debug("start editSpecificationMaintenance");
 	this.getManagedBean().setQtnTenderSearchBean(qtTnderBean);
 	this.getManagedBean().setSearchQTDataModel(qtdataModel);
 	this.getManagedBean().setMaintanceFlow(true);
@@ -359,7 +359,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
-     log.info("status Publish");
+     log.debug("status Publish");
 		if (specCommitteeSecreatry) {
 			if (isEditable) {
 				
@@ -377,12 +377,12 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 					this.getManagedBean().setSpecMaintenance(Boolean.FALSE);
 				}
 			} else {
-				log.info("status not true");
+				log.debug("status not true");
 				this.getManagedBean().setReadOnly(Boolean.TRUE);
 				this.getManagedBean().setSpecMaintenance(Boolean.FALSE);
 			}
 		} else {
-			log.info("otherthan secretary else value workFlowStatus");
+			log.debug("otherthan secretary else value workFlowStatus");
 			this.getManagedBean().setReadOnly(Boolean.TRUE);
 		}
 	
@@ -403,7 +403,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 		ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
 		if (null != specMainworkflow) {
 			Long currentSpecStatusId = specMainworkflow.getPmStatus().getStatusId();
-			log.info("Workflow status not null == "+ currentSpecStatusId);
+			log.debug("Workflow status not null == "+ currentSpecStatusId);
 			if(QTStatusConst.SE_COMPLETED.equals(currentSpecStatusId)){
 				currentSpecStatusId = scQt_.getQtStatus().getStatusId();
 			} 
@@ -414,7 +414,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
 		
-	log.info("end editSpecificationMaintenance");
+	log.debug("end editSpecificationMaintenance");
 }
 
 /**
@@ -490,7 +490,7 @@ public IPagingDataModel<ScQt> getSpecMaintenanceDataModel() {
 }
 
 private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
-	log.info("Start retrieveStatusByTypeAndId");
+	log.debug("Start retrieveStatusByTypeAndId");
 	IScWorkFlowStatusSO workFlowStatusSO;
 	try {
 		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
