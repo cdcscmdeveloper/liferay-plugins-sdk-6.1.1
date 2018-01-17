@@ -68,10 +68,10 @@ public class SuppliersReviewBackingBean extends
 	 */
 	public SuppliersReviewBackingBean() {
 
-		log.info("inside SuppliersReviewBackingBean constructor");
+		log.debug("inside SuppliersReviewBackingBean constructor");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
+			log.debug("***userId: " + pmUser.getUserId());
 
 			new LogKey(pmUser.getUserId());
 		} else {
@@ -89,7 +89,7 @@ public class SuppliersReviewBackingBean extends
 	 * Select all states.
 	 */
 	public void selectAllStates() {
-		log.info("selectAllStates method");
+		log.debug("selectAllStates method");
 		if (this.getManagedBean().isAllStates()) {
 			this.getManagedBean()
 					.getSuppliersReviewSearchBean()
@@ -129,7 +129,7 @@ public class SuppliersReviewBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
-		log.info(message);
+		//log.info(message);
 	}
 
 	/**

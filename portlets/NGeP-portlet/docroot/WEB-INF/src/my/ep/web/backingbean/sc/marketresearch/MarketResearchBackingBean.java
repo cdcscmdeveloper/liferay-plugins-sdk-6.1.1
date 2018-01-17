@@ -90,7 +90,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void preLoadingMarketResearch(){
-		log.info("preLoadingMarketResearch");
+		log.debug("preLoadingMarketResearch");
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -109,7 +109,7 @@ public class MarketResearchBackingBean extends
 		@Override
 		protected ISearchResultBean<ScLoa> pageChangeListener(
 					ISearchBean<ScLoa> searchBean) {
-			log.info("pageChangeListener");
+			log.debug("pageChangeListener");
 			if(getManagedBean().isSearch()){
 				IQTAwardSO qtAwardSO = null;
 				try {
@@ -174,7 +174,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void searchMarketResearch(){
-		log.info("searchMarketResearch");
+		log.debug("searchMarketResearch");
 		getManagedBean().setSearch(true);
 		MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();	
 		boolean searchValue=checkSearchValues(mrSearchBean);
@@ -191,7 +191,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void resetMarketResearch(){
-		log.info("resetMarketResearch");
+		log.debug("resetMarketResearch");
 		getManagedBean().setMarketResearchSearchBean(null);
 		getMarketResearchDataModel().resetData();
 	}
@@ -230,7 +230,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	private void initQt(Long qtId,Long loaId){
-		log.info("initQt");
+		log.debug("initQt");
 //		IQTDetailSO detailSO = null;
 		MarketResearchVO vo = null;
 		try {
@@ -284,7 +284,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	private void initSimpleQuote(Long quoteId, Long loaId){
-		log.info("initSimpleQuote");
+		log.debug("initSimpleQuote");
 //		IQuoteSO quoteSO = null;
 		MarketResearchVO vo = null;
 		try{
@@ -364,7 +364,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void downloadSpecReport() throws IOException {
-		log.info("downloadSpecReport");
+		log.debug("downloadSpecReport");
 		ScLoa loa= getManagedBean().getScLoa();
 		IQTDocumentSO qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
@@ -478,29 +478,29 @@ public class MarketResearchBackingBean extends
 			
 		}
 		
-		if(StringUtils.isNotBlank(mrSearchBean.getItemName())){
+		else if(StringUtils.isNotBlank(mrSearchBean.getItemName())){
 			return Boolean.TRUE;
 			
 		}
 		
-		if(StringUtils.isNotBlank(mrSearchBean.getSpec())){
+		else if(StringUtils.isNotBlank(mrSearchBean.getSpec())){
 			return Boolean.TRUE;
 			
 		}
 		
-		if(StringUtils.isNotBlank(mrSearchBean.getLoaNo())){
+		else if(StringUtils.isNotBlank(mrSearchBean.getLoaNo())){
 			return Boolean.TRUE;
 			
 		}
 		
 		
 	
-		if(mrSearchBean.getLoaAckDateFrom() != null){
+		else if(mrSearchBean.getLoaAckDateFrom() != null){
 			return Boolean.TRUE;
 			
 		}
 		
-		if(mrSearchBean.getLoaAckDateTo() != null){
+		else if(mrSearchBean.getLoaAckDateTo() != null){
 			return Boolean.TRUE;
 			
 		}
