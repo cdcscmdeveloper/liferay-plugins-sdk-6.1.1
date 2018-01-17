@@ -1738,7 +1738,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
 		for (int i = 0; i < selectedList.size(); i++) {
-			log.info("====delete committee member name==="+selectedList.get(i).getMemberName());
+			log.debug("====delete committee member name==="+selectedList.get(i).getMemberName());
 			scCommitte.getScCommitteeMembers().remove(selectedList.get(i));
 			if (null != selectedList.get(i).getCommitteeMemberId()) {
 
@@ -2453,10 +2453,10 @@ public class QTCommitteBackingBean extends
 	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel){
 		if(null!=dataModel){
 		List<PmUser> modelList=dataModel.getList();
-		log.info("start addNewCommiteteUsers");
+		log.debug("start addNewCommiteteUsers");
 		List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
 		if(null==userList){
-			log.info("nullList addNewCommiteteUsers");
+			log.debug("nullList addNewCommiteteUsers");
 			userList=new ArrayList<PmUser>();
 		}
 		if (modelList != null) {

@@ -476,7 +476,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		debugLogger("retrieveSmMofAccountFromSmSupplier");
 		SmMofAccount smMofAccount = null;
 		if (null != smSupplier) {
-			log.info("(smSupplier.getSupplierId()) : " + smSupplier.getSupplierId());
+			log.debug("(smSupplier.getSupplierId()) : " + smSupplier.getSupplierId());
 			smMofAccount = smSupplier.getSmMofAccount();
 			if(smMofAccount != null){
 				return smMofAccount;
@@ -521,9 +521,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 				return smMofAccount;
 			}
 		} else {
-			log.info("(smSupplier.getSupplierId()) : " + smSupplier.getSupplierId());
+			log.debug("(smSupplier.getSupplierId()) : " + smSupplier.getSupplierId());
 			supplierId = smSupplier.getSupplierId();
-			log.info("supplierId : " + supplierId);
+			log.debug("supplierId : " + supplierId);
 			smMofAccount = smSupplier.getSmMofAccount();
 			if(smMofAccount != null){
 				return smMofAccount;
@@ -684,7 +684,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		debugLogger("selectSupplierLocation");
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
-		log.info("Location : " + location);
+		log.debug("Location : " + location);
 		if (null != getManagedBean().getZoneTrees()
 				&& !getManagedBean().getZoneTrees().isEmpty()) {
 			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
@@ -1425,7 +1425,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			SmCompanyBasic smCompanyBasic = resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic();
 			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
 				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
-					log.info("found hq address");
+					log.debug("found hq address");
 					getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
 					getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
 					//getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
@@ -1802,7 +1802,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param scQtLocCriteriaList the sc qt loc criteria list
 	 */
 	private void retrievLocationDtls(List<ScQtLocCriteria> scQtLocCriteriaList) {
-		log.info("retrievLocationDtls - START");
+		log.debug("retrievLocationDtls - START");
 		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(scQtLocCriteriaList);
 		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(scQtLocCriteriaList);
 		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(scQtLocCriteriaList);
@@ -1902,7 +1902,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 				}
 			}
 		}
-		log.info("retrievLocationDtls - END");
+		log.debug("retrievLocationDtls - END");
 	}
 	
 	/**

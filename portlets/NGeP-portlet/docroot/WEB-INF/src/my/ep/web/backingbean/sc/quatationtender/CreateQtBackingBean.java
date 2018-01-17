@@ -142,8 +142,8 @@ public class CreateQtBackingBean extends
 	 * Instantiates a new QT detail backing bean.
 	 */
 	public CreateQtBackingBean() {
-		log.info("inside constructor");
-		log.info("@@@@@@@@@ Managed Bean @@@@@@@@@ = "+this.getManagedBean());
+		log.debug("inside constructor");
+		log.debug("@@@@@@@@@ Managed Bean @@@@@@@@@ = "+this.getManagedBean());
 
 	}
 
@@ -157,7 +157,7 @@ public class CreateQtBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
-		log.info(message);
+		//log.info(message);
 	}
 
 	/**

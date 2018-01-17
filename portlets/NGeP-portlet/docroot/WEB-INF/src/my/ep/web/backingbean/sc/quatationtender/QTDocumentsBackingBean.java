@@ -828,7 +828,7 @@ public class QTDocumentsBackingBean extends
 
 		ScQt scQt = scQtDocReport.getScQt();
 		Long tplMasterId = retrieveStandardTplDocMaster(scQt).getDocMasterId();
-		System.out.println("==========doc master id===="+tplMasterId);
+		log.debug("==========doc master id===="+tplMasterId);
 		TplDocMaster templateDocMaster = retrieveTplDocMasterById(tplMasterId);
 
 		// clone TplDocMaster Details
@@ -957,7 +957,7 @@ public class QTDocumentsBackingBean extends
 							IQTDetailSO.class);
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 			PmParameter parameter=getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_CATEGORY,ParameterConst.PROCUREMENT_CATEGORY_OTHERS);
-			log.info("========parametrid===="+parameter.getParameterId());
+			log.debug("========parametrid===="+parameter.getParameterId());
 			reqDTO.setCategoryId(parameter.getParameterId());
 			PmParameter processType = getPmParameter(
 					ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
@@ -972,11 +972,11 @@ public class QTDocumentsBackingBean extends
 			Locale locale =myLocale;
 			//locale = myLocale;
 			String language=locale.getLanguage();
-			log.info("=====display language====="+language);
+			log.debug("=====display language====="+language);
 			String paramDesc=getParameterDesc(quotationOrTender,locale);
 			//log.info("=====param quotation or tenderdesc====="+paramDesc);
 			reqDTO.setTitle(TemplateDocConst.PARAM_DOCTITLE_QT+TemplateDocConst.PARAM_SPACE+TemplateDocConst.PARAM_HIGH_FUN+TemplateDocConst.PARAM_SPACE+paramDesc);
-			log.info("====reqDTO.setTitle====="+reqDTO.getTitle());  
+			log.debug("====reqDTO.setTitle====="+reqDTO.getTitle());  
 			TemplateDocResDTO resDTO = templateDocSO
 					.getTemplateMasterList(reqDTO);
 			List<TplDocMaster> docMasterList = resDTO.getDocMasterList();
@@ -1501,14 +1501,14 @@ public class QTDocumentsBackingBean extends
 								}
 								break;
 							} else {
-								log.info("Testing");
+								log.debug("Testing");
 							}
 						} else {
-							log.info("Testings");
+							log.debug("Testings");
 						}
 					}
 				} else {
-					log.info("Testingss");
+					log.debug("Testingss");
 				}
 			}
 		} finally {
@@ -1564,14 +1564,14 @@ public class QTDocumentsBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
-		log.info("======currentstatusid generateSampleComplianceChecklistPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		log.debug("======currentstatusid generateSampleComplianceChecklistPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
 		String ptjName=" ";
 		if(null!=this.getManagedBean().getCurrentStatusId()){
 		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
 		}else{
 			ptjName=qt.getPmOrgProfile().getOrgName();
 		}
-		log.info("=======ptjName====="+ptjName);
+		log.debug("=======ptjName====="+ptjName);
 		context.put("ptj", ptjName);
 		String title = qt.getQtTitle();
 		if (title == null) {
@@ -1859,7 +1859,7 @@ public class QTDocumentsBackingBean extends
 					date=qt.getCreatedDate();
 				}
 				PmOrgProfile changedOrgprofile=retriveOrgprofileByIdAndDate(qt.getPmOrgProfile().getOrgProfileId(),date);
-				log.info("=========changed orgprofile===="+changedOrgprofile.getOrgName());
+				log.debug("=========changed orgprofile===="+changedOrgprofile.getOrgName());
 				isOneOff = true;
 				for (TplSpecZoneDtl specZoneDtl : zones) {
 					reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
@@ -1883,7 +1883,7 @@ public class QTDocumentsBackingBean extends
 					date=qt.getCreatedDate();
 				}
 				PmOrgProfile changedOrgprofile=retriveOrgprofileByIdAndDate(qt.getPmOrgProfile().getOrgProfileId(),date);
-				log.info("=========changed orgprofile===="+changedOrgprofile.getOrgName());
+				log.debug("=========changed orgprofile===="+changedOrgprofile.getOrgName());
 				for(ScQtDeliveryLoc deliveryLoc:resDTO.getAddressResultBean()){
 					//changedOrgprofile.setOrgName("manga");
 					deliveryLoc.getPmAddressType().setPmOrgProfile(changedOrgprofile);
@@ -1966,8 +1966,8 @@ public class QTDocumentsBackingBean extends
 
 					startMonth = fulfilmentMonthlyDtls(startdate);
 					endMonth = fulfilmentMonthlyDtls(enddate);
-					log.info("startMonth : " + startMonth);
-					log.info("endMonth : " + endMonth);
+					log.debug("startMonth : " + startMonth);
+					log.debug("endMonth : " + endMonth);
 
 					int sYear = Integer.parseInt(startYear);
 					int eYear = Integer.parseInt(endYear);
@@ -2304,14 +2304,14 @@ public class QTDocumentsBackingBean extends
 		} finally {
 			addressSO = null;
 		}
-		log.info("======currentstatusid generateSampleSuratSetujuTerimaPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		log.debug("======currentstatusid generateSampleSuratSetujuTerimaPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
 		String ptjName=" ";
 		if(null!=this.getManagedBean().getCurrentStatusId()){
 		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
 		}else{
 			ptjName=qt.getPmOrgProfile().getOrgName();
 		}
-		log.info("=======ptjName====="+ptjName);
+		log.debug("=======ptjName====="+ptjName);
 		context.put("agency", ptjName);
 		context.put("ministry", pmOrgProfile.getParentOrgProfile().getOrgName());
 
@@ -2434,14 +2434,14 @@ public class QTDocumentsBackingBean extends
 		context.put("ministry", ministryOrgName);
 		// context.put("ministry",
 		// qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
-		log.info("======currentstatusid generateKenyataanTawaranPembekalPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		log.debug("======currentstatusid generateKenyataanTawaranPembekalPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
 		String ptjName=" ";
 		if(null!=this.getManagedBean().getCurrentStatusId()){
 		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
 		}else{
 			ptjName=qt.getPmOrgProfile().getOrgName();
 		}
-		log.info("=======ptjName====="+ptjName);
+		log.debug("=======ptjName====="+ptjName);
 		context.put("ptj", ptjName);
 		String title = qt.getQtTitle();
 		if (title == null) {
@@ -2821,7 +2821,7 @@ public class QTDocumentsBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			String officerName = facesScopes.getUserSessionBean().getUserName();
-			log.info("======currentstatusid generateSyaratSyaratAmFromVelocity===="
+			log.debug("======currentstatusid generateSyaratSyaratAmFromVelocity===="
 					+ this.getManagedBean().getCurrentStatusId());
 			String ptjName = " ";
 			if (null != this.getManagedBean().getCurrentStatusId()) {
@@ -2833,7 +2833,7 @@ public class QTDocumentsBackingBean extends
 			} else {
 				ptjName = scQt.getPmOrgProfile().getOrgName();
 			}
-			log.info("=======ptjName=====" + ptjName);
+			log.debug("=======ptjName=====" + ptjName);
 			Map<String, String> docParamValues = templateDocBackingBean
 					.getManagedBean().getDocParamValues();
 			if (null == docParamValues) {
@@ -2889,7 +2889,7 @@ public class QTDocumentsBackingBean extends
 				}
 				}
 				paymentDeductions.append("</table>");
-				log.info("PaymentDeductionString"+ paymentDeductions.toString());
+				log.debug("PaymentDeductionString"+ paymentDeductions.toString());
 				docParamValues.put(TemplateDocConst.PARAM_PAYMENT_DEDUCTION, paymentDeductions.toString());	
 			}else{
 				docParamValues.put(TemplateDocConst.PARAM_PAYMENT_DEDUCTION, TemplateDocConst.PARAM_PAYMENT_DEDUCTION_NOT_APPLIABLE);	
@@ -2901,9 +2901,9 @@ public class QTDocumentsBackingBean extends
 			// TemplateDocConst.PARAM_SPACE);
 			PmConfigRuleValue configRuleValue = calculateBondPercentage();
 			if (null != configRuleValue) {
-				log.info("configRuleValue.getFromValue()"
+				log.debug("configRuleValue.getFromValue()"
 						+ configRuleValue.getFromValue());
-				log.info("configRuleValue.getToValue()"
+				log.debug("configRuleValue.getToValue()"
 						+ configRuleValue.getToValue());
 				docParamValues
 						.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM,
@@ -2943,7 +2943,7 @@ public class QTDocumentsBackingBean extends
 	}
 
 	private BigDecimal returnContractAmount() {
-		log.info("start returnContractAmount");
+		log.debug("start returnContractAmount");
 		IRuleSO ruleSO = null;
 		BigDecimal contractAmount = new BigDecimal(0);
 		try {
@@ -2968,7 +2968,7 @@ public class QTDocumentsBackingBean extends
 				contractAmount = new BigDecimal(
 						TemplateDocConst.PARAM_CONTRACT_AMOUNT_VALUE);
 			}
-			log.info("contractAmount" + contractAmount);
+			log.debug("contractAmount" + contractAmount);
 			return contractAmount;
 
 		} finally {
@@ -2985,7 +2985,7 @@ public class QTDocumentsBackingBean extends
 	 * @return BigDecimal bondPercentage
 	 */
 	private PmConfigRuleValue calculateBondPercentage() {
-		log.info("start calculateBondPercentage");
+		log.debug("start calculateBondPercentage");
 		IRuleSO ruleSO = null;
 		PmConfigRuleValue configRuleValue = null;
 		try {
