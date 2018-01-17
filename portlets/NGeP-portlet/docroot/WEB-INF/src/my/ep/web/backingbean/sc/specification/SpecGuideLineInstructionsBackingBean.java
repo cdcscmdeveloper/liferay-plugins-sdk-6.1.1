@@ -63,7 +63,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 	 * @throws Exception
 	 */
 	public void specGuideLineWindow()throws Exception{
-		log.info("startspecGuideLineWindow");
+		log.debug("startspecGuideLineWindow");
 		RequestContext.getCurrentInstance().execute(
 				"specGuideLineDlgWidget.show();");	
 	}
@@ -88,7 +88,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 	
 	private void generateSpecGuideLinePdfFromSharedrepository(
 			ScAttachment attachment, ScQt qt, String prefixFileName) throws Exception {
-		log.info("generateSamplesamplesalinankontrakPdfFromVelocity");
+		log.debug("generateSamplesamplesalinankontrakPdfFromVelocity");
 		
 		StringBuilder fileName = new StringBuilder();
 		if(prefixFileName != null){
