@@ -190,10 +190,10 @@ public class EvaluationMeetingBackingBean extends
 				.getPmOrgProfile().getOrgProfileId());
 		if (null != user.getPmUserOrgs() && null!=orgProfile) {
 			for (PmUserOrg userorg : user.getPmUserOrgs()) {
-				log.info("===user org record status==="
+				log.debug("===user org record status==="
 						+ userorg.isRecordStatus());
 				//orgProfile.setOrgProfileId(273481L);
-				log.info("===qt PtjId===" + orgProfile.getOrgProfileId());
+				log.debug("===qt PtjId===" + orgProfile.getOrgProfileId());
 				if (userorg.isRecordStatus()
 						&& null != userorg.getPmOrgProfile()) {
 					PmOrgProfile localorgProfile=retriveMinistryByOrgprofile(userorg.getPmOrgProfile().getOrgProfileId());
