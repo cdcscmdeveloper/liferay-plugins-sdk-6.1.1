@@ -598,7 +598,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			
 			//for deleted Restrictions
 			if(this.getManagedBean().getDeleteRestrictions()!=null && this.getManagedBean().getDeleteRestrictions().size()>0){
-				this.getManagedBean().getSelectedReason().setBySupplierType(true);
 				for(PmSupplierReason tempReason:this.getManagedBean().getDeleteRestrictions()){
 					if(tempReason.isBrandNew()){
 						if(!tempReason.isSelected()){
@@ -622,8 +621,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}
 					
 				}
-			}else{
-				this.getManagedBean().getSelectedReason().setBySupplierType(false);
 			}
 			
 		}catch(Exception e){
