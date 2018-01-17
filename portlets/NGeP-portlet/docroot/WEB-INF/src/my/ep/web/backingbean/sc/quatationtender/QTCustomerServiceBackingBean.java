@@ -172,9 +172,9 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		this.getManagedBean().setQtCustomerServiceSearchBean(customerService);
 		this.getManagedBean().setQtCustomerServiceDataModel(customerServiceModel);
 		this.getManagedBean().setOfficerName(" ");
-		log.info("=status Id==="+statusId);
+		log.debug("=status Id==="+statusId);
 		if(isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-			log.info("=status greater==="+statusId);
+			log.debug("=status greater==="+statusId);
 			retriveCustomerServiceBriefingSiteVisitdtls(scQt.getQtId());
 			if(isQTStatusGreaterThan(statusId, QTStatusConst.QT_PENDING_PUBLICATION)){
 			this.getManagedBean().setTotalProposalSubmitCount(totalproposaSubmitteed(scQt.getQtId()));
@@ -218,7 +218,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 				
 				if(CollectionUtils.isNotEmpty(worklistItem.getAssignees())){
 	    	 	//custServiceEntity.setOfficerName(worklistItem.getAssignees().get(0));
-					log.info("assignee"+worklistItem.getAssignees());
+					log.debug("assignee"+worklistItem.getAssignees());
 					//log.info("assignee1"+worklistItem.getAssignees().get(0));
 					for(int i=0;i<worklistItem.getAssignees().size();i++){
 					SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
@@ -227,7 +227,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		 		reqUserDTO.setLoginId(worklistItem.getAssignees().get(i));
 		 	UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
 		 	if(null!=userResDTO && null!=userResDTO.getPmUser()){
-		 		log.info("====user name==="+userResDTO.getPmUser().getUserName());
+		 		log.debug("====user name==="+userResDTO.getPmUser().getUserName());
 	    	 	custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
 		 	}
 				
@@ -236,12 +236,12 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	    	 	reqDTO.setTaskId(worklistItem.getTaskId());
 	    	 	resDTO = getBpmSO().getTaskDetails(reqDTO);
 	    	 PmStatusDesc statusDesc=	getPmStatusDesc(resDTO.getDocStatus());
-	    	 log.info("display doc numner"+resDTO.getDocNumber());
+	    	 log.debug("display doc numner"+resDTO.getDocNumber());
 	    	 custServiceEntity.setDocumentNum(resDTO.getDocNumber());
 	    	 if(null!=statusDesc){
 				custServiceEntity.setStatusDesc(statusDesc.getStatusName());
 				custServiceEntity.setDocumentType(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, statusDesc.getPmStatus().getDocType()));
-				log.info("customer status Id"+statusDesc.getPmStatus().getStatusId());
+				log.debug("customer status Id"+statusDesc.getPmStatus().getStatusId());
 				custServiceEntity.setStatus(statusDesc.getPmStatus().getStatusId());
 	    	 }
 				getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
@@ -252,7 +252,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 				String replaceString=	this.getManagedBean().getOfficerName().substring(1, this.getManagedBean().getOfficerName().length()-1).trim();
 				this.getManagedBean().setOfficerName(replaceString);
 				}*/
-				log.info("========staus===="+worklistItem.getState());
+				log.debug("========staus===="+worklistItem.getState());
 			}
 		}
 		if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(statusId)){
@@ -302,7 +302,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	}
 	
 	private List<String> retriveListOfLoiLoaDocNumbers(Long qtId){
-		log.info("start retriveListOfLoiLoaDocNumbers");
+		log.debug("start retriveListOfLoiLoaDocNumbers");
 		IQTCustomerServiceSO customerServiceInfo=null;
 		try{
 			customerServiceInfo = BusinessDelegate.getInstance().getServiceObject(
@@ -312,7 +312,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 			customerServiceReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			customerServiceReqDTO.setQuotationTenderId(qtId);
 			 resDto=customerServiceInfo.retriveCustomerServiceLoiLoaList(customerServiceReqDTO);
-			 log.info("end retriveListOfLoiLoaDocNumbers");
+			 log.debug("end retriveListOfLoiLoaDocNumbers");
 			return resDto.getLoiLoaNumbers();
 		}finally{
 			customerServiceInfo=null;
@@ -322,7 +322,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	
 	private List<ScBidSchedule> retriveCustomerServiceBidSchedules(Long qtId){
 		IBiddingSO BiddingSO=null;
-		log.info("start retriveCustomerServiceBidSchedules");
+		log.debug("start retriveCustomerServiceBidSchedules");
 		try{
 			BiddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
@@ -339,7 +339,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 			BiddingResDTO resDTo=new BiddingResDTO();
 			reqDTo.setBidSchSearchBean(searchBean);
 			resDTo=BiddingSO.retriveCustomerServiceBidSchedules(reqDTo);
-			log.info("end retriveCustomerServiceBidSchedules");
+			log.debug("end retriveCustomerServiceBidSchedules");
 			return resDTo.getActiveBidSchedules();
 			
 		}finally{
@@ -390,7 +390,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	
 	private Long totalproposaSubmitteed(Long qtId){
 		IQTProposalSO qTProposalSO = null;
-		log.info("start totalproposaSubmitteed");
+		log.debug("start totalproposaSubmitteed");
 		try{
 			qTProposalSO = (IQTProposalSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -399,7 +399,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 			ProposalResDTO proposalResDto=new ProposalResDTO();
 			proposalReqDto.setQtId(qtId);
 			proposalResDto=qTProposalSO.getTotalSubmittedProposal(proposalReqDto);
-			log.info("end totalproposaSubmitteed");
+			log.debug("end totalproposaSubmitteed");
 			return proposalResDto.getTotalSubmitted();
 		}finally{
 			qTProposalSO = null;	
@@ -613,7 +613,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 	 * 
 	 */
 	public void preRenderView(){
-		log.info("QT customer service preRenderView");
+		log.debug("QT customer service preRenderView");
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()

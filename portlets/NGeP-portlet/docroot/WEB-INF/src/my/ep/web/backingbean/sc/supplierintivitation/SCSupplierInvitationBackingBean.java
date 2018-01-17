@@ -207,7 +207,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	 */
 	public void getNavigationUrl(Long statusId,Long id){
 		
-		log.info("getNavigationUrl");
+		log.debug("getNavigationUrl");
 		
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
