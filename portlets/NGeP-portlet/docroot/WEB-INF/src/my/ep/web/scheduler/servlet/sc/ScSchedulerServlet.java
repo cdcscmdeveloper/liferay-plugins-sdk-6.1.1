@@ -23,6 +23,7 @@ import my.ep.web.scheduler.job.sc.QTPublishSchedulingJob;
 import my.ep.web.scheduler.job.sc.QuotationPropoValidReminderJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
 import my.ep.web.scheduler.job.sc.TenderPropoValidReminderJob;
+import my.ep.web.util.DateUtils;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobDataMap;
@@ -37,7 +38,7 @@ public class ScSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// Sc Daily job
-		/*EpSchedulerHelper
+		EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(SchedulerConstants.SC_DAILY_JOB,
 								SchedulerConstants.SC_JOB_GROUP),
@@ -66,7 +67,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
-						new JobDataMap(new HashMap<String, List<Long>>()));*/
+						new JobDataMap(new HashMap<String, List<Long>>()));
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper
@@ -178,11 +179,13 @@ public class ScSchedulerServlet extends HttpServlet {
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPCOMING_BIDS_REMINDER));
 		
 		// failover handler Job to be run at server startup
-				boolean success = EpSchedulerHelper.runJobOnce(new JobKey(
-						SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
-						SchedulerConstants.SC_JOB_GROUP), ScFailoverHandlerJob.class,
-						SchedulerConstants.SC_FAILOVER_HANDLER_JOB_DESCRIPTION);
-				log.info("+++++ ScFailoverHandlerJob triggred successfully? "+success);
-
+		try{
+			JobKey jobKey = new JobKey(SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
+					SchedulerConstants.SC_JOB_GROUP);
+			EpSchedulerHelper.scheduleSimpleJob(jobKey,ScFailoverHandlerJob.class,DateUtils.getCurrentDate());
+		}catch(Exception e){
+			log.info("***** failed to build ScFailoverHandlerJob simple job at server start up");
+			e.printStackTrace();
+		}
 	}
 }
