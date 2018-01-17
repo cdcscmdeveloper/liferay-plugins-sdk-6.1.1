@@ -126,17 +126,23 @@ public class SmVirtualCertHelper {
 			log.info("reportUrl>>>>>>>" + reportUrl);
 
 			HttpURLConnection urlConnection = null;
-			URL obj = new URL(reportUrl);
-			urlConnection = (HttpURLConnection) obj.openConnection();
+			URL url = new URL(reportUrl);
+			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setUseCaches(false);
-			
-			
+
 			if(urlConnection.getContentType().equalsIgnoreCase(HTTP_HEADER_TYPE_PDF)){
-				buf = new BufferedInputStream(urlConnection.getInputStream());
+				buf = new BufferedInputStream(url.openStream());
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					log.info(">>>>> Error when delay>>>>>" + e.getMessage());
+				}
+				
 				//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
-
 				log.info("Content Type>>>>" + urlConnection.getContentType());
-
+				
 				File dir = new File(filePath);
 				log.info(" dir.exists()" + dir.exists());
 				if (!dir.exists()) {
