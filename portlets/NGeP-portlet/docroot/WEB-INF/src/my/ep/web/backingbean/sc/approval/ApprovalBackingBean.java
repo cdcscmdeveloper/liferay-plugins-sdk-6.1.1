@@ -201,7 +201,7 @@ public class ApprovalBackingBean extends
 	 */
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
-		logger.info("handleFileUpload - START");
+		logger.debug("handleFileUpload - START");
 		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
@@ -225,7 +225,7 @@ public class ApprovalBackingBean extends
 			attachments.add(attachment);
 			getManagedBean().setAttachments(attachments);
 		}
-		logger.info("handleFileUpload - END");
+		logger.debug("handleFileUpload - END");
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class ApprovalBackingBean extends
 	 */
 	public void handleOtherFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
-		logger.info("handleOtherFileUpload - START");
+		logger.debug("handleOtherFileUpload - START");
 		if (event.getFile() != null) {
 			//ScAttachment scAttachment = null;
 			//ScQtApprovalRequest scQtApprovalRequest = null;
@@ -269,31 +269,31 @@ public class ApprovalBackingBean extends
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			scQtApprovalDtls.setApprovalRequestAttachement(approvalReqAttachement);
 		}
-		logger.info("handleOtherFileUpload - END");
+		logger.debug("handleOtherFileUpload - END");
 	}
 
 	/**
 	 * Delete Attachment.
 	 */
 	public void deleteUploadFile() {
-		logger.info("deleteUploadFile - START");
+		logger.debug("deleteUploadFile - START");
 		// getManagedBean().getScQtApproval().setScQtApprovalAttachments(null);
 		getManagedBean().getAttachments().clear();
-		logger.info("deleteUploadFile - END");
+		logger.debug("deleteUploadFile - END");
 	}
 
 	/**
 	 * Delete Attachment for other approvals.
 	 */
 	public void deleteOthersApprovalFile(BaseEntity delEntity) {
-		logger.info("deleteOthersApprovalFile - START");
+		logger.debug("deleteOthersApprovalFile - START");
 		List<ScQtApprovalRequest> list = this.getManagedBean()
 				.getSelectedApprovalTabBean().getScQtApproval()
 				.getScQtApprovalDtls();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setApprovalRequestAttachement(null);
 		}
-		logger.info("deleteOthersApprovalFile - END");
+		logger.debug("deleteOthersApprovalFile - END");
 	}
 
 	/**
@@ -625,7 +625,7 @@ public class ApprovalBackingBean extends
 						.getScQtApprovalRequestList());
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		this.getManagedBean().setAction(action);
-		logger.info("Task Name : " + this.getManagedBean().getTaskName());
+		logger.debug("Task Name : " + this.getManagedBean().getTaskName());
 		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
 			boolean isRevised = false;
 			boolean isApproved = false;
