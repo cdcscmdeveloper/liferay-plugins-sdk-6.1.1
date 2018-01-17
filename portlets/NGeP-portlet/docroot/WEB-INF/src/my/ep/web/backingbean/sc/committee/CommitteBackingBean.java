@@ -134,7 +134,7 @@ public class CommitteBackingBean extends
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
 		}
-		logger.info(message);
+		//logger.info(message);
 	}
 
 	/**
@@ -837,10 +837,10 @@ public class CommitteBackingBean extends
 				ParameterHelper.getInstance().getParameterDesc(
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						scQtCommittee.getScCommittee().getCommitteeType().getParameterCode()));
-		log.info("Title : " + getManagedBean().getHeaderTitle());
+		log.debug("Title : " + getManagedBean().getHeaderTitle());
 		String committeeType = scQtCommittee.getScCommittee()
 				.getCommitteeType().getParameterCode();
-		log.info("Committee Type : " + committeeType);
+		log.debug("Committee Type : " + committeeType);
 		if (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)
 				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)
 				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)
@@ -1002,7 +1002,7 @@ public class CommitteBackingBean extends
 		debugLogger("viewHistoryAction");
 		ScCommittee scCommittee = scQtCommittee.getScCommittee();
 		String committeeType = scCommittee.getCommitteeType().getParameterCode();
-		log.info("Committee Type : " + committeeType);
+		log.debug("Committee Type : " + committeeType);
 		
 		ICommitteSO committeSO;
 		try {
@@ -1457,7 +1457,7 @@ public class CommitteBackingBean extends
 				.get("value");
 		userSelection = this.getManagedBean().getCommitteMember()
 				.getUserSelection();
-		logger.info("User Selection : " + userSelection);
+		logger.debug("User Selection : " + userSelection);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(userSelection);

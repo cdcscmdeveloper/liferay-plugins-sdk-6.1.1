@@ -216,7 +216,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean im
 	private File downloadEncryptedFile(String encryptionKey, String filePath, String fileName)
 			throws IOException {
 
-		log.info("Inside downloadFile(...)");
+		log.debug("Inside downloadFile(...)");
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = com.liferay.portal.util.PortalUtil
@@ -238,7 +238,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean im
 		if (filePath != null) {
 			InputStream input = null;
 			try {
-				log.info("Inside filePath(...)");
+				log.debug("Inside filePath(...)");
 				URLConnection uc = new URL(filePath).openConnection();
 				input = new BufferedInputStream(uc.getInputStream());
 
