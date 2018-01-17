@@ -8,6 +8,8 @@ import java.util.Set;
 
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
+import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
 import my.ep.web.scheduler.listener.EpSchedulerListener;
 
 import org.apache.commons.lang3.StringUtils;
@@ -474,7 +476,7 @@ public class EpSchedulerHelper extends QuartzAdapter {
 	}
 
 	/**
-	 * schedule simple Job
+	 * schedule simple Job with JObDataMap
 	 * 
 	 * @param jobKey
 	 *            the JobKey instance,jobClass the jobClass
@@ -499,6 +501,35 @@ public class EpSchedulerHelper extends QuartzAdapter {
 		// Tell quartz to schedule the job using our trigger
 		getScheduler().scheduleJob(job, trigger);
 	}
+	
+	/**
+	 * schedule simple Job
+	 * 
+	 * @param jobKey without JObDataMap
+	 *            the JobKey instance,jobClass the jobClass
+	 *            instance,scheduleDate
+	 *            the Date instance
+	 * @throws SchedulerException
+	 */
+	public static void scheduleSimpleJob(JobKey jobKey, Class jobClass,
+			Date scheduleDate)
+			throws SchedulerException {
+		
+
+		// define the job and tie it to our QTPublishJob class
+		JobDetail job = JobBuilder.newJob(jobClass)
+				.withIdentity(jobKey.getName(), jobKey.getGroup())
+				.build();
+
+		// define a simple trigger that runs at specific time (publish time)
+		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+				.withIdentity(jobKey.getName(),jobKey.getGroup())
+				.startAt(scheduleDate).forJob(jobKey).build();
+
+		// Tell quartz to schedule the job using our trigger
+		getScheduler().scheduleJob(job, trigger);
+	}
+
 
 	/**
 	 * To update job data in the JobDetail
