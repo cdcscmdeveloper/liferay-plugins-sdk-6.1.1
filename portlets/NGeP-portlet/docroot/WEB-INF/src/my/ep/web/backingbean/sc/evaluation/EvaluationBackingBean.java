@@ -222,7 +222,7 @@ public class EvaluationBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
-		log.info(message);
+		//log.info(message);
 	}
 
 	/**
@@ -3364,7 +3364,7 @@ public class EvaluationBackingBean extends
 			debugLogger("zoneTabChange");
 			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
 					.getSpecZoneDtls().get(selectedZoneTabIndex);
-			log.info("Selected Zone : " + specZoneDtl.getZoneName());
+			log.debug("Selected Zone : " + specZoneDtl.getZoneName());
 			getManagedBean().setSelectedZone(specZoneDtl);
 
 			for (int i = 0; i < this.getManagedBean().getSpecZoneDtls().size(); i++) {
@@ -6632,7 +6632,7 @@ public class EvaluationBackingBean extends
 	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
 	 */
 	private void retrieveReportTabDtl() {
-		log.info("start retrieveReportTabDtl");
+		log.debug("start retrieveReportTabDtl");
 		retrieveReportHeader();
 		IQTEvaluationSO evaluationSO;
 		EvaluationResDTO resDTO = null;
@@ -6691,7 +6691,7 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setScAttachment(attachment);
 
 			}
-			log.info("end retrieveReportTabDtl");
+			log.debug("end retrieveReportTabDtl");
 		} finally {
 			evaluationSO = null;
 		}
@@ -6727,7 +6727,7 @@ public class EvaluationBackingBean extends
 	 * @throws Exception
 	 */
 	public void retriveCommitteeEndorsment() throws Exception {
-      log.info("start retriveCommitteeEndorsment");
+      log.debug("start retriveCommitteeEndorsment");
 		
 		try {
 			
@@ -6744,7 +6744,7 @@ public class EvaluationBackingBean extends
 			
 			
 			
-			log.info("end retriveCommitteeEndorsment");
+			log.debug("end retriveCommitteeEndorsment");
 		} finally {
 			
 
@@ -7355,13 +7355,13 @@ private void retriveCommitteeRemarksList(){
 
 			List<ScQtMeetingAttendance> meetingAttendanceRemoveList = getAttendanceToBeRemoveList();
 			if (null != meetingAttendanceRemoveList && !meetingAttendanceRemoveList.isEmpty()) {
-				log.info("before EvaluationBackingBean MeetingAttendance List Size"+meetingAttendanceRemoveList.size());
+				log.debug("before EvaluationBackingBean MeetingAttendance List Size"+meetingAttendanceRemoveList.size());
 				for (int i = 0; i < meetingAttendanceRemoveList.size(); i++) {
 					if (null == meetingAttendanceRemoveList.get(i).getQtMeetingAttendanceId()) {
 						meetingAttendanceRemoveList.remove(i);
 					}
 				}
-				log.info("after EvaluationBackingBean MeetingAttendance List Size"+meetingAttendanceRemoveList.size());
+				log.debug("after EvaluationBackingBean MeetingAttendance List Size"+meetingAttendanceRemoveList.size());
 			}
 			reqDtO.setRemovedmeetingAttendanceList(meetingAttendanceRemoveList);
 			List<ScQtEvaluationReport> evaluationReport = this.getManagedBean()
@@ -8963,7 +8963,7 @@ private void retriveCommitteeRemarksList(){
 		settinglist.add(1);
 		reqDTO.setSettingTypes(settinglist);
 
-		log.info("before retrieveScoreSettingDtls");
+		log.debug("before retrieveScoreSettingDtls");
 
 		specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -8972,7 +8972,7 @@ private void retriveCommitteeRemarksList(){
 		List<ScQtScoreSetting> list = resDTO.getScoreSettingResultBean()
 				.getResultList();
 
-		log.info("after retrieveScoreSettingDtls");
+		log.debug("after retrieveScoreSettingDtls");
 
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
@@ -9004,7 +9004,7 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 
-		log.info("before paramMap");
+		log.debug("before paramMap");
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
@@ -9012,12 +9012,12 @@ private void retriveCommitteeRemarksList(){
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
-		log.info("after paramMap");
+		log.debug("after paramMap");
 
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 
-		log.info("end generateTeknikalSpecificationPdf");
+		log.debug("end generateTeknikalSpecificationPdf");
 	}
 
 	/**
@@ -11623,7 +11623,7 @@ private void retriveCommitteeRemarksList(){
 		List<TplSpecQuestion> questions = resDTO.getSpecMaster()
 				.getTplSpecQuestions();
 		for (TplSpecQuestion specQuestion : questions) {
-			log.info("===specQuestion name====" + specQuestion.getClItem());
+			log.debug("===specQuestion name====" + specQuestion.getClItem());
 			if (null != specQuestion.getScoreTypeCode()
 					&& specQuestion.getScoreTypeCode().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.SCORE_TYPE_USER)) {
@@ -11764,7 +11764,7 @@ private void retriveCommitteeRemarksList(){
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> finanialSummaryDropDownValues(){
-		log.info("finanialSummaryDropDownValues");
+		log.debug("finanialSummaryDropDownValues");
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		selectItems.add(new SelectItem(null, ResourceBundleUtils
 				.getMessage("lbl.txt.select",
@@ -11791,7 +11791,7 @@ private void retriveCommitteeRemarksList(){
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> recommendationSummaryDropDownValues(){
-		log.info("recommendationSummaryDropDownValues");
+		log.debug("recommendationSummaryDropDownValues");
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		selectItems.add(new SelectItem(null, ResourceBundleUtils
 				.getMessage("lbl.txt.select",
@@ -11923,7 +11923,7 @@ private void retriveCommitteeRemarksList(){
 		debugLogger("deleteUploadFile");
 		
 		try{
-		log.info("deleteReportsUploadFile");
+		log.debug("deleteReportsUploadFile");
 		ScQtEvaluationReport selectedEvaluationReport = getManagedBean()
 				.getSelectedReport();
 		selectedEvaluationReport.setScQtEvaluationReportAttachment(null);
