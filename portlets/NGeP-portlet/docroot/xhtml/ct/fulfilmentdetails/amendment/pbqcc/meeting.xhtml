@@ -27,7 +27,8 @@
 				             <h:outputText value="#{lbl['lbl.ct.date.of.meeting']}" styleClass="required"/>
 				        </f:facet>
 			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
-			              maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+			              maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				   		  mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 				   		  required="true" label="#{lbl['lbl.ct.date.of.meeting']}"
 			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"

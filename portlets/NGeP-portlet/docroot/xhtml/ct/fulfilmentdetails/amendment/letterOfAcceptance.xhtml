@@ -20,7 +20,8 @@
 			<p:outputLabel value="#{lbl['lbl.ct.supplemental.contract.letter.date']}" styleClass="required" />
 			<h:panelGrid columns="2">
 	   			<p:calendar style="width:100px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
-	 				maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+	 				maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			  		pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					label="#{lbl['lbl.ct.supplemental.contract.letter.date']}" 
 					disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
