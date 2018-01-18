@@ -1325,6 +1325,11 @@ public class TaskReassignmentBackingBean extends
 			ctIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT,
 					IContractIntegrationSO.class);
+			if(getManagedBean()
+					.getTaskAssignmentSearchBean().getUser() != null){
+				reqDTO.setUserId(getManagedBean()
+						.getTaskAssignmentSearchBean().getUser().getUserId());
+			}
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setDocType(task.getDocType());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
