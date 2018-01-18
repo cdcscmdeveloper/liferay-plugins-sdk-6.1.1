@@ -85,11 +85,11 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 
 
 	public void searchAction() {
-		if(StringUtils.isBlank(getManagedBean().getApplNo()) && StringUtils.isBlank(getManagedBean().getSupplierName()) 
+/*		if(StringUtils.isBlank(getManagedBean().getApplNo()) && StringUtils.isBlank(getManagedBean().getSupplierName()) 
 			&& StringUtils.isBlank(getManagedBean().getEpNo()) && getManagedBean().getDistrictId() == 0 && 
 			getManagedBean().getStateId() == 0){
 			throw new EpException(MessageConst.ERROR_721048);
-		}
+		}*/
 		
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
