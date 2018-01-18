@@ -26,7 +26,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					action="#{templateSpecBackingBean.zoneQtyOkAction(templateSpecBean)}"
 					partialSubmit="true" process="@this, zoneQtyPnl"
-					update="zoneQtyPnl">
+					update="zoneQtyPnl, @(.calcAmount)">
 					<f:setPropertyActionListener
 						target="#{templateSpecBean.specComponentId}"
 						value="#{templateSpecId}" />
