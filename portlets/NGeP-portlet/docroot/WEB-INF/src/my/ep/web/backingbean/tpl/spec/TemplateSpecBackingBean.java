@@ -1899,6 +1899,25 @@ public class TemplateSpecBackingBean extends
 
 		return totalAmount;
 	}
+	
+	/**
+	 * Calculate the Total Amount Per Question
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 */
+	public void calcTotalAmountPerQuestion(TemplateSpecBean templateSpecBean, 
+			TplSpecQuestion specQuestion, boolean isService) {
+		List<TplSpecAnswer> specAnswerList = null;
+		if (specQuestion.getTplSpecAnswers() != null) {
+			specAnswerList = specQuestion.getTplSpecAnswers();
+		}
+		if (specAnswerList != null) {
+			for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
+				calcTotalAmount(templateSpecBean, tplSpecAnswer, isService);
+			}
+		}
+	}
 
 	/**
 	 * Calculate the total amount and amount per year for each item.
