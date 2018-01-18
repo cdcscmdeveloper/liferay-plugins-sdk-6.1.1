@@ -1582,13 +1582,12 @@ public class SmApplicationUtil {
 				if (per.isClerical() && !StringUtils.isBlank(per.getEpfNo())) {
 					staffCount = staffCount + 1;
 
-				} 
+				}
 				if (per.isProf() && !StringUtils.isBlank(per.getEpfNo())) {
 					profCount = profCount + 1;
 
-				} 
-				if (per.isSemiProf()
-						&& !StringUtils.isBlank(per.getEpfNo())) {
+				}
+				if (per.isSemiProf() && !StringUtils.isBlank(per.getEpfNo())) {
 					semiProfCount = semiProfCount + 1;
 				}
 			}
@@ -4303,12 +4302,14 @@ public class SmApplicationUtil {
 		return reasonDescList;
 	}
 
-	public static List<PmReasonDesc> retrieveMofRejectReason(String businessType) {
+	public static List<PmReasonDesc> retrieveMofRejectReason(
+			String businessType, String suppType, String applType) {
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
 				.value());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-		reqDTO.setParameterCodes(Arrays.asList(businessType));
+		reqDTO.setParameterCodes(Arrays
+				.asList(businessType, suppType, applType));
 		reqDTO.setRestrictionType(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
 		ReasonResDTO resDTO = SmServiceLookup.getReasonSO()
 				.retrieveSuppReasonByRestrType(reqDTO);
