@@ -5540,62 +5540,13 @@ public class QTDetailBackingBean extends
 	/**
 	 * Trigger to publish Quotation / Tender
 	 * 
-	 * @param qtId
-	 * 		the quotation / tender id
+	 * @param scQt
+	 * 		the quotation
 	 */
-	/*public void publishQT(ScQt scQt) {
-		log.info("publishQT-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
-		
-		IQTDetailSO qtDetailSO = null;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			log.info("qtId: " + scQt.getQtId());
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			scQt = qtDetailSO.retriveQTDetails(reqDTO)
-					.getQtDetail();
-			Calendar newPublishDate = Calendar.getInstance();
-			newPublishDate.setTime(DateUtils.getCurrentDate());
-			newPublishDate.add(Calendar.MINUTE, 15);
-			scQt.setPublishDate(newPublishDate.getTime());
-			if(scQt != null) {
-				log.info("call simple scheduler if QT is publishing today.");
-				ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
-				reqDTO.setQtdetail(scQt);
-				QuationTenderResDTO resDTO = qtDetailSO.updateQTDetails(reqDTO);
-				if(resDTO.isSuccessful()){
-					log.info("***** simple job was built and scQt is updated with new publish date *****");
-				}
-				FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
-									));
-				}
-			
-		}catch (SchedulerException e) {
-			log.info(scQt.getQtNo()+ " Publish failed bcoz of scheduler exception");
-			throw new EpException(e.getLocalizedMessage());
-		}catch(Exception e){
-			log.info(scQt.getQtNo()+ " Publish failed");
-			throw new EpException(e.getLocalizedMessage());
-		}
-		finally {
-			qtDetailSO = null;
-		}
-	}*/
 	
 	public void publishQT(ScQt scQt) {
 		
 		try{
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			scQt.setPublishDate(new Date());
-			reqDTO.setQtdetail(scQt);
-			scQt = getQtDetailSO().updateQTDetails(reqDTO).getQtDetail();
-			log.info("^^^^^ QT Publish time updated before publish to :"+scQt.getPublishDate());
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(scQt.getQtId());
 			ProposalResDTO proposalResDTO = getProposalSO()
