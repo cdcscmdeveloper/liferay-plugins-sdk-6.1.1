@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 public class SmVirtualCertHelper {
 	private static SmVirtualCertHelper instance = null;
 	private static Logger log = EpLogger.getLogger(SmVirtualCertHelper.class);
-	private final static String VIRTUAL_CERT_PATH = "SM/VIRTUAL_CERT";
+	private final static String VIRTUAL_CERT_PATH = "SM/VIRTUAL_CERT_NEW";
 	private final static String CERT_EXT = ".pdf";
 	private final static String HTTP_HEADER_TYPE_PDF = "application/pdf";
 	
