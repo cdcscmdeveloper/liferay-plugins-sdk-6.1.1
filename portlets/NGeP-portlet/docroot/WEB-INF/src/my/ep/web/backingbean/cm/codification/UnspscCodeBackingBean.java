@@ -1773,6 +1773,31 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									new FacesScopes().getUserLocale())));
 			return null;
 		}
+		
+		
+		if (this.getManagedBean().getRequestExtCodeList() != null && this.getManagedBean().getRequestExtCodeList().size()>0) {
+			
+			
+			for(CmRequestCode code : this.getManagedBean().getRequestExtCodeList()){
+				
+				if(StringUtils.isBlank(code.getTypeName()) || StringUtils.isBlank(code.getBrandName())
+						||StringUtils.isBlank(code.getColorName())||StringUtils.isBlank(code.getMeasurementName())){
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_716020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return null;
+				}
+				
+			}
+			
+			
+			
+		}
+		
+		
 
 		Map brandMap = new HashMap();
 		Map typeMap = new HashMap();
