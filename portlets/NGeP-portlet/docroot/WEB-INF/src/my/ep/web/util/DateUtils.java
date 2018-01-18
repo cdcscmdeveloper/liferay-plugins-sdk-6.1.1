@@ -558,16 +558,18 @@ public class DateUtils {
 	 * Fulfilment get end Date
 	 * Requirement from sector S implementation of end date setting
 	 */
-	public static Date getEndDate(Date startDate, int days,String date){
+	public static Date getEndDate(Date startDate, int term,String periodType){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
-		if(date.equals(ParameterConst.DELIVERY_TERM_DAYS)){
-			calendar.add(Calendar.DATE, days-1);
-		}if(date.equals(ParameterConst.DELIVERY_TERM_MONTHS)){
-			calendar.add(Calendar.MONTH, days-1);
-		}if(date.equals(ParameterConst.DELIVERY_TERM_YEARS)){
-			calendar.add(Calendar.YEAR, days-1);
+		if(periodType.equals(ParameterConst.DELIVERY_TERM_DAYS)){
+			calendar.add(Calendar.DATE, term);
+		}if(periodType.equals(ParameterConst.DELIVERY_TERM_MONTHS)){
+			calendar.add(Calendar.MONTH, term);
+		}if(periodType.equals(ParameterConst.DELIVERY_TERM_YEARS)){
+			calendar.add(Calendar.YEAR, term);
 		}
+		
+		calendar.add(Calendar.DATE, -1);
 		
 		return calendar.getTime();
 		
