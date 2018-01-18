@@ -183,9 +183,10 @@ public class QTDocumentsBackingBean extends
 		}
 		if (log.isDebugEnabled()) {
 			log.debug(message);
-		} else {
+		} 
+		/*else {
 			log.info(message);
-		}
+		}*/
 		
 	}
 
