@@ -21,7 +21,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						showOn="button"
 						value="#{directLOABackingBean.managedBean.scLoa.govtSignDate}"
-						mindate="#{DateUtils.getCurrentDateWithoutTime()}" required="true"
+						required="true"
 						readonlyInput="true"
 						label="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}" size="31"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
