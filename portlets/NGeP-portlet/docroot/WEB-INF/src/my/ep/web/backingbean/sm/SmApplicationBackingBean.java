@@ -927,7 +927,8 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmSupplier().getBusinessType()));
+						.getSmSupplier().getBusinessType(), smAppl
+						.getSupplierType(), applicationType));
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -4322,6 +4323,8 @@ public class SmApplicationBackingBean extends
 				// (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
 				// .getCategoryL2Code() != null && getManagedBean()
 				// .getSelectedCategory()
+				
+				
 				// .getPmCategoryL2()
 				// .getCategoryL2Code()
 				// .equalsIgnoreCase(
@@ -4366,6 +4369,8 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_722563);
 					} else if (!isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
+					}else{
+						validCat = true;
 					}
 				} else {
 					throw new EpException(MessageConst.ERROR_722533);
@@ -9973,7 +9978,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
 		getManagedBean().setReasonDescList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmSupplier().getBusinessType()));
+						.getSmSupplier().getBusinessType(), getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmAppl().getApplType()));
 		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 
