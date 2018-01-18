@@ -141,9 +141,10 @@ public class QTCommitteBackingBean extends
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
-		}else{
-			logger.info(message);
 		}
+		/*else{
+			logger.info(message);
+		}*/
 		
 	}
 
