@@ -265,9 +265,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		if (log.isDebugEnabled()) {
 			log.debug(message);
-		}else {
-			log.info(message);
 		}
+		/*else {
+			log.info(message);
+		}*/
 		
 	}
 
