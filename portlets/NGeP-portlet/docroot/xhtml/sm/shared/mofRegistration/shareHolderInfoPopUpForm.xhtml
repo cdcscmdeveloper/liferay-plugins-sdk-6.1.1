@@ -503,7 +503,6 @@
 									and backingBean.managedBean.selectedShareHolder.softcertFlg ne '0'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
-						disabled="#{backingBean.managedBean.popupAction eq 'U'}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')
