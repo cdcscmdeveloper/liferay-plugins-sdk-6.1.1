@@ -926,9 +926,7 @@ public class SmApplicationBackingBean extends
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
 		getManagedBean().setReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmSupplier().getBusinessType(), smAppl
-						.getSupplierType(), applicationType));
+				SmApplicationUtil.retrieveMofRejectReason());
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -9977,10 +9975,7 @@ public class SmApplicationBackingBean extends
 	public void resetSearchRejectedReason() {
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
 		getManagedBean().setReasonDescList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmSupplier().getBusinessType(), getManagedBean()
-						.getSmAppl().getSupplierType(), getManagedBean()
-						.getSmAppl().getApplType()));
+				SmApplicationUtil.retrieveMofRejectReason());
 		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 

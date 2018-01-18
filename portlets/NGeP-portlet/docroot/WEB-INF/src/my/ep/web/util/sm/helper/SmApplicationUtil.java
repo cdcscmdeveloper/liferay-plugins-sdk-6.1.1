@@ -3585,10 +3585,10 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-//		managedBean.setDisAllowOwnerEdit(true);
-//		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
-//			managedBean.setDisAllowOwnerEdit(false);
-//		}
+		// managedBean.setDisAllowOwnerEdit(true);
+		// if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
+		// managedBean.setDisAllowOwnerEdit(false);
+		// }
 		managedBean.setDisAllowOwnerEdit(false);
 	}
 
@@ -4303,17 +4303,11 @@ public class SmApplicationUtil {
 		return reasonDescList;
 	}
 
-	public static List<PmReasonDesc> retrieveMofRejectReason(
-			String businessType, String suppType, String applType) {
+	public static List<PmReasonDesc> retrieveMofRejectReason() {
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
-				.value());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-		reqDTO.setParameterCodes(Arrays
-				.asList(businessType, suppType, applType));
-		reqDTO.setRestrictionType(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
 		ReasonResDTO resDTO = SmServiceLookup.getReasonSO()
-				.retrieveSuppReasonByRestrType(reqDTO);
+				.retrieveSupplierRejectionReason(reqDTO);
 		return resDTO.getReasonDescList();
 	}
 
