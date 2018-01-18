@@ -4323,8 +4323,7 @@ public class SmApplicationBackingBean extends
 				// (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
 				// .getCategoryL2Code() != null && getManagedBean()
 				// .getSelectedCategory()
-				
-				
+
 				// .getPmCategoryL2()
 				// .getCategoryL2Code()
 				// .equalsIgnoreCase(
@@ -4369,7 +4368,7 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_722563);
 					} else if (!isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
-					}else{
+					} else {
 						validCat = true;
 					}
 				} else {
@@ -6824,6 +6823,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitSmApplToBpm(String applType) {
 
+		validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
 		SmApplicationUtil
 				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
@@ -11308,5 +11308,22 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
+	}
+
+	private void validateDontHavePersonnelWithLogin() {
+		boolean valid = false;
+		
+		if(getManagedBean().getSmAppl().getSmPersonnels()!=null){
+			for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+				if (!StringUtils.isBlank(per.getEpRole())
+						&& per.getPmUser() != null
+						&& per.getPmUser().getUserId() != null) {
+					valid = true;
+				}
+			}
+			if (!valid) {
+				throw new EpException(MessageConst.ERROR_700124);
+			}
+		}
 	}
 }
