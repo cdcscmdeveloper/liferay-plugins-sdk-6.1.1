@@ -24,24 +24,23 @@
 				<p:commandButton value="#{lbl['lbl.bpm.btn.refresh']}"
 					onclick="this.disabled=true;" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
-					action="#{bpmErrorListBackingBean.refreshError()}" update="@form">
+					action="#{bpmErrorListBackingBean.refreshError()}" update="@form" >
 				</p:commandButton>
 			</div>
 
-			<p:dataTable
+			<p:dataTable id="errorListMyErrorId"
 				value="#{bpmErrorListBackingBean.managedBean.errorListDataModel}"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
-				rowIndexVar="rowIndex" rows="10" id="errorListMyErrorId"
+				rowIndexVar="rowIndex" rows="10"
 				style="width:100%;" var="errors" widgetVar="errorListTableWidget">
 				<ac:paginator for="errorListMyErrorId"></ac:paginator>
-
 
 				<p:column width="25%;" style="white-space:normal;">
 					<f:facet name="header">#{lbl['lbl.bpm.title']}</f:facet>
 					<p:commandLink
 						action="#{bpmErrorListBackingBean.onClickPayload(errors.title,errors.taskId)}"
-						oncomplete="payloadPopUp.show()" update="@form">
-							#{errors.title}
+						oncomplete="payloadPopUp.show()" partialSubmit="true"
+						update="@form" >#{errors.title}
 					</p:commandLink>
 				</p:column>
 
@@ -70,14 +69,19 @@
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>
-
+			
 			<p:dialog id="payloadPopUp" widgetVar="payloadPopUp"
 				header="#{bpmErrorListBackingBean.managedBean.errorMessageTitle}"
-				styleClass="screen-title" resizable="false" modal="true" width="400"
-				height="350">
+				styleClass="screen-title" resizable="false" modal="true" width="650"
+				height="500">
 				<h:outputText
 					value="#{bpmErrorListBackingBean.managedBean.payloadContent}"
-					escape="false" />
+					escape="false" >
+				</h:outputText>
+				<p:inputTextarea autoResize="false" readonly="true"
+					value="#{bpmErrorListBackingBean.managedBean.bodyPayload}"
+					escape="false" style="margin: 0px;width: 602px;height: 367px;">
+				</p:inputTextarea>
 			</p:dialog>
 
 		</h:panelGroup>
