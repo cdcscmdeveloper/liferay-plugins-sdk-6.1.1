@@ -15,6 +15,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constants.BpmConstants;
+import my.ep.jaxb.error.data.ErrorDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
@@ -45,13 +46,13 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	private String docNoGroup;
 	private String errorDescGroup;
 	private String payloadContent;
+	private String bodyPayload;
 	private int showIndex = 0;
 	private Boolean claim = true;
-	
 	private List<SelectItem> docStatusList;
 	private int docStatus;
-	
 	private long docId;
+	private ErrorDataType errorDetails = new ErrorDataType();
 	
 	private PagingDataModel<WorklistItemVO> errorListDataModel = new errorPagingDataModel();
 
@@ -294,6 +295,20 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	public void setPayloadContent(String payloadContent) {
 		this.payloadContent = payloadContent;
 	}
+	
+	/**
+	 * @return the bodyPayload
+	 */
+	public String getBodyPayload() {
+		return bodyPayload;
+	}
+
+	/**
+	 * @param bodyPayload the bodyPayload to set
+	 */
+	public void setBodyPayload(String bodyPayload) {
+		this.bodyPayload = bodyPayload;
+	}
 
 	/**
 	 * @return the showIndex
@@ -366,6 +381,20 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * @return the errorDetails
+	 */
+	public ErrorDataType getErrorDetails() {
+		return errorDetails;
+	}
+
+	/**
+	 * @param errorDetails the errorDetails to set
+	 */
+	public void setErrorDetails(ErrorDataType errorDetails) {
+		this.errorDetails = errorDetails;
+	}
+
+	/**
 	 * @return the errorListDataModel
 	 */
 	public PagingDataModel<WorklistItemVO> getErrorListDataModel() {
@@ -398,15 +427,14 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 			
 
 			try {
-				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="
-						+ getAssignment());
-				System.out.println(">>>>>>>.pageNo()="+getPageNo());
-				System.out.println(">>>>>>>.pageSize()="+getPageSize());
+//				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="
+//						+ getAssignment());
+//				System.out.println(">>>>>>>.pageNo()="+getPageNo());
+//				System.out.println(">>>>>>>.pageSize()="+getPageSize());
 
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 				
-				System.out.println("testing BPM auth******" + getToken());
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -421,8 +449,6 @@ public class BPMErrorListManagedBean extends BaseManagedBean{
 						setTitle(worklistItemVO.getTitle());
 					}
 				}
-				
-				
 				
 				if (responseDTO.getWorklistVO() != null) {
 					System.out.println("testing BPM******size="
