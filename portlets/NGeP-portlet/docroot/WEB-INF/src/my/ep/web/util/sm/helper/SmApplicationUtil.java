@@ -2776,7 +2776,7 @@ public class SmApplicationUtil {
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		if (!EntityHelper.isCollectionEmpty(resultList)) {
+		if (!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0) {
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
