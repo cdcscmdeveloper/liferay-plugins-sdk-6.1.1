@@ -8,8 +8,6 @@ import java.util.Set;
 
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
-import my.ep.web.scheduler.constants.common.SchedulerConstants;
-import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
 import my.ep.web.scheduler.listener.EpSchedulerListener;
 
 import org.apache.commons.lang3.StringUtils;
@@ -458,7 +456,7 @@ public class EpSchedulerHelper extends QuartzAdapter {
 				if (!instance.isStarted()) {
 					log.info(">>>>>EP SCHEDULER INSTANCE IS NOT STARTED<<<<<<");
 					log.info(">>>>>EP SCHEDULER DELAYING STARTUP<<<<<<");
-					instance.startDelayed(600);
+					instance.start();
 					log.info(">>>>>EP SCHEDULER INSTANCE IS FINISH STARTED<<<<<<");
 				}
 				log.info(">>>>>EP SCHEDULER LISTENER START ADDING ALL JOBS<<<<<<");
@@ -473,6 +471,19 @@ public class EpSchedulerHelper extends QuartzAdapter {
 		}
 		return instance;
 
+	}
+	
+	public static void shutdownScheduler() {
+		if (instance != null) {
+			try {
+				instance.shutdown(true);
+			} catch (SchedulerException e) {
+				log.info(">>>>>FAILED TO SHUTDOWN EP SCHEDULER DUE TO ERR MSG:"
+						+ e.getMessage() + "<<<<<<<<<");
+			} finally {
+				instance = null;
+			}
+		} 
 	}
 
 	/**
