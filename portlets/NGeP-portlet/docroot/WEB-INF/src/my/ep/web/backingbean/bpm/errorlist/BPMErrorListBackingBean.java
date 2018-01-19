@@ -8,11 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.service.osb.bpm.IOsbLoggingSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.osb.bpm.OsbLoggingReqDTO;
+import my.ep.dto.osb.bpm.OsbLoggingResDTO;
 import my.ep.jaxb.error.data.ErrorDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -23,6 +27,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.errorlist.BPMErrorListManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
@@ -151,6 +156,9 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 
 	public void onClickPayload(String title,String taskId) throws JAXBException{
 		
+		IOsbLoggingSO loggingSO = (IOsbLoggingSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT, IOsbLoggingSO.class);
+		
 		StringBuilder errorDisplay = new StringBuilder();
 		
 		this.getManagedBean().setErrorMessageTitle("");
@@ -163,10 +171,16 @@ public class BPMErrorListBackingBean extends BaseBackingBean<BPMErrorListManaged
 		errorDisplay.append("<br/>ErrorCode: " + pojo.getErrorCode());
 		errorDisplay.append("<br/>ErrorDesc: " + pojo.getErrorDesc());
 		errorDisplay.append("<br/>RequestUID: " + pojo.getRqUID());
+		errorDisplay.append("<br/>Body Payload: <br/>");
+		
+		OsbLoggingReqDTO reqDTO = new OsbLoggingReqDTO();
+		
+		reqDTO.setReqUid(pojo.getRqUID());
+		
+		OsbLoggingResDTO resDTO = loggingSO.retrieveOsbBodyPayload(reqDTO);
 		
 		this.getManagedBean().setPayloadContent(errorDisplay.toString());
-		
-		refreshError();
+		this.getManagedBean().setBodyPayload(resDTO.getBodyPayload());
 	}
 	
 	private ErrorDataType getPojo(String taskId){
