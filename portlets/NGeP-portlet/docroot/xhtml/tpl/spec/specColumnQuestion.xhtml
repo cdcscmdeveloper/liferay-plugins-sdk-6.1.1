@@ -136,8 +136,7 @@
 					<ac:validateNumber maxIntegerDigits="7"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax partialSubmit="true" process="@this"
-						update="@this, freqUOMMsg, ansYearPG, ansPG, @(.calcAmount)"
-						listener="#{templateSpecBackingBean.calcTotalAmountPerQuestion(templateSpecBean, question, isItemTypeService)}" />
+						update="@this, freqUOMMsg" />
 				</p:inputText>
 				<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
 			</h:panelGroup>
@@ -153,8 +152,7 @@
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
 					<p:ajax partialSubmit="true" process="@this"
-						update="@this, dayUOMMsg, ansYearPG, ansPG, @(.calcAmount)" 
-						listener="#{templateSpecBackingBean.calcTotalAmountPerQuestion(templateSpecBean, question, isItemTypeService)}" />
+						update="@this, dayUOMMsg" />
 					<f:attribute name="min" value="0.1" />
 					<f:attribute name="max" value="23.9" />
 				</p:inputText>
@@ -172,8 +170,7 @@
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
 					<p:ajax partialSubmit="true" process="@this"
-						update="@this, monthUOMMsg, ansYearPG, ansPG, @(.calcAmount)"
-						listener="#{templateSpecBackingBean.calcTotalAmountPerQuestion(templateSpecBean, question, isItemTypeService)}" />
+						update="@this, monthUOMMsg" />
 					<f:attribute name="min" value="0.1" />
 					<f:attribute name="max" value="31.0" />
 				</p:inputText>
