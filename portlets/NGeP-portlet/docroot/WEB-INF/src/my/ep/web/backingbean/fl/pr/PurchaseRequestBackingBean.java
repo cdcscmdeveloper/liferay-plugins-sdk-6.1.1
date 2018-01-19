@@ -3550,13 +3550,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
 				if(itemAmtMap.containsKey(item.getScRequestItem().getRequestNoteItemId())){
-					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), itemAmtMap.get(item.getScRequestItem().getRequestNoteItemId()).add(new BigDecimal(item.getGstUnitPrice().doubleValue()*item.getOrderedQty().doubleValue())));
+					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), itemAmtMap.get(item.getScRequestItem().getRequestNoteItemId()).add(new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue())));
 				}else{
 					// Skip validation if item not yet codified.
 					if(item.getCmItem()==null) {
 						continue;
 					}
-					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), new BigDecimal(item.getGstUnitPrice().doubleValue()*item.getOrderedQty().doubleValue()));
+					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue()));
 					requestItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item.getScRequestItem());
 				}
 			}
