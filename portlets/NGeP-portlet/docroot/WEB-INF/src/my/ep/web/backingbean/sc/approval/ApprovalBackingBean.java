@@ -978,6 +978,7 @@ public class ApprovalBackingBean extends
 								try {
 									log.info("call simple scheduler if QT is publishing today.");
 									ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qt);
+									EpSchedulerHelper.shutdownScheduler();
 								} catch (SchedulerException e) {
 									e.printStackTrace();
 									log.error(e.getMessage());
@@ -993,7 +994,8 @@ public class ApprovalBackingBean extends
 								JobKey jobKey = ScSchedulerHelper.getInstance().getQTClosingJobKey(qt);
 								jobKey = EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup());
 								if (jobKey != null) {
-									EpSchedulerHelper.deleteJobAndAssociatedTriggers(jobKey);	
+									EpSchedulerHelper.deleteJobAndAssociatedTriggers(jobKey);
+									EpSchedulerHelper.shutdownScheduler();
 								}
 							}
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {

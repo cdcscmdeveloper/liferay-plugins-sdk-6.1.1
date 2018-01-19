@@ -61,6 +61,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.helper.sc.ScSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -345,6 +346,7 @@ public class BSVAttendanceBackingBean extends
 					try {
 						log.info("call simple scheduler if QT is closing today.");
 						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
+						EpSchedulerHelper.shutdownScheduler();
 					} catch (SchedulerException e) {
 						e.printStackTrace();
 						log.error(e.getMessage());
