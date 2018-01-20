@@ -6821,7 +6821,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitSmApplToBpm(String applType) {
 
-		validateDontHavePersonnelWithLogin();
+//		validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
 		SmApplicationUtil
 				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
@@ -11317,7 +11317,10 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (!valid) {
-				throw new EpException(MessageConst.ERROR_700124);
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				reqDTO.setAppl(getManagedBean().getSmAppl());
+				SmServiceLookup.getPersonnelSO().updatePersonnelRoleWithPreviousAppl(reqDTO);
+//				throw new EpException(MessageConst.ERROR_700124);
 			}
 		}
 	}
