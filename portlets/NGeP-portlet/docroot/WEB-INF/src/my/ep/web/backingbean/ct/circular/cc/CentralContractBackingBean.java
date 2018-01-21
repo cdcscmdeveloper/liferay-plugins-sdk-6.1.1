@@ -800,20 +800,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	/**
 	 * The method used to download the attached file.
 	 * 
-	 * @param  type
 	 * @throws IOException  if an input or output exception occurred
 	 * @see    IOException
 	 */
-	public void downloadFile(int type) throws IOException {
+	public void downloadFile() throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-
-		String fileName = null;
-		String filePath = null;
-		if(type==1) {
-			fileName = getManagedBean().getCircularVer().getCircularFileName();
-			filePath = DocumentRepositoryUtils.getDBFilePath(getManagedBean().getCircularVer().getCircularFilePath());
-		} 
+		
+		String fileName = getManagedBean().getCircularVer().getCircularFileName();
+		String filePath = DocumentRepositoryUtils.getDBFilePath(getManagedBean().getCircularVer().getCircularFilePath());
 
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
 		res.setHeader( "Content-Transfer-Encoding", "binary" );
