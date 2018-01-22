@@ -693,75 +693,76 @@ public class AccessApplBackingBean extends
 			}
 		}
 		
-		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
-		if(user != null){
-			PmUserOrg currentUserOrg = null;
-			for(PmUserOrg userOrg : user.getPmUserOrgs()){
-				if(DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg().intValue()){
-					currentUserOrg = userOrg;
-					break;
-				}
-			}
-			
-			if(currentUserOrg != null){
-				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
-						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
-					String orgName = null;
-					if(ParameterConst.ORG_TYPE_SUPPLIER.equals(currentUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
-						throw new EpException(MessageConst.ERROR_770223,
-								new String[] {orgName});
-					}else {
-						if(ParameterConst.ORG_TYPE_FACTORING.equals(currentUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
-							orgName = currentUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
-						}else{
-							orgName = currentUserOrg.getPmOrgProfile().getOrgName();
-						}
-						throw new EpException(MessageConst.ERROR_770217,
-								new String[] {orgName});
+		if(!BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+			PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
+			if(user != null){
+				PmUserOrg currentUserOrg = null;
+				for(PmUserOrg userOrg : user.getPmUserOrgs()){
+					if(DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg().intValue()){
+						currentUserOrg = userOrg;
+						break;
 					}
-					
-				}else{
-					boolean hasMrRole = false;
-					boolean hasCpRole = false;
-					for(PmUserRole userRole : currentUserOrg.getPmUserRoles()){
-						if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg().intValue()){
-							if(RoleCode.MARKET_RESEARCH.value().equals(userRole.getPmRole().getRoleCode())){
-								hasMrRole = true;
-							}else if(RoleCode.COMPANY_PROFILE.value().equals(userRole.getPmRole().getRoleCode())){
-								hasCpRole = true;
+				}
+				
+				if(currentUserOrg != null){
+					if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
+							.equals(accessAppl.getOrgProfile().getOrgProfileId())){
+						String orgName = null;
+						if(ParameterConst.ORG_TYPE_SUPPLIER.equals(currentUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+							throw new EpException(MessageConst.ERROR_770223,
+									new String[] {orgName});
+						}else {
+							if(ParameterConst.ORG_TYPE_FACTORING.equals(currentUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+								orgName = currentUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
+							}else{
+								orgName = currentUserOrg.getPmOrgProfile().getOrgName();
+							}
+							throw new EpException(MessageConst.ERROR_770217,
+									new String[] {orgName});
+						}
+						
+					}else{
+						boolean hasMrRole = false;
+						boolean hasCpRole = false;
+						for(PmUserRole userRole : currentUserOrg.getPmUserRoles()){
+							if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg().intValue()){
+								if(RoleCode.MARKET_RESEARCH.value().equals(userRole.getPmRole().getRoleCode())){
+									hasMrRole = true;
+								}else if(RoleCode.COMPANY_PROFILE.value().equals(userRole.getPmRole().getRoleCode())){
+									hasCpRole = true;
+								}
 							}
 						}
-					}
-					
-					if(accessAppl.isCompanyProfile() && hasCpRole && accessAppl.isMarketResearch() && hasMrRole){						
-						throw new EpException(MessageConst.ERROR_770216,
-								new String[] {ResourceBundleUtils
-								.getMessage("lbl.pm.access.app.cp.and.mr",
-										new String[] {},
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()),
-										PmCommonUtil.getBasePortalUrl()});
-					}else if(accessAppl.isCompanyProfile() && hasCpRole){
-						throw new EpException(MessageConst.ERROR_770216,
-								new String[] {ResourceBundleUtils
-								.getMessage("lbl.pm.access.app.company.profile",
-										new String[] {},
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()),
-										PmCommonUtil.getBasePortalUrl()});
-					}else if(accessAppl.isMarketResearch() && hasMrRole){
-						throw new EpException(MessageConst.ERROR_770216,
-								new String[] {ResourceBundleUtils
-								.getMessage("lbl.pm.access.app.market.research",
-										new String[] {},
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()),
-										PmCommonUtil.getBasePortalUrl()});
+						
+						if(accessAppl.isCompanyProfile() && hasCpRole && accessAppl.isMarketResearch() && hasMrRole){						
+							throw new EpException(MessageConst.ERROR_770216,
+									new String[] {ResourceBundleUtils
+									.getMessage("lbl.pm.access.app.cp.and.mr",
+											new String[] {},
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()),
+											PmCommonUtil.getBasePortalUrl()});
+						}else if(accessAppl.isCompanyProfile() && hasCpRole){
+							throw new EpException(MessageConst.ERROR_770216,
+									new String[] {ResourceBundleUtils
+									.getMessage("lbl.pm.access.app.company.profile",
+											new String[] {},
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()),
+											PmCommonUtil.getBasePortalUrl()});
+						}else if(accessAppl.isMarketResearch() && hasMrRole){
+							throw new EpException(MessageConst.ERROR_770216,
+									new String[] {ResourceBundleUtils
+									.getMessage("lbl.pm.access.app.market.research",
+											new String[] {},
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()),
+											PmCommonUtil.getBasePortalUrl()});
+						}
 					}
 				}
 			}
 		}
-		
 		if(BpmOutcomeConst.BPM_REJECT.equals(outcome) && !accessAppl.isBrandNew() && StringUtils.isBlank(getManagedBean().getRemarks())){
 			throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils
 					.getMessage("lbl.pm.access.app.remarks",
@@ -770,6 +771,7 @@ public class AccessApplBackingBean extends
 							new FacesScopes().getUserLocale())});
 		}
 	}
+	
 	
 	/**
 	 * Get Facescopes
