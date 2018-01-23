@@ -4287,36 +4287,38 @@ public class SmCommonUtil {
 				"pmCountry", "pmState", "pmCity", "pmDistrict" })) {
 			retVal = true;
 		} else {
-			if ((latest.getPmCountry() != null && current.getPmCountry() == null)
-					|| (latest.getPmCountry() == null && current.getPmCountry() != null)
-					|| (latest.getPmCountry() != null
-							&& current.getPmCountry() != null && latest
-							.getPmCountry().getCountryId()
-							.compareTo(current.getPmCountry().getCountryId()) != 0)) {
-				retVal = true;
-			} else if ((latest.getPmState() != null && current.getPmState() == null)
-					|| (latest.getPmState() == null && current.getPmState() != null)
-					|| (latest.getPmState() != null
-							&& current.getPmState() != null && latest
-							.getPmState().getStateId()
-							.compareTo(current.getPmState().getStateId()) != 0)) {
-				retVal = true;
-			} else if ((latest.getPmCity() != null && current.getPmCity() == null)
-					|| (latest.getPmCity() == null && current.getPmCity() != null)
-					|| (latest.getPmCity() != null
-							&& current.getPmCity() != null && latest
-							.getPmCity().getCityId()
-							.compareTo(current.getPmCity().getCityId()) != 0)) {
-				retVal = true;
-			} else if ((latest.getPmDistrict() != null && current
-					.getPmDistrict() == null)
-					|| (latest.getPmDistrict() == null && current
-							.getPmDistrict() != null)
-					|| (latest.getPmDistrict() != null
-							&& current.getPmDistrict() != null && latest
-							.getPmDistrict().getDistrictId()
-							.compareTo(current.getPmDistrict().getDistrictId()) != 0)) {
-				retVal = true;
+			if(latest!=null && current!=null){
+				if ((latest.getPmCountry() != null && current.getPmCountry() == null)
+						|| (latest.getPmCountry() == null && current.getPmCountry() != null)
+						|| (latest.getPmCountry() != null
+								&& current.getPmCountry() != null && latest
+								.getPmCountry().getCountryId()
+								.compareTo(current.getPmCountry().getCountryId()) != 0)) {
+					retVal = true;
+				} else if ((latest.getPmState() != null && current.getPmState() == null)
+						|| (latest.getPmState() == null && current.getPmState() != null)
+						|| (latest.getPmState() != null
+								&& current.getPmState() != null && latest
+								.getPmState().getStateId()
+								.compareTo(current.getPmState().getStateId()) != 0)) {
+					retVal = true;
+				} else if ((latest.getPmCity() != null && current.getPmCity() == null)
+						|| (latest.getPmCity() == null && current.getPmCity() != null)
+						|| (latest.getPmCity() != null
+								&& current.getPmCity() != null && latest
+								.getPmCity().getCityId()
+								.compareTo(current.getPmCity().getCityId()) != 0)) {
+					retVal = true;
+				} else if ((latest.getPmDistrict() != null && current
+						.getPmDistrict() == null)
+						|| (latest.getPmDistrict() == null && current
+								.getPmDistrict() != null)
+						|| (latest.getPmDistrict() != null
+								&& current.getPmDistrict() != null && latest
+								.getPmDistrict().getDistrictId()
+								.compareTo(current.getPmDistrict().getDistrictId()) != 0)) {
+					retVal = true;
+				}
 			}
 		}
 		return retVal;
