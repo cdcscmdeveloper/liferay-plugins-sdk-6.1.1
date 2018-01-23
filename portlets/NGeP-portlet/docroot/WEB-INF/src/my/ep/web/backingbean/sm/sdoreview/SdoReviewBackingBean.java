@@ -505,7 +505,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 					.getSmAppl().getSupplierType(), getManagedBean()
 					.getSmAppl().getApplType(), getManagedBean()
-					.getSmAppl().getApplCategoryType());
+					.getSmAppl().getApplCategoryType(), getManagedBean().getZoneCode());
 			reqDTO.setPmUser(poUser);
 			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
 			
@@ -524,12 +524,12 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmAppl().getApplType(), getManagedBean()
-						.getSmAppl().getApplCategoryType());
+						.getSmAppl().getApplCategoryType(),getManagedBean().getZoneCode());
 			}else{
 				poUser = SmCommonUtil.getInstance().retrievePOByUserIdAndJobTask(loginId, 
 						getManagedBean().getSmAppl().getSupplierType(), getManagedBean()
 						.getSmAppl().getApplType(), getManagedBean()
-						.getSmAppl().getApplCategoryType());
+						.getSmAppl().getApplCategoryType(), getManagedBean().getZoneCode());
 			}
 
 			setPOWeightage(poUser);
