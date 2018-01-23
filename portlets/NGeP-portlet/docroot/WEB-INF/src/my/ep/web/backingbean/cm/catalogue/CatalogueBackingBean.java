@@ -259,8 +259,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.retriveSupplierProfiles(supplierReqDTO);
 
 		
-		if(smResDTO.getResultBean()==null){
-			throw new EpException("Unable to get Supplier Profile");
+		if (smResDTO.getResultBean().getResultList().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_721017);
 		}
 		
 		
@@ -2166,8 +2166,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void districtChecked() {
 
-		log.debug("********hktan**********");
-
 		/*
 		 * log.debug("boolean:"+this.getManagedBean().getSelectedPricing().
 		 * isSelected());
@@ -3191,12 +3189,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 
-
-
-
 			log.info("last check review"+this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
-
-
 
 			for (CmPromotionTierPricing promotion : this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings()) {
