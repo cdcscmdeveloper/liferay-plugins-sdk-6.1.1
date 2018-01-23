@@ -595,6 +595,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					StringUtils.join(lvl2Ls, ","));
 			params.put(SmReportConst.PARAM_CAT_L3,
 					StringUtils.join(lvl3Ls, ","));
+		}else{
+			throw new EpException(MessageConst.ERROR_REPORT_780047);
 		}
 	}
 
