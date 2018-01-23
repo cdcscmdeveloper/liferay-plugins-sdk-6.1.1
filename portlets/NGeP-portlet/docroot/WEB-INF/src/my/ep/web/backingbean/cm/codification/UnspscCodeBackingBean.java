@@ -207,7 +207,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
-
+		supplierReqDTO.setAllStatuses(true);
 		// this block is to identify the request from Catalogue Admin or
 		// Supplier
 		if (isAllSupplier()) {
