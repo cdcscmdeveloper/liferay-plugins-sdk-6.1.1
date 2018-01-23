@@ -43,7 +43,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
-				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}"
+				<h:inputText style="width:60%" label="#{lbl['lbl.sc.content']}"
 				    id="contendId"
 					value="#{scLoaReport.title}" required="true"
 					disabled="#{directLOABackingBean.managedBean.readOnly}"
@@ -61,7 +61,7 @@
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
-			<p:column style="width:10%;text-align: center;"
+			<p:column style="text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
