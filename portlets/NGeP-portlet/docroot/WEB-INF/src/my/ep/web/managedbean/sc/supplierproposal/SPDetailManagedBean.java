@@ -209,6 +209,19 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
+	
+	/**
+	 * Default Consructor
+	 */
+	public SPDetailManagedBean() {
+		debugLogger("inside SPDetailManagedBean");
+	}
+	
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+	}
 
 	/**
 	 * Gets the spki backing bean.
@@ -245,12 +258,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.selectMultipleProposalList = selectMultipleProposalList;
 	}
 
-	/**
-	 * Default Consructor
-	 */
-	public SPDetailManagedBean() {
-		log.info("inside ");
-	}
+	
 
 	/**
 	 * Gets the sm basic company.
