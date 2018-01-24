@@ -729,7 +729,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				remark.setParent(parent);
+				if(null!=workFlowStatus && !workFlowStatus.isBrandNew()){
 				remark.setScWorkFlowStatus(workFlowStatus);
+				}
 
 				scRemarks.add(0, remark);
 			}
