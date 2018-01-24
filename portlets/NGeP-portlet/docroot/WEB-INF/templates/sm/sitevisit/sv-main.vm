@@ -75,7 +75,7 @@
 		<tr align="left">
 			<td width="25%"><b>Processing Officer</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$!poName</td>
 		</tr>
 		
 		<tr align="left">
