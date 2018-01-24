@@ -321,8 +321,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
-			reqDTO.setMto(getManagedBean().isMto());
-			reqDTO.setImportedItems(getManagedBean().isImportedItems());
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -1315,13 +1313,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(newItem.getScRequestItem().getRequestNoteItemId())) {
 						ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 						contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-						contractItemReqDTO.setUomId(selectedItem.getScRequestItem().getUom().getUomId());
-						if(selectedItem.getScRequestItem().getCmItem() != null && selectedItem.getScRequestItem().getCmItem().getExtensionCode() != null){
-							contractItemReqDTO.setItemCode(selectedItem.getScRequestItem().getCmItem().getExtensionCode());
-						}else{
-							contractItemReqDTO.setItemCode(selectedItem.getScRequestItem().getTempUnspscCode());
-						}
-						ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
+						contractItemReqDTO.setRequestItemId(selectedItem.getScRequestItem().getRequestNoteItemId());
+						ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 						selectedItem.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
 						existed = true;
 						itemsList.add(selectedItem);
@@ -3785,13 +3778,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr = new FlFulfilmentItemAddr();
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
-				contractItemReqDTO.setUomId(flTempItem.getScRequestItem().getUom().getUomId());
-				if(flTempItem.getScRequestItem().getCmItem() != null && flTempItem.getScRequestItem().getCmItem().getExtensionCode() != null){
-					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
-				}else{
-					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
-				}
-				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
+				contractItemReqDTO.setRequestItemId(flTempItem.getScRequestItem().getRequestNoteItemId());
+				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 				if(getManagedBean().getTaskName() != null){
 					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
 							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
@@ -4326,13 +4314,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			for(FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 				contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-				contractItemReqDTO.setUomId(itemAddr.getScRequestItem().getUom().getUomId());
-				if(itemAddr.getScRequestItem().getCmItem() != null && itemAddr.getScRequestItem().getCmItem().getExtensionCode() != null){
-					contractItemReqDTO.setItemCode(itemAddr.getScRequestItem().getCmItem().getExtensionCode());
-				}else{
-					contractItemReqDTO.setItemCode(itemAddr.getScRequestItem().getTempUnspscCode());
-				}
-				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
+				contractItemReqDTO.setRequestItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
+				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 				if(getManagedBean().getTaskName() != null){
 					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
 							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
