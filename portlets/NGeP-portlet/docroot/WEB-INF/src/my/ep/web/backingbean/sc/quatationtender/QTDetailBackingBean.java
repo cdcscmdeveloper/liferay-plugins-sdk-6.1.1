@@ -2456,11 +2456,19 @@ public class QTDetailBackingBean extends
 						String titleName = parameterHelper.getParameterDesc(
 								ParameterTypeConst.APPROVAL_CATEGORY,
 								approvalCategoryCode);
-
+                      if(null!=scQt.getCurrentWorkFlowStatus() && scQt.getCurrentWorkFlowStatus().isBrandNew()){
+                    	if(null==qtApproval.getScQtApprovalRemarks() || qtApproval.getScQtApprovalRemarks().size()==0) {  
 						qtApproval.setScQtApprovalRemarks(initializeRemarks(
 								qtApproval, scQt.getCurrentWorkFlowStatus(),
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
+                    	}
+                         }else{
+                        	 qtApproval.setScQtApprovalRemarks(initializeRemarks(
+     								qtApproval, scQt.getCurrentWorkFlowStatus(),
+     								qtApproval.getScQtApprovalRemarks(),
+     								ScQtApprovalRemark.class)); 
+                         }
 						// qtApproval.setScQtApprovalAttachment(null);
 						// qtApproval.setScQt(this.getManagedBean().getQt());
 
