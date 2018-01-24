@@ -92,9 +92,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 							&& per.getPmUser() == null
 							&& StringUtils.isBlank(per.getEpRole())
 							&& per.getIdentificationTypeId() != null
-							&& per.getIdentificationType() != null
-							&& per.getIdentificationType().getParameterCode()
-									.equals(SupplierManagementConst.NEW_IC)) {
+							&& per.getIdentificationType() != null) {
 						if ((SmPersonnel) EntityHelper
 								.getEntityBySinglePropertyFromList(
 										per.getIdentificationNo(),
