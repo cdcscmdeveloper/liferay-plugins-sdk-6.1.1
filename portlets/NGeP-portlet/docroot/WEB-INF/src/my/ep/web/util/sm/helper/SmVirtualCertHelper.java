@@ -172,12 +172,7 @@ public class SmVirtualCertHelper {
 			}
 			//commonDownload(finalFile, fileName);
 		}catch(Exception ex){
-			log.info("******genReport******" + cert.getMofCertId() + " - " + ex.getMessage());
-			if(isDeleteCategory){
-				cert.setFilePath(path);
-				cert.setFileName(fileName);
-				updateMOFCertFilePath(cert);
-			}
+			log.info("******genReport ex******" + cert.getMofCertId() + " - " + ex.getMessage());
 		} finally {
 			buf.close();
 			out.close();
