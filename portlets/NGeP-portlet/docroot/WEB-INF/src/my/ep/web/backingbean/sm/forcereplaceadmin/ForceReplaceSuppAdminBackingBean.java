@@ -11,6 +11,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -19,6 +20,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -222,6 +224,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
+		reqDTO.setTaskList(getTaskList());
 		return reqDTO;
 	}
 
@@ -674,6 +677,23 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void viewTnc() {
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "", null, null);
+	}
+
+	private List<String> getTaskList() {
+		List<String> taskList = new ArrayList<String>();
+		if (getManagedBean().getOldAdmin() != null
+				&& getManagedBean().getOldAdmin().getPmUser() != null
+				&& getManagedBean().getOldAdmin().getPmUser().getUserId() != null) {
+			List<WorklistItemVO> items = SmCommonUtil
+					.getBpmTaskListByLoginId(getManagedBean().getOldAdmin()
+							.getPmUser().getLoginId());
+			if (!EntityHelper.isCollectionEmpty(items)) {
+				for (WorklistItemVO task : items) {
+					taskList.add(task.getTaskId());
+				}
+			}
+		}
+		return taskList;
 	}
 
 }
