@@ -337,6 +337,11 @@ public class AccessApplBackingBean extends
 	 */
 	public void changeOrgUnit(BaseEntity entity) {
 		log.info("changeOrgUnit");
+		if(entity != null){
+			PmOrgProfile orgProfile = (PmOrgProfile) entity;
+			log.info("changeOrgUnit orgProfileId -> " + orgProfile.getOrgProfileId());
+			this.getManagedBean().setSelectedOrgProfile(orgProfile);
+		}
 	}
 	
 	/**
@@ -645,7 +650,8 @@ public class AccessApplBackingBean extends
 //					accessAppl.getPostcode(), null);
 		}
 		
-		if(accessAppl.getOrgProfile() == null ){
+		if(accessAppl.getOrgProfile() == null ||  
+				(accessAppl.getOrgProfile() != null && accessAppl.getOrgProfile().getOrgProfileId() == null)){
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.pm.access.app.org",
