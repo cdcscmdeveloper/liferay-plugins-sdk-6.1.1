@@ -3,13 +3,10 @@ package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -471,49 +468,13 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 	}
 
-	public boolean isSuccess(String reportStatus, String reportPath){
+	public boolean isSuccess(String reportStatus){
 		
 		if(reportStatus != null && reportStatus.equals("4")){
-			
-			String dir = EpPropertiesUtils.getInstance().getProperty("document.repository.shared.report.dir");
-			
-			String path = dir + "/" + reportPath;
-			
-			FileInputStream fis = null;
-		    FileLock lock = null;
-		    FileChannel fc = null;
-		    try {
-		        fis = new FileInputStream(path);
-		        fc = fis.getChannel();
-		        lock = fc.tryLock(0L, Long.MAX_VALUE, true);
-		    } catch(IOException ioe) {
-		    	return false;
-		    } finally {
-		        if(lock != null) {
-		        	try {
-		        		lock.close();
-		        	} catch(IOException ioe) {
-		        		
-		        	}
-		        }
-		    	if(fc != null) {
-		        	try {
-		        		fc.close();
-		        	} catch(IOException ioe) {
-		        		
-		        	}
-		        }
-		    	if (fis != null) {
-		            try {
-		                fis.close();
-		            } catch (IOException ioe) {
-		                // give up...
-		            }
-		        }		        
-		    }
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	public boolean isInProgress(String reportStatus){
