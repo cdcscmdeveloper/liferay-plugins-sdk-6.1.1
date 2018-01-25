@@ -202,6 +202,12 @@ public interface QTConstants {
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO = 61;
 	public static final String NEW_LINE_CHARACTER = "\r\n";
 	public static final String HTML_NEW_LINE_CHARACTER = "<br />";
+	public static final String AMBRA_SENT = "&";
+	public static final String HTML_AMBRA_SENT = "&#38;";
+	public static final String LESS_THEN = "<";
+	public static final String HTML_LESS_THEN = "&#60;";
+	public static final String GREATER_THEN = ">";
+	public static final String HTML_GREATER_THEN = "&#62;";
 	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
 	public static final String FINANCIAL_SUMMARY_PACKAGE_MARGIN="FPM";

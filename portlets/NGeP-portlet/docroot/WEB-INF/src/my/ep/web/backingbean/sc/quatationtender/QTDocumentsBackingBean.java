@@ -2138,12 +2138,22 @@ public class QTDocumentsBackingBean extends
 
 					if (question.getClItem() == null) {
 						question.setClItem("");
+					}else{
+					    String clItem = question.getClItem();
+						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
+						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,QTConstants.HTML_AMBRA_SENT);
+						clItem=clItem.replaceAll(QTConstants.LESS_THEN,QTConstants.HTML_LESS_THEN);
+						clItem=clItem.replaceAll(QTConstants.GREATER_THEN,QTConstants.HTML_GREATER_THEN);
+						question.setClItem(clItem);
 					}
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
 					} else{
-						final String clSpecDetail = question.getClSpecDetail()
+						 String clSpecDetail = question.getClSpecDetail()
 								.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,QTConstants.HTML_AMBRA_SENT);
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,QTConstants.HTML_LESS_THEN);
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,QTConstants.HTML_GREATER_THEN);
 						question.setClSpecDetail(clSpecDetail);
 					}
 					if (question.getClUom() != null) {
