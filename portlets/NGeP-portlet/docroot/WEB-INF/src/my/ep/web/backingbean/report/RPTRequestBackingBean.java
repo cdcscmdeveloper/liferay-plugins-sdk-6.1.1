@@ -3,10 +3,13 @@ package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -468,13 +471,60 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 	}
 
-	public boolean isSuccess(String reportStatus){
+	public boolean isSuccess(String reportStatus, String reportPath){
 		
 		if(reportStatus != null && reportStatus.equals("4")){
-			return true;
+			
+			String dir = EpPropertiesUtils.getInstance().getProperty("document.repository.shared.report.dir");
+			String path = dir + "/" + reportPath;
+			
+			return isFileAvailable(path);
 		}
-		
 		return false;
+	}
+	
+	/**
+	 * check whether this file is available and not locked by other process
+	 * @param filePath
+	 * @return
+	 */
+	private boolean isFileAvailable(String filePath) {
+		logger.info("file path: " + filePath);
+		FileInputStream fis = null;
+	    FileLock lock = null;
+	    FileChannel fc = null;
+	    try {
+	        fis = new FileInputStream(filePath);
+	        fc = fis.getChannel();
+	        lock = fc.tryLock(0L, Long.MAX_VALUE, true);
+	    } catch(IOException ioe) {
+	    	logger.info("file exception: " + ioe);
+	    	return false;
+	    } finally {
+	        if(lock != null) {
+	        	try {
+	        		lock.close();
+	        	} catch(IOException ioe) {
+	        		
+	        	}
+	        }
+	    	if(fc != null) {
+	        	try {
+	        		fc.close();
+	        	} catch(IOException ioe) {
+	        		
+	        	}
+	        }
+	    	if (fis != null) {
+	            try {
+	                fis.close();
+	            } catch (IOException ioe) {
+	                // give up...
+	            }
+	        }		        
+	    }
+	    logger.info("success file");
+	    return true;
 	}
 	
 	public boolean isInProgress(String reportStatus){
