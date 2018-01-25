@@ -78,6 +78,24 @@ public class SmVirtualCertHelper {
 		}
 	}
 	
+	public void autoGenerateVirtualCertBySupplier(Long supplierId) throws Exception{
+		log.info("******autoGenerateVirtualCertBySupplier*****" + supplierId);
+		//SmSupplier supp = getSmSupplier();
+		List<SmMofCert> mCertLs = retrieveCurrentMofCertBySupplierId(supplierId);
+		
+		if(mCertLs.size() > 0){
+			log.info("****mCertLs****" + mCertLs.size());
+			for(SmMofCert mCert : mCertLs){
+				// if both is null, generate the pdf and save the file name and path
+				log.info("****MCert****" + mCert.getMofCertId());
+				if(mCert.getFileName() == null || mCert.getFilePath() == null){
+					genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert, false);
+				}
+
+			}
+		}
+	}
+	
 	/**
 	 * Get Supplier Object
 	 * @param mofAccountNo
@@ -198,6 +216,16 @@ public class SmVirtualCertHelper {
 		reqDTO.setApplId(applId);
 		
 		VirtualCertResDTO resDTO = reqSO.retrieveMofCertsByApplId(reqDTO);
+		
+		return resDTO.getSmMofCerts();
+	}
+	
+	private List<SmMofCert> retrieveCurrentMofCertBySupplierId(Long supplierId){
+		IVirtualCertSO reqSO = SmServiceLookup.getVirtualCertSO();
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		
+		VirtualCertResDTO resDTO = reqSO.retrieveMOFCertBySupplierId(reqDTO);
 		
 		return resDTO.getSmMofCerts();
 	}
