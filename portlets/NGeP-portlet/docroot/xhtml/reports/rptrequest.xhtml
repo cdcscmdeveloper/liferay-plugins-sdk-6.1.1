@@ -100,12 +100,12 @@
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.txt.docStatus']}" style="text-align:center;">
-										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode, rptRequest.reportPath)}" style="text-align:center;"/>
+										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center;"/>
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
-										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}" ajax="false"
+										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode, rptRequest.reportPath)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}" ajax="false"
 										    onclick="setTimeout('location.reload();', 1000);"
 											style="text-align:center;">
 											<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/download.png" id="downloadImage"
