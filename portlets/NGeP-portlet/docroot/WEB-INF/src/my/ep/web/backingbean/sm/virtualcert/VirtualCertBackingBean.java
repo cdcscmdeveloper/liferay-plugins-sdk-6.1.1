@@ -48,7 +48,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		setExpiredMofAccountMessageIfApplicable(fc, supp);
 		
 		try{
-			SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(supp.getSmAppl().getApplId(), false);
+			SmVirtualCertHelper.getInstance().autoGenerateVirtualCertBySupplier(supp.getSupplierId());
 		}catch(Exception ex){
 			log.info("<<<<virtual cert - error when generate Virtual Cert>>>>" + ex.getMessage());
 		}
