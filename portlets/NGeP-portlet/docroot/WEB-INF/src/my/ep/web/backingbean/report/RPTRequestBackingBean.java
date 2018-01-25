@@ -513,7 +513,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		    }
 		}
 		
-		return false;
+		return true;
 	}
 	
 	public boolean isInProgress(String reportStatus){
