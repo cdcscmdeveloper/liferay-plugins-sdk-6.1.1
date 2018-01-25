@@ -2135,7 +2135,15 @@ public class QTDocumentsBackingBean extends
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 					TplSpecQuestion parentQuestion = question
 							.getParentSpecQuestion();
-
+                    if(null!=master.getSpecName()){
+                   String specTitle= master.getSpecName();
+                   specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
+                   specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,QTConstants.HTML_AMBRA_SENT);
+                   specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,QTConstants.HTML_LESS_THEN);
+                   specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,QTConstants.HTML_GREATER_THEN);
+                   master.setSpecName(specTitle);
+                    	
+                    }
 					if (question.getClItem() == null) {
 						question.setClItem("");
 					}else{
