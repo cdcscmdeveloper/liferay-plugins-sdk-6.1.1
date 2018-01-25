@@ -1639,7 +1639,7 @@ public class TaskReassignmentBackingBean extends
 	 * @param excludeUserIds
 	 * @return ISearchResultBean<PmUser>
 	 */
-	private ISearchResultBean<PmUser> retrieveUserGroupUserListByUserGroupId(Long userGroupId, BigDecimal approvalLimit, List<Long> excludeUserIds) {
+	private ISearchResultBean<PmUser> retrieveUserGroupUserListByUserGroupId(Long userGroupId, BigDecimal approvalLimit, List<Long> excludeUserIds,ISearchBean<PmUser> searchBean) {
 		log.info("retrieveUserGroupUserListByUserGroupId");
 		IUserSO userSO = null;
 		try {
@@ -1647,6 +1647,7 @@ public class TaskReassignmentBackingBean extends
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
+			reqDTO.setUserSearchBean(searchBean);
 			reqDTO.setApprovalLimit(approvalLimit);
 			reqDTO.setGroupId(userGroupId);
 			reqDTO.setExcludeUserIds(excludeUserIds);
@@ -1953,7 +1954,7 @@ public class TaskReassignmentBackingBean extends
 						approvalLimit,
 						new ArrayList<Long>(Arrays.asList(userId,
 						getFacesScopes().getUserSessionBean()
-						.getUserId())));
+						.getUserId())),searchBean);
 			}
 			isSearched = true;
 			break;
