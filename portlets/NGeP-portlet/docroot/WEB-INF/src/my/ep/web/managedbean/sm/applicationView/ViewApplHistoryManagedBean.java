@@ -104,15 +104,7 @@ public class ViewApplHistoryManagedBean extends
 				.getCurrentActiveWokFlowStatus(applId);
 		String retVal = statusOri;
 		if (st.getPmStatus() != null
-				&& st.getPmStatus().getStatusId() != null
-				&& (st.getPmStatus()
-						.getStatusId()
-						.compareTo(
-								SupplierManagementConst.PM_STATUS_CANCELLATION_APPROVED) == 0 || st
-						.getPmStatus()
-						.getStatusId()
-						.toString()
-						.equals(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM))) {
+				&& st.getPmStatus().getStatusId() != null) {
 			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
 					.getPmStatus().getStatusId());
 			if (sd != null) {
