@@ -100,7 +100,7 @@
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.txt.docStatus']}" style="text-align:center;">
-										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center;"/>
+										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode, rptRequest.reportPath)}" style="text-align:center;"/>
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
