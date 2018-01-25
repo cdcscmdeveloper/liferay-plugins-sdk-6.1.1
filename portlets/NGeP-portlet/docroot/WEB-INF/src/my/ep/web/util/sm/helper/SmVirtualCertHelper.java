@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -162,11 +163,20 @@ public class SmVirtualCertHelper {
 				while ((size = buf.read(b, 0, b.length)) != -1) {
 					out.write(b, 0, size);
 				}
-				//update MOF Cert with file path & name
-				cert.setFilePath(path);
-				cert.setFileName(fileName);
-				SmMofCert mofcert = updateMOFCertFilePath(cert);
-				return mofcert;
+				//verify file size is greater than 10
+				File file =new File(finalFile);
+				if(file.exists()){
+					double bytes = Files.size(new File(finalFile).toPath());
+					double kilobytes = (bytes / 1024);
+					
+					if(kilobytes > 10){
+						//update MOF Cert with file path & name
+						cert.setFilePath(path);
+						cert.setFileName(fileName);
+						SmMofCert mofcert = updateMOFCertFilePath(cert);
+						return mofcert;
+					}
+				}
 			}else{
 				log.info("****genReport contentType****" + urlConnection.getContentType());
 			}
