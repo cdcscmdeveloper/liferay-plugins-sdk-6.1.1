@@ -67,10 +67,10 @@ public class SecurityFilterUtil {
 
 				UIComponent component = facesScopes.findComponentById(viewroot,
 						componentId);
-				System.out.println("veiwRoot : " + viewroot);
-				System.out.println("componentId : " + componentId);
-				System.out.println("CompMap : " + compMap);
-				System.out.println("Component : " + component);
+				log.debug("veiwRoot : " + viewroot);
+				log.debug("componentId : " + componentId);
+				log.debug("CompMap : " + compMap);
+				log.debug("Component : " + component);
 
 				if (component != null) {
 					mergeBizRules(compMap, component);
