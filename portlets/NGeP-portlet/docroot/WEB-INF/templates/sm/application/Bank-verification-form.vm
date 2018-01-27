@@ -73,6 +73,8 @@ body {margin-top: 0px;margin-left: 0px;}
 .td35{padding: 0px;margin: 0px;width: 10px;vertical-align: bottom;border-bottom: #000000 1px solid;}
 .td36{padding: 0px;margin: 0px;width: 280px;vertical-align: bottom;border-bottom: #000000 1px solid;}
 .td37{padding: 0px;margin: 0px;width: 56px;vertical-align: bottom;}
+.td38{border-bottom: #000000 1px solid; padding: 0px;margin: 0px;width: 148px;vertical-align: bottom;}
+.td39{border-bottom: #000000 1px solid; padding: 0px;margin: 0px;width: 750px;vertical-align: bottom;}
 
 .tr0{height: 17px;}
 .tr1{height: 38px;}
@@ -150,10 +152,10 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>	
 	<td class="tr2 td2"><p class="p1 ft1">Poskod</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>
-	<td class="tr2 td30"><p class="p1 ft2">$bankPostCode</p></td>
+	<td class="tr2 td38"><p class="p1 ft2">$bankPostCode</p></td>
 	<td class="tr2 td2"><p class="p1 ft1">Negeri</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>	
-	<td class="tr2 td30"><p class="p1 ft2">$bankState</p></td>
+	<td class="tr2 td39"><p class="p1 ft2">$bankState</p></td>
 </tr>
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">No. Akaun</p></td>
