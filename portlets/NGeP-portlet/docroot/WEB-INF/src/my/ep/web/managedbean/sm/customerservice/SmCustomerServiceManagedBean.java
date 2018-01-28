@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -156,6 +158,18 @@ public class SmCustomerServiceManagedBean extends
 
 	public void setRequestCodeLs(List<CmRequestCode> requestCodeLs) {
 		this.requestCodeLs = requestCodeLs;
+	}
+
+	public boolean isSearchCriteriaEmpty() {
+		boolean retVal = false;
+		if (StringUtils.isBlank(getSearchMofNo())
+				&& StringUtils.isBlank(getSearchEpNo())
+				&& StringUtils.isBlank(getSearchSupplier().getCompanyName())
+				&& StringUtils.isBlank(getSearchApplNo())
+				&& getSearchApplStatusId() == null) {
+			retVal = true;
+		}
+		return retVal;
 	}
 
 }
