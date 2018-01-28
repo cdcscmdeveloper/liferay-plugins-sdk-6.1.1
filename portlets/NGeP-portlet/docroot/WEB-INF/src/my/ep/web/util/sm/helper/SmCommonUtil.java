@@ -2097,17 +2097,22 @@ public class SmCommonUtil {
 	 */
 	public static List<WorklistItemVO> getBpmTaskListByLoginId(String loginId) {
 		List<WorklistItemVO> taskList = new ArrayList<WorklistItemVO>();
-		BpmResponseDTO responseDTO = null;
-		BpmRequestDTO reqDTO = null;
-		reqDTO = new BpmRequestDTO();
-		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-		reqDTO.setOffset(0);
-		reqDTO.setUserId(loginId);
-		responseDTO = SmServiceLookup.getBpmSO().getReassignedItems(reqDTO);
-		if (responseDTO.getWorklistVO() != null
-				&& !EntityHelper.isCollectionEmpty(responseDTO.getWorklistVO()
-						.getWorklistItem())) {
-			taskList = responseDTO.getWorklistVO().getWorklistItem();
+		try {
+			BpmResponseDTO responseDTO = null;
+			BpmRequestDTO reqDTO = null;
+			reqDTO = new BpmRequestDTO();
+			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+			reqDTO.setOffset(0);
+			reqDTO.setUserId(loginId);
+			responseDTO = SmServiceLookup.getBpmSO().getReassignedItems(reqDTO);
+			if (responseDTO.getWorklistVO() != null
+					&& !EntityHelper.isCollectionEmpty(responseDTO
+							.getWorklistVO().getWorklistItem())) {
+				taskList = responseDTO.getWorklistVO().getWorklistItem();
+			}
+		} catch (Exception e) {
+			log.error("Error get tasklist for login id:" + loginId
+					+ " with error msg:" + e.getMessage());
 		}
 		return taskList;
 	}
@@ -2115,15 +2120,20 @@ public class SmCommonUtil {
 	public static WorklistItemVO getSingleBpmWorkListByTaskTitleAndToken(
 			String taskTitle, Object token) {
 		WorklistItemVO retVal = null;
-		List<WorklistItemVO> taskList = SmCommonUtil
-				.getBpmTaskListByAuthToken(token);
-		if (taskList != null && !taskList.isEmpty()) {
-			for (WorklistItemVO worklistItemVO : taskList) {
-				if (worklistItemVO.getTitle().equalsIgnoreCase(taskTitle)) {
-					retVal = worklistItemVO;
-					break;
+
+		try {
+			List<WorklistItemVO> taskList = SmCommonUtil
+					.getBpmTaskListByAuthToken(token);
+			if (taskList != null && !taskList.isEmpty()) {
+				for (WorklistItemVO worklistItemVO : taskList) {
+					if (worklistItemVO.getTitle().equalsIgnoreCase(taskTitle)) {
+						retVal = worklistItemVO;
+						break;
+					}
 				}
 			}
+		} catch (Exception e) {
+
 		}
 		return retVal;
 	}
@@ -4287,13 +4297,16 @@ public class SmCommonUtil {
 				"pmCountry", "pmState", "pmCity", "pmDistrict" })) {
 			retVal = true;
 		} else {
-			if(latest!=null && current!=null){
+			if (latest != null && current != null) {
 				if ((latest.getPmCountry() != null && current.getPmCountry() == null)
-						|| (latest.getPmCountry() == null && current.getPmCountry() != null)
+						|| (latest.getPmCountry() == null && current
+								.getPmCountry() != null)
 						|| (latest.getPmCountry() != null
 								&& current.getPmCountry() != null && latest
-								.getPmCountry().getCountryId()
-								.compareTo(current.getPmCountry().getCountryId()) != 0)) {
+								.getPmCountry()
+								.getCountryId()
+								.compareTo(
+										current.getPmCountry().getCountryId()) != 0)) {
 					retVal = true;
 				} else if ((latest.getPmState() != null && current.getPmState() == null)
 						|| (latest.getPmState() == null && current.getPmState() != null)
@@ -4315,8 +4328,10 @@ public class SmCommonUtil {
 								.getPmDistrict() != null)
 						|| (latest.getPmDistrict() != null
 								&& current.getPmDistrict() != null && latest
-								.getPmDistrict().getDistrictId()
-								.compareTo(current.getPmDistrict().getDistrictId()) != 0)) {
+								.getPmDistrict()
+								.getDistrictId()
+								.compareTo(
+										current.getPmDistrict().getDistrictId()) != 0)) {
 					retVal = true;
 				}
 			}
@@ -4559,39 +4574,44 @@ public class SmCommonUtil {
 			for (SmApplRejectReason rej : rejectReasons) {
 				if (rej.getPmReason() != null
 						&& rej.getPmReason().getPmReasonDescs() != null) {
-					
+
 					try {
 						for (PmReasonDesc desc : rej.getPmReason()
 								.getPmReasonDescs()) {
 
 							String remark = null;
 							if (rej.getPmReason() != null
-									&& !StringUtils.isBlank(rej.getPmReason().getReasonCode())
+									&& !StringUtils.isBlank(rej.getPmReason()
+											.getReasonCode())
 									&& SupplierManagementConst.DPA_REASON_OTHERS_LIST
-											.contains(rej.getPmReason().getReasonCode())) {
+											.contains(rej.getPmReason()
+													.getReasonCode())) {
 
-								remark = SmApplicationUtil.getSmRemarksByDocTypeAndId(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT, rej.getSmAppl().getApplId());
+								remark = SmApplicationUtil
+										.getSmRemarksByDocTypeAndId(
+												ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+												rej.getSmAppl().getApplId());
 							}
-							
+
 							if (desc.getPmLanguage() != null
 									&& desc.getPmLanguage().getLanguageCode()
 											.equalsIgnoreCase("en")) {
 								sbEng.append(i + ") " + desc.getReasonDesc());
-								
-								if(remark != null) {
+
+								if (remark != null) {
 									sbEng.append(" - ");
 									sbEng.append(remark);
 								}
-								
+
 								sbEng.append("<br />");
 							} else {
 								sbMs.append(i + ") " + desc.getReasonDesc());
-								
-								if(remark != null) {
+
+								if (remark != null) {
 									sbMs.append(" - ");
 									sbMs.append(remark);
 								}
-								
+
 								sbMs.append("<br />");
 							}
 						}
@@ -4927,7 +4947,7 @@ public class SmCommonUtil {
 	 * @return PmUser
 	 */
 	public PmUser retrievePOWithLowestWeightage(String supplierType,
-			String applType, String categoryType,String zoneCode) {
+			String applType, String categoryType, String zoneCode) {
 
 		PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
 		reqDTO.setZoneCode(zoneCode);
@@ -4964,7 +4984,8 @@ public class SmCommonUtil {
 	 * @return PmUser
 	 */
 	public PmUser retrievePOByUserIdAndJobTask(String loginId,
-			String supplierType, String applType, String categoryType, String zoneCode) {
+			String supplierType, String applType, String categoryType,
+			String zoneCode) {
 
 		PoRoleTaskReqDTO reqDTO = new PoRoleTaskReqDTO();
 		reqDTO.setZoneCode(zoneCode);
@@ -4974,7 +4995,7 @@ public class SmCommonUtil {
 		reqDTO.setCategoryType(categoryType);
 		reqDTO.setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 		reqDTO.setLoginId(loginId);
-		//reqDTO.setUserName(pmUser.getUserName());
+		// reqDTO.setUserName(pmUser.getUserName());
 		// reqDTO.setByWeightage(true);
 
 		List<PmUser> poList = SmServiceLookup.getPoRoleTaskSO()
@@ -4983,7 +5004,7 @@ public class SmCommonUtil {
 			return poList.get(0);
 		} else {
 			return retrievePOWithLowestWeightage(supplierType, applType,
-					categoryType,zoneCode);
+					categoryType, zoneCode);
 		}
 
 	}
