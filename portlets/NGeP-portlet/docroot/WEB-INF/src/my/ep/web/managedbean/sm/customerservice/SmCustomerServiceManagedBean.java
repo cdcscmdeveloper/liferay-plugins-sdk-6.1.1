@@ -12,11 +12,14 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @ManagedBean(name = "smCustServiceMB")
@@ -81,10 +84,35 @@ public class SmCustomerServiceManagedBean extends
 			reqDTO.setEpNo(getSearchEpNo());
 			reqDTO.setApplicationNo(getSearchApplNo());
 			reqDTO.setPmStatusId(getSearchApplStatusId());
-			return SmServiceLookup.getSmApplRevisionSO()
+
+			ISearchResultBean<Object[]> retVal = SmServiceLookup
+					.getSmApplRevisionSO()
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
+
+			int i = 0;
+			for (Object[] obj : retVal.getResultList()) {
+				obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
+						+ "");
+				retVal.getResultList().set(i, obj);
+				i++;
+			}
+			return retVal;
 		}
+	}
+
+	private String getWorkflowStatus(Long applId, String statusOri) {
+		SmWorkflowStatus st = SmCommonUtil
+				.getCurrentActiveWokFlowStatus(applId);
+		String retVal = statusOri;
+		if (st.getPmStatus() != null && st.getPmStatus().getStatusId() != null) {
+			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
+					.getPmStatus().getStatusId());
+			if (sd != null) {
+				retVal = sd.getStatusName();
+			}
+		}
+		return retVal;
 	}
 
 	public int getTargetPage() {
