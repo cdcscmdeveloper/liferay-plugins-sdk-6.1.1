@@ -1584,6 +1584,13 @@ public class SmApplicationBackingBean extends
 		if (!StringUtils.isBlank(applType)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
+			if (getManagedBean().getCompanyBasicGst() != null) {
+				SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+						.getSmSupplier().getRegNo(), getManagedBean()
+						.getCompanyBasicGst().getGstRegNo());
+				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+						ruleHelper);
+			}
 			RequestContext.getCurrentInstance().execute(
 					"saveDraftConfirmDialog.show();");
 		} else {
@@ -4317,20 +4324,10 @@ public class SmApplicationBackingBean extends
 							.getCategoryL1Code()
 							.equalsIgnoreCase(
 									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
-				// if
-				// (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
-				// .getCategoryL2Code() != null && getManagedBean()
-				// .getSelectedCategory()
-
-				// .getPmCategoryL2()
-				// .getCategoryL2Code()
-				// .equalsIgnoreCase(
-				// SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
 				validCat = SmApplicationUtil.validateIctCatCode(
 						getManagedBean().getBusinessTypeVal(), getManagedBean()
 								.getSmAppl(), getManagedBean()
 								.getSelectedCategory());
-				// }
 			}
 		}
 		boolean overLapCategory = false;
@@ -4341,6 +4338,7 @@ public class SmApplicationBackingBean extends
 						.getApplId());
 		getManagedBean().getSelectedCategory().setOverLapCategory(
 				overLapCategory);
+
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (getManagedBean().getSelectedCategory().getPmCategoryL3()
@@ -4376,18 +4374,22 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (validCat) {
+			getManagedBean().getSelectedCategory().setCategoryL1Name(
+					getManagedBean().getSelectedCategory().getPmCategoryL1()
+							.getCategoryName());
+			getManagedBean().getSelectedCategory().setCategoryL2Name(
+					getManagedBean().getSelectedCategory().getPmCategoryL2()
+							.getCategoryName());
+			getManagedBean().getSelectedCategory().setCategoryL3Name(
+					getManagedBean().getSelectedCategory().getPmCategoryL3()
+							.getCategoryName());
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.add(getManagedBean().getSelectedCategory());
 
-			if (!getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-
-			} else {
-
-			}
 			saveOrUpdateAppl();
 			SmApplicationUtil
 					.assignActiveAndApprovedCategoryList(getManagedBean());
+
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
@@ -5608,6 +5610,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private void saveOrUpdateAppl() {
 		updateMandatoryAndNonMandatorySuppDocToApplDoc();
+		nullifiedPmMachineWithNoId();
 		updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 				.getSmPersonnels(), getManagedBean().getSmSupplier());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
@@ -10333,6 +10336,23 @@ public class SmApplicationBackingBean extends
 			for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
 				EntityHelper.addOrUpdateEntityToList(doc, getManagedBean()
 						.getSmAppl().getSmApplSupportDocs());
+			}
+		}
+	}
+
+	/**
+	 * checked if machine declare as new without nullified, need to be nullified
+	 * before save to db
+	 */
+	private void nullifiedPmMachineWithNoId() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmMachineDtls())) {
+			for (SmMachineDtl mcDtl : getManagedBean().getSmAppl()
+					.getSmMachineDtls()) {
+				if (mcDtl.getMachine() != null
+						&& mcDtl.getMachine().getMachineId() == null) {
+					mcDtl.setMachine(null);
+				}
 			}
 		}
 	}

@@ -45,87 +45,88 @@
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.showMachineryEquipmentPanel}">
 				<br />
-				<ui:repeat var="machCatVar" value="#{backingBean.managedBean.machineCategoryVOList}" varStatus="machCatVarStatus">
-					<table style="width: 100%;">
-						<tr>
-							<td style="white-space: nowrap; float: left;">
-							    <p:outputLabel value="#{lbl['lbl.sm.category.type']}: #{backingBean.getParameterDesc(machCatVar.categoryTypeCode)}" />
-							</td>
-						</tr>
-					</table>
-					<br />
+				
+				<p:dataTable var="machCatVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{backingBean.managedBean.machineCategoryVOList}" rowKey="#{machCatVar}" rowIndexVar="machCatIndex" id="machCatVarDt">
+					<ac:paginator for="machCatVarDt" />
 					
-					<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{machCatVar.smMachineDtls}"
-						rowKey="#{macBean}" rowIndexVar="index" id="macDt">
-						<ac:paginator for="macDt" />
-						
-						<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls}">
-							<f:facet name="header">
-					          <p:selectBooleanCheckbox value="#{machCatVar.selected}" >
-					          	<p:ajax event="change" update=":#{p:component('machineMainPanelId')}" 
-									process="@this" partialSubmit="true" 
-									listener="#{backingBean.selectAll(machCatVar.selected,machCatVar.smMachineDtls)}"/>
-					          </p:selectBooleanCheckbox>
-					       </f:facet>
-							<p:selectBooleanCheckbox value="#{macBean.selected}">
-								<p:ajax event="change" update="@this,:#{p:component('machInfPan')}" 
-									process="@this" partialSubmit="true" />
-							</p:selectBooleanCheckbox>
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
-							<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
-							<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sm.category']}">
-							<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
-								<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-											#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-											#{catFac.pmCategoryL3.categoryL3Code}
-										 	(#{catFac.pmCategoryL3.categoryName})" 
-									style="float: left;white-space: normal;" /><br />
-							</ui:repeat>
-						</p:column>
-		
-						<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
-							<h:outputText value="#{macBean.brandName}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.machine.function']}">
-							<h:outputText value="#{macBean.machineFunction}" />
-						</p:column>
-		
-						<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
-							<h:outputText value="#{macBean.qty}" />
-						</p:column>
-		
-						<p:column headerText="#{lbl['lbl.sm.machine.value']}">
-							<ac:labelAmount value="#{macBean.value}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-							<p:commandLink partialSubmit="true" process="@this"
-								action="#{backingBean.assignSelMachinery(macBean)}"
-								update=":form:tt:equipmentDialog,macDt" style="padding-right:5px" 
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
-							</p:commandLink>
-						</p:column>
-		
-					</p:dataTable>
-					<p:spacer height="2px;" />
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-							update=":form:tt:equipmentDialog" process="@this"
-							partialSubmit="true" action="#{backingBean.assignNewMachineryBean(machCatVar.categoryTypeCode.parameterId)}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-						<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
-							disabled="#{backingBean.disableDeleteBtn(machCatVar.smMachineDtls)}"
-							partialSubmit="true" process=":form:tt:machInfPan" update=":#{p:component('machineMainPanelId')}" 
-							oncomplete="machDeletePopUp.show()" />
-					</div>
-				</ui:repeat>
+					<p:column headerText="#{lbl['lbl.sm.category.type']}" style="width: 10% !important;white-space: normal;">
+						<h:outputText value="#{backingBean.getParameterDesc(machCatVar.categoryTypeCode)}" />
+					</p:column>
+				
+					<p:column headerText="#{lbl['lbl.sm.details']}">
+						<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{machCatVar.smMachineDtls}"
+							rowKey="#{macBean}" rowIndexVar="index" id="macDt">
+							<ac:paginator for="macDt" />
+							
+							<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls}">
+								<f:facet name="header">
+						          <p:selectBooleanCheckbox value="#{machCatVar.selected}" >
+						          	<p:ajax event="change" update=":#{p:component('machineMainPanelId')}" 
+										process="@this" partialSubmit="true" 
+										listener="#{backingBean.selectAll(machCatVar.selected,machCatVar.smMachineDtls)}"/>
+						          </p:selectBooleanCheckbox>
+						       </f:facet>
+								<p:selectBooleanCheckbox value="#{macBean.selected}">
+									<p:ajax event="change" update="@this,:#{p:component('machInfPan')}" 
+										process="@this" partialSubmit="true" />
+								</p:selectBooleanCheckbox>
+							</p:column>
+							
+							<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
+								<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
+								<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
+							</p:column>
+							
+							<p:column headerText="#{lbl['lbl.sm.category']}">
+								<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
+									<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+												#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+												#{catFac.pmCategoryL3.categoryL3Code}
+											 	(#{catFac.pmCategoryL3.categoryName})" 
+										style="float: left;white-space: normal;" /><br />
+								</ui:repeat>
+							</p:column>
+			
+							<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
+								<h:outputText value="#{macBean.brandName}" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sm.machine.function']}">
+								<h:outputText value="#{macBean.machineFunction}" />
+							</p:column>
+			
+							<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
+								<h:outputText value="#{macBean.qty}" />
+							</p:column>
+			
+							<p:column headerText="#{lbl['lbl.sm.machine.value']}">
+								<ac:labelAmount value="#{macBean.value}" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+								<p:commandLink partialSubmit="true" process="@this"
+									action="#{backingBean.assignSelMachinery(macBean)}"
+									update=":form:tt:equipmentDialog,macDt" style="padding-right:5px" 
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+									<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+								</p:commandLink>
+							</p:column>
+			
+						</p:dataTable>
+						<p:spacer height="2px;" />
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+								update=":form:tt:equipmentDialog" process="@this"
+								partialSubmit="true" action="#{backingBean.assignNewMachineryBean(machCatVar.categoryTypeCode.parameterId)}" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
+								disabled="#{backingBean.disableDeleteBtn(machCatVar.smMachineDtls)}"
+								partialSubmit="true" process=":form:tt:machInfPan" update=":#{p:component('machineMainPanelId')}" 
+								oncomplete="machDeletePopUp.show()" />
+						</div>
+					</p:column>
+				</p:dataTable>
 			</p:outputPanel>
 			
 			<ui:remove>
