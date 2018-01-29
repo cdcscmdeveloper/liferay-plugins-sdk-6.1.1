@@ -115,32 +115,32 @@ public class TrustGateHelper {
 			default:
 				if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_776057,
+							MessageConst.ERROR_TRUSTGATE_776057,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_776058,
+							MessageConst.ERROR_TRUSTGATE_776058,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_776059,
+							MessageConst.ERROR_TRUSTGATE_776059,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_776060,
+							MessageConst.ERROR_TRUSTGATE_776060,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_776061,
+							MessageConst.ERROR_TRUSTGATE_776061,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_776062,
+							MessageConst.ERROR_TRUSTGATE_776062,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				}
