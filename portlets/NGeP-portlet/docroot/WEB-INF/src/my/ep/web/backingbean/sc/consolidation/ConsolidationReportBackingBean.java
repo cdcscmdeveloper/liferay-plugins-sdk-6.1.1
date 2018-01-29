@@ -99,6 +99,11 @@ import org.primefaces.model.MenuModel;
 public class ConsolidationReportBackingBean extends
 		SourcingBaseBackingBean<ConsolidationReportManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger log = EpLogger
 			.getLogger(ConsolidationReportBackingBean.class);
 
@@ -345,8 +350,6 @@ public class ConsolidationReportBackingBean extends
 
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setScQtFinalization(scQtFinalization);
-		// report.setScQtFinalizationReportAttachment(
-		// new ScQtFinalizationReportAttachment());
 
 		IParameterSO parameterSO = null;
 		try {
@@ -489,6 +492,10 @@ public class ConsolidationReportBackingBean extends
 
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
 				.getScQtFinalizationReportAttachment();
+		String definitionType = scQtFinalizationReport.getDefinationType()
+				.getParameterCode();
+		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+				.getDocDefinitionKey();
 
 		if (reportAttachment == null
 				|| this.getManagedBean().getScQtFinalization()
@@ -496,7 +503,9 @@ public class ConsolidationReportBackingBean extends
 				|| this.getManagedBean().getScQtFinalization()
 						.isReEvaluateTechReq()
 				|| this.getManagedBean().getScQtFinalization()
-						.isReEvaluateFinReq()) {
+						.isReEvaluateFinReq()||(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+						.equals(definitionType)&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+						.equals(docDefinitionKey))) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			//scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
@@ -620,8 +629,6 @@ public class ConsolidationReportBackingBean extends
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + getManagedBean().getScQt().getQtNo();
-				//String statusParam = getStatusDescById(getManagedBean()
-						//.getCurrentStatusId());
 
 				commonMessageAcknowledmentPage(MessageConst.INFO_700070,
 						submitMessage,qtParam);
@@ -641,7 +648,6 @@ public class ConsolidationReportBackingBean extends
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
 		initializeFinalizationUlasanRemarks();
-		// initializeFinalizationPengreysonRemarks();
 	}
 
 	private void setZoneAndTabIndexOnException(boolean isItemized,
@@ -826,51 +832,7 @@ public class ConsolidationReportBackingBean extends
 					.getScQtFinalizationReports();
 			checkKertasTaklimatReports(finalizationReports);
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			// Sort the reports as per the last updated date (in ascending
-			// order)
-
-			/*Collections.sort(finalizationReports,
-					new Comparator<ScQtFinalizationReport>() {
-						public int compare(ScQtFinalizationReport report1,
-								ScQtFinalizationReport report2) {
-							 if (report1.getCreatedDate() != null
-									&& report2.getCreatedDate() != null) {
-								if (report1.getCreatedDate().equals(report2
-										.getCreatedDate())) {
-									return 0;
-								} else if (report1.getCreatedDate().before(report2
-										.getCreatedDate())) {
-									return 1;
-								} else {
-									return -1;
-								}
-							}
-							return -1;
-						}
-			});
-*/
-		/*	Collections.sort(finalizationReports,
-					new Comparator<ScQtFinalizationReport>() {
-						public int compare(ScQtFinalizationReport report1,
-								ScQtFinalizationReport report2) {
-							
-							if (report1.getCreatedDate() != null
-									&& report2.getCreatedDate() != null) {
-
-								// Ascending order
-								if (report1.getCreatedDate().getTime() == report2
-										.getCreatedDate().getTime()) {
-									return 0;
-								} else if (report2.getCreatedDate().getTime() < report1
-										.getCreatedDate().getTime()) {
-									return 1;
-								} else {
-									return -1;
-								}
-							}
-							return -1;
-						}
-					});*/
+			
 			if (finalizationReports != null) {
 				this.getManagedBean().setFinalizationReports(
 						finalizationReports);
@@ -957,7 +919,6 @@ public class ConsolidationReportBackingBean extends
 
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
-					// zoneItem.setAjax(true);
 					zoneItem.setTransient(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
@@ -986,7 +947,7 @@ public class ConsolidationReportBackingBean extends
 		if (scQtFinalization != null) {
 			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = scQtFinalization
 					.getScQtRecommendsByZone();
-			log.info("scQtFinalization.getScQtRecommendsByZone() : "
+			log.debug("scQtFinalization.getScQtRecommendsByZone() : "
 					+ scQtRecommendsByZone);
 
 			if (selectedZone != null && scQtRecommendsByZone != null
@@ -1076,18 +1037,6 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		/*
-		 * List<ScQtRecommendationPengesyoranRemarks>
-		 * pengerysonRemarks=this.getManagedBean
-		 * ().getFinalizationPengreysonremarks(); if
-		 * (CollectionUtils.isNotEmpty(pengerysonRemarks)) { for (int i = 0; i <
-		 * pengerysonRemarks.size(); i++) { String userRemark =
-		 * pengerysonRemarks.get(i).getRemark(); if (null == userRemark ||
-		 * StringUtils.isBlank(userRemark)) { navigateToBriefingPaperTab();
-		 * throw new EpException(MessageConst.ERROR_760446); }
-		 * 
-		 * } }
-		 */
 
 		boolean isZonal = getManagedBean().getScQt().isZonal();
 		Map<Long, List<ScQtRecommend>> itemsByZone = scQtFinalization
@@ -1319,7 +1268,6 @@ public class ConsolidationReportBackingBean extends
 
 		finalizeRemarks();
 		finalizeUlasanremarks();
-		// finalizePengrysonremarks();
 		return reqDTO;
 	}
 
@@ -1360,43 +1308,6 @@ public class ConsolidationReportBackingBean extends
 				reportAttachment = null;
 			}
 
-			// Redmine SIR#7782
-			// if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey))
-			// {
-			// filename.append(".pdf");
-			// reportAttachment.setFileName(filename.toString());
-			// generateCoverPdf(attachment, getManagedBean().getScQt());
-			//
-			// } else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS
-			// .equals(docDefinitionKey)) {
-			// generateOfferedAndQTDtlsPdf(attachment, getManagedBean()
-			// .getScQt());
-			//
-			// } else if
-			// (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT
-			// .equals(docDefinitionKey)) {
-			// filename.append(".pdf");
-			// reportAttachment.setFileName(filename.toString());
-			// generateAnalysisEvaluationReportPdf(attachment,
-			// getManagedBean().getScQt());
-			//
-			// } else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD
-			// .equals(docDefinitionKey)) {
-			// generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
-			//
-			// } else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE
-			// .equals(docDefinitionKey)) {
-			// filename.append(".pdf");
-			// reportAttachment.setFileName(filename.toString());
-			// generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
-			//
-			// } else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
-			// .equals(docDefinitionKey)) {
-			// filename.append(".pdf");
-			// reportAttachment.setFileName(filename.toString());
-			// populateAttachmentDetails(reportAttachment);
-			//
-			// }
 
 		}
 		return reportAttachment;
@@ -1444,21 +1355,9 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		/*
-		 * StringBuilder pengesyoran=new StringBuilder();
-		 * List<ScQtRecommendationPengesyoranRemarks>
-		 * pengerysonRemarks=this.getManagedBean
-		 * ().getFinalizationPengreysonremarks(); if
-		 * (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
-		 * for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
-		 * if(StringUtils.isNotBlank(remark.getRemark())){
-		 * pengesyoran.append(remark.getRemark() + "\n"); } } }
-		 */
 		paramMap.put(ReportConst.PARAM_REMARK,
 				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
-		// paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ?
-		// StringUtils.EMPTY : pengesyoran.toString());
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 
@@ -1852,9 +1751,9 @@ public class ConsolidationReportBackingBean extends
 			this.getManagedBean().getScQtFinalization()
 					.setBriefingPaperUploaded(true);
 		} else {
-			log.info("$$$$$ File from event is null @ "
+			log.debug("$$$$$ File from event is null @ "
 					+ DateUtils.getCurrentDate());
-			log.info("$$$$$ Qt id is: "
+			log.debug("$$$$$ Qt id is: "
 					+ this.getManagedBean().getScQtFinalization().getScQt()
 							.getQtId());
 		}
@@ -1885,20 +1784,6 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setFinalizationUlasanremarks(remarks);
 	}
 
-	private void initializeFinalizationPengreysonRemarks() {
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
-
-		// Retrieve finalization endorsement remarks
-		List<ScQtRecommendationPengesyoranRemarks> remarks = initializeRemarks(
-				scQtFinalization, scQtFinalization.getCurrentStatus(),
-				scQtFinalization.getScQtRecommendationPengesyoranRemarks(),
-				ScQtRecommendationPengesyoranRemarks.class);
-		scQtFinalization.setScQtRecommendationPengesyoranRemarks(remarks);
-
-		// Finalization Pengesyoran Remarks list
-		getManagedBean().setFinalizationPengreysonremarks(remarks);
-	}
 
 	private void finalizeUlasanremarks() {
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -1909,20 +1794,6 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtRecommendationUlasanRemarks> remarksList = super
 					.finalizeRemarks(ulasanRemarks);
 			scQtFinalization.setScQtRecommendationUlasanRemarks(remarksList);
-			setUserDetails(scQtFinalization);
-		}
-	}
-
-	private void finalizePengrysonremarks() {
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
-		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks = this
-				.getManagedBean().getFinalizationPengreysonremarks();
-		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
-			List<ScQtRecommendationPengesyoranRemarks> remarksList = super
-					.finalizeRemarks(pengerysonRemarks);
-			scQtFinalization
-					.setScQtRecommendationPengesyoranRemarks(remarksList);
 			setUserDetails(scQtFinalization);
 		}
 	}
