@@ -361,6 +361,9 @@ public class TemplateSpecBackingBean extends
 		}
 		if (!questionToDelete.isBrandNew()) {
 			questionToDelete.setDeleted(true);
+			if(null!=questionToDelete.getTplSpecMaster() && null!=questionToDelete.getTplSpecMaster().getTplSpecZone()){
+			TemplateSpecHelper.getInstance().resetSpecZoneQuanties(questionToDelete);
+			}
 		}
 		specQuestionList.remove(questionToDelete);
 
