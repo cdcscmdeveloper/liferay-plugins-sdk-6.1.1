@@ -90,240 +90,313 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "qtCustomerServiceBB")
 @ViewScoped
-public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCustomerServiceManagedBean> implements Serializable{
+public class QTCustomerServiceBackingBean extends
+		SourcingBaseBackingBean<QTCustomerServiceManagedBean> implements
+		Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(QTCustomerServiceBackingBean.class);
-	
-	//private IPagingDataModel<ScQt> qtCustomerServiceDataModel = new QTCustomerServiceSearchQtDataModel();
-	private static final String NAV_QT_CUSTOMER_SERVICE_VIEW="/xhtml/sc/qtcustomerservice/qtCustomerServiceViewMain.xhtml";
-	private static final String NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW="/xhtml/sc/qtcustomerservice/qtcustomerServiceSearchview.xhtml";
-	
-	
-	public QTCustomerServiceBackingBean(){
-		
+
+	// private IPagingDataModel<ScQt> qtCustomerServiceDataModel = new
+	// QTCustomerServiceSearchQtDataModel();
+	private static final String NAV_QT_CUSTOMER_SERVICE_VIEW = "/xhtml/sc/qtcustomerservice/qtCustomerServiceViewMain.xhtml";
+	private static final String NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW = "/xhtml/sc/qtcustomerservice/qtcustomerServiceSearchview.xhtml";
+
+	public QTCustomerServiceBackingBean() {
+
 	}
-	
+
 	/**
 	 * set user orgProfile data.
 	 * 
 	 */
-	public void setorgProfileData(){
-		try{
-		QTCustomerServiceSearchBean qtCustomerService=	getManagedBean().getQtCustomerServiceSearchBean();
-		PmOrgProfile orgProfileCode =qtCustomerService.getOrgProfilePtjCode();
-		this.getManagedBean().getQtCustomerServiceSearchBean().setOrgProfilePtjname(orgProfileCode);
-		}finally{
-			
+	public void setorgProfileData() {
+		try {
+			QTCustomerServiceSearchBean qtCustomerService = getManagedBean()
+					.getQtCustomerServiceSearchBean();
+			PmOrgProfile orgProfileCode = qtCustomerService
+					.getOrgProfilePtjCode();
+			this.getManagedBean().getQtCustomerServiceSearchBean()
+					.setOrgProfilePtjname(orgProfileCode);
+		} finally {
+
 		}
-		
-		
+
 	}
-	
+
 	/**
 	 * Method to Reset the QTCustomer Service data.
 	 */
-	public void qtCustomerServicereset(){
-		try{
-			getManagedBean().getQtCustomerServiceSearchBean().setOrgProfilePtjCode(new PmOrgProfile());
-			getManagedBean().getQtCustomerServiceSearchBean().setOrgProfilePtjname(new PmOrgProfile());
+	public void qtCustomerServicereset() {
+		try {
+			getManagedBean().getQtCustomerServiceSearchBean()
+					.setOrgProfilePtjCode(new PmOrgProfile());
+			getManagedBean().getQtCustomerServiceSearchBean()
+					.setOrgProfilePtjname(new PmOrgProfile());
 			getManagedBean().getQtCustomerServiceSearchBean().setQtNo(" ");
 			getManagedBean().getQtCustomerServiceSearchBean().setQtTitle(" ");
 			getManagedBean().getQtCustomerServiceSearchBean().setQtStatus(" ");
-			getManagedBean().getQtCustomerServiceSearchBean().setCreatedFromDate(null);
-			getManagedBean().getQtCustomerServiceSearchBean().setCreatedToDate(null);
-			getManagedBean().getQtCustomerServiceSearchBean().setPublishFromDate(null);
-			getManagedBean().getQtCustomerServiceSearchBean().setPublishToDate(null);
-			getManagedBean().getQtCustomerServiceSearchBean().setCloseFromDate(null);
-			getManagedBean().getQtCustomerServiceSearchBean().setCloseToDate(null);
+			getManagedBean().getQtCustomerServiceSearchBean()
+					.setCreatedFromDate(null);
+			getManagedBean().getQtCustomerServiceSearchBean().setCreatedToDate(
+					null);
+			getManagedBean().getQtCustomerServiceSearchBean()
+					.setPublishFromDate(null);
+			getManagedBean().getQtCustomerServiceSearchBean().setPublishToDate(
+					null);
+			getManagedBean().getQtCustomerServiceSearchBean().setCloseFromDate(
+					null);
+			getManagedBean().getQtCustomerServiceSearchBean().setCloseToDate(
+					null);
 			this.getManagedBean().getQtCustomerServiceDataModel().resetData();
-		}finally{
-			
+		} finally {
+
 		}
 	}
-	
+
 	/**
 	 * Method to search the customerService data based on serach fields.
 	 */
 	public void searchQtCustomerService() {
-	QTCustomerServiceSearchBean qtCustomerSearchBean=getManagedBean().getQtCustomerServiceSearchBean();
-	PmOrgProfile orgProfileCode=qtCustomerSearchBean.getOrgProfilePtjCode();
-	if(null==orgProfileCode || StringUtils.isBlank(orgProfileCode.getOrgCode()) || StringUtils.isEmpty(orgProfileCode.getOrgCode())){
-		throw new EpException(MessageConst.ERROR_760443);
+		QTCustomerServiceSearchBean qtCustomerSearchBean = getManagedBean()
+				.getQtCustomerServiceSearchBean();
+		PmOrgProfile orgProfileCode = qtCustomerSearchBean
+				.getOrgProfilePtjCode();
+		if (null == orgProfileCode
+				|| StringUtils.isBlank(orgProfileCode.getOrgCode())
+				|| StringUtils.isEmpty(orgProfileCode.getOrgCode())) {
+			throw new EpException(MessageConst.ERROR_760443);
+		}
+		this.getManagedBean().getQtCustomerServiceDataModel().reloadData();
 	}
-	this.getManagedBean().getQtCustomerServiceDataModel().reloadData();
-	}
-	
-	
+
 	/**
 	 * View doc.
-	 *
-	 * @param ScQt the qt obj
+	 * 
+	 * @param ScQt
+	 *            the qt obj
 	 */
-	public void viewDoc(ScQt scQt,String url,Long statusId){
-		List<String> docNumberList=new ArrayList<String>();
+	public void viewDoc(ScQt scQt, String url, Long statusId) {
+		List<String> docNumberList = new ArrayList<String>();
 		List<String> userIds = new ArrayList<String>();
-		
-	try{
-		QTCustomerServiceSearchBean customerService=this.getManagedBean().getQtCustomerServiceSearchBean();
-	IPagingDataModel<ScQt> customerServiceModel=this.getManagedBean().getQtCustomerServiceDataModel();
-		renewSesionObject();
-		this.getManagedBean().setQtCustomerServiceSearchBean(customerService);
-		this.getManagedBean().setQtCustomerServiceDataModel(customerServiceModel);
-		this.getManagedBean().setOfficerName(" ");
-		log.debug("=status Id==="+statusId);
-		if(isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-			log.debug("=status greater==="+statusId);
-			retriveCustomerServiceBriefingSiteVisitdtls(scQt.getQtId());
-			if(isQTStatusGreaterThan(statusId, QTStatusConst.QT_PENDING_PUBLICATION)){
-			this.getManagedBean().setTotalProposalSubmitCount(totalproposaSubmitteed(scQt.getQtId()));
-			}
-			if(isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_SUPPLIER_FINALIZATION)){
-				List<ScBidSchedule> bidScheduleList=retriveCustomerServiceBidSchedules(scQt.getQtId());
-				if(CollectionUtils.isNotEmpty(bidScheduleList)){
-					this.getManagedBean().setBidScheduleList(bidScheduleList);
-				}	
-			}
-		if(isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_PENDING_LOI) || isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_PENDING_LOA)){
-		 docNumberList=retriveListOfLoiLoaDocNumbers(scQt.getQtId());
-		}
-		}
-		
-		
-		String ministryName=retrieveMinistryByOrgProfileId(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjname().getOrgProfileId());
-		String kampulanPTJ=retrieveJabatanByOrgProfileId(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjname().getOrgProfileId());
-		this.getManagedBean().setMinistryName(ministryName);
-		this.getManagedBean().setKampulanPtjName(kampulanPTJ);
-		this.getManagedBean().setPtjCode(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjCode().getOrgCode());
-		this.getManagedBean().setPtjName(this.getManagedBean().getQtCustomerServiceSearchBean().getOrgProfilePtjname().getOrgName());
-		this.getManagedBean().setViewOriginalUrl(url);
-	    this.getManagedBean().setCustomerScQt(scQt);
-       
-	    BpmRequestDTO reqDTO=new BpmRequestDTO();
-	    
-	    String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.BPM_PRINCIPAL);
-		
-		Object token = getBpmSO().authenticate(bpmUserLogin);
-		reqDTO.setUserId(bpmUserLogin);
-		docNumberList.add(scQt.getQtNo());
-		reqDTO.setDocNumberList(docNumberList);
-		reqDTO.setCtxToken(token);
-		reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-		BpmResponseDTO resDTO=getBpmSO().getTasksByDocNumberList(reqDTO);
-		if(null!=resDTO &&  null!=resDTO.getWorklistVO() && null!=resDTO.getWorklistVO().getWorklistItem() && resDTO.getWorklistVO().getWorklistItem().size()>0){
-			getManagedBean().setCustomerServiceEntity(new ArrayList<SourcingCustomerServiceBean>());
-			for(WorklistItemVO worklistItem:resDTO.getWorklistVO().getWorklistItem()){
-				
-				if(CollectionUtils.isNotEmpty(worklistItem.getAssignees())){
-	    	 	//custServiceEntity.setOfficerName(worklistItem.getAssignees().get(0));
-					log.debug("assignee"+worklistItem.getAssignees());
-					//log.info("assignee1"+worklistItem.getAssignees().get(0));
-					for(int i=0;i<worklistItem.getAssignees().size();i++){
-					SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
-	    	 	IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	    	 	UserReqDTO reqUserDTO = new UserReqDTO();
-		 		reqUserDTO.setLoginId(worklistItem.getAssignees().get(i));
-		 	UserResDTO userResDTO=	userSO.retrieveUserByLoginId(reqUserDTO);
-		 	if(null!=userResDTO && null!=userResDTO.getPmUser()){
-		 		log.debug("====user name==="+userResDTO.getPmUser().getUserName());
-	    	 	custServiceEntity.setOfficerName(userResDTO.getPmUser().getUserName());
-		 	}
-				
-	    	 	reqDTO = new BpmRequestDTO();
-	    	 	reqDTO.setCtxToken(token);
-	    	 	reqDTO.setTaskId(worklistItem.getTaskId());
-	    	 	resDTO = getBpmSO().getTaskDetails(reqDTO);
-	    	 PmStatusDesc statusDesc=	getPmStatusDesc(resDTO.getDocStatus());
-	    	 log.debug("display doc numner"+resDTO.getDocNumber());
-	    	 custServiceEntity.setDocumentNum(resDTO.getDocNumber());
-	    	 if(null!=statusDesc){
-				custServiceEntity.setStatusDesc(statusDesc.getStatusName());
-				custServiceEntity.setDocumentType(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, statusDesc.getPmStatus().getDocType()));
-				log.debug("customer status Id"+statusDesc.getPmStatus().getStatusId());
-				custServiceEntity.setStatus(statusDesc.getPmStatus().getStatusId());
-	    	 }
-				getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+
+		try {
+			QTCustomerServiceSearchBean customerService = this.getManagedBean()
+					.getQtCustomerServiceSearchBean();
+			IPagingDataModel<ScQt> customerServiceModel = this.getManagedBean()
+					.getQtCustomerServiceDataModel();
+			renewSesionObject();
+			this.getManagedBean().setQtCustomerServiceSearchBean(
+					customerService);
+			this.getManagedBean().setQtCustomerServiceDataModel(
+					customerServiceModel);
+			this.getManagedBean().setOfficerName(" ");
+			log.debug("=status Id===" + statusId);
+			if (isQTStatusGreaterThanOrEquals(statusId,
+					QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
+				log.debug("=status greater===" + statusId);
+				retriveCustomerServiceBriefingSiteVisitdtls(scQt.getQtId());
+				if (isQTStatusGreaterThan(statusId,
+						QTStatusConst.QT_PENDING_PUBLICATION)) {
+					this.getManagedBean().setTotalProposalSubmitCount(
+							totalproposaSubmitteed(scQt.getQtId()));
 				}
-				}	
-				/*this.getManagedBean().setOfficerName(userIds.toString());
-				if(StringUtils.isNotBlank(this.getManagedBean().getOfficerName()) && StringUtils.isNotEmpty(this.getManagedBean().getOfficerName())){
-				String replaceString=	this.getManagedBean().getOfficerName().substring(1, this.getManagedBean().getOfficerName().length()-1).trim();
-				this.getManagedBean().setOfficerName(replaceString);
-				}*/
-				log.debug("========staus===="+worklistItem.getState());
+				if (isQTStatusGreaterThanOrEquals(statusId,
+						QTStatusConst.QT_SUPPLIER_FINALIZATION)) {
+					List<ScBidSchedule> bidScheduleList = retriveCustomerServiceBidSchedules(scQt
+							.getQtId());
+					if (CollectionUtils.isNotEmpty(bidScheduleList)) {
+						this.getManagedBean().setBidScheduleList(
+								bidScheduleList);
+					}
+				}
+				if (isQTStatusGreaterThanOrEquals(statusId,
+						QTStatusConst.QT_PENDING_LOI)
+						|| isQTStatusGreaterThanOrEquals(statusId,
+								QTStatusConst.QT_PENDING_LOA)) {
+					docNumberList = retriveListOfLoiLoaDocNumbers(scQt
+							.getQtId());
+				}
 			}
-		}
-		if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(statusId)){
-			if(null==getManagedBean().getCustomerServiceEntity()){
-				getManagedBean().setCustomerServiceEntity(new ArrayList<SourcingCustomerServiceBean>());
+
+			String ministryName = retrieveMinistryByOrgProfileId(this
+					.getManagedBean().getQtCustomerServiceSearchBean()
+					.getOrgProfilePtjname().getOrgProfileId());
+			String kampulanPTJ = retrieveJabatanByOrgProfileId(this
+					.getManagedBean().getQtCustomerServiceSearchBean()
+					.getOrgProfilePtjname().getOrgProfileId());
+			this.getManagedBean().setMinistryName(ministryName);
+			this.getManagedBean().setKampulanPtjName(kampulanPTJ);
+			this.getManagedBean().setPtjCode(
+					this.getManagedBean().getQtCustomerServiceSearchBean()
+							.getOrgProfilePtjCode().getOrgCode());
+			this.getManagedBean().setPtjName(
+					this.getManagedBean().getQtCustomerServiceSearchBean()
+							.getOrgProfilePtjname().getOrgName());
+			this.getManagedBean().setViewOriginalUrl(url);
+			this.getManagedBean().setCustomerScQt(scQt);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+			String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.BPM_PRINCIPAL);
+
+			Object token = getBpmSO().authenticate(bpmUserLogin);
+			reqDTO.setUserId(bpmUserLogin);
+			docNumberList.add(scQt.getQtNo());
+			reqDTO.setDocNumberList(docNumberList);
+			reqDTO.setCtxToken(token);
+			reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			BpmResponseDTO resDTO = getBpmSO().getTasksByDocNumberList(reqDTO);
+			if (null != resDTO && null != resDTO.getWorklistVO()
+					&& null != resDTO.getWorklistVO().getWorklistItem()
+					&& resDTO.getWorklistVO().getWorklistItem().size() > 0) {
+				getManagedBean().setCustomerServiceEntity(
+						new ArrayList<SourcingCustomerServiceBean>());
+				for (WorklistItemVO worklistItem : resDTO.getWorklistVO()
+						.getWorklistItem()) {
+
+					if (CollectionUtils.isNotEmpty(worklistItem.getAssignees())) {
+						// custServiceEntity.setOfficerName(worklistItem.getAssignees().get(0));
+						log.debug("assignee" + worklistItem.getAssignees());
+						// log.info("assignee1"+worklistItem.getAssignees().get(0));
+						for (int i = 0; i < worklistItem.getAssignees().size(); i++) {
+							SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
+							IUserSO userSO = (IUserSO) BusinessDelegate
+									.getInstance().getServiceObject(
+											ModuleCodeConst.PROFILE_MANAGEMENT,
+											IUserSO.class);
+							UserReqDTO reqUserDTO = new UserReqDTO();
+							reqUserDTO.setLoginId(worklistItem.getAssignees()
+									.get(i));
+							UserResDTO userResDTO = userSO
+									.retrieveUserByLoginId(reqUserDTO);
+							if (null != userResDTO
+									&& null != userResDTO.getPmUser()) {
+								log.debug("====user name==="
+										+ userResDTO.getPmUser().getUserName());
+								custServiceEntity.setOfficerName(userResDTO
+										.getPmUser().getUserName());
+							}
+
+							reqDTO = new BpmRequestDTO();
+							reqDTO.setCtxToken(token);
+							reqDTO.setTaskId(worklistItem.getTaskId());
+							PmStatusDesc statusDesc = getPmStatusDesc(worklistItem
+									.getDocStatus());
+							log.debug("display doc numner"
+									+ worklistItem.getDocNumber());
+							custServiceEntity.setDocumentNum(worklistItem
+									.getDocNumber());
+							if (null != statusDesc) {
+								custServiceEntity.setStatusDesc(statusDesc
+										.getStatusName());
+								custServiceEntity
+										.setDocumentType(getParameterDesc(
+												ParameterTypeConst.DOCUMENT_TYPES,
+												statusDesc.getPmStatus()
+														.getDocType()));
+								log.debug("customer status Id"
+										+ statusDesc.getPmStatus()
+												.getStatusId());
+								custServiceEntity.setStatus(statusDesc
+										.getPmStatus().getStatusId());
+							}
+							getManagedBean().getCustomerServiceEntity().add(
+									custServiceEntity);
+						}
+					}
+					/*
+					 * this.getManagedBean().setOfficerName(userIds.toString());
+					 * if
+					 * (StringUtils.isNotBlank(this.getManagedBean().getOfficerName
+					 * ()) &&
+					 * StringUtils.isNotEmpty(this.getManagedBean().getOfficerName
+					 * ())){ String replaceString=
+					 * this.getManagedBean().getOfficerName().substring(1,
+					 * this.getManagedBean
+					 * ().getOfficerName().length()-1).trim();
+					 * this.getManagedBean().setOfficerName(replaceString); }
+					 */
+					log.debug("========staus====" + worklistItem.getState());
+				}
 			}
-			SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
-			custServiceEntity.setStatus(statusId);
-			getManagedBean().getCustomerServiceEntity().add(custServiceEntity);
+			if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(statusId)) {
+				if (null == getManagedBean().getCustomerServiceEntity()) {
+					getManagedBean().setCustomerServiceEntity(
+							new ArrayList<SourcingCustomerServiceBean>());
+				}
+				SourcingCustomerServiceBean custServiceEntity = new SourcingCustomerServiceBean();
+				custServiceEntity.setStatus(statusId);
+				getManagedBean().getCustomerServiceEntity().add(
+						custServiceEntity);
+			}
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_QT_CUSTOMER_SERVICE_VIEW);
+		} finally {
+			docNumberList = null;
+			userIds = null;
 		}
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication()
-		.getNavigationHandler()
-		.handleNavigation(fc, null, NAV_QT_CUSTOMER_SERVICE_VIEW);
-	}finally{
-		docNumberList=null;	
-		userIds=null;
 	}
-	}
-	
+
 	/**
 	 * Sets the pm status desc.
 	 * 
 	 * @param statusId
-	 *  - pm status id passed as String
+	 *            - pm status id passed as String
 	 */
 	private PmStatusDesc getPmStatusDesc(Integer docStatus) {
-	
+
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(new Long(docStatus));
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
 		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-					return resDTO.getPmStatusDesc();
+			return resDTO.getPmStatusDesc();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the user so.
 	 * 
 	 * @return the user so
 	 */
 	private IBpmSO getBpmSO() {
-		return (IBpmSO)EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
+				IBpmSO.class);
 	}
-	
-	private List<String> retriveListOfLoiLoaDocNumbers(Long qtId){
+
+	private List<String> retriveListOfLoiLoaDocNumbers(Long qtId) {
 		log.debug("start retriveListOfLoiLoaDocNumbers");
-		IQTCustomerServiceSO customerServiceInfo=null;
-		try{
-			customerServiceInfo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTCustomerServiceSO.class);
-			QTCustomerServiceReqDTO customerServiceReqDTO=new QTCustomerServiceReqDTO();
-			QTCustomerServiceResDTO resDto=new QTCustomerServiceResDTO();
+		IQTCustomerServiceSO customerServiceInfo = null;
+		try {
+			customerServiceInfo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTCustomerServiceSO.class);
+			QTCustomerServiceReqDTO customerServiceReqDTO = new QTCustomerServiceReqDTO();
+			QTCustomerServiceResDTO resDto = new QTCustomerServiceResDTO();
 			customerServiceReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			customerServiceReqDTO.setQuotationTenderId(qtId);
-			 resDto=customerServiceInfo.retriveCustomerServiceLoiLoaList(customerServiceReqDTO);
-			 log.debug("end retriveListOfLoiLoaDocNumbers");
+			resDto = customerServiceInfo
+					.retriveCustomerServiceLoiLoaList(customerServiceReqDTO);
+			log.debug("end retriveListOfLoiLoaDocNumbers");
 			return resDto.getLoiLoaNumbers();
-		}finally{
-			customerServiceInfo=null;
+		} finally {
+			customerServiceInfo = null;
 		}
-		
+
 	}
-	
-	private List<ScBidSchedule> retriveCustomerServiceBidSchedules(Long qtId){
-		IBiddingSO BiddingSO=null;
+
+	private List<ScBidSchedule> retriveCustomerServiceBidSchedules(Long qtId) {
+		IBiddingSO BiddingSO = null;
 		log.debug("start retriveCustomerServiceBidSchedules");
-		try{
+		try {
 			BiddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 			ISearchBean<ScBidSchedule> searchBean = new SearchBean<ScBidSchedule>();
@@ -334,87 +407,95 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 							SearchOperator.OPERATOR_EQUALS.value(), qtId));
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("scBid.docType",
-							SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_QUOTATION));
-			BiddingReqDTO reqDTo=new BiddingReqDTO();
-			BiddingResDTO resDTo=new BiddingResDTO();
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.DOCTYPE_QUOTATION));
+			BiddingReqDTO reqDTo = new BiddingReqDTO();
+			BiddingResDTO resDTo = new BiddingResDTO();
 			reqDTo.setBidSchSearchBean(searchBean);
-			resDTo=BiddingSO.retriveCustomerServiceBidSchedules(reqDTo);
+			resDTo = BiddingSO.retriveCustomerServiceBidSchedules(reqDTo);
 			log.debug("end retriveCustomerServiceBidSchedules");
 			return resDTo.getActiveBidSchedules();
-			
-		}finally{
-			BiddingSO=null;	
+
+		} finally {
+			BiddingSO = null;
 		}
 	}
-	
-	private void retriveCustomerServiceBriefingSiteVisitdtls(Long qtId){
+
+	private void retriveCustomerServiceBriefingSiteVisitdtls(Long qtId) {
 		IQTBriefingSO qTBriefingSO = null;
-		try{
-		qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTBriefingSO.class);
-		BriefingReqDTO briefingReqDTO=new BriefingReqDTO();
-		BriefingResDTO briefingResDTO=new BriefingResDTO();
-		ISearchBean<ScQtBsvDtl> brifingsearchBean = new SearchBean<ScQtBsvDtl>();
-		// Filter By - qtId
-		brifingsearchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtBsv.scQt.qtId",
-									SearchOperator.OPERATOR_EQUALS.value(), qtId));
-		brifingsearchBean.getDataFilterBeans().add(
-							new SearchFilterBean("bsvType",
-									SearchOperator.OPERATOR_EQUALS.value(), QTConstants.BSV_TYPE_BRIEFING));
-		briefingReqDTO.setCustomerBriefingSearchBean(brifingsearchBean);
-		
-		
-		ISearchBean<ScQtBsvDtl> sitevisitsearchBean = new SearchBean<ScQtBsvDtl>();
-		// Filter By - qtId
-		sitevisitsearchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtBsv.scQt.qtId",
-									SearchOperator.OPERATOR_EQUALS.value(), qtId));
-		sitevisitsearchBean.getDataFilterBeans().add(
-							new SearchFilterBean("bsvType",
-									SearchOperator.OPERATOR_EQUALS.value(), QTConstants.BSV_TYPE_SITEVISIT));
-		briefingReqDTO.setCustomerSiteVisitSearchBean(sitevisitsearchBean);
-		briefingResDTO=qTBriefingSO.retriveCustomerServiceBriefingSiteVisitDtls(briefingReqDTO);
-		if(CollectionUtils.isNotEmpty(briefingResDTO.getBriefingList())){
-			this.getManagedBean().setBriefingDtlsList(briefingResDTO.getBriefingList());
-		}
-		if(CollectionUtils.isNotEmpty(briefingResDTO.getSiteVisitList())){
-			this.getManagedBean().setSiteVisitDtlsList(briefingResDTO.getSiteVisitList());
-		}
-		}finally{
+		try {
+			qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+			BriefingResDTO briefingResDTO = new BriefingResDTO();
+			ISearchBean<ScQtBsvDtl> brifingsearchBean = new SearchBean<ScQtBsvDtl>();
+			// Filter By - qtId
+			brifingsearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scQtBsv.scQt.qtId",
+							SearchOperator.OPERATOR_EQUALS.value(), qtId));
+			brifingsearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("bsvType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							QTConstants.BSV_TYPE_BRIEFING));
+			briefingReqDTO.setCustomerBriefingSearchBean(brifingsearchBean);
+
+			ISearchBean<ScQtBsvDtl> sitevisitsearchBean = new SearchBean<ScQtBsvDtl>();
+			// Filter By - qtId
+			sitevisitsearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scQtBsv.scQt.qtId",
+							SearchOperator.OPERATOR_EQUALS.value(), qtId));
+			sitevisitsearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("bsvType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							QTConstants.BSV_TYPE_SITEVISIT));
+			briefingReqDTO.setCustomerSiteVisitSearchBean(sitevisitsearchBean);
+			briefingResDTO = qTBriefingSO
+					.retriveCustomerServiceBriefingSiteVisitDtls(briefingReqDTO);
+			if (CollectionUtils.isNotEmpty(briefingResDTO.getBriefingList())) {
+				this.getManagedBean().setBriefingDtlsList(
+						briefingResDTO.getBriefingList());
+			}
+			if (CollectionUtils.isNotEmpty(briefingResDTO.getSiteVisitList())) {
+				this.getManagedBean().setSiteVisitDtlsList(
+						briefingResDTO.getSiteVisitList());
+			}
+		} finally {
 			qTBriefingSO = null;
 		}
-		
+
 	}
-	
-	private Long totalproposaSubmitteed(Long qtId){
+
+	private Long totalproposaSubmitteed(Long qtId) {
 		IQTProposalSO qTProposalSO = null;
 		log.debug("start totalproposaSubmitteed");
-		try{
+		try {
 			qTProposalSO = (IQTProposalSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTProposalSO.class);
-			ProposalReqDTO proposalReqDto=new ProposalReqDTO();
-			ProposalResDTO proposalResDto=new ProposalResDTO();
+			ProposalReqDTO proposalReqDto = new ProposalReqDTO();
+			ProposalResDTO proposalResDto = new ProposalResDTO();
 			proposalReqDto.setQtId(qtId);
-			proposalResDto=qTProposalSO.getTotalSubmittedProposal(proposalReqDto);
+			proposalResDto = qTProposalSO
+					.getTotalSubmittedProposal(proposalReqDto);
 			log.debug("end totalproposaSubmitteed");
 			return proposalResDto.getTotalSubmitted();
-		}finally{
-			qTProposalSO = null;	
+		} finally {
+			qTProposalSO = null;
 		}
-		
+
 	}
+
 	/**
 	 * navigate to original page
+	 * 
 	 * @return navigation to original page.
 	 */
-	public String navigateToCurrentPage(){
-		//QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+	public String navigateToCurrentPage() {
+		// QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		return getManagedBean().getViewOriginalUrl();
 	}
-	
+
 	/**
 	 * The Class QTCustomerServiceSearchQtDataModel.customer service paging data
 	 * model.
@@ -430,7 +511,7 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		 */
 		public QTCustomerServiceSearchQtDataModel(String componentId) {
 
-			super(componentId,false);
+			super(componentId, false);
 
 		}
 
@@ -443,21 +524,22 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		 */
 		public ISearchResultBean<ScQt> pageChangeListener(
 				ISearchBean<ScQt> searchBean) {
-			
+
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				populateQTSearchCriteria(reqDTO, getManagedBean().getQtCustomerServiceSearchBean(), searchBean);
+				populateQTSearchCriteria(reqDTO, getManagedBean()
+						.getQtCustomerServiceSearchBean(), searchBean);
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
-				
-				
-				// set search result doc type for navigate to diff page based on diff doc type selected.
-				//getManagedBean().getQtnTenderSearchBean().setResultDocType(getManagedBean().getQtnTenderSearchBean().getDocType());
-				if(resDTO.isSuccessful()){
-				return resDTO.getQtResultBean();
+
+				// set search result doc type for navigate to diff page based on
+				// diff doc type selected.
+				// getManagedBean().getQtnTenderSearchBean().setResultDocType(getManagedBean().getQtnTenderSearchBean().getDocType());
+				if (resDTO.isSuccessful()) {
+					return resDTO.getQtResultBean();
 				}
 			} finally {
 				detailSO = null;
@@ -467,7 +549,6 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 		}
 	}
 
-	
 	/**
 	 * Method to prepare qt search criteria.
 	 * 
@@ -480,39 +561,40 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 			QTCustomerServiceSearchBean customerServiceSearchBean,
 			ISearchBean<ScQt> qtSearchBean) {
 		if (customerServiceSearchBean != null) {
-			if (CollectionUtils.isNotEmpty(qtSearchBean
-					.getDataFilterBeans())) {
+			if (CollectionUtils.isNotEmpty(qtSearchBean.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = customerServiceSearchBean.getQtTitle();
-			if (StringUtils.isNotBlank(qtTitle) && StringUtils.isNotEmpty(qtTitle)) {
-				searchFilterBean.add(
-						new SearchFilterBean(QTConstants.QT_TITILE,
-								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
-								true));
+			if (StringUtils.isNotBlank(qtTitle)
+					&& StringUtils.isNotEmpty(qtTitle)) {
+				searchFilterBean.add(new SearchFilterBean(
+						QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE
+								.value(), qtTitle, true));
 			}
-			
+
 			// docType & docNo
 			String docType = customerServiceSearchBean.getDocumentType();
 			String docNo = customerServiceSearchBean.getQtNo();
 			if (StringUtils.isNotEmpty(docType)) {
 				if (ParameterConst.DOCTYPE_QUOTATION.equals(docType)) {
-					if (StringUtils.isNotBlank(docNo) && StringUtils.isNotEmpty(docNo)) {
+					if (StringUtils.isNotBlank(docNo)
+							&& StringUtils.isNotEmpty(docNo)) {
 						SearchFilterBean bean = new SearchFilterBean();
 						bean.setSearchField(QTConstants.QT_NUMBER);
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE
+								.value());
 						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);	
+						searchFilterBean.add(bean);
 					}
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
 				}
 			}
-			
-			
-			Date fromCreatedDate = customerServiceSearchBean.getCreatedFromDate();
+
+			Date fromCreatedDate = customerServiceSearchBean
+					.getCreatedFromDate();
 			Date toCreatedDate = customerServiceSearchBean.getCreatedToDate();
 			if (null != fromCreatedDate || toCreatedDate != null) {
 				Calendar c1 = Calendar.getInstance();
@@ -539,7 +621,8 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			Date fromPublishDate = customerServiceSearchBean.getPublishFromDate();
+			Date fromPublishDate = customerServiceSearchBean
+					.getPublishFromDate();
 			Date toPublishDate = customerServiceSearchBean.getPublishToDate();
 			if (null != fromPublishDate || null != toPublishDate) {
 				Calendar c1 = Calendar.getInstance();
@@ -577,89 +660,91 @@ public class QTCustomerServiceBackingBean extends SourcingBaseBackingBean<QTCust
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			
+
 			String status = customerServiceSearchBean.getQtStatus();
-			if (StringUtils.isNotBlank(status) && StringUtils.isNotEmpty(status)) {
+			if (StringUtils.isNotBlank(status)
+					&& StringUtils.isNotEmpty(status)) {
 				searchFilterBean.add(new SearchFilterBean(
-								"scQtStatus.pmStatus.statusId",
-								SearchOperator.OPERATOR_EQUALS.value(), status));
-				searchFilterBean.add(
-						new SearchFilterBean("scQtStatus.current",
-								SearchOperator.OPERATOR_EQUALS.value(), true));
+						"scQtStatus.pmStatus.statusId",
+						SearchOperator.OPERATOR_EQUALS.value(), status));
+				searchFilterBean.add(new SearchFilterBean("scQtStatus.current",
+						SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			
-			
-				PmOrgProfile ptjProfiles = customerServiceSearchBean.getOrgProfilePtjname();
-				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
-					// Filter By - PTJ
-					searchFilterBean.add(new SearchFilterBean(
-							"pmOrgProfile." + OrgProfileUtil
-								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							ptjProfiles.getOrgProfileId()));
-				} 
-			
+
+			PmOrgProfile ptjProfiles = customerServiceSearchBean
+					.getOrgProfilePtjname();
+			if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
+				// Filter By - PTJ
+				searchFilterBean
+						.add(new SearchFilterBean(
+								"pmOrgProfile."
+										+ OrgProfileUtil
+												.getSearchBeanParentString(OrganizationType.DIVISION
+														.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								ptjProfiles.getOrgProfileId()));
+			}
 
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
-			
+
 			reqDTO.setQtSearchBean(qtSearchBean);
 		}
 	}
 
 	/**
-	 *navigate to CustomerService search page.
-	 *
+	 * navigate to CustomerService search page.
+	 * 
 	 * 
 	 */
-	public void preRenderView(){
+	public void preRenderView() {
 		log.debug("QT customer service preRenderView");
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
-		.getNavigationHandler()
-		.handleNavigation(fc, null, NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW);
+				.getNavigationHandler()
+				.handleNavigation(fc, null, NAV_QT_CUSTOMER_SERVICE_SEARCH_VIEW);
 	}
 
 	/**
 	 * @return the qtCustomerServiceDataModel
 	 */
 	public IPagingDataModel<ScQt> getQtCustomerServiceDataModel() {
-		IPagingDataModel<ScQt> customerService=	getManagedBean().getQtCustomerServiceDataModel();
-		if(null==customerService){
-			customerService=new QTCustomerServiceSearchQtDataModel("qtCustomerServiceSearchResult");
+		IPagingDataModel<ScQt> customerService = getManagedBean()
+				.getQtCustomerServiceDataModel();
+		if (null == customerService) {
+			customerService = new QTCustomerServiceSearchQtDataModel(
+					"qtCustomerServiceSearchResult");
 			getManagedBean().setQtCustomerServiceDataModel(customerService);
 		}
 		return customerService;
-		
+
 	}
 
-
-	
-	
 	/**
 	 * Method to get the list of bidding suppliers count.
 	 * 
 	 * @param bidScheduleList
-	 *            
+	 * 
 	 * @return the bidSuppliers Count.
 	 */
-	public int totalBidSuppliersCount(List<ScBidSchedule> bidScheduleList){
-		int count=0;
-		try{
-			if(CollectionUtils.isNotEmpty(bidScheduleList)){
-				for(ScBidSchedule bidSchedule:bidScheduleList){
-					if(CollectionUtils.isNotEmpty(bidSchedule.getScBidSuppliers())){
-						count=count+bidSchedule.getScBidSuppliers().size();
+	public int totalBidSuppliersCount(List<ScBidSchedule> bidScheduleList) {
+		int count = 0;
+		try {
+			if (CollectionUtils.isNotEmpty(bidScheduleList)) {
+				for (ScBidSchedule bidSchedule : bidScheduleList) {
+					if (CollectionUtils.isNotEmpty(bidSchedule
+							.getScBidSuppliers())) {
+						count = count + bidSchedule.getScBidSuppliers().size();
 					}
-					
+
 				}
 			}
-			
-		}finally{
-			
+
+		} finally {
+
 		}
 		return count;
 	}
-	
+
 }
