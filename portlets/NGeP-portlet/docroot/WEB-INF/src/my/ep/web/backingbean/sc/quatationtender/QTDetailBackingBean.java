@@ -2683,10 +2683,10 @@ public class QTDetailBackingBean extends
 					if (tenderResDTO.getTotalSuppliers() != null) {
 						this.getManagedBean().setTotalSuppliers(tenderResDTO.getTotalSuppliers());	
 					}
-				}
-
+				} 
+			String procurementMode=	scQt.getProcurementMode() !=null ?scQt.getProcurementMode().getParameterCode() : ParameterConst.PROCUREMENT_MODE_QUOTATION;
 				boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION
-						.equals(scQt.getProcurementMode().getParameterCode());
+						.equals(procurementMode);
 				if (!isQuotationThresHold
 						&& !scQt.getScQtSupplierCriteria().isAllState()) {
 					if(this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR){
