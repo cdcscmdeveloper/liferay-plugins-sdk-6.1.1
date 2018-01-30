@@ -3380,7 +3380,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			SearchBean<VCmSupplierItem> searchBean = new SearchBean<VCmSupplierItem>();
 			
 			for (String filter: conditionField.split("\\|")){
-		         System.out.println(filter);
+				 log.debug(filter);
 		         String searchField = null;
 		         String searchValue = null;
 		         int searchCondition = SearchOperator.OPERATOR_EQUALS.value();
@@ -3396,7 +3396,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		         filterBean.setSearchValue(searchValue);
 		         searchBean.getDataFilterBeans().add(
 		        		 filterBean);
-		         System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
+		         log.debug(searchField + "|" + searchValue + "|" + searchCondition);
 		    }
 			//catalogueReqDTO.setSupplierItemId(scRequestNoteDtl.getvCmSupplierItem());
 			IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
@@ -3748,7 +3748,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			         }
 			         paramMap.put(ReportConst.PARAM_QUANTITY, quantity.toString());	
 			         paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
-			         System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
+			         log.debug(searchField + "|" + searchValue + "|" + searchCondition);
 			    }
 				
 				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 0 + "");
