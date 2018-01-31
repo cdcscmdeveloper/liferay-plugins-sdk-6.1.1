@@ -521,6 +521,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestChallRespUpdate();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
@@ -533,6 +534,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestResetPIN();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
@@ -545,6 +547,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestChangePIN();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
