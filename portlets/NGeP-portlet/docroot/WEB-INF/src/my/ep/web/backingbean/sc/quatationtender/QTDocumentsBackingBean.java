@@ -1102,7 +1102,7 @@ public class QTDocumentsBackingBean extends
 			}
 			
 			
-			String docDefinitionKey = docReports.getPmDocument().getDocDefinitionKey();
+			String docDefinitionKey = docReports.getPmDocument()!=null ?docReports.getPmDocument().getDocDefinitionKey() : " ";
 					
 			if (attachment != null && SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
 					.equals(docDefinitionKey)) {
