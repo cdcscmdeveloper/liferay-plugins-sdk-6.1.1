@@ -2840,7 +2840,7 @@ public class NoticeBoardBackingBean extends
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
-				String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
+				String docDefinitionKey = scQtDocReport.getPmDocument()!=null? scQtDocReport.getPmDocument().getDocDefinitionKey() : " ";
 				
 				if(attachment != null && SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE.equals(docDefinitionKey)){
 					String custFileName = getDocTitleAsFileName((scQtDocReports.indexOf(scQtDocReport) + 1),
