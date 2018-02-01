@@ -925,6 +925,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if(getManagedBean().getFulfilmentOrder() != null && getManagedBean().getFulfilmentOrder().getDocNo() != null){
+			log.info("****PO No****"+getManagedBean().getFulfilmentOrder().getDocNo());
+		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
