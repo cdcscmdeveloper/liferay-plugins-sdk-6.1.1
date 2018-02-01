@@ -88,13 +88,13 @@ public class ViewApplHistoryManagedBean extends
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
 
-			int i = 0;
-			for (Object[] obj : retVal.getResultList()) {
-				obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
-						+ "");
-				retVal.getResultList().set(i, obj);
-				i++;
-			}
+//			int i = 0;
+//			for (Object[] obj : retVal.getResultList()) {
+//				obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
+//						+ "");
+//				retVal.getResultList().set(i, obj);
+//				i++;
+//			}
 			return retVal;
 		}
 	}
