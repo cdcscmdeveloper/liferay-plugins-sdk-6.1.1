@@ -1698,7 +1698,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getTechnicalScoring().add(list);
 					}
 					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
-					list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().longValueExact()));
+					list.getQtScoreWeightage().setScore(list.getQtScoreWeightage().getScore());
 					}
 					
 				}
@@ -1903,7 +1903,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					int local = (int) addScore;
 					this.getManagedBean().setFinPoints(local);
 					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
-						list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().longValueExact()));
+						list.getQtScoreWeightage().setScore(list.getQtScoreWeightage().getScore());
 						}
 				} //
 					// ScQtCheckList schecklist = specChecklist.get(0);
