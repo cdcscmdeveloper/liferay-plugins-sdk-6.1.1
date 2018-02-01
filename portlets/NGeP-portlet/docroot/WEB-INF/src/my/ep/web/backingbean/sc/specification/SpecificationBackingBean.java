@@ -5386,6 +5386,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setStartYear(startYear);
 				this.getManagedBean().setEndYear(endYear);
 				this.getManagedBean().setToMonth(endToMonth);
+			}else{
+				int year = Calendar.getInstance().get(Calendar.YEAR);
+				this.getManagedBean()
+				.setStartYear(String.valueOf(year));
+		       this.getManagedBean().setEndYear(String.valueOf(year));
 			}
 		}
 	}
