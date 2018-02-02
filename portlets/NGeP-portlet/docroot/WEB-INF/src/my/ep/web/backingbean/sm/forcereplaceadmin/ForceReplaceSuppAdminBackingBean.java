@@ -433,15 +433,19 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void validateMyIdentity() {
 		if (getManagedBean().getNewAdmin() != null
-				&& getManagedBean().getIdentificationType().getParameterCode()
-						.equals(SupplierManagementConst.NEW_IC)) {
-			SmCommonUtil.getInstance()
-					.verifyWithMyIdentity(
-							getManagedBean().getNewAdmin().getName(),
-							getManagedBean().getNewAdmin()
-									.getIdentificationNo(),
-							getManagedBean().getPermAddr().getSmAddress()
-									.getPostcode(), null);
+				&& getManagedBean().getNewAdmin().getIdentificationType() != null) {
+			PmParameter idType = SmApplicationUtil
+					.retrievePmParameterById(getManagedBean().getNewAdmin()
+							.getIdentificationTypeId());
+
+			if (idType.getParameterCode()
+					.equals(SupplierManagementConst.NEW_IC)) {
+				SmCommonUtil.getInstance().verifyWithMyIdentity(
+						getManagedBean().getNewAdmin().getName(),
+						getManagedBean().getNewAdmin().getIdentificationNo(),
+						getManagedBean().getPermAddr().getSmAddress()
+								.getPostcode(), null);
+			}
 		}
 	}
 
