@@ -6824,7 +6824,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitSmApplToBpm(String applType) {
 
-//		validateDontHavePersonnelWithLogin();
+		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
 		SmApplicationUtil
 				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
@@ -8816,12 +8816,21 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getSmApplSupportDocs()
 					.contains(getManagedBean().getSupportDoc())) {
 				log.info("******* Contains selected file ****");
+				String filePath = Calendar.getInstance().get(Calendar.YEAR)
+						+ "/SM/APPLICATION/"
+						+ getManagedBean().getSmAppl().getApplNo() + "/SD/";
 				SmApplSupportDoc doc = getManagedBean().getSupportDoc();
+
+				if (EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					SmApplicationUtil.setDefaultSmApplDocFiles(doc);
+				}
 				doc.getSmApplDocFiles()
 						.get(0)
 						.setFileName(
 								StringUtils.replace(event.getFile()
 										.getFileName(), " ", "-"));
+				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+
 				getManagedBean()
 						.getSmAppl()
 						.getSmApplSupportDocs()
@@ -8829,15 +8838,6 @@ public class SmApplicationBackingBean extends
 								.getSmApplSupportDocs()
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
-				String filePath = Calendar.getInstance().get(Calendar.YEAR)
-						+ "/SM/APPLICATION/"
-						+ getManagedBean().getSmAppl().getApplNo() + "/SD/";
-				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
-						.getSmApplSupportDocs()) {
-					log.info(" *** The name is ****"
-							+ docs.getSmApplDocFiles().get(0).getFileName());
-					docs.getSmApplDocFiles().get(0).setFilePath(filePath);
-				}
 
 				commonUploadFile(event, filePath);
 			}
