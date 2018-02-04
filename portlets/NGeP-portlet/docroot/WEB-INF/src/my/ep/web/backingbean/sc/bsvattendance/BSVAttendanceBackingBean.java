@@ -1049,7 +1049,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				isAttendedOrPreRegistered(registration, bsvAttandance);
 
 				if (registration.isAttended()) {
-					if (null == registration.getBsvRegistrationId()) {
+					if (null == registration.getBsvRegistrationId() || registration.isModified()) {
 						invokeBPM = true;
 						registration.setPostRegistered(true);
 						registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
@@ -1200,10 +1200,12 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	 * @param attendance
 	 *
 	 */
-	public void updateBriefingAttendance(ScQtBsvAttendance bsvAttendance,List<ScQtBsvAttendance> listAttendance,boolean attendance){
+	public void updateBriefingAttendance(ScQtBsvAttendance bsvAttendance, ScQtBsvRegistration scQtBsvRegistration,boolean attendance){
+		List<ScQtBsvAttendance> listAttendance = scQtBsvRegistration.getBsvAttendance();
 		int i=listAttendance.indexOf(bsvAttendance);
 		bsvAttendance.setAttended(attendance);
 		listAttendance.set(i, bsvAttendance);
+		scQtBsvRegistration.setModified(true);
 	}
 	
 	
