@@ -1046,14 +1046,17 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
-				isAttendedOrPreRegistered(registration, bsvAttandance);
+				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
 
-				if (registration.isAttended()) {
-					if (null == registration.getBsvRegistrationId() || registration.isModified()) {
-						invokeBPM = true;
-						registration.setPostRegistered(true);
-						registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+				if (flag) {
+					if (registration.isAttended()) {
+						if (null == registration.getBsvRegistrationId() || registration.isModified()) {
+							invokeBPM = true;
+							registration.setPostRegistered(true);
+							registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+						}
 					}
+					
 				} else {
 					throw new EpException(MessageConst.ERROR_760043);
 				}
