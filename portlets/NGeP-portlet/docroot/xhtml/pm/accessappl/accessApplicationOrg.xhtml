@@ -43,6 +43,7 @@
 						required="#{!empty param['disableValidation']}" 
 						update="@form"
 						label="#{lbl['lbl.pm.organisation.orgName']}"
+						readonly="true"
 						disabled="#{empty accessApplBackingBean.managedBean.selectedOrgType or not isBrandNew}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{accessApplBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
