@@ -2890,7 +2890,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ptjSpecialApproval != null &&
 				ptjSpecialApproval.getProcureAmt() != null &&
 				amount != null &&
-				amount.compareTo(ptjSpecialApproval.getProcureAmt()) >= 0) {
+				amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0) {
 			isProcumentMethodDropdownReq = true;
 		}
 		return isProcumentMethodDropdownReq;
