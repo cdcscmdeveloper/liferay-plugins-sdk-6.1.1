@@ -671,10 +671,10 @@ public class CreateQtBackingBean extends
 					parameterReqDTO
 							.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				} else if (BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
-						ptjSpecialApproval != null &&
+						ptjSpecialApproval != null && !isQuotationThresHold &&
 						ptjSpecialApproval.getProcureAmt() != null &&
 						amount != null &&
-						amount.compareTo(ptjSpecialApproval.getProcureAmt()) >= 0){
+						amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0){
 					this.getManagedBean().setProcMethodDropdownPresent(true);
 					//scQt.setProcurementMode(new PmParameter());
 				}else {
