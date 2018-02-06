@@ -778,7 +778,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
 		FulfilmentResDTO frnNoteRes = receivedNoteSO.retrieveReceivedNoteByReqId(reqDTO);
-		Map<Long, FlInvoiceItemSummary> itemMapLv1 = new HashMap<Long, FlInvoiceItemSummary>();;
+		Map<Long, FlInvoiceItemSummary> itemMapLv1 = new HashMap<Long, FlInvoiceItemSummary>();
 		FlInvoiceItemSummary invItemSummary = null;
 		for(FlFulfilmentNote fulfilmentNote : frnNoteRes.getFulfilmentNoteList()){
 			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
@@ -1858,6 +1858,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			BigDecimal grandTotalInvAmt = new BigDecimal(0);
 			TreeNode lv1TreeNode = null;
 			Map<String, InvoiceChargeLineVO> lvl3Map = null;
+			Map<Long,FlInvoiceItemSummary> checkDupMap = new HashMap<Long,FlInvoiceItemSummary>();
+			List<FlInvoiceItemSummary> removeInvSummItemObj = new ArrayList<FlInvoiceItemSummary>(); 
+			for(FlInvoiceItemSummary invoiceItemSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+				if(!checkDupMap.containsKey(invoiceItemSummary.getFlFulfilmentItem().getFulfilmentItemId())){
+					checkDupMap.put(invoiceItemSummary.getFlFulfilmentItem().getFulfilmentItemId(), invoiceItemSummary);
+				}else{
+					removeInvSummItemObj.add(checkDupMap.get(invoiceItemSummary.getFlFulfilmentItem().getFulfilmentItemId()));
+				}
+			}
+			getManagedBean().getInvoice().getFlInvoiceItemSummary().removeAll(removeInvSummItemObj);
 			for(FlInvoiceItemSummary invItemSummLv2 : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 				if(lvl1Map.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId())) {
 					lv1TreeNode = lvl1Map.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemSummLv2.getFlFulfilmentItem().getPmUomId());
@@ -1922,7 +1932,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			TreeNode lv1TreeNode = null;
 			List<FlInvoiceItemSummary> taxList = new ArrayList<FlInvoiceItemSummary>(); 
 			List<FlInvoiceItemSummary> outOfScopeList = new ArrayList<FlInvoiceItemSummary>(); 
-			
+			Map<Long,FlInvoiceItemSummary> checkDupMap = new HashMap<Long,FlInvoiceItemSummary>();
+			List<FlInvoiceItemSummary> removeInvSummItemObj = new ArrayList<FlInvoiceItemSummary>(); 
+			for(FlInvoiceItemSummary invoiceItemSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+				if(!checkDupMap.containsKey(invoiceItemSummary.getFlFulfilmentItem().getFulfilmentItemId())){
+					checkDupMap.put(invoiceItemSummary.getFlFulfilmentItem().getFulfilmentItemId(), invoiceItemSummary);
+				}else{
+					removeInvSummItemObj.add(checkDupMap.get(invoiceItemSummary.getFlFulfilmentItem().getFulfilmentItemId()));
+				}
+			}
+			getManagedBean().getInvoice().getFlInvoiceItemSummary().removeAll(removeInvSummItemObj);
 			for(FlInvoiceItemSummary invoiceItemSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 				for(FlInvoiceItem invItem : invoiceItemSummary.getFlInvoiceItem()){
 					if(!invItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
