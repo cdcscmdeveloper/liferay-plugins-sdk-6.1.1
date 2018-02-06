@@ -3026,11 +3026,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					&& !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
 				for (CtSchedule schedule : getManagedBean().getContractVer().getCtSchedules()) {
 					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						Date d1 = new Date();
-						String localDate = dateFormat.format(d1);
-						String date = localDate.substring(0, 2);
-						String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
-						String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+						String fromDate =  "01/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
+						String toDate = "01/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
 						try {
 							schedule.setFromDate(dateFormat.parse(fromDate));
 							schedule.setToDate(dateFormat.parse(toDate));
@@ -3046,16 +3043,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					&& !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
 				for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						Date d1 = new Date();
-						String localDate = dateFormat.format(d1);
-						String date = localDate.substring(0, 2);
-						String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
-						String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+						String fromDate = "01/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
+						String toDate = "01/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
 						try {
 							schedule.setFromDate(dateFormat.parse(fromDate));
 							schedule.setToDate(dateFormat.parse(toDate));
 						} catch (ParseException e) {
-							//	log.debug(e.getMessage());
+							e.printStackTrace();
 						}
 					}
 				}
