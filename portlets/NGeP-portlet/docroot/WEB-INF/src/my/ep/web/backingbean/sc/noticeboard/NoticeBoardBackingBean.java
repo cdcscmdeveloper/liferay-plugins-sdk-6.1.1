@@ -1515,13 +1515,39 @@ public class NoticeBoardBackingBean extends
 		SearchFilterBean searchFilterBean = new SearchFilterBean();
 		
 		if (searchDataBean.isToday()) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
 					.value());
-			searchFilterBean.setSearchValue(new Date());
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(Calendar.HOUR_OF_DAY,0);
+			fromDate.set(Calendar.MINUTE,0);
+			fromDate.set(Calendar.SECOND,0);
+			fromDate.set(Calendar.MILLISECOND,0);
+			
+			Calendar toDate = Calendar.getInstance();
+			toDate.set(Calendar.HOUR_OF_DAY,23);
+			toDate.set(Calendar.MINUTE,59);
+			toDate.set(Calendar.SECOND,59);
+			toDate.set(Calendar.MILLISECOND,59);
+			searchFilterBean.setSearchValue(new SearchBetweenValue<Date>(
+					fromDate.getTime(), toDate.getTime()));
 		} else if (searchDataBean.isYesterday()) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
 					.value());
-			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(), 1));
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(Calendar.HOUR_OF_DAY,0);
+			fromDate.set(Calendar.MINUTE,0);
+			fromDate.set(Calendar.SECOND,0);
+			fromDate.set(Calendar.MILLISECOND,0);
+			fromDate.add(Calendar.DAY_OF_MONTH, -1);
+			
+			Calendar toDate = Calendar.getInstance();
+			toDate.set(Calendar.HOUR_OF_DAY,23);
+			toDate.set(Calendar.MINUTE,59);
+			toDate.set(Calendar.SECOND,59);
+			toDate.set(Calendar.MILLISECOND,59);
+			toDate.add(Calendar.DAY_OF_MONTH, -1);
+			searchFilterBean.setSearchValue(new SearchBetweenValue<Date>(
+					fromDate.getTime(), toDate.getTime()));
 		} else if (searchDataBean.getPassDays() != null) {
 			
 			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
