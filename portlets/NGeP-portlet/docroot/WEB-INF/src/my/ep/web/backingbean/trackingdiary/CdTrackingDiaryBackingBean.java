@@ -206,11 +206,13 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 
 							System.out.println("recomemd:"+code.getRequestId());
 							this.getManagedBean().getRecommendExtCodeList().add(code);
+							this.getManagedBean().getProceedExtCodeList().add(code);
+							
 						}else{
 
 							System.out.println("process:"+code.getRequestId());
 							this.getManagedBean().getProceedExtCodeList().add(code);
-
+							
 
 						}
 					}else{
