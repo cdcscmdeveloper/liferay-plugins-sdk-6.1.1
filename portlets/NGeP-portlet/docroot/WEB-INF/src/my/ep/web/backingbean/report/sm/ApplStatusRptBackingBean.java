@@ -8,9 +8,18 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang.StringUtils;
 
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ApplStatusRptManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @ManagedBean(name = "applStatusRptBB")
 @ViewScoped
@@ -24,6 +33,7 @@ public class ApplStatusRptBackingBean extends
 
 	public ApplStatusRptBackingBean() {
 		setDefaultDateFromAndDateTo();
+		getSupplierInfo();
 	}
 
 	public void generateReport() {
@@ -55,4 +65,32 @@ public class ApplStatusRptBackingBean extends
 		setDefaultDateFromAndDateTo();
 	}
 
+	public void getSupplierInfo(){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+
+		if(pmUser != null){
+		
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+			
+			if(smResDTO.getResultBean().getResultList().size() > 0){
+				SmSupplier supplier = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
+
+				if(supplier != null){
+					getManagedBean().setRegNo(supplier.getRegNo());
+
+					MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+					reqDTO.setSupplierId(supplier.getSupplierId());
+					SmMofAccount mofAccount = SmServiceLookup.getMofAccountSO().retrieveMOFAccBySupplierId(reqDTO).getMofAccount();
+
+					if(mofAccount != null){
+						getManagedBean().setMofNo(mofAccount.getMofNo());
+					}
+				}
+			}
+		}
+		
+	}
 }
