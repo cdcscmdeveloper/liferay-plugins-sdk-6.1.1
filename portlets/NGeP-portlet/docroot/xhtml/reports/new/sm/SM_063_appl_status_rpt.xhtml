@@ -13,7 +13,7 @@
 
 			</td>
 			<td class="tdContent">
-				<p:inputText maxlength="20" value="#{applStatusRptBB.managedBean.mofNo}" 
+				<p:inputText maxlength="20" value="#{applStatusRptBB.managedBean.mofNo}" readonly="true"
 				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}"/>
 			</td>
 			
@@ -66,7 +66,8 @@
 			</td>
 		
 			<td class="tdContent">
-				<p:inputText maxlength="20"
+				<p:inputText maxlength="20"  required="true" 
+				label="#{lbl['lbl.rpt.business.registrationNo']}"
 					value="#{applStatusRptBB.managedBean.regNo}"
 					style="width:290px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
