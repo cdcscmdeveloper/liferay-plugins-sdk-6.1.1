@@ -1282,8 +1282,18 @@ public class QTDocumentsBackingBean extends
 					scQtDocReportAttachment = null;
 				}
 			} else {
-
+				if(null!=scQtDocReport.getScQtDocReportAttachment()){
+					StringBuilder fileName = new StringBuilder();
+					if (prefixFileName != null) {
+						fileName.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
+					}
+					fileName.append(scQtDocReport.getScQtDocReportAttachment().getFileName().toString());
+					scQtDocReport.getScQtDocReportAttachment().setFileName(fileName.toString());
+					scQtDocReportAttachment	=scQtDocReport.getScQtDocReportAttachment();
+				}
+				else{
 				scQtDocReportAttachment = null;
+				}
 			}
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
