@@ -42,10 +42,25 @@
 						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
-					<h:outputText value="#{lbl['lbl.sm.no.available']}"
-						rendered="#{empty aprvdCatBean.otherDesc}" />
-					<h:outputText value="#{aprvdCatBean.otherDesc}"
-						rendered="#{not empty aprvdCatBean.otherDesc}" />
+					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+						<h:outputText value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{empty aprvdCatBean.otherDesc}" />
+						<h:outputText value="#{aprvdCatBean.otherDesc}"
+							rendered="#{not empty aprvdCatBean.otherDesc}" />
+					</p:outputPanel>
+					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+						<p:inputTextarea id="otherDesc" maxlength="100"
+							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
+							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
+							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20">
+						</p:inputTextarea>
+						<h:outputText value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{empty aprvdCatBean.otherDesc 
+							and aprvdCatBean.pmCategoryL3.otherDescReq ne 1}" />
+						<h:outputText value="#{aprvdCatBean.otherDesc}"
+							rendered="#{not empty aprvdCatBean.otherDesc 
+							and aprvdCatBean.pmCategoryL3.otherDescReq ne 1}" />
+					</p:outputPanel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
