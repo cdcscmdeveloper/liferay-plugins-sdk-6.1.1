@@ -3013,7 +3013,7 @@ public class QTDetailBackingBean extends
 		debugLogger("retrieveDocumentTabDtl");
 		IQTDocumentSO qtDocumentSO;
 		if (getManagedBean().getScQtDocReportList() == null) {
-			QTDocumentResDTO resDTO = null;
+			QTDocumentResDTO resDTO = new QTDocumentResDTO();
 			try {
 				qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
@@ -3028,6 +3028,7 @@ public class QTDetailBackingBean extends
 				}
 			} finally {
 				qtDocumentSO = null;
+				resDTO=null;
 			}
 		}
 	}
