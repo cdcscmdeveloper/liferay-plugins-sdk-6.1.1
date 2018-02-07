@@ -4360,9 +4360,8 @@ public class SmApplicationBackingBean extends
 				validCat = false;
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
-					if (cat.getCancelledDate() == null) {
-						throw new EpException(MessageConst.ERROR_722563);
-					} else if (!isValidToAddAfterDeleted(cat.getCancelledDate())) {
+					if (cat.getCancelledDate() != null
+							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
 					} else {
 						validCat = true;
@@ -11327,9 +11326,10 @@ public class SmApplicationBackingBean extends
 
 	private void validateDontHavePersonnelWithLogin() {
 		boolean valid = false;
-		
-		if(getManagedBean().getSmAppl().getSmPersonnels()!=null){
-			for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+
+		if (getManagedBean().getSmAppl().getSmPersonnels() != null) {
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
 						&& per.getPmUser().getUserId() != null) {
@@ -11339,8 +11339,9 @@ public class SmApplicationBackingBean extends
 			if (!valid) {
 				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				reqDTO.setAppl(getManagedBean().getSmAppl());
-				SmServiceLookup.getPersonnelSO().updatePersonnelRoleWithPreviousAppl(reqDTO);
-//				throw new EpException(MessageConst.ERROR_700124);
+				SmServiceLookup.getPersonnelSO()
+						.updatePersonnelRoleWithPreviousAppl(reqDTO);
+				// throw new EpException(MessageConst.ERROR_700124);
 			}
 		}
 	}
