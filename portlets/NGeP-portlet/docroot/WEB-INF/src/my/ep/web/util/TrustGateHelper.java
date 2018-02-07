@@ -69,7 +69,7 @@ public class TrustGateHelper {
 				break;
 
 			default:
-				throw new EpException(MessageConst.ERROR_776062);
+				throw new EpException(MessageConst.ERROR_TRUSTGATE_776062);
 			}
 
 		} catch (Exception ex) {
