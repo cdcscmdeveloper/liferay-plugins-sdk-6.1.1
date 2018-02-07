@@ -183,7 +183,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		StringBuilder sb = new StringBuilder();
 		sb.append("smAppl.smSupplier.supplierId^");
 		sb.append(getManagedBean().getSmSupplier().getSupplierId());
-//		sb.append("|recordStatus^1");
+		sb.append("|recordStatus^1");
 		return sb.toString();
 	}
 
@@ -782,10 +782,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	
 	public List<PmParameterDesc> retrieveParameterDesc(){
-		if(getManagedBean().getTaskAssignmentSearchBean().getUser().getEpRole() == null) {
-			return null;
-		}
-		
 		IStatusSO statusSO = null;
 		StatusReqDTO reqDTO = null;
 		if(getManagedBean().getTaskAssignmentSearchBean().getUser() != null){
