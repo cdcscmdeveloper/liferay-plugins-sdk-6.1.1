@@ -576,14 +576,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
-		System.out.println(" << ======= Login USer === >>  "
-				+ sc.getUserScreenName());
 		List<Role> loginUserRoles = sc.getUserRoleList();
 		poSecReview = new SmApplSectionReview();
 		apprvrSecReview = new SmApplSectionReview();
 		List<String> roleNames = new ArrayList<String>();
 		for (Role r : loginUserRoles) {
-			System.out.println(" Role ===  >> " + r.getName());
 			roleNames.add(r.getName());
 		}
 		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
@@ -608,17 +605,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
-			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
-		} else {
-			System.out.println("  *** UNKNOWN USER ****");
 		}
 		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
 		// setPoUser(true);
 		// }
 
-		System.out.println("PO USER === >> " + isPoUser());
-		System.out.println("APPROVER USER === >> " + isApproverUser());
-		System.out.println("NORMAL USER === >> " + isSupplierUser());
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
