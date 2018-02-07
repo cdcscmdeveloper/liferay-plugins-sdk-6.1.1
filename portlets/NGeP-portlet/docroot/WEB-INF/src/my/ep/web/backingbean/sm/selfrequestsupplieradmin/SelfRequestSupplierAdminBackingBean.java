@@ -156,6 +156,14 @@ public class SelfRequestSupplierAdminBackingBean extends
 				permAddr.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
 				permAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 				permAddr.setSmPersonnel(getManagedBean().getSelectedAdmin());
+				if (getManagedBean().getSelectedAdmin()
+						.getSmPersonnelAddresses() == null) {
+					getManagedBean().getSelectedAdmin()
+							.setSmPersonnelAddresses(
+									new ArrayList<SmPersonnelAddress>());
+				}
+				getManagedBean().getSelectedAdmin().getSmPersonnelAddresses()
+						.add(permAddr);
 			}
 			getManagedBean().setSelectedAdminPermAddr(permAddr);
 			onChangeCountry(getManagedBean().getSelectedAdminPermAddr()
