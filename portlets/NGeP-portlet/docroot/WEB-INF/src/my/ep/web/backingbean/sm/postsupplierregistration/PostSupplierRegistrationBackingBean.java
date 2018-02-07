@@ -262,7 +262,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	public void pageNavigate() throws Exception{
-		if(isHavePendingTaskList()){
+		SmSupplier supplier = getSupplierProfileByUserId();
+		
+		if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
 			pageRedirect(TASK_LIST_PATH);
 			
 		}else{
