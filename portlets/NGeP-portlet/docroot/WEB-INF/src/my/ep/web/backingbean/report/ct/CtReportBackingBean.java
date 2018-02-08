@@ -49,7 +49,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {
-		log.info("preRenderView");
+		log.debug("preRenderView");
 		this.renewSesionObject();
 		
 		retrieveReportCategoryListByModuleCode(
@@ -112,7 +112,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 * retrieve and set the current active org
 	 */
 	private void setCurrentActiveOrg() {
-		log.info("setCurrentActiveOrg");
+		log.debug("setCurrentActiveOrg");
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
@@ -155,7 +155,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 */
 	@Override
 	public void resetSearch() {
-		log.info("resetSearch: ctReportBB");		
+		log.debug("resetSearch: ctReportBB");		
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);

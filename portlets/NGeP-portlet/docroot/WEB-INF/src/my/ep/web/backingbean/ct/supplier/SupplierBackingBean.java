@@ -460,7 +460,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IChangeBankAccSO.class);
 			resDTO = changeBankAccSO.saveChangeBankAccRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_758000;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_758001;
@@ -561,7 +561,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700043;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_700011;

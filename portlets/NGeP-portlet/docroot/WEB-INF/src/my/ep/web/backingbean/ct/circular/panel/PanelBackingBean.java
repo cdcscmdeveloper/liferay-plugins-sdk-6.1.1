@@ -485,7 +485,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
@@ -503,7 +503,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
 					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
 
@@ -591,7 +591,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 				String docType = null;
@@ -611,7 +611,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
 				} 
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(messageId, new String[]{docType, 
@@ -1060,7 +1060,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * during panel circular creation
 	 */
 	public void addContactPerson(){
-		log.info("PanelBackingBean.addContactPerson()");
 		try {
 			CtContactPerson contactPerson = new CtContactPerson();
 			getManagedBean().getCircularVer().getCtContactPersons().add(contactPerson);
@@ -1075,7 +1074,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * from panel circular creation
 	 */
 	public void deleteContactPerson(){
-		log.info("PanelBackingBean.deleteContactPerson()");
 		try {
 			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
 			getManagedBean().setSelectedContactPersons(null);
@@ -1110,7 +1108,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * during panel circular creation
 	 */
 	public void addPanelItemSpec(){
-		log.info("PanelBackingBean.addPanelItemSpec()");
 		try {
 			CtPanelItemSpec itemSpec = new CtPanelItemSpec();
 			itemSpec.setCtPanelItem(getManagedBean().getSelectedItemForSpec());
@@ -1146,7 +1143,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * during panel circular item creation
 	 */
 	public void addPanelSupplier(List<SmSupplier> supplierList) { //101
-		log.info("PanelBackingBean.addPanelSupplier()");
 		getManagedBean().setButtonHideActiveDel(true);
 		getManagedBean().setButtonHidePanelItemDel(true);
 		try {
@@ -1220,7 +1216,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * zone supplier details
 	 */
 	public void addBulkPanelSupplier(List<SmSupplier> supplierList){ 
-		log.info("PanelBackingBean.addPanelSupplier()");
 		String panelCoverageICode = "";
 		try {
 			List<SmSupplierBank> bankAccountNoList = null;
@@ -1474,7 +1469,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 
 	public void addCancelCircularListener() {
-		log.info("PanelBackingBean.addCancelCircularListener()");
 		CircularReqDTO reqDTO = null;
 		try {
 			if(getManagedBean().getCancelledCircularList().size() == 0){
@@ -1503,7 +1497,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to delete list of circular for circular list
 	 */
 	public void deleteCancelCircular(){
-		log.info("PanelBackingBean.deleteCancelCircular()");
 		try {
 			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCircular());
 			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCircular());		
@@ -1519,7 +1512,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to add list of circular for cancel
 	 */
 	public void addCancelledCircular(){
-		log.info("PanelBackingBean.addCancelledCircular()");
 		try {
 			for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
 				//        		cancelCircular.setCancelCircularId(null);
@@ -1542,7 +1534,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * panel circular item details
 	 */
 	public void addPanelItem(){
-		log.info("PanelBackingBean.addPanelItem()");
 		try {	
 			CtPanelItem panelItem = new CtPanelItem();
 			panelItem.setItemCategoryId(new PmParameter());
@@ -1590,7 +1581,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to delete zone from panel item details
 	 */
 	public void selectActiveCirculars(){
-		log.info("PanelBackingBean.selectActiveCirculars()");
 		try {	
 			CtCancelCircular cancelCircular = null;
 			List<CtCancelCircular> cancelCircularList = new ArrayList<CtCancelCircular>();
@@ -1726,7 +1716,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
-		log.info("Action :"+action+" Id :"+circularVerId);
+		log.debug("Action :"+action+" Id :"+circularVerId);
 		String docType = this.getManagedBean().getCircularDocType();
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setCircularVerId(circularVerId);
