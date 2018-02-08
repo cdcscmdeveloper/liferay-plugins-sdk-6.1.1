@@ -183,7 +183,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		StringBuilder sb = new StringBuilder();
 		sb.append("smAppl.smSupplier.supplierId^");
 		sb.append(getManagedBean().getSmSupplier().getSupplierId());
-		sb.append("|recordStatus^1");
+//		sb.append("|recordStatus^1");
 		return sb.toString();
 	}
 
@@ -231,9 +231,11 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			try {
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser().getPmUser() != null ? taskSearchBean.getUser().getPmUser().getLoginId() : null;
+				System.out.println("taskSearchBean.getUser().getPmUser(): " + taskSearchBean.getUser().getPmUser());
+				System.out.println("loginId: " + loginId);
 				if (loginId != null && loginId.length() > 0) {
 					statusIds = retrieveAvailableStatusId();
-					if (statusIds != null && !statusIds.isEmpty()) {
+//					if (statusIds != null && !statusIds.isEmpty()) {
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 						reqDTO = new BpmRequestDTO();
 						Object ctxToken = bpmSO.authenticate(loginId);
@@ -280,7 +282,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
 						}
-					}
+//					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -782,6 +784,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	
 	public List<PmParameterDesc> retrieveParameterDesc(){
+		if(getManagedBean().getTaskAssignmentSearchBean().getUser() != null && getManagedBean().getTaskAssignmentSearchBean().getUser().getEpRole() == null) {
+			return null;
+		}
+		
 		IStatusSO statusSO = null;
 		StatusReqDTO reqDTO = null;
 		if(getManagedBean().getTaskAssignmentSearchBean().getUser() != null){
