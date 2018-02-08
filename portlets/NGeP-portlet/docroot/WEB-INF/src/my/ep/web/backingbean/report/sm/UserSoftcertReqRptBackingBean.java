@@ -6,57 +6,76 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.constants.CommonConstants;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
+import my.ep.web.constant.report.SmReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.report.sm.UserSoftcertReqRptManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+
 import org.apache.commons.lang.StringUtils;
 
-import my.ep.constants.CommonConstants;
-import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.managedbean.report.sm.UserSoftcertReqRptManagedBean;
-
-@ManagedBean (name="userSoftcertReqRptBB")
+@ManagedBean(name = "userSoftcertReqRptBB")
 @ViewScoped
-public class UserSoftcertReqRptBackingBean extends SmReportBackingBean<UserSoftcertReqRptManagedBean>{
+public class UserSoftcertReqRptBackingBean extends
+		SmReportBackingBean<UserSoftcertReqRptManagedBean> {
 	private static final long serialVersionUID = 1L;
-	
-	public UserSoftcertReqRptBackingBean(){
+
+	public UserSoftcertReqRptBackingBean() {
 		setDefaultDateFromAndDateTo();
+		getManagedBean().setSupplierUser(isSuppUser());
 	}
-	
-	public void generateReport(){
-		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+	public void generateReport() {
+		SimpleDateFormat df = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		
+
 		addCompanyNameParam(params);
-		
-		if(StringUtils.isNotBlank(getManagedBean().getUserName())){
-			params.put(SmReportConst.PARAM_USER_NAME, getManagedBean().getUserName());
+
+		if (StringUtils.isNotBlank(getManagedBean().getUserName())) {
+			params.put(SmReportConst.PARAM_USER_NAME, getManagedBean()
+					.getUserName());
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getMofNo())){
+
+		if (StringUtils.isNotBlank(getManagedBean().getMofNo())) {
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getRegNo())){
+
+		if (StringUtils.isNotBlank(getManagedBean().getRegNo())) {
 			params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getIdentificationNo())){
-			params.put(SmReportConst.PARAM_IDENT_NO, getManagedBean().getIdentificationNo());
+
+		if (StringUtils.isNotBlank(getManagedBean().getIdentificationNo())) {
+			params.put(SmReportConst.PARAM_IDENT_NO, getManagedBean()
+					.getIdentificationNo());
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getSoftcertDateType())){
-			params.put(SmReportConst.PARAM_DATE_TYPE,getManagedBean().getSoftcertDateType());
-			
-			if(getManagedBean().getDateFrom() != null){
-				params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
-				params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
+
+		if (StringUtils.isNotBlank(getManagedBean().getSoftcertDateType())) {
+			params.put(SmReportConst.PARAM_DATE_TYPE, getManagedBean()
+					.getSoftcertDateType());
+
+			if (getManagedBean().getDateFrom() != null) {
+				params.put(SmReportConst.PARAM_DATE_FROM,
+						df.format(getManagedBean().getDateFrom()));
+				params.put(SmReportConst.PARAM_DATE_TO,
+						df.format(getManagedBean().getDateTo()));
 			}
 		}
-		
+
 		generateSmReport(params);
 	}
-	
-	public void resetSearch(){
+
+	public void resetSearch() {
 		getManagedBean().setUserName(null);
 		getManagedBean().setMofNo(null);
 		getManagedBean().setRegNo(null);
@@ -64,5 +83,57 @@ public class UserSoftcertReqRptBackingBean extends SmReportBackingBean<UserSoftc
 		getManagedBean().setDateTo(null);
 		getManagedBean().setSoftcertDateType(null);
 		getManagedBean().setIdentificationNo(null);
+	}
+
+	private boolean isSuppUser() {
+		boolean retVal = false;
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+				|| sc.hasRoleUser(RoleCode.FL_USER.value())
+				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			retVal = true;
+
+			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(supplier.getSupplierId());
+			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
+					.retrievePersonnelBySupplierId(reqDTO);
+			String loginId = new FacesScopes().getUserScreenName();
+			if (!SmCommonUtil.isCollectionEmpty(resDTO.getSmPersonnelList())) {
+				for (SmPersonnel personnel : resDTO.getSmPersonnelList()) {
+					if (personnel.getPmUser() != null
+							&& personnel.getPmUser().getUserId() != null
+							&& loginId != null
+							&& personnel.getPmUser().getLoginId() != null
+							&& loginId.equals(personnel.getPmUser()
+									.getLoginId())) {
+						getManagedBean().setIdentificationNo(
+								personnel.getIdentificationNo());
+						getManagedBean().setUserName(personnel.getName());
+						getManagedBean().setCompanyName(
+								supplier.getCompanyName());
+						getManagedBean().setRegNo(supplier.getRegNo());
+						getManagedBean().setSelectedOrgProfile(
+								personnel.getSmAppl().getSmSupplier()
+										.getPmOrgProfile());
+						SmMofAccount acc = SmCommonUtil
+								.getMofAccountBySuppIdAndSuppType(personnel
+										.getSmAppl().getSmSupplier()
+										.getSupplierId(), personnel.getSmAppl()
+										.getSupplierType());
+						if (acc != null) {
+							getManagedBean().setMofNo(acc.getMofNo());
+						}
+						break;
+					}
+				}
+			}
+		}
+		return retVal;
 	}
 }
