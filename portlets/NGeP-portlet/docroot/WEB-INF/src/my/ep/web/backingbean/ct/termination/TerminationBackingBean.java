@@ -404,7 +404,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700046;
 				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;

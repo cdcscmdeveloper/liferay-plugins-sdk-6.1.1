@@ -254,7 +254,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						boolean isValidApprover = false;
 						while (sourceIt.hasNext()) {
 							PmUser user = sourceIt.next();
-							log.info("user : "+user+"; approverUser: "+approverUser);
+							log.debug("user : "+user+"; approverUser: "+approverUser);
 							if (user!=null && approverUser!=null && (user.getUserId() == approverUser.getUserId())) {
 								sourceIt.remove();
 								isValidApprover = true;
@@ -459,7 +459,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			}
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 

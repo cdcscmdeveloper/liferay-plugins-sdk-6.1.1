@@ -2092,7 +2092,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * from panel circular creation
 	 */
 	public void deleteContactPerson(){
-		log.info("PanelBackingBean.deleteContactPerson()");
 		try {
 			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
 			getManagedBean().setSelectedContactPersons(null);
@@ -2106,7 +2105,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * Method used to delete list of circular for circular list
 	 */
 	public void deleteCancelCircular(){
-		log.info("PanelBackingBean.deleteCancelCircular()");
 		try {
 			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
 			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());		

@@ -45,11 +45,11 @@ public class ForgotLogin {
 	private String loginId;
 	
 	public ForgotLogin() {
-		log.info("ForgotLogin");
+		//log.info("ForgotLogin");
 	}
 	
 	public void cancelBtnAction () throws IOException {
-		log.info("cancelbtnaction");
+		//log.info("cancelbtnaction");
 		FacesContext.getCurrentInstance().getExternalContext().redirect(
 				 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
 	}
@@ -75,7 +75,7 @@ public class ForgotLogin {
 	}
 	
 	public String forgotLoginId() {
-		log.info("Email Address: " + this.emailAddress);
+		//log.info("Email Address: " + this.emailAddress);
 		
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);

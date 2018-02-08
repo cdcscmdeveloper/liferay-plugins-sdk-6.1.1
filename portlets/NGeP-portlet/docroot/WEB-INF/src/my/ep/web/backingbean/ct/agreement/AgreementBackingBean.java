@@ -542,7 +542,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String prefix = "";
 				String nextRole = null;
