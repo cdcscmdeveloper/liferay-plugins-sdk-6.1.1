@@ -12,7 +12,8 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.username']}" /> 
 			</td>
 			<td class="tdContent">
-				<p:inputText maxlength="100" value="#{userSoftcertReqRptBB.managedBean.userName}" style="width:290px;">
+				<p:inputText maxlength="100" value="#{userSoftcertReqRptBB.managedBean.userName}" 
+					style="width:290px;" disabled="#{userSoftcertReqRptBB.managedBean.supplierUser}">
 				</p:inputText>
 			</td>
 
@@ -20,8 +21,15 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.companyName']}" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportCompanyNameLOV bBean="#{userSoftcertReqRptBB}" 
-				saveObj="userSoftcertReqRptBB.managedBean.selectedOrgProfile" />
+				<p:outputPanel rendered="#{!userSoftcertReqRptBB.managedBean.supplierUser}">
+					<ac:smReportCompanyNameLOV bBean="#{userSoftcertReqRptBB}" 
+					saveObj="userSoftcertReqRptBB.managedBean.selectedOrgProfile" />
+				</p:outputPanel>
+				<p:outputPanel rendered="#{userSoftcertReqRptBB.managedBean.supplierUser}">
+					<p:inputText maxlength="100" value="#{userSoftcertReqRptBB.managedBean.companyName}" 
+						style="width:290px;" disabled="#{userSoftcertReqRptBB.managedBean.supplierUser}">
+					</p:inputText>
+				</p:outputPanel>
 			</td>
 		</tr>
 		
@@ -29,8 +37,8 @@
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.mofNo']}" /> 
 			</td>
-			<td class="tdContent" colspan="3">
-				<p:inputText maxlength="20"
+			<td class="tdContent">
+				<p:inputText maxlength="20" disabled="#{userSoftcertReqRptBB.managedBean.supplierUser}"
 					value="#{userSoftcertReqRptBB.managedBean.mofNo}" style="width:290px;">
 				</p:inputText>
 			</td>
@@ -38,8 +46,8 @@
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.business.registrationNo']}" /> 
 			</td>
-			<td class="tdContent" colspan="3">
-				<p:inputText maxlength="20" 
+			<td class="tdContent">
+				<p:inputText maxlength="20" disabled="#{userSoftcertReqRptBB.managedBean.supplierUser}"
 					value="#{userSoftcertReqRptBB.managedBean.regNo}" style="width:290px;">
 				</p:inputText>
 			</td>
@@ -67,7 +75,7 @@
 			</td>
 			<td class="tdContent">
 				<p:inputText maxlength="40" value="#{userSoftcertReqRptBB.managedBean.identificationNo}"
-					style="width:290px;">
+					disabled="#{userSoftcertReqRptBB.managedBean.supplierUser}" style="width:290px;">
 				</p:inputText>
 			</td>
 		</tr>
@@ -85,10 +93,10 @@
 			</td>
 		</tr>
 		
-		<ac:smGenerateReport bBean="{userSoftcertReqRptBB}" 
-			reportCode="#{smReportBB.managedBean.reportCode}"
-			generateMethod="generateReport" resetMethod="resetSearch">
-		</ac:smGenerateReport>
-		
 	</table>
+	
+	<ac:smGenerateReport bBean="#{userSoftcertReqRptBB}" 
+		reportCode="#{smReportBB.managedBean.reportCode}"
+		generateMethod="generateReport" resetMethod="resetSearch">
+	</ac:smGenerateReport>
 </ui:composition>
