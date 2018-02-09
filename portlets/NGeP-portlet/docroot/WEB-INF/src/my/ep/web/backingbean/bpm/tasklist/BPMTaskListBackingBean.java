@@ -576,7 +576,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			this.getManagedBean().setBpmMap(temp);
 		}
 
-		System.out.println("testing BPM******");
+		log.info("testing BPM******");
 
 	}
 
@@ -624,14 +624,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
 				.getRequestScope(WebKeys.THEME_DISPLAY);
 
-		System.out.println("getURLCurrent" + themeDisplay.getURLCurrent());
+		log.info("getURLCurrent" + themeDisplay.getURLCurrent());
 		String commonUrl = themeDisplay.getURLCurrent().substring(
 				0,
 				themeDisplay.getURLCurrent().indexOf(
 						themeDisplay.getLayout().getGroup().getFriendlyURL())
 						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
 						.length());
-		System.out.println("commonUrl" + commonUrl);
+		log.info("commonUrl" + commonUrl);
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -656,7 +656,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		String claim = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("isClaim");
 
-		System.out.println("****claim****"+claim);
+		log.info("****claim****"+claim);
 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
@@ -665,8 +665,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		try {
 			log.info("taskId:" + taskId);
 
-			System.out.println("********getProcessName********" + process);
-			System.out.println("********getTaskName********" + taskName);
+			log.info("********getProcessName********" + process);
+			log.info("********getTaskName********" + taskName);
 			// this.getManagedBean().setProcessName(res.getProcessName());
 			// this.getManagedBean().setAction(res.getAction());
 			// Object obj = res.getPojo();
@@ -692,7 +692,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
 					.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			System.out.println("getURLCurrent" + themeDisplay.getURLCurrent());
+			log.info("getURLCurrent" + themeDisplay.getURLCurrent());
 
 			String commonUrl = themeDisplay.getURLCurrent().substring(
 					0,
@@ -701,7 +701,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 							.getFriendlyURL())
 							+ themeDisplay.getLayout().getGroup()
 							.getFriendlyURL().length());
-			System.out.println("commonUrl" + commonUrl);
+			log.info("commonUrl" + commonUrl);
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
@@ -719,13 +719,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 
 	public void filterViewbyNAssignment() {
-		System.out
-		.println(">>>>>>>>>>>>>>>filterViewbyNAssignment<<<<<<<<<<<<<<<<<");
-		System.out.println("this.getManagedBean().getViewBy()"
+		log.info(">>>>>>>>>>>>>>>filterViewbyNAssignment<<<<<<<<<<<<<<<<<");
+		log.info("this.getManagedBean().getViewBy()"
 				+ this.getManagedBean().getViewBy());
-		System.out.println("this.getManagedBean().getAssignment()"
+		log.info("this.getManagedBean().getAssignment()"
 				+ this.getManagedBean().getAssignment());
-		System.out.println("this.getManagedBean().getDocType()="
+		log.info("this.getManagedBean().getDocType()="
 				+ this.getManagedBean().getDocType());
 		// retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(),
 		// this.getManagedBean().getAssignment());
@@ -754,7 +753,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	 */
 	public String backToTaskList() {
 
-		System.out.println("*******backToTaskList*******");
+		log.info("*******backToTaskList*******");
 
 		return "/xhtml/bpmtasklist/taskListView";
 	}
@@ -790,7 +789,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 
 	public String goToMyTasks() {
-		System.out.println(">>>>>>>>>>goToMyTasks<<<<<<<<<<");
+		log.info(">>>>>>>>>>goToMyTasks<<<<<<<<<<");
 		// System.out.println(">>>>>showIndex = "+showIndex);
 		// this.getManagedBean().setShowIndex(showIndex);
 
@@ -886,7 +885,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public String claimTask()  {
 
-		System.out.println("**********claimTask");
+		log.info("**********claimTask");
 		
 			claimBpmTask();
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
@@ -901,7 +900,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 
 	public String releaseTask()  {
-		System.out.println("**********releaseTask");
+		log.info("**********releaseTask");
 		
 		releaseBpmTask();
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
@@ -916,7 +915,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 
 	public void claimTaskInDetailPage()  {
-		System.out.println("**********claimTask");
+		log.info("**********claimTask");
 
 
 
@@ -929,8 +928,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		Object token = face.getBPMAuthenticationCtxToken();
 
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		System.out.println("taskId:"+this.getManagedBean().getTaskId());
-		System.out.println("token:"+token);
+		log.info("taskId:"+this.getManagedBean().getTaskId());
+		log.info("token:"+token);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setCtxToken(token);
 		bpmSO.claimTask(reqDTO);
@@ -966,7 +965,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		}
 		
 		String outCome = docType.substring(0, docType.length()-1);
-		System.out.println("outCome:"+outCome);
+		log.info("outCome:"+outCome);
 		
 		StringBuilder sb = new StringBuilder();
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
@@ -977,7 +976,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		sb.append(outCome);
 		sb.append("^9");
 
-		System.out.println("sb.toString()"+sb.toString());
+		log.info("sb.toString()"+sb.toString());
 		return sb.toString();
 	}
 	
