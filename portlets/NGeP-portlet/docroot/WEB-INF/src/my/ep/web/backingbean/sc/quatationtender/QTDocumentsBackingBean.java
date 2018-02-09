@@ -561,14 +561,24 @@ public class QTDocumentsBackingBean extends
 		if (null == reportList) {
 			reportList = new ArrayList<ScQtDocReport>();
 		}
+		List<String> existedDocumets=new ArrayList<String>();
+		if(CollectionUtils.isNotEmpty(reportList)){
+			for(ScQtDocReport docReport:reportList){
+				String docDefinitionKey = docReport.getPmDocument()!=null ?docReport.getPmDocument().getDocDefinitionKey() : docReport.getTitle();
+				existedDocumets.add(docDefinitionKey);
+			}
+			
+		}
 		List<ScQtDocReport> scQtDocReports = this.getManagedBean()
 				.getSelectedCloneScQtDocReports();
 		if (!this.getManagedBean().getSelectedCloneScQtDocReports().isEmpty()) {
 			for (ScQtDocReport docReport : scQtDocReports) {
 				ScQtDocReport qtDocReport = null;
 				try {
+					if(!existedDocumets.contains(docReport.getPmDocument()!=null ?docReport.getPmDocument().getDocDefinitionKey() : docReport.getTitle())){
 					qtDocReport = (ScQtDocReport) BeanUtils
 							.cloneBean(docReport);
+					}
 				} catch (IllegalAccessException | InstantiationException
 						| InvocationTargetException | NoSuchMethodException e) {
 					e.printStackTrace();
@@ -584,6 +594,7 @@ public class QTDocumentsBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760141);
 		}
+		existedDocumets=null;
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 	}
 
