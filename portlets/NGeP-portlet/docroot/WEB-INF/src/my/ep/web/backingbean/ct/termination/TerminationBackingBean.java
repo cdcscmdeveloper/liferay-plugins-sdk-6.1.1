@@ -370,7 +370,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		try{
 
 			/*Validation for login user's org profile before initiate contract task*/
-			if (getManagedBean().getContractVer().getStatus() != null
+			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
+					&& getManagedBean().getContractVer().getStatus() != null
 					&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FT_PENDING_SUBMISSION.longValue()) {
 				validateOwnerOrgProfile(
 						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());

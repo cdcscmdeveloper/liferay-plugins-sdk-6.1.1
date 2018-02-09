@@ -855,7 +855,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ContractReqDTO reqDTO = null;
 		try {
 			/*Validation for login user's org profile before initiate contract task*/
-			if (ctBackingBean.getManagedBean().getContractVer().getStatus() != null
+			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
+					&& ctBackingBean.getManagedBean().getContractVer().getStatus() != null
 					&& ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_SUBMISSION.longValue()) {
 				validateOwnerOrgProfile(
 						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
