@@ -953,7 +953,7 @@ public class SPDetailBackingBean extends
 	 * @return the proposal res DTO
 	 */
 	private ProposalResDTO saveTemplateSpecDtls(ScQtProposalChecklist completedFinSpec) {
-		debugLogger("saveTempleateSpecDtls");
+		log.info("saveTempleateSpecDtls.completedFinSpec: " + completedFinSpec + ", loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
