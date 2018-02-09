@@ -33,6 +33,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -431,6 +432,13 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
 		try{
+			/*Validation for login user's org profile before initiate contract task*/
+			if (getManagedBean().getContractVer().getStatus() != null
+					&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FS_PENDING_SUBMISSION.longValue()) {
+				validateOwnerOrgProfile(
+						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
 
