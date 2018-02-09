@@ -594,6 +594,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String saveContract(String action) throws Exception {
 		IContractSO contractSO = null;
 		try {
+			/*Validation for login user's org profile before initiate contract task*/
+			if (ctBB.getManagedBean().getContractVer().getStatus() != null
+					&& (ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()
+						|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue())) {
+				validateOwnerOrgProfile(
+						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+			
 			ctBB.getZoneObjDetails();
 
 			if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){

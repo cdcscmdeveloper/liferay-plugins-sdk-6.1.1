@@ -369,6 +369,13 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		ContractReqDTO ctReqDTO = null;
 		try{
 
+			/*Validation for login user's org profile before initiate contract task*/
+			if (getManagedBean().getContractVer().getStatus() != null
+					&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FT_PENDING_SUBMISSION.longValue()) {
+				validateOwnerOrgProfile(
+						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+			
 			validateContractTermination(outcome);
 			reqDTO = new ContractReqDTO();		
 			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);

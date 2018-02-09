@@ -3132,7 +3132,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		IReasonSO reasonSO = null;
 		List<PmReasonDesc> list = null;
 		ReasonResDTO resDTO  = null;
-		ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>(); ;
+		ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
 		int i = 1;
 		try {
 
