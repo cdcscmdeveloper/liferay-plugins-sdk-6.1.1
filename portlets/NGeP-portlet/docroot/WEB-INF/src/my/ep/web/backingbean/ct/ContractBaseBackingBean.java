@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -26,6 +27,7 @@ import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -291,6 +293,38 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
 			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+		}
+	}
+	
+	/**
+	 * The method used to validate login user which same owner org profile
+	 * have the authority to initiate contract task.
+	 * A error message will display on screen if login user is not same owner org profile.
+	 * 
+	 * @param  ownerOrgProfileId    contract's owner org proifle id
+	 * 
+	 */
+	public void validateOwnerOrgProfile(Long ownerOrgProfileId) {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean isValidOrgProfile = false;
+		
+		if (facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
+			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+				if (userResDTO.getUserOrgList().get(0).getPmOrgProfile() != null
+						&& userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId() == ownerOrgProfileId) {
+					isValidOrgProfile = true;
+				}
+			}
+		}
+		
+		if (!isValidOrgProfile) {
+			log.info("validateOwnerOrgProfile failed.");
+			throw new EpException(MessageConst.ERROR_750040);
 		}
 	}
 }

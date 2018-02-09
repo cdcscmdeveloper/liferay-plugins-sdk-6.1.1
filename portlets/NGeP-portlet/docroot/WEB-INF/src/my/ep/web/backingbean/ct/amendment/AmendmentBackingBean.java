@@ -854,6 +854,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractReqDTO reqDTO = null;
 		try {
+			/*Validation for login user's org profile before initiate contract task*/
+			if (ctBackingBean.getManagedBean().getContractVer().getStatus() != null
+					&& ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_SUBMISSION.longValue()) {
+				validateOwnerOrgProfile(
+						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+			
 			setSecretary();
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
@@ -971,7 +978,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			ContractResDTO resDTO = contractAmendmentSO.saveContractAmendmentVerDtls(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String[] params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
