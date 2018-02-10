@@ -953,7 +953,7 @@ public class SPDetailBackingBean extends
 	 * @return the proposal res DTO
 	 */
 	private ProposalResDTO saveTemplateSpecDtls(ScQtProposalChecklist completedFinSpec) {
-		log.info("saveTempleateSpecDtls.completedFinSpec: " + completedFinSpec + ", loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
+		log.info("saveTempleateSpecDtls.completedFinSpec: " + completedFinSpec);
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
@@ -1026,6 +1026,7 @@ public class SPDetailBackingBean extends
             		if(answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)){
             			throw new EpException(MessageConst.ERROR_760464);
             		}
+            		super.setUserDetails(answer);
             	}
             }
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
