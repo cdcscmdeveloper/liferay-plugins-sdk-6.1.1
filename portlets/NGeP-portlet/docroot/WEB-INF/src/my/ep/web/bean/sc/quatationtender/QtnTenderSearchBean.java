@@ -11,6 +11,7 @@
 package my.ep.web.bean.sc.quatationtender;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import my.ep.constant.pm.ParameterConst;
@@ -156,7 +157,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 * @param fromCreatedDate the fromCreatedDate to set
 	 */
 	public void setFromCreatedDate(Date fromCreatedDate) {
-		this.fromCreatedDate = fromCreatedDate;
+		this.fromCreatedDate = getFromDate(fromCreatedDate);
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 * @param toCreatedDate the toCreatedDate to set
 	 */
 	public void setToCreatedDate(Date toCreatedDate) {
-		this.toCreatedDate = toCreatedDate;
+		this.toCreatedDate = getToDate(toCreatedDate);
 	}
 
 	/**
@@ -192,7 +193,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 * @param fromPublishDate the fromPublishDate to set
 	 */
 	public void setFromPublishDate(Date fromPublishDate) {
-		this.fromPublishDate = fromPublishDate;
+		this.fromPublishDate = getFromDate(fromPublishDate);
 	}
 
 	/**
@@ -210,7 +211,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 * @param toPublishDate the toPublishDate to set
 	 */
 	public void setToPublishDate(Date toPublishDate) {
-		this.toPublishDate = toPublishDate;
+		this.toPublishDate = getToDate(toPublishDate);
 	}
 
 	/**
@@ -228,7 +229,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 * @param fromClosingDate the fromClosingDate to set
 	 */
 	public void setFromClosingDate(Date fromClosingDate) {
-		this.fromClosingDate = fromClosingDate;
+		this.fromClosingDate = getFromDate(fromClosingDate);
 	}
 
 	/**
@@ -246,7 +247,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 * @param toClosingDate the toClosingDate to set
 	 */
 	public void setToClosingDate(Date toClosingDate) {
-		this.toClosingDate = toClosingDate;
+		this.toClosingDate = getToDate(toClosingDate);
 	}
 
 	/**
@@ -395,6 +396,34 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
+	}
+	
+	private Date getFromDate(Date date){
+		if(date != null){
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.setTime(date);
+			fromDate.set(Calendar.HOUR_OF_DAY,0);
+			fromDate.set(Calendar.MINUTE,0);
+			fromDate.set(Calendar.SECOND,0);
+			fromDate.set(Calendar.MILLISECOND,0);
+			return fromDate.getTime();
+		}else{
+			return date;
+		}
+	}
+	
+	private Date getToDate(Date date){
+		if(date != null){
+			Calendar toDate = Calendar.getInstance();
+			toDate.setTime(date);
+			toDate.set(Calendar.HOUR_OF_DAY,23);
+			toDate.set(Calendar.MINUTE,59);
+			toDate.set(Calendar.SECOND,59);
+			toDate.set(Calendar.MILLISECOND,59);
+			return toDate.getTime();
+		}else{
+			return date;
+		}
 	}
 	
 }
