@@ -2776,7 +2776,8 @@ public class SmApplicationUtil {
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		if (!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0) {
+		if (!EntityHelper.isCollectionEmpty(resultList)
+				&& resultList.size() > 0) {
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -7352,9 +7353,12 @@ public class SmApplicationUtil {
 		if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
 				.contains(smSupplier.getBusinessType())) {
 			retVal = true;
-		} else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
-			retVal = true;
 		}
+
+		// disable due to ticket #17505
+		// else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
+		// retVal = true;
+		// }
 		return retVal;
 	}
 
