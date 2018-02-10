@@ -2633,7 +2633,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public StreamedContent getFile() throws Exception {
 
-		log.debug("***write***");
+		log.info("***catalogue maintainance download write***");
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -2648,7 +2648,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext()
 				.getRealPath("/excelUpload");
-		log.debug("tempDir" + tempDir);
+		log.info("tempDir" + tempDir);
 		// Read Excel document first
 		FileInputStream input_document = new FileInputStream(new File(tempDir
 				+ "/Catalogue-offline-template.xlsx"));
@@ -10106,7 +10106,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 
-	
 	
 
 
