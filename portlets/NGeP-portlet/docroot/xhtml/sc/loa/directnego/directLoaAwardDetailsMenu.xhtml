@@ -81,7 +81,7 @@
 	<h:panelGroup id="productAndServiceId">
 		<ac:templateSpec
 			first="#{directLOABackingBean.managedBean.prodFirst}"
-		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus}"
+		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus or isPendingRevisionStatus}"
 			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
 			title="#{lbl['lbl.txt.product']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
@@ -89,7 +89,7 @@
 
 		<ac:templateSpec
 			first="#{directLOABackingBean.managedBean.servFirst}"
-		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus}"
+		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus or isPendingRevisionStatus}"
 			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
 			title="#{lbl['lbl.txt.service']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
