@@ -217,64 +217,74 @@ public class GovtSellerRegistrationBackingBean extends
 					supplier = orgProfile.getSmSupplier();
 					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
-					SmPersonnel activatedPersonnel = getActivatedPersonnel(orgProfile
-							.getSmSupplier().getSmAppl().getSmPersonnels());
-					if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-						// Selected agency account already deactivated. Please
-						// reactivate the account
-						throw new EpException(MessageConst.ERROR_722625);
-					} else if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-						if (orgProfile.getSmSupplier().getSmAppl() != null
-								&& !SmCommonUtil.isCollectionEmpty(orgProfile
-										.getSmSupplier().getSmAppl()
-										.getSmPersonnels())) {
+					if(orgProfile
+							.getSmSupplier().getSmAppl()!=null && orgProfile
+							.getSmSupplier().getSmAppl().getSmPersonnels()!=null){
+						SmPersonnel activatedPersonnel = getActivatedPersonnel(orgProfile
+								.getSmSupplier().getSmAppl().getSmPersonnels());
+						if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+							// Selected agency account already deactivated. Please
+							// reactivate the account
+							throw new EpException(MessageConst.ERROR_722625);
+						} else if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+							if (orgProfile.getSmSupplier().getSmAppl() != null
+									&& !SmCommonUtil.isCollectionEmpty(orgProfile
+											.getSmSupplier().getSmAppl()
+											.getSmPersonnels())) {
 
-							if (activatedPersonnel != null) {
-								// Selected agency already had account. Please
-								// contact:- Sir/Madam: {0} / Mobile No.: {1}
-								throw new EpException(
-										MessageConst.ERROR_722623,
-										new String[] {
-												activatedPersonnel.getName(),
-												activatedPersonnel
-														.getMobileFull() });
-							} else {
-								// Selected agency already had account but has
-								// not
-								// activated the account. Please activate the
-								// account using activation link that had been
-								// sent
-								// to the user's email address.
-								throw new EpException(MessageConst.ERROR_722624);
-							}
-						}
-					} else {
-						if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
-							if (activatedPersonnel != null) {
-								// Selected agency already had account. Please
-								// contact:- Sir/Madam: {0} / Mobile No.: {1}
-								throw new EpException(
-										MessageConst.ERROR_722623,
-										new String[] {
-												activatedPersonnel.getName(),
-												activatedPersonnel
-														.getMobileFull() });
-							} else {
-								// Selected agency already had account but has
-								// not
-								// activated the account. Please activate the
-								// account using activation link that had been
-								// sent
-								// to the user's email address.
-								throw new EpException(MessageConst.ERROR_722624);
+								if (activatedPersonnel != null) {
+									// Selected agency already had account. Please
+									// contact:- Sir/Madam: {0} / Mobile No.: {1}
+									throw new EpException(
+											MessageConst.ERROR_722623,
+											new String[] {
+													activatedPersonnel.getName(),
+													activatedPersonnel
+															.getMobileFull() });
+								} else {
+									// Selected agency already had account but has
+									// not
+									// activated the account. Please activate the
+									// account using activation link that had been
+									// sent
+									// to the user's email address.
+									throw new EpException(MessageConst.ERROR_722624);
+								}
 							}
 						} else {
-							// Unknown problem occurred. Invalid or missing
-							// data.
-							// Please
-							// contact administrator.
-							throw new EpException(MessageConst.ERROR_722505);
+							if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+								if (activatedPersonnel != null) {
+									// Selected agency already had account. Please
+									// contact:- Sir/Madam: {0} / Mobile No.: {1}
+									throw new EpException(
+											MessageConst.ERROR_722623,
+											new String[] {
+													activatedPersonnel.getName(),
+													activatedPersonnel
+															.getMobileFull() });
+								} else {
+									// Selected agency already had account but has
+									// not
+									// activated the account. Please activate the
+									// account using activation link that had been
+									// sent
+									// to the user's email address.
+									throw new EpException(MessageConst.ERROR_722624);
+								}
+							} else {
+								// Unknown problem occurred. Invalid or missing
+								// data.
+								// Please
+								// contact administrator.
+								throw new EpException(MessageConst.ERROR_722505);
+							}
 						}
+					}else{
+						// Unknown problem occurred. Invalid or missing
+						// data.
+						// Please
+						// contact administrator.
+						throw new EpException(MessageConst.ERROR_722505);
 					}
 				}
 			}
