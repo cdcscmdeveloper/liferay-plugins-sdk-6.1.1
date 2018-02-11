@@ -2641,7 +2641,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
-		response.setContentType("application/vnd.ms-excel");
+		//response.setContentType("application/vnd.ms-excel");
+		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ "Catalogue-offline-template.xlsx");
 		response.flushBuffer();
