@@ -90,7 +90,6 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -758,6 +757,10 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			
+			//validate if dont have supplier admin
+			validateDontHaveSuppAdmin();
+			
 			log.info("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
@@ -11324,7 +11327,7 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 	}
 
-	private void validateDontHavePersonnelWithLogin() {
+	private void validateDontHaveSuppAdmin() {
 		boolean valid = false;
 
 		if (getManagedBean().getSmAppl().getSmPersonnels() != null) {
@@ -11332,16 +11335,15 @@ public class SmApplicationBackingBean extends
 					.getSmPersonnels()) {
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
-						&& per.getPmUser().getUserId() != null) {
+						&& per.getPmUser().getUserId() != null
+						&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+								.contains(per.getEpRole())
+						&& per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					valid = true;
 				}
 			}
 			if (!valid) {
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				reqDTO.setAppl(getManagedBean().getSmAppl());
-				SmServiceLookup.getPersonnelSO()
-						.updatePersonnelRoleWithPreviousAppl(reqDTO);
-				// throw new EpException(MessageConst.ERROR_700124);
+				throw new EpException(MessageConst.ERROR_700124);
 			}
 		}
 	}
