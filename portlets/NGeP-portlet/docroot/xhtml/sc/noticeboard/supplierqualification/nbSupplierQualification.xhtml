@@ -62,7 +62,7 @@
 					<ui:param name="criteriaLbL" value="lbl.sc.notice.board.criteria.#{qulificationBean.criteria}" />
 					<h:outputText value="#{lbl[criteriaLbL]}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.requirement']}" style="width:50%;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.requirement']}" style="width:50%;white-space : normal;">
 					<h:outputText
 						value="#{fn:replace(qulificationBean.qtRequirement,'::','&lt;/br&gt;')}"
 						escape="false"
