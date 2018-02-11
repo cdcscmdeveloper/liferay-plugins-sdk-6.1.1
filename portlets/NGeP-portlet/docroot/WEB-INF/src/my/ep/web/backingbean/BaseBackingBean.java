@@ -1061,7 +1061,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
 		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
-		response.setContentType("application/octet-stream");
+//		response.setContentType("application/octet-stream");
+		response.setContentType(getMimeType(displayFileName));
 		response.flushBuffer();
 
 		InputStream docInputStream = null;
@@ -1099,6 +1100,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 
+	}
+	
+	private String getMimeType(String fileName) {
+		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
+		
+		return (mimeType != null) ? mimeType : "octet-stream";
+	}
+	
+	public static void main(String[] args) {
+		String fileName = "abcde.pdf";
+//		fileName.lastIndexOf(".")
+//		fileName.substring(fileName.indexOf("."));
+		System.out.println(fileName.substring(fileName.lastIndexOf(".") + 1));
 	}
 	
 	/**
