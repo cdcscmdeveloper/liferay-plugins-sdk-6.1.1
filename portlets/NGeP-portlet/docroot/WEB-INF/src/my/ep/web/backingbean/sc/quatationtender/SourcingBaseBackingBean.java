@@ -433,8 +433,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			String finalFileName = fileName.replaceAll("\\s+",
 					QTConstants.REPLACE_CHAR);
 			log.info("finalFileName: " + finalFileName);
-			response.setHeader("Content-Disposition", "attachment; filename="
-					+ finalFileName);
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\"");
+//			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 			response.setContentType("application/octet-stream");
 			response.flushBuffer();
 
