@@ -1435,8 +1435,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		for (CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
 			if (zone.getDeliveryTermUom() == null) {
-				zone.setDeliveryTermUom(new PmParameter()); 
-				zone.getDeliveryTermUom().setParameterId(0L);
+				PmParameter pmParameter = getParameterByTypeAndCode(
+						ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS);
+				zone.setDeliveryTermUom(pmParameter); 
+				if (pmParameter != null) {
+					zone.getDeliveryTermUom().setParameterId(pmParameter.getParameterId());
+				}
 			}
 			zoneNode = new DefaultTreeNode("zone", new LocationDTO(
 					zone.toString(), zone.getZoneName(), zone.getDeliveryTerm(), 
@@ -1628,14 +1632,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 
 		// Filter By - Ministry Profile Id
-		Long ministryProfileId = getManagedBean().getMinistryProfileId();
-		if (ministryProfileId == null) {
-			ministryProfileId = 0L;
+		if (getManagedBean().getMinistryProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getMinistryProfileId()));
 		}
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-						SearchOperator.OPERATOR_EQUALS.value(),
-						ministryProfileId));
 
 
 		if (getManagedBean().getJabatanProfileId() != null) {
@@ -2150,16 +2152,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		SelectItem[] items = null;
 
 		try {
-			int i = 1;
+			int i = 0;
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
 
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
-			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
