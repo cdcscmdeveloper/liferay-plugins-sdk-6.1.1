@@ -435,7 +435,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.info("finalFileName: " + finalFileName);
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\"");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
-			response.setContentType("application/octet-stream");
+//			response.setContentType("application/octet-stream");
+			response.setContentType(getMimeType(finalFileName));
 			response.flushBuffer();
 
 			out = response.getOutputStream();
@@ -3020,5 +3021,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}finally{
 			specSO=null;
 		}
+	}
+	
+	private String getMimeType(String fileName) {
+		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
+		
+		return (mimeType != null) ? mimeType : "octet-stream";
 	}
 }
