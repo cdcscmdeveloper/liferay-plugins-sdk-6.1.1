@@ -438,9 +438,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+						
+						
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							
+							try{
 							if (worklistItemVO.getTitle().contains("<")) {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"))  ;
 							}
@@ -544,7 +546,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   }
 						       }
+							}catch(Exception ex){
+								worklistItemVO.setTitle("Please check");
+								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
+							}
 						}
+						
+						
+					
+						
 					}
 					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
@@ -648,8 +658,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
+						
+						
+						
+						
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							
+							try{
 							if (worklistItemVO.getTitle().matches("<")) {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 							}
@@ -731,7 +745,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
+							}catch(Exception ex){
+								worklistItemVO.setTitle("please check");
+								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
+							}
 						}
+						
+						
+						
+						
 					}
 					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
