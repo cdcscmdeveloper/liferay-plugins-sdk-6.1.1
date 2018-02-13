@@ -148,37 +148,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void downloadFile(FlAttachment attachment) throws IOException {
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ attachment.getFileName() + "\"");//
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		if (attachment.getFilePath() != null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath())
-						.openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath());
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
-			input.close();
-		} else {
-		}
-		out.flush();
-		out.close();
+		commonDownloadUtil(DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath(), attachment.getFileName());
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
