@@ -276,6 +276,7 @@ public class PpReportsBackingBean extends
 			RequestContext.getCurrentInstance()
 					.execute("confirmationId.show()");
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			throw new EpException(e.getMessage());
 		} finally {
 			rptRequestSO = null;
