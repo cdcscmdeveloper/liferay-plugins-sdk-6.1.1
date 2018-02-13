@@ -800,7 +800,7 @@ public class AccessApplBackingBean extends
 		log.info("downloadAttachment - START");
 		try {
 			if (attachment != null) {
-				downloadFile(attachment.getFilePath(), attachment.getFileName());
+				commonDownloadUtil(attachment.getFilePath(), attachment.getFileName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
