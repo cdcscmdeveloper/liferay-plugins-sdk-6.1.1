@@ -177,6 +177,7 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.faces.bridge.util.FileNameUtil;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -433,10 +434,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			String finalFileName = fileName.replaceAll("\\s+",
 					QTConstants.REPLACE_CHAR);
 			log.info("finalFileName: " + finalFileName);
-			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\"");
+			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName + ";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			response.setContentType(getMimeType(finalFileName));
+			response.setContentType(FileNameUtil.getFileNameMimeType(finalFileName));
 			response.flushBuffer();
 
 			out = response.getOutputStream();
