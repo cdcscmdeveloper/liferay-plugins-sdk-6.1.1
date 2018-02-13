@@ -1190,8 +1190,8 @@ public class SPDetailBackingBean extends
 				index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 						finProposalChecklist);
 
-				if (creditFacilitiesList == null
-						|| creditFacilitiesList.isEmpty()) {
+				if (finProposalChecklist!= null && (creditFacilitiesList == null
+						|| creditFacilitiesList.isEmpty())) {
 
 					if (!finProposalChecklist.isSubmitted()
 							|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
@@ -1206,9 +1206,9 @@ public class SPDetailBackingBean extends
 								.setScQtProposalChecklistAttachment(null);
 					}
 
-				} else if (finProposalChecklist.isSubmitted()
+				} else if (finProposalChecklist != null && (finProposalChecklist.isSubmitted()
 						|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-								.getCompliance() == ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE)) {
+								.getCompliance() == ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE))) {
 					if (finProposalChecklist
 							.getScQtProposalChecklistAttachment() != null) {
 						finProposalChecklist
@@ -1234,13 +1234,15 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				if (isCompleted) {
-					reqDTO.setMultiEncryptBeanList(null);
-					reqDTO.setScQtProposalChecklist(finProposalChecklist);
-					reqDTO.setTobeRemovedCreditFacilities(null);
-					ProposalResDTO resDto = proposalSO
-							.saveProposalDetails(reqDTO);
-					getManagedBean().getFinanceCheckDetailsList().set(index,
-							resDto.getProposalChecklist());
+					if(finProposalChecklist != null){
+						reqDTO.setMultiEncryptBeanList(null);
+						reqDTO.setScQtProposalChecklist(finProposalChecklist);
+						reqDTO.setTobeRemovedCreditFacilities(null);
+						ProposalResDTO resDto = proposalSO
+								.saveProposalDetails(reqDTO);
+						getManagedBean().getFinanceCheckDetailsList().set(index,
+								resDto.getProposalChecklist());
+					}
 				}
 				getManagedBean().setToBeDeletedCreditFacilities(null);
 				return navigatePrepareFinProposalCheckList(
