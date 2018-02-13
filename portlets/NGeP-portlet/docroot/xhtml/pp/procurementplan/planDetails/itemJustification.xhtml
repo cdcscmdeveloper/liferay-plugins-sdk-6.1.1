@@ -33,7 +33,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<td>
 						<!-- for phase 1 -->
 						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-							disabled="#{!pPlanBackingBean.managedBean.modeEditable}">							
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+							onkeyup="limitTextArea(this,1000);"
+							onkeydown="limitTextArea(this,1000);">							
 							</p:inputTextarea> 
 							
 						<!-- enable this for phase 2 and disable phase 1 section to test	 
