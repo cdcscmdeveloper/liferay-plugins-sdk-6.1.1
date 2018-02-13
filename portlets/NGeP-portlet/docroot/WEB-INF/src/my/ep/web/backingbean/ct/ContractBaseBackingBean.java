@@ -307,12 +307,14 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	public void validateOwnerOrgProfile(Long ownerOrgProfileId) {
 		FacesScopes facesScopes = new FacesScopes();
 		boolean isValidOrgProfile = false;
-		
+		log.info("MIN_CONTRACT_ADMIN role: " + facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
+		log.info("BPK_CCA role: " + facesScopes.hasRoleUser(RoleCode.BPK_CCA.value()));
 		if (facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			log.info("UserId: " + userReqDTO.getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
 				if (userResDTO.getUserOrgList().get(0).getPmOrgProfile() != null
