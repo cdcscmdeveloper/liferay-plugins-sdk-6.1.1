@@ -437,7 +437,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName + ";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			response.setContentType(FileNameUtil.getFileNameMimeType(finalFileName));
+			response.setContentType(getMimeType(finalFileName));
 			response.flushBuffer();
 
 			out = response.getOutputStream();
