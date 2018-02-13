@@ -2025,7 +2025,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("downloadAttachment - START");
 		try {
 			if (attachment != null) {
-				downloadFile(attachment.getFilePath(), attachment.getFileName());
+				commonDownloadUtil(attachment.getFilePath(), attachment.getFileName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2035,45 +2035,45 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("downloadAttachment - END");
 	}
 
-	/**
-	 * Download attachment from server
-	 * 
-	 * @param filePath
-	 * @param fileName
-	 * @throws IOException
-	 */
-	private void downloadFile(String filePath, String fileName) throws IOException {
-		logger.info("Inside downloadFile start");
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
-				.getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");//
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		if (filePath != null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
-			input.close();
-		}
-		out.flush();
-		out.close();
-		FacesContext.getCurrentInstance().responseComplete();
-		logger.info("Inside downloadFile end");
-	}
+//	/**
+//	 * Download attachment from server
+//	 * 
+//	 * @param filePath
+//	 * @param fileName
+//	 * @throws IOException
+//	 */
+//	private void downloadFile(String filePath, String fileName) throws IOException {
+//		logger.info("Inside downloadFile start");
+//		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+//				.getResponse();
+//		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+//		res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");//
+//		res.setHeader("Content-Transfer-Encoding", "binary");
+//		res.setContentType("application/octet-stream");
+//		res.flushBuffer();
+//		OutputStream out = res.getOutputStream();
+//		if (filePath != null) {
+//			InputStream input = null;
+//			try {
+//				URLConnection uc = new URL(filePath).openConnection();
+//				input = new BufferedInputStream(uc.getInputStream());
+//			} catch (Exception e) {
+//				// Cannot open connection, maybe local file
+//				input = new FileInputStream(filePath);
+//			}
+//			byte[] buffer = new byte[4096];
+//			int bytesRead;
+//			while ((bytesRead = input.read(buffer)) != -1) {
+//				out.write(buffer, 0, bytesRead);
+//				buffer = new byte[4096];
+//			}
+//			input.close();
+//		}
+//		out.flush();
+//		out.close();
+//		FacesContext.getCurrentInstance().responseComplete();
+//		logger.info("Inside downloadFile end");
+//	}
 
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
