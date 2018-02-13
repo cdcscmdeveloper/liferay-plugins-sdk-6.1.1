@@ -1047,44 +1047,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
 
 	/**
-	 * The method used to download the attached file.
-	 * 
-	 * @param  filePath	    will be download file path
-	 * @param  fileName     will be download filename
-	 * @throws IOException  if an input or output exception occurred
-	 * @see    IOException
-	 */
-	public void downloadFile(String filePath, String fileName) throws IOException {
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();   
-		if (filePath != null) {
-			filePath = DocumentRepositoryUtils.getBaseDir() + filePath;
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream()); 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read( buffer )) != -1) { 
-				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
-			}
-			input.close();			
-		}
-		out.flush();
-		out.close(); 
-		FacesContext.getCurrentInstance().responseComplete();
-	}
-
-	/**
 	 * The method used to confirm the notification of factoring service is ready to view.
 	 * 
 	 * @return true, if factoring letter is ready to view
@@ -1223,7 +1185,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
 				fileOutputStream = new FileOutputStream(filePath);
 				DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, fileOutputStream);
-				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+				commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 			}
 		}  catch (Exception e) {
 			throw new EpException(e.toString());

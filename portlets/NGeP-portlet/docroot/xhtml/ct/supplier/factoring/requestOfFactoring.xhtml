@@ -269,7 +269,7 @@
 						      <h:commandLink title="#{supplierBackingBean.managedBean.factoring.fileName}"
 							     value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.fileName)}"
 							     style="float:left;" styleClass="blue_font" rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
-							     action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
+							     action="#{supplierBackingBean.commonDownload(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
 					
 					         <p:commandLink onclick="deleteFactoringAttach.show();"
 						        rendered="#{supplierBackingBean.managedBean.factoring.filePath != null
@@ -315,7 +315,7 @@
 						      <h:commandLink title="#{supplierBackingBean.managedBean.factoring.removeFileName}"
 							     value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.removeFileName)}"
 							     style="float:left;" styleClass="blue_font" rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath != null}"
-							     action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
+							     action="#{supplierBackingBean.commonDownload(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
 					
 					         <p:commandLink onclick="deleteFactoringAttach.show();"
 						        rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath!= null

@@ -318,7 +318,7 @@
 				 		disabled="#{ctBackingBean.managedBean.disableAmendDetails}"/>	
 		     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName}" 
 		           		rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
-		          		styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath, ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName)}" />					
+		          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath, ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName)}" />					
 		     		<p:spacer width="3"/>
 		         	<p:commandLink onclick="deleteApprovalLetterDlg.show();" 
 			           rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"

@@ -62,7 +62,8 @@
 						               update="uploadCircularPg1, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" />	
 					            <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
 					                 rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}"
-						               styleClass="blue_font truncate"  action="#{panelBackingBean.downloadFile()}" />
+						               styleClass="blue_font truncate"  action="#{panelBackingBean.commonDownload(
+						               		panelBackingBean.managedBean.circularVer.circularFilePath, panelBackingBean.managedBean.circularVer.circularFileName)}" />
 						         <p:commandLink  onclick="deleteAttachFile.show();"
 						              rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null
 						              and !panelBackingBean.managedBean.viewContract}">

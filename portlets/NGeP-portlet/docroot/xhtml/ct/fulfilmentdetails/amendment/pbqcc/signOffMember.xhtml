@@ -38,7 +38,7 @@
 		    	<p:outputLabel value="#{lbl['lbl.ct.decision.letter']}"    />
 		  	</h:panelGrid>
 		  	<h:commandLink value="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName}" styleClass="blue_font"
-		  		action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName)}" />        
+		  		action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName)}" />        
     	</h:panelGrid>
           
           <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" styleClass="top-aligned-columns">
