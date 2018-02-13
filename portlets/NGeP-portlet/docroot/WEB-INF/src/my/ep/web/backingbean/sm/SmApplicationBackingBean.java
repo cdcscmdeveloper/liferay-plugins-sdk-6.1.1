@@ -758,9 +758,6 @@ public class SmApplicationBackingBean extends
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			
-			//validate if dont have supplier admin
-			validateDontHaveSuppAdmin();
-			
 			log.info("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
@@ -11327,24 +11324,4 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 	}
 
-	private void validateDontHaveSuppAdmin() {
-		boolean valid = false;
-
-		if (getManagedBean().getSmAppl().getSmPersonnels() != null) {
-			for (SmPersonnel per : getManagedBean().getSmAppl()
-					.getSmPersonnels()) {
-				if (!StringUtils.isBlank(per.getEpRole())
-						&& per.getPmUser() != null
-						&& per.getPmUser().getUserId() != null
-						&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-								.contains(per.getEpRole())
-						&& per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					valid = true;
-				}
-			}
-			if (!valid) {
-				throw new EpException(MessageConst.ERROR_700124);
-			}
-		}
-	}
 }
