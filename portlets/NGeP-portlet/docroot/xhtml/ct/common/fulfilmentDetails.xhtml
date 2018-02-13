@@ -138,7 +138,7 @@
 						<h:commandLink for="agreement" styleClass="blue_font"
 							title="#{ctBackingBean.managedBean.ctContractAmount.ctAgreement.fileName}"
 							value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.ctContractAmount.ctAgreement.fileName)}"
-							action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.ctAgreement.filePath,
+							action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.ctContractAmount.ctAgreement.filePath,
 							ctBackingBean.managedBean.ctContractAmount.ctAgreement.fileName)}" />
 					</td>
 					</h:panelGroup>
@@ -248,7 +248,7 @@
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"/>	
 		     <h:commandLink value="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName}" 
 		            rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"
-		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName)}" />					
+		          styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName)}" />					
 		     <p:spacer width="3"/>
 		         <p:commandLink onclick="bondExemptedDocDlg.show();" 
 			    	rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"

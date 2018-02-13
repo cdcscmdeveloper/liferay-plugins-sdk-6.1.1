@@ -48,7 +48,7 @@
 		 		disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>	
      		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName}" 
            		rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath != null}"
-          		styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName)}" />					
+          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName)}" />					
      		<p:spacer width="3"/>
          	<p:commandLink onclick="deletePbqcDecisionLetterDlg.show();" 
 	           rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath != null}"
@@ -206,7 +206,7 @@
 		 		disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>	
      		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName}" 
            		rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath != null}"
-          		styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName)}" />					
+          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName)}" />					
      		<p:spacer width="3"/>
          	<p:commandLink onclick="deleteMofDecisionLetterDlg.show();" 
 	           rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath != null}"
