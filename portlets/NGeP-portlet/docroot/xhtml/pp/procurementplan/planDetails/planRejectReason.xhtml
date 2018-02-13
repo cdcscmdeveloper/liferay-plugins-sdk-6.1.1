@@ -33,7 +33,9 @@
 					<td>
 						<!-- for phase 1 -->
 						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}"
-							 maxlength="200">
+							 maxlength="200"
+							 onkeyup="limitTextArea(this,200);"
+							onkeydown="limitTextArea(this,200);">
 						</p:inputTextarea>
 						
 						<!-- enable this for phase 2 and disable phase 1 section to test 
