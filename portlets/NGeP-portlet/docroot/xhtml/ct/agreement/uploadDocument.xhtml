@@ -58,7 +58,7 @@
 						rendered="#{agreementBackingBean.managedBean.ctAgreement.signedPageName == null}" />	
 					<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.signedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctAgreement.signedPageName != null}"
-						styleClass="blue_font" action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.signedPagePath,
+						styleClass="blue_font" action="#{agreementBackingBean.commonDownload(agreementBackingBean.managedBean.ctAgreement.signedPagePath,
 							agreementBackingBean.managedBean.ctAgreement.signedPageName)}" />					
 					<p:spacer width="3"/>
 					<p:commandLink onclick="delSignedPageDlg.show();" 
@@ -77,7 +77,7 @@
 						rendered="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName == null}" />	
 					<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName != null}"
-						styleClass="blue_font" action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.stampedPagePath,
+						styleClass="blue_font" action="#{agreementBackingBean.commonDownload(agreementBackingBean.managedBean.ctAgreement.stampedPagePath,
 							agreementBackingBean.managedBean.ctAgreement.stampedPageName)}" />					
 					<p:spacer width="3"/>
 					<p:commandLink onclick="delStampedPageDlg.show();" 

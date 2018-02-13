@@ -89,7 +89,8 @@
 			  		  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath == null and !centralContractBackingBean.managedBean.viewContract}"
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
 				 
-				 	<h:commandLink action="#{centralContractBackingBean.downloadFile()}" 
+				 	<h:commandLink action="#{centralContractBackingBean.commonDownload(
+						  	centralContractBackingBean.managedBean.circularVer.circularFilePath, centralContractBackingBean.managedBean.circularVer.circularFileName)}" 
 				 	  	rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}"
 				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />			
 				 	

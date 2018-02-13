@@ -355,39 +355,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @see    IOException
 	 */
 	public void downloadFile(CtAttachment attachment) throws IOException {
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\"" + attachment.getFileName() + "\"");
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-
-		String filePath = null;
-		OutputStream out = res.getOutputStream();
-
-		if (attachment.getFilePath() != null) {
-			filePath = DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath();
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream()); 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read( buffer )) != -1) { 
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096]; 
-			}
-			input.close();			
-		} else {
-			/*out.write(filePath.getFileByte()); */
-		}
-		out.flush();
-		out.close(); 
-		FacesContext.getCurrentInstance().responseComplete();
+		commonDownload(attachment.getFilePath(), attachment.getFileName());
 	}
 
 	/**
@@ -684,60 +652,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 
-		downloadFile(filePath.toString());
-	}
-
-	/**
-	 * The method used to download file 
-	 * 
-	 * @param filePath  the filePath
-	 */
-	public void downloadFile(String filePath) throws IOException {
-		StringBuilder downloadPath = new StringBuilder();
-		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(
-				ContractConst.SPACE_SLASH).append(filePath);
-
-		super.downloadFile(downloadPath.toString());
-	}
-
-	/**
-	 * The method used to download the attached file.
-	 * 
-	 * @param  filePath	    will be download file path
-	 * @param  fileName     will be download filename
-	 * @throws IOException  if an input or output exception occurred
-	 * @see    IOException
-	 */
-	public void downloadFile(String filePath, String fileName) throws IOException {
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-
-		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();   
-		if (filePath != null) {
-			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream()); 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read( buffer )) != -1) { 
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096]; 
-			}
-			input.close();			
-		}
-		out.flush();
-		out.close(); 
-		FacesContext.getCurrentInstance().responseComplete();
+		commonDownload(filePath.toString(), ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
 
 	/* Implementation of contract schedule start*/

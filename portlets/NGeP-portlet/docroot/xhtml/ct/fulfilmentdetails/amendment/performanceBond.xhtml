@@ -55,7 +55,7 @@
 						title="#{varBond.fileName}"
 						value="#{amendmentBackingBean.getShortFileName(varBond.fileName)}"
 						rendered="#{varBond.filePath != null}" style="float:left;"
-						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
+						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup> 
 			</p:column>
 	    

@@ -177,7 +177,7 @@
 						title="#{varBond.fileName}"
 						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
 						style="float:left;" styleClass="blue_font"
-						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
+						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
 					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract
 						or !ctBackingBean.managedBean.ctContractAmount.bondReq)}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"

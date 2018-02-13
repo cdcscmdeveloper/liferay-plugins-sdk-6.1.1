@@ -62,7 +62,7 @@
 					value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileName}"
 					style="float:left;padding-top:10px" styleClass="blue_font"
 					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}"
-					action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.contractVer.ctTermination.filePath, 
+					action="#{terminationBackingBean.commonDownload(terminationBackingBean.managedBean.contractVer.ctTermination.filePath, 
 						terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}" />
 				<p:spacer width="3" />
 						 <p:commandLink onclick="dlgAttachAgrementDoc.show();" style="margin-bottom:-5px;"

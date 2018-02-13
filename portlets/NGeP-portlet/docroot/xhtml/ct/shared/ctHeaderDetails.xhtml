@@ -139,7 +139,7 @@
 						<h:commandLink for="agreement" styleClass="blue_font"
 							title="#{ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName}"
 							value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}"
-							action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.filePath,
+							action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.filePath,
 							ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}" />
 					</td>
 					</h:panelGroup>
@@ -244,7 +244,7 @@
  			and ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}">	   		
 	   		<p:outputLabel value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required" />
 			<h:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFileName}" 
-		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFileName)}" />
+		          styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFileName)}" />
     	</h:panelGrid> 
 	</h:panelGrid>
  </p:panel>
