@@ -32,7 +32,6 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.DpReportConst;
-import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.dp.DpReportManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -244,6 +243,38 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 			}
 		}
 		return this.getManagedBean().isRequisitionerEnable();	
+	}
+
+	/**
+	 * equisitionerList - Retrieve requisitioner, based on user id and
+	 * organization profile id.
+	 * 
+	 * @return the requisitionerList
+	 */
+	public List<SelectItem> retrieveRequisitioner() {
+		log.info("ReportBackingBean-retrieveRequisitioner");
+		List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			Long orgProfileId = null;
+			/*if (StringUtils.isNotEmpty(this.getScPtj())) {
+				orgProfileId = Long.parseLong(this.getScPtj());
+			}*/
+			List<Object[]> reqLst = reportSO.retrieveRequisitioner(
+					new FacesScopes().getUserSessionBean().getUserId(),
+					orgProfileId);
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scRequisitionerList.add(selectItem);
+				}
+			}
+		}
+		return scRequisitionerList;
 	}
 	
 	public abstract void resetSearch();
