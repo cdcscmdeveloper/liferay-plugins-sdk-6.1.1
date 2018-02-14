@@ -746,6 +746,8 @@ public class PurchaseInDefaultBackingBean extends
 				PmParameter conditionField = pmReason.getConditionField();
 				PmParameter sourceMethod = pmReason.getSourceMethod();
 
+				log.info(conditionField);
+				log.info(conditionField.getParameterCode());
 				if(conditionField!= null && conditionField.getParameterCode().equals(ParameterConst.PID_FIELD_MINIMUM_QUANTITY)) {
 					getManagedBean().setVisibleOrderQty(Boolean.TRUE);
 				} else {
