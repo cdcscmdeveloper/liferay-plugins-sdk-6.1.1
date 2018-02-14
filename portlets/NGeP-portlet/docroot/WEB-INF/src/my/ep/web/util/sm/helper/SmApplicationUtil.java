@@ -3611,10 +3611,10 @@ public class SmApplicationUtil {
 		resDto = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSupplierProfile(reqDto);
 		if (resDto.getSmSupplier() != null) {
-			
+
 			SmSupplier smSupplier = resDto.getSmSupplier();
-			
-			//check if dont have supplier admin
+
+			// check if dont have supplier admin
 			validateDontHaveSuppAdmin(smSupplier.getSmAppl());
 
 			// check if already had rejected application within 60 days (and
@@ -3724,13 +3724,12 @@ public class SmApplicationUtil {
 		}
 		return result;
 	}
-	
+
 	private static void validateDontHaveSuppAdmin(SmAppl appl) {
 		boolean valid = false;
 
 		if (appl.getSmPersonnels() != null) {
-			for (SmPersonnel per : appl
-					.getSmPersonnels()) {
+			for (SmPersonnel per : appl.getSmPersonnels()) {
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
 						&& per.getPmUser().getUserId() != null
@@ -4328,9 +4327,13 @@ public class SmApplicationUtil {
 		return reasonDescList;
 	}
 
-	public static List<PmReasonDesc> retrieveMofRejectReason() {
+	public static List<PmReasonDesc> retrieveMofRejectReason(String suppType,
+			String bussType, String applType) {
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setSuppType(suppType);
+		reqDTO.setApplType(applType);
+		reqDTO.setRegType(bussType);
 		ReasonResDTO resDTO = SmServiceLookup.getReasonSO()
 				.retrieveSupplierRejectionReason(reqDTO);
 		return resDTO.getReasonDescList();
