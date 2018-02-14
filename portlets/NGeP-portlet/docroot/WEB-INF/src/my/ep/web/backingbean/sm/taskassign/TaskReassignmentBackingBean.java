@@ -15,11 +15,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -32,14 +27,13 @@ import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
-import my.ep.biz.service.sm.common.taskassginment.ITaskAssignmentSO;
+import my.ep.biz.service.sm.common.taskassginment.ISmTaskAssignmentSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -87,6 +81,11 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmTaskReassignmentVO;
+
+import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * Backing Bean for Task Reasssingment (new)
@@ -596,7 +595,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 
 		SmPersonnel smUser = this.getManagedBean().getSelectedUser();
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
-		ITaskAssignmentSO taskAssignmentSO = null;
+		ISmTaskAssignmentSO taskAssignmentSO = null;
 		SmTaskReassignmentVO vo = getManagedBean().getTaskReassignmentVO();
 		if (task == null) {
 			throw new EpException(MessageConst.ERROR_770097);
@@ -631,8 +630,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
 			}
 
-			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ITaskAssignmentSO.class);
+			taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmTaskAssignmentSO.class);
 			TaskAssignmentResDTO resDTO = taskAssignmentSO.reassignTask(reqDTO);
 
 			// isSuccess = reassignTask(pmUser, task);
@@ -669,7 +668,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 
 		String claimedBy = null;
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
-		ITaskAssignmentSO taskAssignmentSO = null;
+		ISmTaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
 		
 		if (task == null) {
@@ -696,10 +695,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			reqDTO.setUserIdList(assigneeUsers);
 			reqDTO.setClaimedBy(claimedBy);
 
-			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
+			taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ITaskAssignmentSO.class);
+							ISmTaskAssignmentSO.class);
 			TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
 			// isSuccess = reassignTask(pmUser, task);
