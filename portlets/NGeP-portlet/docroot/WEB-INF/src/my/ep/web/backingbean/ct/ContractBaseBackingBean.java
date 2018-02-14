@@ -319,6 +319,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 			if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
 				if (userResDTO.getUserOrgList().get(0).getPmOrgProfile() != null
 						&& userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId() == ownerOrgProfileId) {
+					log.info("userOrgProfileId: "+ userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+					log.info("ownerOrgProfileId: " + ownerOrgProfileId);
 					isValidOrgProfile = true;
 				}
 			}
@@ -326,7 +328,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		
 		if (!isValidOrgProfile) {
 			log.info("validateOwnerOrgProfile failed.");
-			throw new EpException(MessageConst.ERROR_750040);
+			//throw new EpException(MessageConst.ERROR_750040);
 		}
 	}
 }
