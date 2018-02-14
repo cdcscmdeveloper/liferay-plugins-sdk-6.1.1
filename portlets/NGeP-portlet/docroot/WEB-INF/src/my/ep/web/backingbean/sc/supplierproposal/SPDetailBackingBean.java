@@ -1234,10 +1234,10 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				if (isCompleted) {
+					reqDTO.setMultiEncryptBeanList(null);
+					reqDTO.setTobeRemovedCreditFacilities(null);
 					if(finProposalChecklist != null){
-						reqDTO.setMultiEncryptBeanList(null);
 						reqDTO.setScQtProposalChecklist(finProposalChecklist);
-						reqDTO.setTobeRemovedCreditFacilities(null);
 						ProposalResDTO resDto = proposalSO
 								.saveProposalDetails(reqDTO);
 						getManagedBean().getFinanceCheckDetailsList().set(index,
@@ -3866,6 +3866,7 @@ public class SPDetailBackingBean extends
 	private String navigatePrepareFinProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
 			ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
+		
 		updateQtFinNdTechProposalCheckList(
 				currProposalChecklist,
 				newProposalChecklist,
