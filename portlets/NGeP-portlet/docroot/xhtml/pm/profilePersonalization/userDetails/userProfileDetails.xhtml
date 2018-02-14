@@ -187,7 +187,7 @@
 								styleClass="ppDisplayTextL"
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
-									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							</p:inputText> &#160;&#160; <p:graphicImage id="giEmail"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giEmail" id="ttEmail"
