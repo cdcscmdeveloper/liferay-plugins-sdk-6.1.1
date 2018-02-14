@@ -757,7 +757,7 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			
+
 			log.info("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
@@ -926,7 +926,9 @@ public class SmApplicationBackingBean extends
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
 		getManagedBean().setReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason());
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmSupplier().getBusinessType(), applicationType));
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -9977,7 +9979,10 @@ public class SmApplicationBackingBean extends
 	public void resetSearchRejectedReason() {
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
 		getManagedBean().setReasonDescList(
-				SmApplicationUtil.retrieveMofRejectReason());
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmSupplier().getBusinessType(), getManagedBean()
+						.getSmAppl().getApplType()));
 		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 
