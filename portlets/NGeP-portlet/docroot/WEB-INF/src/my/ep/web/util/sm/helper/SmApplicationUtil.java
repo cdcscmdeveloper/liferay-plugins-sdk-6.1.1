@@ -3611,6 +3611,11 @@ public class SmApplicationUtil {
 		resDto = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSupplierProfile(reqDto);
 		if (resDto.getSmSupplier() != null) {
+			
+			SmSupplier smSupplier = resDto.getSmSupplier();
+			
+			//check if dont have supplier admin
+			validateDontHaveSuppAdmin(smSupplier.getSmAppl());
 
 			// check if already had rejected application within 60 days (and
 			// created date after latest application created date), can't
@@ -3627,8 +3632,6 @@ public class SmApplicationUtil {
 					throw new EpException(MessageConst.ERROR_722643);
 				}
 			}
-
-			SmSupplier smSupplier = resDto.getSmSupplier();
 
 			log.info("validate before proceed regNo:" + smSupplier.getRegNo()
 					+ " isBumi:" + smSupplier.isBumi());
@@ -3720,6 +3723,27 @@ public class SmApplicationUtil {
 			}
 		}
 		return result;
+	}
+	
+	private static void validateDontHaveSuppAdmin(SmAppl appl) {
+		boolean valid = false;
+
+		if (appl.getSmPersonnels() != null) {
+			for (SmPersonnel per : appl
+					.getSmPersonnels()) {
+				if (!StringUtils.isBlank(per.getEpRole())
+						&& per.getPmUser() != null
+						&& per.getPmUser().getUserId() != null
+						&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+								.contains(per.getEpRole())
+						&& per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					valid = true;
+				}
+			}
+			if (!valid) {
+				throw new EpException(MessageConst.ERROR_700124);
+			}
+		}
 	}
 
 	/**
