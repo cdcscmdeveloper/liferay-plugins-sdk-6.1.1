@@ -16,6 +16,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -225,6 +227,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
 		reqDTO.setTaskList(getTaskList());
+		SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
+				.getSmSupplier());
+		if (activeAppl != null) {
+			reqDTO.setHasActiveAppl(true);
+			reqDTO.setDraftApplId(activeAppl.getApplId());
+		}
 		return reqDTO;
 	}
 
@@ -698,6 +706,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 		return taskList;
+	}
+
+	private SmAppl getCurrActiveSmAppl(SmSupplier smSupplier) {
+		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+		mofRegistrationReqDTO.setSupplierId(smSupplier.getSupplierId());
+		return SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
 	}
 
 }
