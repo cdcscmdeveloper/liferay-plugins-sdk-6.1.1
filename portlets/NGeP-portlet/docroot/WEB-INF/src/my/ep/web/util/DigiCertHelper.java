@@ -148,6 +148,9 @@ public class DigiCertHelper {
 			}
 
 		} catch (Exception ex) {
+			log.info("DIGICERT GET CHALL QUEST:" + identificationNo
+					+ " ERROR MSG:" + ex.getMessage());
+			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 
 		}
@@ -156,8 +159,8 @@ public class DigiCertHelper {
 
 	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
-		log.info("DIGICERT SIGNING:" + identificationNo + "||" + epNo + "||"
-				+ pin + "||" + dataForSigning);
+		log.info("BEFORE DIGICERT SIGNING:" + identificationNo + "||" + epNo
+				+ "||" + pin + "||" + dataForSigning);
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
 		try {
@@ -212,14 +215,17 @@ public class DigiCertHelper {
 
 			}
 		} catch (KMCAPIException | InvalidKMCAPIFieldException e) {
-			log.info("DIGICERT ERROR SIGN MSG:" + e.getMessage());
+			log.info("DIGICERT SIGNING:" + identificationNo + "||" + epNo
+					+ "||" + pin + "||" + dataForSigning + " ERROR MSG:"
+					+ e.getMessage());
 			e.printStackTrace();
 			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale()));
 		}
-		log.info("DIGICERT SIGNED DATA:" + signedData);
 		vo.setSignedData(signedData);
+		log.info("AFTER DIGICERT SIGNING:" + identificationNo + "||" + epNo
+				+ "||" + pin + "||" + dataForSigning);
 		return vo;
 	}
 
