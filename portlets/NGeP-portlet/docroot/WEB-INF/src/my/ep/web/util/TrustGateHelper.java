@@ -73,6 +73,8 @@ public class TrustGateHelper {
 			}
 
 		} catch (Exception ex) {
+			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
+					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
 			throw new EpException(ex.getMessage());
 
 		}
@@ -93,8 +95,8 @@ public class TrustGateHelper {
 
 	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
-		log.info("TRUSTGATE SIGNING:" + identificationNo + "||" + epNo + "||"
-				+ pin + "||" + dataForSigning);
+		log.info("BEFORE TRUSTGATE SIGNING:" + identificationNo + "||" + epNo
+				+ "||" + pin + "||" + dataForSigning);
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
 		try {
@@ -147,14 +149,17 @@ public class TrustGateHelper {
 
 			}
 		} catch (Exception e) {
-			log.info("TRUSTGATE ERROR SIGN MSG:" + e.getMessage());
+			log.info("TRUSTGATE SIGNING:" + identificationNo + "||" + epNo
+					+ "||" + pin + "||" + dataForSigning + "  ERROR MSG:"
+					+ e.getMessage());
 			e.printStackTrace();
 			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale()));
 		}
 		vo.setSignedData(signedData);
-		log.info("TRUSTGATE SIGNED DATA:" + signedData);
+		log.info("AFTER TRUSTGATE SIGNING:" + identificationNo + "||" + epNo
+				+ "||" + pin + "||" + dataForSigning);
 		return vo;
 	}
 
