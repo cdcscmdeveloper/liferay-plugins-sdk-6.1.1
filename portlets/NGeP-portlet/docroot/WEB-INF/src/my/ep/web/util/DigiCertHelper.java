@@ -139,12 +139,12 @@ public class DigiCertHelper {
 						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
-					throw new EpException(MessageConst.ERROR_776051);
+					throw new EpException(MessageConst.ERROR_DIGICERT_776051);
 				}
 				break;
 
 			default:
-				throw new EpException(MessageConst.ERROR_776062);
+				throw new EpException(MessageConst.ERROR_DIGICERT_776062);
 			}
 
 		} catch (Exception ex) {

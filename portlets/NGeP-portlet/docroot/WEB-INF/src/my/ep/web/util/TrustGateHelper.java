@@ -64,7 +64,7 @@ public class TrustGateHelper {
 				retVal = getChallQuest(selectedQuest, res.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
-					throw new EpException(MessageConst.ERROR_776051);
+					throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
 				}
 				break;
 
