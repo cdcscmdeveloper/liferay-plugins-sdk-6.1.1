@@ -22,8 +22,10 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -181,6 +183,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneTree;
 	private Map<Long,Boolean> committeeFormed;
 	private boolean navigateFromMobileView;
+	private ScWorkFlowStatus workflowStatus;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1192,6 +1195,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 * @return the renderRegisterBtn
 	 */
 	public boolean isRenderRegisterBtn() {
+		if(this.getWorkflowStatus()!= null && this.getWorkflowStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)){
+			return false;
+		}
 		return renderRegisterBtn;
 	}
 
@@ -1270,6 +1276,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setNavigateFromMobileView(boolean navigateFromMobileView) {
 		this.navigateFromMobileView = navigateFromMobileView;
+	}
+
+	/**
+	 * @return the workflowStatus
+	 */
+	public ScWorkFlowStatus getWorkflowStatus() {
+		return workflowStatus;
+	}
+
+	/**
+	 * @param workflowStatus the workflowStatus to set
+	 */
+	public void setWorkflowStatus(ScWorkFlowStatus workflowStatus) {
+		this.workflowStatus = workflowStatus;
 	}
 
 	

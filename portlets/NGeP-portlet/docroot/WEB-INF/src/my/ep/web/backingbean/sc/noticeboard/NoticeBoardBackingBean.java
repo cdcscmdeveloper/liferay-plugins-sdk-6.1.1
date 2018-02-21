@@ -81,6 +81,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -2119,7 +2120,8 @@ public class NoticeBoardBackingBean extends
 		NoticeBoardResDTO resDTO = qtNoticeBoardSO
 				.retrieveSupplierRegistrationDtl(reqDTO);
 		ScQt scQt = resDTO.getScQt();
-		this.getManagedBean().setScQt(resDTO.getScQt());
+		this.getManagedBean().setWorkflowStatus(scQt.getCurrentWorkFlowStatus());
+		this.getManagedBean().setScQt(scQt);
 		this.getManagedBean().setSmSupplier(smSupplier);
 		
 		boolean isNotRigistered = false;
@@ -2571,10 +2573,15 @@ public class NoticeBoardBackingBean extends
 	 * @return the attendance is editable or not.
 	 */
 	public boolean isAttandanceEditable(ScQtBsvDtl bsvDtl){
-		if(bsvDtl.getBsvDate().compareTo(new Date()) > 0 ){
-			return false;
-		}
-		return true;
+		ScWorkFlowStatus wfStatus = this.getManagedBean().getScQt().getCurrentWorkFlowStatus();
+        if(wfStatus!= null && wfStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)){
+        	return true;
+        }else{
+        	if(bsvDtl.getBsvDate().compareTo(new Date()) > 0 ){
+    			return false;
+    		}
+    		return true;
+        }
 	}
 	
 	/**
