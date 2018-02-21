@@ -1518,6 +1518,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				
+				Date currentDate = DateUtils.getCurrentDateWithoutTime();
+				// Filter By - Org effDate
+				searchBean.getDataFilterBeans()
+						.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+				// Filter By - Org expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+								"pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_IS_NULL.value(), null,
+								SearchCondition.CONDITION_OR.value())));
+				
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				if (resDTO.isSuccessful()) {
