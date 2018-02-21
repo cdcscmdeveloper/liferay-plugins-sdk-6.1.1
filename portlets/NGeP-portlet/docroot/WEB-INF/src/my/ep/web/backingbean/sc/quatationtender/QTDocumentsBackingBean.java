@@ -1599,10 +1599,10 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 		context.put("title", title);
 		context.put("qtNo", qt.getQtNo());
 
@@ -2158,10 +2158,10 @@ public class QTDocumentsBackingBean extends
 							.getParentSpecQuestion();
                     if(null!=master.getSpecName()){
                    String specTitle= master.getSpecName();
-                   specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
-                   specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,QTConstants.HTML_AMBRA_SENT);
-                   specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,QTConstants.HTML_LESS_THEN);
-                   specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,QTConstants.HTML_GREATER_THEN);
+                   specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+                   specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+                   specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+                   specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
                    master.setSpecName(specTitle);
                     	
                     }
@@ -2169,20 +2169,20 @@ public class QTDocumentsBackingBean extends
 						question.setClItem("");
 					}else{
 					    String clItem = question.getClItem();
-						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
-						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,QTConstants.HTML_AMBRA_SENT);
-						clItem=clItem.replaceAll(QTConstants.LESS_THEN,QTConstants.HTML_LESS_THEN);
-						clItem=clItem.replaceAll(QTConstants.GREATER_THEN,QTConstants.HTML_GREATER_THEN);
+						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+						clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+						clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 						question.setClItem(clItem);
 					}
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
 					} else{
 						 String clSpecDetail = question.getClSpecDetail()
-								.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,QTConstants.HTML_AMBRA_SENT);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,QTConstants.HTML_LESS_THEN);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,QTConstants.HTML_GREATER_THEN);
+								.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 						question.setClSpecDetail(clSpecDetail);
 					}
 					if (question.getClUom() != null) {
@@ -2379,10 +2379,10 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 		context.put("title", title);
 
 		String estimatedPrice = "";
@@ -2424,10 +2424,10 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 		context.put("title", StringUtil.upperCase(title));
 		context.put("qtNo", qt.getQtNo());
 
@@ -2490,10 +2490,10 @@ public class QTDocumentsBackingBean extends
 		
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		title=title.replaceAll("\r\n", "<br />");
-		title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
+		title=title.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+		title=title.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 		
 		context.put("qtTitle", title);
 
