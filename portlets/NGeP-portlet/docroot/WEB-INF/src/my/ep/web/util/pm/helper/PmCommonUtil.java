@@ -2763,8 +2763,6 @@ public class PmCommonUtil implements Serializable{
 		reqDTO.setIdentificationNo(idNo);
 		String certIssuer = SmServiceLookup.getPersonnelSO()
 				.getCertIssuerByUserIdNoAndEpNo(reqDTO).getCertIssuer();
-		certIssuer = StringUtils.isBlank(certIssuer) ? SPKIConst.DIGICERT
-				: certIssuer;
 		return certIssuer;
 	}
 	
