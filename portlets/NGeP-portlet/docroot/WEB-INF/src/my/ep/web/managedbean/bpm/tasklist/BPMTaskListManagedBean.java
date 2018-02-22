@@ -415,9 +415,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc().replaceAll("<", "&#60;"));
 				}
 				
-				if(getSelectedOrgProfile()!=null){
+				/*if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
-				}
+				}*/
 				System.out.println("getDocStatus()"+getDocStatus());
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
@@ -624,9 +624,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setDocNumber(getDocNoGroup());
 				}
 			
-				if(getSelectedOrgProfileGroup()!=null){
+				/*if(getSelectedOrgProfileGroup()!=null){
 					System.out.println("getOrgProfileId"+getSelectedOrgProfileGroup().getOrgProfileId());
-				}
+				}*/
 				
 				if(getDocStatusGroup()>0){
 					System.out.println("getDocStatusGroup"+getDocStatusGroup());
