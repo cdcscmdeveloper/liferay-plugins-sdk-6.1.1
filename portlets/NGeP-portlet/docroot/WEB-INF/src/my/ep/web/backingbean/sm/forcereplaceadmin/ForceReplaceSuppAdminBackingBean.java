@@ -217,6 +217,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
 		reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
+		reqDTO.setEmail(getManagedBean().getNewAdmin().getEmail());
 		reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
 				.getApplId());
 		FacesScopes fs = new FacesScopes();
