@@ -114,7 +114,8 @@
 						value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 				</ac:lov>
 			</h:panelGroup>
-			<h:outputText value="#{question.clUom.uomName}" />
+			<h:outputText value="#{question.clUom.uomName}"
+				rendered="#{isQuestionTypeItem}"  />
 		</c:if>
 		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{question.clUom.uomName}"
