@@ -1,8 +1,6 @@
 package my.ep.web.constant;
 
 public class SPKIConst {
-	public static final String TRUSTGATE = "T";
-	public static final String DIGICERT = "D";
 	public static final String DIGICERT_CONFIG_FILE_PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
 	public static final String TRUSTGATE_CONFIG_FILE_PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc-msctg.properties";
 	public static final int ERROR_CERT_REVOKED = 43;

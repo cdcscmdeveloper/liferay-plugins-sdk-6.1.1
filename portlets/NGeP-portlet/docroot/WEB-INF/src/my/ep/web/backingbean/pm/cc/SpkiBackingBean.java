@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -112,7 +113,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(),
 						getSupplier().getEpNo(), challengeQues1);
@@ -127,7 +128,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer(identificationNo).equals(SPKIConst.TRUSTGATE)) {
+			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
@@ -179,7 +180,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 		String dataForSigning = originalText;
 
-		if (getCertIssuer(identificationNo).equals(SPKIConst.TRUSTGATE)) {
+		if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			vo = TrustGateHelper.getInstance().getSignedData(identificationNo,
 					getSupplier().getEpNo(), pin, challenges, dataForSigning);
 		} else {
@@ -378,7 +379,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void changeChallengeQuestions() {
-		if (getCertIssuer().equals(SPKIConst.TRUSTGATE)) {
+		if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			challs = TrustGateHelper.getInstance().getChallengeQuestion(
 					getLoginUser().getIdentificationNo(),
 					getSupplier().getEpNo(), challengeQues1);
