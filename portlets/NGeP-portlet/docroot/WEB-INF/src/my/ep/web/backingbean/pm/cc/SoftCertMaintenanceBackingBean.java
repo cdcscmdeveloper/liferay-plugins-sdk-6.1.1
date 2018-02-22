@@ -8,12 +8,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.web.constant.SPKIConst;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.TrustGateHelper;
@@ -128,7 +128,7 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 		String idNo = getDigiCertUserId();
 		String certIssuer = PmCommonUtil
 				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
-		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().changePIN(idNo, epNo);
 		} else {
 			DigiCertHelper.getInstance().changePIN(idNo, epNo);
@@ -141,7 +141,7 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 		String idNo = getDigiCertUserId();
 		String certIssuer = PmCommonUtil
 				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
-		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().updateChallResp(idNo, epNo);
 		} else {
 			DigiCertHelper.getInstance().updateChallResp(idNo, epNo);
@@ -154,7 +154,7 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 		String idNo = getDigiCertUserId();
 		String certIssuer = PmCommonUtil
 				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
-		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().resetPIN(idNo, epNo,
 					getSupplierEmail());
 		} else {
@@ -168,7 +168,7 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 		String certIssuer = PmCommonUtil
 				.getCertIssuerByIdentificationNoAndEpNo(digiCertUserId,
 						supplierEpNo);
-		if (certIssuer.equals(SPKIConst.TRUSTGATE)) {
+		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().revoke(digiCertUserId, supplierEpNo);
 		} else {
 			DigiCertHelper.getInstance().revoke(digiCertUserId, supplierEpNo);
