@@ -1216,11 +1216,49 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		 * Pre render view do table.
 		 */
 		public void preRenderViewDOTable(){
+			renewSesionObject();
 			getManagedBean().getPendingDoDataModel().reloadData();
+			getDocStatusList();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTable.xhtml");
 		}
 	
+		public void getDocStatusList() {
+			SelectItem[] items = null;
+			FacesScopes face = new FacesScopes();
+
+			try {
+				List<String> statusDescs = new ArrayList<String>();
+				List<Long> statusIds = new ArrayList<Long>();
+				statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
+				statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+				
+				Map<String, Long> statusMap = new HashMap<String, Long>();
+				for(Long statusId : statusIds){
+					if(statusMap.get(statusId) == null){
+						statusMap.put(getStatusDescById(statusId), statusId);
+						statusDescs.add(getStatusDescById(statusId));
+					}
+				}
+				items = new SelectItem[statusDescs.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				int i = 1;
+				for (String statusDesc : statusDescs) {
+					items[i++] = new SelectItem(statusMap.get(statusDesc),statusDesc);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+								e.getMessage()));
+			}
+
+			getManagedBean().setDocStatusList(items); ;
+		}
+
 		/**
 		 * Pre render view do dash board table.
 		 */
@@ -1576,5 +1614,25 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
 		
 		super.downloadFile(downloadPath.toString());
+	}
+	
+	public void searchPendingDeliveryList() {
+		if(getManagedBean().getFromDate() != null && getManagedBean().getToDate() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.created.date.to",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
+		
+		getManagedBean().getPendingDoDataModel().reloadData();
+	}
+	
+	/**
+	 * Search reset.
+	 */
+	public void searchReset(){
+		getManagedBean().setTitle(null);
+		getManagedBean().setDocNo(null);
+		getManagedBean().setFromDate(null);
+		getManagedBean().setToDate(null);
+		getManagedBean().setSelectedOrgProfile(null);
+		getManagedBean().setDocStatusId(null);
 	}
 }

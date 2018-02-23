@@ -5,11 +5,13 @@ package my.ep.web.managedbean.fl.po;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
@@ -30,6 +32,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -64,6 +67,12 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String taskName;
 	private Long flOrderId;
 	private Long stopRequestId;
+	private String docNo;
+	private String title;
+	private PmOrgProfile selectedOrgProfile;
+	private SelectItem[] docStatusList;
+	private Date fromDate;
+	private Date toDate;
 	
 	private boolean contractRequest;
 	
@@ -197,8 +206,25 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				searchBean.setUseEntityClass(true);
 				reqDTO.setPendingDoSearchBean(searchBean);
+				if(getDocStatusId() != null){
+					reqDTO.setStatusId(docStatusId);
+				}
 				if(!getStatusIds().isEmpty()){
 					reqDTO.setStatusIds(getStatusIds());
+				}
+				
+				if(getTitle() != null && getTitle().length() > 0){
+					reqDTO.setTitle(getTitle());
+				}
+				if(getDocNo() != null){
+					reqDTO.setFlDocNo(getDocNo());
+				}
+				if(getFromDate() != null){
+					reqDTO.setFromDate(getFromDate());
+					reqDTO.setToDate(getToDate());
+				}
+				if(getSelectedOrgProfile() != null){
+					reqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());
 				}
 				
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -1293,6 +1319,54 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setEspkbCommitmentNo(String espkbCommitmentNo) {
 		this.espkbCommitmentNo = espkbCommitmentNo;
+	}
+
+	public String getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public PmOrgProfile getSelectedOrgProfile() {
+		return selectedOrgProfile;
+	}
+
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	public void setDocStatusList(SelectItem[] docStatusList) {
+		this.docStatusList = docStatusList;
+	}
+
+	public SelectItem[] getDocStatusList() {
+		return docStatusList;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
 
 }
