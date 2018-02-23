@@ -1634,5 +1634,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().setToDate(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setDocStatusId(null);
+		getManagedBean().getPendingDoDataModel().reloadData();
 	}
 }
