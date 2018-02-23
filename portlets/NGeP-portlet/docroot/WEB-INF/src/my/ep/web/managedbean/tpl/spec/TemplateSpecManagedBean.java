@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -51,7 +52,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private String docType;
 	private PmOrgProfile orgProfileOfLoginUser;
 	private boolean cloneBtnRendered;
-	
+	private List<PmUom> uomDropDownList;
 	public TemplateSpecManagedBean() {
 	}
 
@@ -278,4 +279,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	public void setCloneBtnRendered(boolean cloneBtnRendered) {
 		this.cloneBtnRendered = cloneBtnRendered;
 	}
+
+	/**
+	 * @return the uomDropDownList
+	 */
+	public List<PmUom> getUomDropDownList() {
+		return uomDropDownList;
+	}
+
+	/**
+	 * @param uomDropDownList the uomDropDownList to set
+	 */
+	public void setUomDropDownList(List<PmUom> uomDropDownList) {
+		this.uomDropDownList = uomDropDownList;
+	}
+	
+	
 }
