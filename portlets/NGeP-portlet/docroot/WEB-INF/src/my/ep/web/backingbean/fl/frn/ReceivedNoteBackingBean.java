@@ -758,6 +758,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 */
 	public String gpkiSignAction(String outcome){
 		IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 		PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
@@ -767,6 +768,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				status.getStatusId().longValue()==FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL) {
 			throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
 		}
+		
+		if(getManagedBean().getFulfilmentNote().isBrandNew() && getManagedBean().getFulfilmentNote().getFlDeliveryOrder()!=null) { // validate to avoid duplicate FRN under one DO inserted
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			if(receivedNoteSO.retrieveActiveReceivedNoteByDeliveryOrderId(reqDTO).getFulfilmentNote()!=null) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
+		}
+		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
 			setTextBeforeSign(outcome);
