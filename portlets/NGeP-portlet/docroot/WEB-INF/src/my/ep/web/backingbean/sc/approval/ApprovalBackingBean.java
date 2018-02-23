@@ -1472,13 +1472,8 @@ return scQt;
 									.equalsIgnoreCase(approvalRequest
 											.getApproverAction()
 											.getParameterCode())) {
-						if (QTConstants.QT_OPEN
-								.equalsIgnoreCase(approvalRequest
-										.getOriginalValue())) {
-							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-						} else {
-							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-						}
+						scQt.setOpenFor(approvalRequest
+								.getOriginalValue());
 					}
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
