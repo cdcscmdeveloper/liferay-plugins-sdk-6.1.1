@@ -9379,33 +9379,6 @@ public class SmApplicationUtil {
 		return addressLine;
 	}
 
-	public static SmAppl deleteApplChildEntities(SmAppl appl) {
-		appl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
-		appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
-		appl.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
-		appl.setSmAssociationBodies(new ArrayList<SmAssociationBody>());
-		appl.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
-		appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
-		appl.setSmSupplierSystems(new ArrayList<SmSupplierSystem>());
-		appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
-		appl.setSmPersonnels(new ArrayList<SmPersonnel>());
-		appl.setSmStaffTotals(new ArrayList<SmStaffTotal>());
-		appl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
-		appl.setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
-		appl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
-		appl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
-		appl.setSmApplRejectReasons(new ArrayList<SmApplRejectReason>());
-		appl.setSmCompanyBasic(null);
-		appl.setSmCompanyExperiences(new ArrayList<SmCompanyExperience>());
-		appl.setSmFacilities(new ArrayList<SmFacility>());
-		appl.setSmApplInquiries(new ArrayList<SmApplInquiry>());
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSmAppl(appl);
-		appl = SmServiceLookup.getMofRegistrationSO()
-				.removeSmApplChilds(reqDTO).getSmAppl();
-		return appl;
-	}
-
 	public static PmDocument getCertDocByCertBodyId(Long certBodyId) {
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
 		reqDTO.setCertBodyId(certBodyId);
