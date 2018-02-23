@@ -21,20 +21,20 @@
 
 			<tr>
 				<td width="10%"><p:outputLabel
-						value="#{lbl['lbl.fl.doc.search.order.no']} : " /></td>
+						value="#{lbl['lbl.fl.doc.search.order.no']}" /></td>
 				<td width="40%"><p:inputText size="35"
 						value="#{flOrderBB.managedBean.docNo}"></p:inputText></td>
 
 
 				<td width="10%"><p:outputLabel
-						value="#{lbl['lbl.fl.doc.search.datatable.title']} : " /></td>
+						value="#{lbl['lbl.fl.doc.search.datatable.title']}" /></td>
 				<td width="40%"><p:inputText size="60"
 						value="#{flOrderBB.managedBean.title}"></p:inputText></td>
 
 			</tr>
 				<tr>
 					<td width="10%"><p:outputLabel
-							value="#{lbl['lbl.fl.ptj.name']} : " /></td>
+							value="#{lbl['lbl.fl.ptj.name']}" /></td>
 					<td width="40%"><ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="56" readonly="true" 
 							headerText="#{lbl['lbl.fl.ptj']}"
 							value="#{flOrderBB.managedBean.selectedOrgProfile.orgName}"
@@ -44,7 +44,7 @@
 					</td>
 
 					<td width="10%"><p:outputLabel
-							value="#{lbl['lbl.fl.status']} :" /></td>
+							value="#{lbl['lbl.fl.status']}" /></td>
 					<td width="40%"><p:selectOneMenu id="docStatus"
 							style="width: 200px;"
 							value="#{flOrderBB.managedBean.docStatusId}">
@@ -54,7 +54,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']} " /></td>
 					<td colspan="2"><p:calendar showOn="button" navigator="true" id="createdDateFrom"
 							display="inline" readonlyInput="true"
 							value="#{flOrderBB.managedBean.fromDate}" size="9"
