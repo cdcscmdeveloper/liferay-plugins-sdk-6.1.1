@@ -33,6 +33,7 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -44,6 +45,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -52,6 +55,7 @@ import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
@@ -498,6 +502,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private boolean dupplicatedInd = false;
 	
+	private List<PmUom> uomLs;
+	
+	private List<SelectItem> uomCriteria;
 	
 	
 	
@@ -880,10 +887,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							ISupplierSearchSO.class);
+			
+			
+			IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm",IUomSO.class);
+			UomReqDTO reqUOMDTO = new UomReqDTO();
+			UomResDTO resUOMDTO = null;
 
 			try {
-
 				CatalogueBackingBean bb = new CatalogueBackingBean();
+				System.out.println("UOM:"+bb.getManagedBean().getUomLs().isEmpty());
+				if(bb.getManagedBean().getUomLs().isEmpty()){
+	
+					resUOMDTO = uomSO.retrieveUomList();
+					bb.getManagedBean().setUomLs(resUOMDTO.getPmUomList());
+	
+				}
+			
+
+				
 				bb.getManagedBean().setDraftTabPageSize(this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
@@ -902,8 +923,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
+
 
 				Map tempMap = new HashMap();
 				for (int i = 0; i < resDTO.getSuppItemResultBean()
@@ -3912,6 +3932,43 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.dupplicatedInd = dupplicatedInd;
 	}
 
+	/**
+	 * @return the uomLs
+	 */
+	public List<PmUom> getUomLs() {
+		if(uomLs==null)
+			uomLs = new ArrayList<PmUom>();
+		return uomLs;
+	}
+
+	/**
+	 * @param uomLs the uomLs to set
+	 */
+	public void setUomLs(List<PmUom> uomLs) {
+		
+		this.uomLs = uomLs;
+	}
+
+	/**
+	 * @return the uomCriteria
+	 */
+	public List<SelectItem> getUomCriteria() {
+		if(uomCriteria==null){
+			uomCriteria = new ArrayList<SelectItem>(); 
+		}
+		
+		return uomCriteria;
+	}
+
+	/**
+	 * @param uomCriteria the uomCriteria to set
+	 */
+	public void setUomCriteria(List<SelectItem> uomCriteria) {
+		this.uomCriteria = uomCriteria;
+	}
+
+	
+	
 	
 	
 	
