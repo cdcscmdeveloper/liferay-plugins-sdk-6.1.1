@@ -190,7 +190,7 @@
 					<td><p:selectOneMenu id="uomAdvanceDetId" style="width:200px"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomId}" filter="true"
 							filterMatchMode="startsWith">
-							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{catalogueBackingBean.managedBean.uomLs}"
 								var="uom" itemLabel="#{uom.uomName}" itemValue="#{uom.uomId}" />
 
