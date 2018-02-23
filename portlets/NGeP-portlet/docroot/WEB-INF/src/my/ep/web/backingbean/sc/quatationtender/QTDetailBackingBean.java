@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.persistence.criteria.JoinType;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
@@ -34,6 +35,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -168,6 +170,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
@@ -1470,12 +1473,30 @@ public class QTDetailBackingBean extends
 			
 			String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
-				searchFilterBean.add(new SearchFilterBean(
+				SearchMultiFilterBean statusBean = null;
+				SearchMultiFilterBean statusFilterBean = new SearchMultiFilterBean(
+						new SearchFilterBean(
 								"scQtStatus.pmStatus.statusId",
-								SearchOperator.OPERATOR_EQUALS.value(), status));
-				searchFilterBean.add(
-						new SearchFilterBean("scQtStatus.current",
-								SearchOperator.OPERATOR_EQUALS.value(), true));
+								SearchOperator.OPERATOR_EQUALS.value(),
+								status,
+								JoinType.LEFT), 
+						new SearchFilterBean(
+								"scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								true,
+								JoinType.LEFT));
+				statusBean = statusFilterBean;
+				if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					statusBean = new SearchMultiFilterBean(
+							statusFilterBean, 
+							new SearchFilterBean(
+									"scQtStatus.pmStatus",
+									SearchOperator.OPERATOR_IS_NULL.value(),
+									null,
+									SearchCondition.CONDITION_OR.value(),
+									JoinType.LEFT));
+				}
+				qtSearchBean.getDataFilterBeans().add(statusBean);
 			}
 			
 			if (isMofSupplier()) {
