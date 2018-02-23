@@ -101,16 +101,21 @@
 
 		<c:if test="#{updateSpec}">
 			<h:panelGroup layout="block" style="width:120px;">
-						 <p:selectOneMenu id="templatespecuomId" value="#{question.clUom.uomId}" rendered="#{isQuestionTypeItem}" required="#{!question.selected}"
-			 label="#{lbl['lbl.tpl.spec.content.uom']}"  
-                         style="width:120px" filter="true" filterMatchMode="startsWith">
-            <f:selectItems value="#{templateSpecBackingBean.uomDropDownList}" var="uom" itemLabel="#{uom.uomName}" itemValue="#{uom.uomId}" />
-            <p:ajax event="change"
-				listener="#{templateSpecBackingBean.uomValuesClearListener(question)}"
-				partialSubmit="true" process="@this"
-				update="@form" />
-        </p:selectOneMenu>
+				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM"
+					headerText="#{lbl['lbl.sc.uom']}"
+					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
+					postUpdateListener="templateSpecBackingBean.uomValuesClearListener(templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}])"
+					value="#{question.clUom.uomCode}" conditionField="recordStatus^1"
+					rendered="#{isQuestionTypeItem}" required="#{!question.selected}"
+					label="#{lbl['lbl.tpl.spec.content.uom']}" size="8" readonly="true"
+					update="@form">
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}"
+						value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
+				</ac:lov>
 			</h:panelGroup>
+			<h:outputText value="#{question.clUom.uomName}"
+				rendered="#{isQuestionTypeItem}"  />
 		</c:if>
 		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{question.clUom.uomName}"
