@@ -1586,6 +1586,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}
 
+		if(getManagedBean().getInvoice().isBrandNew()) { // validate to avoid duplicate invoice record for one order/request
+			reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
+			if(invoiceSO.retrieveInvoiceByFlRequestId(reqDTO).getInvoice()!=null) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
+		}
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				if(!getManagedBean().isReliefDeclarationCheck()){
