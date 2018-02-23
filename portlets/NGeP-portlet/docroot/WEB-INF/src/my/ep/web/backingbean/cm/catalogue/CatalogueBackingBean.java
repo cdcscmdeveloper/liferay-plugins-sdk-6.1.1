@@ -1043,10 +1043,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String GoToMaintain() {
 
-		log.info("*****GoToMaintain*******");
-
+		log.info("*****GoToMaintain*******");	
+	
 		this.getManagedBean().getDraftSearchDataModel().reloadData();
-
+		
 		return "catalogueMaintenanceFile";
 	}
 
@@ -3449,8 +3449,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			//----------mandatory checking-------------------------------------------------------------------------------------------//
 
-			if (this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName()==null || 
-					this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName().isEmpty()) {
+			if (this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomId()==null ) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -4558,8 +4557,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				if (catalog.getCmStandardPricing().getPrice() == null
 						|| catalog.getCmStandardPricing().getStartDate() == null
 						|| catalog.getCmStandardPricing().getEndDate() == null
-						|| catalog.getPmUom().getUomName() == null
-						|| catalog.getPmUom().getUomName().isEmpty()) {
+						|| catalog.getPmUom().getUomId() == null) {
 
 					log.info("********validation**********");
 					FacesContext facesContext = FacesContext
