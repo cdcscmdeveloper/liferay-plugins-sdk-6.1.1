@@ -14,17 +14,14 @@
 	</script>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.upload']}"
-			rendered="#{!unspscCodeBackingBean.supplierTemp}"
+		<p:commandButton value="#{lbl['lbl.cm.upload']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 			onclick="excelDialog.show(); clearInvalidFileMsg();" />
 
-		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
-			rendered="#{!unspscCodeBackingBean.supplierTemp}"
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			update=":form" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
-
 
 
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
@@ -41,14 +38,12 @@
 
 
 	<table style="width: 100%; height: 100%;">
-		<tr>
-			<td width="100%"><h:outputText styleClass="instruction"
-					style="float:left;margin-left:5px;" escape="false"
-					value="#{lbl['lbl.cm.insturction']}" /></td>
-		</tr>
-	</table>
-	
-	
+			<tr>
+				<td width="100%"><h:outputText styleClass="instruction"
+						style="float:left;margin-left:5px;" escape="false"
+						value="#{lbl['lbl.cm.insturction']}" /></td>
+			</tr>
+		</table>
 	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
@@ -94,9 +89,9 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.price']}" />
 			</f:facet>
-			<p:inputText id="stdPrice"
-				value="#{selectedSuppCat.cmStandardPricing.price}" maxlength="18"
-				label="#{lbl['lbl.cm.price']}" size="10" style="text-align:right">
+			<p:inputText id="stdPrice" value="#{selectedSuppCat.cmStandardPricing.price}"
+				maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
+				style="text-align:right">	
 				<f:converter converterId="bigDecimalConverter" />
 				<p:ajax event="blur" update="stdPrice" />
 			</p:inputText>
@@ -107,27 +102,21 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			
-
-		<p:selectOneMenu id="uomAdvanceId" style="width:200px"
-				value="#{selectedSuppCat.pmUom.uomId}" 
-				filter="true" filterMatchMode="startsWith">
-				 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				<f:selectItems value="#{catalogueBackingBean.managedBean.uomLs}"
-					var="uom" itemLabel="#{uom.uomName}" itemValue="#{uom.uomId}" />
-			
-
-			</p:selectOneMenu>
-		
-
+			<ui:param name="correctionIndexRow" value="#{rowIndex % 10}" />
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="16"
+				headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
+				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{correctionIndexRow}].pmUom"
+				value="#{selectedSuppCat.pmUom.uomName}"
+				conditionField="recordStatus^1">
+			</ac:lov>
 		</p:column>
 		<p:column width="2%">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.start.date']}" />
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
-				readonlyInput="true" navigator="true" showOn="button" size="10"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" readonlyInput="true"
+				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
@@ -137,8 +126,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
-				readonlyInput="true" navigator="true" showOn="button" size="10"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true"
+				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
