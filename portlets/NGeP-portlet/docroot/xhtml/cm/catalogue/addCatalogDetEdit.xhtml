@@ -42,7 +42,7 @@
 					rendered="#{!unspscCodeBackingBean.supplierTemp and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'U'}"
 					action="#{catalogueBackingBean.navigate}">
 				</p:commandButton>
-
+				
 				<p:commandButton value="#{lbl['lbl.cm.back']}"
 					rendered="#{!unspscCodeBackingBean.supplierTemp and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U'}"
 					action="#{catalogueBackingBean.cancelToPublishTab}">
@@ -58,10 +58,10 @@
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
-
+			
 			</h:panelGroup>
 
-
+		
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
@@ -97,10 +97,10 @@
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
-					<td rowspan="10"><h:outputText styleClass="instruction"
+					<td rowspan="10"><h:outputText styleClass="instruction" 
 							value="#{lbl['lbl.cm.instruction.related.image']}"
-							rendered="#{unspscCodeBackingBean.allSupplierWithoutTemp}" /><br />
-						<br /> <h:panelGroup id="refereshImageId">
+							rendered="#{unspscCodeBackingBean.allSupplierWithoutTemp}" /><br /><br />
+						<h:panelGroup id="refereshImageId">
 
 							<h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
@@ -127,24 +127,24 @@
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
 
 								<script>
-									$(function() {
-										$('#slides').slidesjs({
-											width : 940,
-											height : 528,
-											navigation : {
-												effect : "fade"
-											},
-											pagination : {
-												effect : "fade"
-											},
-											effect : {
-												fade : {
-													speed : 400
-												}
-											}
-										});
-									});
-								</script>
+			$(function() {
+				$('#slides').slidesjs({
+					width : 940,
+					height : 528,
+					navigation : {
+						effect : "fade"
+					},
+					pagination : {
+						effect : "fade"
+					},
+					effect : {
+						fade : {
+							speed : 400
+						}
+					}
+				});
+			});
+		</script>
 
 
 								<div id="slides" style="width: 250px;">
@@ -187,15 +187,12 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="uomAdvanceDetId" style="width:200px"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomId}" filter="true"
-							filterMatchMode="startsWith">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems value="#{catalogueBackingBean.managedBean.uomLs}"
-								var="uom" itemLabel="#{uom.uomName}" itemValue="#{uom.uomId}" />
-
-
-						</p:selectOneMenu></td>
+					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
+							headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
+							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
+							conditionField="recordStatus^1">
+						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35" maxlength="50"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
