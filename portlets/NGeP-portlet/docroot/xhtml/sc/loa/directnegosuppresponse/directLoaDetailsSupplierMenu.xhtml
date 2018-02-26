@@ -111,7 +111,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 						showOn="button"
 						value="#{directLOABackingBean.managedBean.scLoa.supplierSignDate}"
-						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+						mindate="#{directLOABackingBean.managedBean.scLoa.govtSignDate}"
 						required="true"
 						readonlyInput="true"
 						label="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}"
