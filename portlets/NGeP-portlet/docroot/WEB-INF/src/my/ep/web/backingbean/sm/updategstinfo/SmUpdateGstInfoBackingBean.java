@@ -438,16 +438,13 @@ public class SmUpdateGstInfoBackingBean extends
 	 */
 	private void setDeleteHq() {
 		getManagedBean().setGstEmpty(true);
-		setDeleteGst(getManagedBean().getHqGstSupplier());
+		getManagedBean().setHqGstSupplier(
+				setDeleteGst(getManagedBean().getHqGstSupplier()));
 		if (getManagedBean().getBranches() != null) {
 			for (SmGstBranchVO br : getManagedBean().getBranches()) {
 				if (br.getGst() != null) {
 					br.setSameWithHq(false);
-					if (br.getGst().getGstSupplierId() != null) {
-						setDeleteGst(br.getGst());
-					} else {
-						br.setGst(null);
-					}
+					br.setGst(setDeleteGst(br.getGst()));
 				}
 			}
 		}
@@ -465,11 +462,7 @@ public class SmUpdateGstInfoBackingBean extends
 					&& brVO.getBranch()
 							.getSupplierBranchId()
 							.compareTo(branch.getBranch().getSupplierBranchId()) == 0) {
-				if (brVO.getGst().getGstSupplierId() != null) {
-					setDeleteGst(brVO.getGst());
-				} else {
-					brVO.setGst(null);
-				}
+				brVO.setGst(setDeleteGst(brVO.getGst()));
 				brVO.setSameWithHq(false);
 			}
 		}
@@ -481,7 +474,7 @@ public class SmUpdateGstInfoBackingBean extends
 	 * @param SmGstSupplier
 	 *            deleteGst
 	 */
-	private void setDeleteGst(SmGstSupplier deleteGst) {
+	private SmGstSupplier setDeleteGst(SmGstSupplier deleteGst) {
 		if (deleteGst.getGstSupplierId() != null) {
 			deleteGst.setGstDeletedDate(new Date());
 			deleteGst.setIsCurrent(false);
@@ -491,6 +484,7 @@ public class SmUpdateGstInfoBackingBean extends
 		} else {
 			deleteGst = null;
 		}
+		return deleteGst;
 	}
 
 	/**
@@ -556,6 +550,9 @@ public class SmUpdateGstInfoBackingBean extends
 			throw new EpException(MessageConst.ERROR_721044);
 		} else if (!StringUtils.isBlank(gst.getGstRegNo())
 				&& !SmCommonUtil.validateGstRegNo(gst.getGstRegNo())) {
+			throw new EpException(MessageConst.ERROR_721027);
+		} else if (StringUtils.isBlank(gst.getGstRegNo())
+				&& gst.getGstEffDate() != null) {
 			throw new EpException(MessageConst.ERROR_721027);
 		}
 		validateBranch();
