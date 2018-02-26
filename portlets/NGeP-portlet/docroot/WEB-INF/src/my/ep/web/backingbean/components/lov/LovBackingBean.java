@@ -533,8 +533,10 @@ public class LovBackingBean implements Serializable {
 				ValueExpression valueExpression = context.getApplication().getExpressionFactory()
 													.createValueExpression(context.getELContext(),
 															expressionString, Object.class);
-		
-				valueExpression.setValue(context.getELContext(), selectedEntity);
+				
+				if(valueExpression != null) {
+					valueExpression.setValue(context.getELContext(), selectedEntity);
+				}
 		
 				debugLogger("postUpdateListener: " + this.getLovBean().getPostUpdateListener());
 					
