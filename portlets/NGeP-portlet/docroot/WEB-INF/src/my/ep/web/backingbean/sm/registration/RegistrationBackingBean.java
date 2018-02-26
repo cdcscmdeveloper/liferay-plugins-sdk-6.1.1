@@ -2249,7 +2249,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmCommonUtil.validateGstRegNoUniqueness(getManagedBean().getSmSupp()
 				.getRegNo(), gstNo);
 
-		if (gstNo != null && gstNo.length() > 0) {
+		if (!StringUtils.isBlank(gstNo)) {
 			if (!SmCommonUtil.validateGstRegNo(gstNo)) {
 				this.getManagedBean().setGstFlag(false);
 				throw new EpException(MessageConst.ERROR_721027);
@@ -2257,8 +2257,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setGstFlag(true);
 			}
 		} else {
-			deleteGst(this.getManagedBean().getSmGstSupplier());
-			this.getManagedBean().setGstFlag(false);
+			if (StringUtils.isBlank(gstNo)) {
+				// if both gst no and gst eff date null means deleted gst
+				if (this.getManagedBean().getSmGstSupplier().getGstEffDate() == null) {
+					deleteGst(this.getManagedBean().getSmGstSupplier());
+					this.getManagedBean().setGstFlag(false);
+				} else {
+					this.getManagedBean().setGstFlag(false);
+					throw new EpException(MessageConst.ERROR_721027);
+				}
+			}
 		}
 	}
 	
