@@ -70,7 +70,6 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" /></td>
 					<td colspan="2"><p:calendar showOn="button" navigator="true" id="createdDateTo"
 							display="inline" readonlyInput="true"
-							disabled="#{flOrderBB.managedBean.fromDate == null}"
 							mindate="#{flOrderBB.managedBean.fromDate}" 
 							value="#{flOrderBB.managedBean.toDate}" size="9"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
