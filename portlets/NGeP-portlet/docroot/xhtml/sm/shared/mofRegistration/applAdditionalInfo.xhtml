@@ -9,7 +9,7 @@
 	<h:outputStylesheet library="ep/css" name="blinktext.css"  />
 	
 	<div align="left" class="header-info">
-		<table style="width: 100%">
+		<table style="width: 100%;table-layout:fixed">
 			<tr height="10">
 				<td colspan="4"></td>
 			</tr>
@@ -63,8 +63,9 @@
 					<td style="vertical-align: baseline;"><p:outputLabel
 							value="#{lbl['lbl.sm.rejection.reasons']}"
 							styleClass="outputLabel-view-label" /></td>
-					<td style="white-space: normal !important;" colspan="5"><p:outputLabel styleClass="outputLabel-view" escape="false"
-							value="#{backingBean.managedBean.rejectReasonsMsg}" />
+					<td style="word-wrap: break-word;" colspan="5">
+							<h:outputText value="#{backingBean.managedBean.rejectReasonsMsg}" 
+						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
 					</td>
 				</tr>
 			</p:outputPanel>
