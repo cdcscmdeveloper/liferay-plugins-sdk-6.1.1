@@ -623,7 +623,6 @@
 						showOn="button" required="true"
 						readonlyInput="true"
 						value="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
-						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 						label="#{lbl[lbleffDate]}" size="28">
 						<p:ajax event="dateSelect" process="@this"
 							partialSubmit="true"

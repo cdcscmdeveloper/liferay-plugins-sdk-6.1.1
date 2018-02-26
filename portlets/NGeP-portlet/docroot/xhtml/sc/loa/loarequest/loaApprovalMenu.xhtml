@@ -17,36 +17,25 @@
 		</f:facet>
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="23%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-			</td>
-			<td>
-				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="contractSigner" 
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userId}"
-						style="width: 276px;margin-bottom: 5px;"
-						required="true"
-						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{lOADetailBackingBean.managedBean.contractSignerList}"
-							var="contractUser" itemLabel="#{contractUser.userName}"
-							itemValue="#{contractUser.userId}" />
-							
-						<p:ajax event="change" listener="#{lOADetailBackingBean.contractSignerEvent}"
-						    partialSubmit="true" process="@this" update="@this loaSignerId" />
-					</p:selectOneMenu>
-					<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
-				</c:if>
-				<c:if test="#{!isEditableStatus}">
-					<p:inputText size="40"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userName}"
-						disabled="true" />
-				</c:if>
-			</td>
-		</tr>
+			<tr>
+				<td width="23%">
+					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<p:outputPanel id="opUserLov">
+					<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+						update="@form" readonly="true"
+						headerText="#{lbl['lbl.pm.ta.user.lov']}"
+						selectionMode="single"
+						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userName}"
+						saveObject="lOADetailBackingBean.managedBean.contractSignerUser"
+						conditionField="#{lOADetailBackingBean.constructUserConditionFields()}"
+						postUpdateListener="lOADetailBackingBean.signerUserListener(lOADetailBackingBean.managedBean.contractSignerUser)" />
+					</p:outputPanel>
+				</td>
+			</tr>
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" />
