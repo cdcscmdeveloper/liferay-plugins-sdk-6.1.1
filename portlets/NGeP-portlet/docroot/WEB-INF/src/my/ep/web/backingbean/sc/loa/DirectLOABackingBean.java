@@ -240,6 +240,7 @@ public class DirectLOABackingBean extends
 			validateSupplierDetails(scLoa);
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
+			validateContractNGovtSignDate(scLoa);
 						
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
@@ -386,6 +387,7 @@ public class DirectLOABackingBean extends
 			validateLOADetails(scLoa, outcome);
 
 			validateContractAmount(scLoa.getLoaAmt(), outcome);
+			validateContractNGovtSignDate(scLoa);
 
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
@@ -1213,7 +1215,16 @@ public class DirectLOABackingBean extends
 			}
 		}
 		
-	}	
+	}
+	
+	private void validateContractNGovtSignDate(ScLoa scLoa) {
+		if(null != scLoa.getGovtSignDate()){
+			if(scLoa.getContractEffDate().before(scLoa.getGovtSignDate())) {
+				throw new EpException(
+						MessageConst.ERROR_760468);
+			}
+		}
+	}
 	
 	/**
 	 * Progressive pay validation.
@@ -7877,5 +7888,30 @@ public class DirectLOABackingBean extends
 			downloadFile(report.getScLoaReportAttachment());
 		}
 	}
+	}
+	
+	public String constructUserConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		ScLoa scLoa = getManagedBean().getScLoa();
+		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+		sb.append(RoleCode.CONTRACT_SIGNER.value());
+		sb.append("^9");
+		if (scLoa.getLoaAmt() != null) {
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
+			sb.append(true);
+			sb.append("^1");
+			sb.append("|pmUserOrgs.pmUserRoles.approvalLimit^");
+			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
+			sb.append("^4");
+		}
+		return sb.toString();
+	}
+
+	public void signerUserListener(PmUser contractSignerUser) {
+		log.info("signerUserListener");
+
+		ScLoa scLoa = getManagedBean().getScLoa();
+		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
+
 	}
 }
