@@ -49,8 +49,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -67,6 +70,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
@@ -81,11 +85,14 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchCondition;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2168,4 +2175,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return pattern.matcher(email).matches();
 	}
 	
+	/**
+	 * uom autocompletelist.
+	 * 
+	 * 
+	 *@return the list of PmUom instance 		
+	 */
+	public List<PmUom> autoCompleteUom(String searchText) {
+		IUomSO uomSo = null;
+		try {
+			uomSo = (IUomSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+			UomReqDTO reqDTO = new UomReqDTO();
+			SearchBean<PmUom> searchBean = new SearchBean<PmUom>();
+			searchBean.setNavigatable(true);
+			searchBean.setNoOfRowsPerPage(15);
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"uomCode",
+									SearchOperator.OPERATOR_LIKE.value(),
+									searchText,true),
+							new SearchFilterBean(
+									"uomName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									searchText!=null?searchText.toLowerCase():searchText,SearchCondition.CONDITION_OR.value())));
+					
+			reqDTO.setMeasurementSearchBean(searchBean);
+			return uomSo.retrieveMeasurementBySearch(reqDTO)
+					.getPmUomList();
+		} finally {
+			uomSo = null;
+		}
+	}
 }
