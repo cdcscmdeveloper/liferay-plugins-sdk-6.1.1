@@ -91,14 +91,16 @@
 		<h:panelGrid columns="2" columnClasses="columnWidth225">
 			    <p:outputLabel value="#{lbl['lbl.ct.loa.signer']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
-			   <p:selectOneMenu id="signer" style="width:310px; margin-bottom:5px" label="#{lbl['lbl.ct.loa.signer']}"
-			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-			       value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
-				   <f:selectItems value="#{amendmentBackingBean.getContractSignerDropdown()}" />
-				   <p:ajax event="change" partialSubmit="true" process="@this" update="@this signerDesignation" 
-				   	listener="#{amendmentBackingBean.contractSignerChange()}" />
-		     	</p:selectOneMenu>
-		         <p:message for="signer" display="icon"/>
+		     	<ac:lov id="lovContractSigner" lovId="PM_USER_ID"
+						size="50"
+						disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+						update=":form:contractSigner" readonly="true"
+						headerText="#{lbl['lbl.ct.signer']}"
+						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userName}"
+						saveObject="ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner"
+						conditionField="#{amendmentBackingBean.constructSignerConditionFields()}"
+						postUpdateListener="amendmentBackingBean.contractSignerChange()" />
+		         <p:message for="lovContractSigner" display="icon"/>
 		     </h:panelGrid>
 		     <p:outputLabel value="#{lbl['lbl.ct.signer.designation']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
@@ -107,11 +109,12 @@
 						maxlength="100"
 						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.loaSignerDesig}"
 						label="#{lbl['lbl.ct.signer.designation']}" required="true"
-						style="width:250px">
+						style="width:300px">
 					</p:inputText>
 		         <p:message for="signerDesignation" display="icon"/>
 		     </h:panelGrid>
 		</h:panelGrid>
+		<ac:lovPopup />
 	</p:panel>
 	<p:panel id="loaVerifier" header="#{lbl['lbl.ct.panel.loa.verifier']}" toggleable="true" toggleSpeed="500"
 		rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
