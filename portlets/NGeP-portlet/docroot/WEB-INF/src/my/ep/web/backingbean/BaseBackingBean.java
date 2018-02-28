@@ -2208,4 +2208,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			uomSo = null;
 		}
 	}
+	
+	/**
+	 * getUomCode and description.
+	 * 
+	 * 
+	 *@return uomCodeDesc.		
+	 */
+	public String retriveUomCodeDesc(PmUom pmUom){
+		String uomCodeDesc="";
+		if(null!=pmUom){
+			if(null!=pmUom.getUomCode() && null!=pmUom.getUomName()){
+			uomCodeDesc=pmUom.getUomCode()+" "+" -"+" "+pmUom.getUomName();	
+			}
+		}
+		
+	return uomCodeDesc;	
+	}
 }
