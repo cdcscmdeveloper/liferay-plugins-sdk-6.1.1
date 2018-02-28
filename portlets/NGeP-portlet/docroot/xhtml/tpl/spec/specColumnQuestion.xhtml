@@ -101,21 +101,20 @@
 
 		<c:if test="#{updateSpec}">
 			<h:panelGroup layout="block" style="width:120px;">
-				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM"
-					headerText="#{lbl['lbl.sc.uom']}"
-					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
-					postUpdateListener="templateSpecBackingBean.uomValuesClearListener(templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}])"
-					value="#{question.clUom.uomCode}" conditionField="recordStatus^1"
-					rendered="#{isQuestionTypeItem}" required="#{!question.selected}"
-					label="#{lbl['lbl.tpl.spec.content.uom']}" size="8" readonly="true"
-					update="@form">
-					<f:setPropertyActionListener for="actionEvent"
-						target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}"
-						value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-				</ac:lov>
+				<p:autoComplete id="uom" required="#{isValidationReq}" size="10"
+					label="#{lbl['lbl.tpl.spec.content.uom']}"
+					title="#{pmUom.uomCode} - #{pmUom.uomName}" 
+					value="#{question.clUom}" converter="PmUomConverter" 
+					var="pmUom" itemLabel="#{pmUom.uomCode} - #{pmUom.uomName}" itemValue="#{pmUom}"
+					completeMethod="#{templateSpecBackingBean.autoCompleteUom}"
+					maxResults1="15" dropdown="false" forceSelection="true"
+					rendered="#{isQuestionTypeItem}">
+					<p:ajax event="itemSelect"
+						listener="#{templateSpecBackingBean.uomValuesClearListener(question)}"
+						partialSubmit="true" process="@this" update="@this, @([id$=freqUOMPG],[id$=dayUOMPG],[id$=monthUOMPG],[id$=qtyPG])" />
+				</p:autoComplete>
+				<p:message id="uomMsg" for="uom" display="icon" />
 			</h:panelGroup>
-			<h:outputText value="#{question.clUom.uomName}"
-				rendered="#{isQuestionTypeItem}"  />
 		</c:if>
 		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{question.clUom.uomName}"
