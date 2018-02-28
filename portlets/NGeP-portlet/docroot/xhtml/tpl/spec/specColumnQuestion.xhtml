@@ -103,9 +103,8 @@
 			<h:panelGroup layout="block" style="width:120px;">
 				<p:autoComplete id="uom" required="#{isValidationReq}" size="10"
 					label="#{lbl['lbl.tpl.spec.content.uom']}"
-					title="#{pmUom.uomCode} - #{pmUom.uomName}" 
 					value="#{question.clUom}" converter="PmUomConverter" 
-					var="pmUom" itemLabel="#{pmUom.uomCode} - #{pmUom.uomName}" itemValue="#{pmUom}"
+					var="pmUom" itemLabel="#{templateSpecBackingBean.retriveUomCodeDesc(pmUom)}" itemValue="#{pmUom}"
 					completeMethod="#{templateSpecBackingBean.autoCompleteUom}"
 					maxResults1="15" dropdown="false" forceSelection="true"
 					rendered="#{isQuestionTypeItem}">
