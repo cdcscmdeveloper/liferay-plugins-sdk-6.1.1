@@ -10,9 +10,8 @@
 	
 	<h:outputText styleClass="warning" style="font-weight: bold;" value="&#x26A0; #{lbl['lbl.sm.glp.alert']}" rendered="#{backingBean.managedBean.smAppl.smSupplierCerts.size() > 0}" /> 
 	
-		<table style="width: 100%;">
+			<table style="width: 100%;table-layout:fixed">
 			<tr>
-
 				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
 				<td class="header-info-text"><c:if
 						test="#{backingBean.managedBean.smAppl.applType eq 'N'}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
@@ -43,7 +42,6 @@
 				</c:if>
 			</tr>
 			<tr>
-
 				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 				<td class="header-info-text"><h:outputLabel
 						value="#{backingBean.managedBean.smAppl.applSubmitDate}"
@@ -61,9 +59,9 @@
 					<td style="vertical-align: baseline;"><p:outputLabel
 							value="#{lbl['lbl.sm.rejection.reasons']}"
 							styleClass="outputLabel-view-label" /></td>
-					<td style="white-space: normal !important;" colspan="5">
-						<p:outputLabel styleClass="outputLabel-view" escape="false"
-							value="#{backingBean.managedBean.rejectReasonsMsg}" />
+					<td style="word-wrap: break-word;" colspan="5">
+							<h:outputText value="#{backingBean.managedBean.rejectReasonsMsg}" 
+						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
 					</td>
 				</tr>
 			</p:outputPanel>

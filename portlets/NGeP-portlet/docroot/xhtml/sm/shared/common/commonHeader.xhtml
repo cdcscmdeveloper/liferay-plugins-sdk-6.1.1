@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<h:outputText styleClass="warning" style="font-weight: bold;" value="&#x26A0;  #{lbl['lbl.sm.glp.alert']}" rendered="#{showGlpAlert}" />
 	
-	<table class="customTbl" style="background-color: #FAFAFA;">
+	<table class="customTbl" style="background-color: #FAFAFA;table-layout:fixed">
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 			<td class="header-info-text">
@@ -29,9 +29,9 @@
 			<td style="vertical-align: baseline;width: 15% !important"><p:outputLabel
 					value="#{lbl['lbl.sm.rejection.reasons']}"
 					styleClass="outputLabel-view-label" /></td>
-			<td style="white-space: normal !important;" colspan="5">
-				<p:outputLabel styleClass="outputLabel-view" escape="false"
-					value="#{sdoReviewBackingBean.managedBean.rejectReasonsMsg}" />
+			<td style="word-wrap: break-word;" colspan="5">
+				<h:outputText value="#{sdoReviewBackingBean.managedBean.rejectReasonsMsg}" 
+						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
 			</td>
 		</tr>
 		</p:outputPanel>
