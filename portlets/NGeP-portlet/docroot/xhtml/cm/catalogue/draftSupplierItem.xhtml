@@ -44,6 +44,8 @@
 						value="#{lbl['lbl.cm.insturction']}" /></td>
 			</tr>
 		</table>
+		
+		<ui:include src="/xhtml/common/uompopup.xhtml"></ui:include>
 	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
@@ -102,13 +104,13 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			<ui:param name="correctionIndexRow" value="#{rowIndex % 10}" />
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="16"
-				headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
-				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{correctionIndexRow}].pmUom"
-				value="#{selectedSuppCat.pmUom.uomName}"
-				conditionField="recordStatus^1">
-			</ac:lov>
+			
+			<p:autoComplete id="uomDraftId" size="20" var="pmUom" converter="PmUomConverter"
+							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
+							itemValue="#{pmUom}" 
+							value="#{selectedSuppCat.pmUom}"
+							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
+							maxResults="15" dropdown="false" forceSelection="true" />
 		</p:column>
 		<p:column width="2%">
 			<f:facet name="header">
