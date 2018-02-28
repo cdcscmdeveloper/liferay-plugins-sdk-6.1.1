@@ -42,7 +42,7 @@
 					rendered="#{!unspscCodeBackingBean.supplierTemp and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'U'}"
 					action="#{catalogueBackingBean.navigate}">
 				</p:commandButton>
-				
+
 				<p:commandButton value="#{lbl['lbl.cm.back']}"
 					rendered="#{!unspscCodeBackingBean.supplierTemp and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U'}"
 					action="#{catalogueBackingBean.cancelToPublishTab}">
@@ -58,10 +58,10 @@
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
-			
+
 			</h:panelGroup>
 
-		
+
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
@@ -76,6 +76,8 @@
 
 
 		<p:panel header="#{lbl['lbl.cm.item.details']}" toggleable="true">
+		
+		<ui:include src="/xhtml/common/uompopup.xhtml"></ui:include>
 
 			<h:panelGroup
 				rendered="#{(unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier) 
@@ -97,10 +99,10 @@
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
-					<td rowspan="10"><h:outputText styleClass="instruction" 
+					<td rowspan="10"><h:outputText styleClass="instruction"
 							value="#{lbl['lbl.cm.instruction.related.image']}"
-							rendered="#{unspscCodeBackingBean.allSupplierWithoutTemp}" /><br /><br />
-						<h:panelGroup id="refereshImageId">
+							rendered="#{unspscCodeBackingBean.allSupplierWithoutTemp}" /><br />
+					<br /> <h:panelGroup id="refereshImageId">
 
 							<h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
@@ -187,12 +189,12 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
-							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
-							conditionField="recordStatus^1">
-						</ac:lov> <ac:lovPopup /></td>
+					<td><p:autoComplete id="uomDetId" size="40" var="pmUom" converter="PmUomConverter"
+							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
+							itemValue="#{pmUom}" 
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom}"
+							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
+							maxResults="15" dropdown="false" forceSelection="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35" maxlength="50"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
