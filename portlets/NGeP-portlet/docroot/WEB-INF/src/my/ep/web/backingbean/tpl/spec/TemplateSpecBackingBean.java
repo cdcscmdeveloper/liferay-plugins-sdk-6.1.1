@@ -32,6 +32,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -44,6 +45,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -2537,4 +2539,50 @@ public class TemplateSpecBackingBean extends
 				navAction +
 				specComponentId + "SpecReRender();");
 	}
+	
+	/**
+	 * uom dropDownValues
+	 * 
+	 * 
+	 *@return the list of PmUom instance 		
+	 */
+	private List<PmUom> retrieveUomList() {
+		IUomSO uomSo = null;
+		try{
+			uomSo = (IUomSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+		UomResDTO resDTO = new UomResDTO();
+		resDTO = uomSo.retrieveUomList();
+		List<PmUom> pmUomList = resDTO.getPmUomList();
+		return pmUomList;
+		}finally{
+		uomSo = null;	
+		}
+		
+		
+	}
+
+	/**
+	 * @return the uomDropDownList
+	 */
+	public SelectItem[] getUomDropDownList() {
+	SelectItem[] uomDropDownList=this.getManagedBean().getUomDropDownList();
+		if(null==uomDropDownList || uomDropDownList.length == 0){
+			List<PmUom> pmUoms = retrieveUomList();
+			List<SelectItem> uomItems = new ArrayList<SelectItem>();
+			uomItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
+			for (PmUom pmUom : pmUoms) {
+				if (StringUtils.isNotBlank(pmUom.getUomName())) {
+					uomItems.add(new SelectItem(pmUom.getUomId(), pmUom.getUomName()));	
+				}
+			}
+			uomDropDownList = uomItems.toArray(new SelectItem[uomItems.size()]);
+			this.getManagedBean().setUomDropDownList(uomDropDownList);
+		}
+		return uomDropDownList;
+	}
+	
+	
 }
