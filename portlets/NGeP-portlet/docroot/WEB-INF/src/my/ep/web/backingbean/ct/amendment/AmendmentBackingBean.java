@@ -3192,6 +3192,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 	}
+	
+	/**
+	 * To construct contract signer condition fields for opUserLov
+	 * 
+	 * @return String
+	 */
+	public String constructSignerConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+		sb.append(RoleCode.CONTRACT_SIGNER.value());
+		sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
+		sb.append(Boolean.TRUE);
+		sb.append("|pmUserOrgs.pmUserRoles.approvalLimit^");
+		sb.append(newOverallContractAmt());
+		sb.append("^");
+		sb.append(SearchOperator.OPERATOR_GREATER_EQUAL.value());
+		sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		return sb.toString();
+	}
 
 	/**
 	 * The method used to set the contract signer information
@@ -3731,43 +3750,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}   	
-		return items;
-	}
-
-	/**
-	 * The method used for generating a list of available contract signer
-	 * as selection.
-	 * 
-	 * @return the selection list of contract signer
-	 */
-	public SelectItem[] getContractSignerDropdown() {
-		SelectItem[] items = null;  
-		IUserSO userSO = null;
-		UserReqDTO reqDTO  = null;
-		UserResDTO resDTO  = null;
-		try {
-			int i = 1;
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			reqDTO = new UserReqDTO();
-			reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());	
-			reqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-			reqDTO.setApprovalLimit(newOverallContractAmt());
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
-
-			items = new SelectItem[resDTO.getUserList().size()+1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
-			for (PmUser pmUser : resDTO.getUserList()) {
-				items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally{
-			resDTO = null;
-			userSO = null;
-		}
 		return items;
 	}
 
