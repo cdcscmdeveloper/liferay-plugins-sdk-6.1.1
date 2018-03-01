@@ -24,7 +24,7 @@
 				<td>
 					<p:outputPanel id="opUserLov">
 					<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						update="@form" readonly="true"
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						selectionMode="single"
@@ -40,7 +40,7 @@
 						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td><p:inputText id="loaSignerDesigId" disabled="#{directLOABackingBean.managedBean.readOnly}"
+				<td><p:inputText id="loaSignerDesigId" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
 						size="40">
