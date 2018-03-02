@@ -2191,15 +2191,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			searchBean.setNavigatable(true);
 			searchBean.setNoOfRowsPerPage(15);
 			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(
-							new SearchFilterBean(
-									"uomCode",
-									SearchOperator.OPERATOR_LIKE.value(),
-									searchText,true),
-							new SearchFilterBean(
-									"uomName",
-									SearchOperator.OPERATOR_LIKE.value(),
-									searchText!=null?searchText.toLowerCase():searchText,SearchCondition.CONDITION_OR.value())));
+					new SearchFilterBean(
+							"uomName",
+							SearchOperator.OPERATOR_LIKE.value(), 
+							searchText,
+							true));
 					
 			reqDTO.setMeasurementSearchBean(searchBean);
 			return uomSo.retrieveMeasurementBySearch(reqDTO)
