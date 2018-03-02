@@ -448,6 +448,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				getManagedBean().setPmUser(reqDTO.getPmUser());
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
+				getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+				for(FlDeliveryOrder flDeliveryOrder : getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+					if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().getDelOrderList().add(flDeliveryOrder);
+					}
+				}
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
