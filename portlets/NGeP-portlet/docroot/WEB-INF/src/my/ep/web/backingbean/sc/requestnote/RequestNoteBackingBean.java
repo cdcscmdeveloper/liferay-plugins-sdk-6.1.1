@@ -892,10 +892,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							Long itemId = requestNoteDtl.getRequestItem().getCmItem()
 									.getItemId();
 							flReqDTO.setItemId(itemId);
+							debugLogger("Item Id : " + itemId);
 							flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
+							Long supplierId = requestNoteDtl.getScRequestSupplierItem().getSupplierId();
 							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
 									.getOrgProfileId());
-							flReqDTO.setSupplierId(requestNoteDtl.getScRequestSupplierItem().getSupplierId());
+							flReqDTO.setSupplierId(supplierId);
+							debugLogger("Supplier Id : " + supplierId);
 							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
 							BigDecimal totalAmt = itemSummarySO
