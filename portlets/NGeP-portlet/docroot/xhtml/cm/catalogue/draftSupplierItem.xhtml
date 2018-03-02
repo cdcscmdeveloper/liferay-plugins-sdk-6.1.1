@@ -104,13 +104,14 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			
+			<div class="ddlAuto">
 			<p:autoComplete id="uomDraftId" size="20" var="pmUom" converter="PmUomConverter"
 							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
 							itemValue="#{pmUom}" 
 							value="#{selectedSuppCat.pmUom}"
 							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
 							maxResults="15" dropdown="false" forceSelection="true" />
+			</div>
 		</p:column>
 		<p:column width="2%">
 			<f:facet name="header">

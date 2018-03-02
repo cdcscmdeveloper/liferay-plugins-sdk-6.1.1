@@ -189,12 +189,16 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:autoComplete id="uomDetId" size="40" var="pmUom" converter="PmUomConverter"
+					<td>
+						<div class="ddlAuto">
+						<p:autoComplete id="uomDetId" size="40" var="pmUom" converter="PmUomConverter"
 							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
 							itemValue="#{pmUom}" 
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom}"
 							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
-							maxResults="15" dropdown="false" forceSelection="true" /></td>
+							maxResults="15" dropdown="false" forceSelection="true" />
+						</div>
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35" maxlength="50"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
