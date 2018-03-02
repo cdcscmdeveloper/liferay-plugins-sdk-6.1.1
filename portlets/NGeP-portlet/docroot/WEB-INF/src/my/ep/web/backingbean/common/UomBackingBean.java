@@ -64,7 +64,7 @@ public class UomBackingBean extends BaseBackingBean<UomManagedBean> implements S
 		private static final long serialVersionUID = 1L;
 
 		public UnitOfMeasurementPagingDataModel() {
-			super("measurementSR");
+			super("measurementSR",false);
 		}
 
 		@Override
