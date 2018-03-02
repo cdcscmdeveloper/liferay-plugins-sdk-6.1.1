@@ -3683,3 +3683,13 @@ table.rptTbl {
     
     width: auto !important;
 }
+
+.ui-autocomplete-list-item {
+    border: 0px none;
+    cursor: pointer;
+    font-weight: normal;
+    margin: 1px 0;
+    padding: 3px 5px;
+    text-align: left;
+    white-space: nowrap !important;
+}
