@@ -103,6 +103,7 @@
 			<h:panelGroup layout="block" style="width:120px;">
 				<p:autoComplete id="uom" required="#{isValidationReq}" size="10"
 					label="#{lbl['lbl.tpl.spec.content.uom']}"
+					  title="#{templateSpecBackingBean.retriveUomCodeDesc(pmUom)}" 
 					value="#{question.clUom}" converter="PmUomConverter" 
 					var="pmUom" itemLabel="#{templateSpecBackingBean.retriveUomCodeDesc(pmUom)}" itemValue="#{pmUom}"
 					completeMethod="#{templateSpecBackingBean.autoCompleteUom}"
@@ -112,6 +113,9 @@
 						listener="#{templateSpecBackingBean.uomValuesClearListener(question)}"
 						partialSubmit="true" process="@this" update="@this, @([id$=freqUOMPG],[id$=dayUOMPG],[id$=monthUOMPG],[id$=qtyPG])" />
 				</p:autoComplete>
+					<p:commandLink oncomplete="uomRefDialog.show();" value="#{lbl['lbl.tpl.spec.content.uom']}" style="font-size:10px;font-style:italic"
+					action="#{uomBackingBean.resetMeasurementSearch}" process="@this" rendered="#{isQuestionTypeItem}"
+					update="@([id$=uomRefDlg])"/>
 				<p:message id="uomMsg" for="uom" display="icon" />
 			</h:panelGroup>
 		</c:if>
