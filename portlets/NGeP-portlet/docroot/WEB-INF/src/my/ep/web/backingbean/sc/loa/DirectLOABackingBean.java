@@ -7801,9 +7801,10 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		ScLoaWitness witness = this.getManagedBean().getLoaSupplierWitness();
 		PmUser ackBy = scLoa.getAckBy();
-		if(witness == null || witness.getWitnessName().isEmpty() || witness.getIdentificationNo().isEmpty() ||
-				witness.getDesignation().isEmpty() || witness.getAddress().isEmpty() || 
-				witness.getPhoneNo().isEmpty() || witness.getFaxNo().isEmpty()) {
+		if(witness == null || 
+				StringUtils.isBlank(witness.getWitnessName()) || StringUtils.isBlank(witness.getIdentificationNo()) ||
+				StringUtils.isBlank(witness.getDesignation()) || StringUtils.isBlank(witness.getAddress()) || 
+				StringUtils.isBlank(witness.getPhoneNo()) || StringUtils.isBlank(witness.getFaxNo())) {
 			throw new EpException(MessageConst.ERROR_760442);
 		}
 		if(ackBy == null || ackBy.getUserName().isEmpty()) {
