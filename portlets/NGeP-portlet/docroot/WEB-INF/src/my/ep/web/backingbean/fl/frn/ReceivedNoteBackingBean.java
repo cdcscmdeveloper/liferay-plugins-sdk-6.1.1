@@ -878,6 +878,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			doBB.getManagedBean().setHyperLinkPage(true);
 			doBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			doBB.getManagedBean().setSupplierUserName(PmCommonUtil.retriveUserName(resDTO.getFlDeliveryOrder().getCreatedBy()));
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
