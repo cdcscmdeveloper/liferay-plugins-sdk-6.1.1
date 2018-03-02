@@ -3678,3 +3678,8 @@ table.rptTbl {
 	border-radius: 0 px;
 	height: 16 px !important;
 }
+
+.ui-shadow {
+    
+    width: auto !important;
+}
