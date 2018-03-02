@@ -101,9 +101,7 @@
 					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
 				</c:if>
 				
-				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) or isSqSpec}">
-					<ac:lovPopup />
-				</c:if>
+			
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
@@ -278,7 +276,7 @@
 			</c:if>
 			
 			<c:if test="#{isContentTypeQuestionAndAnswer}">
-				<ac:lovPopup />
+				
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsAndAnswers" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
