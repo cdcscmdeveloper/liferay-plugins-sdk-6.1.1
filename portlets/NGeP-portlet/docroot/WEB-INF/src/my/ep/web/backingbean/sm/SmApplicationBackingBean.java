@@ -536,11 +536,14 @@ public class SmApplicationBackingBean extends
 
 								// for application that is not yet active, will
 								// automatically initiate new BPM task
-								getManagedBean()
-										.setSmAppl(
-												SmApplicationUtil
-														.initiateMofApplNewBpmTask(getManagedBean()
-																.getSmAppl()));
+								if (!getManagedBean().getSmAppl()
+										.isActiveAppl()) {
+									getManagedBean()
+											.setSmAppl(
+													SmApplicationUtil
+															.initiateMofApplNewBpmTask(getManagedBean()
+																	.getSmAppl()));
+								}
 
 								prerenderApplicationForResubmission();
 							}
@@ -7349,7 +7352,7 @@ public class SmApplicationBackingBean extends
 			setSupplierChangeValues(currentPageType);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
-
+			String oriApplNo = bpmAppl.getApplNo();
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 			}
@@ -7382,16 +7385,18 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			log.info(">>>>>>>>TASK ID BEFORE:" + getManagedBean().getTaskId()
-					+ "<<<<<<<<");
-			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
-			getManagedBean().setTaskId(resDTO.getTaskId());
-			log.info(">>>>>>>>TASK ID AFTER:" + getManagedBean().getTaskId()
-					+ "<<<<<<<<");
-			log.info("******* From SO ******** " + resDTO.isBpmSuccess());
-			valid = resDTO.isBpmSuccess();
+			if (reqDTO.getSmAppl().isActiveAppl()) {
+				resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
+				valid = resDTO.isBpmSuccess();
+			} else {
+				resDTO = regSo.saveNewDraftApplication(reqDTO);
+
+				reqDTO.setSmAppl(resDTO.getSmAppl());
+				resDTO = regSo.initiateMofApplNewBpmTask(reqDTO);
+				getManagedBean().setTaskId(resDTO.getTaskId());
+				valid = resDTO.isBpmSuccess();
+			}
 			if (!valid) {
-				log.info("******* Process No Valid ******");
 				throw new EpException(MessageConst.ERROR_700020);
 			}
 			return valid;
