@@ -196,10 +196,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			reqDTO.setSupplier(hasSupplierRole());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			
+			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
 						FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
+						flDeliveryOrder.setDeliveryOrderNo(deliveryOrderSO.generateDeliveryOrderNumber(reqDTO).getDocNo());
 						flDeliveryOrder.setSupplierDoRef(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
 						flDeliveryOrder.setEstStartDate(flDeliveryAddress.getStartDate());
 						flDeliveryOrder.setEstEndDate(flDeliveryAddress.getEndDate());
@@ -248,10 +252,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				}
 			}
 			
-			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
-			
 			reqDTO.setFulfilmentOrderId(Long.valueOf(flOrderId));
-			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
