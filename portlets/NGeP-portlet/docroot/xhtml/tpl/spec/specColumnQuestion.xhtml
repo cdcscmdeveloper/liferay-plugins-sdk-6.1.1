@@ -101,9 +101,8 @@
 
 		<c:if test="#{updateSpec}">
 			<h:panelGroup layout="block" style="width:120px;">
-			<div class="ddlAuto">
 				<p:autoComplete id="uom" required="#{isValidationReq}" size="10"
-					label="#{lbl['lbl.tpl.spec.content.uom']}"
+					label="#{lbl['lbl.tpl.spec.content.uom']}" panelStyleClass="uomAuto"
 					  title="#{templateSpecBackingBean.retriveUomCodeDesc(pmUom)}" 
 					value="#{question.clUom}" converter="PmUomConverter" 
 					var="pmUom" itemLabel="#{templateSpecBackingBean.retriveUomCodeDesc(pmUom)}" itemValue="#{pmUom}"
@@ -119,7 +118,6 @@
 					action="#{uomBackingBean.resetMeasurementSearch}" process="@this" rendered="#{isQuestionTypeItem}"
 					update="@([id$=uomRefDlg])"/>
 				<p:message id="uomMsg" for="uom" display="icon" />
-				</div>
 			</h:panelGroup>
 		</c:if>
 		<c:if test="#{!updateSpec}">
