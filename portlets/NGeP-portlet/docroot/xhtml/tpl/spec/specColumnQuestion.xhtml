@@ -114,7 +114,7 @@
 						partialSubmit="true" process="@this" update="@this, @([id$=freqUOMPG],[id$=dayUOMPG],[id$=monthUOMPG],[id$=qtyPG])" />
 				</p:autoComplete>
 				
-					<p:commandLink oncomplete="uomRefDialog.show();" value="#{lbl['lbl.tpl.spec.content.uom']}" style="font-size:10px;font-style:italic"
+					<p:commandLink oncomplete="uomRefDialog.show();" value="UOM" style="font-size:10px;font-style:italic"
 					action="#{uomBackingBean.resetMeasurementSearch}" process="@this" rendered="#{isQuestionTypeItem}"
 					update="@([id$=uomRefDlg])"/>
 				<p:message id="uomMsg" for="uom" display="icon" />
