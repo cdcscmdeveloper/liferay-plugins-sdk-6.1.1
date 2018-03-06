@@ -106,6 +106,7 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<DeliveryOrderManagedBean> {
 	 
+	private static final long serialVersionUID = 1L;
 	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
 	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
@@ -200,10 +201,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				String deliveryOrderNumbers = "";
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
 						FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
 						flDeliveryOrder.setDeliveryOrderNo(deliveryOrderSO.generateDeliveryOrderNumber(reqDTO).getDocNo());
+						deliveryOrderNumbers = deliveryOrderNumbers + "," + flDeliveryOrder.getDeliveryOrderNo();
 						flDeliveryOrder.setSupplierDoRef(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
 						flDeliveryOrder.setEstStartDate(flDeliveryAddress.getStartDate());
 						flDeliveryOrder.setEstEndDate(flDeliveryAddress.getEndDate());
@@ -236,6 +239,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						reqDTO.getDeliveryOrdersList().add(flDeliveryOrder);
 					}
 				}
+				log.info("DeliveryOrderBackingBean.createDeliveryOrder(). Delivery Order Number are generated. "+deliveryOrderNumbers);
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					flDeliveryAddress.getFlTempDoAddr().setFlDeliveryAddress(flDeliveryAddress);
