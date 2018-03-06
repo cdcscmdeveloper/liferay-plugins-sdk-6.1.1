@@ -7352,7 +7352,6 @@ public class SmApplicationBackingBean extends
 			setSupplierChangeValues(currentPageType);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
-			String oriApplNo = bpmAppl.getApplNo();
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 			}
@@ -7395,6 +7394,11 @@ public class SmApplicationBackingBean extends
 				resDTO = regSo.initiateMofApplNewBpmTask(reqDTO);
 				getManagedBean().setTaskId(resDTO.getTaskId());
 				valid = resDTO.isBpmSuccess();
+				
+				if(!valid && resDTO.getSmAppl()!=null){
+					reqDTO.setSmAppl(resDTO.getSmAppl());
+					regSo.rollbackNewDraftApplication(reqDTO);
+				}
 			}
 			if (!valid) {
 				throw new EpException(MessageConst.ERROR_700020);
