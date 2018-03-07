@@ -18,7 +18,6 @@ import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -138,7 +137,6 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
-import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -168,7 +166,6 @@ import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
-import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -5611,10 +5608,10 @@ public class SmApplicationUtil {
 					new FacesScopes().getUserLocale().getLanguage());
 			for (SmSiteVisitFacilityVO facVO : voList) {
 
-				// add headquarters address to site visit
+				// add company basic address to site visit
 				if (!SmCommonUtil.isCollectionEmpty(facVO.getHeadQuarters())) {
-					for (SmFacility hq : facVO.getHeadQuarters()) {
-						if (hq.isSelected()) {
+					for (SmCompanyAddress basic : facVO.getHeadQuarters()) {
+						if (basic.isSelected()) {
 
 							// set smSvTask related table
 							setSmSvTask(
@@ -5622,8 +5619,8 @@ public class SmApplicationUtil {
 									bumiType,
 									facVO,
 									svTask,
-									hq.getSmAddress(),
-									hq.getFacilityId(),
+									basic.getSmAddress(),
+									basic.getCompanyAddressId(),
 									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ);
 						}
 					}
@@ -5929,8 +5926,6 @@ public class SmApplicationUtil {
 				SmSiteVisitFacilityVO facVO = new SmSiteVisitFacilityVO();
 				facVO.setCatTypeLabel(SupplierManagementConst.FACILITY_TYPE_MAP
 						.get(hq.getFacilityType()));
-				facVO.setHeadQuarters(new ArrayList<SmFacility>());
-				facVO.getHeadQuarters().add(hq);
 				facVO.setAssocCompanies(managedBean.getSmAppl()
 						.getSmAssociateCompanies());
 				facVO.setSuppBranches(managedBean.getSmAppl()
@@ -6099,8 +6094,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean) {
 		// only check for application not in site visit after approved
 		if (!bean.isSiteVisitAfterApproval()) {
-//			removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
-//					.getBasicCompanyFacility().getFacilityType());
+			// removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
+			// .getBasicCompanyFacility().getFacilityType());
 			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
 			removeTravellingSoftwareIfNotApplicable(bean);
 			removeEquipmentIfNotApplicable(bean);
@@ -9713,10 +9708,11 @@ public class SmApplicationUtil {
 					}
 
 					// add HQ
-					vo.setHeadQuarters(new ArrayList<SmFacility>());
+					vo.setHeadQuarters(new ArrayList<SmCompanyAddress>());
 					vo.getHeadQuarters().add(
-							(SmFacility) SerializationUtils
-									.clone(getHqFacilityByAppl(smAppl)));
+							(SmCompanyAddress) SerializationUtils.clone(smAppl
+									.getSmCompanyBasic()
+									.getSmCompanyAddresses().get(0)));
 
 					// add associate company
 					vo.setAssocCompanies(new ArrayList<SmAssociateCompany>());
