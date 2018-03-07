@@ -4761,7 +4761,7 @@ public class SmCommonUtil {
 	}
 
 	public void setSmSvAddressInfoBySiteTypeAndRefId(String siteType,
-			Long refId, SmSvAddress svAddress) {
+			Long refId, SmSvAddress svAddress, Long applId) {
 		SiteVisitReqDTO svReqDTO = new SiteVisitReqDTO();
 		svReqDTO.setSiteType(svAddress.getSiteType());
 		svReqDTO.setRefId(svAddress.getSiteRefId());
@@ -4783,6 +4783,20 @@ public class SmCommonUtil {
 						.getParameterDesc(
 								ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
 								facility.getFacilityType()));
+				
+				if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)){
+					MofRegistrationReqDTO mofRegDTO = new MofRegistrationReqDTO();
+					mofRegDTO.setApplId(applId);
+					MofRegistrationResDTO mofRegResDTO = SmServiceLookup.getMofRegistrationSO()
+							.retrieveSmCompanyBasicByApplId(mofRegDTO);
+					
+					if(mofRegResDTO.getCompanyBasicList().size() > 0){
+						SmCompanyBasic compBasic = mofRegResDTO.getCompanyBasicList().get(0);
+						if(compBasic.getSmCompanyAddresses().size() > 0){
+							svAddress.setAddress(compBasic.getSmCompanyAddresses().get(0).getSmAddress());
+						}
+					}
+				}
 			} else if (siteType
 					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH)) {
 				SmSupplierBranch branch = (SmSupplierBranch) site;
