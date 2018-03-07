@@ -322,7 +322,7 @@ public class SvcSiteAssignBackingBean extends
 				
 				if(svTask.getSmSvAddress() != null){
 					SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(svTask.getSmSvAddress().getSiteType(),
-							svTask.getSmSvAddress().getSiteRefId(),svTask.getSmSvAddress());
+							svTask.getSmSvAddress().getSiteRefId(),svTask.getSmSvAddress(), getManagedBean().getSmAppl().getApplId());
 					
 					
 				}

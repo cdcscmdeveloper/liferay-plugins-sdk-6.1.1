@@ -327,7 +327,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("SV address id>>>>>>>>." + smSvTask.getSmSvAddress().getSvAddressId());
 			
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
-					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress());
+					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
 			//smSvTask.getSmSvAddress().setAddress(getSmAddressById(smSvTask.getSmSvAddress().getSiteRefId()));
 		}
 		
@@ -2363,7 +2363,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		for(SmSvTask smSvTask : appl.getSmSvTasks()){
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
-					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress());
+					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), appl.getApplId());
 		}
 
 	}
