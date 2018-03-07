@@ -293,6 +293,8 @@ public class CreateQtBackingBean extends
 			if (pmOrgProfile != null) {
 				scQt.setPmOrgProfile(pmOrgProfile);
 				scQt.setOwnerOrgProfile(pmOrgProfile);
+				scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+				scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
 				// check whether ptj have the special approval or not for login user
 				PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile
 						.getOrgProfileId());
