@@ -565,8 +565,11 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getProductOrService()));
 				}
+				
+				Long userId = new FacesScopes().getUserSessionBean().getUserId();
 
 				QuoteReqDTO reqDTO = new QuoteReqDTO();
+				reqDTO.setUserId(userId);
 				reqDTO.setSearchQuoteBean(searchBean);
 
 				IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance()
