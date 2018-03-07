@@ -892,14 +892,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * 
 	 * @return the selection list of year
 	 */
-	public List<String> getYearList() {	 
-		if (getManagedBean().getYearList() == null) {
-			getManagedBean().setYearList(new ArrayList<String>());
-			int startYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
-			int endYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
-			for (int i = startYear; i <= endYear; i++) {
-				getManagedBean().getYearList().add(String.valueOf(i));
-			}
+	public List<String> getYearList() {
+		getManagedBean().setYearList(new ArrayList<String>());
+		int startYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+		int endYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+		for (int i = startYear; i <= endYear; i++) {
+			getManagedBean().getYearList().add(String.valueOf(i));
 		}
 		return getManagedBean().getYearList();
 	}
