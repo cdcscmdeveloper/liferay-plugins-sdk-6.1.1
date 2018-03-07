@@ -5,6 +5,7 @@ import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -18,7 +19,7 @@ public class SmSiteVisitFacilityVO implements Serializable {
 	private String catTypeLabel;
 	private List<SmSupplierCategory> suppCategories;
 	private List<SmFacility> facilities;
-	private List<SmFacility> headQuarters;
+	private List<SmCompanyAddress> headQuarters;
 	private List<SmAssociateCompany> assocCompanies;
 	private List<SmSupplierBranch> suppBranches;
 	private boolean shareAddress;
@@ -71,11 +72,11 @@ public class SmSiteVisitFacilityVO implements Serializable {
 		this.l3 = l3;
 	}
 
-	public List<SmFacility> getHeadQuarters() {
+	public List<SmCompanyAddress> getHeadQuarters() {
 		return headQuarters;
 	}
 
-	public void setHeadQuarters(List<SmFacility> headQuarters) {
+	public void setHeadQuarters(List<SmCompanyAddress> headQuarters) {
 		this.headQuarters = headQuarters;
 	}
 

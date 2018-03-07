@@ -3412,10 +3412,7 @@ public class SmCommonUtil {
 	}
 
 	public static boolean isCollectionEmpty(Collection<?> value) {
-		if (value == null || value.isEmpty()) {
-			return true;
-		}
-		return false;
+		return EntityHelper.isCollectionEmpty(value);
 	}
 
 	public static void checkEmailDomainWithExceptionMsg(String emailOwner,
