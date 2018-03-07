@@ -10035,10 +10035,10 @@ public class SmApplicationBackingBean extends
 		for (SmSiteVisitFacilityVO siteVisit : getManagedBean()
 				.getBumiSiteVisitVOList()) {
 			if (!SmCommonUtil.isCollectionEmpty(siteVisit.getHeadQuarters())) {
-				for (SmFacility fac : siteVisit.getHeadQuarters()) {
-					if (fac.isSelected()) {
-						getManagedBean().getSelectedFactoryFacilities()
-								.add(fac);
+				for (SmCompanyAddress addr : siteVisit.getHeadQuarters()) {
+					if (addr.isSelected()) {
+//						getManagedBean().getSelectedFactoryFacilities()
+//								.add(fac);
 					}
 				}
 			}
