@@ -296,8 +296,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 					setFulfilmentNoteField(resDTO);
 				}
-			} else {
-				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
 			receivedNoteSO = null;
@@ -690,11 +688,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractId(fulfilmentNote.getFlRequest().getCtContract().getContractId());
 				if(!contractSO.checkContractStatus(contractReqDTO).isActive()) {
-					throw new EpException(MessageConst.ERROR_700020);
+					throw new EpException(MessageConst.ERROR_740056);
 				}
 			} else if((fulfilmentNote.getReceivedDate().after(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) 
 					|| fulfilmentNote.getReceivedDate().before(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate()))){
-				throw new EpException(MessageConst.ERROR_700020);
+				throw new EpException(MessageConst.ERROR_740021);
 			}
 		}
 		
