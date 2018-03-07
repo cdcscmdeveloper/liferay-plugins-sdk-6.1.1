@@ -687,8 +687,11 @@ public class QTDetailBackingBean extends
 
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileDtlByProfileId(reqDTO);
+			
+			PmOrgProfile orgProfile = resDTO.getPmOrgProfile();
 
-			scQT.setPmOrgProfile(resDTO.getPmOrgProfile());
+			scQT.setPmOrgProfile(orgProfile);
+			scQT.setOrgProfileId(orgProfile.getOrgProfileId());
 
 		} finally {
 			orgProfileSO = null;

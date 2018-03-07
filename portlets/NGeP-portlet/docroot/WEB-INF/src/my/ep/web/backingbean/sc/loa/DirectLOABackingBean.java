@@ -2081,6 +2081,8 @@ public class DirectLOABackingBean extends
 		PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
 		scQt.setPmOrgProfile(pmOrgProfile);
 		scQt.setOwnerOrgProfile(pmOrgProfile);
+		scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+		scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
 		this.getManagedBean()
 				.getScLoa()
 				.getScLoiLoa()
