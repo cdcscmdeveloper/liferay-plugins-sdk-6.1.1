@@ -117,7 +117,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.util.shared.PerformanceBondUtil;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -2317,11 +2317,6 @@ public class QTDocumentsBackingBean extends
 			ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 
-		PmOrgProfile pmOrgProfile = qt.getPmOrgProfile();
-		CommonUtils commonUtils = new CommonUtils();
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 
 		FacesScopes fs = new FacesScopes();
@@ -2329,80 +2324,36 @@ public class QTDocumentsBackingBean extends
 				+ fs.getRequest().getServerPort();
 		context.put("hostUrl", hostUrl);
 
-		IAddressSO addressSO = null;
-		PmAddressType pmAddressType = null;
-		try {
-			addressSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if (resDTO.getAddressTypeList().size() > 0) {
-				pmAddressType = resDTO.getAddressTypeList().get(0);
-			}
-		} finally {
-			addressSO = null;
-		}
 		log.debug("======currentstatusid generateSampleSuratSetujuTerimaPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
-		String ptjName=" ";
-		if(null!=this.getManagedBean().getCurrentStatusId()){
-		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
+		
+		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		
+		String procurementMode = "";
+		
+		if(qt.getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
+			procurementMode = ResourceBundleUtils.getMessage("lbl.rpt.drpdown.tenderLabel",ResourceBundleUtils.BUNDLE_COMMON_LABELS, myLocale);
 		}else{
-			ptjName=qt.getPmOrgProfile().getOrgName();
+			procurementMode = ResourceBundleUtils.getMessage("lbl.rpt.drpdown.quotationLabel",ResourceBundleUtils.BUNDLE_COMMON_LABELS, myLocale);
 		}
-		log.debug("=======ptjName====="+ptjName);
-		context.put("agency", ptjName);
-		context.put("ministry", pmOrgProfile.getParentOrgProfile().getOrgName());
-
-		String agencyAddress = "";
-		String agencyPhoneNo = "";
-		String agencyFaxNo = "";
-		if (pmAddressType != null) {
-			PmAddress pmAddress = pmAddressType.getPmAddress();
-			agencyAddress = getFullAddress(pmAddress);
-			agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
-			agencyPhoneNo = pmAddress.getPhoneNo();
-			agencyFaxNo = pmAddress.getFaxNo();
-		}
-		context.put("agencyAddress", agencyAddress);
-		context.put("agencyPhoneNo", agencyPhoneNo);
-		context.put("agencyFaxNo", agencyFaxNo);
-		context.put("fileNo", qt.getFileNo());
-
-		StringBuilder procurementMode = new StringBuilder();
-		if (procurementMode != null) {
-			procurementMode.append(getParameterDesc(qt.getProcurementMode()));
-		}
+		
 		context.put("procurementMode", procurementMode);
+		context.put("qtNo", qt.getQtNo());	
+		
 		String title = qt.getQtTitle();
 		if (title == null) {
 			title = "";
 		}
+		
 		title=title.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 		context.put("title", title);
 
-		String estimatedPrice = "";
-		if (qt.getEstimatedAmount() != null) {
-			estimatedPrice = amountDF.format(qt.getEstimatedAmount());
-		}
-		context.put("estimatedPrice", estimatedPrice);
-		boolean isPerformanceBondReq = false;
-		List<ScQtCategory> qtCategories = qt.getScQtCategorys();
-		if (qt.getEstimatedAmount() != null && PerformanceBondUtil.isPerformanceBondRequired(
-				qt.getEstimatedAmount(), qtCategories)) {
-			isPerformanceBondReq = true;
-		}
-		context.put("isPerformanceBondReq", isPerformanceBondReq);
-
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_QT_LOA_SAMPLE, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
-
 	/**
 	 * Generate sample surat pdf from velocity.
 	 * 
