@@ -365,13 +365,17 @@ public class SmApplicationUtil {
 		boolean addedNewCode = false;
 		List<String> applTypes = Arrays.asList(
 				ParameterConst.NEW_SM_APPLN_FOR_MOF,
-				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 
 		if (applTypes.contains(managedBean.getSmAppl().getApplType())) {
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					addedNewCode = true;
 					break;
 				}
@@ -381,7 +385,6 @@ public class SmApplicationUtil {
 		}
 
 		return addedNewCode;
-
 	}
 
 	/**
