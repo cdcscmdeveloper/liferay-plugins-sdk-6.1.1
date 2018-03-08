@@ -198,6 +198,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 			
+			reqDTO.setInvoice(invoice);
+			// Generate invoice number
+			if(invoice.isBrandNew()) {
+				invoice.setInvoiceNo(invoiceSO.generateInvoiceNumber(reqDTO).getInvoiceNo());
+				log.info("InvoiceBackingBean.submitAction(). A new invoice number is generated. "+invoice.getInvoiceNo());
+			}
 			// Need to call this as user may not click on summary menu
 			calInvSummary();
 			// Check is it DAN exist
@@ -237,7 +243,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 			}
 			reqDTO.setApproverUserList(listOfApprover);
-			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
