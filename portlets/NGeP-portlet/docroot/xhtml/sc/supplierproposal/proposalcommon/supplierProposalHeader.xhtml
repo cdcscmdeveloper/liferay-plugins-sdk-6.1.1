@@ -28,7 +28,7 @@
 					</td>
 					
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td class="header-info-text">#{lbl[isSubmitted ? 'lbl.sc.proposal.submitted.status' : 'lbl.sc.proposal.not.submitted.status']}
+					<td class="header-info-text">#{isSubmitted ? lbl['lbl.sc.proposal.submitted.status'] : supplierProposalDetailBackingBean.getStatusDescById(supplierProposalDetailBackingBean.managedBean.qt.qtStatus.statusId)}
 					</td>
 					
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.proposal.submitted.date']}" /></td>
