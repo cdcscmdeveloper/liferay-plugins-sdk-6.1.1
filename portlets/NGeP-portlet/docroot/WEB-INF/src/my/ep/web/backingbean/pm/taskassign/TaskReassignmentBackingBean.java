@@ -1971,6 +1971,20 @@ public class TaskReassignmentBackingBean extends
 								SearchOperator.OPERATOR_EQUALS
 										.value(), addressId));
 				
+				searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean(
+						"pmAddressTypes.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS
+								.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean(
+						"pmAddressTypes.pmAddress.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS
+								.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				
 			}else{
 				// not allow to search
 				isSearched = true;
