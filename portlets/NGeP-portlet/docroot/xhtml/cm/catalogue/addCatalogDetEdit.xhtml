@@ -191,7 +191,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 						
-						<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" size="40" var="pmUom" converter="PmUomConverter"
+						<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" scrollHeight="250" size="40" var="pmUom" converter="PmUomConverter"
 							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
 							itemValue="#{pmUom}" 
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom}"
