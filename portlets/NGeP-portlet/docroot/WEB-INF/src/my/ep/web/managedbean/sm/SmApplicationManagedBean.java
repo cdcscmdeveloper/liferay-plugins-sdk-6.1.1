@@ -142,7 +142,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String selectedSubChildCat;
 	private List<PmCategoryL1> defaultParentCatList;
 	private SmSupplierCategory selectedCategory;
-	private List<SmSupplierCategory> selectedCategories;
 	private List<SmSupplierCategory> deleteCategoryList;
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierCategory> deleteExistingCategoryList;
@@ -622,8 +621,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		editVO = new SmSectionEditorVO();
 		supplierEditVO = new SmSectionEditorVO();
-
-		selectedCategories = new ArrayList<SmSupplierCategory>();
 		selectedBranch = new SmSupplierBranch();
 		selectedBranch.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedBranch.setSmPersonnel(new SmPersonnel());
@@ -1170,15 +1167,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedTemplateList(
 			List<SvcTemplateBean> selectedTemplateList) {
 		this.selectedTemplateList = selectedTemplateList;
-	}
-
-	public List<SmSupplierCategory> getSelectedCategories() {
-		return selectedCategories;
-	}
-
-	public void setSelectedCategories(
-			List<SmSupplierCategory> selectedCategories) {
-		this.selectedCategories = selectedCategories;
 	}
 
 	public String[] getBpmActions() {
