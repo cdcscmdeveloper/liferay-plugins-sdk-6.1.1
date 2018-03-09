@@ -10026,27 +10026,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * On click check or uncheck check box for site visit facility address
-	 * assignment
-	 */
-	public void onCheckedSiteVisitFacilityAddress() {
-		getManagedBean().setSelectedFactoryFacilities(
-				new ArrayList<SmFacility>());
-		for (SmSiteVisitFacilityVO siteVisit : getManagedBean()
-				.getBumiSiteVisitVOList()) {
-			if (!SmCommonUtil.isCollectionEmpty(siteVisit.getHeadQuarters())) {
-				for (SmCompanyAddress addr : siteVisit.getHeadQuarters()) {
-					if (addr.isSelected()) {
-//						getManagedBean().getSelectedFactoryFacilities()
-//								.add(fac);
-					}
-				}
-			}
-		}
-		setSelectedSpecialCategoriesForSiteVisit();
-	}
-
-	/**
 	 * On click check or uncheck check box for site visit branches assignment
 	 */
 	public void onCheckedSiteVisitBranchAddress() {
@@ -11139,23 +11118,6 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	/**
-	 * Set selected categories for site visit based on selected facility
-	 */
-	private void setSelectedSpecialCategoriesForSiteVisit() {
-		getManagedBean().setSelectedCategories(
-				new ArrayList<SmSupplierCategory>());
-		for (SmFacility fac : getManagedBean().getSelectedFactoryFacilities()) {
-			if (SmCommonUtil.isCollectionEmpty(SmApplicationUtil
-					.getCategoryByFacType(fac.getFacilityType(),
-							getManagedBean().getSelectedCategories()))) {
-				getManagedBean().getSelectedCategories().addAll(
-						SmApplicationUtil.getCategoryByFacType(fac
-								.getFacilityType(), getManagedBean()
-								.getSplCategoryList()));
-			}
-		}
-	}
 
 	/**
 	 * Check if selected facility exist in selected facility list
