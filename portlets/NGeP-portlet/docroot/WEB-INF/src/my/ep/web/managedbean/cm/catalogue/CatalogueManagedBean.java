@@ -613,12 +613,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
+				supplierReqDTO.setAllStatuses(true);
 
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
 						.get(0).getSupplierId());
+				
+				
+				
 				reqDTO.setItemStatus("U");
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
