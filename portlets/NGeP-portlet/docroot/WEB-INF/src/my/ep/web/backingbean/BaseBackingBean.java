@@ -2191,16 +2191,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			SearchBean<PmUom> searchBean = new SearchBean<PmUom>();
 			searchBean.setNavigatable(true);
 			searchBean.setNoOfRowsPerPage(15);
+			SearchFilterBean uomNameSFB = new SearchFilterBean(
+					"uomName",
+					SearchOperator.OPERATOR_LIKE.value(),
+					searchText!=null?searchText.toLowerCase():searchText,SearchCondition.CONDITION_OR.value());
+			uomNameSFB.setCaseInsensitive(true);
 			searchBean.getDataFilterBeans().add(
 					new SearchMultiFilterBean(
 							new SearchFilterBean(
 									"uomCode",
 									SearchOperator.OPERATOR_LIKE.value(),
 									searchText,true),
-							new SearchFilterBean(
-									"uomName",
-									SearchOperator.OPERATOR_LIKE.value(),
-									searchText!=null?searchText.toLowerCase():searchText,SearchCondition.CONDITION_OR.value())));
+							uomNameSFB
+							));
 					
 			searchBean.getSortColumns().add(new SearchOrderBean("uomName"));
 			reqDTO.setMeasurementSearchBean(searchBean);
