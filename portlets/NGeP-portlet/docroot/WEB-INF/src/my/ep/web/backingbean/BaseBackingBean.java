@@ -51,6 +51,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -2191,12 +2192,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			searchBean.setNavigatable(true);
 			searchBean.setNoOfRowsPerPage(15);
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"uomName",
-							SearchOperator.OPERATOR_LIKE.value(), 
-							searchText,
-							true));
+					new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"uomCode",
+									SearchOperator.OPERATOR_LIKE.value(),
+									searchText,true),
+							new SearchFilterBean(
+									"uomName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									searchText!=null?searchText.toLowerCase():searchText,SearchCondition.CONDITION_OR.value())));
 					
+			searchBean.getSortColumns().add(new SearchOrderBean("uomName"));
 			reqDTO.setMeasurementSearchBean(searchBean);
 			return uomSo.retrieveMeasurementBySearch(reqDTO)
 					.getPmUomList();
