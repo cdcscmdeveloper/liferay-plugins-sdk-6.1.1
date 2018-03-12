@@ -228,8 +228,8 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean im
 		// response.setHeader("Content-Transfer-Encoding", "binary");
 		// fire fox issue regarding space
 		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ finalFileName);
+		response.setHeader("Content-Disposition", "attachment; filename=\""
+				+ finalFileName + "\"");
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
 
