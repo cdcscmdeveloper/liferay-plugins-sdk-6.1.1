@@ -456,7 +456,7 @@ public class EpSchedulerHelper extends QuartzAdapter {
 				if (!instance.isStarted()) {
 					log.info(">>>>>EP SCHEDULER INSTANCE IS NOT STARTED<<<<<<");
 					log.info(">>>>>EP SCHEDULER DELAYING STARTUP<<<<<<");
-					instance.start();
+					instance.startDelayed(600);
 					log.info(">>>>>EP SCHEDULER INSTANCE IS FINISH STARTED<<<<<<");
 				}
 				log.info(">>>>>EP SCHEDULER LISTENER START ADDING ALL JOBS<<<<<<");
