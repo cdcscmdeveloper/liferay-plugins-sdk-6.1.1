@@ -23,6 +23,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
@@ -201,21 +202,39 @@ public class SelfRequestSupplierAdminBackingBean extends
 					.add(getManagedBean().getSelectedAdminPermAddr());
 		}
 
-		boolean isSoftcertCatlogueReqd = (getManagedBean().getSupplier()
-				.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT) || (getManagedBean()
-				.getSupplier().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !getManagedBean()
-				.getSupplier().getSmAppl().getSmCompanyBasic().isWithFederal())) ? false
-				: true;
+		boolean isSoftcertCatlogueReqd = false;
+		int mofStatus = getManagedBean().getSupplier().getSmMofAccounts()
+				.get(0).getRecordStatusFlg();
+		if (getManagedBean().getSupplier().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				&& getManagedBean().getSupplier().getSmAppl()
+						.getSmCompanyBasic() != null
+				&& getManagedBean().getSupplier().getSmAppl()
+						.getSmCompanyBasic().isWithFederal()) {
+			isSoftcertCatlogueReqd = true;
+			if (getManagedBean().getSelectedAdmin().getSoftcertFlg() == 0) {
+				getManagedBean().getSelectedAdmin().setSoftcertFlg(
+						SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+			}
+			getManagedBean().getSelectedAdmin().setEpRole(
+					RoleCode.SUPPLIER_TEMP.value());
+		} else {
+			if (mofStatus == DbValueConst.RECORD_STATUS_ACTIVE) {
+				getManagedBean().getSelectedAdmin().setEpRole(
+						RoleCode.MOF_SUPPLIER_ADMIN.value());
+			} else if (mofStatus == DbValueConst.RECORD_STATUS_EXPIRED) {
+				getManagedBean().getSelectedAdmin().setEpRole(
+						RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			}
+			getManagedBean().getSelectedAdmin().setSoftcertFlg(0);
+		}
 
 		SelfRequestSupplierAdminReqDTO reqDTO = new SelfRequestSupplierAdminReqDTO();
 		reqDTO.setSoftcertCatalogueReqd(isSoftcertCatlogueReqd);
 		reqDTO.setSupplierAdmin(getManagedBean().getSelectedAdmin());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setBaseUrl(SmCommonUtil.getBasePortalUrl());
-		reqDTO.setMofStatus(getManagedBean().getSupplier().getSmMofAccounts()
-				.get(0).getRecordStatusFlg());
+		reqDTO.setMofStatus(mofStatus);
 
 		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
 				reqDTO);
