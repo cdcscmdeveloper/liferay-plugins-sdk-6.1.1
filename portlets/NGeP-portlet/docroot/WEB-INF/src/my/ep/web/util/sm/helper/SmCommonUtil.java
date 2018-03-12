@@ -4684,15 +4684,15 @@ public class SmCommonUtil {
 		return userResDTO.getUserIdList();
 	}
 
-	public SmSupplierCategory retrieveSupplierCategoryByApplIdAndCategoryId(
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
 			Long applId, Long categoryL3Id) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
 		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
-				.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+				.retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
 
-		return resDTO.getSupplierCategory();
+		return resDTO.getSmSupplierCategoryList();
 	}
 
 	/**
@@ -4765,7 +4765,7 @@ public class SmCommonUtil {
 		SiteVisitReqDTO svReqDTO = new SiteVisitReqDTO();
 		svReqDTO.setSiteType(svAddress.getSiteType());
 		svReqDTO.setRefId(svAddress.getSiteRefId());
-		;
+
 		Object site = SmServiceLookup.getSiteVisitSO()
 				.retrieveSmSvAddressInfoBySiteTypeAndRefId(svReqDTO).getSite();
 

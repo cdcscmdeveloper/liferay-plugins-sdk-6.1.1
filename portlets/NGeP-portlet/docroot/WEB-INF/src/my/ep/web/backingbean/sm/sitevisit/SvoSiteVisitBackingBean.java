@@ -298,7 +298,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().setCompanyAddress(getCompanyAddressInLine());
 			if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
 				getManagedBean().setSiteVisitNo(getSvTaskCountByApplIdAndCategoryId());
-				getManagedBean().setSupplierCategory(retrieveSupplierCategoryByApplIdAndCategoryL3Id());
+				List<SmSupplierCategory> catLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id();
+				if(catLs.size() > 0){
+					getManagedBean().setSupplierCategory(retrieveSupplierCategoryByApplIdAndCategoryL3Id().get(0));
+				}
+				
 				setMachineList();
 			}
 			
@@ -2512,13 +2516,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return resDTO.getSiteVisitCount();
 	}
 	
-	public SmSupplierCategory retrieveSupplierCategoryByApplIdAndCategoryL3Id(){
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryL3Id(){
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
 		reqDTO.setCategoryId(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id());
-		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(reqDTO);
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
 		
-		return resDTO.getSupplierCategory();
+		return resDTO.getSmSupplierCategoryList();
 	}
 	
 	public List<SmMachineCategory> retrieveMachineDtlByApplIdAndCategoryL3Id(Long applId, Long catL3Id){
