@@ -402,20 +402,22 @@ public class SvcSiteAssignBackingBean extends
 		
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
 			if(svTask.getPmCategoryL3() != null){
-				SmSupplierCategory suppCat = SmCommonUtil.getInstance().
+				List<SmSupplierCategory> suppCatLs = SmCommonUtil.getInstance().
 						retrieveSupplierCategoryByApplIdAndCategoryId(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id());
 				
-				if(suppCat != null){
-					StringBuilder catrStr = new StringBuilder();
-					catrStr.append(suppCat.getPmCategoryL1().getCategoryL1Code());
-					catrStr.append(suppCat.getPmCategoryL2().getCategoryL2Code());
-					catrStr.append(suppCat.getPmCategoryL3().getCategoryL3Code());
-					
-					if(!tempCatLs.contains(catrStr.toString())){
-						if(suppCat != null){
-							getManagedBean().getCategoryLs().add(suppCat);
+				if(suppCatLs.size() > 0){
+					for(SmSupplierCategory suppCat : suppCatLs){
+						StringBuilder catrStr = new StringBuilder();
+						catrStr.append(suppCat.getPmCategoryL1().getCategoryL1Code());
+						catrStr.append(suppCat.getPmCategoryL2().getCategoryL2Code());
+						catrStr.append(suppCat.getPmCategoryL3().getCategoryL3Code());
+						
+						if(!tempCatLs.contains(catrStr.toString())){
+							if(suppCat != null){
+								getManagedBean().getCategoryLs().add(suppCat);
+							}
+							tempCatLs.add(catrStr.toString());
 						}
-						tempCatLs.add(catrStr.toString());
 					}
 				}
 			}
