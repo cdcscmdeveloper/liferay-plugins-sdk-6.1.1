@@ -12,6 +12,7 @@
 
 
 	<ui:define name="contentSection">
+	<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
@@ -43,7 +44,7 @@
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true"
 			style="width:100%;">
         <ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
-        <ui:include src="/xhtml/common/uompopup.xhtml"></ui:include>
+        <ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
 			<table>
 				<tr>
 					<td valign="top"><h:outputLabel
