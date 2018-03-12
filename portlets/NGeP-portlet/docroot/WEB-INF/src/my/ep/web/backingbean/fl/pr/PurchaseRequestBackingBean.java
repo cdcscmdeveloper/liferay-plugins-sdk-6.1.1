@@ -988,7 +988,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			return false;
 		}
 		for(FlFulfilmentItemAddr flFulItemAddress:showAllItemsRows){
-			if(purchaseItem.getRequestItem().getRequestNoteItemId()+purchaseItem.getRequestItem().getUom().getUomId()==flFulItemAddress.getScRequestItem().getRequestNoteItemId()+flFulItemAddress.getPmUomId()){
+			if((""+purchaseItem.getRequestItem().getRequestNoteItemId()+purchaseItem.getRequestItem().getUom().getUomId()).equalsIgnoreCase(""+flFulItemAddress.getScRequestItem().getRequestNoteItemId()+flFulItemAddress.getPmUomId())){
 				isContains=true;
 			}
 		}
@@ -1149,7 +1149,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			boolean isExist = false;
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				if(itemAddr.getFlDeliveryAddress() == getManagedBean().getSelectedDelAddr() 
-						&& itemAddr.getScRequestItem().getRequestNoteItemId().longValue()+itemAddr.getPmUomId() == flItemAddr.getScRequestItem().getRequestNoteItemId()+flItemAddr.getPmUomId()){
+						&& (""+itemAddr.getScRequestItem().getRequestNoteItemId().longValue()+itemAddr.getPmUomId()).equalsIgnoreCase(""+flItemAddr.getScRequestItem().getRequestNoteItemId()+flItemAddr.getPmUomId())){
 
 					isExist = true;
 					break;
