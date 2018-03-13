@@ -7920,7 +7920,8 @@ public class DirectLOABackingBean extends
 		if(null != fulfillmentType) {
 			fullfillmentTypeParamCode = fulfillmentType.getParameterCode();
 		}
-
+		log.info("isFulfillmentTypeOneOffOrAsAndWhen:"+ fullfillmentTypeParamCode);
+		
 		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
 				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
 	}
