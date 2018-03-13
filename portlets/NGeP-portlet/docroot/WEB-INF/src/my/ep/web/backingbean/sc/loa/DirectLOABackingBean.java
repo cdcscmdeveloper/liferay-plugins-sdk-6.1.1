@@ -3491,9 +3491,7 @@ public class DirectLOABackingBean extends
     private void checkFulFilmentType(ScLoa scLoa){
     log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
 	PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
-	if(null!=fulfilMentType && 
-			ParameterConst.FULFILMENT_TYPE_ONE_OFF
-			.equals(fulfilMentType.getParameterCode())){
+	if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
 			this.getManagedBean()
 			.getSpecTemplateSpecBean()
 			.getSpecMaster().setDurationMonth(
@@ -7916,5 +7914,14 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
 
+	}
+	private boolean isFulfillmentTypeOneOffOrAsAndWhen(PmParameter fulfillmentType) {
+		String fullfillmentTypeParamCode = null;
+		if(null != fulfillmentType) {
+			fullfillmentTypeParamCode = fulfillmentType.getParameterCode();
+		}
+
+		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
+				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
 	}
 }
