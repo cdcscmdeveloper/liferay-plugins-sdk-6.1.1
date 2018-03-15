@@ -492,7 +492,7 @@ public class AccessApplBackingBean extends
 //						&& !this.getManagedBean().getFileEventMapper().isEmpty()) {
 //					this.getManagedBean().getFileEventMapper().clear();
 //				}
-				PmAccessAppl savedAccessAppl = reqDTO.getAccessAppl();
+				PmAccessAppl savedAccessAppl = resDTO.getAccessAppl();
 				AccessApplResDTO bpmResDTO = accessApplSO.initBPMProcess(reqDTO, savedAccessAppl);
 				if(bpmResDTO.isSuccessful()){
 					String messageId = null;
