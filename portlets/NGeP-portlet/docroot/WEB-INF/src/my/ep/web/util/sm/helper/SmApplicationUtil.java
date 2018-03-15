@@ -5580,6 +5580,52 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Validate if new special category added already assigned to facility for
+	 * site visit purpose
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void validateSpecialCategoryAssignedToFacility(
+			SmApplicationManagedBean bean) {
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+				.getSmSupplierCategories())) {
+			SmSupplierCategoryFacility tmp = null;
+			for (SmSupplierCategory cat : bean.getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.isSpecialCategory()
+						&& cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+
+					boolean exist = false;
+
+					for (SmFacility fac : bean.getSmAppl().getSmFacilities()) {
+						tmp = (SmSupplierCategoryFacility) EntityHelper
+								.getEntityBySinglePropertyFromList(cat
+										.getPmCategoryL3().getCategoryL3Id(),
+										fac.getSmSupplierCategoryFacilities(),
+										"pmCategoryL3");
+						if (tmp != null) {
+							exist = true;
+							break;
+						}
+					}
+					if (!exist) {
+						throw new EpException(MessageConst.ERROR_722627,
+								new String[] { SmCommonUtil.getMessage(
+										"lbl.sm.catCodes.catcode", null)
+										+ " "
+										+ cat.getPmCategoryL3()
+												.getFullCatcode()
+										+ " ("
+										+ cat.getPmCategoryL3()
+												.getCategoryName() + ")" });
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Construct Site visit data based on facilities and categories selected for
 	 * site visit.
 	 * 
@@ -5929,10 +5975,31 @@ public class SmApplicationUtil {
 				SmSiteVisitFacilityVO facVO = new SmSiteVisitFacilityVO();
 				facVO.setCatTypeLabel(SupplierManagementConst.FACILITY_TYPE_MAP
 						.get(hq.getFacilityType()));
-				facVO.setAssocCompanies(managedBean.getSmAppl()
-						.getSmAssociateCompanies());
-				facVO.setSuppBranches(managedBean.getSmAppl()
-						.getSmSupplierBranches());
+				facVO.setAssocCompanies(new ArrayList<SmAssociateCompany>());
+				if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
+						.getSmAssociateCompanies())) {
+					for (SmAssociateCompany assoc : managedBean.getSmAppl()
+							.getSmAssociateCompanies()) {
+						facVO.getAssocCompanies().add(
+								(SmAssociateCompany) SerializationUtils
+										.clone(assoc));
+					}
+				}
+				facVO.setSuppBranches(new ArrayList<SmSupplierBranch>());
+				if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
+						.getSmSupplierBranches())) {
+					for (SmSupplierBranch br : managedBean.getSmAppl()
+							.getSmSupplierBranches()) {
+						facVO.getSuppBranches()
+								.add((SmSupplierBranch) SerializationUtils
+										.clone(br));
+					}
+				}
+				facVO.setHeadQuarters(new ArrayList<SmCompanyAddress>());
+				facVO.getHeadQuarters().add(
+						(SmCompanyAddress) SerializationUtils.clone(managedBean
+								.getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0)));
 				managedBean
 						.setBumiSiteVisitVOList(new ArrayList<SmSiteVisitFacilityVO>());
 				managedBean.getBumiSiteVisitVOList().add(facVO);
