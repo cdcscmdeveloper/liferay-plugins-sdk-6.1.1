@@ -200,6 +200,6 @@
 		</h:outputText>
 	</p:column>
 	<p:column style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
-		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"/>
+		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);" />
 	</p:column>
 </ui:composition>
