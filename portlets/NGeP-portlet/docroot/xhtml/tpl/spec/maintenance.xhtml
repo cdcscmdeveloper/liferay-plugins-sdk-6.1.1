@@ -53,7 +53,7 @@
 						<p:inputTextarea id="title" rows="3" style="width:280px" 
 							value="#{specMaster.specName}"
 							required="true" maxlength="200"
-							onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+							onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
 							label="#{lbl['lbl.tpl.spec.title']}" disabled="#{isReadOnly}"><p:ajax partialSubmit="true" process="@this" /></p:inputTextarea>
 						<p:message id="titleMsg" for="title" display="icon" />
 					</td>
@@ -64,7 +64,7 @@
 						<p:inputTextarea id="descr" rows="3" style="width:280px" 
 							value="#{specMaster.specDesc}"
 							maxlength="500"
-							onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+							onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"
 							label="#{lbl['lbl.tpl.spec.description']}"  disabled="#{isReadOnly}"><p:ajax partialSubmit="true" process="@this" />
 							</p:inputTextarea>
 					</td>

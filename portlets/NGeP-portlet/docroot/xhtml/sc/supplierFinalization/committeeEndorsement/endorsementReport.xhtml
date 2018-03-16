@@ -60,7 +60,7 @@
 									<tr>
 										<td style="float: right; margin-left: 55px;"><p:inputTextarea
 												id="withConditionTxtId" value="#{finalization.termsText}"
-												cols="80" rows="3" onkeydown="limitTextArea(this,1000);"
+												cols="80" rows="3" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 												required="#{readOnly}" disabled="#{!readOnly}"
 												label="#{lbl['lbl.sc.sf.with.conditions.as.below']}" /> <p:message
 												id="withConditionTxtMsgId" for="withConditionTxtId"
@@ -113,9 +113,9 @@
 					<table>
 						<tr>
 							<td style="float: right; margin-left: 55px;"><p:inputTextarea
-									id="justificationTxtId"
+									id="justificationTxtId" required="#{readOnly}"
 									value="#{finalization.justificationText}" cols="80" rows="3"
-									onkeydown="limitTextArea(this,1000);" required="#{readOnly}"
+									onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 									disabled="#{!readOnly}"
 									label="#{lbl['lbl.sc.sf.justification']}" /> <p:message
 									id="justificationTxtMsgId" for="justificationTxtId"

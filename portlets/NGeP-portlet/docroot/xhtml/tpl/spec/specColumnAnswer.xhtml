@@ -153,7 +153,7 @@
 		
 		<h:panelGroup id="ansPG">
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
-			onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+			onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
 				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired and isValidationReq}" rows="1" maxlength="200"
 				label="#{lbl[answerlbl]}">
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />

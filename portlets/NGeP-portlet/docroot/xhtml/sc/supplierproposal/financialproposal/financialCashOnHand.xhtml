@@ -103,7 +103,7 @@
 					rendered="#{!isProposal}" />
 				<p:inputTextarea id="bankAddress" value="#{cashonhand.bankAddress}"
 					cols="35" rows="2" required="true" maxlength="100"
-					onkeyup="limitTextArea(this,100);"
+					onkeyup="limitTextArea(this,100);" onmouseout="limitTextArea(this,100);"
 					onkeydown="limitTextArea(this,100);" style="width : 85%;"
 					label="#{lbl['lbl.sc.address']}"
 					rendered="#{isProposal}">
