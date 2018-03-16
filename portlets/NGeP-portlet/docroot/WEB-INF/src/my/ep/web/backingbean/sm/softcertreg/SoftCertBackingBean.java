@@ -167,24 +167,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 *            usr
 	 */
 	public void getPersonnelByPmUser(PmUser usr) {
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmSupplierId(supplier.getSupplierId());
+		reqDTO.setUserId(usr.getUserId());
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
-				.retrievePersonnelBySupplierId(reqDTO);
-		if (!SmCommonUtil.isCollectionEmpty(resDTO.getSmPersonnelList())) {
-			for (SmPersonnel personnel : resDTO.getSmPersonnelList()) {
-				if (personnel.getPmUser() != null
-						&& personnel.getPmUser().getUserId() != null
-						&& usr.getUserId().compareTo(
-								personnel.getPmUser().getUserId()) == 0) {
-					this.getManagedBean().setLoginUserPersonnelInfo(personnel);
-					getManagedBean().setSmAppl(
-							getManagedBean().getLoginUserPersonnelInfo()
-									.getSmAppl());
-					break;
-				}
-			}
+				.retrievePersonnelByUserId(reqDTO);
+		if (resDTO.getSmPersonnel() != null
+				&& resDTO.getSmPersonnel().getSmAppl() != null) {
+			getManagedBean().setLoginUserPersonnelInfo(resDTO.getSmPersonnel());
+			getManagedBean().setSmAppl(resDTO.getSmPersonnel().getSmAppl());
 		}
 	}
 
@@ -1308,15 +1298,23 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel payPersonnel : getManagedBean()
 					.getSoftCertPayList()) {
-				log.info("payPersonnel: " + payPersonnel.getName() + " : " + payPersonnel.getIdentificationNo());
-				log.info("login Personnel: " + getManagedBean().getLoginUserPersonnelInfo().getName() + " : " + getManagedBean().getLoginUserPersonnelInfo().getIdentificationNo());
-				
+				log.info("payPersonnel: " + payPersonnel.getName() + " : "
+						+ payPersonnel.getIdentificationNo());
+				log.info("login Personnel: "
+						+ getManagedBean().getLoginUserPersonnelInfo()
+								.getName()
+						+ " : "
+						+ getManagedBean().getLoginUserPersonnelInfo()
+								.getIdentificationNo());
+
 				if (getManagedBean().getLoginUserPersonnelInfo() != null
 						&& !getManagedBean()
 								.getLoginUserPersonnelInfo()
-								.getIdentificationNo().trim()
+								.getIdentificationNo()
+								.trim()
 								.equalsIgnoreCase(
-										payPersonnel.getIdentificationNo().trim())) {
+										payPersonnel.getIdentificationNo()
+												.trim())) {
 					applyForOthers = true;
 				}
 			}
