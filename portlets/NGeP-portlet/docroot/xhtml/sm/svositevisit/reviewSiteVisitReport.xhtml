@@ -18,7 +18,7 @@
 
 		<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
 			<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-			value="#{svTask.pmCategoryL3.categoryL3Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code} : 
+			value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
 			#{svTask.pmCategoryL3.categoryName}"/>
 		</p:column>
 		
