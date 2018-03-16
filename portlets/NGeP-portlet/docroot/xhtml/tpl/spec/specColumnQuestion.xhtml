@@ -20,7 +20,7 @@
 				value="#{question.clItem}" rendered="#{isQuestionTypeItem}"
 				required="#{isValidationReq}" rows="5" maxlength="2000"
 				onkeyup="limitTextArea(this,2000);"
-				onkeydown="limitTextArea(this,2000);" autoResize="false"
+				onkeydown="limitTextArea(this,2000);" onmouseout="limitTextArea(this,2000);" autoResize="false"
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
@@ -31,7 +31,7 @@
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{isValidationReq}" rows="5" maxlength="1000"
 				onkeyup="limitTextArea(this,1000);"
-				onkeydown="limitTextArea(this,1000);"
+				onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				label="#{lbl['lbl.tpl.spec.content.specification']}"
 				autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -63,7 +63,7 @@
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{isValidationReq}" rows="5" maxlength="1000"
 				onkeyup="limitTextArea(this,1000);"
-				onkeydown="limitTextArea(this,1000);"
+				onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				label="#{lbl['lbl.tpl.spec.content.specification']}"
 				autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />

@@ -66,8 +66,7 @@
 				<p:inputTextarea id="bankAddress" style="width:85%;"
 					value="#{creditfacilities.bankAddress}" rows="3" required="true"
 					maxlength="100" label="#{lbl['lbl.sc.address']}"
-					rendered="#{isProposal}" onkeyup="limitTextArea(this,100);"
-					onkeydown="limitTextArea(this,100);">
+					rendered="#{isProposal}" onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);" onmouseout="limitTextArea(this,100);" >
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankAddressMsg" />
 				</p:inputTextarea>
