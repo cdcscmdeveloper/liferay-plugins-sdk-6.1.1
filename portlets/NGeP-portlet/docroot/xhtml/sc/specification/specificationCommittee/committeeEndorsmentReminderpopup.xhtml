@@ -35,7 +35,9 @@
 							value="#{lbl['lbl.sc.message']}" /></td>
 
 					<td><p:inputTextarea rows="5" cols="75" maxlength="1000"
-							value="#{specificationBackingBean.managedBean.message}"></p:inputTextarea>
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
+							value="#{specificationBackingBean.managedBean.message}">
+							</p:inputTextarea>
 					</td>
 				</tr>
 			</table>

@@ -59,7 +59,7 @@
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
 				<p:inputTextarea id="remarkid" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
 					rows="3" />
 				<p:message id="remarkidMsg" for="remarkid" display="icon" />
