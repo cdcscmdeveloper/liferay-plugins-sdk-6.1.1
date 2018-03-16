@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2369,6 +2371,38 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), appl.getApplId());
 		}
+		
+		// sort by code
+		Collections.sort(appl.getSmSvTasks(), new Comparator<SmSvTask>() {
+			@Override
+			public int compare(final SmSvTask s1, final SmSvTask s2) {
+				String code1 = StringUtils.EMPTY;
+				String code2 = StringUtils.EMPTY;
+
+				if (s1.getPmCategoryL3() != null
+						&& s1.getPmCategoryL3().getPmCategoryL2() != null
+						&& s1.getPmCategoryL3().getPmCategoryL2()
+								.getPmCategoryL1() != null) {
+					code1 = s1.getPmCategoryL3().getPmCategoryL2()
+							.getPmCategoryL1().getCategoryL1Code()
+							+ s1.getPmCategoryL3().getPmCategoryL2()
+									.getCategoryL2Code()
+							+ s1.getPmCategoryL3().getCategoryL3Code();
+				}
+				if (s2.getPmCategoryL3() != null
+						&& s2.getPmCategoryL3().getPmCategoryL2() != null
+						&& s2.getPmCategoryL3().getPmCategoryL2()
+								.getPmCategoryL1() != null) {
+					code2 = s2.getPmCategoryL3().getPmCategoryL2()
+							.getPmCategoryL1().getCategoryL1Code()
+							+ s2.getPmCategoryL3().getPmCategoryL2()
+									.getCategoryL2Code()
+							+ s2.getPmCategoryL3().getCategoryL3Code();
+				}
+
+				return code1.compareTo(code2);
+			}
+		});
 
 	}
 	

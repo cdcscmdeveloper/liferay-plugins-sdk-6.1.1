@@ -2668,6 +2668,9 @@ public class SmApplicationBackingBean extends
 		// validate paid up capital amount
 		SmApplicationUtil.validatePaidCaptialAmt(false, getManagedBean(),
 				currentTab);
+
+		SmApplicationUtil
+				.validateSpecialCategoryAssignedToFacility(getManagedBean());
 	}
 
 	/**
@@ -7394,8 +7397,8 @@ public class SmApplicationBackingBean extends
 				resDTO = regSo.initiateMofApplNewBpmTask(reqDTO);
 				getManagedBean().setTaskId(resDTO.getTaskId());
 				valid = resDTO.isBpmSuccess();
-				
-				if(!valid && resDTO.getSmAppl()!=null){
+
+				if (!valid && resDTO.getSmAppl() != null) {
 					reqDTO.setSmAppl(resDTO.getSmAppl());
 					regSo.rollbackNewDraftApplication(reqDTO);
 				}
@@ -11117,7 +11120,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedFactoryFacilities().add(hq);
 		}
 	}
-
 
 	/**
 	 * Check if selected facility exist in selected facility list
