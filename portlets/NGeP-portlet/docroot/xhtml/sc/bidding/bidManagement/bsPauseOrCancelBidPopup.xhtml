@@ -26,7 +26,7 @@
 						label="#{lbl['lbl.sc.notes.to.supplier']}" rows="5"
 						value="#{biddingBB.managedBean.bidAction.remark}" cols="65"
 						onkeyup="limitTextArea(this,200);"
-						onkeydown="limitTextArea(this,200);" maxLength="200">
+						onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);" maxLength="200">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@this,bidPauseCancelMessages" />
 					</p:inputTextarea></TD>
