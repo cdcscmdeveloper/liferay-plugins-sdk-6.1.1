@@ -234,7 +234,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 					for(int i = 0; i<rptRequestList.size(); i++){
 						
 						RPTRequest rptRequest = rptRequestList.get(i);
-						
+						logger.info("RPTRequestDataModel("+i+")= " +rptRequest.getStatusCode());
 						if(isInProgress(rptRequest.getStatusCode())){
 							RPTRequestBackingBean rptRequestBackingBean = new RPTRequestBackingBean();
 							rptRequestBackingBean.update(rptRequest);	
@@ -469,7 +469,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	}
 
 	public boolean isSuccess(String reportStatus){
-		
+		logger.info("isSuccess : "+reportStatus);
 		if(reportStatus != null && reportStatus.equals("4")){
 			return true;
 		}
