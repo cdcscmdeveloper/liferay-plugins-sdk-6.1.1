@@ -65,6 +65,7 @@
 				<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}"
 					required="true" rows="2" cols="30" maxlength="255"
 					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
+					onmouseout="limitTextArea(this,255);"
 					value="#{meetingDtl.meetingLocation}" id="meetingLocation"
 					disabled="#{disableMeeting}">
 					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
@@ -91,7 +92,7 @@
 			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
 				<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" maxlength="100"
 				onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
-					disabled="#{disableMeeting}">
+				onmouseout="limitTextArea(this,100);"	disabled="#{disableMeeting}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputTextarea>
 			</p:column>

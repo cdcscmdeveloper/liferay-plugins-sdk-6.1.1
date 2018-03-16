@@ -86,6 +86,7 @@
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					style="width:75%;" maxlength="255" onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
+						onmouseout="limitTextArea(this,255);"
 					label="#{lbl['lbl.sc.meeting.location']}" id="locationId"
 					required="true" cols="140">
 					<p:ajax process="@this" partialSubmit="true" update="@this"></p:ajax>
