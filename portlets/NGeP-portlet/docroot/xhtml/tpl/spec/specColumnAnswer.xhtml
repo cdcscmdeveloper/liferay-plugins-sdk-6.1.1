@@ -119,25 +119,23 @@
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
 	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}">
-		<h:panelGroup rendered="#{isDurationYear}">
 		<f:facet name="footer">
-			<h:outputText id="totalAmountPerYr" 
+			<h:outputText id="totalAmountPerYr" rendered="#{isDurationYear}"
 				styleClass="calcAmount" 
 				value="#{templateSpecBean.specMaster.totalAmountPerYear}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
-		<h:panelGroup id="ansYearPG">
+		<h:panelGroup id="ansYearPG" rendered="#{isDurationYear}">
 			<h:outputText 
 				value="#{tplSpecAnswer.amountPerYear}"
 				rendered="#{isQuestionTypeItem}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</h:panelGroup>
-	</h:panelGroup>
-	<h:panelGroup rendered="#{!isDurationYear}">
-	<h:outputText value="#{lbl['lbl.txt.na']}"/>
-	</h:panelGroup>
+		<h:panelGroup rendered="#{!isDurationYear}">
+			<h:outputText value="#{lbl['lbl.txt.na']}"/>
+		</h:panelGroup>
 	</p:column>
 	
 	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">

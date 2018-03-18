@@ -58,18 +58,21 @@
 	<p:column style="width:90px;white-space:normal;text-align:right;"
 		rendered="#{isItemTypeService}">
 		<f:facet name="footer">
-			<h:outputText id="totalAmountPerYr" styleClass="calcAmount"
+			<h:outputText id="totalAmountPerYr" styleClass="calcAmount" rendered="#{isDurationYear}"
 				value="#{templateSpecBean.specMaster.totalAmountPerYear}">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
-		<h:panelGroup id="ansYearPG">
+		<h:panelGroup id="ansYearPG" rendered="#{isDurationYear}">
 			<h:outputText value="#{question.tplSpecAnswers[0].amountPerYear}"
 				rendered="#{isQuestionTypeItem and isPriceTypeStandard}">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{!isDurationYear}">
+			<h:outputText value="#{lbl['lbl.txt.na']}"/>
 		</h:panelGroup>
 	</p:column>
 
