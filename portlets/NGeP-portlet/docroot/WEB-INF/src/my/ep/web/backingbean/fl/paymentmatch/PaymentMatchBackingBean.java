@@ -1928,6 +1928,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				}
 				
 				votReqDTO.setVotFundObjectSearchBean(searchBean);
+				votReqDTO.setFLSearch(true);
 				votFundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IVotFundSO.class);
 				VotFundResDTO resDTO = votFundSO.searchVotFundData(votReqDTO);
 				if (resDTO.isSuccessful()) {
