@@ -246,6 +246,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 			getManagedBean().setRemarkList(remarkList);
 		}
 		getManagedBean().setAttachmentList(attachmentList);
+		getManagedBean().setDeleteAttachments(null);
 	}
 	
 	/**
