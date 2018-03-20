@@ -1026,6 +1026,15 @@ public class SPDetailBackingBean extends
             		if(answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)){
             			throw new EpException(MessageConst.ERROR_760464);
             		}
+            		//added because of Bug #17772, please do not remove or change the order of if statements
+            		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
+            			boolean isItemTypeService = false; 
+            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+            				isItemTypeService = true;
+            			}
+            			this.getManagedBean().getTemplateSpecBackingBean()
+            			  .calcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
+            		}
             		super.setUserDetails(answer);
             	}
             }
