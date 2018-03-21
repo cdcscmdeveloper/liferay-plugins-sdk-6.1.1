@@ -270,7 +270,7 @@ public class CommitteBackingBean extends
 								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setUser(pmUser);
+			reqDTO.setPmUser(pmUser);
 			reqDTO.setCommitteeType(committeeType);
 			
 			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
@@ -736,7 +736,7 @@ public class CommitteBackingBean extends
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO.setCommitteeType(committeeType);
 		
 		return committeSO.retrieveCommitteMemberByUserId(

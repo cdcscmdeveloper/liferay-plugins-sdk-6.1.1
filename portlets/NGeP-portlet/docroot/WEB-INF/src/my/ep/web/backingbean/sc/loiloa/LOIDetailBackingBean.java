@@ -2453,7 +2453,7 @@ public class LOIDetailBackingBean extends
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO.setCommitteeType(committeeType);
 		
 		return committeSO.retrieveCommitteMemberByUserId(
