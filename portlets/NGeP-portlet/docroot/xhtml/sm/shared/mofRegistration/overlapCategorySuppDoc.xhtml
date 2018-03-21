@@ -58,7 +58,7 @@
 		</script>
 		
 		<br />
-		<p:dataTable var="overlap" id="overlapCatSuppDocDtId" value="#{backingBean.managedBean.smAppl.smCategoryOverlapDocs}" 
+		<p:dataTable var="overlap" id="overlapCatSuppDocDtId" value="#{backingBean.managedBean.overlapDocs}" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 			rowIndexVar="index">
 
@@ -74,7 +74,7 @@
 					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
-					style="width : auto;" rows="3" cols="80" required="true"
+					style="width : auto;" rows="3" cols="80"
 					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
 					<p:ajax process="@this" update="overlapCatSuppDocDtId,@this" event="blur"/>
 					<f:validateLength maximum="200" />
