@@ -86,6 +86,7 @@ import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
+import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
@@ -462,6 +463,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSiteVisitFacilityVO> factorySiteVisitVOList;
 	private List<SmSiteVisitFacilityVO> bumiSiteVisitVOList;
 	private List<SmMachineCategoryVO> machineCategoryVOList;
+	private List<SmCategoryOverlapDoc> overlapDocs;
 	private boolean branchSameAsHq;
 	private String facAddresSameAs;
 	private List<SelectItem> addrSameAsItems;
@@ -3972,5 +3974,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setMofAccount(SmMofAccount mofAccount) {
 		this.mofAccount = mofAccount;
+	}
+
+	public List<SmCategoryOverlapDoc> getOverlapDocs() {
+		return overlapDocs;
+	}
+
+	public void setOverlapDocs(List<SmCategoryOverlapDoc> overlapDocs) {
+		this.overlapDocs = overlapDocs;
 	}
 }
