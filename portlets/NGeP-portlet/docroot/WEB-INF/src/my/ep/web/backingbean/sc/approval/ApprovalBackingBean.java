@@ -689,7 +689,7 @@ public class ApprovalBackingBean extends
 					CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 					committeReqDTO.setScQt(reqDTO.getQtdetail());
 					FacesScopes scope = new FacesScopes();
-					committeReqDTO.setUser(scope.getUserSessionBean());
+					committeReqDTO.setPmUser(scope.getUserSessionBean());
 					committeReqDTO.setUserLocale(scope.getUserLocale());
 					committeReqDTO.setSpecApprovalReq(true);
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
@@ -864,7 +864,7 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setSpecApprovalReq(true);
 				committeReqDTO.setApprovalFlow(true);
 				committeReqDTO.setSaveFlow(false);
-				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
+				committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
 				committeReqDTO.setCommitteeTypes(committeeTypes);

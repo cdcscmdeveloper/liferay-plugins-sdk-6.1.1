@@ -876,6 +876,7 @@ public class EvaluationMeetingBackingBean extends
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
 			metReqDtO.setCommitteType(this.getManagedBean().getCommitteeType());
+			metReqDtO.setPmUser(new FacesScopes().getUserSessionBean());
 
 		} finally {
 
