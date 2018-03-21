@@ -350,8 +350,8 @@ public class SmApplicationBackingBean extends
 		SmCategoryOverlapDoc doc = (SmCategoryOverlapDoc) EntityHelper
 				.getEntityBySinglePropertyFromList(getManagedBean()
 						.getSelectedOverlapDoc().getPmDocument()
-						.getDocumentId(), getManagedBean().getSmAppl()
-						.getSmCategoryOverlapDocs(), "pmDocument");
+						.getDocumentId(), getManagedBean().getOverlapDocs(),
+						"pmDocument");
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
 	}
@@ -1604,6 +1604,10 @@ public class SmApplicationBackingBean extends
 					&& currentPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 
+				SmApplicationUtil
+						.validateOverlapCategoryJustificationAndSuppDocs(
+								getManagedBean(), currentPageType);
+
 				// set back newly added and approved categories to main appl
 				// categories for appl type other than renew
 				for (SmSupplierCategory cat : getManagedBean()
@@ -1652,6 +1656,9 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
+				SmApplicationUtil
+						.validateOverlapCategoryJustificationAndSuppDocs(
+								getManagedBean(), currentPageType);
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
@@ -2617,8 +2624,8 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getSmPersonnels());
 
 		// validate overlap category supporting docs
-		SmApplicationUtil
-				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
+		SmApplicationUtil.validateOverlapCategoryJustificationAndSuppDocs(
+				getManagedBean(), null);
 
 		// validate at least one category is added
 		if (getManagedBean().getSmAppl().getApplType()
@@ -4400,6 +4407,8 @@ public class SmApplicationBackingBean extends
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+			SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
+					.isOverLappedCategoryExists(), getManagedBean());
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}
@@ -5629,6 +5638,7 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 				.getSmAppl());
 		SmApplicationUtil.updateTravellingSoftware(getManagedBean());
+		SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean());
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -5649,6 +5659,9 @@ public class SmApplicationBackingBean extends
 			// sort staff info after update
 			SmApplicationUtil.sortStaffInfo(getManagedBean().getSmAppl()
 					.getSmStaffTotals());
+
+			SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
+					.isOverLappedCategoryExists(), getManagedBean());
 		}
 	}
 
@@ -6833,8 +6846,6 @@ public class SmApplicationBackingBean extends
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
-		SmApplicationUtil
-				.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean());
 
 		// try {
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
@@ -9494,6 +9505,11 @@ public class SmApplicationBackingBean extends
 		if (event.getFile() != null) {
 			if (getManagedBean().getSelectedOverlapDoc() != null) {
 
+				if (getManagedBean().getOverlapDocs() == null) {
+					getManagedBean().setOverlapDocs(
+							new ArrayList<SmCategoryOverlapDoc>());
+				}
+
 				// construct file path
 				String filePath = SmCommonUtil
 						.getUploadFilePath(SupplierManagementConst.OVERLAP_CATEGORY_PATH)
@@ -9509,17 +9525,14 @@ public class SmApplicationBackingBean extends
 				doc.setFilePath(filePath);
 
 				int i = 0;
-				for (SmCategoryOverlapDoc docTmp : getManagedBean().getSmAppl()
-						.getSmCategoryOverlapDocs()) {
-					if (doc.equals(docTmp)) {
-						break;
-					} else if (docTmp.getPmDocument().getDocumentId()
+				for (SmCategoryOverlapDoc docTmp : getManagedBean()
+						.getOverlapDocs()) {
+					if (docTmp.getPmDocument().getDocumentId()
 							.compareTo(doc.getPmDocument().getDocumentId()) == 0) {
+						getManagedBean().getOverlapDocs().set(i, doc);
 						break;
 					}
 					i++;
-					getManagedBean().getSmAppl().getSmCategoryOverlapDocs()
-							.set(i, doc);
 				}
 
 				// upload file
