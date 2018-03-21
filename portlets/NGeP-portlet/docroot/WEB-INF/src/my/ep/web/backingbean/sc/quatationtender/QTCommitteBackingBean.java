@@ -2398,7 +2398,7 @@ public class QTCommitteBackingBean extends
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setScQt(scQt);
 		FacesScopes scope = new FacesScopes();
-		committeReqDTO.setUser(scope.getUserSessionBean());
+		committeReqDTO.setPmUser(scope.getUserSessionBean());
 		committeReqDTO.setUserLocale(scope.getUserLocale());
 		committeReqDTO.setQtCommittee(qtCommitteList);
 		committeReqDTO.setCommitteeMembers(toBeAddedList);

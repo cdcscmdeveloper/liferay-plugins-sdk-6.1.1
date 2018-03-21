@@ -7377,6 +7377,7 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			reqDtO.setScQtCommitte(qtCommittee);
+			reqDtO.setPmUser(new FacesScopes().getUserSessionBean());
 
 		} finally {
 
@@ -8020,7 +8021,7 @@ private void retriveCommitteeRemarksList(){
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO.setCommitteeType(this.getManagedBean()
 				.getCommitteeType());
 		CommitteResDTO CommitteeresDTO = committeSO
@@ -8226,7 +8227,7 @@ private void retriveCommitteeRemarksList(){
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO.setCommitteeType(this.getManagedBean()
 				.getCommitteeType());
 		CommitteResDTO CommitteeresDTO = committeSO

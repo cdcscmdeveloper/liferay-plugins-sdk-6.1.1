@@ -634,7 +634,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setUser(pmUser);
+			reqDTO.setPmUser(pmUser);
 			reqDTO.setCommitteeType(committeeType);
 			
 			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
@@ -1423,7 +1423,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO.setCommitteeType(committeeType);
 		
 		return committeSO.retrieveCommitteMemberByUserId(
@@ -1488,7 +1488,10 @@ if (CollectionUtils.isNotEmpty(
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
 			reqDTO.setScQtCommitte(scQtCommittee);
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			
 			return reqDTO;
 		} finally {

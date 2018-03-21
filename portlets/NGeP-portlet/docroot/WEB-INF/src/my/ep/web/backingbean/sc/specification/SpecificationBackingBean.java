@@ -9157,7 +9157,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(quotationTenderDataType.getQtId().longValue());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO
 				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = committeSO
@@ -10019,7 +10019,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO
 				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO CommitteeresDTO = committeSO
@@ -13878,7 +13878,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(quotationTenderDataType.getQtId().longValue());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO
 				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = committeSO
@@ -13948,7 +13948,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setPmUser(curLogedInUser);
 		committeReqDTO
 				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO CommitteeresDTO = committeSO
