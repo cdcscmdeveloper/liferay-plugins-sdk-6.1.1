@@ -270,8 +270,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
-				.getPersonnelSO()
-				.retrieveLatestApprovedPersonnelBySupplierId(reqDTO)
+				.getPersonnelSO().retrieveLatestPersonnelBySupplierId(reqDTO)
 				.getSmPersonnelList();
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
@@ -331,6 +330,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 						getManagedBean().setExistingUser(true);
 					}
 				}
+
+				// existing deleted personnel
+				else if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+						&& !StringUtils.isBlank(smPersonnel
+								.getIdentificationNo())
+						&& smPersonnel.getIdentificationNo().equalsIgnoreCase(
+								getManagedBean().getReactivateBasic()
+										.getNewIdentificationNo())) {
+					getManagedBean().setNewAdmin(smPersonnel);
+					getManagedBean().setExistingUser(false);
+				}
 			}
 		}
 
@@ -352,38 +362,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
-		}
-
-		// existing new admin
-		if (getManagedBean().isExistingUser()
-				&& getManagedBean().getNewAdmin() != null) {
-
-			// check if replace with catalog user not allowed if have active
-			// supplier
-			// user
-			// if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
-			// .getEpRole())
-			// && getManagedBean().getNewAdmin().getEpRole()
-			// .equals(RoleCode.CM_USER.value())
-			// && getManagedBean().isHasSupplierUser()) {
-			// throw new EpException(MessageConst.ERROR_722595);
-			// }
-
-			// check if replace with pending activation user not allowed if have
-			// active supplier user
-			// if (getManagedBean().getNewAdmin().getRecordStatusFlg() ==
-			// DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-			// && getManagedBean().isHasSupplierUser()) {
-			// throw new EpException(MessageConst.ERROR_722629);
-			// }
-
-			// check if replace with user that don't have role in ep not allowed
-			// if have active supplier user
-			// if
-			// (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())
-			// && getManagedBean().isHasSupplierUser()) {
-			// throw new EpException(MessageConst.ERROR_722630);
-			// }
 		}
 
 	}
@@ -462,7 +440,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Initialize new admin values
 	 */
 	private void initDefaultNewAdmin() {
-		getManagedBean().setNewAdmin(new SmPersonnel());
+		if (getManagedBean().getNewAdmin() == null) {
+			getManagedBean().setNewAdmin(new SmPersonnel());
+		}
 		setDefaultNewAdminPersonnelValues();
 		setDefaultNewAdminAddress();
 	}
@@ -588,13 +568,36 @@ public class ForceReplaceSuppAdminBackingBean extends
 	private void setDefaultNewAdminAddress() {
 		PmCountry countryMy = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-		SmPersonnelAddress perm = new SmPersonnelAddress();
+
+		SmPersonnelAddress perm = null;
+		if (getManagedBean().getNewAdmin() != null
+				&& getManagedBean().getNewAdmin().getSmPersonnelAddresses() != null) {
+			perm = (SmPersonnelAddress) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							SupplierManagementConst.PERM_ADD, getManagedBean()
+									.getNewAdmin().getSmPersonnelAddresses(),
+							"addressType");
+		}
+		if (perm == null) {
+			perm = new SmPersonnelAddress();
+		}
 		perm.setAddressType(SupplierManagementConst.PERM_ADD);
 		perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
 		perm.setSmPersonnel(getManagedBean().getNewAdmin());
 		perm.setSameAsPerm(false);
 
-		SmPersonnelAddress mail = new SmPersonnelAddress();
+		SmPersonnelAddress mail = null;
+		if (getManagedBean().getNewAdmin() != null
+				&& getManagedBean().getNewAdmin().getSmPersonnelAddresses() != null) {
+			mail = (SmPersonnelAddress) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							SupplierManagementConst.MAIL_ADD, getManagedBean()
+									.getNewAdmin().getSmPersonnelAddresses(),
+							"addressType");
+		}
+		if (mail == null) {
+			mail = new SmPersonnelAddress();
+		}
 		mail.setAddressType(SupplierManagementConst.MAIL_ADD);
 		mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
 		mail.setSmPersonnel(getManagedBean().getNewAdmin());
@@ -629,6 +632,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 				DbValueConst.RECORD_STATUS_ACTIVE);
 		getManagedBean().getNewAdmin().setContactPerson(
 				getManagedBean().getOldAdmin().isContactPerson());
+		getManagedBean().getNewAdmin().setDesignation(StringUtils.EMPTY);
+		getManagedBean().getNewAdmin().setEmail(StringUtils.EMPTY);
+		getManagedBean().getNewAdmin().setBirthDate(null);
+		getManagedBean().getNewAdmin().setPhoneArea(StringUtils.EMPTY);
+		getManagedBean().getNewAdmin().setPhoneNo(StringUtils.EMPTY);
+		getManagedBean().getNewAdmin().setMobileArea(StringUtils.EMPTY);
+		getManagedBean().getNewAdmin().setMobileNo(StringUtils.EMPTY);
+		getManagedBean().getNewAdmin().setMobileTelcoId(StringUtils.EMPTY);
 
 		PmCountry country = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
