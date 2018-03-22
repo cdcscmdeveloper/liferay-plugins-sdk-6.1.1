@@ -450,14 +450,20 @@ public class CodificationManagedBean extends BaseManagedBean {
 				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 						.getServiceObject("cm", ICodificationSO.class);
 
-
+				String unspscCode = "";
 				if (getAutoCompleteUnspscCode()
 						.getUnspscCode() != null
 						&&getAutoCompleteUnspscCode()
 						.getUnspscCode().trim().length() > 0) {
+					
+					if(getAutoCompleteUnspscCode().getUnspscCode().equalsIgnoreCase("00000000")){
+						unspscCode = "notValid";
+					}else{
+						unspscCode = getAutoCompleteUnspscCode().getUnspscCode();
+					}
 
 					codeFilterBean.setSearchField("unspscCode");
-					codeFilterBean.setSearchValue(getAutoCompleteUnspscCode().getUnspscCode());
+					codeFilterBean.setSearchValue(unspscCode);
 					searchBean.getDataFilterBeans().add(codeFilterBean);
 				}
 
