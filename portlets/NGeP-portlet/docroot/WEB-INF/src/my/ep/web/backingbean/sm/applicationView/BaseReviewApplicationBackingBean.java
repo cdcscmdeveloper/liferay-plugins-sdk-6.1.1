@@ -1992,6 +1992,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.retrievePersonnelByUserId(reqDTO).getSmPersonnel();
 			getManagedBean().setRoleCode(
 					loginPersonnel == null ? "" : loginPersonnel.getEpRole());
+		} else if(sc.hasRoleUser(SupplierManagementConst.BPK_AUDITOR)) {
+			getManagedBean().setBpkUser(true);
+			getManagedBean().setRoleCode(RoleCode.BPK_AUDITOR.value());
+		} else if(sc.hasRoleUser(SupplierManagementConst.BPK_OFFICER)) {
+			getManagedBean().setBpkUser(true);
+			getManagedBean().setRoleCode(RoleCode.BPK_OFFICER.value());
 		}
 	}
 
@@ -2046,11 +2052,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		if (getManagedBean().isViewApplicationHistory()) {
 			basePage = "/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewApplHistorySideMenu_BasePage.xhtml";
-			baseUrl = "/supplier-profile";
+			if(this.getManagedBean().isBpkUser()) {
+				baseUrl = "/supplier-profile-search";
+			} else {
+				baseUrl = "/supplier-profile";	
+			}
 			baseUrlLabel = SmCommonUtil.getMessage("lbl.sm.supprofile", null);
 		} else {
 			basePage = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
-			baseUrl = "/application-history";
+			if(this.getManagedBean().isBpkUser()) {
+				baseUrl = "/supplier-application-search";
+			} else {
+				baseUrl = "/application-history";
+			}
 			baseUrlLabel = SmCommonUtil.getMessage(
 					"lbl.sm.supplier.application.history", null);
 		}
