@@ -1191,41 +1191,34 @@ public class SPDetailBackingBean extends
 			reqDTO.setMultiEncryptBeanList(encryptCrditFacilitesList);
 
 			ScQtProposalChecklist finProposalChecklist = null;
-			int index = 0;
-			if (isCompleted) {
-				finProposalChecklist = findProposalChecklistByDocDefKey(
-						getManagedBean().getFinanceCheckDetailsList(),
-						ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_CREDIT_FACILITY_UPLOAD);
-				index = getManagedBean().getFinanceCheckDetailsList().indexOf(
-						finProposalChecklist);
-
-				if (finProposalChecklist!= null && (creditFacilitiesList == null
-						|| creditFacilitiesList.isEmpty())) {
-
-					if (!finProposalChecklist.isSubmitted()
-							|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-									.getCompliance() == ParameterConst.COMPLIANCE_STATUS__COMPLIANCE)) {
+			finProposalChecklist = findProposalChecklistByDocDefKey(
+					getManagedBean().getFinanceCheckDetailsList(),
+					ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_CREDIT_FACILITY_UPLOAD);
+			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
+					finProposalChecklist);
+			if (isCompleted && finProposalChecklist!= null) {
+				if (creditFacilitiesList == null
+						|| creditFacilitiesList.isEmpty()) {
 						finProposalChecklist
 								.setScQtProposalChecklistAttachment(null);
 						finProposalChecklist.setSubmitted(true);
 						finProposalChecklist
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-					} else {
-						finProposalChecklist
-								.setScQtProposalChecklistAttachment(null);
-					}
 
-				} else if (finProposalChecklist != null && (finProposalChecklist.isSubmitted()
-						|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
-								.getCompliance() == ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE))) {
-					if (finProposalChecklist
-							.getScQtProposalChecklistAttachment() != null) {
+				} else{
+					if (finProposalChecklist.isSubmitted()){
+						if (finProposalChecklist
+								.getScQtProposalChecklistAttachment() == null) {
+							finProposalChecklist.setSubmitted(false);
+							finProposalChecklist
+									.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						} else {
+							finProposalChecklist
+									.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}
+					}else{
 						finProposalChecklist
-								.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					} else {
-						finProposalChecklist.setSubmitted(false);
-						finProposalChecklist
-								.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 					}
 				}
 			}
