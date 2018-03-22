@@ -5502,15 +5502,9 @@ public class SmApplicationUtil {
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 					pendingExits = true;
-					if ((managedBean.isPoUser() && cat.getPoDecFlg() != null && cat
-							.getPoDecFlg()
-							.compareTo(
-									SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
-							|| (managedBean.isApproverUser()
-									&& cat.getApprvrDecFlg() != null && cat
-									.getApprvrDecFlg()
-									.compareTo(
-											SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)) {
+					if ((managedBean.isPoUser() && cat.getPoDecFlg() != null)
+							|| (managedBean.isApproverUser() && cat
+									.getApprvrDecFlg() != null)) {
 						validForApproval = true;
 						break;
 					}
