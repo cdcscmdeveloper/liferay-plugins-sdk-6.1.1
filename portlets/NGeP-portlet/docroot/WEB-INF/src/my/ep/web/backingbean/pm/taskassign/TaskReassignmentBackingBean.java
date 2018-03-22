@@ -1262,7 +1262,7 @@ public class TaskReassignmentBackingBean extends
 				vo.setDocId(resDTO.getDocId());
 				vo.setDocType(resDTO.getDocType());
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
-				vo.setRoleList(new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())));
+				vo.setRoleList(StringUtils.isNotBlank(resDTO.getRoleCode()) ? new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())) : new ArrayList<String>());
 				vo.setUserGroupId(resDTO.getUserGroupId());
 				
 			}
