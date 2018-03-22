@@ -112,6 +112,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean poUser;
 	private boolean supplierUser;
 	private boolean approverUser;
+	private boolean bpkUser;
 	private boolean reviewSiteVisit;
 	private boolean reviewApplicationExist;
 	private boolean hasPreviousApplication;
@@ -1432,6 +1433,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setPendingApprovedCategoryList(
 			List<SmSupplierCategory> pendingApprovedCategoryList) {
 		this.pendingApprovedCategoryList = pendingApprovedCategoryList;
+	}
+
+	public boolean isBpkUser() {
+		return bpkUser;
+	}
+
+	public void setBpkUser(boolean bpkUser) {
+		this.bpkUser = bpkUser;
 	}
 
 }

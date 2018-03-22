@@ -328,6 +328,9 @@ public class SupplierManagementConst {
 	public static final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
 	public static final String MOF_SUPPLIER_USER = "MOF_SUPPLIER_USER";
 
+	public static final String BPK_OFFICER = "BPK_OFFICER";
+	public static final String BPK_AUDITOR = "BPK_AUDITOR";
+	
 	// SmPersonnel Parameter for staff role
 
 	public static final String SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR = "KPT";
