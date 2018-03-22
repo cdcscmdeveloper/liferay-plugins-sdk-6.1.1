@@ -990,12 +990,13 @@ public class ApprovalBackingBean extends
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
 								// To remove the existing QT closing job from scheduler if any
+								log.info("remove simple scheduler if QT is closing today.");
 								JobKey jobKey = ScSchedulerHelper.getInstance().getQTClosingJobKey(qt);
 								jobKey = EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup());
 								if (jobKey != null) {
 									EpSchedulerHelper.deleteJobAndAssociatedTriggers(jobKey);
-									EpSchedulerHelper.shutdownScheduler();
 								}
+								EpSchedulerHelper.shutdownScheduler();
 							}
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
 							if (isFinalApproval) {
