@@ -6,18 +6,11 @@ import javax.servlet.http.HttpServlet;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.SchedulerPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataErrorInboundJob;
-import my.ep.web.scheduler.job.phis.MasterDataDeliveryAddressJob;
-import my.ep.web.scheduler.job.phis.MasterDataKodAkaunJob;
-import my.ep.web.scheduler.job.phis.MasterDataProgramJob;
-import my.ep.web.scheduler.job.phis.MasterDataProjectJob;
-import my.ep.web.scheduler.job.phis.MasterDataVotDanaJob;
-import my.ep.web.scheduler.job.phis.MasterDataVotJob;
 import my.ep.web.scheduler.job.pm.PmAccessApplJob;
 import my.ep.web.scheduler.job.pm.PmAccessApplReminderJob;
 import my.ep.web.scheduler.job.pm.PmConfigRulesJob;
@@ -31,74 +24,6 @@ public class PmSchedulerServlet extends HttpServlet {
 	public static Logger log = EpLogger.getLogger(PmSchedulerServlet.class);
 
 	public void init(ServletConfig config) throws ServletException {
-
-		// PHIS Integration Jobs
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_VOT_FUND_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataVotJob.class,
-						SchedulerConstants.PHIS_PM_VOT_FUND_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_VOT_FUND));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_VOT_FUND_DANA_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataVotDanaJob.class,
-						SchedulerConstants.PHIS_PM_DANA_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_VOT_FUND_DANA));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_PROGRAM_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataProgramJob.class,
-						SchedulerConstants.PHIS_PM_PROGRAM_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROGRAM));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_PROJECT_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataProjectJob.class,
-						SchedulerConstants.PHIS_PROJECT_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_PROJECT));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_KOD_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataKodAkaunJob.class,
-						SchedulerConstants.PHIS_PM_KOD_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_KOD));
-
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.PHIS_DELIVERY_ADDRESS_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						MasterDataDeliveryAddressJob.class,
-						SchedulerConstants.PHIS_DELIVERY_ADDRESS_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_PHIS_DELIVERY_ADDRESS));
 
 		// 1GFMAS integration Jobs
 		EpSchedulerHelper
