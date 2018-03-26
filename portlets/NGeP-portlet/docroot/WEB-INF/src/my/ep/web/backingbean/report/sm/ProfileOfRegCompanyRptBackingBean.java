@@ -5,10 +5,13 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang.StringUtils;
-
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ProfileOfRegCompanyRptManagedBean;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "profileOfRegCompanyRptBB")
 @ViewScoped
@@ -32,5 +35,17 @@ public class ProfileOfRegCompanyRptBackingBean extends
 
 	public void resetSearch() {
 
+	}
+	
+	public void populateMofNo(BaseEntity entity) {
+		SmSupplier selectedSupplier = (SmSupplier)entity;
+		/*SmMofAccount mofAccount = null;
+		for(SmMofAccount acc : selectedSupplier.getSmMofAccounts()) {
+			if(acc.isRecordStatus()) {
+				mofAccount = acc;
+				break;
+			}
+		}*/
+		this.getManagedBean().setMofNo(selectedSupplier.getMofNo());
 	}
 }
