@@ -934,8 +934,8 @@ public class OrganisationBackingBean extends
 
 						for (PmProfileGroup proGroup : getManagedBean()
 								.getProfileGroup()) {
-							proGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-							log.info("Profile Suspended");
+							log.info("Profile Group Suspended");
+							proGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);						
 							profileGroup.add(proGroup);
 							orgProfile.setMainProfileGroups(profileGroup);
 						}
