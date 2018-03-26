@@ -46,16 +46,6 @@ public class FLSchedulerServlet extends HttpServlet {
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_FL_1GFMAS_FL_INBOUND));
 
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.PHIS_PAY_EFF_NOTIFY_JOB,
-								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-						PaymentEffectNotificationJob.class,
-						SchedulerConstants.PHIS_FL_JOB_DESC,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_FL_PHIS_FL_OUTBOUND));
 	}
 
 }
