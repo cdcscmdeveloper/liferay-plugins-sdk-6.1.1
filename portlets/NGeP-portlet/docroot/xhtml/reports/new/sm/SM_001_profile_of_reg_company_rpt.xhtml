@@ -32,9 +32,25 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent">
-				<p:inputText maxlength="20" required="true" 
-				label="#{lbl['lbl.rpt.mofRegNo']}"
-				value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" style="width:290px;" />
+				<ui:remove>
+					<p:inputText maxlength="20" required="true" 
+					label="#{lbl['lbl.rpt.mofRegNo']}"
+					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" style="width:290px;" />
+				</ui:remove>
+		
+				<ac:lov id="supplier" lovId="SM_SUPPLIER_RPT" 
+					headerText="#{lbl['lbl.sm.supplov']}" 
+					saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
+					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}"
+					conditionField="recordStatus^1|smMofAccounts.recordStatus^1"
+					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo" >
+				</ac:lov>
+				
+				<p:graphicImage id="mofNott"
+					value="/css/images/design/tooltips.png" /> 
+				<p:tooltip for="mofNott">
+					<p:outputLabel escape="false" value="#{lbl['lbl.sm.rpt.profile.tooltip']}" />	
+				</p:tooltip>
 			</td>
 		</tr>
 	</table>
@@ -42,4 +58,5 @@
 	<ac:smGenerateReport bBean="#{profileOfRegCompanyRptBB}" reportCode="#{smReportBB.managedBean.reportCode}"
 		generateMethod="generateReport" resetMethod="resetSearch">
 	</ac:smGenerateReport>
+	<ac:lovPopup />
 </ui:composition>
