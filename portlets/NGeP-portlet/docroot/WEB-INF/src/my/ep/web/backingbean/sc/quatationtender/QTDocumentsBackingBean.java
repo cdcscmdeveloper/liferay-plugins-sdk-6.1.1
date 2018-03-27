@@ -556,6 +556,7 @@ public class QTDocumentsBackingBean extends
 	 */
 	public void addDocumentCloneAction() {
 		debugLogger("addDocumentCloneAction");
+		ScQt scQt = this.getManagedBean().getQt();
 		List<ScQtDocReport> reportList = getManagedBean()
 				.getScQtDocReportList();
 		if (null == reportList) {
@@ -575,9 +576,12 @@ public class QTDocumentsBackingBean extends
 			for (ScQtDocReport docReport : scQtDocReports) {
 				ScQtDocReport qtDocReport = null;
 				try {
-					if(!existedDocumets.contains(docReport.getPmDocument()!=null ?docReport.getPmDocument().getDocDefinitionKey() : docReport.getTitle())){
-					qtDocReport = (ScQtDocReport) BeanUtils
-							.cloneBean(docReport);
+					if (!existedDocumets
+							.contains(docReport.getPmDocument() != null ? docReport
+									.getPmDocument().getDocDefinitionKey()
+									: docReport.getTitle())) {
+						qtDocReport = (ScQtDocReport) BeanUtils
+								.cloneBean(docReport);
 					}
 				} catch (IllegalAccessException | InstantiationException
 						| InvocationTargetException | NoSuchMethodException e) {
@@ -585,7 +589,8 @@ public class QTDocumentsBackingBean extends
 				}
 				if (null != qtDocReport) {
 					qtDocReport.setQtReportId(null);
-					qtDocReport.setDocId(null);
+					qtDocReport.setScQt(scQt);
+					qtDocReport.setDocId(String.valueOf(qtDocReport.getScQt().getQtId()));
 					setUserDetails(qtDocReport);
 					qtDocReport.setChangedDate(null);
 					reportList.add(qtDocReport);
