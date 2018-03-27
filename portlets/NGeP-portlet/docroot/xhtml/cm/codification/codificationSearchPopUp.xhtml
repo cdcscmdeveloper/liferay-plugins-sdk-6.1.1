@@ -60,7 +60,7 @@
 			var="unspscObj1" width="100%" rows="10">
 
 			<ac:paginator for="unspscTablePopUpId"></ac:paginator>
-			
+
 			<p:column width="25%" sortBy="#{unspscObj1.unspscCode}">
 				<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
@@ -72,13 +72,24 @@
 							#{unspscObj1.unspscCode}
 							</p:commandLink>
 
-				<p:commandLink
-					action="#{codificationBackingBean.goToAddServiceConfirmPopUp(unspscObj1)}"
-					rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}"
-					onclick="unspscPopUp.hide()" oncomplete="confirmationPopUp.show()"
-					update=":form:confirmationPopUpId">
+				<h:panelGroup rendered="#{unspscCodeBackingBean.allSupplier}">
+					<p:commandLink
+						action="#{codificationBackingBean.goToAddServiceConfirmPopUp(unspscObj1)}"
+						rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}"
+						onclick="unspscPopUp.hide()" oncomplete="confirmationPopUp.show()"
+						update=":form:confirmationPopUpId">
 							#{unspscObj1.unspscCode}
 							</p:commandLink>
+				</h:panelGroup>
+				
+				
+				
+					<h:panelGroup rendered="#{!unspscCodeBackingBean.allSupplier}">
+						<h:outputLabel value="#{unspscObj1.unspscCode}" style="float:left;"
+							rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}">
+
+						</h:outputLabel>
+					</h:panelGroup>
 
 				<p:commandLink
 					action="#{codificationBackingBean.unspscPopUpSearch(unspscObj1)}"
