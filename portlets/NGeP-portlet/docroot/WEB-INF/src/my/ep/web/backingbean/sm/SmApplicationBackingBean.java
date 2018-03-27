@@ -1587,6 +1587,10 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
 						ruleHelper);
 			}
+			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+					.getSmSupplier())) {
+				throw new EpException(MessageConst.ERROR_722542);
+			}
 			RequestContext.getCurrentInstance().execute(
 					"saveDraftConfirmDialog.show();");
 		} else {
