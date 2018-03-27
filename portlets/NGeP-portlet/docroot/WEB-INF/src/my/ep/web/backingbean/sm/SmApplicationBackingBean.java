@@ -770,19 +770,10 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setProfBodyItems(
 					SmApplicationUtil.getProfBodyItems());
 
-			// getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
-
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
-
-			/*
-			 * getManagedBean().setDiplomaEduLevel(
-			 * SmApplicationUtil.retrievePmEduLevelByCode("80"));
-			 * getManagedBean().setCertEduLevel(
-			 * SmApplicationUtil.retrievePmEduLevelByCode("60"));
-			 */
 			getManagedBean().setGlpCert(
 					SmApplicationUtil.retrievePmParameterByTypeAndCode(
 							SupplierManagementConst.SM_SUPPLIER_PARAM_TYPE_CRT,
