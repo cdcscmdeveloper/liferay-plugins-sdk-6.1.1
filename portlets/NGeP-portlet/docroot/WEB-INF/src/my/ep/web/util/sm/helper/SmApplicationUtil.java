@@ -3814,16 +3814,13 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean checkActiveSmApplForSupp(SmSupplier smSupplier) {
-		boolean activeSmAppl = false;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
-		resDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(reqDTO);
-		if (resDTO.getSmAppl() != null)
-			activeSmAppl = true;
-		return activeSmAppl;
+		resDTO = mofRegistrationSO.checkActiveApplicationBySupplierId(reqDTO);
+		return resDTO.isHasActiveTransaction();
 	}
 
 	/**
