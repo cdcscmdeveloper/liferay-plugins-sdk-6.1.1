@@ -44,7 +44,7 @@
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.proceed']}" id="canApplCmdBtn"
-					action="#{backingBean.proceedToApplication('C')}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					action="#{backingBean.proceedToApplication('C')}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 					disabled="#{!backingBean.managedBean.termsAccepted}" />
 			</div>
 		</p:panel>

@@ -39,7 +39,7 @@
 					action="#{backingBean.proceedToApplication('N')}" 
 					update="defNewMofApplMsgs" 
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 		</p:panel>
 	</ui:define>
