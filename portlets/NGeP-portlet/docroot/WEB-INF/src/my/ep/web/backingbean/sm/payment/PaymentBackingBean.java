@@ -767,8 +767,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		
 		if(itemCode.equals(SupplierManagementConst.MOF_PAYMENT) || itemCode.equals(SupplierManagementConst.RENEWAL_PAYMENT)){
 			List<PyPaymentChargeLine> paymentChargeLineLs = new ArrayList<PyPaymentChargeLine>();
-			PyPaymentChargeLine hChargeLine = new PyPaymentChargeLine();
-			PyPaymentChargeLine lChargeLine = new PyPaymentChargeLine();
+			PyPaymentChargeLine hChargeLine = new PyPaymentChargeLine(); //GOV
+			PyPaymentChargeLine lChargeLine = new PyPaymentChargeLine(); //CDC
 			
 			BigDecimal cdcCharge = SmServiceLookup.getSmRuleSO().retrieveMofAmountPaidToCDC().getMofAmountPaidToCDC();
 			
