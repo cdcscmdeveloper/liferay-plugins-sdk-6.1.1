@@ -585,7 +585,7 @@ public class QTDocumentsBackingBean extends
 					}
 				} catch (IllegalAccessException | InstantiationException
 						| InvocationTargetException | NoSuchMethodException e) {
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 				if (null != qtDocReport) {
 					qtDocReport.setQtReportId(null);
@@ -593,6 +593,24 @@ public class QTDocumentsBackingBean extends
 					qtDocReport.setDocId(String.valueOf(qtDocReport.getScQt().getQtId()));
 					setUserDetails(qtDocReport);
 					qtDocReport.setChangedDate(null);
+					
+					if (docReport.getScQtDocReportAttachment() != null) {
+						try {
+							ScQtDocReportAttachment qtDocReportAttachment = (ScQtDocReportAttachment)BeanUtils.cloneBean(docReport.getScQtDocReportAttachment());
+							if (qtDocReportAttachment != null) {
+								qtDocReportAttachment.setAttachmentId(null);
+								qtDocReportAttachment.setScQtDocReport(qtDocReport);
+								setUserDetails(qtDocReportAttachment);
+								qtDocReportAttachment.setChangedDate(null);
+								
+								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
+							}
+						} catch (IllegalAccessException | InstantiationException
+								| InvocationTargetException | NoSuchMethodException e) {
+							log.warn(e.getMessage(), e);
+						}	
+					}
+					
 					reportList.add(qtDocReport);
 				}
 			}
