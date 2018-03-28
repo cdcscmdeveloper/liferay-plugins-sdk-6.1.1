@@ -815,6 +815,31 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				calPaymentAmt=getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew();
 			}
 		} 
+		
+		BigDecimal ruleFee = new BigDecimal(0);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			ruleReqDTO.setRuleType(FulfilmentConst.FLONE);
+			ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+			if(transFee.doubleValue() > ruleFee.doubleValue()){
+				transFee = ruleFee;
+			}
+		}else{
+			if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+				ruleReqDTO.setRuleType(FulfilmentConst.FLONE);
+				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+				if(transFee.doubleValue() > ruleFee.doubleValue()){
+					transFee = ruleFee;
+				}
+			}else{
+				ruleReqDTO.setRuleType(FulfilmentConst.FLPER);
+				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+				if(transFee.doubleValue() > ruleFee.doubleValue()){
+					transFee = ruleFee;
+				}
+			}
+		}
+		getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
 		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
 		getTaxinvoice();
 	}
