@@ -4655,9 +4655,10 @@ public class SmCommonUtil {
 
 	public String getPaymentGatewayMerchantIdByBillType(String billType) {
 		String vCode = null;
-
 		if (billType
-				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT) || 
+				billType
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)) {
 			vCode = EpPropertiesUtils.getInstance().getProperty(
 					"molpay.cdc.merchantid");
 		} else {
