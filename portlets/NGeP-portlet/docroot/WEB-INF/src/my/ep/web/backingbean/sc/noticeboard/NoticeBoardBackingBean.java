@@ -1462,10 +1462,8 @@ public class NoticeBoardBackingBean extends
 
 					}
 				}
-				searchBean
-						.getSortColumns()
-						.add(new SearchOrderBean(
-								"to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')", false));
+				searchBean.getSortColumns().add(new SearchOrderBean("to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')", false));
+				searchBean.getSortColumns().add(new SearchOrderBean("qtId"));
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtSearchBean(searchBean);
 				reqDTO.setCurrentTab(selectedTab);
