@@ -73,7 +73,7 @@
 					listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
 
 
-				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%">
+				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
 
 					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
 
@@ -132,7 +132,7 @@
 
 
 					<p:column headerText="#{lbl['lbl.sc.specification']}"
-						style="width:50%">
+						style="width:50%;white-space: normal;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.specification']}" />
 							<ac:iconTooltip id="sampleSpec#{index}"
