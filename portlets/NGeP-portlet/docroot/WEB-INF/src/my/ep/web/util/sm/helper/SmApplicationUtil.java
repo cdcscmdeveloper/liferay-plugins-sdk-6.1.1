@@ -5381,7 +5381,8 @@ public class SmApplicationUtil {
 	public static SmSupplierBranchBank getBranchBankFromListByBranchIdAndBankId(
 			Long branchId, Long bankId, List<SmSupplierBranchBank> list) {
 		SmSupplierBranchBank retVal = null;
-		if (!SmCommonUtil.isCollectionEmpty(list)) {
+		if (!SmCommonUtil.isCollectionEmpty(list) && bankId != null
+				&& branchId != null) {
 			for (SmSupplierBranchBank tmp : list) {
 				if (tmp.getSmSupplierBank() != null
 						&& tmp.getSmSupplierBank().getSupplierBankId()
