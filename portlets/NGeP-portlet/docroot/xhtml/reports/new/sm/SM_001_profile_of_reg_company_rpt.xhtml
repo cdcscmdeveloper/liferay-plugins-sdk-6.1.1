@@ -43,14 +43,9 @@
 					saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
 					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}"
 					conditionField="recordStatus^1|smMofAccounts.recordStatus^1"
-					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo" >
+					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 				</ac:lov>
-				
-				<p:graphicImage id="mofNott"
-					value="/css/images/design/tooltips.png" /> 
-				<p:tooltip for="mofNott">
-					<p:outputLabel escape="false" value="#{lbl['lbl.sm.rpt.profile.tooltip']}" />	
-				</p:tooltip>
 			</td>
 		</tr>
 	</table>
