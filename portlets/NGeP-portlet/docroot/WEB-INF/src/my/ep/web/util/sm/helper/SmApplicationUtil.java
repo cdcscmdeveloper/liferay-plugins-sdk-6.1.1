@@ -5626,7 +5626,12 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory cat : bean.getSmAppl()
 					.getSmSupplierCategories()) {
 				if (cat.isSpecialCategory()
-						&& cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+						&& cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getFacilityType() != null
+						&& !cat.getPmCategoryL3()
+								.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 
 					boolean exist = false;
 
