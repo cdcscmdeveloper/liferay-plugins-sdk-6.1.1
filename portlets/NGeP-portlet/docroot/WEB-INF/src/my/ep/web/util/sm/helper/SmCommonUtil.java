@@ -4643,7 +4643,9 @@ public class SmCommonUtil {
 		String vKey = null;
 
 		if (billType
-				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT) || 
+				billType
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)) {
 			vKey = EpPropertiesUtils.getInstance().getProperty(
 					"molpay.cdc.vkey");
 		} else {
