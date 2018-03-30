@@ -115,6 +115,7 @@
 							partialSubmit="true" process="@this"
 							onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
+							update="searchQTs"
 							rendered="#{qTDetailBB.isAllowQTPublishBtn(scQt)}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png" styleClass="tasklist_title1"
 								title="Click here to Publish QT" />
@@ -124,6 +125,7 @@
 							partialSubmit="true" process="@this"
 							onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
+							update="searchQTs"
 							rendered="#{qTDetailBB.isAllowQTClosedBtn(scQt)}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png" styleClass="tasklist_title1"
 								title="Click here to Close QT" />
