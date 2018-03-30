@@ -563,10 +563,20 @@ public class QTDocumentsBackingBean extends
 			reportList = new ArrayList<ScQtDocReport>();
 		}
 		List<String> existedDocumets=new ArrayList<String>();
+		ScQtDocReport templetDoc=null;
 		if(CollectionUtils.isNotEmpty(reportList)){
 			for(ScQtDocReport docReport:reportList){
-				String docDefinitionKey = docReport.getPmDocument()!=null ?docReport.getPmDocument().getDocDefinitionKey() : docReport.getTitle();
-				existedDocumets.add(docDefinitionKey);
+				//String docDefinitionKey = docReport.getPmDocument()!=null ?docReport.getPmDocument().getDocDefinitionKey() : docReport.getTitle();
+				if(null==docReport.getPmDocument()){
+				existedDocumets.add(docReport.getTitle());
+				}
+				else{
+				String docDefinitionKey=	docReport.getPmDocument().getDocDefinitionKey();
+					if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
+							.equals(docDefinitionKey)) {
+					templetDoc=docReport;
+					}
+				}
 			}
 			
 		}
@@ -575,11 +585,11 @@ public class QTDocumentsBackingBean extends
 		if (!this.getManagedBean().getSelectedCloneScQtDocReports().isEmpty()) {
 			for (ScQtDocReport docReport : scQtDocReports) {
 				ScQtDocReport qtDocReport = null;
+				ScQtDocReportAttachment qtDocReportAttachment=null;
 				try {
 					if (!existedDocumets
-							.contains(docReport.getPmDocument() != null ? docReport
-									.getPmDocument().getDocDefinitionKey()
-									: docReport.getTitle())) {
+							.contains(
+									 docReport.getTitle())) {
 						qtDocReport = (ScQtDocReport) BeanUtils
 								.cloneBean(docReport);
 					}
@@ -596,7 +606,7 @@ public class QTDocumentsBackingBean extends
 					
 					if (docReport.getScQtDocReportAttachment() != null) {
 						try {
-							ScQtDocReportAttachment qtDocReportAttachment = (ScQtDocReportAttachment)BeanUtils.cloneBean(docReport.getScQtDocReportAttachment());
+							 qtDocReportAttachment = (ScQtDocReportAttachment)BeanUtils.cloneBean(docReport.getScQtDocReportAttachment());
 							if (qtDocReportAttachment != null) {
 								qtDocReportAttachment.setAttachmentId(null);
 								qtDocReportAttachment.setScQtDocReport(qtDocReport);
@@ -610,10 +620,43 @@ public class QTDocumentsBackingBean extends
 							log.warn(e.getMessage(), e);
 						}	
 					}
-					
+					if (docReport.getTplDocMaster() != null) {
+						IQTTemplateSO qtTemplateSO = null;
+						try {
+							qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+					if(null!=templetDoc){
+					reportList.remove(templetDoc);
+					templetDoc=retriveRulesAndRegulationReport(templetDoc);
+					TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
+					master=cloneDocMasterDocSectionDetails(master, templetDoc);
+					templetDoc.setTplDocMaster(master);
+						QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
+						reqDTO.setScQtDocReport(templetDoc);
+						QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
+						qtDocReport=resDTO.getScQtDocReport();
+					}else{
+						TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
+						master=cloneDocMasterDocSectionDetails(master, qtDocReport);
+						qtDocReport.setTplDocMaster(master);
+							QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
+							reqDTO.setScQtDocReport(qtDocReport);
+							QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
+							qtDocReport=resDTO.getScQtDocReport();
+						
+					}
+						
+					}finally{
+						qtTemplateSO = null;
+					}
+						
+					}
 					reportList.add(qtDocReport);
+					
 				}
 			}
+			 getManagedBean()
+				.setScQtDocReportList(reportList);
 		} else {
 			throw new EpException(MessageConst.ERROR_760141);
 		}
@@ -865,111 +908,7 @@ public class QTDocumentsBackingBean extends
 		Long tplMasterId = retrieveStandardTplDocMaster(scQt).getDocMasterId();
 		log.debug("==========doc master id===="+tplMasterId);
 		TplDocMaster templateDocMaster = retrieveTplDocMasterById(tplMasterId);
-
-		// clone TplDocMaster Details
-		TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster
-				.cloneEntity();
-		tplDocMaster.setDocMasterId(null);
-		tplDocMaster.setOrgProfile(null);
-		tplDocMaster.setTplDocSections(null);
-		// tplDocMaster.setTplDocSectionCollection(null);
-		tplDocMaster.setDocTitle(scQtDocReport.getTitle());
-		tplDocMaster.setDocName(scQtDocReport.getTitle());
-
-		setUserDetails(tplDocMaster);
-
-		// clone tplDocSection Details
-		/*
-		 * tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
-		 * List<TplDocSection> docSections =
-		 * templateDocMaster.getTplDocSections(); for (TplDocSection
-		 * tplDocSection : docSections) { TplDocSection section =
-		 * (TplDocSection) tplDocSection.cloneEntity();
-		 * section.setDocSectionId(null); section.setParent(null); //
-		 * Temporarily am setting null, need to confirm once
-		 * section.setTplDocMaster(tplDocMaster);
-		 * 
-		 * setUserDetails(section);
-		 * tplDocMaster.getTplDocSections().add(section); }
-		 */
-
-		tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
-		List<TplDocSection> docSectionCOllection = templateDocMaster
-				.getTplDocSectionCollection();
-		for (TplDocSection tplDocSection : docSectionCOllection) {
-			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
-			//log.info("===doc section name"+section.getSectionTitle()+"section content"+section.getSectionContent());
-			if(TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE.equalsIgnoreCase(section.getSectionTitle())){
-				String title=TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE+TemplateDocConst.PARAM_SPACE+getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), myLocale).toUpperCase();
-				section.setSectionName(title);
-				section.setSectionTitle(title);
-			}
-			section.setDocSectionId(null);
-			section.setParent(null); // Temporarily am setting null, need to
-										// confirm once
-			section.setTplDocMaster(tplDocMaster);
-
-			setUserDetails(section);
-			tplDocMaster.getTplDocSectionCollection().add(section);
-		}
-
-		// Procurement Category
-		PmParameter procurementCategory = scQtDocReport.getScQt()
-				.getPmProcurementCategory();
-		tplDocMaster.setProcurementCategory(procurementCategory);
-
-		// Process Type
-		PmParameter processType = getPmParameter(
-				ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
-				ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-		tplDocMaster.setProcessType(processType);
-
-		// Template Type
-		PmParameter templateType = getPmParameter(
-				ParameterTypeConst.TEMPLATE_TYPE,
-				ParameterConst.TEMPLATE_TYPE_MINISTRY);
-		tplDocMaster.setTemplateType(templateType);
-
-		// Item Type - Service & Product
-		PmParameter itemType = null;
-		if (procurementCategory.getParameterCode().equals(
-				ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
-				|| procurementCategory
-						.getParameterCode()
-						.equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
-				|| procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
-				|| procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_MTO)
-				|| procurementCategory
-						.getParameterCode()
-						.equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
-				|| procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
-			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
-					ParameterConst.ITEM_TYPE_SERVICE);
-		} else if (procurementCategory.getParameterCode().equals(
-				ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
-				|| procurementCategory
-						.getParameterCode()
-						.equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
-				|| procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_ICT)
-				|| procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
-				|| procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
-			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
-					ParameterConst.ITEM_TYPE_PRODUCT);
-		}
-		tplDocMaster.setItemTypeId(itemType);
-
-		// Status
-		tplDocMaster.setPmStatus(getPmStatusByStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT));
-
-		tplDocMaster.setScReport(scQtDocReport);
-
-		return tplDocMaster;
+		return cloneDocMasterDocSectionDetails(templateDocMaster,scQtDocReport);
 	}
 
 	/**
@@ -3027,6 +2966,113 @@ public class QTDocumentsBackingBean extends
 			ruleSO = null;
 		}
 		return configRuleValue;
+	}
+	
+	private TplDocMaster cloneDocMasterDocSectionDetails(TplDocMaster templateDocMaster,ScQtDocReport scQtDocReport){
+		// clone TplDocMaster Details
+				TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster
+						.cloneEntity();
+				tplDocMaster.setDocMasterId(null);
+				tplDocMaster.setOrgProfile(null);
+				tplDocMaster.setTplDocSections(null);
+				// tplDocMaster.setTplDocSectionCollection(null);
+				tplDocMaster.setDocTitle(scQtDocReport.getTitle());
+				tplDocMaster.setDocName(scQtDocReport.getTitle());
+
+				setUserDetails(tplDocMaster);
+
+				// clone tplDocSection Details
+				/*
+				 * tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
+				 * List<TplDocSection> docSections =
+				 * templateDocMaster.getTplDocSections(); for (TplDocSection
+				 * tplDocSection : docSections) { TplDocSection section =
+				 * (TplDocSection) tplDocSection.cloneEntity();
+				 * section.setDocSectionId(null); section.setParent(null); //
+				 * Temporarily am setting null, need to confirm once
+				 * section.setTplDocMaster(tplDocMaster);
+				 * 
+				 * setUserDetails(section);
+				 * tplDocMaster.getTplDocSections().add(section); }
+				 */
+
+				tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+				List<TplDocSection> docSectionCOllection = templateDocMaster
+						.getTplDocSectionCollection();
+				for (TplDocSection tplDocSection : docSectionCOllection) {
+					TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
+					//log.info("===doc section name"+section.getSectionTitle()+"section content"+section.getSectionContent());
+					if(TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE.equalsIgnoreCase(section.getSectionTitle())){
+						String title=TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE+TemplateDocConst.PARAM_SPACE+getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), myLocale).toUpperCase();
+						section.setSectionName(title);
+						section.setSectionTitle(title);
+					}
+					section.setDocSectionId(null);
+					section.setParent(null); // Temporarily am setting null, need to
+												// confirm once
+					section.setTplDocMaster(tplDocMaster);
+
+					setUserDetails(section);
+					tplDocMaster.getTplDocSectionCollection().add(section);
+				}
+
+				// Procurement Category
+				PmParameter procurementCategory = scQtDocReport.getScQt()
+						.getPmProcurementCategory();
+				tplDocMaster.setProcurementCategory(procurementCategory);
+
+				// Process Type
+				PmParameter processType = getPmParameter(
+						ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
+						ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+				tplDocMaster.setProcessType(processType);
+
+				// Template Type
+				PmParameter templateType = getPmParameter(
+						ParameterTypeConst.TEMPLATE_TYPE,
+						ParameterConst.TEMPLATE_TYPE_MINISTRY);
+				tplDocMaster.setTemplateType(templateType);
+
+				// Item Type - Service & Product
+				PmParameter itemType = null;
+				if (procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
+						|| procurementCategory
+								.getParameterCode()
+								.equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
+						|| procurementCategory.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
+						|| procurementCategory.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_CATEGORY_MTO)
+						|| procurementCategory
+								.getParameterCode()
+								.equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
+						|| procurementCategory.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
+					itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
+							ParameterConst.ITEM_TYPE_SERVICE);
+				} else if (procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
+						|| procurementCategory
+								.getParameterCode()
+								.equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
+						|| procurementCategory.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_CATEGORY_ICT)
+						|| procurementCategory.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
+						|| procurementCategory.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
+					itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
+							ParameterConst.ITEM_TYPE_PRODUCT);
+				}
+				tplDocMaster.setItemTypeId(itemType);
+
+				// Status
+				tplDocMaster.setPmStatus(getPmStatusByStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT));
+
+				tplDocMaster.setScReport(scQtDocReport);
+				
+				return tplDocMaster;
 	}
 
 }
