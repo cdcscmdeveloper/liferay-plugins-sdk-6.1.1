@@ -151,7 +151,7 @@
 		
 		<h:panelGroup id="ansPG">
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
-			onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
+			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired and isValidationReq}" rows="1" maxlength="200"
 				label="#{lbl[answerlbl]}">
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
@@ -198,9 +198,9 @@
 		</h:outputText>
 	</p:column>
 	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
-		<p:inputTextarea id="answerRemarks" label="#{lbl['lbl.tpl.spec.content.note']}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" rows="1"  onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
-		onmouseout="limitTextArea(this,500);">
-		<f:validateLength for="answerRemarks" maximum="500" />
+		<p:inputTextarea id="answerRemarks" label="#{lbl['lbl.tpl.spec.content.note']}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+		onmouseout="limitTextArea(this,1000);">
+		<f:validateLength for="answerRemarks" maximum="1000" />
 		</p:inputTextarea>
 		<p:message id="answerRemarksMsg" for="answerRemarks" display="icon" />
 	</p:column>
