@@ -5545,16 +5545,13 @@ public class QTDetailBackingBean extends
 		try {
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			
 			Long qtId = scQt.getQtId();
-
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtId);
 			
-			boolean isUpdateSucessful = qtProposalSO.updateProposalWorkFlowStatus(reqDTO)
-				.isSuccessful();
+			ProposalResDTO resDTO = qtProposalSO.updateProposalCloseWorkFlowStatus(reqDTO);
 			boolean isSucessful = false;
-			if(isUpdateSucessful){
+			if(resDTO.isSuccessful()){
 				IQTNoticeBoardSO noticeBoardSO = null;
 				try{
 					noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -5570,15 +5567,15 @@ public class QTDetailBackingBean extends
 			}
 			if (isSucessful) {
 				qtProposalSO.closeProposal(reqDTO);
-				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								scQt.getQtNo() + " Closing Started. Please wait a while for QT closing."
-				));
 			}
+			
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,resDTO.getErrorMessage()!= null ? resDTO.getErrorMessage() :
+							scQt.getQtNo() + " Closing Started. Please wait a while for QT closing."
+			));
 
 		} finally {
 			qtProposalSO = null;
@@ -5594,37 +5591,38 @@ public class QTDetailBackingBean extends
 	 */
 	
 	public void publishQT(ScQt scQt) {
-		
+		ProposalResDTO proposalResDTO = null;
 		try{
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(scQt.getQtId());
-			ProposalResDTO proposalResDTO = getProposalSO()
-					.updateProposalWorkFlowStatus(proposalReqDTO);
+			proposalResDTO = getProposalSO()
+					.updateProposalStartWorkFlowStatus(proposalReqDTO);
 			if (!proposalResDTO.isSpecChanged()) {
 				if (proposalResDTO.isSuccessful()) {
 					log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
 					insertSuppliersAndSendNotification(scQt.getQtId());
-				} else {
-					log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
-					updateQtAsDisrupted(
-							scQt.getQtId(),
-							QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
-							proposalResDTO.getErrorMessage());
-				}
+					
+				} 
 			}
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(
 							FacesMessage.SEVERITY_INFO,
-							null,
+							null,proposalResDTO.getErrorMessage()!= null ? proposalResDTO.getErrorMessage():
 							scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
 							));
 		
+		}catch(Exception e){
+			log.info("$$$$$ qt Work Flow status updated failed during Publish due to exception");
+			log.error(e.getStackTrace());
+			if(proposalResDTO != null){
+				updateQtAsDisrupted(
+						scQt.getQtId(),
+						QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
+						proposalResDTO.getErrorMessage());
+			}
 		}
-		finally{
-			
-		}
-		
 	}
 	
 	
