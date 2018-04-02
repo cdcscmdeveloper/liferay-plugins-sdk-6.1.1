@@ -11414,7 +11414,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 			}
-
+           checkTechnicalFinancialItemCount(scQtCheckList,qtCheckList);
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
 			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
@@ -14367,5 +14367,30 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		
+	}
+	
+	private void  checkTechnicalFinancialItemCount(ScQtCheckList technicalChecklist,ScQtCheckList financialCheckList){
+		try{
+			//log.info("TechnicalQuestionSize"+technicalChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size());
+			//log.info("FinancialQuestionSize"+financialCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size());
+			List<TplSpecQuestion> technicalQuestionList=new ArrayList<TplSpecQuestion>();
+			if(CollectionUtils.isNotEmpty(technicalChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions())){
+				for(TplSpecQuestion technicalQuestion:technicalChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+					if (TemplateSpecConst.QUESTION_TYPE_ITEM .equalsIgnoreCase(
+							technicalQuestion.getQuestionType())) {
+						technicalQuestionList.add(technicalQuestion);
+					}
+				}
+				//technicalQuestionList.add(new TplSpecQuestion());
+			}
+			//log.info("finalTechnicalQuestionSize"+technicalQuestionList.size());
+			if(technicalQuestionList.size()!=financialCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size()){
+				throw new EpException("TechnicalQuestion size and financialQuestion size not same.");
+				
+			}
+			technicalQuestionList=null;	
+		}finally{
+			
+		}
 	}
 }
