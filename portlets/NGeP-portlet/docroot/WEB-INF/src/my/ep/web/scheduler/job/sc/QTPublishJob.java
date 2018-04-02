@@ -86,18 +86,14 @@ public class QTPublishJob implements Job {
 			ScQt qt = proposalSO.getQtByQtId(proposalReqDTO).getScQt();
 			if (qt.getPublishDate().equals(getCompareTime())) {
 				ProposalResDTO proposalResDTO = proposalSO
-						.updateProposalWorkFlowStatus(proposalReqDTO);
+						.updateProposalStartWorkFlowStatus(proposalReqDTO);
 				// skip publish QT call if QT is waiting to sign off pending specchanges.
 				if (!proposalResDTO.isSpecChanged()) {
 					if (proposalResDTO.isSuccessful()) {
 						log.debug("$$$$$ qt Work Flow status updated suceessfull for Publish");
 						insertSuppliersAndSendNotification(qtId);
-					} else {
-						log.debug("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
-						updateQtAsDisrupted(
-								qtId,
-								QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
-								proposalResDTO.getErrorMessage());
+					} else{
+						log.info(proposalResDTO.getErrorMessage());
 					}
 				}
 			}else if(qt.getPublishDate().before(getCompareTime())){
@@ -108,7 +104,7 @@ public class QTPublishJob implements Job {
 			log.debug("$$$$$ qt Work Flow status updated failed for Publish");
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
-			reSchedulePublicationForPublishFailQt(qtId);
+			//reSchedulePublicationForPublishFailQt(qtId);
 		}
 
 		finally {

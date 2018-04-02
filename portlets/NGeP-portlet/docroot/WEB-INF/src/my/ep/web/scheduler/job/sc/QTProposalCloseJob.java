@@ -64,12 +64,15 @@ public class QTProposalCloseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		debugLogger("Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
-		log.debug("##### Start execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
+		debugLogger("Start execute in QTProposalCloseJob @"
+				+ DateUtils.getCurrentDate());
+		log.debug("##### Start execute in QTProposalCloseJob @"
+				+ DateUtils.getCurrentDate());
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
-		
-		log.debug("#$#$#$#$ Proposal being closed for QT with id:: "+qtId);
+		Long qtId = dataMap
+				.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
+
+		log.debug("#$#$#$#$ Proposal being closed for QT with id:: " + qtId);
 
 		try {
 			if (proposalSO == null) {
@@ -79,22 +82,16 @@ public class QTProposalCloseJob implements Job {
 			}
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
-			ScQt qt = proposalSO
-					.getQtByQtId(proposalReqDTO).getScQt();
-			if(qt.getClosingDate().equals(getCompareTime())){
-			ProposalResDTO proposalResDTO = proposalSO
-					.updateProposalWorkFlowStatus(proposalReqDTO);
-			
-			if (proposalResDTO.isSuccessful()) {
-				log.debug("$$$$$ qt Work Flow status update suceessful from QTProposalCloseJob job");
-				insertProposalAmount(qtId);
-			} else {
-				log.debug("$$$$$ qt Work Flow status update unsuceessful from QTProposalCloseJob job");
-				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
-						proposalResDTO.getErrorMessage());
-			}
-			}else if(qt.getClosingDate().before(getCompareTime())){
+			ScQt qt = proposalSO.getQtByQtId(proposalReqDTO).getScQt();
+			if (qt.getClosingDate().equals(getCompareTime())) {
+				ProposalResDTO proposalResDTO = proposalSO
+						.updateProposalCloseWorkFlowStatus(proposalReqDTO);
+
+				if (proposalResDTO.isSuccessful()) {
+					log.debug("$$$$$ qt Work Flow status update suceessful from QTProposalCloseJob job");
+					insertProposalAmount(qtId);
+				}
+			} else if (qt.getClosingDate().before(getCompareTime())) {
 				log.debug("%%%%% QT not Closed ontime and updated to closing reschedule");
 				reSchedulePublicationForPublishFailQt(qtId);
 			}
@@ -108,8 +105,10 @@ public class QTProposalCloseJob implements Job {
 			noticeBoardSO = null;
 			proposalSO = null;
 		}
-		debugLogger("End execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
-		log.debug("##### Finish execute in QTProposalCloseJob @"+DateUtils.getCurrentDate());
+		debugLogger("End execute in QTProposalCloseJob @"
+				+ DateUtils.getCurrentDate());
+		log.debug("##### Finish execute in QTProposalCloseJob @"
+				+ DateUtils.getCurrentDate());
 	}
 
 	private void insertProposalAmount(Long qtId) {
@@ -133,7 +132,7 @@ public class QTProposalCloseJob implements Job {
 						+ qtId);
 				updateQtAsDisrupted(
 						qtId,
-						QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION, 
+						QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION,
 						resDTO.getErrorMessage());
 			}
 
@@ -144,12 +143,12 @@ public class QTProposalCloseJob implements Job {
 			String errorMessage = null;
 			e.printStackTrace();
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
-    		if (rootCause != null) {
-    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
-    		} else {
-    			errorMessage = ExceptionUtils.getStackTrace(e);
-    			
-    		}
+			if (rootCause != null) {
+				errorMessage = ExceptionUtils.getStackTrace(rootCause);
+			} else {
+				errorMessage = ExceptionUtils.getStackTrace(e);
+
+			}
 			updateQtAsDisrupted(
 					qtId,
 					QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION,
@@ -174,7 +173,7 @@ public class QTProposalCloseJob implements Job {
 				log.debug("$$$$$ BPM Update after Proposal Close unsuccessful for the QT Id :"
 						+ qtId);
 				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION, 
+						QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION,
 						resDTO.getErrorMessage());
 			}
 		} catch (Exception e) {
@@ -184,19 +183,19 @@ public class QTProposalCloseJob implements Job {
 			e.printStackTrace();
 			String errorMessage = null;
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
-    		if (rootCause != null) {
-    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
-    		} else {
-    			errorMessage = ExceptionUtils.getStackTrace(e);
-    			
-    		}
-			updateQtAsDisrupted(qtId, 
-					QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION,
-					errorMessage);
+			if (rootCause != null) {
+				errorMessage = ExceptionUtils.getStackTrace(rootCause);
+			} else {
+				errorMessage = ExceptionUtils.getStackTrace(e);
+
+			}
+			updateQtAsDisrupted(qtId,
+					QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION, errorMessage);
 		}
 	}
 
-	private void updateQtAsDisrupted(Long qtId, int disruptionStage, String errorMessage) {
+	private void updateQtAsDisrupted(Long qtId, int disruptionStage,
+			String errorMessage) {
 		try {
 			if (proposalSO == null) {
 				proposalSO = BusinessDelegate.getInstance()
@@ -212,9 +211,9 @@ public class QTProposalCloseJob implements Job {
 			log.error(e.getLocalizedMessage());
 		}
 	}
-	
-	private void reSchedulePublicationForPublishFailQt(Long qtId){
-		if(proposalSO == null){
+
+	private void reSchedulePublicationForPublishFailQt(Long qtId) {
+		if (proposalSO == null) {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 		}
@@ -222,11 +221,14 @@ public class QTProposalCloseJob implements Job {
 		reqDTO.setQtId(qtId);
 		reqDTO.setJobType(SourcingConstants.JOB_TYPE_CLOSE);
 		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
-		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
-		if(resDTO.isSuccessful()){
-			log.debug("Work flow status updated for proposal close failed QT with id"+qtId);
+		ProposalResDTO resDTO = proposalSO
+				.updateRescheduleWorkFlowStatus(reqDTO);
+		if (resDTO.isSuccessful()) {
+			log.debug("Work flow status updated for proposal close failed QT with id"
+					+ qtId);
 		}
 	}
+
 	private Date getCompareTime() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.SECOND, 0);
