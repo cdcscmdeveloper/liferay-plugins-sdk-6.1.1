@@ -994,8 +994,8 @@ public class AccessApplBackingBean extends
 	 */
 	private static String getUserRoleValue() {
 		FacesScopes sc = new FacesScopes();
-		if (sc.hasRoleUser(RoleCode.UPS_ADMIN.value())) {
-			return RoleCode.UPS_ADMIN.value();
+		if (sc.hasRoleUser(RoleCode.UPS_APPROVER.value())) {
+			return RoleCode.UPS_APPROVER.value();
 		} else if (sc.hasRoleUser(RoleCode.EP_ADMIN_2.value())) {
 			return RoleCode.EP_ADMIN_2.value();
 		} 
