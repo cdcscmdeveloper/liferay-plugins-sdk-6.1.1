@@ -4463,40 +4463,6 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Sort progressive payment list.
-	 *
-	 * @param progressivePaymentList the progressive payment list
-	 */
-	private void sortProgressivePaymentList(
-			List<ScQtProgressivePayment> progressivePaymentList) {
-		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
-			@Override
-			public int compare(ScQtProgressivePayment o1,
-					ScQtProgressivePayment o2) {
-				return new CompareToBuilder().append(o1.getPhaseNo(),
-						o2.getPhaseNo()).toComparison();
-			}
-		};
-		Collections.sort(progressivePaymentList, comparator);
-	}
-
-	/**
-	 * Sort frequent schedule list.
-	 *
-	 * @param scQtScheduleList the sc qt schedule list
-	 */
-	private void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
-		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
-			@Override
-			public int compare(ScQtSchedule o1, ScQtSchedule o2) {
-				return new CompareToBuilder().append(o1.getScheduleNo(),
-						o2.getScheduleNo()).toComparison();
-			}
-		};
-		Collections.sort(scQtScheduleList, comparator);
-	}
-
-	/**
 	 * Gets the approval action display name.
 	 *
 	 * @param value the value
