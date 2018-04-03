@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -123,7 +125,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -161,6 +165,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.jaxb.Context;
@@ -3022,6 +3027,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}finally{
 			specSO=null;
 		}
+	}
+	
+	/**
+	 * Sort frequent schedule list.
+	 *
+	 * @param scQtScheduleList the sc qt schedule list
+	 */
+	protected void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
+		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
+			@Override
+			public int compare(ScQtSchedule o1, ScQtSchedule o2) {
+				return new CompareToBuilder().append(o1.getScheduleNo(),
+						o2.getScheduleNo()).toComparison();
+			}
+		};
+		Collections.sort(scQtScheduleList, comparator);
+	}
+	
+	/**
+	 * Sort progressive payment list.
+	 *
+	 * @param progressivePaymentList the progressive payment list
+	 */
+	protected void sortProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
+			@Override
+			public int compare(ScQtProgressivePayment o1,
+					ScQtProgressivePayment o2) {
+				return new CompareToBuilder().append(o1.getPhaseNo(),
+						o2.getPhaseNo()).toComparison();
+			}
+		};
+		Collections.sort(progressivePaymentList, comparator);
 	}
 	
 	private String getMimeType(String fileName) {

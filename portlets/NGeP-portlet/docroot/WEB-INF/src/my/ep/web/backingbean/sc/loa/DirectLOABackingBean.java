@@ -4470,6 +4470,7 @@ public class DirectLOABackingBean extends
 				scQtSchedule.setEndYear(endYear);
 
 			}
+			this.sortFrequentScheduleList(scheduleList);
 		}catch(ParseException e){
 			
 		}
@@ -4500,7 +4501,7 @@ public class DirectLOABackingBean extends
 				payment.setEndYear(endYear);
 
 			}
-
+			this.sortProgressivePaymentList(payments);
 		}
 	}
 
