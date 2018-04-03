@@ -14385,7 +14385,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			//log.info("finalTechnicalQuestionSize"+technicalQuestionList.size());
 			if(technicalQuestionList.size()!=financialCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size()){
-				throw new EpException("TechnicalQuestion size and financialQuestion size not same.");
+				throw new EpException(MessageConst.ERROR_760469);
 				
 			}
 			technicalQuestionList=null;	
