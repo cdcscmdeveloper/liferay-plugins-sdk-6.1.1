@@ -19,6 +19,7 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
@@ -88,9 +89,11 @@ public class PpReportsBackingBean extends
 		getManagedBean().setSelectedPegawaiPengawal(null);
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
-		getManagedBean().setDisableOrgFields(false);
 		getManagedBean().setSelectedYear(null);
-		getManagedBean().setDisableMinistryField(false);
+		getManagedBean().setDisabledMinistryLov(false);
+		getManagedBean().setDisabledPegawaiLov(false);
+		getManagedBean().setDisabledKumpulanPTJLov(false);
+		getManagedBean().setDisabledPTJLov(false);
 		getManagedBean().setProcurementCatId(null);
 		getManagedBean().setProcurementTypeId(null);
 		getManagedBean().setStatus(null);
@@ -118,26 +121,76 @@ public class PpReportsBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-
-		if (getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(
-						RoleCode.PLAN_VERFICATION_OFFICER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PLAN_OFFICER.value())) {
-			getManagedBean().setDisableOrgFields(true);
-			getManagedBean().setDisableMinistryField(true);
-			getManagedBean().setSelectedMinistry(
-					retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedPegawaiPengawal(
-					retrievePegawaiPegawalOrgProfile(pmOrgProfile
-							.getOrgProfileId()));
-			getManagedBean().setSelectedKumpulanPTJ(
-					retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-			getManagedBean().setSelectedPTJ(pmOrgProfile);
-		}else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			getManagedBean().setSelectedMinistry(
-					pmOrgProfile);
-			getManagedBean().setDisableMinistryField(true);
+		if(getManagedBean().getCurrentActiveOrg() !=null){
+			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+			if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+					&&(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
+							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+				if(isRolePlanner() || isRoleVerifier()){
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));					
+					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));					
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));					
+					getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().setDisabledMinistryLov(true);
+					getManagedBean().setDisabledPegawaiLov(true);
+					getManagedBean().setDisabledKumpulanPTJLov(true);
+					getManagedBean().setDisabledPTJLov(true);
+					
+				}else if(isRoleApprover()){
+					 // group org hierarchy
+					if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+						getManagedBean().setDisabledMinistryLov(true);
+					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){					
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+						getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));	
+						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
+						getManagedBean().setDisabledPegawaiLov(true);
+						getManagedBean().setDisabledMinistryLov(true);
+						getManagedBean().setDisabledKumpulanPTJLov(true);
+					}
+				}else if(isInternalAuditor()){
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					getManagedBean().setDisabledMinistryLov(true);
+				}
+			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
+					|| (getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+					&& ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+				// usual org hierarchy 
+				if(isRolePlanner() || isRoleVerifier() || isRoleApprover()){
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
+					getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().setDisabledMinistryLov(true);
+					getManagedBean().setDisabledPegawaiLov(true);
+					getManagedBean().setDisabledKumpulanPTJLov(true);
+					getManagedBean().setDisabledPTJLov(true);
+				}else if(isInternalAuditor()){
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					getManagedBean().setDisabledMinistryLov(true);
+				}
+			}
 		}
+		
+//		if (isRoleApprover()
+//				|| isRoleVerifier()
+//				|| isRolePlanner()) {
+//			getManagedBean().setDisableOrgFields(true);
+//			getManagedBean().setDisableMinistryField(true);
+//			getManagedBean().setSelectedMinistry(
+//					retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+//			getManagedBean().setSelectedPegawaiPengawal(
+//					retrievePegawaiPegawalOrgProfile(pmOrgProfile
+//							.getOrgProfileId()));
+//			getManagedBean().setSelectedKumpulanPTJ(
+//					retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+//			getManagedBean().setSelectedPTJ(pmOrgProfile);
+//		}else if(isInternalAuditor()){
+//			getManagedBean().setSelectedMinistry(
+//					pmOrgProfile);
+//			getManagedBean().setDisableMinistryField(true);
+//		}
 	}
 
 	public void onChangeMinistry(BaseEntity entity) {
@@ -373,5 +426,33 @@ public class PpReportsBackingBean extends
 	
 	public void onChangeProcurementMethod(){
 		getManagedBean().setProcurementTypeId(null);
+	}
+	
+	/**
+	 * Login user has approver role
+	 * @return boolean
+	 */
+	public boolean isRoleApprover(){
+		return getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value());
+	}
+	
+	/**
+	 * Login user has verifier role
+	 * @return boolean
+	 */
+	public boolean isRoleVerifier(){
+		return getFacesScopes().hasRoleUser(RoleCode.PLAN_VERFICATION_OFFICER.value());
+	}
+	
+	/**
+	 * Login user has planner role
+	 * @return boolean
+	 */
+	public boolean isRolePlanner(){
+		return getFacesScopes().hasRoleUser(RoleCode.PLAN_OFFICER.value());
+	}
+	
+	private boolean isInternalAuditor(){
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
 	}
 }
