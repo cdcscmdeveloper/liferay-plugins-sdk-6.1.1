@@ -36,7 +36,7 @@
 				</td>
 			
 				<td class="tdContent">
-					<p:inputText value="#{poTaskWeightageBB.managedBean.selectedUser.userName}" disabled="true"/>
+					<p:inputText id="txtUserName" value="#{poTaskWeightageBB.managedBean.selectedUser.userName}" disabled="true"/>
 				</td>
 				
 				<td class="tdTitle">
@@ -44,13 +44,13 @@
 				</td>
 			
 				<td class="tdContent">
-					<p:inputText value="#{poTaskWeightageBB.managedBean.selectedUser.identificationNo}" disabled="true"/>
+					<p:inputText id="txtIdentNo" value="#{poTaskWeightageBB.managedBean.selectedUser.identificationNo}" disabled="true" />
 				</td>
 			</tr>
 			
 			<tr>
 				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.pm.po.task.current.accumulated.weight']}" />
+					<p:outputLabel id="txtAccummualtedWeight" value="#{lbl['lbl.pm.po.task.current.accumulated.weight']}" />
 				</td>
 			
 				<td class="tdContent">
@@ -58,7 +58,7 @@
 				</td>
 				
 				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.pm.po.task.new.weight']}" />
+					<p:outputLabel id="txtNewWeight" value="#{lbl['lbl.pm.po.task.new.weight']}" />
 				</td>
 			
 				<td class="tdContent">
