@@ -7,7 +7,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 
 @ManagedBean(name = "ppReportsManagedBean")
 @SessionScoped
-public class PpReportsManagedBean extends ReportBaseManagedBean{
+public class PpReportsManagedBean extends ReportBaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private PmOrgProfile currentActiveOrg;
@@ -15,14 +15,17 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	private PmOrgProfile selectedPegawaiPengawal;
 	private PmOrgProfile selectedKumpulanPTJ;
 	private PmOrgProfile selectedPTJ;
-	private boolean disableOrgFields;
-	private boolean disableMinistryField;
+	private boolean disabledMinistryLov = false;
+	private boolean disabledPegawaiLov = false;
+	private boolean disabledKumpulanPTJLov = false;
+	private boolean disabledPTJLov = false;
 	private String selectedYear;
 	private Long procurementCatId;
 	private Long procurementTypeId;
 	private Integer status;
-	
-	public PpReportsManagedBean(){}
+
+	public PpReportsManagedBean() {
+	}
 
 	/**
 	 * @return the selectedMinistry
@@ -32,7 +35,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param selectedMinistry the selectedMinistry to set
+	 * @param selectedMinistry
+	 *            the selectedMinistry to set
 	 */
 	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
 		this.selectedMinistry = selectedMinistry;
@@ -46,7 +50,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param selectedPegawaiPengawal the selectedPegawaiPengawal to set
+	 * @param selectedPegawaiPengawal
+	 *            the selectedPegawaiPengawal to set
 	 */
 	public void setSelectedPegawaiPengawal(PmOrgProfile selectedPegawaiPengawal) {
 		this.selectedPegawaiPengawal = selectedPegawaiPengawal;
@@ -60,7 +65,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param selectedKumpulanPTJ the selectedKumpulanPTJ to set
+	 * @param selectedKumpulanPTJ
+	 *            the selectedKumpulanPTJ to set
 	 */
 	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
 		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
@@ -74,7 +80,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param selectedPTJ the selectedPTJ to set
+	 * @param selectedPTJ
+	 *            the selectedPTJ to set
 	 */
 	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
 		this.selectedPTJ = selectedPTJ;
@@ -88,24 +95,11 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param currentActiveOrg the currentActiveOrg to set
+	 * @param currentActiveOrg
+	 *            the currentActiveOrg to set
 	 */
 	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
 		this.currentActiveOrg = currentActiveOrg;
-	}
-
-	/**
-	 * @return the disableOrgFields
-	 */
-	public boolean isDisableOrgFields() {
-		return disableOrgFields;
-	}
-
-	/**
-	 * @param disableOrgFields the disableOrgFields to set
-	 */
-	public void setDisableOrgFields(boolean disableOrgFields) {
-		this.disableOrgFields = disableOrgFields;
 	}
 
 	/**
@@ -116,24 +110,11 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param selectedYear the selectedYear to set
+	 * @param selectedYear
+	 *            the selectedYear to set
 	 */
 	public void setSelectedYear(String selectedYear) {
 		this.selectedYear = selectedYear;
-	}
-
-	/**
-	 * @return the disableMinistryField
-	 */
-	public boolean isDisableMinistryField() {
-		return disableMinistryField;
-	}
-
-	/**
-	 * @param disableMinistryField the disableMinistryField to set
-	 */
-	public void setDisableMinistryField(boolean disableMinistryField) {
-		this.disableMinistryField = disableMinistryField;
 	}
 
 	/**
@@ -144,7 +125,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param procurementCatId the procurementCatId to set
+	 * @param procurementCatId
+	 *            the procurementCatId to set
 	 */
 	public void setProcurementCatId(Long procurementCatId) {
 		this.procurementCatId = procurementCatId;
@@ -158,7 +140,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param procurementTypeId the procurementTypeId to set
+	 * @param procurementTypeId
+	 *            the procurementTypeId to set
 	 */
 	public void setProcurementTypeId(Long procurementTypeId) {
 		this.procurementTypeId = procurementTypeId;
@@ -172,9 +155,44 @@ public class PpReportsManagedBean extends ReportBaseManagedBean{
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	public boolean isDisabledMinistryLov() {
+		return disabledMinistryLov;
+	}
+
+	public void setDisabledMinistryLov(boolean disabledMinistryLov) {
+		this.disabledMinistryLov = disabledMinistryLov;
+	}
+
+	public boolean isDisabledPegawaiLov() {
+		return disabledPegawaiLov;
+	}
+
+	public void setDisabledPegawaiLov(boolean disabledPegawaiLov) {
+		this.disabledPegawaiLov = disabledPegawaiLov;
+	}
+
+	public boolean isDisabledKumpulanPTJLov() {
+		return disabledKumpulanPTJLov;
+	}
+
+	public void setDisabledKumpulanPTJLov(boolean disabledKumpulanPTJLov) {
+		this.disabledKumpulanPTJLov = disabledKumpulanPTJLov;
+	}
+
+	public boolean isDisabledPTJLov() {
+		return disabledPTJLov;
+	}
+
+	public void setDisabledPTJLov(boolean disabledPTJLov) {
+		this.disabledPTJLov = disabledPTJLov;
+	}
+	
+	
 }
