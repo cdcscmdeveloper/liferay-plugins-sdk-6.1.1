@@ -14,7 +14,7 @@
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%"><p:outputLabel value="#{lbl['lbl.pm.po.task.identification.no']}" /></th>
-				<td width="25%"><p:inputText id="identificationNoId" value="#{poTaskWeightageBB.managedBean.identificationNo}" /></td>
+				<td width="25%"><p:inputText id="identificationNoId" value="#{poTaskWeightageBB.managedBean.identificationNo}" maxlength="20" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
@@ -22,7 +22,7 @@
 			<tr>
 				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.po.task.user.name']}" /></th>
-				<td width="25%"><p:inputText id="userNameId" value="#{poTaskWeightageBB.managedBean.userName}" /></td>
+				<td width="25%"><p:inputText id="userNameId" value="#{poTaskWeightageBB.managedBean.userName}" maxlength="80" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
