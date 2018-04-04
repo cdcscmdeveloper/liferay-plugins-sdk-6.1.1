@@ -212,6 +212,8 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 	public void resetPOTaskWeightageSearch(){
 		getManagedBean().setUserName(null);
 		getManagedBean().setIdentificationNo(null);
+		getManagedBean().setRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
+		getManagedBean().setPoStatus(DbValueConst.RECORD_STATUS_ACTIVE);
 	}
 	
 	public void updateUser(){
