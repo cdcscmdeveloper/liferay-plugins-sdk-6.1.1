@@ -104,7 +104,10 @@ public class QTPublishJob implements Job {
 			log.debug("$$$$$ qt Work Flow status updated failed for Publish");
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
-			//reSchedulePublicationForPublishFailQt(qtId);
+			updateQtAsDisrupted(
+					qtId,
+					QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
+					e.getLocalizedMessage());
 		}
 
 		finally {
