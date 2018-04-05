@@ -523,7 +523,6 @@ public class SPDetailBackingBean extends
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
 			setUserDetails(scQtProposal);
 			scQtProposal.setLastSubmitDate(DateUtils.getCurrentDate());
-			scQtProposal.setSubmitted(true);
 			scQtProposal.setProposalSubmitBy(facesScopes.getUserSessionBean()
 					.getUserId());
 			reqDTO = new ProposalReqDTO();
@@ -592,6 +591,7 @@ public class SPDetailBackingBean extends
 			}
 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+			scQtProposal.setSubmitted(true);
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
 
@@ -605,8 +605,9 @@ public class SPDetailBackingBean extends
 				throw new EpException("Failed.");
 			}
 		} catch (Exception e) {
+			//Bug #18695 when exception happens while proposal submit update back as not submit
+			getManagedBean().getQtProposal().setSubmitted(false);
 			proposalSO.insertTrackingDiary(reqDTO);
-
 			throw e;
 		} finally {
 			proposalSO = null;
