@@ -462,7 +462,7 @@ public class AccessApplBackingBean extends
 			AccessApplReqDTO reqDTO = new AccessApplReqDTO();
 			reqDTO.setAccessAppl(accessAppl);
 			reqDTO.setAccessApplDocList(getManagedBean().getAccessApplDocList());
-			PmUser user =  PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
+			PmUser user =  PmCommonUtil.retrieveUserByLoginId(accessAppl.getIdentificationNo());
 			if(user == null){
 				reqDTO.setPortalBaseUrl(PmCommonUtil.getBasePortalUrl());
 			}
