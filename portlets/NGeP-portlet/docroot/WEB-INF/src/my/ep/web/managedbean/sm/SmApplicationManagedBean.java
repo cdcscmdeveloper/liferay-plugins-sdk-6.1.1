@@ -462,6 +462,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSiteVisitFacilityVO> workshopSiteVisitVOList;
 	private List<SmSiteVisitFacilityVO> factorySiteVisitVOList;
 	private List<SmSiteVisitFacilityVO> bumiSiteVisitVOList;
+	private List<SmSiteVisitFacilityVO> businessOfficeSiteVisitVOList;
 	private List<SmMachineCategoryVO> machineCategoryVOList;
 	private List<SmCategoryOverlapDoc> overlapDocs;
 	private boolean branchSameAsHq;
@@ -715,7 +716,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
 		selectedManufacturer = new SmManufacturingDtl();
-//		selectedManufacturer.setPmUom(new PmUom());
+		// selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
 		selectedMachine.setCategoryType(new PmParameter());
 		selectedMachine.setMachine(new PmMachine());
@@ -3982,5 +3983,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOverlapDocs(List<SmCategoryOverlapDoc> overlapDocs) {
 		this.overlapDocs = overlapDocs;
+	}
+
+	public List<SmSiteVisitFacilityVO> getBusinessOfficeSiteVisitVOList() {
+		return businessOfficeSiteVisitVOList;
+	}
+
+	public void setBusinessOfficeSiteVisitVOList(
+			List<SmSiteVisitFacilityVO> businessOfficeSiteVisitVOList) {
+		this.businessOfficeSiteVisitVOList = businessOfficeSiteVisitVOList;
 	}
 }
