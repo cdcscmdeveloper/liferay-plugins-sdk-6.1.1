@@ -74,7 +74,7 @@
 					</p:panel><br />
 
 					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}"
-						toggleable="true">
+						toggleable="true" rendered="#{tableVar.l3.facilityType ne 'B'}">
 
 						<p:dataTable var="assocVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -103,7 +103,8 @@
 
 					</p:panel><br />
 
-					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" 
+						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">
 
 						<p:dataTable var="brVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -133,7 +134,7 @@
 					</p:panel><br />
 
 					<p:panel header="#{lbl['lbl.sm.facility.information']}"
-						toggleable="true">
+						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">
 
 						<p:dataTable var="facVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
