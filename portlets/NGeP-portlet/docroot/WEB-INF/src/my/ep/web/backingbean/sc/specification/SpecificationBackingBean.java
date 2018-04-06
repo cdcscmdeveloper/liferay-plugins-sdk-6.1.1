@@ -10878,7 +10878,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					for (int i = 0; i < finanicalCheckList.size(); i++) {
 						ScQtCheckList localCheckList = finanicalCheckList
 								.get(i);
-						if (this.getManagedBean().getCheckListTitle().trim()
+						if (null!=localCheckList
+								.getDefinationType() && QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(localCheckList
+								.getDefinationType().getParameterCode()) && this.getManagedBean().getCheckListTitle().trim()
 								.replaceAll("\\s", "")
 								.equalsIgnoreCase(localCheckList.getTitle().trim()
 										.replaceAll("\\s", ""))) {
@@ -11426,7 +11428,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					for (int i = 0; i < finanicalCheckList.size(); i++) {
 						ScQtCheckList localCheckList = finanicalCheckList
 								.get(i);
-						if (this.getManagedBean().getCheckListTitle().trim()
+						if (null!=localCheckList
+								.getDefinationType() && QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(localCheckList
+								.getDefinationType().getParameterCode()) && this.getManagedBean().getCheckListTitle().trim()
 								.replaceAll("\\s", "")
 								.equalsIgnoreCase(localCheckList.getTitle().trim()
 										.replaceAll("\\s", ""))) {
