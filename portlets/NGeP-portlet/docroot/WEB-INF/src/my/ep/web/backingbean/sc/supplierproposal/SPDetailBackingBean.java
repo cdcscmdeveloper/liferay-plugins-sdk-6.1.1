@@ -522,7 +522,6 @@ public class SPDetailBackingBean extends
 					.getFinanceCheckDetailsList();
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
 			setUserDetails(scQtProposal);
-			scQtProposal.setLastSubmitDate(DateUtils.getCurrentDate());
 			scQtProposal.setProposalSubmitBy(facesScopes.getUserSessionBean()
 					.getUserId());
 			reqDTO = new ProposalReqDTO();
@@ -591,6 +590,7 @@ public class SPDetailBackingBean extends
 			}
 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+			scQtProposal.setLastSubmitDate(DateUtils.getCurrentDate());
 			scQtProposal.setSubmitted(true);
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
