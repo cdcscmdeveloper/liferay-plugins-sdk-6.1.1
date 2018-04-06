@@ -8,12 +8,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
+
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.util.ResourceBundleUtils;
-
-import org.apache.log4j.Logger;
 
 /**
  * DateUtils is a utility class for Date. 
@@ -573,5 +573,23 @@ public class DateUtils {
 		
 		return calendar.getTime();
 		
+	}
+	
+	/**
+	 * Fulfilment get end Date
+	 * Requirement from sector S implementation of end date setting
+	 */
+	public static Date getStartDate(Date endDate, int term,String periodType){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(endDate);
+		if(periodType.equals(ParameterConst.DELIVERY_TERM_DAYS)){
+			calendar.add(Calendar.DATE, -term);
+		}if(periodType.equals(ParameterConst.DELIVERY_TERM_MONTHS)){
+			calendar.add(Calendar.MONTH, -term);
+		}if(periodType.equals(ParameterConst.DELIVERY_TERM_YEARS)){
+			calendar.add(Calendar.YEAR, -term);
+		}
+		calendar.add(Calendar.DATE, 1);
+		return calendar.getTime();
 	}
 }
