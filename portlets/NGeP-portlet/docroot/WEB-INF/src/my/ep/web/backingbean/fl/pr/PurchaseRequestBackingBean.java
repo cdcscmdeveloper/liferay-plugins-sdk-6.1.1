@@ -3115,6 +3115,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745071);
 				}
+				// #18648
+				if(getManagedBean().getFulfilmentRequest().getStartDate()==null && getManagedBean().getFulfilmentRequest().getEndDate()!=null) {
+					getManagedBean().getFulfilmentRequest().setStartDate(DateUtils.getStartDate(getManagedBean().getFulfilmentRequest().getEndDate(), getManagedBean().getFulfilmentRequest().getDeliveryTerm(), getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode()));
+					updateDeliveryDate();
+				}
 			} else if(BpmOutcomeConst.BPM_REVISE.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					getManagedBean().setSelectedTabIndex(0);
