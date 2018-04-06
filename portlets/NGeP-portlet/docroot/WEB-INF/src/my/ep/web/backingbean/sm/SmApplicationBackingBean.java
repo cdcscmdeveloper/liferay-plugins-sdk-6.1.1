@@ -87,6 +87,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -2342,9 +2343,31 @@ public class SmApplicationBackingBean extends
 					.getSmSupplier());
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
+				if (getManagedBean().getPoSecReview() != null) {
+					log.info(">>>>PO SEC REVIEW VERIFIEDALL:"
+							+ getManagedBean().getPoSecReview().isVerifiedAll()
+							+ " APPLNO:"
+							+ getManagedBean().getSmAppl().getApplNo()
+							+ " ALLOWEDAPPROVE:"
+							+ getManagedBean().isAllowedToApprove());
+				} else {
+					log.info(">>>>PO SEC REVIEW NULL FOR APPLNO:"
+							+ getManagedBean().getSmAppl().getApplNo());
+				}
 			}
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
+				if (getManagedBean().getApprvrSecReview() != null) {
+					log.info(">>>>APPROVER SEC REVIEW VERIFIEDALL:"
+							+ getManagedBean().getApprvrSecReview()
+									.isVerifiedAll() + " APPLNO:"
+							+ getManagedBean().getSmAppl().getApplNo()
+							+ " ALLOWEDAPPROVE:"
+							+ getManagedBean().isAllowedToApprove());
+				} else {
+					log.info(">>>>APPROVER SEC REVIEW NULL FOR APPLNO:"
+							+ getManagedBean().getSmAppl().getApplNo());
+				}
 			}
 			return true;
 		} finally {
@@ -7122,6 +7145,13 @@ public class SmApplicationBackingBean extends
 	public String deleteDraftApplication() {
 
 		boolean valid = false;
+
+		// check if delete draft action perform for application that is already
+		// approved
+		if (getManagedBean().getSmAppl().getApplSubmitDate() != null) {
+			throw new EpException(MessageConst.ERROR_722663);
+		}
+
 		try {
 			valid = deleteDraftApplciationTask();
 			if (valid) {
@@ -7606,7 +7636,11 @@ public class SmApplicationBackingBean extends
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			getManagedBean().getSmAppl().setBumi(true);
 		}
-		getManagedBean().setChangeCurrRegStatus(false);
+		if (getManagedBean().getCurrRegStatus() == null) {
+			getManagedBean().setChangeCurrRegStatus(true);
+		} else {
+			getManagedBean().setChangeCurrRegStatus(false);
+		}
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -8015,6 +8049,7 @@ public class SmApplicationBackingBean extends
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
 			} else if (getManagedBean().isApproverUser()) {
@@ -8025,10 +8060,14 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 			} else {
 
-				SmApplicationUtil.setApplicationApproveStatus(getManagedBean()
-						.getSmAppl(), pmStatId);
+				regStatus = SmApplicationUtil.setApplicationApproveStatus(
+						getManagedBean().getSmAppl(), pmStatId);
 				reqDTO.setPaymentReqd(SmApplicationUtil
 						.getPaymentMode(getManagedBean().getSmAppl()));
+			}
+
+			if (regStatus == null) {
+				throw new EpException(MessageConst.ERROR_722662);
 			}
 
 			// approve categories
@@ -10552,13 +10591,16 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setSupplierChangeValues(String currPage) {
 		if (currPage
-				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
-				&& !getManagedBean().isDisabledBusinessType()) {
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			SmSupplier supplier = getManagedBean().getSmAppl().getSmSupplier();
-			supplier.setBusinessType(getManagedBean().getSmSupplier()
-					.getBusinessType());
-			supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
-					.getLocalAuthorityId());
+			supplier.setEstablishDate(getManagedBean().getSmSupplier()
+					.getEstablishDate());
+			if (!getManagedBean().isDisabledBusinessType()) {
+				supplier.setBusinessType(getManagedBean().getSmSupplier()
+						.getBusinessType());
+				supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
+						.getLocalAuthorityId());
+			}
 		}
 	}
 

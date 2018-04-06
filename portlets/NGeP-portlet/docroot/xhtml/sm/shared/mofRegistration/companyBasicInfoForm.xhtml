@@ -96,12 +96,20 @@
 							showDetail="false" display="icon" />
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.smSupplier.establishDate}"
-							readonly="true" size="35">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" required="true" readonlyInput="true"
+							label="#{lbl['lbl.sm.estdate']}" id="establishDate"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+							value="#{backingBean.managedBean.smSupplier.establishDate}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smSupplier.establishDate}" 
+							currValue="#{backingBean.managedBean.smSupplier.establishDate}" 
+							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.smSupplier.establishDate)}"/>
+						<p:message id="establishDateMsg" for="establishDate" showSummary="true"
+							showDetail="false" display="icon" /></td>
 				</tr>
 				<ui:remove>
 					<tr>
