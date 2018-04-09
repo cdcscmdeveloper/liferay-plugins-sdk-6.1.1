@@ -206,6 +206,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private String previousPageUrl;	
 	private boolean isProcCategoryMedicine;
 	private boolean qtClosed = false;
+	private Date lastSubmittedDate;
 	
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
@@ -1824,6 +1825,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setQtClosed(boolean qtClosed) {
 		this.qtClosed = qtClosed;
+	}
+
+	/**
+	 * @return the lastSubmittedDate
+	 */
+	public Date getLastSubmittedDate() {
+		return lastSubmittedDate;
+	}
+
+	/**
+	 * @param lastSubmittedDate the lastSubmittedDate to set
+	 */
+	public void setLastSubmittedDate(Date lastSubmittedDate) {
+		this.lastSubmittedDate = lastSubmittedDate;
 	}
 
 }
