@@ -226,6 +226,7 @@ public class SPDetailBackingBean extends
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			getManagedBean().setLastSubmittedDate(resDTO.getScQtProposal().getLastSubmitDate());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
 			// Technical Check List
@@ -607,6 +608,7 @@ public class SPDetailBackingBean extends
 		} catch (Exception e) {
 			//Bug #18695 when exception happens while proposal submit update back as not submit
 			getManagedBean().getQtProposal().setSubmitted(false);
+			getManagedBean().getQtProposal().setLastSubmitDate(getManagedBean().getLastSubmittedDate());
 			proposalSO.insertTrackingDiary(reqDTO);
 			throw e;
 		} finally {
