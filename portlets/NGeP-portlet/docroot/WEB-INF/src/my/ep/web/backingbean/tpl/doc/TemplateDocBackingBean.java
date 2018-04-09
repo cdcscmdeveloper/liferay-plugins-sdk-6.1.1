@@ -942,10 +942,24 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 			filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);;
 			String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), "", "P");
-			html = html.replaceAll("&#160;","");
-			html = html.replaceAll("&lt;","(");
-			html = html.replaceAll("&gt;",")");
+			//html = html.replaceAll("&#160;","");
+			//html = html.replaceAll("&lt;","(");
+			//html = html.replaceAll("&gt;",")");
 			System.out.println("********************* html******************"+ html);
+			if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
+				for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
+					String value = entry.getValue();
+					//log.info("entry.getKey()"+entry.getKey());
+					//log.info("entry.getValue()"+value);
+					String replacekey=TemplateDocConst.PARAM_PREFIX+entry.getKey()+TemplateDocConst.PARAM_POSTFIX;
+					//log.info("replacekey"+replacekey);
+					if(value != null){
+						html=html.replaceAll(replacekey, value);
+					}
+				}
+				}
+			html=html.replaceAll(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
+			html=html.replaceAll(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
 			os = new FileOutputStream(filePath);
 			DocumentGenerator.getInstance().generatePdf(os, html);
 			downloadFile(filePath);
