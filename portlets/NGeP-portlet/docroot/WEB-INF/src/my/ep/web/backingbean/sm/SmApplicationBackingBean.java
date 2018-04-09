@@ -7971,6 +7971,8 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getFactorySiteVisitVOList());
 			SmApplicationUtil.setSiteVisitData(getManagedBean(),
 					getManagedBean().getWorkshopSiteVisitVOList());
+			SmApplicationUtil.setSiteVisitData(getManagedBean(),
+					getManagedBean().getBusinessOfficeSiteVisitVOList());
 			if (!StringUtils.isBlank(getManagedBean().getPoSiteVisitType())
 					&& getManagedBean().getPoSiteVisitType().equals("A")) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED

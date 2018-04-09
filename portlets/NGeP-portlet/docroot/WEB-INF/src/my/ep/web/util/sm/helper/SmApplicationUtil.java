@@ -5547,6 +5547,9 @@ public class SmApplicationUtil {
 		valid = isValidSiteVisitSelection(valid,
 				managedBean.getStoreSiteVisitVOList(), managedBean.getSmAppl()
 						.getApplType());
+		valid = isValidSiteVisitSelection(valid,
+				managedBean.getBusinessOfficeSiteVisitVOList(), managedBean
+						.getSmAppl().getApplType());
 
 		return valid;
 
@@ -5569,10 +5572,27 @@ public class SmApplicationUtil {
 										.lowerCase(SmCommonUtil.getMessage(
 												"lbl.sm.site.visit", null)) });
 					} else {
-						if (!EntityHelper.isCollectionEmpty(facVO
-								.getFacilities())
+						if (!facVO
+								.getL3()
+								.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
 								&& !EntityHelper.isListGotSelectedValue(facVO
 										.getFacilities())) {
+							valid = false;
+							throw new EpException(MessageConst.ERROR_722627,
+									new String[] { SmCommonUtil.getMessage(
+											"lbl.sm.catCodes.catcode", null)
+											+ " "
+											+ facVO.getL3().getFullCatcode()
+											+ " ("
+											+ facVO.getL3().getCategoryName()
+											+ ")" });
+						} else if (facVO
+								.getL3()
+								.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
+								&& !EntityHelper.isListGotSelectedValue(facVO
+										.getHeadQuarters())) {
 							valid = false;
 							throw new EpException(MessageConst.ERROR_722627,
 									new String[] { SmCommonUtil.getMessage(
@@ -9800,10 +9820,10 @@ public class SmApplicationUtil {
 			for (PmCategoryL3 l3 : l3List) {
 				if (l3.getFacilityType()
 						.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-					
+
 					vo = new SmSiteVisitFacilityVO();
 					vo.setL3(l3);
-					
+
 					// add HQ
 					vo.setHeadQuarters(new ArrayList<SmCompanyAddress>());
 					vo.getHeadQuarters().add(
