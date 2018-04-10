@@ -743,7 +743,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
 			ContractReqDTO contractReqDTO = new ContractReqDTO();
 			contractReqDTO.setContractVerId(getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-			contractReqDTO.setAsAtDate(getManagedBean().getInvoice().getFlRequest().getAgApprovedDate());
+			contractReqDTO.setAsAtDate(getManagedBean().getInvoice().getFlRequest().getSubmissionDate());
 			contractValue = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
 			for(CtDeduction deduction : getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){

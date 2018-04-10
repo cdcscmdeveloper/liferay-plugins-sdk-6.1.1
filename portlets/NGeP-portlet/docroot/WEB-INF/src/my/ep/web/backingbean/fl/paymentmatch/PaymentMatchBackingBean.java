@@ -522,7 +522,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractVerId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-				contractReqDTO.setAsAtDate(new Date());
+				contractReqDTO.setAsAtDate(getManagedBean().getPaymentAdvice().getFlRequest().getSubmissionDate());
 				BigDecimal contractValue = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
 				
 				ContractReqDTO ctReqDTO = new ContractReqDTO();
