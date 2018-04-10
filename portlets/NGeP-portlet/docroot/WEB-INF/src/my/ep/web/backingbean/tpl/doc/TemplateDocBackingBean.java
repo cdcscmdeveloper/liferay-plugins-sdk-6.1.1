@@ -349,6 +349,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				}
 			}
 			}
+			combinedContentHtml=combinedContentHtml.replaceAll(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
+			combinedContentHtml=combinedContentHtml.replaceAll(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
 			getManagedBean().setPreviewValue(combinedContentHtml);
 		} catch (Exception e) {
 			e.printStackTrace();
