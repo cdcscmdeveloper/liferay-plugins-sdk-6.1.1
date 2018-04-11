@@ -299,6 +299,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		for(VFlDocument docsearchResult:searchResultList){
 			if(isTrackingDiarySearch()) {
 				docsearchResult.setViewAction(true);
+				FLOrderInfo orderInfo=null;
+				orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
+				if(orderInfo.isCoGSTR()){
+					docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
+					docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
+				}
 				continue;
 			}
 				docsearchResult.setUpdateAction(false);
@@ -509,7 +515,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	reqDTO.setFulfilmentOrderId(resDTO.getFlOrder().getFulfilmentOrderId());
 		        	resDTO = reliefOrderSO.retrieveReliefOrderByOrderId(reqDTO);
 		        	if(resDTO.getReliefOrder() != null){
-		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer()) {
+		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer() || isAuditor()) {
 		        			orderInfo.setCoGSTR(true);
 		        			orderInfo.setCoGSTRNo(resDTO.getReliefOrder().getReliefOrderNo());
 		        		}
