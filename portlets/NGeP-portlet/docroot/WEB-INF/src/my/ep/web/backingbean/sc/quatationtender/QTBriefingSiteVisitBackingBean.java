@@ -413,6 +413,10 @@ public class QTBriefingSiteVisitBackingBean extends
 			updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl,bsvDetail);
 		} else {
 			updateLatestBsvDate();
+			if(this.getManagedBean().getAmendMentBean() == null){
+				this.getManagedBean().setAmendMentBean(new QtAmendMentBean());
+			}
+			
 		}
 		
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
