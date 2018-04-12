@@ -173,6 +173,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -4775,27 +4776,20 @@ public class SmCommonUtil {
 					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)
 					|| siteType
 							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY)) {
-				SmFacility facility = (SmFacility) site;
-				svAddress.setFacilityName(facility.getFacilityName());
-				svAddress.setSiteType(siteType);
-				svAddress.setAddress(facility.getSmAddress());
-				svAddress.setFacilityType(ParameterHelper.getInstance()
-						.getParameterDesc(
-								ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
-								facility.getFacilityType()));
 				
+				svAddress.setSiteType(siteType);
 				if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)){
-					MofRegistrationReqDTO mofRegDTO = new MofRegistrationReqDTO();
-					mofRegDTO.setApplId(applId);
-					MofRegistrationResDTO mofRegResDTO = SmServiceLookup.getMofRegistrationSO()
-							.retrieveSmCompanyBasicByApplId(mofRegDTO);
-					
-					if(mofRegResDTO.getCompanyBasicList().size() > 0){
-						SmCompanyBasic compBasic = mofRegResDTO.getCompanyBasicList().get(0);
-						if(compBasic.getSmCompanyAddresses().size() > 0){
-							svAddress.setAddress(compBasic.getSmCompanyAddresses().get(0).getSmAddress());
-						}
-					}
+					SmCompanyAddress compAddress = (SmCompanyAddress) site;
+					svAddress.setAddress(compAddress.getSmAddress());
+
+				}else{
+					SmFacility facility = (SmFacility) site;
+					svAddress.setFacilityName(facility.getFacilityName());
+					svAddress.setAddress(facility.getSmAddress());
+					svAddress.setFacilityType(ParameterHelper.getInstance()
+							.getParameterDesc(
+									ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
+									facility.getFacilityType()));
 				}
 			} else if (siteType
 					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH)) {
