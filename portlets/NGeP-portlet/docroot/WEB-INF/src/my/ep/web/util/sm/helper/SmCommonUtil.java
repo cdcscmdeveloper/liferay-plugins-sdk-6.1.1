@@ -4781,7 +4781,17 @@ public class SmCommonUtil {
 				if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)){
 					SmCompanyAddress compAddress = (SmCompanyAddress) site;
 					svAddress.setAddress(compAddress.getSmAddress());
-
+					SmFacility fac = SmApplicationUtil.getHqFacilityByAppl(compAddress.getSmCompanyBasic().getSmAppl());
+					
+					if(fac != null && StringUtils.isNotBlank(fac.getFacilityType())){
+						svAddress.setFacilityName(fac.getFacilityName());
+						svAddress.setFacilityType(ParameterHelper.getInstance()
+								.getParameterDesc(
+										ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
+										fac.getFacilityType()));
+						
+					}
+					
 				}else{
 					SmFacility facility = (SmFacility) site;
 					svAddress.setFacilityName(facility.getFacilityName());
