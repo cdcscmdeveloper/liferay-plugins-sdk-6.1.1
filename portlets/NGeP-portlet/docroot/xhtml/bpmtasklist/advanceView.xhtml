@@ -93,7 +93,7 @@
 
 		<div class="clear"></div>
 		<div style="text-align: left; margin-right: 2px; float: right;">
-			<p:commandButton
+			<p:commandButton onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{bpmTasklistBackingBean.refreshAdvanceTaskList}"
 				update="taskListGroupId" value="#{lbl['lbl.btn.search']}"></p:commandButton>
 		</div>
