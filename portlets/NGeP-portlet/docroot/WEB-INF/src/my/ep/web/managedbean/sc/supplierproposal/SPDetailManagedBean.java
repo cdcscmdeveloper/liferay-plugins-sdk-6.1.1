@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -186,6 +187,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private int technicalTableRow;
 	private int financialTableRow;
 	private SmPersonnel contactPerson;
+	private List<SmCompanyExperience> supplierExperienceList;
+	private int suppExpSize;
 
 	private boolean agreeWithIntegrityPact;
 	private boolean agreeWithOthersTermsConditions;
@@ -1839,6 +1842,23 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setLastSubmittedDate(Date lastSubmittedDate) {
 		this.lastSubmittedDate = lastSubmittedDate;
+	}
+
+	public int getSuppExpSize() {
+		return suppExpSize;
+	}
+
+	public void setSuppExpSize(int suppExpSize) {
+		this.suppExpSize = suppExpSize;
+	}
+
+	public List<SmCompanyExperience> getSupplierExperienceList() {
+		return supplierExperienceList;
+	}
+
+	public void setSupplierExperienceList(
+			List<SmCompanyExperience> supplierExperienceList) {
+		this.supplierExperienceList = supplierExperienceList;
 	}
 
 }
