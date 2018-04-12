@@ -85,6 +85,7 @@
 		<div class="clear"></div>
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{bpmTasklistBackingBean.refreshNormalTaskList}"
 				update="taskListMyTaskId" value="#{lbl['lbl.btn.search']}"></p:commandButton>
 		</div>

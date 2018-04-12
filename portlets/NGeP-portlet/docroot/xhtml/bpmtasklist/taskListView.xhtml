@@ -11,7 +11,9 @@
 	
 		<p:messages id="taskListMsgId" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
- 
+ 		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<h:panelGroup id="tasksListViewId">
 
 			<div class="clear"></div>
