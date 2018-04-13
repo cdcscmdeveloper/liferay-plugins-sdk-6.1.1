@@ -873,6 +873,7 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setQtDetail(qt);
 			} else {
 				boolean isFinalApproval = false;
+				boolean bpkRevise = false;
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
@@ -899,10 +900,8 @@ public class ApprovalBackingBean extends
 
 					String action = constuctOutCome(approvalRequests, qt);
 					if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-
-						((SCQuotationTenderDataType) this.getManagedBean()
-								.getPayLoad())
-								.setBpkRevise(true);
+						bpkRevise = true;
+						
 						// revert to old value if got any approval request rejected.
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_REJECT
@@ -937,6 +936,8 @@ public class ApprovalBackingBean extends
 						approvalTypes = approveApprovalRequests(qt, approvalRequests, true);
 					}
 				}
+				dataType.setBpkRevise(bpkRevise);
+				
 				updateApprovalRequest(approvalRequests, outcome);
 
 				finalizeRemarks(approval.getScQtApprovalRemarks());
