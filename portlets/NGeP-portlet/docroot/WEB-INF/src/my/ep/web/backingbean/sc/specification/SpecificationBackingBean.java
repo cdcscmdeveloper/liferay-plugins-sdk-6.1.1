@@ -3337,7 +3337,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						Arrays.asList(uploaditems));
 
 			}
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
 					.equalsIgnoreCase(parameterCode)) {
 				ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 				docDefTypeReqDTO
@@ -9346,7 +9346,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					}
 
 				}
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
 					sample = true;
