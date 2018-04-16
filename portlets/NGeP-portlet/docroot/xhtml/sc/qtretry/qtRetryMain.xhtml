@@ -26,6 +26,13 @@
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					disabled="#{empty qtRetryBackingBean.selectedRetryQTs}" /> 
+				<p:commandButton id="deleteRetryBtn"
+					value="#{lbl['lbl.btn.delete']}"
+					partialSubmit="true"
+					process="@this"
+					update="inactivePopUp"
+					oncomplete="inactivePopUp.show();"
+					disabled="#{empty qtRetryBackingBean.selectedRetryQTs}" />
 				<p:commandButton
 					value="#{lbl['lbl.sc.btn.refresh']}"
 					action="#{qtRetryBackingBean.reloadRetryQTAction}"
@@ -43,11 +50,11 @@
 
 			<ac:paginator for="qtRetryTbl" />
 			
-			<p:ajax event="rowSelect" update="@([id$=submitRetryBtn])" />
-			<p:ajax event="rowUnselect" update="@([id$=submitRetryBtn])" />
-			<p:ajax event="rowSelectCheckbox" update="@([id$=submitRetryBtn])" />
-			<p:ajax event="rowUnselectCheckbox" update="@([id$=submitRetryBtn])" />
-			<p:ajax event="toggleSelect" update="@([id$=submitRetryBtn])" />
+			<p:ajax event="rowSelect" update="@([id$=submitRetryBtn],[id$=deleteRetryBtn])" />
+			<p:ajax event="rowUnselect" update="@([id$=submitRetryBtn],[id$=deleteRetryBtn])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=submitRetryBtn],[id$=deleteRetryBtn])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=submitRetryBtn],[id$=deleteRetryBtn])" />
+			<p:ajax event="toggleSelect" update="@([id$=submitRetryBtn],[id$=deleteRetryBtn])" />
 			
 			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
@@ -97,6 +104,48 @@
 			header="#{lbl['lbl.txt.error']}" styleClass="screen-title"
 			resizable="false" modal="true" width="600" height="200">
 			<h:outputText value="#{qtRetryBackingBean.selectedRetryQT.errorMsg}" escape="false" />
+		</p:dialog>
+		
+		<p:dialog id="inactivePopUp" widgetVar="inactivePopUp"
+			header="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" styleClass="screen-title"
+			resizable="false" modal="true" width="600" height="200">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.txt.remarks']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:inputTextarea id="reasonTxt" 
+						required="#{param[p:component('OkBtn')]!=null}" 
+						rows="9" cols="50" 
+						value="#{qtRetryBackingBean.reason}"
+						label="#{lbl['lbl.txt.remarks']}" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">
+					<p:commandButton id="OkBtn"
+						value="#{lbl['lbl.btn.ok']}"
+						action="#{qtRetryBackingBean.inactiveQTRetryAction}"
+						partialSubmit="true"
+						process="@this, reasonTxt"
+						update="qtRetryTbl"
+						onstart="blockWidget.show();"
+						oncomplete="inactivePopUp.hide();blockWidget.hide();" /> 
+					<p:commandButton id="CancelBtn"
+						value="#{lbl['lbl.btn.cancel']}"
+						partialSubmit="true"
+						process="@this"
+						update="qtRetryTbl, @([id$=submitRetryBtn],[id$=deleteRetryBtn])"
+						oncomplete="inactivePopUp.hide();">
+						<f:setPropertyActionListener value="#{null}" target="#{qtRetryBackingBean.reason}" />
+						<f:setPropertyActionListener value="#{null}" target="#{qtRetryBackingBean.selectedRetryQTs}" />
+					</p:commandButton> 
+				</td>
+			</tr>
+			</table>
 		</p:dialog>
 		
 	</ui:define>
