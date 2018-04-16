@@ -68,6 +68,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	public static Logger log = EpLogger.getLogger(QTRetryBackingBean.class);
 	
 	private IPagingDataModel<ScQtDisruptionLog> retryQTDataModel = new RetryQTPagingDataModel();
+	private String reason;
 	private ScQtDisruptionLog selectedRetryQT;
 	private List<ScQtDisruptionLog> selectedRetryQTs;
 	
@@ -79,6 +80,41 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 */
 	public void reloadRetryQTAction() {
 		this.retryQTDataModel.reloadData();
+	}
+	
+	public void inactiveQTRetryAction(){ 
+		if (CollectionUtils.isNotEmpty(this.selectedRetryQTs)) {
+			List<ScQtDisruptionLog> selectedRetryQTs = new ArrayList<ScQtDisruptionLog>(this.selectedRetryQTs);
+			IQTRetrySO qtRetrySO;
+			try {
+				qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
+				
+				for (ScQtDisruptionLog qtDisruptionLog : selectedRetryQTs) {
+					qtDisruptionLog.setSuccess(true);
+					qtDisruptionLog.setErrorMsg(new StringBuilder()
+						.append(qtDisruptionLog.getErrorMsg())
+						.append("\r\nInactive Reason:")
+						.append(this.reason)
+						.toString());
+					log.info(new StringBuilder().append("qtDisruptionLogId:")
+							.append(qtDisruptionLog.getQtDisruptionLogId())
+							.append(", qtNo:" + qtDisruptionLog.getScQt().getQtNo())
+							.append(", disruptionStage:" + qtDisruptionLog.getDisruptionStage())
+							.append(", errorMsg:" + qtDisruptionLog.getErrorMsg())
+							.toString());
+					
+					QTRetryReqDTO reqDTO = new QTRetryReqDTO();
+					reqDTO.setScQtDisruptionLog(qtDisruptionLog);
+					qtRetrySO.saveQTDisruption(reqDTO);
+				}
+				
+				reloadRetryQTAction();
+			} finally {
+				qtRetrySO = null;
+				this.reason = null;
+			}
+		}
 	}
 	
 	/**
@@ -289,6 +325,20 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 */
 	public void setRetryQTDataModel(IPagingDataModel<ScQtDisruptionLog> retryQTDataModel) {
 		this.retryQTDataModel = retryQTDataModel;
+	}
+
+	/**
+	 * @return the reason
+	 */
+	public String getReason() {
+		return reason;
+	}
+
+	/**
+	 * @param reason the reason to set
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 	/**
