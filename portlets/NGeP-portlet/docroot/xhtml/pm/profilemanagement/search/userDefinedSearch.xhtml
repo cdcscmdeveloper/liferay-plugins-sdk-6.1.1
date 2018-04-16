@@ -17,7 +17,10 @@
 						label="#{lbl['lbl.pm.org.category']}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{profileManagementBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{profileManagementBackingBean.others}"/>
-						<p:ajax process="@this,orgCategoryPanelGrid" event="change" update=":form:opDefinedSearch, :form:dtUserResult" 
+						<p:ajax process="@this,orgCategoryPanelGrid" event="change" 
+							onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()" 
+							update=":form:opDefinedSearch, :form:dtUserResult" 
 							listener ="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
 					</p:selectOneRadio>
 					<h:panelGrid id="orgCategoryPanelGrid" columns="4">
