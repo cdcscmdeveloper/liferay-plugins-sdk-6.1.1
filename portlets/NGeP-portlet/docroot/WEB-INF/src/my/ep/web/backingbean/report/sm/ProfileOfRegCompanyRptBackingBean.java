@@ -39,23 +39,16 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	
 	public void populateMofNo(BaseEntity entity) {
 		SmSupplier selectedSupplier = (SmSupplier)entity;
-		/*SmMofAccount mofAccount = null;
-		for(SmMofAccount acc : selectedSupplier.getSmMofAccounts()) {
-			if(acc.isRecordStatus()) {
-				mofAccount = acc;
-				break;
-			}
-		}*/
 		this.getManagedBean().setMofNo(selectedSupplier.getMofNo());
 	}
 	
-	public String constructMofNoCriteria() {
+	public String getMofNoCriteria() {
 		String mofCriteria = "";
 		if(this.getManagedBean().getSupplierType() != null) {
 			mofCriteria += "|smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType();
 		}
 		if(this.getManagedBean().getZone() != null) {
-			mofCriteria += "|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneName^" + this.getManagedBean().getZone();
+			mofCriteria += "|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneName^" + this.getManagedBean().getZone().toUpperCase();
 		}
 		return mofCriteria;
 	}
