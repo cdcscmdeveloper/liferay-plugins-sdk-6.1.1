@@ -60,6 +60,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
 									itemValue="#{profileManagementBackingBean.others}" />
 								<p:ajax process="@this,orgCategoryMaintainPanelGrid" event="change" partialSubmit="true"
+									onstart="blockWidget.show()" 
+									oncomplete="blockWidget.hide()" 
 									listener="#{profileManagementBackingBean.resetOrgTypeAndCode()}"
 									update=":form:orgProfileDet,:form:opUserProfileDet" />
 							</p:selectOneRadio>
