@@ -48,4 +48,15 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		}*/
 		this.getManagedBean().setMofNo(selectedSupplier.getMofNo());
 	}
+	
+	public String constructMofNoCriteria() {
+		String mofCriteria = "";
+		if(this.getManagedBean().getSupplierType() != null) {
+			mofCriteria += "|smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType();
+		}
+		if(this.getManagedBean().getZone() != null) {
+			mofCriteria += "|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneName^" + this.getManagedBean().getZone();
+		}
+		return mofCriteria;
+	}
 }
