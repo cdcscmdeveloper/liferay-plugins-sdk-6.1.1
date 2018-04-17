@@ -83,7 +83,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
-import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -1991,10 +1990,7 @@ public class SPDetailBackingBean extends
 			
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(docDefinitionKey)) {
 				
-				//Bug #18723 To Generate Company Experience from SM Module 	
-				pageUrl = getTecCompanyExpDtls(scQtProposalChecklist); 
-//				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
-				//end of Bug #18723
+				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
 				
 			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_STAFF_LIST.equalsIgnoreCase(docDefinitionKey)) {
 				
@@ -4553,52 +4549,6 @@ public class SPDetailBackingBean extends
 	 */
 	public boolean isProposalSubmitted() {
 		return this.getManagedBean().getQtProposal().isSubmitted();
-	}
-	
-	/**
-	 * Method to retrieve technical federal government experience details
-	 * 
-	 * @param scQtProposalChecklist
-	 * @return navigation path
-	 */
-	public String getTecCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) { 
-
-		getManagedBean().setYear(
-				scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
-
-		IQTProposalSO proposalSO = null;
-		
-		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
-			reqDTO.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setQtProposalCheckListId(scQtProposalChecklist.getQtProposalChecklistId());
-
-			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
-			reqDTO.setScQt(this.getManagedBean().getQt());
-
-			//Bug #18723 To Generate Company Experience from SM Module 
-//			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
-//			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
-//			this.getManagedBean().setScLoaList(list);
-//			this.getManagedBean().setContractSize(list.size());
-						
-			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
-			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
-			this.getManagedBean().setSupplierExperienceList(suppExpList);
-			this.getManagedBean().setSuppExpSize(suppExpList.size());
-			
-			log.info(":::SPDetailBackingBean/getTecCompanyExpDtls() suppExpList.size() "+ suppExpList.size());
-			//end of Bug #18723			
-
-			return NAV_TO_FEDERAL_GOVT_PAGE;
-
-		} finally {
-			proposalSO = null;
-		}
 	}
 
 }
