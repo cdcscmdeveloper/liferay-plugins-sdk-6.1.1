@@ -7427,6 +7427,12 @@ public class SmApplicationBackingBean extends
 				resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
 				valid = resDTO.isBpmSuccess();
 			} else {
+				boolean cannotProceedAlertMsg = SmApplicationUtil
+						.checkActiveSmApplForSupp(getManagedBean().getSmSupplier());
+				if (cannotProceedAlertMsg) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				
 				resDTO = regSo.saveNewDraftApplication(reqDTO);
 
 				reqDTO.setSmAppl(resDTO.getSmAppl());
