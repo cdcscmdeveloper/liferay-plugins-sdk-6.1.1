@@ -2529,7 +2529,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		// searchBean.getSortColumns().add(new
 		// SearchOrderBean("pmUser.userName",true));
 		searchBean.getSortColumns().add(new SearchOrderBean("createdDate", false));
-
+		searchBean.getSortColumns().add(new SearchOrderBean("pmUser.userName", true));
 		logger.info("getSearchBeanData - End");
 		return searchBean;
 	}
