@@ -936,10 +936,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * is more than 100%.
 	 */
 	public void calculatePercentage(CtProgressivePayment progPayment) {
-		float addValue = 0.0f;
+		double addValue = 0.0f;
 		getManagedBean().setProgSchedButtonDeactive(false);
 		for (CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
-			addValue = addValue + progressivePayment.getPercentage();
+			if(progressivePayment.getPercentage()!=null) {
+				addValue = addValue + progressivePayment.getPercentage().doubleValue();
+			}
 		}
 		for (CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
 			if (progressivePayment.equals(progPayment)) {
@@ -1012,6 +1014,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void addFrequencyDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();
 		ctProgressivePayment.setPhaseNo(getManagedBean().getContractVer().getCtProgressivePayments().size() + 1);
+		ctProgressivePayment.setPercentage(BigDecimal.ZERO);
 		getManagedBean().getContractVer().getCtProgressivePayments().add(ctProgressivePayment);
 	}
 

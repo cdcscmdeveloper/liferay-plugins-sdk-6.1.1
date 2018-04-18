@@ -1330,9 +1330,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null && !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-					float percentage = 0.0f;
+					double percentage = 0.0f;
 					for (CtProgressivePayment progressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
-						percentage = percentage + progressivePayment.getPercentage();
 						if (progressivePayment.getPhaseNo()== null) {
 							setTabValue("SC");
 							throw new EpException(MessageConst.ERROR_100022,
@@ -1373,8 +1372,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 											+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}     	
+						if(progressivePayment.getPercentage()!=null) {
+							percentage = percentage + progressivePayment.getPercentage().doubleValue();
+						} else {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.percentage", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});							
+						}						
 					}
-					int value = Float.compare(percentage,100);
+					int value = Double.compare(percentage,100);
 					if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 						setTabValue("SC");
