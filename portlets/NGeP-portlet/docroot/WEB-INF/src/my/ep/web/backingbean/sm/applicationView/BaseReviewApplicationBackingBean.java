@@ -460,7 +460,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmApplRevisionResDTO
 	 *            resDTO
 	 */
-	private void initStep0BaseInfo(SmAppl smAppl) {
+	public void initStep0BaseInfo(SmAppl smAppl) {
 		getManagedBean().setSmAppl(smAppl);
 
 		getManagedBean().setSmSupplier(
@@ -504,7 +504,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized revision application company information step
 	 */
-	private void initStep1CompanyInfo() {
+	public void initStep1CompanyInfo() {
 		// companyBasicInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmCompanyBasic() == null) {
 			getManagedBean().getSmAppl()
@@ -576,7 +576,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized branch company information step
 	 */
-	private void initStep2BranchCompanyInfo() {
+	public void initStep2BranchCompanyInfo() {
 		// branchCompanyInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmSupplierBranches() == null) {
 			getManagedBean().getSmAppl().setSmSupplierBranches(
@@ -637,7 +637,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized personnel information step
 	 */
-	private void initStep3PersonnelInfo() {
+	public void initStep3PersonnelInfo() {
 		List<SmPersonnel> deletedPersonnels = new ArrayList<SmPersonnel>();
 
 		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
@@ -719,7 +719,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized capital and equity information step
 	 */
-	private void initStep4CaptialAndEquityInfo() {
+	public void initStep4CaptialAndEquityInfo() {
 		// captialOrEquityStatusInfoFormViewOnly
 		SmCommonUtil
 				.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
@@ -749,7 +749,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized Bank Information step
 	 */
-	private void initStep5BankInfo() {
+	public void initStep5BankInfo() {
 		getManagedBean().setSmSupplierBankList(getSupplierBankByRevNo());
 		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
 		removeDeletedFromList(getManagedBean().getSmSupplierBankList());
@@ -758,7 +758,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized register category code step
 	 */
-	private void initStep6RegisterCategoryCode() {
+	public void initStep6RegisterCategoryCode() {
 		if (getManagedBean().getSmAppl().getSmSupplierCategories() == null) {
 			getManagedBean().getSmAppl().setSmSupplierCategories(
 					new ArrayList<SmSupplierCategory>());
@@ -771,7 +771,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized Factory Information step
 	 */
-	private void initStep6_1ViewFactoryInfo() {
+	public void initStep6_1ViewFactoryInfo() {
 		// factoryOrWorkshopInfoFormViewOnly/dockyardInfoFormViewOnly/workshopInfoFormViewOnly/storeInfoFormViewOnly
 		setApplicationFacilities();
 	}
@@ -779,7 +779,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized Equipment Information step
 	 */
-	private void initStep6_2EquipmentInfo() {
+	public void initStep6_2EquipmentInfo() {
 		// machineryInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmMachineDtls() == null) {
 			getManagedBean().getSmAppl().setSmMachineDtls(
@@ -827,7 +827,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized Suppoerting Document Information step
 	 */
-	private void initStep7SupportingDocumentsInfo() {
+	public void initStep7SupportingDocumentsInfo() {
 		// offlineSupportingDocsFormViewOnly/onlineSupportingDocsFormViewOnly
 		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
 			getManagedBean().getSmAppl().setSmApplSupportDocs(
@@ -847,7 +847,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized PO or Approver Default Decision page
 	 */
-	private void initStep8_9PoApproverDefaultDecision() {
+	public void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
 		setReviewSectionRemarks();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()

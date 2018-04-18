@@ -92,7 +92,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSmAppl(
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
-		setApplication(getManagedBean().getSmAppl());
+		initStep0BaseInfo(getManagedBean().getSmAppl());
+		initStep1CompanyInfo();
+		initStep6RegisterCategoryCode();
+		initStep8_9PoApproverDefaultDecision();
+		initBumiRecommendNote();
 		initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
 		assignApplActiveAndApprovedCategoryList();
 		setOverLappingCategories();
