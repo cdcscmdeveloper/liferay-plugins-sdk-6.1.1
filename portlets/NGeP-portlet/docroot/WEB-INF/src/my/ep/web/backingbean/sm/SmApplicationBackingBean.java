@@ -8577,8 +8577,8 @@ public class SmApplicationBackingBean extends
 			for (SmFacility fac : getManagedBean().getSmAppl()
 					.getSmFacilities()) {
 				if (StringUtils.isNotBlank(fac.getFacilityType())
-						&& fac.getFacilityType().equals("H")
-						|| fac.getFacilityType().equals("B")) {
+						&& (fac.getFacilityType().equals("H")
+						|| fac.getFacilityType().equals("B"))) {
 					hq = fac;
 					break;
 				}
