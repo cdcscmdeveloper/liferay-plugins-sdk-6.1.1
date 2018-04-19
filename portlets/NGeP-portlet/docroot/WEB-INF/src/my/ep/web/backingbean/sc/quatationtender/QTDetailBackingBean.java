@@ -3846,7 +3846,9 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setPmOrgProfile(getManagedBean().getQt().getPmOrgProfile());
+			reqDTO.setPmOrgProfile(retrieveMinistryOrgProfile(getManagedBean()
+					.getQt().getPmOrgProfile().getOrgProfileId()));
+			// reqDTO.setPmOrgProfile(getManagedBean().getQt().getPmOrgProfile());
 			reqDTO.setCommitteeType(committeeType);
 
 			CommitteResDTO resDTO = committeSO
