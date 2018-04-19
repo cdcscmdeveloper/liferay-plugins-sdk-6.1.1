@@ -33,8 +33,8 @@
 				<p:column style="width :350px;white-space : normal"
 					headerText="#{lbl['lbl.sm.catCodes.cate']}" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
-
 			</p:row>
 		</p:columnGroup>
 		<p:column selectionMode="multiple" style="width:2%" />
@@ -52,7 +52,26 @@
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 		</p:column>
-
+		<p:column>
+			<p:inputTextarea id="otherDescMaintenance" maxlength="100"
+				style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
+				value="#{aprvdCatBean.otherDesc}" rows="5" cols="20"
+				rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}">
+			</p:inputTextarea>
+			<p:graphicImage id="otherDescMaintenanceImg"
+				value="/css/images/design/icon_alert.png"
+				style="padding-left : 3px;"
+				rendered="#{not empty aprvdCatBean.approvedDate 
+				and aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS 
+				and not empty aprvdCatBean.prevOtherDesc}" />
+			<p:tooltip for="otherDescMaintenanceImg">
+				<p:inputTextarea readonly="true" disabled="true" rows="5" cols="20"
+					style="width : auto;"
+					value="#{lbl['lbl.sm.catCodes.prevDesc']} #{aprvdCatBean.prevOtherDesc}" />
+			</p:tooltip>
+			<p:message for="otherDescMaintenance" showDetail="false" showSummary="true"
+				display="icon" />
+		</p:column>
 		<p:column>
 			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 				rendered="#{!aprvdCatBean.specialCategory}" />
