@@ -179,7 +179,7 @@
 		<property name="pk" value="supplierId" />
 
 		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
-		<property name="searchMethod" value="retrieveComplaintSupplierLs" /> 
+		<property name="searchMethod" value="retrieveSupplierList" /> 
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
