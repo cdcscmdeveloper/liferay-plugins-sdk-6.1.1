@@ -793,12 +793,12 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			getManagedBean().setDeductionAmt(totalDeductionAmt);
 
-			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt).subtract(transFee));
+			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt));
 		}else if(haveDeduction && nonExemptedItemAmt.doubleValue() <= 0){
 			if(totalDeductionAmt != null && totalDeductionAmt.doubleValue() > 0){
 				getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
 				getManagedBean().setDeductionAmt(totalDeductionAmt);
-				calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt).subtract(transFee));
+				calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt));
 			}
 		}else if(nonExemptedItemAmt.doubleValue() >= 0 && haveDeduction == false){
 			if(nonExemptedItemAmt.doubleValue() > 0){
@@ -806,7 +806,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				transFee = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 				getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
 				getManagedBean().setDeductionAmt(totalDeductionAmt);
-				calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(transFee));
+				calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew());
 				if(totalDeductionAmt.doubleValue() > 0){
 					calPaymentAmt=calPaymentAmt.subtract(totalDeductionAmt);
 				}
@@ -821,26 +821,26 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			ruleReqDTO.setRuleType(FulfilmentConst.FLONE);
 			ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
-			if(transFee.doubleValue() > ruleFee.doubleValue()){
-				transFee = ruleFee;
+			if(getManagedBean().getPaymentAdvice().getFeeAmt().doubleValue() > ruleFee.doubleValue()){
+				getManagedBean().getPaymentAdvice().setFeeAmt(ruleFee);
 			}
 		}else{
 			if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
 				ruleReqDTO.setRuleType(FulfilmentConst.FLONE);
 				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
-				if(transFee.doubleValue() > ruleFee.doubleValue()){
-					transFee = ruleFee;
+				if(getManagedBean().getPaymentAdvice().getFeeAmt().doubleValue() > ruleFee.doubleValue()){
+					getManagedBean().getPaymentAdvice().setFeeAmt(ruleFee);
 				}
 			}else{
 				ruleReqDTO.setRuleType(FulfilmentConst.FLPER);
 				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
-				if(transFee.doubleValue() > ruleFee.doubleValue()){
-					transFee = ruleFee;
+				if(getManagedBean().getPaymentAdvice().getFeeAmt().doubleValue() > ruleFee.doubleValue()){
+					getManagedBean().getPaymentAdvice().setFeeAmt(ruleFee);
 				}
 			}
 		}
-		getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
-		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
+		
+		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt.subtract(getManagedBean().getPaymentAdvice().getFeeAmt()));
 		getTaxinvoice();
 	}
 	
