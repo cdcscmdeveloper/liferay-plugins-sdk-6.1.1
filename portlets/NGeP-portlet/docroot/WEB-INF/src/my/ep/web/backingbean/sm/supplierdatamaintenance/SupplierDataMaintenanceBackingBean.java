@@ -188,7 +188,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
-					SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
+					getActionDesc(getManagedBean().getSmAppl()));
 			reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
 
 			if (getManagedBean().isEditDisciplinaryAction())
@@ -568,6 +568,31 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	}
 
+	private String getActionDesc(SmAppl appl) {
+		PmUser user = new FacesScopes().getUserSessionBean();
+		StringBuffer sb = new StringBuffer();
+		boolean editOtherDesc = false;
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			for (SmSupplierCategory sc : appl.getSmSupplierCategories()) {
+				if (!StringUtils.isBlank(sc.getOtherDesc())
+						&& !sc.getOtherDesc().equals(sc.getEntryMode())) {
+					editOtherDesc = true;
+					sb.append(sc.getPmCategoryL1().getCategoryL1Code()
+							+ sc.getPmCategoryL2().getCategoryL2Code()
+							+ sc.getPmCategoryL3().getCategoryL3Code());
+					sb.append(" telah dikemaskini dari ")
+							.append(sc.getEntryMode()).append(" kepada ")
+							.append(sc.getOtherDesc()).append(" oleh ")
+							.append(user.getUserName()).append("<br />");
+				}
+			}
+		}
+		if (!editOtherDesc) {
+			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
+		}
+		return sb.toString();
+	}
+
 	private void setCategoryTypeConfirm() {
 		if (getManagedBean().getSmAppl().getApplCategoryType()
 				.equalsIgnoreCase("N")) {
@@ -596,8 +621,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				catList.add(cat);
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				cat.setEntryMode(cat.getOtherDesc());
 				apprvList.add(cat);
-
 			}
 		}
 		if (getManagedBean().getActiveCategoryList() != null
