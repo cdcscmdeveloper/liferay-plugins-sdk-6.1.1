@@ -974,7 +974,7 @@ public class ApprovalBackingBean extends
 					if (CollectionUtils.isNotEmpty(approvalTypes)) {
 						if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-							if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
+							/*if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
 								try {
 									log.info("call simple scheduler if QT is publishing today.");
 									ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qt);
@@ -983,13 +983,13 @@ public class ApprovalBackingBean extends
 									e.printStackTrace();
 									log.error(e.getMessage());
 								}
-							}
+							}*/
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
 							new QTDocumentsBackingBean().reGenerateDocuments(
 									qt.getQtId(), 
 									QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
+							/*if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
 								// To remove the existing QT closing job from scheduler if any
 								log.info("remove simple scheduler if QT is closing today.");
 								JobKey jobKey = ScSchedulerHelper.getInstance().getQTClosingJobKey(qt);
@@ -998,7 +998,7 @@ public class ApprovalBackingBean extends
 									EpSchedulerHelper.deleteJobAndAssociatedTriggers(jobKey);
 								}
 								EpSchedulerHelper.shutdownScheduler();
-							}
+							}*/
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
 							if (isFinalApproval) {
 								new QTDocumentsBackingBean().reGenerateDocuments(
