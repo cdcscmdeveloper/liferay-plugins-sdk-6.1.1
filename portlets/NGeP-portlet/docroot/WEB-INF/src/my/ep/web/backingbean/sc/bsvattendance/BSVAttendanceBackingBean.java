@@ -342,7 +342,7 @@ public class BSVAttendanceBackingBean extends
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-				if (!DateUtils.isDateGreater(scQt.getClosingDate(), todayDate)) {
+				/*if (!DateUtils.isDateGreater(scQt.getClosingDate(), todayDate)) {
 					try {
 						log.info("call simple scheduler if QT is closing today.");
 						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
@@ -351,7 +351,7 @@ public class BSVAttendanceBackingBean extends
 						e.printStackTrace();
 						log.error(e.getMessage());
 					}
-				}
+				}*/
 				
 				FacesContext
 						.getCurrentInstance()
