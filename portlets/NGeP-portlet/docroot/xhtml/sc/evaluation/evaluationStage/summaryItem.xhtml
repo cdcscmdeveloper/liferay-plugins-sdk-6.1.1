@@ -23,7 +23,7 @@
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				update="@form"
 				listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%">
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
 
 				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
 
