@@ -987,7 +987,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		BigDecimal feeAmount = new BigDecimal(0.0);
 		invMulty = nonExemptedItem.multiply(serviceFee);
 		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
-		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 		
 		BigDecimal ruleFee = new BigDecimal(0);
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
@@ -1012,6 +1011,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 		}
+		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setServiceFee(serviceFee);
 		getTaxinvoice();
@@ -1581,12 +1581,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
-			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0) {
+			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0 || getManagedBean().getInvoice().getPaymentBank() == null ) {
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.bank.acc.no.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			} else if(null == getManagedBean().getInvoice().getSupplierInvoiceRef() || getManagedBean().getInvoice().getSupplierInvoiceRef().length()==0) {
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.supp.invoice.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			} else if(getManagedBean().getInvoice().getPaymentBankAddress() == null ){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.bank.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			} else {
 				reqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 				reqDTO.setSupplierInvNo(getManagedBean().getInvoice().getSupplierInvoiceRef());
