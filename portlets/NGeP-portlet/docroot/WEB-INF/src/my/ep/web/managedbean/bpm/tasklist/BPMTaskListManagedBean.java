@@ -89,8 +89,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	Integer loiPreparationDays = null;
 	private boolean sdoWithMultipleRoles;
 	
-	FacesScopes face = new FacesScopes();
-	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -231,7 +229,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						.getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
-				//FacesScopes face = new FacesScopes();
+				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
 			   System.out.println("testing BPM auth******" + token);
@@ -395,7 +393,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						.getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
-				//FacesScopes face = new FacesScopes();
+				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
 			   System.out.println("testing BPM auth******" + token);
@@ -606,7 +604,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						.getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
-				
+				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
 			   System.out.println("testing BPM auth******" + token);
