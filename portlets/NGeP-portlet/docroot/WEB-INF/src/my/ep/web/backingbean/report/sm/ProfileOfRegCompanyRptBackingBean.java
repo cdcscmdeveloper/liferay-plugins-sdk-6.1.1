@@ -34,7 +34,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 
 	public void resetSearch() {
-
+		this.getManagedBean().setZone(null);
+		this.getManagedBean().setSupplierType(null);
+		this.getManagedBean().setMofNo(null);
 	}
 	
 	public void populateMofNo(BaseEntity entity) {
