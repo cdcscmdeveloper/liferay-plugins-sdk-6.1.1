@@ -504,7 +504,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 						"lbl.sm.selfrequest.icno.invalid", null);
 			} else {
 				if (getManagedBean().getSelectedAdmin() != null
-						&& per.getIdentificationNo().equals(
+						&& !per.getIdentificationNo().equals(
 								getManagedBean().getSelectedAdmin()
 										.getIdentificationNo())) {
 					errMsg = SmCommonUtil.getMessage(
