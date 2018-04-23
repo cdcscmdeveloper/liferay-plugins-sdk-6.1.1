@@ -4548,7 +4548,7 @@ public class SPDetailBackingBean extends
 	 * @return
 	 */
 	public boolean isProposalSubmitted() {
-		return this.getManagedBean().getQtProposal().isSubmitted();
+		return this.getManagedBean().getQtProposal() != null ? this.getManagedBean().getQtProposal().isSubmitted() : false;
 	}
 
 }
