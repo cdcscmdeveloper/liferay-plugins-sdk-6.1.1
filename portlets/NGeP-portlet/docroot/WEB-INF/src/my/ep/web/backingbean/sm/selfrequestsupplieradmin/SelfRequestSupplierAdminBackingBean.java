@@ -94,24 +94,17 @@ public class SelfRequestSupplierAdminBackingBean extends
 							&& StringUtils.isBlank(per.getEpRole())
 							&& per.getIdentificationTypeId() != null
 							&& per.getIdentificationType() != null) {
-						if ((SmPersonnel) EntityHelper
+
+						tmp = (SmPersonnel) EntityHelper
 								.getEntityBySinglePropertyFromList(
 										per.getIdentificationNo(),
-										filteredPersonnels, "identificationNo") == null) {
-							tmp = SmCommonUtil
-									.getSmPersonnelByRevNoAndIdentificationNo(
-											getManagedBean().getSupplier()
-													.getSmAppl()
-													.getSmPersonnels(), per, 2);
-							if (tmp == null) {
-								tmp = SmCommonUtil
-										.getSmPersonnelByRevNoAndIdentificationNo(
-												getManagedBean().getSupplier()
-														.getSmAppl()
-														.getSmPersonnels(),
-												per, 1);
-							}
-							if (tmp != null) {
+										filteredPersonnels, "identificationNo");
+
+						if (tmp == null) {
+							filteredPersonnels.add(per);
+						} else {
+							if (per.getRevNo() > tmp.getRevNo()) {
+								filteredPersonnels.remove(tmp);
 								filteredPersonnels.add(per);
 							}
 						}
@@ -511,9 +504,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 						"lbl.sm.selfrequest.icno.invalid", null);
 			} else {
 				if (getManagedBean().getSelectedAdmin() != null
-						&& per.getPersonnelId().compareTo(
+						&& per.getIdentificationNo().equals(
 								getManagedBean().getSelectedAdmin()
-										.getPersonnelId()) != 0) {
+										.getIdentificationNo())) {
 					errMsg = SmCommonUtil.getMessage(
 							"lbl.sm.selfrequest.icno.invalid", null);
 				}
