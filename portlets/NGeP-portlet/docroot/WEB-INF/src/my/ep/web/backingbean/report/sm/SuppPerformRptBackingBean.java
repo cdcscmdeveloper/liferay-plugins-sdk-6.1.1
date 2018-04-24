@@ -1,18 +1,21 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-
-import org.apache.commons.lang.StringUtils;
 
 import my.ep.constants.CommonConstants;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "suppPerformRptBB")
 @ViewScoped
@@ -25,7 +28,7 @@ public class SuppPerformRptBackingBean extends
 	private static final long serialVersionUID = -7400800649761552705L;
 
 	public SuppPerformRptBackingBean() {
-		getManagedBean().setYearList(getCommonYearList());
+		getManagedBean().setYearList(getYearList());
 		setDefaultDateFromAndDateTo();
 		onChangeRegType();
 	}
@@ -86,6 +89,26 @@ public class SuppPerformRptBackingBean extends
 			label = SmCommonUtil.getMessage("lbl.rpt.registereddatefrom", null);
 		}
 		getManagedBean().setRegDateLabel(label);
+	}
+
+	private List<String> getYearList() {
+		List<String> years = new ArrayList<String>();
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+
+		Date currentDate = new Date();
+		Integer year = null;
+		String yearFrom = outputDateFormat.format(currentDate).substring(6, 10);
+		if (yearFrom != null) {
+			year = Integer.parseInt(yearFrom);
+		}
+		if (year != null) {
+			while (year >= 2018) {
+				years.add(Integer.toString(year));
+				year--;
+			}
+		}
+		return years;
 	}
 
 }
