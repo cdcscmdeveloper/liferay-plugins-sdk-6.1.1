@@ -40,6 +40,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -62,6 +63,7 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -2748,6 +2750,7 @@ public class QTDocumentsBackingBean extends
 
 		IAddressSO addressSO = null;
 		PmAddressType pmAddressType = null;
+		IUserSO userSO = null;
 		try {
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
@@ -2759,21 +2762,27 @@ public class QTDocumentsBackingBean extends
 			if (resDTO.getAddressTypeList().size() > 0) {
 				pmAddressType = resDTO.getAddressTypeList().get(0);
 			}
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+
+			// Get Desk Officer User
+			UserReqDTO userreqDTO = new UserReqDTO();
+			userreqDTO.setUserId(scQt.getCreatedBy());
+			PmUser doUser = userSO.retrieveUserByUserId(userreqDTO).getPmUser();
 			String agencyAddress = "";
-			String agencyPhoneNo = "";
-			String agencyFaxNo = "";
 			if (pmAddressType != null) {
 				PmAddress pmAddress = pmAddressType.getPmAddress();
 				agencyAddress = getFullAddress(pmAddress);
 				agencyAddress = agencyAddress.replaceAll(
 						TemplateDocConst.PARAM_NEW_LINE_CHARACTER,
 						TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER);
-				agencyPhoneNo = pmAddress.getPhoneNo();
-				agencyFaxNo = pmAddress.getFaxNo();
+				//agencyPhoneNo = pmAddress.getPhoneNo();
+				//agencyFaxNo = pmAddress.getFaxNo();
 			}
 
-			FacesScopes facesScopes = new FacesScopes();
-			String officerName = facesScopes.getUserSessionBean().getUserName();
+			//FacesScopes facesScopes = new FacesScopes();
+			//String officerName = facesScopes.getUserSessionBean().getUserName();
 			log.debug("======currentstatusid generateSyaratSyaratAmFromVelocity===="
 					+ this.getManagedBean().getCurrentStatusId());
 			String ptjName = " ";
@@ -2796,12 +2805,12 @@ public class QTDocumentsBackingBean extends
 			docParamValues.put(TemplateDocConst.PARAM_AGENCY_ADDRESS,
 					agencyAddress);
 			docParamValues
-					.put(TemplateDocConst.PARAM_OFFICER_NAME, officerName);
+					.put(TemplateDocConst.PARAM_OFFICER_NAME, doUser!=null ?doUser.getUserName() :" ");
 			docParamValues.put(TemplateDocConst.PARAM_TELEPHONE_NUM,
-					agencyPhoneNo);
-			docParamValues.put(TemplateDocConst.PARAM_AGENCY_EMAIL, facesScopes.getUserSessionBean().getEmail());
+					doUser!=null ?doUser.getPhoneNo() :" ");
+			docParamValues.put(TemplateDocConst.PARAM_AGENCY_EMAIL, doUser!=null ?doUser.getEmail() :" ");
 			// docParamValues.put(TemplateDocConst.COMPANY_NAME, ptjName);
-			docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, agencyFaxNo);
+			docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, doUser!=null ?doUser.getFaxNo() :" ");
 			docParamValues.put(
 					TemplateDocConst.PARAM_VALIDITY_PERIOD,
 					scQt.getQtValidityPeriod() != null ? Integer.toString(scQt
@@ -2892,6 +2901,7 @@ public class QTDocumentsBackingBean extends
 			 */
 		} finally {
 			addressSO = null;
+			userSO = null;
 		}
 	}
 
