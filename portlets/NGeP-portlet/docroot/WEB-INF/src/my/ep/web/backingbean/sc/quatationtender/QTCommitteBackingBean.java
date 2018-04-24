@@ -2080,6 +2080,7 @@ public class QTCommitteBackingBean extends
 					}
 				}
 			}
+			setQtMaintencesChanges();
 		}
 	}
 
