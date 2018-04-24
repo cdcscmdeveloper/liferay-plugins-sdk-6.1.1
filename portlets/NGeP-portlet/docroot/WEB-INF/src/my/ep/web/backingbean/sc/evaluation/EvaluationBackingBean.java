@@ -3753,8 +3753,12 @@ public class EvaluationBackingBean extends
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier()
 									.getSupplierId());
-					proposalPage = detailBackingBean
-							.retrieveTecCompanyExpDtls(proposalCheckList);
+					
+					//Enhancement #18723 To Generate Company Experience from SM Module
+					proposalPage = detailBackingBean.getTecCompanyExpDtls(proposalCheckList);
+//					proposalPage = detailBackingBean.retrieveTecCompanyExpDtls(proposalCheckList);
+					//end of Enhancement #18723
+					
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/techGovCompanyExperience.xhtml";
 					// return "techGovCompanyExperience.xhtml";
 				} else if (QTConstants.TECHNICAL_PRIVATE_CODE
