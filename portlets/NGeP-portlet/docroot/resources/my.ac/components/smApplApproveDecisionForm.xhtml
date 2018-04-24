@@ -53,7 +53,7 @@
 						<tr>
 							<td style="border-style: none !important;float: right !important;">
 								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
-									disabled="#{empty cc.attrs.currRegStatus and cc.attrs.changeCurrRegStatus}">
+									disabled="#{empty cc.attrs.currRegStatus}">
 									<p:ajax event="change" partialSubmit="true" process="@this"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
