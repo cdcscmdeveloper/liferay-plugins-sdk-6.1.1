@@ -198,6 +198,7 @@ public class PurchaseInquiryBackingBean extends
 			}
 
 			SmSupplier smSupplier = cmSupplierItem.getSmSupplier();
+			validateSupplierAddress(smSupplier.getSupplierId());
 			requestSupplierItem.setSmSupplier(smSupplier);
 			
 			requestSupplierItem.setSupplierName(smSupplier.getCompanyName());
@@ -1798,6 +1799,19 @@ public class PurchaseInquiryBackingBean extends
 	public void enableAutoUpdate() {
 		//RequestContext.getCurrentInstance().update("@form");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
+	
+	private void validateSupplierAddress(Long supplierId) {
+		try {
+			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IRequestNoteSO.class);
+			RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+			rnReqDTO.setSupplierId(supplierId);
+			requestNoteSO.validateSupplierAddressExist(rnReqDTO);
+		} finally {
+		}
 	}
 	
 	/**
