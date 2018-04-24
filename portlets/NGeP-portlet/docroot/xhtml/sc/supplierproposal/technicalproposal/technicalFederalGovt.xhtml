@@ -17,7 +17,42 @@
 			</tr>
 		</table>
 		
-		<p:dataTable id="techgovtid" var="techgovt"
+		<!-- start - Enhancement #18723 To Generate Company Experience from SM Module -->
+		<p:dataTable id="techgovtid2" var="suppExperience"
+			value="#{supplierProposalDetailBackingBean.managedBean.supplierExperienceList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowKey="#{suppExperience}" rowIndexVar="rowIndex" rows="10">
+
+			<ac:paginator for="techgovtid2" />
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.clientName']}" style="white-space : normal; ">
+				<h:outputText value="#{suppExperience.clientName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}" style="white-space : normal; ">
+				<h:outputText value="#{suppExperience.title}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}" style="white-space : normal; ">
+				<ac:labelAmount value="#{suppExperience.contractValue}"	styleClass="outputLabel-view" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
+				<h:outputText value="#{suppExperience.procurementDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
+				<h:outputText value="#{lbl['lbl.sm.projDtls.inProgress']}" rendered="#{suppExperience.progressStatus eq 'P'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.success']}" rendered="#{suppExperience.progressStatus eq 'S'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}" rendered="#{suppExperience.progressStatus eq 'F'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.kiv']}" rendered="#{suppExperience.progressStatus eq 'K'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.repeal']}" rendered="#{suppExperience.progressStatus eq 'R'}" />
+			</p:column>
+
+		</p:dataTable>
+		<!-- <p:dataTable id="techgovtid" var="techgovt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scLoaList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{techgovt}" rowIndexVar="rowIndex" rows="10">
@@ -64,7 +99,8 @@
 				</h:outputText>
 			</p:column>
 
-		</p:dataTable>  
+		</p:dataTable>   -->
+		<!-- end - Enhancement #18723 To Generate Company Experience from SM Module -->
 		
 		<p:spacer height="5" />
 		<table style="width: 100%">
@@ -72,11 +108,18 @@
 				<td style="width: 150px">
 					<p:outputLabel value="#{lbl['lbl.sc.spec.total.no.contracts']}" />
 				</td>
+				<!-- start - Enhancement #18723 To Generate Company Experience from SM Module -->
 				<td colspan="3">
+					<p:inputText style="text-align:right"
+						value="#{supplierProposalDetailBackingBean.managedBean.suppExpSize}"
+						readonly="true" disabled="true" size="15" />
+				</td>	
+				<!-- <td colspan="3">
 					<p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.contractSize}"
 						readonly="true" disabled="true" size="15" />
-				</td>
+				</td> -->
+				<!-- end - Enhancement #18723 To Generate Company Experience from SM Module -->
 				<td style="width: 120px;">
 					<p:outputLabel value="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{checklistScoreType eq '1'}" /> 
 					<p:outputLabel value="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{checklistScoreType eq '2'}" /> 
