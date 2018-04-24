@@ -69,6 +69,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
@@ -614,11 +615,12 @@ public class SimpleQuoteBackingBean extends
 						.getSupplierItem();
 
 				if (selectedSupplierItem != null) {
+					SmSupplier smSupplier = selectedSupplierItem.getSmSupplier();
+					validateSupplierAddress(smSupplier.getSupplierId());
 					// For checking govt.seller
-					if (selectedSupplierItem.getSmSupplier() != null) {
+					if (smSupplier != null) {
 						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-						profileReqDTO.setOrgProfileId(selectedSupplierItem
-								.getSmSupplier().getSupplierId());
+						profileReqDTO.setOrgProfileId(smSupplier.getSupplierId());
 						OrgProfileResDTO orgProfileResDTO = orgProfileSO
 								.retrieveOrgProfileByProfileId(profileReqDTO);
 						 pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
@@ -671,8 +673,7 @@ public class SimpleQuoteBackingBean extends
 					}
 					
 					List<SmSupplier> selectedSuppliers = new ArrayList<SmSupplier>();
-					selectedSuppliers.add(selectedSupplierItem
-							.getSmSupplier());
+					selectedSuppliers.add(smSupplier);
 					
 					supplierListListener(selectedSuppliers, scQuote);
 					
@@ -4170,6 +4171,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		if (suppliers != null) {
 			for (SmSupplier supplier : suppliers) {
+				//validateSupplierAddress(supplier.getSupplierId());
 				// after save supplier list, can't add new supplier if the suppler exists
 				Map<Long, ScQuoteSupplier> deletedSupplierMap = getManagedBean().getDeletedSupplierMap();
 				if(deletedSupplierMap != null && deletedSupplierMap.containsKey(supplier.getSupplierId())){
@@ -6749,6 +6751,19 @@ public class SimpleQuoteBackingBean extends
 					throw new EpException(MessageConst.ERROR_760388);
 				}
 			}
+		}
+	}
+	
+	private void validateSupplierAddress(Long supplierId) {
+		try {
+			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IRequestNoteSO.class);
+			RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+			rnReqDTO.setSupplierId(supplierId);
+			requestNoteSO.validateSupplierAddressExist(rnReqDTO);
+		} finally {
 		}
 	}
 	
