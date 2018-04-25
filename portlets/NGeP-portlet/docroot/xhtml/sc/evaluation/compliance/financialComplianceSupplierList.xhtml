@@ -34,7 +34,6 @@
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 					<h:commandLink immediate="true" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 						action="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}" >
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
 					</h:commandLink>
