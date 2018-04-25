@@ -57,7 +57,9 @@
 				<td>
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}">
-			            <p:ajax update="@form" />
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickDiscipline()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			        </p:selectBooleanCheckbox>
 				</td>
 			</tr>
