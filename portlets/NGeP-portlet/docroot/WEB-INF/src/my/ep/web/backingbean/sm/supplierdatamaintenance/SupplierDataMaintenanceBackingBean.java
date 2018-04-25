@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -995,16 +993,15 @@ public class SupplierDataMaintenanceBackingBean extends
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			for (SmDisciplinaryAction disc : supplier
 					.getSmDisciplinaryActions()) {
-				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& disc.getEndDate().after(new Date())) {
 					discipline.setSmDiscplinaryAction(disc);
+					discipline.setSuspend(true);
 					break;
 				}
 			}
-
-			discipline.setSuspend(true);
 		}
 		getManagedBean().setDisciplineVO(discipline);
-
 	}
 
 	/**
