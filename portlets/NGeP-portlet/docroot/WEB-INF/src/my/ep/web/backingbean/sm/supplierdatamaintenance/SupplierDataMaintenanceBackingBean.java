@@ -993,9 +993,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			for (SmDisciplinaryAction disc : supplier
 					.getSmDisciplinaryActions()) {
-				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-						&& disc.getEndDate().after(new Date())) {
-					discipline.setSmDiscplinaryAction(disc);
+				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					discipline.getSmDiscplinaryAction().setRemark(
+							disc.getRemark());
+					discipline.getSmDiscplinaryAction().setStartDate(
+							disc.getStartDate());
+					discipline.getSmDiscplinaryAction().setEndDate(
+							disc.getEndDate());
 					discipline.setSuspend(true);
 					break;
 				}
