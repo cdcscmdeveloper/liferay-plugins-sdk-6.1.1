@@ -189,9 +189,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					getActionDesc(getManagedBean().getSmAppl()));
 			reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
 
-			if (getManagedBean().isEditDisciplinaryAction())
+			if (getManagedBean().isEditDisciplinaryAction()) {
 				reqDTO.setSmDisciplinaryAction(getManagedBean()
 						.getDisciplineVO().getSmDiscplinaryAction());
+			}
 
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
@@ -756,6 +757,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		RequestContext.getCurrentInstance().execute("catCodePopup.show();");
 	}
 
+	public void onTickDiscipline() {
+		if (getManagedBean().isEditDisciplinaryAction()) {
+			getManagedBean().setDisciplineVO(getInitDisciplinaryActionVO());
+		} else {
+			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
+		}
+	}
+
 	/**
 	 * Delete category codes.
 	 * 
@@ -979,16 +988,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void initSupplierDisciplinaryAction(SmSupplier supplier) {
 		getManagedBean().setEditDisciplinaryAction(false);
-		DisciplinaryActionVO discipline = new DisciplinaryActionVO();
-		discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
-		discipline.getSmDiscplinaryAction().setStartDate(new Date());
-		discipline.getSmDiscplinaryAction().setSmSupplier(
-				getManagedBean().getSmSupplier());
-		if (getManagedBean().getSmMofAccount() != null) {
-			discipline.getSmDiscplinaryAction().setMofNo(
-					getManagedBean().getSmMofAccount().getMofNo());
-		}
-		discipline.setSuspend(false);
+		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			for (SmDisciplinaryAction disc : supplier
@@ -1006,6 +1006,19 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 		}
 		getManagedBean().setDisciplineVO(discipline);
+	}
+
+	private DisciplinaryActionVO getInitDisciplinaryActionVO() {
+		DisciplinaryActionVO discipline = new DisciplinaryActionVO();
+		discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
+		discipline.getSmDiscplinaryAction().setSmSupplier(
+				getManagedBean().getSmSupplier());
+		if (getManagedBean().getSmMofAccount() != null) {
+			discipline.getSmDiscplinaryAction().setMofNo(
+					getManagedBean().getSmMofAccount().getMofNo());
+		}
+		discipline.setSuspend(false);
+		return discipline;
 	}
 
 	/**
