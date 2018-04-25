@@ -7428,11 +7428,12 @@ public class SmApplicationBackingBean extends
 				valid = resDTO.isBpmSuccess();
 			} else {
 				boolean cannotProceedAlertMsg = SmApplicationUtil
-						.checkActiveSmApplForSupp(getManagedBean().getSmSupplier());
+						.checkActiveSmApplForSupp(getManagedBean()
+								.getSmSupplier());
 				if (cannotProceedAlertMsg) {
 					throw new EpException(MessageConst.ERROR_722542);
 				}
-				
+
 				resDTO = regSo.saveNewDraftApplication(reqDTO);
 
 				reqDTO.setSmAppl(resDTO.getSmAppl());
@@ -8074,7 +8075,9 @@ public class SmApplicationBackingBean extends
 						.getPaymentMode(getManagedBean().getSmAppl()));
 			}
 
-			if (regStatus == null) {
+			if (regStatus == null
+					&& !getManagedBean().getSmAppl().getApplType()
+							.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				throw new EpException(MessageConst.ERROR_722662);
 			}
 
@@ -8577,8 +8580,8 @@ public class SmApplicationBackingBean extends
 			for (SmFacility fac : getManagedBean().getSmAppl()
 					.getSmFacilities()) {
 				if (StringUtils.isNotBlank(fac.getFacilityType())
-						&& (fac.getFacilityType().equals("H")
-						|| fac.getFacilityType().equals("B"))) {
+						&& (fac.getFacilityType().equals("H") || fac
+								.getFacilityType().equals("B"))) {
 					hq = fac;
 					break;
 				}
