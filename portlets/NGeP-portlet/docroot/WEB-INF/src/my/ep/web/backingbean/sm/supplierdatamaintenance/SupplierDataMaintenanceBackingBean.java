@@ -983,6 +983,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setEditDisciplinaryAction(false);
 		DisciplinaryActionVO discipline = new DisciplinaryActionVO();
 		discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
+		discipline.getSmDiscplinaryAction().setStartDate(new Date());
 		discipline.getSmDiscplinaryAction().setSmSupplier(
 				getManagedBean().getSmSupplier());
 		if (getManagedBean().getSmMofAccount() != null) {
@@ -992,36 +993,15 @@ public class SupplierDataMaintenanceBackingBean extends
 		discipline.setSuspend(false);
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
-			Collections.sort(supplier.getSmDisciplinaryActions(),
-					new Comparator<SmDisciplinaryAction>() {
-						public int compare(SmDisciplinaryAction o1,
-								SmDisciplinaryAction o2) {
-							if (o1.getEndDate() == null
-									|| o2.getEndDate() == null)
-								return 0;
-							return o1.getEndDate().compareTo(o2.getEndDate());
-						}
-					});
-			discipline.setSmDiscplinaryAction(supplier
-					.getSmDisciplinaryActions().get(0));
-
-			// already finished suspend, need to insert new record
-			if (discipline.getSmDiscplinaryAction().getEndDate()
-					.compareTo(new Date()) <= 0) {
-				discipline.setSuspend(false);
-				discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
-				discipline.getSmDiscplinaryAction().setSmSupplier(
-						getManagedBean().getSmSupplier());
-				if (getManagedBean().getSmMofAccount() != null) {
-					discipline.getSmDiscplinaryAction().setMofNo(
-							getManagedBean().getSmMofAccount().getMofNo());
+			for (SmDisciplinaryAction disc : supplier
+					.getSmDisciplinaryActions()) {
+				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					discipline.setSmDiscplinaryAction(disc);
+					break;
 				}
 			}
-			// haven't finished suspend or not yet started suspend, just update
-			// record
-			else {
-				discipline.setSuspend(true);
-			}
+
+			discipline.setSuspend(true);
 		}
 		getManagedBean().setDisciplineVO(discipline);
 
