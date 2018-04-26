@@ -72,8 +72,7 @@
 						display="inline" readonlyInput="true"
 						label="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" id="startDate"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}" 
-						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}"  
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}">
 						<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
 					</p:calendar>
@@ -90,8 +89,7 @@
 						label="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" id="endDate"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}" 
-						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.endDate}" 
-						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.endDate}"
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" />
 					<p:message id="endDateMsg" for="endDate"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -103,8 +101,7 @@
 				<td><p:inputTextarea autoResize="false" cols="41" id="suspendRemark" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
 						maxlength="500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
-						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" 
-						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" />
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" />
 					<p:message id="suspendRemarkMsg"
 					for="suspendRemark" showSummary="true" showDetail="false"
 					display="icon" />
