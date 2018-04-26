@@ -1587,9 +1587,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			} else if(null == getManagedBean().getInvoice().getSupplierInvoiceRef() || getManagedBean().getInvoice().getSupplierInvoiceRef().length()==0) {
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.supp.invoice.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			} else if(getManagedBean().getInvoice().getPaymentBankAddress() == null ){
-				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.bank.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			} else {
 				reqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 				reqDTO.setSupplierInvNo(getManagedBean().getInvoice().getSupplierInvoiceRef());
