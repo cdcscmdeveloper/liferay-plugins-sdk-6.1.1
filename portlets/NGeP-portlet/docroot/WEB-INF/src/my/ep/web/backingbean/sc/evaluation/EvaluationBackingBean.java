@@ -7510,7 +7510,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setCheckReportDownload(true);
 			ScAttachment scAttachment = this.getManagedBean().getScAttachment();
 			ScQt scQt = this.getManagedBean().getScQt();
-            log.info("Start EvaluationReportAttachment downaload"+DateUtils.getCurrentDate());
+            log.info("Start EvaluationReportAttachment downaload"+scQt.getQtId()+"Time"+DateUtils.getCurrentDate());
 			// scQtEvaluationReport.setScQt(this.getManagedBean().getScQt());
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
@@ -7626,7 +7626,7 @@ private void retriveCommitteeRemarksList(){
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
 				this.getManagedBean().setScAttachment(localAttachment);
 			}
-			  log.info("end EvaluationReportAttachment downaload"+DateUtils.getCurrentDate());
+			  log.info("end EvaluationReportAttachment downaload"+scQt.getQtId()+"Time"+DateUtils.getCurrentDate());
 		} finally {
 			evaluationSO = null;
 		}
