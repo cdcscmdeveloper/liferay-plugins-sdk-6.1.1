@@ -41,11 +41,26 @@
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{applCat.specialCategory}" />
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal">
-				<h:outputText value="#{lbl['lbl.sm.approved']}"
-					rendered="#{applCat.poDecFlg eq 1}" />
-				<h:outputText value="#{lbl['lbl.sm.rejected']}"
-					rendered="#{applCat.poDecFlg eq 0}" />
+			<p:column style="width : 10% !important;white-space : normal">			
+				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
+						<tr>
+							<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+									rendered="#{applCat.poDecFlg eq 1}"
+									escape="false" /> 
+								<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+									rendered="#{applCat.poDecFlg eq 0}"
+									escape="false" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border: none !important; font-weight: bold;"><h:outputText	value="#{lbl['lbl.sm.catCodes.remark']}: " rendered="#{applCat.poDecFlg eq 0}" /></td>
+						</tr>
+						<tr>
+							<td	style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+								<h:outputText value="#{applCat.poRemarks}" rendered="#{applCat.poDecFlg eq 0}" /></td>
+						</tr>
+					</table>					
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
