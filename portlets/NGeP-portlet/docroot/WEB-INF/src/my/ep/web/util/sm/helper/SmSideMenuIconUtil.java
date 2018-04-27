@@ -547,6 +547,8 @@ public class SmSideMenuIconUtil {
 										.getSupportingDocMode(), bean
 										.isApproverUser())) {
 					retVal = ICON_TICK;
+				}
+
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
 					&& rev.isSitevisitVerified()) {
