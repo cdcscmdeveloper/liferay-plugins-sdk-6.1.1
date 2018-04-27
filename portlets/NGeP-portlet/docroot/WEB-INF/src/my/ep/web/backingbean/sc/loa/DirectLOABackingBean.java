@@ -4181,7 +4181,6 @@ public class DirectLOABackingBean extends
 	 * Pre render direct loa.
 	 */
 	public void preRenderDirectLoa() {
-		debugLogger("preRenderDirectLoa");
 		FacesContext fc = FacesContext.getCurrentInstance();		
 		
 		try {
@@ -4243,7 +4242,6 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setApproverUser(new PmUser());
 		this.getManagedBean().setScLoa(scLoa);
 		if(scLoa.getContractType().getParameterId() != null) {
-			System.out.println("------------shams : scLoa.getContractType().getParameterId() = "+scLoa.getContractType().getParameterId());
 			this.getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
 		}
 		if (scQt.isZonal()) {
