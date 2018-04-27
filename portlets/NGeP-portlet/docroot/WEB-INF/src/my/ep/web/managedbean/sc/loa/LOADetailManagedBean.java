@@ -264,7 +264,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgressivePayments;
-    
+	
+	private Long contractTypeId;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -1491,6 +1493,13 @@ public class LOADetailManagedBean extends BaseManagedBean {
 			List<ScQtProgressivePayment> toBeRemoveProgressivePayments) {
 		this.toBeRemoveProgressivePayments = toBeRemoveProgressivePayments;
 	}
-	
+
+	public Long getContractTypeId() {
+		return contractTypeId;
+	}
+
+	public void setContractTypeId(Long contractTypeId) {
+		this.contractTypeId = contractTypeId;
+	}
 	
 }

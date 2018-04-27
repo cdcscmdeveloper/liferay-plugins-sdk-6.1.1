@@ -1490,6 +1490,16 @@ public class DirectLOABackingBean extends
 				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scLoa.setContractType(resDTO.getPmParameter());
+			} 
+			
+			// to reset Contract Admin User
+			if(getManagedBean().getContractTypeId() != null) {
+				if (!scLoa.getContractType().getParameterId().equals(getManagedBean().getContractTypeId())){
+					scLoa.setContractAdmin(new PmUser());
+				}
+				getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
+			} else {
+				scLoa.setContractAdmin(new PmUser());
 			}
 
 		} finally {
@@ -4171,7 +4181,8 @@ public class DirectLOABackingBean extends
 	 * Pre render direct loa.
 	 */
 	public void preRenderDirectLoa() {
-		FacesContext fc = FacesContext.getCurrentInstance();
+		debugLogger("preRenderDirectLoa");
+		FacesContext fc = FacesContext.getCurrentInstance();		
 		
 		try {
 			SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
@@ -4231,6 +4242,10 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
 		this.getManagedBean().setScLoa(scLoa);
+		if(scLoa.getContractType().getParameterId() != null) {
+			System.out.println("------------shams : scLoa.getContractType().getParameterId() = "+scLoa.getContractType().getParameterId());
+			this.getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
+		}
 		if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDetails = awardResDTO.getSpecZoneDetails();
 			constructTreeNodeForZones(zoneDetails);
@@ -4501,7 +4516,7 @@ public class DirectLOABackingBean extends
 				payment.setEndYear(endYear);
 
 			}
-			this.sortProgressivePaymentList(payments);
+			//this.sortProgressivePaymentList(payments);
 		}
 	}
 
@@ -7925,5 +7940,40 @@ public class DirectLOABackingBean extends
 		
 		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
 				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
+	}
+	
+	public String constructContractAdminConditionFields() {
+		log.info("constructContractAdminConditionFields");
+		StringBuilder sb = new StringBuilder();
+		ScLoa scLoa = getManagedBean().getScLoa();		
+		String contractType = scLoa.getContractType().getParameterCode();
+		String roleCode = null;
+		Long userProfileId = null;
+
+		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
+			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+		} else if(ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			roleCode = RoleCode.BPK_CCA.value();
+		}
+		
+		if (scLoa.getContractAgency().getOrgProfileId() != null){
+			userProfileId = scLoa.getContractAgency().getOrgProfileId();
+		} else {
+			userProfileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
+		}
+
+		sb.append("pmUserOrg.pmOrgProfile."
+				+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+		sb.append("^");
+		sb.append(retrieveMinistryOrgProfile(userProfileId).getOrgProfileId());
+		sb.append("^1");
+
+		if(roleCode != null) {
+			sb.append("|pmUserOrg.pmUserRoles.pmRole.roleCode^");
+			sb.append(roleCode);
+			sb.append("^9");
+		}		
+			
+		return sb.toString();
 	}
 }
