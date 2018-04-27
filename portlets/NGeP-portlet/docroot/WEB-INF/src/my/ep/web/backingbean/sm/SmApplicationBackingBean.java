@@ -7608,6 +7608,9 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
+		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
+			getManagedBean().setChangeCurrRegStatus(true);
+		}
 		RequestContext.getCurrentInstance()
 				.execute("submitApprvrDialog.show()");
 	}
