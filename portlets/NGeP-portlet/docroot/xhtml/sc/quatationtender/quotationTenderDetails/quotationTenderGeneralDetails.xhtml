@@ -630,7 +630,7 @@
 							<tr>
 								<td><p:inputMask id="proposalvalidity" mask="9?9999"
 										maxlength="5" placeHolder=""
-										label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
+										label="#{lbl['lbl.sc.qt.proposal.validity']}" required="true"
 										value="#{scQt.qtValidityPeriod}"
 										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
