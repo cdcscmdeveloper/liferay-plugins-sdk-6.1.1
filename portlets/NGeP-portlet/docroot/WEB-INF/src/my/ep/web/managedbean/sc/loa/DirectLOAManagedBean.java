@@ -292,6 +292,8 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private int prodFirst;
 	private int servFirst;
 	
+	private Long contractTypeId;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1755,6 +1757,14 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setServFirst(int servFirst) {
 		this.servFirst = servFirst;
+	}
+
+	public Long getContractTypeId() {
+		return contractTypeId;
+	}
+
+	public void setContractTypeId(Long contractTypeId) {
+		this.contractTypeId = contractTypeId;
 	}
 	
 }

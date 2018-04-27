@@ -130,6 +130,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -730,6 +731,7 @@ public class LOADetailBackingBean extends
 		}
 
 		if (scLoa.getContractType().getParameterId() != null) {
+			this.getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
 			contractTypeChanged();
 		}
 
@@ -3264,10 +3266,22 @@ public class LOADetailBackingBean extends
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(scLoa.getContractType().getParameterId());
-
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			scLoa.setContractType(resDTO.getPmParameter());
+			if(scLoa.getContractType() !=null){
+				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
+	
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				scLoa.setContractType(resDTO.getPmParameter());
+			}
+			
+			// to reset Contract Admin User
+			if(getManagedBean().getContractTypeId() != null) {
+				if (!scLoa.getContractType().getParameterId().equals(getManagedBean().getContractTypeId())){
+					scLoa.setContractAdmin(new PmUser());
+				}
+				getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
+			} else {
+				scLoa.setContractAdmin(new PmUser());
+			}
 
 		} finally {
 			parameterSO = null;
@@ -5939,6 +5953,41 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
 
+	}
+	
+	public String constructContractAdminConditionFields() {
+		debugLogger("constructContractAdminConditionFields");
+		ScLoa scLoa = getManagedBean().getScLoa();
+		String contractType = scLoa.getContractType().getParameterCode();
+		String roleCode = null;
+		Long userProfileId = null;
+
+		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
+			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+		} else if(ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			roleCode = RoleCode.BPK_CCA.value();
+		}
+		
+		if (scLoa.getContractAgency().getOrgProfileId() != null){
+			userProfileId = scLoa.getContractAgency().getOrgProfileId();
+		} else {
+			userProfileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("pmUserOrg.pmOrgProfile."
+				+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+		sb.append("^");
+		sb.append(retrieveMinistryOrgProfile(userProfileId).getOrgProfileId());
+		sb.append("^1");
+
+		if(roleCode != null) {
+			sb.append("|pmUserOrg.pmUserRoles.pmRole.roleCode^");
+			sb.append(roleCode);
+			sb.append("^9");
+		}
+
+		return sb.toString();
 	}
 
 }

@@ -445,21 +445,17 @@
 			</td>
 			<td>
 				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="contractAdmin"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 250px;margin-bottom:5px;"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						required="true"
-						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
-						
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{lOADetailBackingBean.managedBean.contractAdminList}"
-							var="pmuser" itemLabel="#{pmuser.userName}" itemValue="#{pmuser.userId}" />
-						<p:ajax event="change"
-							listener="#{lOADetailBackingBean.contractAdminChanged()}"
-							partialSubmit="true" process="@this" update="@this" />
-					</p:selectOneMenu>
-					<p:message id="contractAdminMsg" for="contractAdmin" display="icon" />
+					<p:outputPanel id="opUserLov">
+						<ac:lov id="lovMinistryUser" lovId="PM_USER_ID_MINISTRY" size="80"
+							disabled="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId == null}"
+							update="@form" readonly="true"
+							headerText="#{lbl['lbl.pm.ta.user.lov']}"
+							selectionMode="single"
+							value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
+							saveObject="lOADetailBackingBean.managedBean.scLoa.contractAdmin"
+							conditionField="#{lOADetailBackingBean.constructContractAdminConditionFields()}"
+							postUpdateListener="lOADetailBackingBean.contractAdminChanged()" />
+					</p:outputPanel>
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
 					<p:inputText 
