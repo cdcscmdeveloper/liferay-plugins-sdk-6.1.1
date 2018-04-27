@@ -26,6 +26,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.vo.SmLicenseInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -526,14 +527,26 @@ public class SmSideMenuIconUtil {
 					}
 				}
 			} else if (sectionType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
-					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser())
-					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getNonMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser())) {
-				retVal = ICON_TICK;
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
+
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+				if (!EntityHelper.isCollectionEmpty(bean
+						.getMandatoryLicenseDocs())) {
+					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
+						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+					}
+				}
+				if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
+						.getMandatoryDocs(), bean.getSmAppl()
+						.getSupportingDocMode(), bean.isApproverUser())
+						&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
+								.getNonMandatoryDocs(), bean.getSmAppl()
+								.getSupportingDocMode(), bean.isApproverUser())
+						&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+								licenseMandatoryDocs, bean.getSmAppl()
+										.getSupportingDocMode(), bean
+										.isApproverUser())) {
+					retVal = ICON_TICK;
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
 					&& rev.isSitevisitVerified()) {
