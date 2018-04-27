@@ -1292,10 +1292,15 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().isResubmit()
 				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
 			applSectionRevExist();
+			
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
+			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
+			
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
-							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getSmAppl().getOriginalAppl()
+							.getHtmlApplicationRejectReasons(latestRejectedAppl
 									.getSmApplRejectReasons()));
 		}
 
