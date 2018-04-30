@@ -7960,14 +7960,14 @@ public class DirectLOABackingBean extends
 			userProfileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
 		}
 
-		sb.append("pmUserOrg.pmOrgProfile."
+		sb.append("pmUserOrgs.pmOrgProfile."
 				+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
 		sb.append("^");
 		sb.append(retrieveMinistryOrgProfile(userProfileId).getOrgProfileId());
 		sb.append("^1");
 
 		if(roleCode != null) {
-			sb.append("|pmUserOrg.pmUserRoles.pmRole.roleCode^");
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 			sb.append(roleCode);
 			sb.append("^9");
 		}		
