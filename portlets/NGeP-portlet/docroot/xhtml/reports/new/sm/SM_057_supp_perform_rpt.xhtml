@@ -77,16 +77,6 @@
 				<p:message id="yearToMsg" for="yearTo" display="icon" showDetail="false" />
 			</td>
 		</tr>
-		<tr>
-			<td class="tdTitle">
-				<p:outputLabel value="#{suppPerformRptBB.managedBean.regDateLabel}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td class="tdContent">
-				<ac:smReportDateFromTo bBean="#{suppPerformRptBB}" />
-			</td>
-			<td colspan="2"></td>
-		</tr>
 	</table>
 	
 	<ac:smGenerateReport bBean="#{suppPerformRptBB}" 
