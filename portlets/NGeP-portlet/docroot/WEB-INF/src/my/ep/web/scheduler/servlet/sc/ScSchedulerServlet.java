@@ -143,17 +143,7 @@ public class ScSchedulerServlet extends HttpServlet {
 				QTProposalCloseSchedulingJob.class,
 				SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION);
 
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB,
-								SchedulerConstants.SC_JOB_GROUP),
-						QuotationPropoValidReminderJob.class,
-						SchedulerConstants.SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
+		
 		EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
