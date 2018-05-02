@@ -46,11 +46,12 @@
 						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 4 -->
-					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}"
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}"
 						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+					
 					<!-- 5 -->
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}"
+					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="width : 25%;"
 						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 6 -->
@@ -81,8 +82,19 @@
 				<h:outputText
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
+			
 			<!-- 4 -->
 			<p:column
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+					rendered="#{!catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+					rendered="#{catBean.specialCategory}" />
+			</p:column>
+			
+			<!-- 5 -->
+			<p:column style="width : 25%;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea id="otherDesc" maxlength="100"
@@ -105,15 +117,7 @@
 				<p:message for="otherDesc" showDetail="false" showSummary="true"
 					display="icon" />
 			</p:column>
-			<!-- 5 -->
-			<p:column
-				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
-							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
-					rendered="#{!catBean.specialCategory}" />
-				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
-					rendered="#{catBean.specialCategory}" />
-			</p:column>
+
 			<!-- 6 -->
 			<p:column
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
