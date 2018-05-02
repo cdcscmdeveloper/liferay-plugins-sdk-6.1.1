@@ -40,10 +40,6 @@ public class SuppPerformRptBackingBean extends
 				CommonConstants.DEFAULT_DATE_FORMAT);
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		params.put(SmReportConst.PARAM_DATE_FROM,
-				df.format(getManagedBean().getDateFrom()));
-		params.put(SmReportConst.PARAM_DATE_TO,
-				df.format(getManagedBean().getDateTo()));
 		if (getManagedBean().getSelectedOrgProfile() != null) {
 			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
