@@ -570,6 +570,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	private String getActionDesc(SmAppl appl) {
 		PmUser user = new FacesScopes().getUserSessionBean();
 		StringBuffer sb = new StringBuffer();
+		sb.append("Keterangan Lain untuk bidang:<br />");
 		boolean editOtherDesc = false;
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory sc : appl.getSmSupplierCategories()) {
@@ -587,6 +588,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 		}
 		if (!editOtherDesc) {
+			sb = new StringBuffer();
 			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
 		}
 		return sb.toString();
