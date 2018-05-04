@@ -483,51 +483,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		response.setContentType("Content-type: text/zip");
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ zipFileName + ".zip");
-
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
+		
 		try {
-			for (ScAttachment scAttachment : scAttachments) {
-				// Get the file
-				FileInputStream fis = null;
-				BufferedInputStream fif = null;
-				try{
-					if (null != scAttachment
-							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-						File file = new File(getActualFilePath(scAttachment));
-
-						if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-							String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-							zos.putNextEntry(new ZipEntry(scAttachment.getTempFileName() + "." + extension));
-						} else {
-							zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
-						}
-						
-						try {
-							fis = new FileInputStream(file);
-						} catch (FileNotFoundException fnfe) {
-							zos.write(("ERROR: Could not find file " + file
-									.getName()).getBytes());
-							continue;
-						}
-						 fif = new BufferedInputStream(fis);
-						// Write the contents of the file
-						int data = 0;
-						while ((data = fif.read()) != -1) {
-							zos.write(data);
-						}
-					}
-				}
-				finally{
-					if(fis != null){
-						fis.close();
-					}
-					if(fif != null){
-						fif.close();
-					}
-					zos.closeEntry();
-				}
-			}
+			downloadAllFilesAsZipFile(zos,scAttachments);
 			
 		} catch (Exception ex) {
 
@@ -3069,5 +3029,50 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
 		
 		return (mimeType != null) ? mimeType : "octet-stream";
+	}
+	
+	protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFile(ZipOutputStream zos,List<ATTACHMENT> scAttachments) throws IOException{
+		//ZipOutputStream zos = new ZipOutputStream(os);
+		for (ScAttachment scAttachment : scAttachments) {
+			// Get the file
+			FileInputStream fis = null;
+			BufferedInputStream fif = null;
+			try{
+				if (null != scAttachment
+						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
+					File file = new File(getActualFilePath(scAttachment));
+
+					if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+						zos.putNextEntry(new ZipEntry(scAttachment.getTempFileName() + "." + extension));
+					} else {
+						zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+					}
+					
+					try {
+						fis = new FileInputStream(file);
+					} catch (FileNotFoundException fnfe) {
+						zos.write(("ERROR: Could not find file " + file
+								.getName()).getBytes());
+						continue;
+					}
+					 fif = new BufferedInputStream(fis);
+					// Write the contents of the file
+					int data = 0;
+					while ((data = fif.read()) != -1) {
+						zos.write(data);
+					}
+				}
+			}
+			finally{
+				if(fis != null){
+					fis.close();
+				}
+				if(fif != null){
+					fif.close();
+				}
+				zos.closeEntry();
+			}
+		}
 	}
 }
