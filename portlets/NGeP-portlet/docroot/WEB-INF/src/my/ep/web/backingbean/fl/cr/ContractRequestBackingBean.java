@@ -4296,7 +4296,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-			reqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+			if(!BpmOutcomeConst.BPM_REJECT.equals(action)){
+				reqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+			}
+			
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			reqDTO.setPmOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
