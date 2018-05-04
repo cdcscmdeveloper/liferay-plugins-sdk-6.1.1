@@ -1131,9 +1131,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								|| StringUtils.isBlank(list.get(i).getTitle())) {
 							list.get(i).setTitle("hellodelete");
 						}
-						markDeletedList.add(list.get(i));
+					int index=	list.get(i).getIndex();
+					index=index-markDeletedList.size();
+					log.debug("DeletedIndex"+index);
+					markDeletedList.add(list.get(index));
 
-						list.remove(list.get(i));
+						list.remove(index);
 						i--;
 					}
 				}
