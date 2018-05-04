@@ -7688,6 +7688,7 @@ private void retriveCommitteeRemarksList(){
 			List<ScAttachment> scAttachments,
 			ScAttachment attachemnt) throws IOException {
 		List<File> files = new ArrayList<File>();
+		ZipOutputStream zos = null;
 		try {
 			for (ScAttachment scAttachment : scAttachments) {
 				if (null != scAttachment
@@ -7695,45 +7696,13 @@ private void retriveCommitteeRemarksList(){
 					files.add(new File(getActualFilePath(scAttachment)));
 				}
 			}
-
-			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(
+			 zos = new ZipOutputStream(new FileOutputStream(
 					getActualFilePath(attachemnt)));
-			try {
-				for (File file : files) {
-
-					zos.putNextEntry(new ZipEntry(file.getName()));
-
-					// Get the file
-					FileInputStream fis = null;
-					try {
-						fis = new FileInputStream(file);
-					} catch (FileNotFoundException fnfe) {
-						zos.write(("ERROR: Could not find file " + file
-								.getName()).getBytes());
-						zos.closeEntry();
-						continue;
-					}
-					BufferedInputStream fif = new BufferedInputStream(fis);
-					// Write the contents of the file
-					int data = 0;
-					while ((data = fif.read()) != -1) {
-						zos.write(data);
-					}
-					fif.close();
-					zos.closeEntry();
-				}
-			} catch (Exception ex) {
-
-			} finally {
-
-				zos.close();
-
-				// response.flushBuffer();
-
-				// FacesContext.getCurrentInstance().responseComplete();
-			}
-		} finally {
-
+			downloadAllFilesAsZipFile(zos,scAttachments);
+		}
+		 finally {
+			 zos.close();
+			 files=null;
 		}
 	}
 
