@@ -2486,6 +2486,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
 		if(getManagedBean().getManualAddressList()!=null) {
 			for (PmAddressType obj : getManagedBean().getManualAddressList()) {
+				System.out.println(obj.getPmAddress().getAddressName());
 				manualAddrList.add(new SelectItem(obj.getAddressTypeId(), obj.getPmAddress().getAddressName()));
 			}
 		}
@@ -3165,7 +3166,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-			reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+			if(!BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+				reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+			}
+			
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
