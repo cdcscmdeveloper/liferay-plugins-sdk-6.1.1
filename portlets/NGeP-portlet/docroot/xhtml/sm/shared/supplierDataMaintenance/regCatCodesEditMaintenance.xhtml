@@ -46,12 +46,12 @@
 						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 4 -->
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}"
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 10% !important;"
 						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					
 					<!-- 5 -->
-					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="width : 25%;"
+					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="width : 25% !important;"
 						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 6 -->
@@ -84,7 +84,7 @@
 			</p:column>
 			
 			<!-- 4 -->
-			<p:column
+			<p:column style="width : 10% !important;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
@@ -94,12 +94,12 @@
 			</p:column>
 			
 			<!-- 5 -->
-			<p:column style="width : 25%;"
+			<p:column style="width : 25% !important;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-					value="#{catBean.otherDesc}" rows="5" cols="20"
+					value="#{catBean.otherDesc}" rows="5" cols="40"
 					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierDataMaintenanceBackingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
