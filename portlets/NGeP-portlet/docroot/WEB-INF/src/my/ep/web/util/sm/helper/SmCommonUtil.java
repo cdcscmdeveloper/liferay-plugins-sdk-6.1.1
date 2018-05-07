@@ -1363,7 +1363,9 @@ public class SmCommonUtil {
 		if (businessTypeVal
 				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 				|| businessTypeVal
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)
+				|| businessTypeVal
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
 			llpOrRoc = true;
 		}
 		if (compBasic.getGovtEquity() != null && llpOrRoc) {
