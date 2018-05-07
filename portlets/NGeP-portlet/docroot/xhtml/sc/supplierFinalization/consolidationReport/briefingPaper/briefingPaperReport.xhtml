@@ -72,7 +72,7 @@
 											!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
 												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
 					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-						popupWidgetVar="briefingReportAttWidget"
+						popupWidgetVar="briefingReportAttWidget" update="@([id$=reportTbl])"
 						attachment="#{report.scQtFinalizationReportAttachment}" 
 						readonly="#{!empty report.pmDocument or 
 						  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
