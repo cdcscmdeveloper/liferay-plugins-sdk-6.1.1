@@ -5620,7 +5620,7 @@ public class SmApplicationUtil {
 	public static void validateSpecialCategoryAssignedToFacility(
 			SmApplicationManagedBean bean) {
 		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
-				.getSmSupplierCategories())) {
+				.getSmSupplierCategories()) && !bean.isApproverUser()) {
 			SmSupplierCategoryFacility tmp = null;
 			for (SmSupplierCategory cat : bean.getSmAppl()
 					.getSmSupplierCategories()) {
