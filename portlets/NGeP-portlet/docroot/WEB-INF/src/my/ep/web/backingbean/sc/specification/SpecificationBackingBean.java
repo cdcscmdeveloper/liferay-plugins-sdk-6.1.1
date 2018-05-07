@@ -7800,9 +7800,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			//if (CollectionUtils.isNotEmpty(panelItemList)) {
              //  log.info("panel Item Name"+panelItemList.get(0));
+			if(QTConstants.CT_PANEL_ZONE_COVERAGE.equalsIgnoreCase(item.getPanelCoverageId().getParameterCode())){
 				reqDTO.setPanelItem(item);
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			//}
+			}
 
 			if (null != resDTO && null != resDTO.getCtPanelZones()
 					&& !resDTO.getCtPanelZones().isEmpty()) {
