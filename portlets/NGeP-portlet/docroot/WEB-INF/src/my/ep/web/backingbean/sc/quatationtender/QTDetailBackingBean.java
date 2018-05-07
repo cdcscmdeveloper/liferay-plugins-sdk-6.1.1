@@ -2834,19 +2834,19 @@ public class QTDetailBackingBean extends
 	 */
 	private void retriveZonesByCircularNo() {
 		debugLogger("retriveZonesByCircularNo");
-		IPanelSupplierSO panelSupplierSO;
 		
-		PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
+		
+		//PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
 		try {
-			PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+			//PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
 
-			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IPanelSupplierSO.class);
+			//panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
+					//.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							//IPanelSupplierSO.class);
 
 			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 			
-			if (CollectionUtils.isNotEmpty(panelItemList)){
+			/*if (CollectionUtils.isNotEmpty(panelItemList)){
 
 				reqDTO.setPanelItem(panelItemList.get(0));
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
@@ -2885,7 +2885,7 @@ public class QTDetailBackingBean extends
 						}
 					}
 				}
-			} else {
+			}*/ //else {
 				
 				this.getManagedBean().setTotalSuppliers(0);
 				
@@ -2915,9 +2915,9 @@ public class QTDetailBackingBean extends
 								supplierResDTO.getCtPanelSuppliers());
 					}
 				}
-			}
+			//}
 		} finally {
-			panelSupplierSO=null;
+			//panelSupplierSO=null;
 		}
 	}
 
