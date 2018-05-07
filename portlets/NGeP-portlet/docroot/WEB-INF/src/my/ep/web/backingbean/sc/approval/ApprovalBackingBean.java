@@ -1415,9 +1415,9 @@ try{
 	SpecificationReqDTO specReqDTO=new SpecificationReqDTO();
 	specReqDTO.setScQt(scQt);
 	SpecificationResDTO specResDTO=qtSpecSO.retriveSpecItemCount(specReqDTO);
-	log.info("itemCount"+specResDTO.getItemCount());
+	log.info("QTID:"+scQt.getQtId()+"itemCount"+specResDTO.getItemCount());
 	boolean isMedicine=isMultipleProposalCategory(scQt, null);
-	log.info("isMedicine"+isMedicine);
+	log.info("QTID:"+scQt.getQtId()+"isMedicine"+isMedicine);
 	if(isMedicine || specResDTO.getItemCount()<=1){
 		scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);	
 	}else{
