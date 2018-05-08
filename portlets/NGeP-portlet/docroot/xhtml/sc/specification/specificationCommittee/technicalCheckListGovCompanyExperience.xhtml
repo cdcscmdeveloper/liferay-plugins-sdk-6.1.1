@@ -10,7 +10,6 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-
 	<ui:define name="contentSection">
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -40,7 +39,6 @@
 		<h:panelGroup id="techCheckListGovtCompExp">
 			<ui:include
 				src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
-
 
 			<p:panel toggleable="true" id="compExpFedGovtId">
 				<f:facet name="header">
@@ -78,7 +76,23 @@
 					rowKey="#{experience}" style="width:1090px">
 					<ac:paginator for="experience"></ac:paginator>
 					<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}">
+					<!-- start - Enhancement #19498 Change column for Company Experience at Specification Preparation -->
+					<p:column headerText="#{lbl['lbl.sm.projDtls.clientName']}">
+						<p:inputText></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}">
+						<p:inputText></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}">
+						<p:inputText></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
+						<p:inputText></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
+						<p:inputText></p:inputText>
+					</p:column>
+					<!-- <p:column headerText="#{lbl['lbl.sc.spec.customer.name']}">
 						<p:inputText></p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}">
@@ -101,7 +115,8 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.remarks']}">
 						<p:inputText></p:inputText>
-					</p:column>
+					</p:column> -->
+				<!-- end - Enhancement #19498 Change column for Company Experience at Specification Preparation -->
 				</p:dataTable>
 
 				<p:spacer height="10px"></p:spacer>
@@ -113,19 +128,13 @@
 						<td><p:inputText readonly="true" disabled="true"></p:inputText>
 						</td>
 					</tr>
-
-				
-
 				</table>
 
 			</p:panel>
 
-
 			<!-- <h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}"
 				escape="false" /> -->
-
-
 
 			<p:panel id="techCompanyExpContracts"
 				header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
@@ -232,7 +241,6 @@
 					</h:panelGroup>
 				</h:panelGroup>
 			</p:panel>
-
 			
 		</h:panelGroup>
 	</ui:define>
