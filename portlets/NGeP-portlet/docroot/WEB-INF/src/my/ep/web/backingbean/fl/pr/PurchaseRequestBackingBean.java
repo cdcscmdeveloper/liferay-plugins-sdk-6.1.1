@@ -2486,7 +2486,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
 		if(getManagedBean().getManualAddressList()!=null) {
 			for (PmAddressType obj : getManagedBean().getManualAddressList()) {
-				System.out.println(obj.getPmAddress().getAddressName());
 				manualAddrList.add(new SelectItem(obj.getAddressTypeId(), obj.getPmAddress().getAddressName()));
 			}
 		}
