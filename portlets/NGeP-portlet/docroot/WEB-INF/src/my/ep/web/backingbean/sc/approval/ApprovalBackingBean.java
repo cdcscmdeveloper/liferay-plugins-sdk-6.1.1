@@ -624,8 +624,9 @@ public class ApprovalBackingBean extends
 						.getScQtApprovalRequestList());
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		this.getManagedBean().setAction(action);
-		logger.debug("Task Name : " + this.getManagedBean().getTaskName());
-		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+		String taskName = this.getManagedBean().getTaskName();
+		logger.debug("Task Name : " + taskName);
+		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
 			boolean isRevised = false;
 			boolean isApproved = false;
 			boolean isRejected = false;
@@ -651,8 +652,11 @@ public class ApprovalBackingBean extends
 				showDialog = "reviceApprovalDlg.show()";
 			} else if (isApproved) {
 				action = BpmOutcomeConst.BPM_APPROVE;
-				showDialog = "gpki_dlg.show()";
-				isGpkiPopup = true;
+//				showDialog = "gpki_dlg.show()";
+//				isGpkiPopup = true;
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler()
+						.handleNavigation(fc, null, gpkiSignAction(null));
 			} else if (isRejected) {
 				action = BpmOutcomeConst.BPM_REJECT;
 				showDialog = "rejectApprovalDlg.show()";
@@ -694,11 +698,16 @@ public class ApprovalBackingBean extends
 					committeReqDTO.setSpecApprovalReq(true);
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
-				showDialog = "gpki_dlg.show()";
-				isGpkiPopup = true;
+				
+				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)) {
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, gpkiSignAction(null));
+				} else {
+					showDialog = "gpki_dlg.show()";
+					isGpkiPopup = true;
+				}
 			}
-			
-			
 		}
 		
 		if (StringUtils.isNotBlank(showDialog)) {
