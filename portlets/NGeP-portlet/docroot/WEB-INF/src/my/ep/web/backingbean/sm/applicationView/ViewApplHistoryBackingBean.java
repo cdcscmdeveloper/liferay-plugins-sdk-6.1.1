@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
+import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
@@ -55,6 +56,7 @@ public class ViewApplHistoryBackingBean extends
 	public static CommonApplBackingBean commonApplInstance;
 	public static PmTrackingDiaryBackingBean trackinDiaryInstance;
 	public static RegistrationBackingBean registrationBackingBean;
+	public static SvoSiteVisitBackingBean svoSiteVisitBackingBean;
 
 	/**
 	 * Set tab value
@@ -274,6 +276,7 @@ public class ViewApplHistoryBackingBean extends
 			initWorkflowStatus(getManagedBean().getSmAppl(), status);
 			if (!getManagedBean().isSupplierUser()) {
 				initPOApproverDecisionInfo();
+				initSiteVisit();
 			}
 		}
 	}
@@ -404,6 +407,12 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 	}
+	
+	public void initSiteVisit() {
+		getSvoSiteVisitBackingBean().getManagedBean().setAppId(
+				getManagedBean().getSmAppl().getApplId());
+		getSvoSiteVisitBackingBean().reviewSiteVisitReport();
+	}
 
 	/**
 	 * Get VirtualCertBackingBean instance
@@ -455,6 +464,18 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return registrationBackingBean;
 
+	}
+	
+	/**
+	 * Get SvoSiteVisitBackingBean instance
+	 * 
+	 * @return SvoSiteVisitBackingBean
+	 */
+	public static SvoSiteVisitBackingBean getSvoSiteVisitBackingBean() {
+		if (svoSiteVisitBackingBean == null) {
+			svoSiteVisitBackingBean = new SvoSiteVisitBackingBean();
+		}
+		return svoSiteVisitBackingBean;
 	}
 
 }
