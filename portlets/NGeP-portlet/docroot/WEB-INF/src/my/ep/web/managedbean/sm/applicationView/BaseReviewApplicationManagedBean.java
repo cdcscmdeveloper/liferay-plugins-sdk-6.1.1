@@ -203,6 +203,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date currDate;
 	private SmGstSupplier hqGst;
 	private boolean updatePersonnelPage;
+	
+	private String poApprOverlappedRemark;
+	private String poUserName;
+	private String poRemark;
+	private Date poRemarkCreatedDate;
+	private String approverUserName;
+	private String approverRemark;
+	private Date approverRemarkCreatedDate;
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1441,6 +1449,62 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setBpkUser(boolean bpkUser) {
 		this.bpkUser = bpkUser;
+	}
+
+	public String getPoApprOverlappedRemark() {
+		return poApprOverlappedRemark;
+	}
+
+	public void setPoApprOverlappedRemark(String poApprOverlappedRemark) {
+		this.poApprOverlappedRemark = poApprOverlappedRemark;
+	}
+
+	public String getPoUserName() {
+		return poUserName;
+	}
+
+	public void setPoUserName(String poUserName) {
+		this.poUserName = poUserName;
+	}
+
+	public String getPoRemark() {
+		return poRemark;
+	}
+
+	public void setPoRemark(String poRemark) {
+		this.poRemark = poRemark;
+	}
+
+	public Date getPoRemarkCreatedDate() {
+		return poRemarkCreatedDate;
+	}
+
+	public void setPoRemarkCreatedDate(Date remarkCreatedDate) {
+		this.poRemarkCreatedDate = remarkCreatedDate;
+	}
+
+	public String getApproverUserName() {
+		return approverUserName;
+	}
+
+	public void setApproverUserName(String approverUserName) {
+		this.approverUserName = approverUserName;
+	}
+
+	public String getApproverRemark() {
+		return approverRemark;
+	}
+
+	public void setApproverRemark(String approverRemark) {
+		this.approverRemark = approverRemark;
+	}
+
+	public Date getApproverRemarkCreatedDate() {
+		return approverRemarkCreatedDate;
+	}
+
+	public void setApproverRemarkCreatedDate(Date remarkCreatedDate) {
+		this.approverRemarkCreatedDate = remarkCreatedDate;
 	}
 
 }

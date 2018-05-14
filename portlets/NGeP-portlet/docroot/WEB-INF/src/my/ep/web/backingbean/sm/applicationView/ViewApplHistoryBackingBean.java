@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.applicationView;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
@@ -270,6 +272,9 @@ public class ViewApplHistoryBackingBean extends
 			initBumiRecommendNote();
 			initVirtualCert();
 			initWorkflowStatus(getManagedBean().getSmAppl(), status);
+			if (!getManagedBean().isSupplierUser()) {
+				initPOApproverDecisionInfo();
+			}
 		}
 	}
 
@@ -303,6 +308,100 @@ public class ViewApplHistoryBackingBean extends
 			getManagedBean().setMofCertLs(
 					SmServiceLookup.getVirtualCertSO()
 							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
+		}
+	}
+
+	/**
+	 * Initialized PO or approver decision info
+	 */
+	private void initPOApproverDecisionInfo() {
+		
+		log.info("initPOApproverDecisionInfo");
+		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrievePOApproverFAandOLASmRemarks
+				(getManagedBean().getSmAppl().getApplNo(), getManagedBean().getSmAppl().getApplId());
+		resetPOApproverDecisionInfo();
+		log.info("PoApproverRemarksList() size:"+ resDTO.getPoApproverRemarksList().size());
+		for(Object[] obj: resDTO.getPoApproverRemarksList()) {
+			boolean isPoUser = false;
+		
+			String userName = (String) obj[0];
+			Date remarkCreatedDate = (Date) obj[1];
+			String roleType = (String) obj[2];
+			String docType = (String) obj[3];
+			String remark = (String) obj[4];
+			
+			log.info("userName:"+userName+",remarkCreatedDate:"+remarkCreatedDate+",roleType:"+roleType+",docType:"+docType+",remark:"+remark);
+			
+			if (roleType != null && roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+				isPoUser = true;
+			}
+			
+			if(isPoUser) {
+				getManagedBean().setPoUserName(userName);
+				setPORemarksInfo(docType, remark, remarkCreatedDate);
+			} else {
+				getManagedBean().setApproverUserName(userName);
+				setApproverRemarksInfo(docType, remark, remarkCreatedDate);
+			}	
+		}
+	}
+	
+	/**
+	 * Reset PO or approver decision info to null
+	 */
+	private void resetPOApproverDecisionInfo() {
+		getManagedBean().setPoApprOverlappedRemark(null);
+		getManagedBean().setPoUserName(null);
+		getManagedBean().setPoRemarkCreatedDate(null);
+		getManagedBean().setPoRemark(null);
+		getManagedBean().setApproverUserName(null);
+		getManagedBean().setApproverRemarkCreatedDate(null);
+		getManagedBean().setApproverRemark(null);
+	}
+	
+	/**
+	 * Set PO remarks info
+	 * 
+	 * @param docType           document type 
+	 * @param remark            remark
+	 * @param remarkCreatedDate remark created date
+	 */
+	private void setPORemarksInfo(String docType, String remark, Date remarkCreatedDate) {
+		setPOApproverRemarksInfo(true, docType, remark, remarkCreatedDate);
+	}
+	
+	/**
+	 * Set approver remarks info
+	 * 
+	 * @param docType           document type 
+	 * @param remark            remark
+	 * @param remarkCreatedDate remark created date
+	 */
+	private void setApproverRemarksInfo(String docType, String remark, Date remarkCreatedDate) {
+		setPOApproverRemarksInfo(false, docType, remark, remarkCreatedDate);
+	}
+
+	/**
+	 * Set PO/approver remarks info
+	 * 
+	 * @param isPoUser          po user indicator
+	 * @param docType           document type 
+	 * @param remark            remark
+	 * @param remarkCreatedDate remark created date
+	 */
+	private void setPOApproverRemarksInfo(boolean isPoUser, String docType, String remark, Date remarkCreatedDate) {
+		if(docType != null) {
+			if(docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE)) {
+				if(isPoUser) {
+					getManagedBean().setPoRemark(remark);
+					getManagedBean().setPoRemarkCreatedDate(remarkCreatedDate);
+				} else {
+					getManagedBean().setApproverRemark(remark);
+					getManagedBean().setApproverRemarkCreatedDate(remarkCreatedDate);
+				}
+			} else {
+				getManagedBean().setPoApprOverlappedRemark(remark);
+			}
 		}
 	}
 
