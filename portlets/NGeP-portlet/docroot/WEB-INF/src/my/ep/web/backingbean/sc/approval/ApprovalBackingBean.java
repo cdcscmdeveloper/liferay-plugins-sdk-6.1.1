@@ -85,8 +85,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.scheduler.helper.sc.ScSchedulerHelper;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -97,8 +95,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.quartz.JobKey;
-import org.quartz.SchedulerException;
 
 /**
  * Backing Bean for Approvals.
@@ -1461,8 +1457,8 @@ return scQt;
 						updateProposalValidityDate(scQt);
 					}
 
-				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD
-						.equalsIgnoreCase(approvalType)) {
+				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD.equalsIgnoreCase(approvalType) ||
+						ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE.equalsIgnoreCase(approvalType)) {
 					if (approvalRequest.getApproverAction() != null
 							&& ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 									.equalsIgnoreCase(approvalRequest
