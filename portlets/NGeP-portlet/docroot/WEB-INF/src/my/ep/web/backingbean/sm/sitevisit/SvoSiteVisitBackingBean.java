@@ -302,7 +302,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				getManagedBean().setSiteVisitNo(getSvTaskCountByApplIdAndCategoryId());
 				List<SmSupplierCategory> catLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id();
 				if(catLs.size() > 0){
-					getManagedBean().setSupplierCategory(retrieveSupplierCategoryByApplIdAndCategoryL3Id().get(0));
+					getManagedBean().setSupplierCategory(catLs.get(0));
+				}
+				else{
+					if(suppCatLs.size() > 0){
+						for(SmSupplierCategory sCat : suppCatLs){
+							if(sCat.getPmCategoryL3().getCategoryL3Id() == getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id()){
+								getManagedBean().setSupplierCategory(sCat);
+								break;
+							}
+						}
+					}
 				}
 				
 				setMachineList();
