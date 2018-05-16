@@ -13951,8 +13951,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	private void saveSpecMaintenanceWorkFlowStatus(){
 		IQTSpecSO QtSpecSO = null;
 		IScWorkFlowStatusSO workFlowStatusSO;
+		log.debug("StartsaveSpecMaintenanceWorkFlowStatus");
 		try {
-			if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(getSpecMaintenance()) && null==this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
+			if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(getSpecMaintenance()) && (null==this.getManagedBean().getSpecMaintenanceWorkFlowStatus() || QTStatusConst.SE_COMPLETED.equals(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId()))){
+			log.info("loopsaveSpecMaintenanceWorkFlowStatus");	
 			QtSpecSO = getSpecSO();
 			SpecificationReqDTO specReqDTo=new SpecificationReqDTO();
 			specReqDTo.setScQt(this.getManagedBean().getQt());
@@ -13972,7 +13974,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			
 		} finally {
 			QtSpecSO = null;
+			workFlowStatusSO=null;
 		}
+		log.debug("endsaveSpecMaintenanceWorkFlowStatus");
 	}
 	
 	/**
