@@ -1459,11 +1459,9 @@ return scQt;
 
 				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD.equalsIgnoreCase(approvalType) ||
 						ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE.equalsIgnoreCase(approvalType)) {
-					if (approvalRequest.getApproverAction() != null
-							&& ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
-									.equalsIgnoreCase(approvalRequest
-											.getApproverAction()
-											.getParameterCode())) {
+					if ((approvalRequest.getApproverAction() != null
+							&& ParameterConst.APPROVAL_DECISION_TYPE_REJECTED.equalsIgnoreCase(approvalRequest.getApproverAction().getParameterCode())) ||
+							ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE.equalsIgnoreCase(approvalType)) {
 						scQt.setPublishPeriod(Integer.parseInt(approvalRequest
 								.getOriginalValue()));
 						updatePublishClosingDate(scQt);
