@@ -9,6 +9,9 @@
 		header="#{lbl['lbl.pm.ta.task.reassignment']}" modal="true"
 		widgetVar="dlTaskReassignment" dynamic="true" width="700">
 		<!-- Validation Message -->
+		<p:blockUI block="dlTaskReassignment" widgetVar="taskReassignPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="messagesRole" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 		<p:panel id="pTaskReassignSearchPnl"
@@ -84,7 +87,8 @@
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
 								action="#{taskReassignmentBackingBean.confirmReassignTask()}"
 								update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole"
-								process=":form:pTaskReassignResultPnl" >
+								process=":form:pTaskReassignResultPnl"
+								onclick="taskReassignPopupBlockWidget.show()" oncomplete="taskReassignPopupBlockWidget.hide()" >
 									 <f:param name="disableValidation" value="true" />
 							</p:commandButton>
 							 <p:commandButton id="cbCancel"
