@@ -770,20 +770,25 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			PyPaymentChargeLine hChargeLine = new PyPaymentChargeLine(); //GOV
 			PyPaymentChargeLine lChargeLine = new PyPaymentChargeLine(); //CDC
 			
-			BigDecimal cdcCharge = SmServiceLookup.getSmRuleSO().retrieveMofAmountPaidToCDC().getMofAmountPaidToCDC();
+			BigDecimal cdcCharge = SmServiceLookup.getSmRuleSO().retrieveMofAmountPaidToCDC().getMofAmountPaidToCDC();			
+			BigDecimal govCharge = paymentDtl.getPyBillDtl().getItemPrice().subtract(cdcCharge);
 			
 			ConfigGeneralReqDTO reqDTO =  new ConfigGeneralReqDTO();
 			ConfigGeneralResDTO resDTO = SmServiceLookup.getConfigGeneralSO().getConfigGeneral(reqDTO);
-			
-			hChargeLine.setPmGlAccount(resDTO.getPmConfigGeneral().getRegGovGlAcc());
-			hChargeLine.setPyPaymentDtl(paymentDtl);
-			hChargeLine.setChargeLineAmt(paymentDtl.getPyBillDtl().getItemPrice().subtract(cdcCharge));
 			
 			lChargeLine.setPmGlAccount(resDTO.getPmConfigGeneral().getRegSupGlAcc());
 			lChargeLine.setPyPaymentDtl(paymentDtl);
 			lChargeLine.setChargeLineAmt(cdcCharge);
 			
-			paymentChargeLineLs.add(hChargeLine);
+			if(govCharge != null &&  govCharge.doubleValue() > 0){
+				//redmine #19162
+				hChargeLine.setPmGlAccount(resDTO.getPmConfigGeneral().getRegGovGlAcc());
+				hChargeLine.setPyPaymentDtl(paymentDtl);
+				hChargeLine.setChargeLineAmt(govCharge);
+				
+				paymentChargeLineLs.add(hChargeLine); 
+			}			
+			
 			paymentChargeLineLs.add(lChargeLine);
 			
 			paymentDtl.setPyPaymentChargeLines(paymentChargeLineLs);
