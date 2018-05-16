@@ -57,18 +57,37 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step7ViewProfileSupportingDocumentsInfo.xhtml" />
 					</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step10ViewSiteVisitInfo.xhtml" />
-					</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
-						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step8ViewVirtualCertInfo.xhtml" />
-					</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 11}">
-						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step9ViewTrackingDiary.xhtml" />
-					</c:if>  
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 12}">
-						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step12POApproverDecisionRemark.xhtml" />
-					</c:if>
+					<c:choose>
+						<c:when test="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step10ViewSiteVisitInfo.xhtml" />
+							</c:if>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step8ViewVirtualCertInfo.xhtml" />
+							</c:if>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 11}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step9ViewTrackingDiary.xhtml" />
+							</c:if>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 12}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step12POApproverDecisionRemark.xhtml" />
+							</c:if>
+						</c:when>
+						<c:otherwise>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step8ViewVirtualCertInfo.xhtml" />
+							</c:if>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step9ViewTrackingDiary.xhtml" />
+							</c:if>
+						</c:otherwise>
+					</c:choose>
+
 				</ac:smPanel>
 			</c:if>
 		</p:outputPanel>
