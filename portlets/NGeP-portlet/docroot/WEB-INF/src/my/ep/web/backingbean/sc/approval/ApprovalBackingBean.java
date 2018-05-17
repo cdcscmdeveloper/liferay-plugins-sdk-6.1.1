@@ -31,6 +31,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
@@ -47,6 +48,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -979,16 +982,23 @@ public class ApprovalBackingBean extends
 					if (CollectionUtils.isNotEmpty(approvalTypes)) {
 						if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-							/*if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
+							if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
 								try {
 									log.info("call simple scheduler if QT is publishing today.");
-									ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qt);
-									EpSchedulerHelper.shutdownScheduler();
-								} catch (SchedulerException e) {
-									e.printStackTrace();
-									log.error(e.getMessage());
+									IQTNoticeBoardSO nbSO = BusinessDelegate.getInstance()
+											.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+													IQTNoticeBoardSO.class);
+									NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+									reqDTO.setScQt(qt);
+									NoticeBoardResDTO resDTO =nbSO.publihQT(reqDTO);
+									if(resDTO.isSuccessful()){
+										log.info("Qt will be published as job was built successfully for QT : "+qt.getQtNo());
+									}
+								} catch (Exception e) {
+									//TODO need find fail over handling for this
+									log.error(e.getMessage(), e);
 								}
-							}*/
+							}
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
 							new QTDocumentsBackingBean().reGenerateDocuments(
 									qt.getQtId(), 
