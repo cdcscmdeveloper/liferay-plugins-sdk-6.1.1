@@ -480,6 +480,8 @@ public class SPDetailBackingBean extends
 		fileName.append(".pdf");
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
+		reportAttachment.setPrefixFileName(getManagedBean().getQtProposal()
+				.getProposalNo());
 		ScAttachment attachment = (ScAttachment) reportAttachment;
 		populateAttachmentDetails(attachment);
 		reportName = ReportConst.SC_SUPPLIER_PROPOSAL_REPORT;
