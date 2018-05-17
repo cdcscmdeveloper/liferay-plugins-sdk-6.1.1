@@ -85,8 +85,6 @@ public class QuestionnaireBackingBean extends
 		reqDTO.setAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
-		reqDTO.setResetLatestResubmitAppl(getManagedBean()
-				.isResetLatestResubmitAppl());
 
 		SmServiceLookup.getQuestionnaireSO().questionnaireSubmission(reqDTO);
 
