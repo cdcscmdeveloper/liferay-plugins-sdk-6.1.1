@@ -5997,21 +5997,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.retrieveAddressTypeDtlListById(reqDTO);
 				deliveryList.addAll(resDTO.getAddressTypeList());
 			}
-           			// List<ScQtDeliveryLoc> nonZone=new ArrayList<ScQtDeliveryLoc>();
-            if(CollectionUtils.isNotEmpty(deliveryList)){
-            	  log.info("=========TotalSize====="+deliveryList.size());
-            List<Long> localaddresstypeId = new ArrayList<Long>();
-            for(int i=0;i<deliveryList.size();i++){
-				if(localaddresstypeId.contains(deliveryList.get(i).getAddressTypeId())){
-					 log.debug("=========deletedCount=====");
-					deliveryList.remove(i);
-					i--;
-				}else{
-					localaddresstypeId.add(deliveryList.get(i).getAddressTypeId());
-				}
-			}
-            log.info("=========deleteListSize====="+deliveryList.size());
-            }
+
+			// List<ScQtDeliveryLoc> nonZone=new ArrayList<ScQtDeliveryLoc>();
+
 			List<BriefingZoneBean> zoneBean = this.getManagedBean()
 					.getDeliveryLocBean();
 			if (this.getManagedBean().getQt().isZonal() == true
@@ -6038,9 +6026,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						for (PmAddressType addressType : deliveryList) {
 							if(addressTypes.contains(addressType.getAddressTypeId())){
 								throw new EpException(MessageConst.ERROR_760410);
-							}
-							else{
-								addressTypes.add(addressType.getAddressTypeId());
 							}
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
@@ -6097,9 +6082,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							if(addressTypes.contains(addressType.getAddressTypeId())){
 								throw new EpException(MessageConst.ERROR_760410);
 							}
-							else{
-								addressTypes.add(addressType.getAddressTypeId());
-							}
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
 							loc.setScDeliveryAddress(deliveryAddress);
@@ -6147,9 +6129,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				for (PmAddressType addressType : deliveryList) {
 					if(addressTypes.contains(addressType.getAddressTypeId())){
 						throw new EpException(MessageConst.ERROR_760410);
-					}
-					else{
-						addressTypes.add(addressType.getAddressTypeId());
 					}
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 					ScAddress deliveryAddress = populateDeliveryAddress(addressType);
@@ -7821,11 +7800,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			//if (CollectionUtils.isNotEmpty(panelItemList)) {
              //  log.info("panel Item Name"+panelItemList.get(0));
-			if(QTConstants.CT_PANEL_ZONE_COVERAGE.equalsIgnoreCase(item.getPanelCoverageId().getParameterCode())){
 				reqDTO.setPanelItem(item);
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			//}
-			}
 
 			if (null != resDTO && null != resDTO.getCtPanelZones()
 					&& !resDTO.getCtPanelZones().isEmpty()) {
@@ -10903,25 +10880,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (this.getManagedBean().getIndex() == -1
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-					 Integer localChecckListseq=SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
-					 int technicalSpecCount=0;
                        for(ScQtCheckList techlist:technicalCheckList){
-                    	   if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(techlist
-	               					.getDefinationType().getParameterCode())) {
-	                    		   technicalSpecCount++;
-	                    		   localChecckListseq= localChecckListseq <techlist.getChecklistSeq()?techlist.getChecklistSeq(): localChecckListseq;
-	                    		   
-	                    	   }
 					if (techlist.getTitle().trim()
 							.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
 						throw new EpException(MessageConst.ERROR_760207,
 								new String[] { scQtCheckList.getTitle() });
 					}
                       }
-                       log.info("QTID:"+getManagedBean().getQt().getQtId()+"localChecckListseq"+localChecckListseq);
-                       if(technicalSpecCount>0){
-						scQtCheckList.setChecklistSeq(localChecckListseq+1);
-                       }
 				}
 				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
                     for(ScQtCheckList financiallist:finanicalAllCheckList){
@@ -11377,24 +11342,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (this.getManagedBean().getIndex() == -1
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-					 Integer localChecckListseq=SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
-					 int technicalSpecCount=0;
+
 					  for(ScQtCheckList techlist:technicalCheckList){
-						  if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(techlist
-	               					.getDefinationType().getParameterCode())) {
-	                    		   technicalSpecCount++;
-	                    		   localChecckListseq= localChecckListseq <techlist.getChecklistSeq()?techlist.getChecklistSeq(): localChecckListseq;
-	                    		   
-	                    	   }
 							if (techlist.getTitle().trim()
 									.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
 						throw new EpException(MessageConst.ERROR_760207,
 								new String[] { scQtCheckList.getTitle() });
 					}
-					  }
-					  log.info("QTID:"+getManagedBean().getQt().getQtId()+"localChecckListseq"+localChecckListseq);
-					  if(technicalSpecCount>0){
-						scQtCheckList.setChecklistSeq(localChecckListseq+1);
 					  }
 				}
 				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
@@ -11475,7 +11429,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			qtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
-			qtCheckList.setChecklistSeq(scQtCheckList.getChecklistSeq());
 			TemplateSpecHelper.getInstance().updateItemWeightageReq(
 					qtCheckList.getScQtDoc().getTplSpecMaster(),
 					qtCheckList.getScQtDoc().getTplSpecMaster()
@@ -13951,10 +13904,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	private void saveSpecMaintenanceWorkFlowStatus(){
 		IQTSpecSO QtSpecSO = null;
 		IScWorkFlowStatusSO workFlowStatusSO;
-		log.debug("StartsaveSpecMaintenanceWorkFlowStatus");
 		try {
-			if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(getSpecMaintenance()) && (null==this.getManagedBean().getSpecMaintenanceWorkFlowStatus() || QTStatusConst.SE_COMPLETED.equals(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId()))){
-			log.info("loopsaveSpecMaintenanceWorkFlowStatus");	
+			if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(getSpecMaintenance()) && null==this.getManagedBean().getSpecMaintenanceWorkFlowStatus()){
 			QtSpecSO = getSpecSO();
 			SpecificationReqDTO specReqDTo=new SpecificationReqDTO();
 			specReqDTo.setScQt(this.getManagedBean().getQt());
@@ -13974,9 +13925,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			
 		} finally {
 			QtSpecSO = null;
-			workFlowStatusSO=null;
 		}
-		log.debug("endsaveSpecMaintenanceWorkFlowStatus");
 	}
 	
 	/**
