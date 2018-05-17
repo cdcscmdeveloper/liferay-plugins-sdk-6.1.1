@@ -2445,12 +2445,19 @@ public class SmApplicationUtil {
 		if (managedBean.isReviewSiteVisit()) {
 			sec.setSitevisitVerified(isVerifiedAll);
 		}
-		sec.setFactoryVerify(isVerifiedAll);
+		if (managedBean.isShowDockyardPanel()
+				|| managedBean.isShowFactoryPanel()
+				|| managedBean.isShowStorePanel()
+				|| managedBean.isShowWorkShopPanel()) {
+			sec.setFactoryVerify(isVerifiedAll);
+		}
 		if (managedBean.isShowMachineryEquipmentPanel()) {
 			sec.setMachineryVerified(isVerifiedAll);
 			sec.setManufacturingVerified(isVerifiedAll);
 		}
-		sec.setAssocBodyVerified(isVerifiedAll);
+		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
+			sec.setAssocBodyVerified(isVerifiedAll);
+		}
 		if (managedBean.isShowTravelSoftwarePanel()) {
 			sec.setSupplierSystemVerified(isVerifiedAll);
 		}
@@ -8619,34 +8626,6 @@ public class SmApplicationUtil {
 						addr.getCityId()));
 			}
 		}
-	}
-
-	public static void checkPersonnelsEmailDomainWithExceptionMsg(
-			List<SmPersonnel> personnels) {
-		// StringBuffer bfFinal = new StringBuffer();
-		// if (!SmCommonUtil.isCollectionEmpty(personnels)) {
-		// StringBuffer bfTmp = new StringBuffer();
-		// int i = 0;
-		// String email = "";
-		// for (SmPersonnel per : personnels) {
-		// email = per.getPmUser() != null
-		// && StringUtils.isNotBlank(per.getPmUser().getEmail()) ? per
-		// .getPmUser().getEmail() : per.getEmail();
-		// if (!SmCommonUtil.isValidEmailDomain(email)) {
-		// i++;
-		// bfTmp.append(i + ") ").append(per.getName()).append(" (")
-		// .append(per.getPmUser().getEmail()).append(")")
-		// .append("<br />");
-		// }
-		// }
-		// if (bfTmp.length() > 0) {
-		// bfFinal.append(bfTmp.toString());
-		// }
-		// }
-		// if (bfFinal.length() > 0) {
-		// throw new EpException(MessageConst.ERROR_721116,
-		// new String[] { bfFinal.toString() });
-		// }
 	}
 
 	private boolean isCatL3Valid(SmAppl appl, String facilityType,
