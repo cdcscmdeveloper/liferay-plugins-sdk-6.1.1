@@ -130,6 +130,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -182,7 +183,6 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.faces.bridge.util.FileNameUtil;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -284,7 +284,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				|| scAttachment instanceof ScEvaluationCommitteeReportAttachment
 				|| scAttachment instanceof ScOpenCommitteeReportAttachment
 				|| scAttachment instanceof ScTechnicalEvaluationReportAttachment
-				|| scAttachment instanceof ScFinancialEvaluationReportAttachment) {
+				|| scAttachment instanceof ScFinancialEvaluationReportAttachment
+				|| scAttachment instanceof ScQtProposalReportAttachment) {
 
 			return new AttachmentDateFormat();
 		} else {
