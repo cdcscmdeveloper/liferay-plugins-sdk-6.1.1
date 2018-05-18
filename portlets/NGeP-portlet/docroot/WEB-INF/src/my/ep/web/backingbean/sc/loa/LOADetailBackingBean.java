@@ -2648,6 +2648,7 @@ public class LOADetailBackingBean extends
 
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
+			validateContractDetails(scLoa);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -5988,6 +5989,23 @@ public class LOADetailBackingBean extends
 		}
 
 		return sb.toString();
+	}
+	
+	/**
+	 * Validate Contract Admin
+	 * 
+	 * @param scLoa
+	 *          the scLoa
+	 */	
+	private void validateContractDetails(ScLoa scLoa) {
+		Locale locale = new FacesScopes().getUserLocale();
+		
+		if (StringUtils.isBlank(
+				scLoa.getContractAdmin().getUserName())) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}	
 	}
 
 }

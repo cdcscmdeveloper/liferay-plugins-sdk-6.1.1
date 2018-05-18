@@ -446,7 +446,7 @@
 			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:outputPanel id="opUserLov">
-						<ac:lov id="lovMinistryUser" lovId="PM_USER_ID_MINISTRY" size="80"
+						<ac:lov id="contractAdmin" lovId="PM_USER_ID_MINISTRY" size="80"
 							disabled="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId == null}"
 							update="@form" readonly="true"
 							headerText="#{lbl['lbl.pm.ta.user.lov']}"
@@ -454,8 +454,9 @@
 							value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
 							saveObject="lOADetailBackingBean.managedBean.scLoa.contractAdmin"
 							conditionField="#{lOADetailBackingBean.constructContractAdminConditionFields()}"
-							postUpdateListener="lOADetailBackingBean.contractAdminChanged()" />
+							postUpdateListener="lOADetailBackingBean.contractAdminChanged()" required="true" />
 					</p:outputPanel>
+					<p:message id="contractAdminMsg" for="contractAdmin" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
 					<p:inputText 
