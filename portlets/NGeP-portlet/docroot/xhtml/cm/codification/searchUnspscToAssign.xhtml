@@ -125,6 +125,19 @@
 
 
 					</p:column>
+					
+					<p:column rendered="#{codificationBackingBean.managedBean.assignCodeFlg}">
+						<f:facet name="header">
+							#{lbl['lbl.cm.item.table.type']}
+						</f:facet>
+
+						<h:outputText style="white-space: normal!important;" value="#{lbl['lbl.txt.product']}"
+						rendered="#{codificationBackingBean.productServiceType(unspscObj.unspscCode) eq 1}" />
+						
+						<h:outputText style="white-space: normal!important;" value="#{lbl['lbl.txt.service']}"
+						rendered="#{codificationBackingBean.productServiceType(unspscObj.unspscCode) eq 2}" />
+					</p:column>
+
 					<p:column>
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
