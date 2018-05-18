@@ -839,13 +839,15 @@
 					<property name="bundleKey" value="lbl.rpt.icNo" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmUserOrg.pmOrgProfile.pmOrgValidity.orgCode" />
+					<property name="methodName" value="directLOABackingBean.getOrgProfileByUserId(entity.userId).orgCode" />
+					<property name="columnName" value="pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.ta.org.code" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmUserOrg.pmOrgProfile.pmOrgValidity.orgName" />
+					<property name="methodName" value="directLOABackingBean.getOrgProfileByUserId(entity.userId).orgName" />
+					<property name="columnName" value="pmUserOrgs.pmOrgProfile.pmOrgValidity.orgName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.ta.org.name" />
