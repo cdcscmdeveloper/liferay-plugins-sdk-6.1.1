@@ -180,6 +180,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private String docNo;
 	private String docTitle;
+	
+	private boolean assignCodeFlg = false;
 
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
@@ -1420,4 +1422,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setSourcing(boolean isSourcing) {
 		this.isSourcing = isSourcing;
 	}
+
+	public boolean isAssignCodeFlg() {
+		return assignCodeFlg;
+	}
+
+	public void setAssignCodeFlg(boolean assignCodeFlg) {
+		this.assignCodeFlg = assignCodeFlg;
+	}
+	
 }

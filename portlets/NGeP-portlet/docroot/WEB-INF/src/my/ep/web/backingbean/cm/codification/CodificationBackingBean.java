@@ -440,22 +440,25 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				}
 				log.info("............getItemTypeParameter="
 						+ getItemTypeParameter());
+				log.info("............ isAssignCodeFlg ="+ getManagedBean().isAssignCodeFlg());
 				// get parameter from backup property whenever table be reloaded
-				if (getItemTypeParameter() != null
-						&& !getItemTypeParameter().isEmpty()) {
-
-					if (getItemTypeParameter().equals("S")
-							|| getItemTypeParameter().equals("2")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("unspscCode",
-										SearchOperator.OPERATOR_GREATER_EQUAL
-										.value(), "70000000"));
-					} else if (getItemTypeParameter().equals("P")
-							|| getItemTypeParameter().equals("1")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("unspscCode",
-										SearchOperator.OPERATOR_LESS.value(),
-										"70000000"));
+				if(!getManagedBean().isAssignCodeFlg()) {
+					if (getItemTypeParameter() != null
+							&& !getItemTypeParameter().isEmpty()) {
+	
+						if (getItemTypeParameter().equals("S")
+								|| getItemTypeParameter().equals("2")) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("unspscCode",
+											SearchOperator.OPERATOR_GREATER_EQUAL
+											.value(), "70000000"));
+						} else if (getItemTypeParameter().equals("P")
+								|| getItemTypeParameter().equals("1")) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("unspscCode",
+											SearchOperator.OPERATOR_LESS.value(),
+											"70000000"));
+						}
 					}
 				}
 
@@ -999,6 +1002,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			requestItem.setItemDesc(tplSpecQuestion.getClSpecDetail());
 			requestItem.setItemType(tplSpecQuestion.getTplSpecMaster().getItemTypeCode());
 		}
+		this.getManagedBean().setAssignCodeFlg(true);
 		this.getManagedBean().setSelectedRequestItem(requestItem);
 		this.getManagedBean().setTplSpecQuestion(tplSpecQuestion);
 		this.getManagedBean().setSourcing(isSourcing);
@@ -3305,6 +3309,24 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		System.out.println("pmDigiSign:"+pmDigiSign.getSpkiSignedData());
 		return null;
+	}
+
+	public String productServiceType(String unspscCode) {
+
+		String itemType = null;
+		String segmentCode = "";
+
+		if (unspscCode != null && unspscCode.trim().length() > 0) {
+			segmentCode = unspscCode.substring(0, 2);
+		}
+
+		if (segmentCode.compareTo(NO_69) > 0) {
+			itemType = ParameterConst.ITEM_TYPE_SERVICE;
+		} else {
+			itemType = ParameterConst.ITEM_TYPE_PRODUCT;
+		}
+
+		return itemType;
 	}
 
 
