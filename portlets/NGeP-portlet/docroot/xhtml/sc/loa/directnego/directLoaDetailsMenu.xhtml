@@ -574,8 +574,9 @@
 									value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userName}"
 									saveObject="directLOABackingBean.managedBean.scLoa.contractAdmin"
 									conditionField="#{directLOABackingBean.constructContractAdminConditionFields()}"
-									postUpdateListener="directLOABackingBean.contractAdminChanged()" />
+									postUpdateListener="directLOABackingBean.contractAdminChanged()" required="true" />
 							</p:outputPanel>
+							<p:message id="contractAdminMsg" for="contractAdmin" display="icon" />
 						</c:when>
 						<c:otherwise>
 							<p:inputText id="contractAdminTxt"
