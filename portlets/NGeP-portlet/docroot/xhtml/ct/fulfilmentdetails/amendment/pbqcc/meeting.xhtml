@@ -29,7 +29,6 @@
 			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
 			              maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
 			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-				   		  mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 				   		  required="true" label="#{lbl['lbl.ct.date.of.meeting']}"
 			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 			              disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
