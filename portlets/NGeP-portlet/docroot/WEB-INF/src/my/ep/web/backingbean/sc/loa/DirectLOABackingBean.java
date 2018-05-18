@@ -82,6 +82,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -241,6 +242,7 @@ public class DirectLOABackingBean extends
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
+			validateContractDetails(scLoa);
 						
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
@@ -7973,5 +7975,53 @@ public class DirectLOABackingBean extends
 		}		
 			
 		return sb.toString();
+	}
+	
+	/**
+	 * Validate Contract Admin
+	 * 
+	 * @param scLoa
+	 *          the scLoa
+	 */	
+	private void validateContractDetails(ScLoa scLoa) {
+		Locale locale = new FacesScopes().getUserLocale();
+		
+		if (StringUtils.isBlank(
+				scLoa.getContractAdmin().getUserName())) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}	
+	}
+	
+	/**
+	 * Get User Organization Profile by user id.
+	 * 
+	 * @param userId
+	 *            the user id.
+	 * @return PmOrgValidity 
+	 */
+	public PmOrgValidity getOrgProfileByUserId(Long userId) {
+		log.info("getOrgProfileByUserId");
+		PmOrgValidity orgValidity = null;
+		String roleCode = "MIN_CONTRACT_ADMIN";
+		IUserSO userSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(roleCode);
+		userReqDTO.setUserId(userId);
+		
+		UserResDTO userResDTO = userSo.retrieveUserOrgListByUserId(userReqDTO);
+		
+		if (userResDTO.getUserOrgList() != null
+				&& userResDTO.getUserOrgList().size() > 0) {
+			for (PmUserOrg pmUserOrg : userResDTO.getUserOrgList()) {
+				if (pmUserOrg.getPmOrgProfile() != null) {
+					orgValidity = pmUserOrg.getPmOrgProfile().getPmOrgValidity();
+				}
+			}
+		}
+		
+		return orgValidity;
 	}
 }
