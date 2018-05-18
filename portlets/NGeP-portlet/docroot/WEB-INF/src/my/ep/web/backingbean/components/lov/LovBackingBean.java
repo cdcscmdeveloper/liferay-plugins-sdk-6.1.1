@@ -261,14 +261,14 @@ public class LovBackingBean implements Serializable {
 				if(column.isViewable()) {
 					
 					ValueExpression valueExpression = null;
-					if(column.getColumnName() != null) {
+					if(column.getMethodName() != null) {
 						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
 								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
-										"#{entity." + column.getColumnName() + "}", Object.class);	
+										"#{" + column.getMethodName() + "}", Object.class);
 					} else {
 						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
 								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
-										"#{" + column.getMethodName() + "}", Object.class);						
+										"#{entity." + column.getColumnName() + "}", Object.class);
 					}
 					
 					column.setColumnNameve(valueExpression);
