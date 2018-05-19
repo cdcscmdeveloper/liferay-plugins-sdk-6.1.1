@@ -11254,6 +11254,11 @@ public class SmApplicationUtil {
 	 * the selected SmPersonnel.
 	 */
 	public static void addOrUpdateShrHldrAcademic(SmApplicationManagedBean bean) {
+		if (bean.getSelectedStaffAcademic().getQualificationLevelId() == null) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.is.required",
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.qualification.level", null) }));
+		}
 		for (PmEduField edu : bean.getEduFieldList()) {
 			if (bean.getSelectedStaffAcademic().getPmEduField().getEduFieldId()
 					.equals(edu.getEduFieldId())) {
