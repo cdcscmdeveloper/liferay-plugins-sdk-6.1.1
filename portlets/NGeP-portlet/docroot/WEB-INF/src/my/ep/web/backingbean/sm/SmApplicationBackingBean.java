@@ -5440,6 +5440,7 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722575);
 		}
 		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
+		validateAuthorizedPersonnel(getManagedBean().getSelectedShareHolder());
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -7554,11 +7555,19 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
-		String currRegStatus = getCurrentRegStatus();
-		getManagedBean().setCurrRegStatus(currRegStatus);
-		log.info(">>>>CURR REGSTATUS:" + currRegStatus);
+		MofRegistrationResDTO resDTO = getCurrentRegStatus();
+		if (resDTO.getStatusId() != null
+				&& !getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			getManagedBean().setApprovedStatusId(resDTO.getStatusId());
+			getManagedBean().setPoRecommendStatusId(resDTO.getStatusId());
+			getManagedBean().setCurrRegStatus(resDTO.getRegStatusDesc());
+		}
+		log.info(">>>>CURR REGSTATUS:" + getManagedBean().getCurrRegStatus());
 		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
 			getManagedBean().setChangeCurrRegStatus(true);
+		}else {
+			getManagedBean().setChangeCurrRegStatus(false);
 		}
 		RequestContext.getCurrentInstance()
 				.execute("submitApprvrDialog.show()");
@@ -7595,8 +7604,14 @@ public class SmApplicationBackingBean extends
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			getManagedBean().getSmAppl().setBumi(true);
 		}
-		String currRegStatus = getCurrentRegStatus();
-		getManagedBean().setCurrRegStatus(currRegStatus);
+		MofRegistrationResDTO resDTO = getCurrentRegStatus();
+		if (resDTO.getStatusId() != null
+				&& !getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			getManagedBean().setApprovedStatusId(resDTO.getStatusId());
+			getManagedBean().setPoRecommendStatusId(resDTO.getStatusId());
+			getManagedBean().setCurrRegStatus(resDTO.getRegStatusDesc());
+		}
 		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
 			getManagedBean().setChangeCurrRegStatus(true);
 		} else {
@@ -11293,6 +11308,19 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	private void validateAuthorizedPersonnel(SmPersonnel personnel) {
+		if (personnel.getAuthorizedFlg() == 1) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+			reqDTO.setPersonnelId(personnel.getPersonnelId());
+
+			if (!SmServiceLookup.getMofRegistrationSO()
+					.validSaveAuthPersonnel(reqDTO).isValidSaveAuthPersonnel()) {
+				throw new EpException(MessageConst.ERROR_722667);
+			}
+		}
+	}
+
 	private void deleteSelectedFacilities(List<PmCategoryL3> list) {
 		SmFacility facMain = null;
 		for (PmCategoryL3 l3 : list) {
@@ -11379,12 +11407,12 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 	}
 
-	private String getCurrentRegStatus() {
+	private MofRegistrationResDTO getCurrentRegStatus() {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		return SmServiceLookup.getMofRegistrationSO()
-				.retrieveApprovedStatusDesc(reqDTO).getRegStatusDesc();
+				.retrieveApprovedStatusDesc(reqDTO);
 	}
 
 }
