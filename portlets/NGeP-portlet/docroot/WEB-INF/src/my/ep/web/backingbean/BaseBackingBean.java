@@ -2190,7 +2190,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			UomReqDTO reqDTO = new UomReqDTO();
 			SearchBean<PmUom> searchBean = new SearchBean<PmUom>();
 			searchBean.setNavigatable(true);
-			searchBean.setNoOfRowsPerPage(15);
+			searchBean.setNoOfRowsPerPage(50);
 			SearchFilterBean uomNameSFB = new SearchFilterBean(
 					"uomName",
 					SearchOperator.OPERATOR_LIKE.value(),
