@@ -43,8 +43,11 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		}else if(getManagedBean().getReportCode().equalsIgnoreCase(SmReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)){
 			addStateParam(params);
 			addDistrictParam(params);
+			addCategoryParam(params);
 		}
 
+		//log.info(Arrays.asList(params)); 
+		
 		generateSmReport(params);
 	}
 	
