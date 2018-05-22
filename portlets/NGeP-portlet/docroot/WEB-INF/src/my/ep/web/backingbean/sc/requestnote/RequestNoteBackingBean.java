@@ -2679,7 +2679,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void supplierListener(Long supplierId, Long priceTypeId, ScRequestNoteDtl requestNoteDtl, Long assignedUserId, Long procTypeCatId) {
 		debugLogger("supplierListener");
 		// lov changes 
+		debugLogger(requestNoteDtl.getRequestNoteDtlId());
+		debugLogger(requestNoteDtl.getRequestItem().getRequestNoteItemId());
+		
 		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
+		debugLogger(scRequestSupplierItem.getRequestSupplierItemId());
 		boolean isPriceTypeFound = Boolean.TRUE;
 		if(priceTypeId != null && priceTypeId > 0){
 			if(scRequestSupplierItem !=null 
