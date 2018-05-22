@@ -6181,41 +6181,77 @@ public class SmApplicationUtil {
 	 *            bean
 	 */
 	public static void updateTravellingSoftware(SmApplicationManagedBean bean) {
-		if (bean.getCurrentPageType().equals(
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
-			bean.getSmAppl().setSmSupplierSystems(
-					new ArrayList<SmSupplierSystem>());
-			SmSupplierSystem travelSoftware = null;
-			if (!EntityHelper.isCollectionEmpty(bean
-					.getTravellingSoftwareList())) {
-				for (PmMachine mac : bean.getTravellingSoftwareList()) {
-					travelSoftware = new SmSupplierSystem();
-					if (mac.getMachineId() != null) {
-
-						if (mac.isSelected()) {
+		SmSupplierSystem travelSoftware = null;
+		if (!EntityHelper.isCollectionEmpty(bean.getTravellingSoftwareList())) {
+			List<SmSupplierSystem> selectedSystems = new ArrayList<SmSupplierSystem>();
+			for (PmMachine mac : bean.getTravellingSoftwareList()) {
+				if (mac.isSelected()
+						|| (mac.getMachineId() == null && !StringUtils
+								.isBlank(mac.getMachineDesc()))) {
+					travelSoftware = getTicketingSystem(mac, bean.getSmAppl()
+							.getSmSupplierSystems());
+					if (travelSoftware == null) {
+						travelSoftware = new SmSupplierSystem();
+						if (mac.getMachineId() != null) {
 							travelSoftware.setRevNo(1);
 							travelSoftware.setSmAppl(bean.getSmAppl());
 							travelSoftware.setSystem(mac);
 							bean.getSmAppl().getSmSupplierSystems()
 									.add(travelSoftware);
-						}
-
-					} else {
-						if (!StringUtils.isBlank(mac.getMachineDesc())) {
+						} else {
 							travelSoftware.setRevNo(1);
 							travelSoftware.setSmAppl(bean.getSmAppl());
 							travelSoftware.setSystemName(mac.getMachineDesc());
 							bean.getSmAppl().getSmSupplierSystems()
 									.add(travelSoftware);
 						}
+					} else {
+						travelSoftware.setSystemName(mac.getMachineDesc());
+					}
+					selectedSystems.add(travelSoftware);
+				}
+			}
+
+			// remove not selected system
+			if (EntityHelper.isCollectionEmpty(selectedSystems)) {
+				bean.getSmAppl().getSmSupplierSystems().clear();
+			} else if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+					.getSmSupplierSystems())) {
+				Iterator<SmSupplierSystem> removeIter = bean.getSmAppl()
+						.getSmSupplierSystems().iterator();
+				while (removeIter.hasNext()) {
+					SmSupplierSystem removeObj = removeIter.next();
+					if (getTicketingSystem(removeObj.getSystem(),
+							selectedSystems) == null) {
+						removeIter.remove();
 					}
 				}
 			}
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSmAppl(bean.getSmAppl());
-			bean.setSmAppl(SmServiceLookup.getMofRegistrationSO()
-					.deleteAndReplaceSmSupplierSystem(reqDTO).getSmAppl());
 		}
+	}
+
+	private static SmSupplierSystem getTicketingSystem(PmMachine mac,
+			List<SmSupplierSystem> systems) {
+		SmSupplierSystem system = null;
+		if (!EntityHelper.isCollectionEmpty(systems)) {
+			if (mac != null && mac.getMachineId() != null) {
+				SmSupplierSystem sys = (SmSupplierSystem) EntityHelper
+						.getEntityBySinglePropertyFromList(mac.getMachineId(),
+								systems, "system");
+				if (sys != null) {
+					system = sys;
+				}
+			} else {
+				for (SmSupplierSystem sys : systems) {
+					if (sys.getSystem() == null
+							|| sys.getSystem().getMachineId() == null) {
+						system = sys;
+						break;
+					}
+				}
+			}
+		}
+		return system;
 	}
 
 	/**
