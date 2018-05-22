@@ -10769,6 +10769,28 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							}
 						}
 						if(!isFinancialChecklistFound){
+							if(!checkSequenceMorethanOne(resDto
+									.getFinSpecResultBean().getResultList(),checkList)){
+								log.info("CancelSpecSequenceFalse");
+							for (ScQtCheckList financialspec : resDto
+									.getFinSpecResultBean().getResultList()) {
+								if (financialspec.getChecklistSeq().equals(checkList.getChecklistSeq())) {
+									isFinancialChecklistFound=true;
+									financialspec.setDeleted(true);
+									toBeRemoveCheckLists.add(financialspec);
+									log.info("BothSequencesAreEqualForDelete"+this.getManagedBean().getQt().getQtId());
+									break;
+									/*
+									 * throw new
+									 * EpException(MessageConst.ERROR_760310, new
+									 * String[] { financialSpecs.getTitle() });
+									 */
+								}
+							}
+							}
+
+						}
+						 if(!isFinancialChecklistFound){
 							for (ScQtCheckList financialspec : resDto
 									.getFinSpecResultBean().getResultList()) {
 								if (financialspec.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
@@ -11483,7 +11505,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			// copy scoring and estimated cost
 			List<ScQtCheckList> toBeRemovedList = validateDuplicateFinancialSpecs(
-					qtCheckList, flowType);
+					qtCheckList, flowType,scQtCheckList);
 			if (toBeRemovedList != null && toBeRemovedList.size() > 0) {
 				TplSpecMaster oldSpecMaster = toBeRemovedList.get(0)
 						.getScQtDoc().getTplSpecMaster();
@@ -11637,7 +11659,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 
 	private List<ScQtCheckList> validateDuplicateFinancialSpecs(
-			ScQtCheckList financialSpecs, String flowType) {
+			ScQtCheckList financialSpecs, String flowType,ScQtCheckList technicalSpec) {
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		List<ScQtCheckList> toBeRemovedList = new ArrayList<ScQtCheckList>();
@@ -11678,6 +11700,26 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					}
 					}
 					if(CollectionUtils.isEmpty(toBeRemovedList)){
+						if(!checkSequenceMorethanOne(resDto
+								.getFinSpecResultBean().getResultList(),technicalSpec)){
+						for (ScQtCheckList financialspec : resDto
+								.getFinSpecResultBean().getResultList()) {
+							if (financialspec.getChecklistSeq().equals(technicalSpec.getChecklistSeq())) {
+								financialspec.setDeleted(true);
+								toBeRemovedList.add(financialspec);
+								log.info("validateDuplicateFinancialSpecsSequencesAreEqualForDelete"+this.getManagedBean().getQt().getQtId());
+								break;
+								/*
+								 * throw new
+								 * EpException(MessageConst.ERROR_760310, new
+								 * String[] { financialSpecs.getTitle() });
+								 */
+							}
+						}
+						}
+
+					}
+					 if(CollectionUtils.isEmpty(toBeRemovedList)){
 						for (ScQtCheckList financialspec : resDto
 								.getFinSpecResultBean().getResultList()) {
 							if (financialspec.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
@@ -14508,5 +14550,25 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}finally{
 			
 		}
+	}
+	
+	private boolean checkSequenceMorethanOne(List<ScQtCheckList> financialSpecs,ScQtCheckList technicalSpec){
+		boolean moreThanOne=false;
+		int count=0;
+		log.info("TechnicalSequence"+technicalSpec.getChecklistSeq());
+		for (ScQtCheckList financialspec :financialSpecs) {
+			log.info("financialSequence"+financialspec.getChecklistSeq());
+			if (financialspec.getChecklistSeq().equals(technicalSpec.getChecklistSeq())) {
+				count++;
+				
+			}
+				
+			}
+		log.info("checkSequenceMorethanOne"+count+"QTID:"+this.getManagedBean().getQt().getQtId());
+		if(count>1){
+			moreThanOne=true;
+			return moreThanOne;
+			}
+		return moreThanOne;
 	}
 }
