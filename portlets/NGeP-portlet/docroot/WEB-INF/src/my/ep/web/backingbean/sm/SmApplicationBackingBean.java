@@ -1634,6 +1634,9 @@ public class SmApplicationBackingBean extends
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
 			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
+				SmApplicationUtil.updateTravellingSoftware(getManagedBean());
+			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 				SmApplicationUtil.validateEquityOwnerCount(getManagedBean(),
@@ -5608,7 +5611,6 @@ public class SmApplicationBackingBean extends
 				.removeNotApplicableInformationBeforeSave(getManagedBean());
 		SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 				.getSmAppl());
-		SmApplicationUtil.updateTravellingSoftware(getManagedBean());
 		SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean());
 		reCheckVerifiedSection();
 		try {
@@ -7566,7 +7568,7 @@ public class SmApplicationBackingBean extends
 		log.info(">>>>CURR REGSTATUS:" + getManagedBean().getCurrRegStatus());
 		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
 			getManagedBean().setChangeCurrRegStatus(true);
-		}else {
+		} else {
 			getManagedBean().setChangeCurrRegStatus(false);
 		}
 		RequestContext.getCurrentInstance()
