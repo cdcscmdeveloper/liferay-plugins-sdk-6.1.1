@@ -9905,15 +9905,6 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	public static SmAppl resetAndCloneResubmitApplication(SmAppl originalAppl,
-			SmAppl latesResubmitAppl) {
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSmAppl(latesResubmitAppl);
-		reqDTO.setSrcAppl(originalAppl);
-		return SmServiceLookup.getMofRegistrationSO()
-				.resetAndCloneResubmitApplication(reqDTO).getSmAppl();
-	}
-
 	/**
 	 * Initiate MOF application new BPM Task
 	 * 

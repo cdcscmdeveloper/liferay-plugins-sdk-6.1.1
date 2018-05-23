@@ -20,6 +20,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.exception.EpException;
@@ -27,6 +28,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -43,6 +45,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -86,10 +89,14 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		// show rejection reason for resubmit application
 		if (getManagedBean().getSmAppl().isResubmit()
 				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
+			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
-							.getHtmlApplicationRejectReasons(getManagedBean()
-									.getSmAppl().getOriginalAppl().getSmApplRejectReasons()));
+							.getHtmlApplicationRejectReasons(latestRejectedAppl
+									.getSmApplRejectReasons()));
 		}
 
 		log.info("----------------------------------" + resDTO.getSmAppl().getSmPersonnels().size());
