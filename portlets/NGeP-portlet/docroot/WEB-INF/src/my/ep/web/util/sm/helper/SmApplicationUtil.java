@@ -9549,16 +9549,14 @@ public class SmApplicationUtil {
 					&& appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
 					&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
 							.getPmStatus() != null
-					&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
-							.getSmAppl().getPmRegStatus().getPmStatus()
-							.getPmStatusDescs())) {
-				for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
-						.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
-					if (language.equals(sd.getLanguageCode())) {
-						retVal = sd;
-						break;
-					}
-				}
+					&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
+							.getPmStatus().getStatusId() != null) {
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setStatusId(appl.getSmSupplier().getSmAppl()
+						.getPmRegStatus().getPmStatus().getStatusId());
+				reqDTO.setLanguageCode(language);
+				retVal = SmServiceLookup.getStatusSO()
+						.retrieveStatusDescById(reqDTO).getPmStatusDesc();
 			}
 		} catch (Exception ex) {
 
