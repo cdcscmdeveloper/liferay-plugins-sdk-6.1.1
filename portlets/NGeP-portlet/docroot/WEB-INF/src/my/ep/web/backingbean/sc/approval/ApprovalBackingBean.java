@@ -990,7 +990,7 @@ public class ApprovalBackingBean extends
 													IQTNoticeBoardSO.class);
 									NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 									reqDTO.setScQt(qt);
-									NoticeBoardResDTO resDTO =nbSO.publihQT(reqDTO);
+									NoticeBoardResDTO resDTO =nbSO.publishQT(reqDTO);
 									if(resDTO.isSuccessful()){
 										log.info("Qt will be published as job was built successfully for QT : "+qt.getQtNo());
 									}
