@@ -409,9 +409,9 @@ public class ViewApplHistoryBackingBean extends
 	}
 	
 	public void initSiteVisit() {
-		getSvoSiteVisitBackingBean().getManagedBean().setAppId(
-				getManagedBean().getSmAppl().getApplId());
-		getSvoSiteVisitBackingBean().reviewSiteVisitReport();
+		SvoSiteVisitBackingBean svo = new SvoSiteVisitBackingBean();
+		svo.getManagedBean().setAppId(getManagedBean().getSmAppl().getApplId());
+		svo.reviewSiteVisitReport();
 	}
 
 	/**
