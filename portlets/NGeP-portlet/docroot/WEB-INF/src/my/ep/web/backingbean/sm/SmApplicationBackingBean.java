@@ -778,6 +778,12 @@ public class SmApplicationBackingBean extends
 
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				cannotProceedAlertMsg = SmApplicationUtil
+						.checkActiveCancelSmApplForSupp(currSupp);
+				if (cannotProceedAlertMsg) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
 				if (hasActiveTransactions) {
