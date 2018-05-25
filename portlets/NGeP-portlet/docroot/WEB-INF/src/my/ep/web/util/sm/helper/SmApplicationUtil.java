@@ -3831,6 +3831,23 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Check if there is any active Cancel MOF appl for supplier.
+	 * 
+	 * @param smSupplier
+	 *            - SmSupplier object
+	 * @return true, if successful
+	 */
+	public static boolean checkActiveCancelSmApplForSupp(SmSupplier smSupplier) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.checkActiveCancelApplicationBySupplierId(reqDTO);
+		return resDTO.isHasActiveTransaction();
+	}
+	
+	/**
 	 * Retrieve pm country list.
 	 * 
 	 * @return the list of PmCountry
