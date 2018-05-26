@@ -319,6 +319,7 @@ public class SmFieldChangeUtil {
 			SmPersonnel latestPersonnel) {
 		if (currPersonnel.getPmCountry() != null
 				&& currPersonnel.getPmCountry() != null
+				&& latestPersonnel.getPmCountry() != null
 				&& currPersonnel
 						.getPmCountry()
 						.getCountryId()
