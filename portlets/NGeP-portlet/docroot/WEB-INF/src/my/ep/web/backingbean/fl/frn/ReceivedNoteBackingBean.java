@@ -1346,6 +1346,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			gstItemReqDTO.setGstEffDate(getManagedBean().getFulfilmentNote().getGstEffectiveDate());
 			gstItemReqDTO.setProcurementCatCode(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY);
 			gstItemReqDTO.setActualReceivedDate(getManagedBean().getFulfilmentNote().getReceivedDate());
+			//get Gst from PR
+			gstItemReqDTO.setGstRate(getManagedBean().getFulfilmentNote().getFlRequest().getGstRate());
+			
 			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementTypeCategory()!=null) {
 				gstItemReqDTO.setProcurementCatCode(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementTypeCategory().getParameterCode());
 			}
