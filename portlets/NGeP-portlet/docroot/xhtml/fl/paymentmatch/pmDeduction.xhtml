@@ -81,7 +81,7 @@
 						disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.gosodo']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
-						conditionField="ptjGroupId^#{paymentMatchBackingBean.retrieveJabatanOrgProfile(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgProfileId).orgProfileId}*ptjGroupId^1^11"
+						conditionField="ptjGroupId^#{paymentMatchBackingBean.retrieveJabatanOrgProfile(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgProfileId).orgProfileId}*ptjGroupId^1^11|excludeCode^1^11"
 						readonly="true" size="9"
 						value="#{deduction.pmGlAccount.glAccCode}">
 					</ac:lov>
