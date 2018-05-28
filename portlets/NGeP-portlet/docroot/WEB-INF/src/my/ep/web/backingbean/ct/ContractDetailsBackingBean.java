@@ -1187,10 +1187,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue()));
 
 						int retval = Double.compare(bondAmount , oriBondAmount);
+						
+						/** Enhancement #20025: Changes for GST in Contract Management
 						if (retval >0) {
 							setTabValue("PB");
 							throw new EpException(MessageConst.ERROR_750015);
 						}
+						**/
+						
 						if (retval < 0) {
 							setTabValue("PB");
 							throw new EpException(MessageConst.ERROR_750016);  
