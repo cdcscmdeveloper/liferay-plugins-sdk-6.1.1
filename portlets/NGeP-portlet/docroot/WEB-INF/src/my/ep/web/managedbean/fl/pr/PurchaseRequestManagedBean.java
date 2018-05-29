@@ -273,6 +273,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean prevHideRemarks;
 	
+	private boolean oldGstRateFlg = false;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3182,6 +3184,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setPrevHideRemarks(boolean prevHideRemarks) {
 		this.prevHideRemarks = prevHideRemarks;
+	}
+
+	public boolean isOldGstRateFlg() {
+		return oldGstRateFlg;
+	}
+
+	public void setOldGstRateFlg(boolean oldGstRateFlg) {
+		this.oldGstRateFlg = oldGstRateFlg;
 	}
 
 }
