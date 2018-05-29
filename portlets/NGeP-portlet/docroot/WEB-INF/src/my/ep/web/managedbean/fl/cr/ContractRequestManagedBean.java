@@ -282,6 +282,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean isLazy;	
 	private boolean espkb;
 	private boolean showCommitmentNo;
+	private boolean oldGstRateFlg = false;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
@@ -2882,6 +2883,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setEspkbCommitmentNo(String espkbCommitmentNo) {
 		this.espkbCommitmentNo = espkbCommitmentNo;
+	}
+
+	public boolean isOldGstRateFlg() {
+		return oldGstRateFlg;
+	}
+
+	public void setOldGstRateFlg(boolean oldGstRateFlg) {
+		this.oldGstRateFlg = oldGstRateFlg;
 	}
 
 }

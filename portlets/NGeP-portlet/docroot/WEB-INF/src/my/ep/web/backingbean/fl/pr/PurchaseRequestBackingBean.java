@@ -404,6 +404,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
+		//Redmine #20011
+		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
 		
 		//initialize all the COA map
 		Long jabatanOrgProfileId = -1l;
@@ -844,7 +846,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						||newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 					newItem.setUnitPrice(new BigDecimal(0));
 				}
-				if(getManagedBean().getFulfilmentRequest().getProcurementTypeCategory()!=null && 
+				/*if(getManagedBean().getFulfilmentRequest().getProcurementTypeCategory()!=null && 
 					getManagedBean().getFulfilmentRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
 					newItem.setGst(true);
 					setGstPrice(newItem, newItem.getUnitPrice().doubleValue());
@@ -852,7 +854,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					newItem.setGst(false);
 					newItem.setGstAmount(BigDecimal.ZERO);
 					newItem.setGstUnitPrice(newItem.getUnitPrice());
-				}
+				}*/
+				//Redmine #20011
+				newItem.setGst(true);
+				setGstPrice(newItem, newItem.getUnitPrice().doubleValue());
+				
 				itemsList.add(newItem);
 			}
 		}
@@ -1374,6 +1380,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		initializePRBeans();
 		updateDeliveryDate();
+		//Redmine #20011
+		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
 		if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
 			checkPRThresholdPerItem();
 		}else if(getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
@@ -4204,5 +4212,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
 		
 		super.downloadFile(downloadPath.toString());
+	}
+	
+	/*
+	 * to check old GST Rate
+	 */
+	public Boolean checkOldGSTRate(FlFulfilmentRequest flRequest) {
+		boolean oldGstRateFlg = false;
+		BigDecimal gstRate = BigDecimal.valueOf(6);
+		
+		if(flRequest.getGstRate() != null) {
+			if(flRequest.getGstRate().compareTo(gstRate)==0) {
+				oldGstRateFlg = true;
+			}
+		}
+		return oldGstRateFlg;
 	}
 }
