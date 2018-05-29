@@ -652,6 +652,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				gstItemReqDTO.setGstEffDate(fulfilmentNote.getGstEffectiveDate());
 				gstItemReqDTO.setActualReceivedDate(fulfilmentNote.getReceivedDate());
 				gstItemReqDTO.setProcurementCatCode(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY);
+				gstItemReqDTO.setGstRate(fulfilmentNote.getFlRequest().getGstRate());
+				
 				if(getManagedBean().getStopInstr().getFlRequest().getProcurementTypeCategory()!=null) {
 					gstItemReqDTO.setProcurementCatCode(getManagedBean().getStopInstr().getFlRequest().getProcurementTypeCategory().getParameterCode());
 				}
