@@ -130,12 +130,16 @@
 					action="#{purchaseRequestBackingBean.resetMeasurementSearch}" process="@this"
 					update=":form:uomRefDlg"/>
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address2']}" />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list2']}" escape="false"  /> 
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline1']}" escape="false"  />
-			<p:commandLink value="#{lbl['lbl.fl.instruction.here']}" ajax="false" 
-				style="font-size:10px;font-style:italic" process="@this"
-				action="#{purchaseRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Penetapan_Item_Bercukai.pdf')}"></p:commandLink>
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list2']}" escape="false"  />
+			<c:choose>
+				<c:when test="#{purchaseRequestBackingBean.managedBean.oldGstRateFlg}">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline1']}" escape="false"  />
+					<p:commandLink value="#{lbl['lbl.fl.instruction.here']}" ajax="false" 
+						style="font-size:10px;font-style:italic" process="@this"
+						action="#{purchaseRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Penetapan_Item_Bercukai.pdf')}"></p:commandLink>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
+				</c:when>
+			</c:choose>
 			<p:dataTable id="itemDataTable" var="flItem" 
 				rowIndexVar="index"
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
@@ -144,11 +148,14 @@
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.fl.gst']}" /><br/>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.flag']}"/>
+						<c:choose>
+							<c:when test="#{purchaseRequestBackingBean.managedBean.oldGstRateFlg}">
+						 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.flag']}"/>
+						 	</c:when>
+						 </c:choose>
 					</f:facet>				
 					<p:selectBooleanCheckbox value="#{flItem.gst}"
-						disabled="#{(purchaseRequestBackingBean.managedBean.selectedDelAddr == null or 
-							flItem.orderedQty == 0) or purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
+						disabled="true">
 						<p:ajax process="@this" listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>

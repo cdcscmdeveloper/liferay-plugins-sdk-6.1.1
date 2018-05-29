@@ -154,11 +154,16 @@
 					update=":form:uomRefDlg"/>
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address2']}" />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list2']}" escape="false"  />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline1']}" escape="false"  />
-			<p:commandLink value="#{lbl['lbl.fl.instruction.here']}" ajax="false" 
-				style="font-size:10px;font-style:italic" process="@this"
-				action="#{contractRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Penetapan_Item_Bercukai.pdf')}"></p:commandLink>
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
+			<c:choose>
+				<c:when test="#{contractRequestBackingBean.managedBean.oldGstRateFlg}">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline1']}" escape="false"  />
+					<p:commandLink value="#{lbl['lbl.fl.instruction.here']}" ajax="false" 
+						style="font-size:10px;font-style:italic" process="@this"
+						action="#{contractRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Penetapan_Item_Bercukai.pdf')}"></p:commandLink>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
+				</c:when>
+			</c:choose>
+			
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.items.spec.guideline']}" escape="false"  />
 			<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false"
 				style="font-size:10px;font-style:italic" process="@this" 
@@ -199,11 +204,14 @@
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.fl.gst']}" /><br/>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.flag']}"/>
-					</f:facet>				
+						<c:choose>
+							<c:when test="#{contractRequestBackingBean.managedBean.oldGstRateFlg}">
+						 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.flag']}"/>
+						 	</c:when>
+						 </c:choose>
+					</f:facet>
 					<p:selectBooleanCheckbox value="#{item.gst}"
-						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr  or item.orderedQty == 0) or  
-									contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}">
+						disabled="true">
 						<p:ajax process="@this" listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>

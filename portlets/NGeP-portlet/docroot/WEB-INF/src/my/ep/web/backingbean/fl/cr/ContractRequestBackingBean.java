@@ -882,16 +882,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						flItemAddr.setUnitPrice(BigDecimal.ZERO);
 						flItemAddr.setGstAmount(BigDecimal.ZERO);
 						flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
+						flItemAddr.setGst(true);//Redmine #20011
 					}else{
 						
 						flItemAddr.setUnitPrice(resDTO.getItemPrice());
 						setGstPrice(flItemAddr,resDTO.getItemPrice().doubleValue());
+						flItemAddr.setGst(true);//Redmine #20011
 					}
 					
 				} else {
 					flItemAddr.setUnitPrice(BigDecimal.ZERO);
 					flItemAddr.setGstAmount(BigDecimal.ZERO);
 					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
+					flItemAddr.setGst(true);//Redmine #20011
 				}
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
@@ -903,6 +906,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					flItemAddr.setItemCode(contractedItem.getScRequestItem().getTempUnspscCode());
 				}	
 			}
+			flItemAddr.setGst(true);//Redmine #20011
 		}
 		getManagedBean().getItemAddrList().addAll(itemAddrList);
 		getManagedBean().getShowItemAddrList().addAll(itemAddrList);
@@ -1244,6 +1248,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
+		//Redmine #20011
+		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFlRequest()));
 		getEspkbCommitmentNo();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage.xhtml");
@@ -1361,14 +1367,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						}
 					}
 				}
-				if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+				/*if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
 					newItem.setGst(true);
 					setGstPrice(newItem, newItem.getUnitPrice().doubleValue());
 				} else {
 					newItem.setGst(false);
 					newItem.setGstAmount(BigDecimal.ZERO);
 					newItem.setGstUnitPrice(newItem.getUnitPrice());
-				}
+				}*/ 
+				//Redmine #20011-GST New Rate
+				newItem.setGst(true);
+				setGstPrice(newItem, newItem.getUnitPrice().doubleValue());
+				
 				itemsList.add(newItem);
 			}
 		}
@@ -5667,5 +5677,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
 		
 		super.downloadFile(downloadPath.toString());
+	}
+	
+	/*
+	 * to check GST Rate
+	 */
+	public Boolean checkOldGSTRate(FlFulfilmentRequest flRequest) {
+		boolean oldGstRateFlg = false;
+		BigDecimal gstRate = BigDecimal.valueOf(6);
+		
+		if(flRequest.getGstRate() != null) {
+			if(flRequest.getGstRate().compareTo(gstRate)==0) {
+				oldGstRateFlg = true;
+			}
+		}
+		return oldGstRateFlg;
 	}
 }

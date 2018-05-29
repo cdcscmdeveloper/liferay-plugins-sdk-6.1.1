@@ -163,6 +163,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					itemAddr.setGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getGstAmount()));
 					orderAmt = itemAddr.getGstUnitPrice().multiply(itemAddr.getOrderedQty());
 					itemAddr.setOrderedAmt(orderAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+					itemAddr.setGst(true);//Redmine #20011
 				}
 			}
 			if(amtChanged == true){
