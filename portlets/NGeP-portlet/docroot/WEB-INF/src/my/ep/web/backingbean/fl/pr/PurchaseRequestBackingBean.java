@@ -4214,7 +4214,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		super.downloadFile(downloadPath.toString());
 	}
 	
-	/*
+	/**
 	 * to check old GST Rate
 	 */
 	public Boolean checkOldGSTRate(FlFulfilmentRequest flRequest) {

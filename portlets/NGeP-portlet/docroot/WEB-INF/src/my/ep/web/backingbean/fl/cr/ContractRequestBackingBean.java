@@ -5679,7 +5679,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		super.downloadFile(downloadPath.toString());
 	}
 	
-	/*
+	/**
 	 * to check GST Rate
 	 */
 	public Boolean checkOldGSTRate(FlFulfilmentRequest flRequest) {
