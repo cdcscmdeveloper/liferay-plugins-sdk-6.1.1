@@ -37,6 +37,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -67,6 +68,8 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
@@ -6216,6 +6219,25 @@ public class DirectLOABackingBean extends
 		}
 
 		return isActive;
+	}
+	
+	//Enhancement #20007: DPQT GST - Disable Field GST Amount
+	public BigDecimal getGstRate() {
+		if(log.isDebugEnabled()) {
+			log.debug("DirectLOABackingBean.getGstRate()");
+		}
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		BigDecimal gstRate = BigDecimal.ZERO;
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		RuleResDTO roleResDTO = null;
+		ruleReqDTO.setRuleType(RuleTypeConst.GST);
+		roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+		if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+			gstRate = new BigDecimal(roleResDTO.getRuleValueList().get(0).getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+		return gstRate;
 	}
 
 	/**
