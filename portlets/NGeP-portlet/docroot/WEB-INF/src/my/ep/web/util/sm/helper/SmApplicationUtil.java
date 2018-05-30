@@ -1917,17 +1917,20 @@ public class SmApplicationUtil {
 			List<PmCategoryL3> categoryList) {
 		if (!EntityHelper.isCollectionEmpty(categoryList)) {
 			for (PmCategoryL3 l3 : categoryList) {
-				if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
-					valid = false;
-					if (currentTab != -1) {
-						setNavigationBackToCurrentPage(currentTab, bean);
-					}
-					throw new EpException(
-							MessageConst.ERROR_722621,
-							new String[] {
-									SmCommonUtil.getMessage(facTypeLabel, null),
-									l3.getFullCatcode() + " ("
-											+ l3.getCategoryName() + ")" });
+				if (l3.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						|| l3.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
+					if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+						valid = false;
+						if (currentTab != -1) {
+							setNavigationBackToCurrentPage(currentTab, bean);
+						}
+						throw new EpException(
+								MessageConst.ERROR_722621,
+								new String[] {
+										SmCommonUtil.getMessage(facTypeLabel, null),
+										l3.getFullCatcode() + " ("
+												+ l3.getCategoryName() + ")" });
+					}	
 				}
 			}
 		}
