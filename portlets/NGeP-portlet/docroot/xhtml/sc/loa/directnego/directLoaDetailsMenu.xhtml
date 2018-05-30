@@ -389,7 +389,13 @@
 				<td colspan="3">
 					<h:outputText styleClass="instruction"
 						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
-						escape="false" /> <br />
+						escape="false" 
+						rendered = "#{directLOABackingBean.getGstRate() == 6}"/> 
+					<h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.gst.remainder.one.instruction.0']}"
+						escape="false" 
+						rendered = "#{directLOABackingBean.getGstRate() == 0}"/> 						
+						<br />
 					<h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
 						escape="false"
