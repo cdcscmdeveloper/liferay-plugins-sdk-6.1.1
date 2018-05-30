@@ -4128,9 +4128,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					StringBuilder templateFilePath = new StringBuilder();
 					
 					templateFilePath.append(EpPropertiesUtils.getInstance().getProperty(
-							EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR));					
-					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-					templateFilePath.append(EpPropertiesUtils.getInstance().getProperty(
 							EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR));
 					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 					templateFilePath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
