@@ -4834,7 +4834,19 @@ public class SimpleQuoteBackingBean extends
 									message));
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
-
+				} else if (MessageConst.ERROR_722668.equals(message)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					
 				} else {
 					handleException(e);
 				}

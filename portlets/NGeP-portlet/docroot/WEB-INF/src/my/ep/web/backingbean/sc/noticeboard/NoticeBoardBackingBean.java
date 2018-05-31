@@ -218,6 +218,14 @@ public class NoticeBoardBackingBean extends
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage(MAIN_PAGE);
+		boolean hasActiveCancelMOFAppl = false;
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+
+		hasActiveCancelMOFAppl = SmApplicationUtil.checkActiveCancelSmApplForSupp(currSupp);
+		if (hasActiveCancelMOFAppl) {
+			throw new EpException(MessageConst.ERROR_722668);
+		}
+		
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
