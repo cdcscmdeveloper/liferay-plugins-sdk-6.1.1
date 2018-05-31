@@ -115,7 +115,7 @@
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
 						maxdate="#{receivedNoteBackingBean.getCurrentDate()}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						<p:ajax event="dateSelect" listener="#{receivedNoteBackingBean.reCalculateGstUnitPrice(receivedNoteBackingBean.managedBean.fulfilmentNote)}" 
+						<p:ajax event="dateSelect" listener="#{receivedNoteBackingBean.reCalculateGstUnitPriceforAjax(receivedNoteBackingBean.managedBean.fulfilmentNote)}" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form" />
 					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.actul.recv.date']}"/>
 				</td>
