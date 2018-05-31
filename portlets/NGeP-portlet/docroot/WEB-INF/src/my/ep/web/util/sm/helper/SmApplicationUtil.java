@@ -3846,10 +3846,11 @@ public class SmApplicationUtil {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
-		resDTO = mofRegistrationSO.checkActiveCancelApplicationBySupplierId(reqDTO);
+		resDTO = mofRegistrationSO
+				.checkActiveCancelApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
-	
+
 	/**
 	 * Retrieve pm country list.
 	 * 
@@ -10131,6 +10132,12 @@ public class SmApplicationUtil {
 	 */
 	public static List<SelectItem> getPersonnelRoleItems(SmPersonnel personnel,
 			SmAppl smAppl, SmAuthorizedPersonnelCountVO authVO) {
+		boolean inDbAlreadyAuth = false;
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplId(smAppl.getApplId());
+		reqDTO.setPersonnel(personnel);
+		inDbAlreadyAuth = SmServiceLookup.getMofRegistrationSO()
+				.isPersonnelAuthorizedByIdNoApplId(reqDTO).isValid();
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 
 		// If authorized and current role is FL_USER, set to
@@ -10154,8 +10161,11 @@ public class SmApplicationUtil {
 						RoleCode.MOF_SUPPLIER_USER.value())) {
 			addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 		} else {
-			if (!authVO.isReachAuthorizedPersonnelLimit()
-					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			// only add supplier user if not reach limit and authorized selected
+			// or the personnel is already authorized in db
+			if ((!authVO.isReachAuthorizedPersonnelLimit() && personnel
+					.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
+					|| inDbAlreadyAuth) {
 				addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 			}
 		}
@@ -10165,7 +10175,7 @@ public class SmApplicationUtil {
 				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
 			addRoles(roles, RoleCode.FL_USER.value(), false);
 		} else {
-			if (authVO.isReachSupplierUserAuthorizedLimit()
+			if (authVO.isReachAuthorizedPersonnelLimit()
 					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				// add if already reach limit and personnel role is empty
 				if (StringUtils.isBlank(personnel.getEpRole())) {
@@ -10174,7 +10184,7 @@ public class SmApplicationUtil {
 				// add if already reach limit and personnel role is not already
 				// activated as MOF_SUPPLIER_USER
 				else if (!StringUtils.isBlank(personnel.getEpRole())
-						&& !personnel.getEpRole().equals(
+						&& personnel.getEpRole().equals(
 								RoleCode.MOF_SUPPLIER_USER.value())
 						&& personnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 					addRoles(roles, RoleCode.FL_USER.value(), false);
@@ -10192,7 +10202,8 @@ public class SmApplicationUtil {
 				&& smAppl.getSmCompanyBasic().isWithFederal()) {
 			addRoles(roles, RoleCode.CM_USER.value(), false);
 		}
-
+		
+		//add ADMIN role
 		if (personnel.getEpRole() != null
 				&& (personnel.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
@@ -10483,6 +10494,9 @@ public class SmApplicationUtil {
 		bean.setDisableAuthorizedRadio(SmApplicationUtil
 				.isDisableAuthorizedRadio(bean.getSelectedShareHolder(),
 						bean.isValidSmUserLimit()));
+		if (bean.isInDbAlreadyAuth()) {
+			bean.setDisableAuthorizedRadio(false);
+		}
 	}
 
 	/**
@@ -10878,6 +10892,18 @@ public class SmApplicationUtil {
 		}
 		bean.setRedirectToPersonPage(true);
 		bean.setRemoveEpRole(false);
+
+		// to determine whether user already authorize in DB
+		boolean inDbAlreadyAuth = false;
+		if (bean.getSelectedShareHolder().getPersonnelId() != null) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(bean.getSmAppl().getApplId());
+			reqDTO.setPersonnel(bean.getSelectedShareHolder());
+			inDbAlreadyAuth = SmServiceLookup.getMofRegistrationSO()
+					.isPersonnelAuthorizedByIdNoApplId(reqDTO).isValid();
+		}
+		bean.setInDbAlreadyAuth(inDbAlreadyAuth);
+
 		bean.setePRoleList(getPersonnelRoleItems(bean.getSelectedShareHolder(),
 				bean.getSmAppl(), bean.getAuthVO()));
 
@@ -10913,6 +10939,9 @@ public class SmApplicationUtil {
 		// disable or enable authorized flag
 		bean.setDisableAuthorizedRadio(isDisableAuthorizedRadio(
 				shareHolderBean, bean.isValidSmUserLimit()));
+		if (bean.isInDbAlreadyAuth()) {
+			bean.setDisableAuthorizedRadio(false);
+		}
 
 		// set previous selected personnel if exist
 		bean.setSelectedPrevShareHolder((SmPersonnel) EntityHelper

@@ -783,7 +783,7 @@ public class SmApplicationBackingBean extends
 				if (cannotProceedAlertMsg) {
 					throw new EpException(MessageConst.ERROR_722542);
 				}
-				
+
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
 				if (hasActiveTransactions) {
@@ -5694,6 +5694,9 @@ public class SmApplicationBackingBean extends
 		retVal = SmApplicationUtil.isDisableAuthorizedRadio(personnel,
 				getManagedBean().isValidSmUserLimit());
 		getManagedBean().setDisableAuthorizedRadio(retVal);
+		if (getManagedBean().isInDbAlreadyAuth()) {
+			getManagedBean().setDisableAuthorizedRadio(false);
+		}
 		return retVal;
 	}
 
