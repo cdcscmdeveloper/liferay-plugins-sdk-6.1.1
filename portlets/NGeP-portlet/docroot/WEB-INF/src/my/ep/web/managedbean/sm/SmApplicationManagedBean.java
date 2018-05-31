@@ -229,6 +229,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean supplierUser;
 	private boolean approverUser;
 	private boolean mofSupplier;
+	private boolean inDbAlreadyAuth;
 	private String decisionAckMsg;
 	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
@@ -3992,5 +3993,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setBusinessOfficeSiteVisitVOList(
 			List<SmSiteVisitFacilityVO> businessOfficeSiteVisitVOList) {
 		this.businessOfficeSiteVisitVOList = businessOfficeSiteVisitVOList;
+	}
+
+	public boolean isInDbAlreadyAuth() {
+		return inDbAlreadyAuth;
+	}
+
+	public void setInDbAlreadyAuth(boolean inDbAlreadyAuth) {
+		this.inDbAlreadyAuth = inDbAlreadyAuth;
 	}
 }
