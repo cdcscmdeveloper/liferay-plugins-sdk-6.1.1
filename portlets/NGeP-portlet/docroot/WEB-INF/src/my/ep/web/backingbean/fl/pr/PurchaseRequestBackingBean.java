@@ -277,9 +277,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
 					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
-					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
-					reqDTO.setApproverUserList(approverUserList);
-					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+					if(groupUser!=null) {
+						List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+						reqDTO.setApproverUserList(approverUserList);
+						reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+					}
 				}
 			}
 			if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
