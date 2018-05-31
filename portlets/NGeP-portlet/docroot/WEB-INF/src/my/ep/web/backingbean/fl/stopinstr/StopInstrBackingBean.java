@@ -680,11 +680,18 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					}
 
 					gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO);
-					if(gstItemResDTO.isCoGSTRFlag()){
+					/*if(gstItemResDTO.isCoGSTRFlag()){
 						getManagedBean().setCoGstr(true);
 						break;
 					}else{
 						getManagedBean().setCoGstr(false); 
+					}*/
+					
+					if(!gstItemResDTO.isCoGSTRFlag()){
+						getManagedBean().setCoGstr(false);
+						break;
+					}else{
+						getManagedBean().setCoGstr(true); 
 					}
 				}
 			}

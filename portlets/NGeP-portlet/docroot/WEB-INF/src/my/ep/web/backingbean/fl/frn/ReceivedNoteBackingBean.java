@@ -1108,6 +1108,20 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	}
 	
 	/**
+	 * Recalculate gst unit price for Ajax
+	 *
+	 */
+	public boolean reCalculateGstUnitPriceforAjax(FlFulfilmentNote fulfilmentNote){
+		boolean amtChanged = false;
+		
+		checkLastTaxFRN();
+		
+		amtChanged = reCalculateGstUnitPrice(fulfilmentNote);		
+		
+		return amtChanged;
+	}
+	
+	/**
 	 * Recalculate gst unit price
 	 *
 	 */
@@ -1356,6 +1370,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				gstItemReqDTO.setSvcCharge(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().isServiceTax());
 				gstItemReqDTO.setLoaSignedDate(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract().getLoa().getAckDate());
 			}
+			
+			int countisCogstrFalse = 0;
+						
 			for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
 				gstItemReqDTO.setGst(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst());
 				gstItemReqDTO.setRequestType(getManagedBean().getFulfilmentRequest().getDocType());
@@ -1373,31 +1390,57 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					gstItemReqDTO.setGslTypeCode(daResDTO.getGslParam().getParameterCode());
 				}
 									
-				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO);
-				if(gstItemResDTO.isCoGSTRFlag()){
-					getManagedBean().setLastFRNTaxInv(true);
-					break;
+				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO); 
+				//check atLeast one isCoGSTRFlag = false, LastFRNTaxInv false
+				if(!gstItemResDTO.isCoGSTRFlag()){
+					//getManagedBean().setLastFRNTaxInv(false);
+					//break;
+					countisCogstrFalse = countisCogstrFalse+1;
 				}else{
-					getManagedBean().setLastFRNTaxInv(false); 
+					//getManagedBean().setLastFRNTaxInv(true); 
 				}
+				
 			}
-			if(!getManagedBean().isLastFRNTaxInv()){
+			
+			if(countisCogstrFalse > 0){
+				getManagedBean().setLastFRNTaxInv(false);
+			}else{
+				getManagedBean().setLastFRNTaxInv(true); 
+			}
+			
+			int countisCogstrFalseDB = 0;
+			
+			if(getManagedBean().isLastFRNTaxInv()){
+				//double check DB
+				System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN() **4** !getManagedBean().isLastFRNTaxInv() ");
 				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
 				FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReqId(reqDTO);
 				for(FlFulfilmentNote note : resDTO.getFulfilmentNoteList()){
-					if(getManagedBean().isLastFRNTaxInv()){
-						break;
-					}
-					for(FlFulfilmentNoteItem frnItem : note.getFlFulfilmentNoteItem()) {
-						if(frnItem.isCoGSTRReq()){
-							getManagedBean().setLastFRNTaxInv(true);
+
+					if(!note.getFulfilmentNoteId().equals(getManagedBean().getFulfilmentNote().getFulfilmentNoteId())) {
+						if(!getManagedBean().isLastFRNTaxInv()){
 							break;
-						}else{
-							getManagedBean().setLastFRNTaxInv(false); 
+						}
+					
+						for(FlFulfilmentNoteItem frnItem : note.getFlFulfilmentNoteItem()) {
+							System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN()**7***1333***** "+ frnItem.getFulfilmentNoteItemId());
+							System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN()**8***1333***** "+ frnItem.isCoGSTRReq());
+							
+							if(!frnItem.isCoGSTRReq()){
+								countisCogstrFalseDB = countisCogstrFalseDB + 1;
+							}else{
+								//getManagedBean().setLastFRNTaxInv(true); 
+							}
 						}
 					}
+				}
+				
+				if(countisCogstrFalseDB > 0){
+					getManagedBean().setLastFRNTaxInv(false);
+				}else{
+					getManagedBean().setLastFRNTaxInv(true); 
 				}
 			}
 		}
