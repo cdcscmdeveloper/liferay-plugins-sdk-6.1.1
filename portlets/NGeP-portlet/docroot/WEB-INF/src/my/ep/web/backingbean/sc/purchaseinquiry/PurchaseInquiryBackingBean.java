@@ -19,7 +19,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
@@ -91,15 +90,13 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.User;
 
 // Auto-generated Javadoc
 
@@ -1327,7 +1324,22 @@ public class PurchaseInquiryBackingBean extends
 
 		// price change lister
 		priceTypeChangeListener();
-
+		
+		try {
+			boolean hasActiveCancelMOFAppl = false;
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			
+			hasActiveCancelMOFAppl = SmApplicationUtil
+					.checkActiveCancelSmApplForSupp(currSupp);
+			log.info("checkActiveCancelMOFAppl | supplierId : " + currSupp.getSupplierId());
+			if (hasActiveCancelMOFAppl) {
+				getManagedBean().setShowButton(Boolean.FALSE);
+				throw new EpException(MessageConst.ERROR_722668);			
+			}
+		} catch (EpException e) {
+			handleException(e);
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (isPageNavFlag) { // page nav.to purchase inquiry
 
