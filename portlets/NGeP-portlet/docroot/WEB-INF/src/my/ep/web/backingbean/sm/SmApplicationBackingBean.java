@@ -10161,7 +10161,8 @@ public class SmApplicationBackingBean extends
 				if ((cat.getRecordStatusFlg() != null && cat
 						.getRecordStatusFlg().compareTo(
 								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
-						|| (cat.getApprovedDate() != null)) {
+						|| (cat.getApprovedDate() != null && cat
+								.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
 					iterator.remove();
 				}
 			}
