@@ -22,12 +22,12 @@
 				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}</td>
 			</tr>
-			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRejectReasons}">
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.rejectReason}">
 				<tr height="20"><td>&#160;</td></tr>
 				<tr>
 					<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
 					<td style="word-wrap: break-word;" colspan="5">
-						<h:outputText value="#{viewSmApplBackingBean.getApplicationRejectionReason()}" 
+						<h:outputText value="#{viewSmApplBackingBean.managedBean.rejectReason}" 
 						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
 					</td>
 				</tr>
