@@ -833,6 +833,13 @@ public class NoticeBoardBackingBean extends
 		retriveBsvDetails(qtId);
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
+		boolean hasActiveCancelMOFAppl = false;
+		
+		hasActiveCancelMOFAppl = SmApplicationUtil.checkActiveCancelSmApplForSupp(smSupplier);
+		if (hasActiveCancelMOFAppl) {
+			throw new EpException(MessageConst.ERROR_722668);
+		}		
+		
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
 			managedBean.setCompanyName(smSupplier.getCompanyName());
 			managedBean.setValidMofNo(true);
