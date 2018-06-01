@@ -3064,22 +3064,19 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setFinSpecZoneEstimatedPrice(
 							estimatedPrice);
 					if (null != packageOfferPrice.getFromVariance()) {
-						int fromvarieance = estimatedPrice.intValue()
-								* packageOfferPrice.getFromVariance()
-										.intValue() / 100;
-						int packageamount = estimatedPrice.intValue()
-								- fromvarieance;
+						BigDecimal fromvarieance = estimatedPrice.multiply(packageOfferPrice.getFromVariance()).divide(
+								new BigDecimal(100), 2,
+								BigDecimal.ROUND_HALF_UP);
 						this.getManagedBean().setPackageFromVarieance(
-								new BigDecimal(packageamount));
+								estimatedPrice.subtract(fromvarieance));
 
 					}
 					if (null != packageOfferPrice.getToVariance()) {
-						int tovarieance = estimatedPrice.intValue()
-								* packageOfferPrice.getToVariance().intValue()
-								/ 100;
-						int toamount = estimatedPrice.intValue() + tovarieance;
+					BigDecimal tovarieance=	 estimatedPrice.multiply(packageOfferPrice.getToVariance()).divide(
+									new BigDecimal(100), 2,
+									BigDecimal.ROUND_HALF_UP);
 						this.getManagedBean().setPackageToVarieance(
-								new BigDecimal(toamount));
+								estimatedPrice.add(tovarieance));
 
 					}
 				} else {
@@ -3100,29 +3097,25 @@ public class EvaluationBackingBean extends
 						this.getManagedBean().setPackageToVarieance(null);
 						if (null != zoneSpecresDTO
 								&& null != zoneSpecresDTO.getEstimatedPrices()) {
-
+							
 							if (null != packageOfferPrice.getFromVariance()) {
-								int fromvarieance = zoneSpecresDTO
-										.getEstimatedPrices().intValue()
-										* packageOfferPrice.getFromVariance()
-												.intValue() / 100;
-								int packageamount = zoneSpecresDTO
-										.getEstimatedPrices().intValue()
-										- fromvarieance;
+								BigDecimal fromvarieance = zoneSpecresDTO
+										.getEstimatedPrices().multiply(packageOfferPrice.getFromVariance()).divide(
+										new BigDecimal(100), 2,
+										BigDecimal.ROUND_HALF_UP);
 								this.getManagedBean().setPackageFromVarieance(
-										new BigDecimal(packageamount));
+										zoneSpecresDTO
+										.getEstimatedPrices().subtract(fromvarieance));
 
 							}
 							if (null != packageOfferPrice.getToVariance()) {
-								int tovarieance = zoneSpecresDTO
-										.getEstimatedPrices().intValue()
-										* packageOfferPrice.getToVariance()
-												.intValue() / 100;
-								int toamount = zoneSpecresDTO
-										.getEstimatedPrices().intValue()
-										+ tovarieance;
+								BigDecimal tovarieance=	 zoneSpecresDTO
+										.getEstimatedPrices().multiply(packageOfferPrice.getToVariance()).divide(
+										new BigDecimal(100), 2,
+										BigDecimal.ROUND_HALF_UP);
 								this.getManagedBean().setPackageToVarieance(
-										new BigDecimal(toamount));
+										zoneSpecresDTO
+										.getEstimatedPrices().add(tovarieance));
 
 							}
 
