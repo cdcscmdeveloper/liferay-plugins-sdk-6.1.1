@@ -146,6 +146,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -4697,7 +4698,9 @@ public class SimpleQuoteBackingBean extends
 				QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
 						quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-
+				Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);
+				
 				// clear session data.
 				renewSesionObject();
 
@@ -6904,5 +6907,14 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	}
+	
+	private Long getSupplierId() {
+		Long supplierId = null;
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		if (currSupp != null) {
+			supplierId = currSupp.getSupplierId();
+		}
+		return supplierId;
 	}
 }
