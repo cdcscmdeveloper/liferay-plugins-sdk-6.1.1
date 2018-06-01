@@ -399,7 +399,7 @@
 						<tr>
 							<td><c:choose>
 									<c:when
-										test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !isReadOnly}">
+										test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !isReadOnly}">
 										<p:selectOneRadio value="#{scQt.zonal}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
