@@ -1992,10 +1992,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.retrievePersonnelByUserId(reqDTO).getSmPersonnel();
 			getManagedBean().setRoleCode(
 					loginPersonnel == null ? "" : loginPersonnel.getEpRole());
-		} else if(sc.hasRoleUser(SupplierManagementConst.BPK_AUDITOR)) {
+		} else if (sc.hasRoleUser(SupplierManagementConst.BPK_AUDITOR)) {
 			getManagedBean().setBpkUser(true);
 			getManagedBean().setRoleCode(RoleCode.BPK_AUDITOR.value());
-		} else if(sc.hasRoleUser(SupplierManagementConst.BPK_OFFICER)) {
+		} else if (sc.hasRoleUser(SupplierManagementConst.BPK_OFFICER)) {
 			getManagedBean().setBpkUser(true);
 			getManagedBean().setRoleCode(RoleCode.BPK_OFFICER.value());
 		}
@@ -2052,15 +2052,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		if (getManagedBean().isViewApplicationHistory()) {
 			basePage = "/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewApplHistorySideMenu_BasePage.xhtml";
-			if(this.getManagedBean().isBpkUser()) {
+			if (this.getManagedBean().isBpkUser()) {
 				baseUrl = "/supplier-profile-search";
 			} else {
-				baseUrl = "/supplier-profile";	
+				baseUrl = "/supplier-profile";
 			}
 			baseUrlLabel = SmCommonUtil.getMessage("lbl.sm.supprofile", null);
 		} else {
 			basePage = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
-			if(this.getManagedBean().isBpkUser()) {
+			if (this.getManagedBean().isBpkUser()) {
 				baseUrl = "/supplier-application-search";
 			} else {
 				baseUrl = "/application-history";
@@ -2074,6 +2074,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		SmAppl smAppl = getApplByLoginRole(selectedSmAppl);
 		setApplication(smAppl);
+		
+		getManagedBean().setRejectReason(getApplicationRejectionReason());
 
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
@@ -2101,13 +2103,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public String getApplicationRejectionReason() {
 		String rejectReasons = StringUtils.EMPTY;
-		SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-		reqDTO.setSmAppl(getManagedBean().getSmAppl());
-		rejectReasons = SmCommonUtil
-				.getHtmlApplicationRejectReasons(SmServiceLookup
-						.getSmApplRevisionSO()
-						.retrieveRejectReasonsBySmAppl(reqDTO)
-						.getSmApplRejectReasons());
+		if (getManagedBean().getSmAppl().isResubmit()
+				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
+
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
+			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
+			rejectReasons = SmCommonUtil
+					.getHtmlApplicationRejectReasons(latestRejectedAppl
+							.getSmApplRejectReasons());
+		}
 		log.info("HTML REJECT REASON:" + rejectReasons);
 		return rejectReasons;
 	}

@@ -152,6 +152,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String currRegStatus;
 	private String srcApplNo;
 	private String targetApplNo;
+	private String rejectReason;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -1505,6 +1506,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setApproverRemarkCreatedDate(Date remarkCreatedDate) {
 		this.approverRemarkCreatedDate = remarkCreatedDate;
+	}
+
+	public String getRejectReason() {
+		return rejectReason;
+	}
+
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
 	}
 
 }
