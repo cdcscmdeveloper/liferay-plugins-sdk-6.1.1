@@ -69,7 +69,8 @@
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{!backingBean.managedBean.approverUser}"
 				disabledSelection="#{backingBean.managedBean.supplierUser and 
-					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
+					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or 
+					(not empty catBean.approvedDate and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS))}" />
 			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
