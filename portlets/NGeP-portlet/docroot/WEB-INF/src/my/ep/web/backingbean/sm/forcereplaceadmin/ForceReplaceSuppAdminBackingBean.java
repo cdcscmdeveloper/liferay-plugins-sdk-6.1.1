@@ -267,6 +267,26 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_722600);
 		}
 
+		// validate if new admin identification no already exist in on going
+		// application
+
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+				.getSupplierId());
+		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
+
+		if (activeAppl != null && activeAppl.getSmPersonnels() != null) {
+			for (SmPersonnel per : activeAppl.getSmPersonnels()) {
+				if (per.getIdentificationNo().equals(
+						getManagedBean().getReactivateBasic()
+								.getNewIdentificationNo())) {
+					throw new EpException(MessageConst.ERROR_722669,
+							new String[] { activeAppl.getApplNo() });
+				}
+			}
+		}
+
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
