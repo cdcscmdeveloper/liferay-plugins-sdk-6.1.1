@@ -380,7 +380,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.gstAmt)}"
-							update="@this,ContractAmtId"></p:ajax>
+							update="@this,ContractAmtId,bondReqPG"></p:ajax>
 					</p:inputText></td>
 			</tr>
 
@@ -445,25 +445,27 @@
 					<table>
 						<tr>
 							<td>
-								<c:choose>
-									<c:when test="#{!directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.scLoa.loaAmt, null) and !directLOABackingBean.managedBean.readOnly}">
-										<p:selectOneRadio id="bondReq" styleClass="commonLabel"
-											value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
-											required="true"
-											label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
-					
-											<f:selectItems
-												value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-											<p:ajax partialSubmit="true" process="@this" update="menuTab" />
-										</p:selectOneRadio>
-										<p:message id="bondReqMsg" for="bondReq" display="icon" />
-									</c:when>
-									<c:otherwise>
-										<p:inputText id="bondReqTxt"
-											value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
-											size="28" disabled="true" />
-									</c:otherwise>
-								</c:choose>
+								<h:panelGroup id="bondReqPG">
+									<c:choose>
+										<c:when test="#{!directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
+											<p:selectOneRadio id="bondReq" styleClass="commonLabel"
+												value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
+												required="true"
+												label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
+						
+												<f:selectItems
+													value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+												<p:ajax partialSubmit="true" process="@this" update="menuTab" />
+											</p:selectOneRadio>
+											<p:message id="bondReqMsg" for="bondReq" display="icon" />
+										</c:when>
+										<c:otherwise>
+											<p:inputText id="bondReqTxt"
+												value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
+												size="28" disabled="true" />
+										</c:otherwise>
+									</c:choose>
+								</h:panelGroup>
 							</td>
 							<td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond.tooltip']}" />

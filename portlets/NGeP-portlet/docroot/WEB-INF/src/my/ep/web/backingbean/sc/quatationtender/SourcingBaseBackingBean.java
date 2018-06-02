@@ -1814,16 +1814,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * Nilai Bon : 360,000 * 2.5% = 9,000 
 		 * 
 		 */
-
-		if(isDirectLoa && scLoa.isBrandNew()){
+		BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
+				scLoa.getGstAmt());
+		if(isDirectLoa/* && scLoa.isBrandNew()*/){
 //			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
-			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(scLoa.getLoaAmt(), null));
+			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
 		}
 		
 		if (scLoa.isBondReq()) {
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
-				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
-						scLoa.getGstAmt());
 				BigDecimal contractPeriod = scLoa.getContractDuration();
 
 				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
