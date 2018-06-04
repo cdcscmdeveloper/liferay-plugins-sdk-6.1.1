@@ -28,7 +28,7 @@
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 					</td> 
 					<td>
-						<p:inputTextarea for="physicalNo" maxlength="30" style="width:130px;margin-bottom:5px;"
+						<p:inputTextarea for="physicalNo" maxlength="100" style="width:130px;margin-bottom:5px;"
 						disabled="#{ctBackingBean.getConditionalValue()}" rows="2"
 		 	    		value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}"  autoResize="false" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
