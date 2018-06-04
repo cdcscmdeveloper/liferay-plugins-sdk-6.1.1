@@ -220,7 +220,7 @@ public class SmVirtualCertHelper {
 		return resDTO.getSmMofCerts();
 	}
 	
-	private List<SmMofCert> retrieveCurrentMofCertBySupplierId(Long supplierId){
+	public List<SmMofCert> retrieveCurrentMofCertBySupplierId(Long supplierId){
 		IVirtualCertSO reqSO = SmServiceLookup.getVirtualCertSO();
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setSupplierId(supplierId);
