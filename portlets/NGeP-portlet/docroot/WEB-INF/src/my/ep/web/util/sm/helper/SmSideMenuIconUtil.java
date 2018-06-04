@@ -517,13 +517,19 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 					}
 				} else {
+					retVal = ICON_TICK;
 					if (bean.isShowMachineryEquipmentPanel()
-							&& (rev.isMachineryVerified() && rev
-									.isManufacturingVerified())) {
-						retVal = ICON_TICK;
-					} else if (bean.isShowTravelSoftwarePanel()
-							&& rev.isSupplierSystemVerified()) {
-						retVal = ICON_TICK;
+							&& !rev.isMachineryVerified()) {
+						retVal = ICON_UNTICK;
+					}
+					if (retVal.equals(ICON_TICK) && bean.isShowFactoryPanel()
+							&& !rev.isManufacturingVerified()) {
+						retVal = ICON_UNTICK;
+					}
+					if (retVal.equals(ICON_TICK)
+							&& bean.isShowTravelSoftwarePanel()
+							&& !rev.isSupplierSystemVerified()) {
+						retVal = ICON_UNTICK;
 					}
 				}
 			} else if (sectionType
