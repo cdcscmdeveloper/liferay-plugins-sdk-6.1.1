@@ -889,7 +889,7 @@ public class SmApplicationUtil {
 	public static int assignMaxReviewCount(String appType, String applCatType,
 			String supplierType, String businessType,
 			boolean isReviewSiteVisit, boolean showTravelPanel,
-			boolean showMachineryPanel) {
+			boolean showMachineryPanel, boolean showFactoryPanel) {
 		int i = 0;
 		switch (appType) {
 
@@ -948,12 +948,14 @@ public class SmApplicationUtil {
 			i = i + 1;
 		}
 		if (applCatType.equals("S")) {
-			if (!showTravelPanel && !showMachineryPanel) {
-				i = i - 2;
-			} else {
-				if (!showTravelPanel || !showMachineryPanel) {
-					i = i - 1;
-				}
+			if (!showTravelPanel) {
+				i = i - 1;
+			}
+			if (!showMachineryPanel) {
+				i = i - 1;
+			}
+			if (!showFactoryPanel) {
+				i = i - 1;
 			}
 		}
 		return i;
@@ -1925,13 +1927,13 @@ public class SmApplicationUtil {
 						if (currentTab != -1) {
 							setNavigationBackToCurrentPage(currentTab, bean);
 						}
-						throw new EpException(
-								MessageConst.ERROR_722621,
+						throw new EpException(MessageConst.ERROR_722621,
 								new String[] {
-										SmCommonUtil.getMessage(facTypeLabel, null),
+										SmCommonUtil.getMessage(facTypeLabel,
+												null),
 										l3.getFullCatcode() + " ("
 												+ l3.getCategoryName() + ")" });
-					}	
+					}
 				}
 			}
 		}
@@ -2760,26 +2762,29 @@ public class SmApplicationUtil {
 
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
 			SmApplicationManagedBean bean, String currPage) {
-		checkOverLappingCategories(bean);
-		if (bean.isOverLappedCategoryExists()) {
-			if (bean.isSupplierUser()) {
-				validateOverlapCategory(bean, currPage);
-			} else {
-				for (SmSupplierCategory cat : bean.getSmAppl()
-						.getSmSupplierCategories()) {
-					if (cat.isOverLapCategory()
-							&& (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || cat
-									.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
-						if (bean.isPoUser()
-								&& cat.getPoDecFlg() != null
-								&& cat.getPoDecFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-							validateOverlapCategory(bean, currPage);
-							break;
-						} else if (bean.isApproverUser()
-								&& cat.getApprvrDecFlg() != null
-								&& cat.getApprvrDecFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-							validateOverlapCategory(bean, currPage);
-							break;
+		if (bean.getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+			checkOverLappingCategories(bean);
+			if (bean.isOverLappedCategoryExists()) {
+				if (bean.isSupplierUser()) {
+					validateOverlapCategory(bean, currPage);
+				} else {
+					for (SmSupplierCategory cat : bean.getSmAppl()
+							.getSmSupplierCategories()) {
+						if (cat.isOverLapCategory()
+								&& (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || cat
+										.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
+							if (bean.isPoUser()
+									&& cat.getPoDecFlg() != null
+									&& cat.getPoDecFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+								validateOverlapCategory(bean, currPage);
+								break;
+							} else if (bean.isApproverUser()
+									&& cat.getApprvrDecFlg() != null
+									&& cat.getApprvrDecFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+								validateOverlapCategory(bean, currPage);
+								break;
+							}
 						}
 					}
 				}
@@ -7220,7 +7225,8 @@ public class SmApplicationUtil {
 					managedBean.getBusinessTypeVal(),
 					managedBean.isReviewSiteVisit(),
 					managedBean.isShowTravelSoftwarePanel(),
-					managedBean.isShowMachineryEquipmentPanel());
+					managedBean.isShowMachineryEquipmentPanel(),
+					managedBean.isShowFactoryPanel());
 		}
 
 		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
@@ -10203,8 +10209,8 @@ public class SmApplicationUtil {
 				&& smAppl.getSmCompanyBasic().isWithFederal()) {
 			addRoles(roles, RoleCode.CM_USER.value(), false);
 		}
-		
-		//add ADMIN role
+
+		// add ADMIN role
 		if (personnel.getEpRole() != null
 				&& (personnel.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
