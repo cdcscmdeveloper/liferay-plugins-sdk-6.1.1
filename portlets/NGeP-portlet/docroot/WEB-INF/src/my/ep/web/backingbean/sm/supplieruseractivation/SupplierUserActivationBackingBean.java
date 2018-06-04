@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -23,6 +24,7 @@ import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
@@ -39,6 +41,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -209,6 +212,21 @@ public class SupplierUserActivationBackingBean extends
 				orgReqDTO.setOrgProfileId(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 				OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgReqDTO);
+				
+				if (this.getManagedBean().getSmPersonnel().getEpRole()
+						.equals(RoleCode.MOF_SUPPLIER_ADMIN)) {
+					List<SmMofCert> certs = SmVirtualCertHelper.getInstance()
+							.retrieveCurrentMofCertBySupplierId(
+									this.getManagedBean().getSmPersonnel()
+											.getSmAppl().getSmSupplier()
+											.getSupplierId());
+					for (SmMofCert cert : certs) {
+						cert.setFileName(null);
+						cert.setFilePath(null);
+						SmVirtualCertHelper.getInstance()
+								.updateMOFCertFilePath(cert);
+					}
+				}
 				
 				if(orgResDTO.getPmOrgProfile() != null){
 					//check Liferay UserName
