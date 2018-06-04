@@ -1915,10 +1915,11 @@ public class SmApplicationUtil {
 	private static boolean validateFacility(boolean valid, int currentTab,
 			SmApplicationManagedBean bean, String facType, String facTypeLabel,
 			List<PmCategoryL3> categoryList) {
-		if (!EntityHelper.isCollectionEmpty(categoryList)) {
-			for (PmCategoryL3 l3 : categoryList) {
-				if (l3.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-						|| l3.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
+		if (!bean.getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {			
+		
+			if (!EntityHelper.isCollectionEmpty(categoryList)) {
+				for (PmCategoryL3 l3 : categoryList) {
 					if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
 						valid = false;
 						if (currentTab != -1) {
