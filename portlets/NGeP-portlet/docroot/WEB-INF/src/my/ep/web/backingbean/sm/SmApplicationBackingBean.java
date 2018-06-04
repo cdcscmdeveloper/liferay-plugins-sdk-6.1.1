@@ -9038,7 +9038,7 @@ public class SmApplicationBackingBean extends
 				supplierType, businessType, getManagedBean()
 						.isReviewSiteVisit(), getManagedBean()
 						.isShowTravelSoftwarePanel(), getManagedBean()
-						.isShowMachineryEquipmentPanel());
+						.isShowMachineryEquipmentPanel(),getManagedBean().isShowFactoryPanel());
 	}
 
 	/**
