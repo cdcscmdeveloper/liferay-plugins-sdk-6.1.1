@@ -1918,8 +1918,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean, String facType, String facTypeLabel,
 			List<PmCategoryL3> categoryList) {
 		if (!bean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {			
-		
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+
 			if (!EntityHelper.isCollectionEmpty(categoryList)) {
 				for (PmCategoryL3 l3 : categoryList) {
 					if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
@@ -3026,9 +3026,8 @@ public class SmApplicationUtil {
 					voTmp.setOverlapInfoList(new ArrayList<SmBulkApplOverlapCatVO>());
 				}
 
-				voSubTmp = (SmBulkApplOverlapCatVO) EntityHelper
-						.getEntityBySinglePropertyFromList(arr[7] + "",
-								voTmp.getOverlapInfoList(), "regNo");
+				voSubTmp = getOverlapVOByRegNoAndIdNo(arr[7] + "",
+						arr[16] + "", voTmp.getOverlapInfoList());
 
 				if (voSubTmp == null) {
 					isSubAdd = true;
@@ -3077,6 +3076,23 @@ public class SmApplicationUtil {
 					isAdd = false;
 				}
 
+			}
+		}
+		return retVal;
+	}
+
+	private static SmBulkApplOverlapCatVO getOverlapVOByRegNoAndIdNo(
+			String regNo, String idNo, List<SmBulkApplOverlapCatVO> overlapLists) {
+		SmBulkApplOverlapCatVO retVal = null;
+		if (!EntityHelper.isCollectionEmpty(overlapLists)) {
+			for (SmBulkApplOverlapCatVO vo : overlapLists) {
+				if (vo.getRegNo() != null && regNo != null
+						&& vo.getRegNo().equals(regNo)
+						&& vo.getIdentificationNo() != null && idNo != null
+						&& vo.getIdentificationNo().equals(idNo)) {
+					retVal = vo;
+					break;
+				}
 			}
 		}
 		return retVal;
