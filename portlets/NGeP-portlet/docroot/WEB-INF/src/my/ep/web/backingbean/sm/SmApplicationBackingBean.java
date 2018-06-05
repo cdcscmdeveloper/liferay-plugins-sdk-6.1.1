@@ -5627,7 +5627,12 @@ public class SmApplicationBackingBean extends
 			reqDto.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
+		} catch (Exception e) {
+			log.debug(getManagedBean().getCurrentPageType() + "|"
+					+ getManagedBean().getSmAppl().getApplNo() + "|"
+					+ e.getMessage());
 		} finally {
+
 			retriveLatestApplAfterUpdate("", "");
 
 			initNonMandatoryAndMandatoryDocs();
@@ -9038,7 +9043,8 @@ public class SmApplicationBackingBean extends
 				supplierType, businessType, getManagedBean()
 						.isReviewSiteVisit(), getManagedBean()
 						.isShowTravelSoftwarePanel(), getManagedBean()
-						.isShowMachineryEquipmentPanel(),getManagedBean().isShowFactoryPanel());
+						.isShowMachineryEquipmentPanel(), getManagedBean()
+						.isShowFactoryPanel());
 	}
 
 	/**
