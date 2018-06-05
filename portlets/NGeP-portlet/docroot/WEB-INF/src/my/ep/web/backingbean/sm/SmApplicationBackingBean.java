@@ -9044,7 +9044,10 @@ public class SmApplicationBackingBean extends
 						.isReviewSiteVisit(), getManagedBean()
 						.isShowTravelSoftwarePanel(), getManagedBean()
 						.isShowMachineryEquipmentPanel(), getManagedBean()
-						.isShowFactoryPanel());
+						.isShowFactoryPanel(), getManagedBean()
+						.isShowDockyardPanel(), getManagedBean()
+						.isShowStorePanel(), getManagedBean()
+						.isShowWorkShopPanel());
 	}
 
 	/**

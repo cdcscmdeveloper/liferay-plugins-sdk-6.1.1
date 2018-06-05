@@ -889,7 +889,9 @@ public class SmApplicationUtil {
 	public static int assignMaxReviewCount(String appType, String applCatType,
 			String supplierType, String businessType,
 			boolean isReviewSiteVisit, boolean showTravelPanel,
-			boolean showMachineryPanel, boolean showFactoryPanel) {
+			boolean showMachineryPanel, boolean showFactoryPanel,
+			boolean showDockyardPanel, boolean showStorePanel,
+			boolean showWorkShopPanel) {
 		int i = 0;
 		switch (appType) {
 
@@ -955,6 +957,10 @@ public class SmApplicationUtil {
 				i = i - 1;
 			}
 			if (!showFactoryPanel) {
+				i = i - 1;
+			}
+			if (!showFactoryPanel && !showDockyardPanel && !showStorePanel
+					&& !showWorkShopPanel) {
 				i = i - 1;
 			}
 		}
@@ -7242,7 +7248,10 @@ public class SmApplicationUtil {
 					managedBean.isReviewSiteVisit(),
 					managedBean.isShowTravelSoftwarePanel(),
 					managedBean.isShowMachineryEquipmentPanel(),
-					managedBean.isShowFactoryPanel());
+					managedBean.isShowFactoryPanel(),
+					managedBean.isShowDockyardPanel(),
+					managedBean.isShowStorePanel(),
+					managedBean.isShowWorkShopPanel());
 		}
 
 		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
