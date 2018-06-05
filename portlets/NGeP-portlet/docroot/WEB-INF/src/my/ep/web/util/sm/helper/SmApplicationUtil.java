@@ -959,10 +959,6 @@ public class SmApplicationUtil {
 			if (!showFactoryPanel) {
 				i = i - 1;
 			}
-			if (!showFactoryPanel && !showDockyardPanel && !showStorePanel
-					&& !showWorkShopPanel) {
-				i = i - 1;
-			}
 		}
 		return i;
 	}

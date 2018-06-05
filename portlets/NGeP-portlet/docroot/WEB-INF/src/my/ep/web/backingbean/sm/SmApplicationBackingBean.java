@@ -8623,12 +8623,17 @@ public class SmApplicationBackingBean extends
 					&& sec.isManufacturingVerified()) {
 				sec.setManufacturingVerified(false);
 			}
-			if (sec.isFactoryVerify()
-					&& (!getManagedBean().isShowDockyardPanel()
-							&& !getManagedBean().isShowFactoryPanel()
-							&& !getManagedBean().isShowStorePanel() && !getManagedBean()
-							.isShowWorkShopPanel())) {
-				sec.setFactoryVerify(false);
+
+			if (!getManagedBean().isShowDockyardPanel()
+					&& !getManagedBean().isShowFactoryPanel()
+					&& !getManagedBean().isShowStorePanel()
+					&& !getManagedBean().isShowWorkShopPanel()) {
+				if (getManagedBean().getSmAppl().getApplCategoryType()
+						.equals("S")) {
+					sec.setFactoryVerify(true);
+				} else {
+					sec.setFactoryVerify(false);
+				}
 			}
 
 			sec.setCheckCount(getTotalVerifiedSec(sec));
@@ -8725,11 +8730,7 @@ public class SmApplicationBackingBean extends
 		/* STEP 6 */
 
 		// factory/workshop/dockyard/store
-		if (sec.isFactoryVerify()
-				&& (getManagedBean().isShowDockyardPanel()
-						|| getManagedBean().isShowFactoryPanel()
-						|| getManagedBean().isShowStorePanel() || getManagedBean()
-						.isShowWorkShopPanel())) {
+		if (sec.isFactoryVerify()) {
 			retVal = retVal + 1;
 		}
 
