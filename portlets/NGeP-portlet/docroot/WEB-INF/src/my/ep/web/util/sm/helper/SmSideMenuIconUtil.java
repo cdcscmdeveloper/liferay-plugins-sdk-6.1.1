@@ -504,33 +504,30 @@ public class SmSideMenuIconUtil {
 					}
 				}
 			} else if (sectionType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)
-					&& rev.isFactoryVerify()) {
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
 				retVal = ICON_TICK;
+
+				if ((bean.isShowDockyardPanel() || bean.isShowFactoryPanel()
+						|| bean.isShowStorePanel() || bean
+							.isShowWorkShopPanel()) && !rev.isFactoryVerify()) {
+					retVal = ICON_UNTICK;
+				}
 			} else if (sectionType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)
-					&& rev.isMachineryVerified()) {
-				if (bean.isShowTravelSoftwarePanel()
-						&& bean.isShowMachineryEquipmentPanel()) {
-					if (rev.isMachineryVerified()
-							&& rev.isSupplierSystemVerified()) {
-						retVal = ICON_TICK;
-					}
-				} else {
-					retVal = ICON_TICK;
-					if (bean.isShowMachineryEquipmentPanel()
-							&& !rev.isMachineryVerified()) {
-						retVal = ICON_UNTICK;
-					}
-					if (retVal.equals(ICON_TICK) && bean.isShowFactoryPanel()
-							&& !rev.isManufacturingVerified()) {
-						retVal = ICON_UNTICK;
-					}
-					if (retVal.equals(ICON_TICK)
-							&& bean.isShowTravelSoftwarePanel()
-							&& !rev.isSupplierSystemVerified()) {
-						retVal = ICON_UNTICK;
-					}
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
+				retVal = ICON_TICK;
+				if (retVal.equals(ICON_TICK)
+						&& bean.isShowMachineryEquipmentPanel()
+						&& !rev.isMachineryVerified()) {
+					retVal = ICON_UNTICK;
+				}
+				if (retVal.equals(ICON_TICK) && bean.isShowFactoryPanel()
+						&& !rev.isManufacturingVerified()) {
+					retVal = ICON_UNTICK;
+				}
+				if (retVal.equals(ICON_TICK)
+						&& bean.isShowTravelSoftwarePanel()
+						&& !rev.isSupplierSystemVerified()) {
+					retVal = ICON_UNTICK;
 				}
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
