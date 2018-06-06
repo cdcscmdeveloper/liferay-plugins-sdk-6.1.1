@@ -2110,9 +2110,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
 			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
+			if (latestRejectedAppl != null) {
+				rejectReasons = SmCommonUtil
+						.getHtmlApplicationRejectReasons(latestRejectedAppl
+								.getSmApplRejectReasons());
+			}
+		} else {
 			rejectReasons = SmCommonUtil
-					.getHtmlApplicationRejectReasons(latestRejectedAppl
-							.getSmApplRejectReasons());
+					.getHtmlApplicationRejectReasons(getManagedBean()
+							.getSmAppl().getSmApplRejectReasons());
 		}
 		log.info("HTML REJECT REASON:" + rejectReasons);
 		return rejectReasons;
