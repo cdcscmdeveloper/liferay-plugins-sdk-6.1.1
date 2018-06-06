@@ -9373,7 +9373,7 @@
 	
 	<portlet>
 	 	<portlet-name>paymentReceipt</portlet-name>
-	 	<display-name>Payment Receipt</display-name>
+	 	<display-name>Payment Receipt/Tax Invoice</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -9387,7 +9387,7 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Payment Receipt</title>
+	 		<title>Payment Receipt/Tax Invoice</title>
 	 		<short-title>NewJSFPortlet</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>

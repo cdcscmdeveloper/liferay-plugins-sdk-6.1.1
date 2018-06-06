@@ -90,7 +90,7 @@
 					rendered="#{payment.pyBill.billType eq SupplierMgmtConst.billTypeSoftcert}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.payment.receipt.receipt.no']}">
+				<p:column headerText="#{lbl['lbl.sm.payment.receipt.receipt.tax.inv.no']}">
 					#{payment.receiptNo}
 				</p:column>
 				
@@ -113,7 +113,7 @@
 					<h:outputText value="#{paymentResp.transactionId}" rendered="#{not empty paymentResp}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.payment.receipt.reprint.rec']}">
+				<p:column headerText="#{lbl['lbl.sm.payment.receipt.reprint.rec.tax.inv']}">
 					<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false">
 						<p:fileDownload value="#{paymentReceiptBB.printReceipt(payment.paymentId)}" />
 					</p:commandButton>
