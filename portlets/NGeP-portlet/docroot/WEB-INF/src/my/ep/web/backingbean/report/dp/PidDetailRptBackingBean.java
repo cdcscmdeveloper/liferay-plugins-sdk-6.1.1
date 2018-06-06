@@ -16,8 +16,11 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.DpReportConst;
 import my.ep.web.managedbean.report.dp.PidDetailRptManagedBean;
@@ -69,6 +72,7 @@ public class PidDetailRptBackingBean extends DpReportBackingBean<PidDetailRptMan
 		log.info("Contract Name>>>>>>" + getManagedBean().getContractName());
 		log.info("Group>>>>>>" + getManagedBean().getPidGroup());
 		
+		validateCriteria();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getDateFrom() != null) {
 			params.put(DpReportConst.PARAM_CREATED_FROM_DATE, df.format(getManagedBean().getDateFrom()));
@@ -108,5 +112,22 @@ public class PidDetailRptBackingBean extends DpReportBackingBean<PidDetailRptMan
 	 * On supplier change
 	 */
 	public void onSupplierChange() {
+	}
+
+	@Override
+	public void validateCriteria() {
+		if(this.getManagedBean().getDateFrom() == null
+				&& this.getManagedBean().getDateTo() == null
+				&& this.getManagedBean().getStatus() == null
+				&& this.getManagedBean().getPidGroup() == null
+				&& this.getManagedBean().getSelectedOrgProfile() == null
+				&& StringUtils.isEmpty(this.getManagedBean().getDocNo())
+				&& StringUtils.isEmpty(this.getManagedBean().getContractType())
+				&& StringUtils.isEmpty(this.getManagedBean().getContractNo())
+				&& StringUtils.isEmpty(this.getManagedBean().getContractName())){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_780003);
+		}
+		
 	}
 }

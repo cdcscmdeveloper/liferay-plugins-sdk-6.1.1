@@ -69,4 +69,9 @@ public class DpReportMainBackingBean extends
 		return null;
 	}
 
+	@Override
+	public void validateCriteria() {
+		
+	}
+
 }
