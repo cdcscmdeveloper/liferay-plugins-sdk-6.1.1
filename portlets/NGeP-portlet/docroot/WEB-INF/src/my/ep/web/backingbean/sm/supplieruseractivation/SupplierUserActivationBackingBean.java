@@ -214,7 +214,7 @@ public class SupplierUserActivationBackingBean extends
 				OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgReqDTO);
 				
 				if (this.getManagedBean().getSmPersonnel().getEpRole()
-						.equals(RoleCode.MOF_SUPPLIER_ADMIN)) {
+						.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 					List<SmMofCert> certs = SmVirtualCertHelper.getInstance()
 							.retrieveCurrentMofCertBySupplierId(
 									this.getManagedBean().getSmPersonnel()
