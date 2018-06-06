@@ -1023,6 +1023,9 @@ public class ReportConst implements Serializable{
 	//public static final String APPLICATIONEIFONXLS = "application/vnd.openxmlformats-officedocument.spreadsheetml.‌​sheet";
 	// SM - JSP
 	public static final String SM_PAYMENT_RECEIPT_JSP = "sm_payment_receipt.jsp";
+	//Enhancement #19056 To replace Receipt document format for SPKI purchase to Tax Invoice format
+	public static final String SM_TAX_INVOICE_JSP = "SM_TAX_INVOICE.jsp";
+	//end of Enhancement #19056
 
 	// SM - Report Parameter Key
 	public static final String PARAM_PAYMENT_ID = "pmntid";
