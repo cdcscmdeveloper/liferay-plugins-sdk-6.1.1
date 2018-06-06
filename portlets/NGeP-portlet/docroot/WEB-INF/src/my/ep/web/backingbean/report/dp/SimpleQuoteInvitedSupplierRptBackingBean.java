@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
@@ -69,6 +70,8 @@ public class SimpleQuoteInvitedSupplierRptBackingBean extends
 	public LinkedHashMap<String, String> getparams() {
 		// TODO Auto-generated method stub
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		
+		validateCriteria();
 		if (StringUtils.isNotEmpty(getManagedBean().getSimpleQuoteNum())) {
 			simpleQuoteNoValidation();
 			params.put(DpReportConst.PARAM_SQ_NO, getManagedBean()
@@ -151,6 +154,14 @@ public class SimpleQuoteInvitedSupplierRptBackingBean extends
 			}
 		}
 		return simpleQuoteNoList;
+	}
+
+	@Override
+	public void validateCriteria() {
+		if(StringUtils.isEmpty(this.getManagedBean().getSimpleQuoteNum())){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_780003);
+		}
 	}
 
 }

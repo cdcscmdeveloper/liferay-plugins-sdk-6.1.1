@@ -364,4 +364,8 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 			loaDetail.downloadReport(scLoaReport);
 		}
 	}
+
+	@Override
+	public void validateCriteria() {
+	}
 }

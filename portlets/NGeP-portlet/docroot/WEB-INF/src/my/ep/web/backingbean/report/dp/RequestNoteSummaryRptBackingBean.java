@@ -16,8 +16,11 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.DpReportConst;
 import my.ep.web.managedbean.report.dp.RequestNoteDetailRptManagedBean;
@@ -63,6 +66,7 @@ public class RequestNoteSummaryRptBackingBean extends DpReportBackingBean<Reques
 		log.info("Doc No>>>>>>" + getManagedBean().getDocNo());
 		log.info("Procurement Type>>>>>>" + getManagedBean().getProcurementType());
 		
+		validateCriteria();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getDateFrom() != null) {
 			params.put(DpReportConst.PARAM_CREATED_FROM_DATE, df.format(getManagedBean().getDateFrom()));
@@ -93,5 +97,19 @@ public class RequestNoteSummaryRptBackingBean extends DpReportBackingBean<Reques
 	 * On supplier change
 	 */
 	public void onSupplierChange() {
+	}
+	
+	@Override
+	public void validateCriteria() {
+		System.out.println("Validate Criteria");
+		if(this.getManagedBean().getDateFrom() == null
+				&& this.getManagedBean().getDateTo() == null
+				&& this.getManagedBean().getStatus() == null
+				&& this.getManagedBean().getProcurementType() == null
+				&& this.getManagedBean().getSelectedOrgProfile() == null
+				&& StringUtils.isEmpty(this.getManagedBean().getDocNo())){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_780003);
+		}
 	}
 }

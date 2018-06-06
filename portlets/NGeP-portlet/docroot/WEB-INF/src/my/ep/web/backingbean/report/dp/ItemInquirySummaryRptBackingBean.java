@@ -16,8 +16,11 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.DpReportConst;
 import my.ep.web.managedbean.report.dp.ItemInquirySummaryRptManagedBean;
@@ -61,6 +64,7 @@ public class ItemInquirySummaryRptBackingBean extends DpReportBackingBean<ItemIn
 		log.info("Status>>>>>>" + getManagedBean().getStatus());
 		log.info("Doc No>>>>>>" + getManagedBean().getDocNo());
 		
+		validateCriteria();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getDateFrom() != null) {
 			params.put(DpReportConst.PARAM_CREATED_FROM_DATE, df.format(getManagedBean().getDateFrom()));
@@ -89,5 +93,17 @@ public class ItemInquirySummaryRptBackingBean extends DpReportBackingBean<ItemIn
 	 * On supplier change
 	 */
 	public void onSupplierChange() {
+	}
+
+	@Override
+	public void validateCriteria() {
+		if(this.getManagedBean().getDateFrom() == null
+				&& this.getManagedBean().getDateTo() == null
+				&& this.getManagedBean().getStatus() == null
+				&& this.getManagedBean().getSelectedOrgProfile() == null
+				&& StringUtils.isEmpty(this.getManagedBean().getDocNo())){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_780003);
+		}
 	}
 }

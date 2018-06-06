@@ -280,4 +280,7 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 	public abstract void resetSearch();
 
 	public abstract LinkedHashMap<String,String> getparams();
+	
+	public abstract void validateCriteria();
+	
 }

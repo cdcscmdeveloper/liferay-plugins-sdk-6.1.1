@@ -16,8 +16,11 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.DpReportConst;
 import my.ep.web.managedbean.report.dp.PidSummaryRptManagedBean;
@@ -66,6 +69,7 @@ public class PidSummaryRptBackingBean extends DpReportBackingBean<PidSummaryRptM
 		log.info("Contract Type>>>>>>" + getManagedBean().getContractType());
 		log.info("Contract Name>>>>>>" + getManagedBean().getContractName());
 		
+		validateCriteria();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getDateFrom() != null) {
 			params.put(DpReportConst.PARAM_CREATED_FROM_DATE, df.format(getManagedBean().getDateFrom()));
@@ -89,5 +93,19 @@ public class PidSummaryRptBackingBean extends DpReportBackingBean<PidSummaryRptM
 			params.put(DpReportConst.PARAM_CONTRACT_NAME, getManagedBean().getContractName());
 		}
 		return params;
+	}
+
+	@Override
+	public void validateCriteria() {
+		if(this.getManagedBean().getDateFrom() == null
+				&& this.getManagedBean().getDateTo() == null
+				&& this.getManagedBean().getStatus() == null
+				&& StringUtils.isEmpty(this.getManagedBean().getDocNo())
+				&& StringUtils.isEmpty(this.getManagedBean().getContractType())
+				&& StringUtils.isEmpty(this.getManagedBean().getContractNo())
+				&& StringUtils.isEmpty(this.getManagedBean().getContractName())){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_780003);
+		}
 	}
 }
