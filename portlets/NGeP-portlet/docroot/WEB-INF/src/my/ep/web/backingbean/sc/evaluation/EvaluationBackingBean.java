@@ -6757,9 +6757,16 @@ private void retriveEndorsmentList(){
 		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 		resDTO = committeSO.retrieveCommitteActivityDtls(reqDTO);
-
-		this.getManagedBean().setEndorscommitteeMemberList(
-				resDTO.getCommitteActivities());
+		if(null!=resDTO && CollectionUtils.isNotEmpty(resDTO.getCommitteActivities())){
+			this.getManagedBean().setEndorscommitteeMemberList(
+					new ArrayList<ScQtCommitteeActivity>());
+			for(ScQtCommitteeActivity committeeActivity:resDTO.getCommitteActivities()){
+				if(committeeActivity.isAttended()){
+					this.getManagedBean().getEndorscommitteeMemberList().add(committeeActivity);	
+				}
+			}
+			
+		}
 	}finally{
 		 committeSO = null;
 		 resDTO = null;
