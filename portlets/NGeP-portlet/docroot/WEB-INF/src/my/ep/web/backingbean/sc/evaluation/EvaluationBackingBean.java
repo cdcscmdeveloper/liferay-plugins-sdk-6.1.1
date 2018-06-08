@@ -6447,7 +6447,61 @@ public class EvaluationBackingBean extends
 				getManagedBean().setTempTab(outputTab);
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
-		} finally {
+		}catch(Exception e){
+			log.info("ExceptionBlock"+currentTab);
+			log.info("ExceptionBlockCommitteeType"+this.getManagedBean()
+					.getCommitteeType());
+			
+			 if(currentTab==1){
+				log.debug("oneExcuted"+currentTab);
+				retriveComplianceTechnical();
+			}
+			else if(currentTab==2){
+				log.debug("TwoExcuted"+currentTab);
+				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						|| ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					log.debug("ifTwoExcutedCommitteeType"+this.getManagedBean()
+							.getCommitteeType());
+				retriveTechnicalEvaluationStage();
+				}
+				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					log.debug("elseTwoExcutedCommitteeType"+this.getManagedBean()
+							.getCommitteeType());
+					retriveFinancialEvaluationStage();
+				}
+			}
+			else if(currentTab==3){
+				log.debug("ThreeExcuted"+currentTab);
+				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					log.debug("ifThreeExcutedCommitteeType"+this.getManagedBean()
+							.getCommitteeType());
+				retriveFinancialEvaluationStage();
+				}
+				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					log.debug("elseThreeExcutedCommitteeType"+this.getManagedBean()
+							.getCommitteeType());
+					retrivePresentationDemo();
+					
+				}
+			}
+			
+			
+			outputTab=currentTab;
+			getManagedBean().setTabActiveIndex(outputTab);
+			
+			handleException(e);
+		}
+		finally {
 			evaluationSo = null;
 		}
 	}
