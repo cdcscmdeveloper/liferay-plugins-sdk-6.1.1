@@ -1692,7 +1692,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
-			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			if(getManagedBean().getFlRequest().getPmUserGroup()!=null && 
 				getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
