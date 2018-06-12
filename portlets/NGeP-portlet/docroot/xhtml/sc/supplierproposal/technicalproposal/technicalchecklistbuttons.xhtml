@@ -19,13 +19,13 @@
 
 		<c:if test="#{'TS' eq docDefinationKey}">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				styleClass="BtnSpacing" onstart="blockWidget.show()"
+				styleClass="BtnSpacing" onclick="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all" />
 
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				styleClass="BtnSpacing" onstart="blockWidget.show()"
+				styleClass="BtnSpacing" onclick="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(true)}"
 				process="@all" partialSubmit="true" update="@all" />
