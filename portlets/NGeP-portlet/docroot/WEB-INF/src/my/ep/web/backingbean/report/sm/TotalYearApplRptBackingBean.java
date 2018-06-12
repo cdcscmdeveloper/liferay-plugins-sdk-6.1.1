@@ -1,5 +1,9 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
@@ -11,6 +15,7 @@ import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.TotalYearApplRptManagedBean;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "totalYearApplRptBB")
 @ViewScoped
@@ -21,6 +26,8 @@ public class TotalYearApplRptBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -1467771092807434815L;
+	public static Logger log = Logger
+			.getLogger(TotalYearApplRptBackingBean.class);
 
 	public TotalYearApplRptBackingBean() {
 		getManagedBean().setMonthList(getCommonMonthList());
@@ -31,13 +38,15 @@ public class TotalYearApplRptBackingBean extends
 		validate();
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
+		String datefrom = "01/" + getManagedBean().getMonthFrom() + "/"
+				+ getManagedBean().getYear();
+		String dateTo = getLastDayOfMonth();
 		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		params.put(SmReportConst.PARAM_YEAR_FROM, getManagedBean().getYear());
-		params.put(SmReportConst.PARAM_YEAR_TO, getManagedBean().getYearTo());
-		params.put(SmReportConst.PARAM_DATE_FROM,
-				getCalendarMonthNameByNo(getManagedBean().getMonthFrom()));
-		params.put(SmReportConst.PARAM_DATE_TO,
-				getCalendarMonthNameByNo(getManagedBean().getMonthTo()));
+		params.put(SmReportConst.PARAM_DATE_FROM, datefrom);
+		params.put(SmReportConst.PARAM_DATE_TO, dateTo);
+
+		log.info("Param sent for report SM_009:" + getManagedBean().getZone()
+				+ "||" + datefrom + "||" + dateTo);
 
 		generateSmReport(params);
 	}
@@ -61,5 +70,23 @@ public class TotalYearApplRptBackingBean extends
 		if (to < from) {
 			throw new EpException(MessageConst.ERROR_REPORT_780050);
 		}
+	}
+
+	private String getLastDayOfMonth() {
+		String date = "01/" + getManagedBean().getMonthFrom() + "/"
+				+ getManagedBean().getYear();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			Date convertedDate = dateFormat.parse(date);
+			Calendar c = Calendar.getInstance();
+			c.setTime(convertedDate);
+			c.set(Calendar.DAY_OF_MONTH,
+					c.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+			date = dateFormat.format(c.getTime());
+		} catch (ParseException e) {
+
+		}
+		return date;
 	}
 }
