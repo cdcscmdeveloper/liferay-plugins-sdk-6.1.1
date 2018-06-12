@@ -16,19 +16,21 @@
 		
 		      <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;" styleClass="column-align-center" >
 		             <div align="left">
-		             <h:outputText value="#{suspensionBackingBean.retrieveMinistryByOrgProfileId(data.orgProfile.orgProfileId)}" />
+		             <h:outputText value="#{suspensionBackingBean.retrieveMinistryByOrgProfileId(data.orgProfile.orgProfileId)}"
+		             	style="float:left; text-align:left;" />
 	               </div>
 	           </p:column>
 	           
 	            <p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;" styleClass="column-align-center" >
 						<div align="left">
-						<h:outputText   value="#{suspensionBackingBean.retrieveJabatanByOrgProfileId(data.orgProfile.orgProfileId)}"  />
+						<h:outputText   value="#{suspensionBackingBean.retrieveJabatanByOrgProfileId(data.orgProfile.orgProfileId)}" 
+							style="float:left; text-align:left;" />
 					</div>
 					</p:column>
 	  
 	           <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
 			        <div align="left">
-			         <h:outputText  value="#{data.orgProfile.orgName}" /></div>
+			         <h:outputText  value="#{data.orgProfile.orgName}" style="float:left; text-align:left;" /></div>
 		       </p:column>
 		
 		       <p:column style="width:15%;" styleClass="column-align-center" >
@@ -36,7 +38,7 @@
 						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.effective.date']}"/>
 			   	   </f:facet>
-		           <p:calendar id="agencyDateActive" value="#{data.effDate}" styleClass="calanderWidth"
+		           <p:calendar id="agencyDateActive" value="#{data.effDate}" styleClass="calanderWidth" style="float:left"
 			            disabled="#{(data.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}"  showOn="button" 
 			             mindate="#{DateUtils.getCurrentDateWithoutTime()}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			              readonlyInput="true" navigator="true"
@@ -51,7 +53,7 @@
 						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.expiry.date']}"/>
 			   	   	</f:facet>
-		            <p:calendar  id="agencyDateExp" value="#{data.expDate}" styleClass="calanderWidth"
+		            <p:calendar  id="agencyDateExp" value="#{data.expDate}" styleClass="calanderWidth" style="float:left"
 			          disabled="#{(data.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}"  showOn="button" 
 			          mindate="#{data.effDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			          readonlyInput="true" navigator="true"

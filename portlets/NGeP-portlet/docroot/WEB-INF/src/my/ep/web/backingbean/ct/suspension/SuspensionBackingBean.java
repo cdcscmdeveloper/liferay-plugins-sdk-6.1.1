@@ -201,12 +201,17 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
-
+			
+			// Clear for search item
+			getManagedBean().setSearchItemString("");
+			getManagedBean().getContractItemList().clear();
+			
 			/*If statement  for check contact item start*/
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
 				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
 
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
+					getManagedBean().getContractItemList().add(contractItem);
 					/*Get latest contract item and map with the sc request item*/
 					for (CtContractItem latestContractItem : getManagedBean().getCtContract().getLatestContractVer().getCtContractItems()) {
 						if (contractItem.getScRequestItem().getRequestNoteItemId().equals(latestContractItem.getScRequestItem().getRequestNoteItemId())) {
@@ -670,5 +675,32 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
+	}
+	
+	/**
+	 * The method used to search for the item.
+	 */
+	public void searchItemAction() {
+		if (getManagedBean().getSearchItemString() != null &&
+				!getManagedBean().getSearchItemString().trim().isEmpty()) {
+			getManagedBean().getContractItemList().clear();
+			for (CtContractItem ctContractItem : getManagedBean().getContractVer().getCtContractItems()) {
+				if (ctContractItem.getScRequestItem().getItemName().toLowerCase().contains(
+						getManagedBean().getSearchItemString().trim().toLowerCase())) {
+					getManagedBean().getContractItemList().add(ctContractItem);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * The method used to reset the search criteria for item.
+	 */
+	public void resetSearchItemAction() {
+		getManagedBean().setSearchItemString("");
+		getManagedBean().getContractItemList().clear();
+		for (CtContractItem ctContractItem : getManagedBean().getContractVer().getCtContractItems()) {
+			getManagedBean().getContractItemList().add(ctContractItem);
+		}
 	}
 }

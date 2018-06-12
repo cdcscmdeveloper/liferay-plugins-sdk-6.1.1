@@ -40,6 +40,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private String textBeforeSign;
 	private String buttonAction;
+	private String searchItemString;
 
 	private boolean autoUpdate = true;
 	private boolean viewOnly = false;
@@ -50,7 +51,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private CtContractItem selectedItemForSpec;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
-	private List<CtContractItem> ctItemFilter;
+	private List<CtContractItem> contractItemList;
 	private HashMap<Long, CtAgency> agencyMap;
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<PmUser> approverModel;
@@ -131,17 +132,19 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the ctItemFilter
+	 * @return the contractItemList
 	 */
-	public List<CtContractItem> getCtItemFilter() {
-		return ctItemFilter;
+	public List<CtContractItem> getContractItemList() {
+		if(contractItemList == null)
+			contractItemList = new ArrayList<CtContractItem>();
+		return contractItemList;
 	}
 
 	/**
-	 * @param ctItemFilter the ctItemFilter to set
+	 * @param contractItemList the contractItemList to set
 	 */
-	public void setCtItemFilter(List<CtContractItem> ctItemFilter) {
-		this.ctItemFilter = ctItemFilter;
+	public void setContractItemList(List<CtContractItem> contractItemList) {
+		this.contractItemList = contractItemList;
 	}
 
 	/**
@@ -305,5 +308,19 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedItemForSpec(CtContractItem selectedItemForSpec) {
 		this.selectedItemForSpec = selectedItemForSpec;
-	}	
+	}
+	
+	/**
+	 * @return the searchItemString
+	 */
+	public String getSearchItemString() {
+		return searchItemString;
+	}
+
+	/**
+	 * @param searchItemString the searchItemString to set
+	 */
+	public void setSearchItemString(String searchItemString) {
+		this.searchItemString = searchItemString;
+	}
 }
