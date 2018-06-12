@@ -20,10 +20,10 @@
 				styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				styleClass="BtnSpacing" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()"
+				styleClass="BtnSpacing" onclick="blockWidget.show()"
+				oncomplete="blockWidget.hide()" 
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(true)}"
 				process="@all" partialSubmit="true" update="@all" />
 		</c:if>
