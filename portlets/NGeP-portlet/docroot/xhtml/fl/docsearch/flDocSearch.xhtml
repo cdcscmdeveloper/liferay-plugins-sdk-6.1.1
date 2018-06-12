@@ -261,7 +261,8 @@
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.cogst.report']}"/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.cogst.report']}"/><br/><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.no']}" escape="false"/><br/>
 			<p:dataTable id="flDocListDt"
 				value="#{flDocumentBackingBean.managedBean.flDocumentDataModel}" lazy="true"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" rows="10"
