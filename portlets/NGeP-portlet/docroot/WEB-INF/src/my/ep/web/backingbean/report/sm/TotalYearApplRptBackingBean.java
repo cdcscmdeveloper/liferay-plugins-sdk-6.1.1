@@ -73,9 +73,9 @@ public class TotalYearApplRptBackingBean extends
 	}
 
 	private String getLastDayOfMonth() {
-		String date = "01/" + getManagedBean().getMonthFrom() + "/"
-				+ getManagedBean().getYear();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		String date = "01/" + getManagedBean().getMonthTo() + "/"
+				+ getManagedBean().getYearTo();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			Date convertedDate = dateFormat.parse(date);
 			Calendar c = Calendar.getInstance();
