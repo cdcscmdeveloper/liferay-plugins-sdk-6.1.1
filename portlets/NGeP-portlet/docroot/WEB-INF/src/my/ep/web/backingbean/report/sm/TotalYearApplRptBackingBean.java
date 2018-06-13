@@ -41,7 +41,9 @@ public class TotalYearApplRptBackingBean extends
 		String datefrom = "01/" + getManagedBean().getMonthFrom() + "/"
 				+ getManagedBean().getYear();
 		String dateTo = getLastDayOfMonth();
-		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+		if (StringUtils.isBlank(getManagedBean().getZone())) {
+			params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+		}
 		params.put(SmReportConst.PARAM_DATE_FROM, datefrom);
 		params.put(SmReportConst.PARAM_DATE_TO, dateTo);
 
