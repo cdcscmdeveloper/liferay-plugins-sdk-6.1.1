@@ -823,6 +823,7 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
+				checkIsLoiProcessRequired(resDTO.getLoiLoas());
 				// rec supplier in loi list
 				//disableIsLoiRequired(resDTO.getLoiLoas());
 			}
@@ -1952,6 +1953,8 @@ public class LOIDetailBackingBean extends
 					.getRecommendDtlIds();
 			Object payLoadData = getManagedBean().getPayLoad();
 			boolean isLoiRequired  = getManagedBean().isLoiRequired();
+			String currentStatus = getManagedBean().getStatus();
+			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
@@ -1966,6 +1969,8 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setRecommendDtlIds(recommendDtlIds);
 				getManagedBean().setPayLoad(payLoadData);
 				getManagedBean().setLoiRequired(isLoiRequired);
+				getManagedBean().setStatus(currentStatus);
+				getManagedBean().setCurrentStatusId(currentStatusId);
 				reloadLOIList(sourceId);
 				if(null!= scQtFinalization){
 					getManagedBean().setScQt(scQtFinalization.getScQt());
@@ -2010,31 +2015,11 @@ public class LOIDetailBackingBean extends
 	 */
 	public void loiRequiredListener(ScLoiLoa scLoiLoa) {
 		debugLogger("loiRequiredListener");
-		boolean isSubmitButton = Boolean.TRUE;
-
 		int index = getManagedBean().getRecSupplierList().indexOf(scLoiLoa);
 		getManagedBean().getRecSupplierList().set(index, scLoiLoa);
 		List<ScLoiLoa> pendingLois  = getManagedBean().getRecSupplierList();
 
-		for (ScLoiLoa loiLoa : pendingLois) {
-
-			if (null != loiLoa.getLoiRequired()) {
-				if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
-					isSubmitButton = Boolean.FALSE;
-					break;
-				}
-
-			} else{
-				isSubmitButton = Boolean.FALSE;
-				break;
-			}
-		}
-
-		if (isSubmitButton) {
-			getManagedBean().setLoiRequired(Boolean.TRUE);
-		} else {
-			getManagedBean().setLoiRequired(Boolean.FALSE);
-		}
+		checkIsLoiProcessRequired(pendingLois);
 	}
 
 	/**
@@ -5754,5 +5739,28 @@ public class LOIDetailBackingBean extends
 			scLoi.setScLoiAttachment(scLoiAttachment);
 		}
 		return scLoiAttachment;
+	}
+	
+	private void checkIsLoiProcessRequired(List<ScLoiLoa> pendingLoiLoas) {
+		boolean isSubmitButton = true;
+		for (ScLoiLoa loiLoa : pendingLoiLoas) {
+
+			if (null != loiLoa.getLoiRequired()) {
+				if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
+					isSubmitButton = Boolean.FALSE;
+					break;
+				}
+
+			} else{
+				isSubmitButton = Boolean.FALSE;
+				break;
+			}
+		}
+
+		if (isSubmitButton) {
+			getManagedBean().setLoiRequired(Boolean.TRUE);
+		} else {
+			getManagedBean().setLoiRequired(Boolean.FALSE);
+		}
 	}
 }
