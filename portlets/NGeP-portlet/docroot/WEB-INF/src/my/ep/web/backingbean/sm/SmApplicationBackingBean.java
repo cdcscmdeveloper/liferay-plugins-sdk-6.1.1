@@ -8041,6 +8041,21 @@ public class SmApplicationBackingBean extends
 							.getApplnRejectionRemarks(), getManagedBean()
 							.getSmSupplier(), reqDTO);
 
+			// check if category recordstatus=1 and ApprvrDecFlg
+			// or PoDecFlg =1 then set recordstatus=8 (#20507)
+			String applType = getManagedBean().getSmAppl().getApplType();
+			if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							&& ((cat.getApprvrDecFlg() != null && cat
+									.getApprvrDecFlg() == 1) || (cat
+									.getPoDecFlg() != null && cat.getPoDecFlg() == 1))) {
+						cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+					}
+				}
+			}
+
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 			PmRegStatus regStatus = null;
