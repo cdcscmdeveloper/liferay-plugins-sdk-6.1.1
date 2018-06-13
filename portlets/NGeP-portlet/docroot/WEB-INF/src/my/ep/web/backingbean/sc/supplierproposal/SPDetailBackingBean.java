@@ -2209,6 +2209,7 @@ public class SPDetailBackingBean extends
 					smPersonnel);
 			for (SmStaffAcademic staffAcademic : smPersonnel
 					.getSmStaffAcademics()) {
+				if(null!=staffAcademic.getQualificationLevelId()){
 				PmParameterDesc qualificationDesc = qualificationMap
 						.get(staffAcademic.getQualificationLevelId()
 								.longValue());
@@ -2221,6 +2222,7 @@ public class SPDetailBackingBean extends
 
 					technicalStaffBean.getSmStaffAcademics().add(
 							qualificationDesc);
+				}
 				}
 			}
 			smPersonnelsList.add(technicalStaffBean);
