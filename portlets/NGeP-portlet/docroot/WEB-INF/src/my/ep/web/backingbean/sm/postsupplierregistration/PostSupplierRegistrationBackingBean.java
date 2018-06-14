@@ -156,7 +156,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 								getManagedBean().setRejectedApplExist(false);
 								successPayment = false;
 							}else{
-								getManagedBean().setRejectedApplExist(true);
+								if(rejectedPaymentExpired(supplier.getSupplierId()).size() > 0){
+									// to avoid resubmit flow when supplier rejected by system during Registration fee(20119)
+									getManagedBean().setRejectedApplExist(false);
+								}
 							}
 						}else{
 							getManagedBean().setRejectedApplExist(false);
@@ -256,7 +259,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}else{
 			pageRedirect= CONTENT_PAGE;
 		}
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, pageRedirect);
 	}
@@ -1130,6 +1133,22 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}
 		
 		return wf;
+	}
+	
+	private List<SmWorkflowStatus> rejectedPaymentExpired(Long supplierId){
+		//boolean isRejectedApplExist = false;
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		
+		reqDTO.setStatusIds(new ArrayList<Long>());
+		reqDTO.getStatusIds().add(20119L);
+		reqDTO.setSupplierId(supplierId);
+		
+		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.
+				retrieveWorkFlowBySuppIdAndStatusIds(reqDTO);
+		
+		
+		return resDTO.getWorkFlowStatusLs();
 	}
 	
 	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
