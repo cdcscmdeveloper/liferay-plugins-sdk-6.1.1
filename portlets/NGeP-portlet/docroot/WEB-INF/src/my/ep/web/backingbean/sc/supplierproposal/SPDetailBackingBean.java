@@ -902,7 +902,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveTechnicalSpecificationAction(boolean isCompleted) {
-		debugLogger("saveTechnicalSpecificationAction");
+		log.info("saveTechnicalSpecificationAction");
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
@@ -1124,6 +1124,8 @@ public class SPDetailBackingBean extends
 
 			List<TplSpecAnswer> answers = getManagedBean()
 					.getTemplateSpecBean().getSpecAnswerList();
+			log.info("%%%%% Template Spec Answer Size is :"+ getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList().size());
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
