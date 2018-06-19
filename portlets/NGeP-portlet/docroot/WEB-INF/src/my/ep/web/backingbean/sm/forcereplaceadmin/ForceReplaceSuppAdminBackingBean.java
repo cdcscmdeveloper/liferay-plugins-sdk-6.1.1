@@ -121,8 +121,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		// Company not exist
 		if (getManagedBean().getSmSupplier() == null
-				|| (getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && getManagedBean()
-						.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				|| (getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						&& getManagedBean().getSmSupplier()
+								.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_IN_PROGRESS && getManagedBean()
+						.getSmSupplier().getRecordStatusFlg() != 7)) {
 			if (getManagedBean().getAccType().equals(
 					SupplierManagementConst.ACC_GOVT_SELLER)) {
 				// Agency name does not exist for G2G
