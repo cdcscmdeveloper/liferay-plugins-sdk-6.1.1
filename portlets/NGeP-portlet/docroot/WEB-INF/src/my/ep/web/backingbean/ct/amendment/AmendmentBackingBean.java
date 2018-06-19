@@ -1609,7 +1609,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					int chairPersonCount = 0;
 					Long chairPersonId = getParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).getParameterId();
 					for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-						if (committeMember.getMemberRole().getParameterId().equals(chairPersonId)) {
+						if (committeMember.getMemberRole().getParameterId().longValue() == chairPersonId.longValue()) {
 							chairPersonCount++;
 							if (chairPersonCount > 1) {
 								setTabValue("MET");
@@ -3861,7 +3861,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// QCA/QCB, need to be same PTJ
 			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
 					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (orgProfile.getOrgProfileId() == ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()) {
+				if (orgProfile.getOrgProfileId().longValue() == ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId().longValue()) {
 					allowChairpersonRole = true;
 				}
 			} else {	// Others same Ministry
