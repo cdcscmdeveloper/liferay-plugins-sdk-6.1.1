@@ -318,7 +318,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
 				if (userResDTO.getUserOrgList().get(0).getPmOrgProfile() != null
-						&& userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId() == ownerOrgProfileId) {
+						&& userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId().longValue() == ownerOrgProfileId.longValue()) {
 					log.info("userOrgProfileId: "+ userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 					log.info("ownerOrgProfileId: " + ownerOrgProfileId);
 					isValidOrgProfile = true;
