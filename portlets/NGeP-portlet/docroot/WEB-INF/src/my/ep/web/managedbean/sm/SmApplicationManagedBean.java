@@ -424,6 +424,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String applnRejectionRemarks;
 	private String applnOverLapRemarks;
 	private String poToSvcRmrk;
+	private String poUserName;
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private PmParameter glpCert;
@@ -4001,5 +4002,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setInDbAlreadyAuth(boolean inDbAlreadyAuth) {
 		this.inDbAlreadyAuth = inDbAlreadyAuth;
+	}
+
+	public String getPoUserName() {
+		return poUserName;
+	}
+
+	public void setPoUserName(String poUserName) {
+		this.poUserName = poUserName;
 	}
 }
