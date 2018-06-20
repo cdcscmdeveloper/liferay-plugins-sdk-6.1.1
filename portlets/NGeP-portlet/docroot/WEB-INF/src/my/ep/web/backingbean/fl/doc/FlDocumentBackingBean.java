@@ -927,8 +927,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 */
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
-			BigDecimal sumOrderedQty = new BigDecimal(0);
+			BigDecimal sumOrderedQty = null;
 			for(FlFulfilmentItem fulfilmentItem : flRequest.getFlFulfilmentItems()){
+				sumOrderedQty = new BigDecimal(0);
 				for(FlFulfilmentItemAddr itemAddress : fulfilmentItem.getFlFulfilmentItemAddr()){
 					sumOrderedQty = sumOrderedQty.add(itemAddress.getOrderedQty());
 				}
