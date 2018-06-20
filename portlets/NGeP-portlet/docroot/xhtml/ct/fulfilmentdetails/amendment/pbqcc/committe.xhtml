@@ -72,12 +72,12 @@
 					 </ui:fragment>
 					<ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
 						<p:selectOneMenu id="appaction" disabled="#{amendmentBackingBean.managedBean.confirmMeeting or amendmentBackingBean.managedBean.disableMeetingDetails}"
-						    value="#{ctCommitteeVar.memberRole.parameterId}" 
+						    value="#{ctCommitteeVar.memberRoleId}" 
 						     style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctCommitteeVar)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"  
 							   update=":form:panelHeaderException, committeRepresentId"
-							   listener="#{amendmentBackingBean.validateDuplicateChairperson(ctCommitteeVar.memberRole.parameterId, index)}"></p:ajax>
+							   listener="#{amendmentBackingBean.validateDuplicateChairperson(ctCommitteeVar.memberRoleId)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>
@@ -92,7 +92,7 @@
 					<p:selectOneMenu  id="representativeType" required="true"
 						value="#{ctCommitteeVar.representativeType.parameterId}" 
 						disabled="#{amendmentBackingBean.managedBean.confirmMeeting or amendmentBackingBean.managedBean.disableMeetingDetails}"
-						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctCommitteeVar.memberRole.parameterId, ctCommitteeVar.pnp)}"
+						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctCommitteeVar.memberRoleId, ctCommitteeVar.pnp)}"
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{amendmentBackingBean.getRepresentativeDropdown()}" />
