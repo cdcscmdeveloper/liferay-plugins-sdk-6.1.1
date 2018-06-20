@@ -1609,7 +1609,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					int chairPersonCount = 0;
 					Long chairPersonId = getParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).getParameterId();
 					for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-						if (committeMember.getMemberRole().getParameterId().longValue() == chairPersonId.longValue()) {
+						if (committeMember.getMemberRoleId().longValue() == chairPersonId.longValue()) {
 							chairPersonCount++;
 							if (chairPersonCount > 1) {
 								setTabValue("MET");
@@ -2888,6 +2888,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				committeeMember.setCtAmendment(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
 				committeeMember.setPmUser(users);
 				committeeMember.setMemberRole(new PmParameter());
+				committeeMember.setMemberRoleId(null);
 				committeeMember.setMemberName(users.getUserName());
 				committeeMember.setIcPassport(users.getIdentificationNo());
 				committeeMember.setGrade(users.getGrade());
@@ -3280,7 +3281,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
-	public void validateDuplicateChairperson(Long parameterId, int index) throws Exception {
+	public void validateDuplicateChairperson(Long parameterId) throws Exception {
 		if (parameterId == null || parameterId.intValue() == 0) {
 			return;
 		}
@@ -3289,7 +3290,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
 				if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
-						&& committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
+						&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
 					counter++;
 					if (counter == 2) {
 						throw new EpException(MessageConst.ERROR_750008);
@@ -3473,9 +3474,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		boolean representativeDirector = true;
 
 		for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-			if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null) {
+			if (committeMember.getMemberRole() != null && committeMember.getMemberRoleId() != null) {
 				String representativeCode = "";
-				String parameterCode = ParameterHelper.getInstance().getPmParameterById(committeMember.getMemberRole().getParameterId()).getParameterCode();
+				String parameterCode = ParameterHelper.getInstance().getPmParameterById(committeMember.getMemberRoleId()).getParameterCode();
 
 				if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 					chairpersonRole = false;
@@ -3529,7 +3530,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						representativeDirector = false;  
 					}
 				}
-			} else if (committeMember.getMemberRole() == null || committeMember.getMemberRole().getParameterId() == null) {
+			} else if (committeMember.getMemberRole() == null || committeMember.getMemberRoleId() == null) {
 				setTabValue("MET");
 				new EpException(MessageConst.ERROR_750025);
 			}
