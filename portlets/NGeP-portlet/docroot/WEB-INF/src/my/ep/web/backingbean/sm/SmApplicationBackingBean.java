@@ -47,6 +47,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -9416,6 +9417,10 @@ public class SmApplicationBackingBean extends
 							SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						getManagedBean().setApprvrSecReview(rev);
 						containsSecRev = true;
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setUserId(rev.getCreatedBy());
+						UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
+						getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
 					}
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
