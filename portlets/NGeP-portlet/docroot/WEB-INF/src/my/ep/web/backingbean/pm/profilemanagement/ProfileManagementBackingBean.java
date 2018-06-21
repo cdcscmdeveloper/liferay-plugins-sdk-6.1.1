@@ -1,14 +1,8 @@
 package my.ep.web.backingbean.pm.profilemanagement;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,8 +20,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -102,6 +94,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -1139,13 +1132,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																	// expire
 																	// Date to
 																	// SyetemDate
-
+				EpException ex = null;
 				if (isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())) {
 					// revert it to active
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770167);
+				} else if ((ex = isAnyPendingDocForUserRole(
+						this.getManagedBean().getSelectedUserOrg() != null ? this.getManagedBean().getSelectedUserOrg().getPmUserRoles() : null, 
+						this.getManagedBean().getSelectedUser().getUserId())) != null) {
+					// revert it to active
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					// hit error and exit
+					throw ex;
 				} else {
 					if (isActiveUserGroupUser() != null) {
 						// revert it to active
@@ -1660,11 +1660,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		if (pmUserRole != null) {
 			if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				EpException ex = null;
 				if (isAnyPendingTaskForUserRole(pmUserRole, this.getManagedBean().getSelectedUser().getLoginId())) {
 					// revert it to active
 					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770168);
+				} else if ((ex = isAnyPendingDocForUserRole(pmUserRole, this.getManagedBean().getSelectedUser().getUserId())) != null) {
+					// revert it to active
+					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					// hit error and exit
+					throw ex;
 				} else if ((RoleCode.FL_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode())
 						|| RoleCode.RN_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode()))
 						&& isActiveUserGroupUser() != null) {
@@ -1771,6 +1777,54 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			anyPendingTask = PmCommonUtil.isAnyPendingTask(loginId, statusIds);
 		}
 		return anyPendingTask;
+	}
+	
+	/**
+	 * Check if any pending document for user role
+	 * 
+	 * @param pmUserRole
+	 * @param userId
+	 * @return
+	 */
+	private EpException isAnyPendingDocForUserRole(PmUserRole pmUserRole, long userId) {
+		List<PmUserRole> pmUserRoles = new ArrayList<PmUserRole>();
+		pmUserRoles.add(pmUserRole);
+		return isAnyPendingDocForUserRole(pmUserRoles, userId);
+	}
+	
+	/**
+	 * Check if any pending document for user roles
+	 * 
+	 * @param pmUserRoles
+	 * @param userId
+	 * @return
+	 */
+	private EpException isAnyPendingDocForUserRole(List<PmUserRole> pmUserRoles, long userId) {
+		logger.info("isAnyPendingDocForUserRole");
+		IUserSO userSO = null;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(userId);
+			reqDTO.setRoleCodes(new ArrayList<String>());
+			if (CollectionUtils.isNotEmpty(pmUserRoles)) {
+				for (PmUserRole pmUserRole : pmUserRoles) {
+					if (pmUserRole.getPmRole() != null) {
+						reqDTO.getRoleCodes().add(pmUserRole.getPmRole().getRoleCode());	
+					}
+				}
+			}			
+			userSO.checkAnyActiveTransactions(reqDTO);
+		} catch (EpException epx) {
+			return epx;
+		} catch (Exception ex) {
+			return new EpException(ex.getMessage());
+		} finally {
+			userSO = null;
+		}
+		
+		return null;
 	}
 
 	/**
