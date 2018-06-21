@@ -55,7 +55,6 @@
 				</f:facet>
 
 				<ac:dateTime id="evaluationMeetingId"
-					mindate="#{evaluationBackingBean.managedBean.today}"
 					required="true" label="#{lbl['lbl.sc.meeting.date']}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{meeting.meetingDate}" update="@([id$=evaluationMeetingId])"

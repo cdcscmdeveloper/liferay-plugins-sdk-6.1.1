@@ -80,8 +80,7 @@
 									<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 								</f:facet>
 
-								<ac:dateTime id="meetingDate"
-									mindate="#{suppFinalMeetingBackingBean.managedBean.currentDate}"
+								<ac:dateTime id="meetingDate"									
 									required="#{!meeting.selected}"
 									label="#{lbl['lbl.sc.meeting.date']}"
 									disabled="#{disableMeeting}" value="#{meeting.meetingDate}"
