@@ -3839,6 +3839,20 @@ public class SmApplicationUtil {
 
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	public static boolean hasOtherActiveTransactions(SmSupplier smSupplier) {
+
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.hasOtherActiveTransactionsForSupplier(reqDTO);
+
+		return resDTO.isHasActiveTransaction();
+	}
 
 	/**
 	 * Check if there is any active sm appl for supplier.
