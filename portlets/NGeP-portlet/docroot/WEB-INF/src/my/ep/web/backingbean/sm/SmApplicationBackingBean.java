@@ -787,7 +787,9 @@ public class SmApplicationBackingBean extends
 
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
-				if (hasActiveTransactions) {
+				boolean hasOtherActiveTransactions = SmApplicationUtil
+						.hasOtherActiveTransactions(currSupp);
+				if (hasActiveTransactions || hasOtherActiveTransactions) {
 					throw new EpException(MessageConst.ERROR_722565);
 				}
 			}
