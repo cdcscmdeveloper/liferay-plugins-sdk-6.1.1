@@ -6,6 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
+	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.tpl.spec.content.answer' : 'lbl.tpl.spec.content.note'}" />
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
@@ -38,7 +39,8 @@
 			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.ranking.tooltip']}" />
 		</f:facet>
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.note']}" rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">	
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:200px;" headerText="#{lbl[remarklbl]}"
+		rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) or isSqSpec}">
 	</p:column>
 	</ui:define>
 	</ui:decorate>
@@ -198,9 +200,11 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</h:outputText>
 	</p:column>
-	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
-		<p:inputTextarea id="answerRemarks" label="#{lbl['lbl.tpl.spec.content.note']}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
-		onmouseout="limitTextArea(this,1000);">
+	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
+		<p:inputTextarea id="answerRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
+		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
+		<p:ajax partialSubmit="true" process="@this" update="@this" />
 		<f:validateLength for="answerRemarks" maximum="1000" />
 		</p:inputTextarea>
 		<p:message id="answerRemarksMsg" for="answerRemarks" display="icon" />
