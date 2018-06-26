@@ -83,7 +83,7 @@
            	<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
            	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
-           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;" />
 		   	<p:outputLabel value="#{lbl['lbl.ct.termination.type']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}" />
 		   	<p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.searchTerminationType}" 
 		   	    style="width:200px; margin-bottom:5px" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
