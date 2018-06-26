@@ -915,19 +915,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								//Rule : ITEM_THRESHOLD For 20k
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 									if(!isShowMessage){
-										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-										
-										FacesContext.getCurrentInstance().addMessage(
-												null,
-												new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-														.getMessage(
-																MessageConst.INFO_760036,
-																new String[] {requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()},
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes().getUserLocale())));
+										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);																				
 										
 //										throw new EpException(MessageConst.ERROR_760036,
 //												new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
+										
+										throw new EpException(MessageConst.ERROR_760036,
+												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
 									}
 								}
 							} else {
