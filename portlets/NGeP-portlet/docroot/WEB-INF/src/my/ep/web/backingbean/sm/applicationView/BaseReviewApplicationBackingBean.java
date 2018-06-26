@@ -2074,7 +2074,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		SmAppl smAppl = getApplByLoginRole(selectedSmAppl);
 		setApplication(smAppl);
-		
+
 		getManagedBean().setRejectReason(getApplicationRejectionReason());
 
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
@@ -2103,7 +2103,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public String getApplicationRejectionReason() {
 		String rejectReasons = StringUtils.EMPTY;
-		if (getManagedBean().getSmAppl().isResubmit()
+		if (getManagedBean().getSmAppl().isActiveAppl()
+				&& getManagedBean().getSmAppl().isResubmit()
 				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
 
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
