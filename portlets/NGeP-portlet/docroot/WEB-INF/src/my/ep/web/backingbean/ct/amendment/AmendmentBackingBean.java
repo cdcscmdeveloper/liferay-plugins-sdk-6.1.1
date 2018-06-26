@@ -3849,32 +3849,56 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	private boolean allowChairpersonRole(CtCommitteeMember committeeMember) {
 		boolean allowChairpersonRole = false;
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
+		
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);		
 		PmOrgProfile orgProfile = null;
 
 		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
 			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			
+			//Bug #19918 Unable to assign Chairperson QCA/QCB from other PTJ within same ministry
+			Long orgProfileId = orgProfile.getOrgProfileId();
+			Long ctOwnerOrgProfileId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId();
+			PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(ctOwnerOrgProfileId);
+			PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfileId);
+			
+			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
+			
+			if (contractMinistry != null && committeeMinistry != null
+					&& contractMinistry.getOrgProfileId() == committeeMinistry.getOrgProfileId()) {	
+				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
+				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
+				
+				allowChairpersonRole = true;
+			}
+			
+			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
 			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
 					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (orgProfile.getOrgProfileId().longValue() == ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId().longValue()) {
-					allowChairpersonRole = true;
-				}
-			} else {	// Others same Ministry
-				PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
-						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
-				if (contractMinistry != null && committeeMinistry != null
-						&& contractMinistry.getOrgProfileId() == committeeMinistry.getOrgProfileId()) {
+				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
+				
+				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
 					allowChairpersonRole = true;
 				}
 			}
+//			} else {	// Others same Ministry
+//				PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
+//						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+//				PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+//				if (contractMinistry != null && committeeMinistry != null
+//						&& contractMinistry.getOrgProfileId() == committeeMinistry.getOrgProfileId()) {
+//					allowChairpersonRole = true;
+//				}
+//			}
+			//end of Bug #19918
 		}
+		
 		return allowChairpersonRole;
 	}
 
