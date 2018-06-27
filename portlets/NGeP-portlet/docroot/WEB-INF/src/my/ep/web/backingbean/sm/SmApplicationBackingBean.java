@@ -6684,6 +6684,8 @@ public class SmApplicationBackingBean extends
 	 * Make a call to the BPM for supplier submitting the application.
 	 */
 	public void initiateSmApplicationTask() {
+		
+		System.out.println("hasif initiateSmApplicationTask");
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		if (getManagedBean().getSmAppl().isResubmit()) {
@@ -9420,9 +9422,11 @@ public class SmApplicationBackingBean extends
 						getManagedBean().setApprvrSecReview(rev);
 						containsSecRev = true;
 						UserReqDTO userReqDTO = new UserReqDTO();
-						userReqDTO.setUserId(rev.getCreatedBy());
-						UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
-						getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
+						if(rev.getApplSectionReviewId() != null) {
+							userReqDTO.setUserId(rev.getCreatedBy());
+							UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
+							getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
+						}
 					}
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
