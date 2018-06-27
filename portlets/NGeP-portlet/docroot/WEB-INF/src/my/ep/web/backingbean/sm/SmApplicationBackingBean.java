@@ -1280,10 +1280,12 @@ public class SmApplicationBackingBean extends
 			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
 			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
-			getManagedBean().setRejectReasonsMsg(
-					SmCommonUtil
-							.getHtmlApplicationRejectReasons(latestRejectedAppl
-									.getSmApplRejectReasons()));
+			if(latestRejectedAppl!=null){
+				getManagedBean().setRejectReasonsMsg(
+						SmCommonUtil
+								.getHtmlApplicationRejectReasons(latestRejectedAppl
+										.getSmApplRejectReasons()));
+			}
 		}
 
 		// set supplier disciplinary action status for PO/Approver review page
