@@ -9406,16 +9406,16 @@ public class SmApplicationBackingBean extends
 							SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						getManagedBean().setApprvrSecReview(rev);
 						containsSecRev = true;
-						UserReqDTO userReqDTO = new UserReqDTO();
-						if(rev.getCreatedBy() != null) {
-							userReqDTO.setUserId(rev.getCreatedBy());
-							UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
-							getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
-						}
 					}
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						getManagedBean().setPoSecReview(rev);
+						if(rev.getCreatedBy() != null) {
+							UserReqDTO userReqDTO = new UserReqDTO();
+							userReqDTO.setUserId(rev.getCreatedBy());
+							UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
+							getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
+						}
 					}
 					if (rev.getPmRegStatus() != null
 							&& rev.getPmRegStatus().getPmStatus() != null) {
