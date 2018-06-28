@@ -4381,8 +4381,20 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedCategory().setCategoryL3Name(
 					getManagedBean().getSelectedCategory().getPmCategoryL3()
 							.getCategoryName());
-			getManagedBean().getSmAppl().getSmSupplierCategories()
-					.add(getManagedBean().getSelectedCategory());
+
+			// check if added category already inside in main list, just set
+			// back to pending activation status
+			SmSupplierCategory cat = (SmSupplierCategory) EntityHelper
+					.getEntityBySinglePropertyFromList(getManagedBean()
+							.getSelectedCategory().getPmCategoryL3()
+							.getCategoryL3Id(), getManagedBean().getSmAppl()
+							.getSmSupplierCategories(), "pmCategoryL3");
+			if (cat != null) {
+				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			} else {
+				getManagedBean().getSmAppl().getSmSupplierCategories()
+						.add(getManagedBean().getSelectedCategory());
+			}
 
 			saveOrUpdateAppl();
 			SmApplicationUtil
