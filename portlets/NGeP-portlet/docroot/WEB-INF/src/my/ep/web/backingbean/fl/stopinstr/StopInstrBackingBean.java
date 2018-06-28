@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.stopinstr;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -333,7 +334,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				flStopInstrItem.setFlStopInstr(getManagedBean().getStopInstr());
 				flStopInstrItem.setRecalledQty(itemAddr.getOrderedQty().subtract(itemAddr.getChargeReceivedQty()));
 				
-				flStopInstrItem.setRecalledAmt(flStopInstrItem.getRecalledQty().multiply(itemAddr.getGstUnitPrice()));
+				flStopInstrItem.setRecalledAmt(flStopInstrItem.getRecalledQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 				stopInstrItems.add(flStopInstrItem);
 			}
 		}
