@@ -852,18 +852,15 @@ public class SmApplicationUtil {
 
 		}
 		if (validCat) {
-			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (category.getPmCategoryL3().getCategoryL3Id() != 99
-						&& category.getPmCategoryL3().getCategoryL3Id() == cat
-								.getPmCategoryL3().getCategoryL3Id()
-						&& category.getPmCategoryL2().getCategoryL2Id() == cat
-								.getPmCategoryL2().getCategoryL2Id()
-						&& category.getPmCategoryL1().getCategoryL1Id() == cat
-								.getPmCategoryL1().getCategoryL1Id()) {
+			if (category.getPmCategoryL3() != null
+					&& category.getPmCategoryL3().getCategoryL3Id() != 99) {
+				SmSupplierCategory cat = (SmSupplierCategory) EntityHelper
+						.getEntityBySinglePropertyFromList(category
+								.getPmCategoryL3().getCategoryL3Id(), appl
+								.getSmSupplierCategories(), "pmCategoryL3");
+				if(cat.getRecordStatusFlg()!=DbValueConst.RECORD_STATUS_DELETED){
 					validCat = false;
 					throw new EpException(MessageConst.ERROR_722525);
-					// break;
-
 				}
 			}
 		}
@@ -3839,7 +3836,7 @@ public class SmApplicationUtil {
 
 		return resDTO.isHasActiveTransaction();
 	}
-	
+
 	public static boolean hasOtherActiveTransactions(SmSupplier smSupplier) {
 
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
