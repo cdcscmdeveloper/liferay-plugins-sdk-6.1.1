@@ -911,19 +911,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
 
 							if (ruleValueList != null && ruleValueList.size() > 0) {
-								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+								PmConfigRuleValue configRuleValue = ruleValueList.get(0);								
 								//Rule : ITEM_THRESHOLD For 20k
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 									if(!isShowMessage){
-										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);																				
-										
-//										throw new EpException(MessageConst.ERROR_760036,
-//												new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
-										
-										throw new EpException(MessageConst.ERROR_760036,
-												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
+										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+										FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+												MessageUtils.getMessage(MessageConst.ERROR_760036, 
+														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
+														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 									}
-								}
+								}														
 							} else {
 								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 							}
