@@ -603,18 +603,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						} else {
 							item.setChkStatus(true);		        		   
 						}
-
-						if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-							getManagedBean().setItemProductExist(true);
-							Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-							Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-							ctBackingBean.getManagedBean().getCtItemList().add(item);
-						} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-							getManagedBean().setItemServiceExist(true);
-							Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-							ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
-						}
 					}
+					
+					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+						getManagedBean().setItemProductExist(true);
+						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						ctBackingBean.getManagedBean().getCtItemList().add(item);
+					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+						getManagedBean().setItemServiceExist(true);
+						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
+					}					
 				}
 			}
 			// Retrieve Zone
