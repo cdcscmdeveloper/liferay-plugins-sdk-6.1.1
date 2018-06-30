@@ -15,6 +15,8 @@ import javax.persistence.PersistenceException;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -27,6 +29,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -102,6 +105,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(false);
+		
+		//Redmine #18959
+		if(getManagedBean().isHasActiveTransaction()) {
+			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
+			getManagedBean().setActiveApplList(applList);
+		}
+		getManagedBean().setExistingStatusId(getManagedBean().getSmAppl().getPmStatus().getStatusId());
+		
 		initPhysicalConsultingCatcode();
 		getManagedBean().setExistingRegStatus(
 				getManagedBean().getSmAppl().getPmRegStatus());
@@ -159,7 +170,12 @@ public class SupplierDataMaintenanceBackingBean extends
 		validateDisciplinaryAction();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
 
+		//reset value
+		getManagedBean().setHasRegStatusChanged(false);
+		getManagedBean().setHasMofExpiryDateChanged(false);		
+		
 		// Check if got active application for this supplier
 		SmAppl activeAppl = SmCommonUtil
 				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
@@ -184,16 +200,59 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
-			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
-					getManagedBean().getSmAppl(),
-					getActionDesc(getManagedBean().getSmAppl()));
-			reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
 
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				reqDTO.setSmDisciplinaryAction(getManagedBean()
 						.getDisciplineVO().getSmDiscplinaryAction());
 			}
-
+			 
+			//Redmine #18959
+			//to check if regStatus changed 
+			if(getManagedBean().getExistingRegStatus().getRegStatusId().compareTo(getPmRegStatusByStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId()).getRegStatusId()) != 0) {
+				getManagedBean().setHasRegStatusChanged(true);				
+			}
+			//to check if MOF expiry date changed
+			if(getManagedBean().getExistingMofExpiryDate().compareTo(getManagedBean().getSmMofAccount().getExpDate()) != 0) {
+				getManagedBean().setHasMofExpiryDateChanged(true);				
+			}
+			
+			//set tracking diary for Registering Status
+			if(getManagedBean().isHasRegStatusChanged()) {				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"RS"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}
+			//set tracking diary for MOF Expiry Date
+			if(getManagedBean().isHasMofExpiryDateChanged()) {				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"ED"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}
+			//set tracking diary for Added Category
+			if(getManagedBean().getActiveCategoryList().size() > 0) {				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"AC"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}
+			//set tracking diary for Deleted Category
+			if(getManagedBean().getDeleteApprovedCategories().size() > 0) {				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"DC"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}
+			//set tracking diary for Disciplinary Action
+			if (getManagedBean().isEditDisciplinaryAction()) {				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"DA"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}
+			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
+			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -438,6 +497,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		categ.setPmCategoryL3(pmCategoryL3);
 		categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
 		categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1());
+		categ.setApplRefId(getManagedBean().getSmAppl().getApplId());
 		getManagedBean().setSelectedCategory(categ);
 		saveSelectedCategory();
 	}
@@ -958,11 +1018,12 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void checkIfSupplierHasActiveTransaction(boolean isCancelMof) {
 		boolean alreadyHasMsg = false;
+		boolean hasActiveAppl = false;
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (isCancelMof) {
 			if (SmApplicationUtil.hasActiveTransactions(getManagedBean()
 					.getSmSupplier())) {
-				getManagedBean().setHasActiveTransaction(true);
+				hasActiveAppl = true;
 				alreadyHasMsg = true;
 				SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
 						MessageUtils.getMessage(MessageConst.ERROR_722609,
@@ -974,12 +1035,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (!alreadyHasMsg
 				&& SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
 						.getSmSupplier())) {
-			getManagedBean().setHasActiveTransaction(true);
-			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
+			hasActiveAppl = true;
+			//Redmine #18959
+			/*SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
 					MessageUtils.getMessage(MessageConst.ERROR_722608,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale()), null);
+							new FacesScopes().getUserLocale()), null);*/
 		}
+		getManagedBean().setHasActiveTransaction(hasActiveAppl);
 	}
 
 	/**
@@ -1105,4 +1168,105 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 		}
 	}
+	
+	// Redmine #18959
+	public void onViewActiveApplList() {
+		RequestContext.getCurrentInstance().execute(
+				"activeApplDialog.show();");
+	}		
+	
+	private String getTrackingActionDesc(SupplierDataMaintenanceReqDTO reqDTO, String val) {
+		StringBuffer sb = new StringBuffer();
+
+		switch(val) {
+		case "RS": // Registration Status
+			sb.append("Status Pendaftaran telah dikemaskini daripada ")
+				.append(getStatusDescByStatusIdForTracking(getManagedBean().getExistingStatusId()).getStatusName()).append(" kepada ")
+				.append(getStatusDescByStatusIdForTracking(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId()).getStatusName());
+		break;
+		case "ED": // MOF Expiry Date
+			sb.append("Tarikh Luput Akaun MOF Pembekal telah dikemaskini dari ")
+				.append(DateUtils.dateToString("dd/MM/yyyy", reqDTO.getOldMofExpiryDate())).append(" kepada ")
+				.append(DateUtils.dateToString("dd/MM/yyyy", getManagedBean().getSmMofAccount().getExpDate()));
+			break;
+		case "DA": // Disclipinary Action
+			sb.append("Pembekal telah dikenakan tindakan tatatertib dari ")
+				.append(DateUtils.dateToString("dd/MM/yyyy", reqDTO.getSmDisciplinaryAction().getStartDate())).append(" hingga ")
+				.append(DateUtils.dateToString("dd/MM/yyyy", reqDTO.getSmDisciplinaryAction().getEndDate()));
+		break;
+		case "AC": // Add new Category Code			
+			if (!EntityHelper.isCollectionEmpty(reqDTO.getSmAppl().getSmSupplierCategories())) {
+				sb.append("Bidang berikut telah ditambah : ");
+				int i = reqDTO.getNewlyAddedCategories().size();
+				for (SmSupplierCategory sc : reqDTO.getNewlyAddedCategories()) {
+					i = i-1;
+					sb.append(sc.getPmCategoryL1().getCategoryL1Code()
+								+ sc.getPmCategoryL2().getCategoryL2Code()
+								+ sc.getPmCategoryL3().getCategoryL3Code());
+					if(i > 0){
+						sb.append(", ");
+					}
+				}
+			}
+		break;
+		case "DC": // Delete Category Code Approved
+			if (!EntityHelper.isCollectionEmpty(reqDTO.getSmAppl().getSmSupplierCategories())) {
+				sb.append("Bidang berikut telah dihapuskan : ");
+				int i = reqDTO.getDeletedCategories().size();
+				for (SmSupplierCategory sc : reqDTO.getDeletedCategories()) {
+					i = i-1;
+					sb.append(sc.getPmCategoryL1().getCategoryL1Code()
+								+ sc.getPmCategoryL2().getCategoryL2Code()
+								+ sc.getPmCategoryL3().getCategoryL3Code());
+					if(i > 0){
+						sb.append(", ");
+					}
+				}
+			}
+		break;		
+		default:
+			sb = new StringBuffer();
+			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * Get status description by status ID for Tracking purpose
+	 * 
+	 * @param Long
+	 *            statusId
+	 * @return PmStatusDesc
+	 */
+	public static PmStatusDesc getStatusDescByStatusIdForTracking(Long statusId) {
+		PmStatusDesc retVal = null;
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(statusId);
+		reqDTO.setLanguageCode("ms");
+		StatusResDTO resDTO = SmServiceLookup.getStatusSO()
+				.retrieveStatusDescById(reqDTO);
+		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+			retVal = resDTO.getPmStatusDesc();
+		}
+		return retVal;
+	}
+	
+	/**
+	 * Get PmRegStatus by status ID for 
+	 * 
+	 * @param Long
+	 *            statusId
+	 * @return PmRegStatus
+	 */
+	public static PmRegStatus getPmRegStatusByStatusId(Long statusId) {
+		PmRegStatus retVal = null;
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(statusId);
+		StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusByStatusId(reqDTO);
+		if (resDTO != null && resDTO.getPmStatus().getPmRegStatus() != null) {
+			retVal = resDTO.getPmStatus().getPmRegStatus();
+		}
+		return retVal;
+	}
+
 }
