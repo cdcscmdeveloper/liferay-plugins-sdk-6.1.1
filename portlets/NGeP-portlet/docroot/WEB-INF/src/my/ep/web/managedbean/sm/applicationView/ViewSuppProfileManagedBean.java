@@ -48,6 +48,10 @@ public class ViewSuppProfileManagedBean extends
 	private List<SmSupplierCategory> selectedPendingApprovedCategories;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
+	private List<Object[]> activeApplList;
+	private boolean hasRegStatusChanged = false;
+	private boolean hasMofExpiryDateChanged = false;
+	private Long existingStatusId;
 
 	public ViewSuppProfileManagedBean() {
 
@@ -255,6 +259,38 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setPhysicalConsulting(String physicalConsulting) {
 		this.physicalConsulting = physicalConsulting;
+	}
+
+	public List<Object[]> getActiveApplList() {
+		return activeApplList;
+	}
+
+	public void setActiveApplList(List<Object[]> activeApplList) {
+		this.activeApplList = activeApplList;
+	}
+
+	public boolean isHasRegStatusChanged() {
+		return hasRegStatusChanged;
+	}
+
+	public void setHasRegStatusChanged(boolean hasRegStatusChanged) {
+		this.hasRegStatusChanged = hasRegStatusChanged;
+	}
+
+	public boolean isHasMofExpiryDateChanged() {
+		return hasMofExpiryDateChanged;
+	}
+
+	public void setHasMofExpiryDateChanged(boolean hasMofExpiryDateChanged) {
+		this.hasMofExpiryDateChanged = hasMofExpiryDateChanged;
+	}
+
+	public Long getExistingStatusId() {
+		return existingStatusId;
+	}
+
+	public void setExistingStatusId(Long existingStatusId) {
+		this.existingStatusId = existingStatusId;
 	}
 
 }

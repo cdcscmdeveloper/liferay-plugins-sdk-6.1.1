@@ -12193,5 +12193,17 @@ public class SmApplicationUtil {
 		}
 		return categoryCodeBbInstance;
 	}
-
+	
+	public static List<Object[]> getActiveApplList(SmSupplier smSupplier) {
+		List<Object[]> resultList = new ArrayList<Object[]>();
+		
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+		resultList = SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveApplUsingNativeQuery(reqDTO).getResultList();
+		
+		return resultList;		
+	}
+	
 }
