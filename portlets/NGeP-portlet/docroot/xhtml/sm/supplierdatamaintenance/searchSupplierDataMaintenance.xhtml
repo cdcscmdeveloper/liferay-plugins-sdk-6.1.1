@@ -83,6 +83,25 @@
 			
 			<p:outputPanel rendered="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 			
+			<p:outputPanel rendered="#{supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}">
+				<table style="width: 100%;">
+					<tr>
+						<td><br/>
+							<p:graphicImage id="bidAlertImage" value="#{CommonUIConstant.imagePath}/priority.png" style="float:left; padding-right:3px"/>
+							<p:outputLabel value="#{lbl['lbl.sm.maintenance.note1']}" style="color: red;font-weight: bold;float:left; padding-right:3px" />
+							<p:commandLink value="#{lbl['lbl.sm.maintenance.note2']}" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{supplierDataMaintenanceBackingBean.onViewActiveApplList()}"
+								process="@this" partialSubmit="true" update="@form" 
+								style="color: red;font-weight: bold;float: left;text-decoration: underline; padding-right:3px" >
+							</p:commandLink>
+							<p:outputLabel value=" #{lbl['lbl.sm.maintenance.note3']}" style="color: red;font-weight: bold;float:left; padding-right:3px" />							
+						</td>
+					</tr>
+				</table>
+				<br/>
+			</p:outputPanel>
+			
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approvalInfoHeaderPage.xhtml" />
 				
 				<table style="width: 100%;">
@@ -94,7 +113,7 @@
 						<td style="white-space: nowrap; float: right;">
 						    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
 						    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}" 
-						    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}"/>
+						    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
 						</td>
 					</tr>
 				</table>
@@ -122,6 +141,31 @@
 				
 				
 			</p:outputPanel>
+			
+			<p:dialog id="activeApplDialog" header="#{lbl['lbl.sm.success.dialog.header']}"
+				widgetVar="activeApplDialog" showEffect="fade" hideEffect="fade"
+				modal="true" width="600" resizable="false">
+				<p:dataTable id="activeApplDtl" var="smAppl" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{supplierDataMaintenanceBackingBean.managedBean.activeApplList}"
+					rowKey="#{smAppl}">
+					<p:column headerText="#{lbl['lbl.sm.application.no']}" style="text-align:center">
+						<h:outputText value="#{smAppl[0]}" style="float:left;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="text-align:center">
+						<h:outputText value="#{lbl['lbl.sm.appltype.basic']}" rendered="#{smAppl[1] eq 'O'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl[1] eq 'N'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl[1] eq 'B'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl[1] eq 'A'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl[1] eq 'U'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl[1] eq 'C'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="text-align:center">
+						<h:outputText value="#{smAppl[2]}" rendered="#{not empty smAppl[2]}"/>
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[2]}"/>
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
 		
 		</p:outputPanel>
 	</ui:define>

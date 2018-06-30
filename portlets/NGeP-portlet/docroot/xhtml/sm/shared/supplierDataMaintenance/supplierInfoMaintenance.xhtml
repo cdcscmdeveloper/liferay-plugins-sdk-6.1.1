@@ -16,7 +16,7 @@
 	
 					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 							id="regStatusId" required="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId}"
-							disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}"
+							disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 							style="width: 270px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
@@ -56,7 +56,7 @@
 						value="#{lbl['lbl.sm.disciplinary.action.edit']}" /></td>
 				<td>
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickDiscipline()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
