@@ -916,10 +916,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 									if(!isShowMessage){
 										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-										FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-												MessageUtils.getMessage(MessageConst.ERROR_760036, 
-														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
-														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+										throw new EpException(MessageConst.ERROR_760036,
+												new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
 									}
 								}														
 							} else {
