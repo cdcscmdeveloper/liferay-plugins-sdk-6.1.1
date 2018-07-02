@@ -719,7 +719,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void submitAction(String outcome) {
 		debugLogger("submitAction");
 		getManagedBean().setAction(outcome);
-		boolean isDeliveryTermPrompt = Boolean.FALSE;
+		boolean isDeliveryTermPrompt = Boolean.FALSE;		
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		parseRequestNote(scRequestNote, outcome);
@@ -762,14 +762,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-
-		if(!isDeliveryTermPrompt){
-			if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
-					outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
-					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
-				approverAction(outcome);
-			} else{
-				requestNoteSubmit(outcome);
+		
+		
+		if(getManagedBean().isExceededAmountAlerted()){
+			if(!getManagedBean().isExceededMessagePrompt()){
+				getManagedBean().setExceededMessagePrompt(Boolean.TRUE);
+			}
+			else{
+				if(!isDeliveryTermPrompt){
+					if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
+							outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
+							outcome.equals(BpmOutcomeConst.BPM_REJECT)){
+						approverAction(outcome);
+					} else{
+						requestNoteSubmit(outcome);
+					}
+				}
+			}
+		}else{
+			if(!isDeliveryTermPrompt){
+				if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
+						outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
+						outcome.equals(BpmOutcomeConst.BPM_REJECT)){
+					approverAction(outcome);
+				} else{
+					requestNoteSubmit(outcome);
+				}
 			}
 		}
 	}
@@ -916,8 +934,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 									if(!isShowMessage){
 										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-										throw new EpException(MessageConst.ERROR_760036,
-												new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
+										
+										FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+												MessageUtils.getMessage(MessageConst.ERROR_760036, 
+														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
+														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+										
+										
+//										throw new EpException(MessageConst.ERROR_760036,
+//												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
 									}
 								}														
 							} else {
