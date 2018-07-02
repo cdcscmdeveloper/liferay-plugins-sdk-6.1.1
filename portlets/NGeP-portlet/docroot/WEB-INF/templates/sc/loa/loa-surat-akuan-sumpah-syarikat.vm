@@ -38,6 +38,15 @@
 			text-decoration:none;
 			color:#333333;
 		}
+		p #font2, #font2{
+			text-align:justify;
+			font-family:Arial;
+			font-size:12.5px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:red;
+		}
 		u {    
 			border-bottom: 1px dotted #000;
 			text-decoration: none;
@@ -45,6 +54,15 @@
 	</style>
 </head>
 <body>
+<div>
+	<table width='100%'>
+		<tr>
+			<td align='left'>
+				<span id='font1'>No. Surat Setuju Terima : <u>$loaNo</u> </span>
+			</td>
+		</tr>		
+	</table>
+</div>
 <div class='header-cont'>
 	<table width='100%'>
 		<tr>
@@ -95,7 +113,7 @@
 						<td><span id='font1'>(c)</span></td>
 						<td>
 							<span id='font1'>
-							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apaapa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
+							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
 							</span>
 						</td>
 					</tr>
@@ -201,10 +219,6 @@
 		<tr>
 			<td style='text-align:center;' colspan='3'>
 				<span id='font1'>Di hadapan saya,</span>
-				<br/><br/><br/>
-				<span id='font1'>............................................</span>
-				<br/>
-				<span id='font1'>Pesuruhjaya Sumpah</span>
 			</td>
 		</tr>
 		<tr>
@@ -212,8 +226,22 @@
 				<span id='font1'>Catatan:</span>
 				<ol type="i">
 					<li><span id='font1'>*Potong mana yang tidak berkenaan.</span></li>
-					<li><span id='font1'>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF.</span></li>
+					<li><span id='font1'>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF/CIDB.</span></li>
 				</ol> 
+			</td>
+		</tr>
+		<tr>
+			<td colspan='3'>
+				<span id='font1'>Tandatangan & Cop (Kerajaan) : .......................</span>
+				<br /><br /><br />
+				<span id='font1'>Tandatangan & Cop (Syarikat) : .......................</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='3'>
+				<span id='font2'>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak</span>
+				<br />
+				<span id='font2'>Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini</span>
 			</td>
 		</tr>
 	</table>
