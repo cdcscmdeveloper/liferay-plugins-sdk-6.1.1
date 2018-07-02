@@ -3703,6 +3703,7 @@ public class SPDetailBackingBean extends
 			title = title.replaceAll("<", "&#60;");
 			title = title.replaceAll(">", "&#62;");
 			context.put("title", title);
+			context.put("qtNo", scQt.getQtNo());
 		}
 
 		if (pmUser != null) {
