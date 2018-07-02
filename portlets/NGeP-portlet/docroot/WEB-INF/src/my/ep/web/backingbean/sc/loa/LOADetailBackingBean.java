@@ -2106,6 +2106,7 @@ public class LOADetailBackingBean extends
 		VelocityContext context = new VelocityContext();
 
 		context.put("supplierName", scLoiLoa.getSupplierName());
+		context.put("loaNo", scLoa.getLoaNo());
 
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
