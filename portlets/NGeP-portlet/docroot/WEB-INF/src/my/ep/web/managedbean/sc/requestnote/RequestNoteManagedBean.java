@@ -276,6 +276,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/** The is exceeded amount alerted. */
 	private boolean isExceededAmountAlerted = Boolean.FALSE;
 	
+	/** The is exceeded amount message prompt. */
+	private boolean isExceededMessagePrompt = Boolean.FALSE;
+	
 	/** The prompt message. */
 	private String promptMessage;
 	
@@ -1660,6 +1663,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setExceededAmountAlerted(boolean isExceededAmountAlerted) {
 		this.isExceededAmountAlerted = isExceededAmountAlerted;
+	}
+	
+	/**
+	 * @return the isExceededMessagePrompt
+	 */
+	public boolean isExceededMessagePrompt() {
+		return isExceededMessagePrompt;
+	}
+
+	/**
+	 * @param isExceededMessagePrompt the isExceededMessagePrompt to set
+	 */
+	public void setExceededMessagePrompt(boolean isExceededMessagePrompt) {
+		this.isExceededMessagePrompt = isExceededMessagePrompt;
 	}
 
 	/**
