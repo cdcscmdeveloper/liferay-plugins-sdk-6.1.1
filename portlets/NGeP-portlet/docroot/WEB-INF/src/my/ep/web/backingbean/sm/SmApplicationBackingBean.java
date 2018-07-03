@@ -1031,6 +1031,12 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
+
+				// set category as verified (copy from is_approved_by_po)
+				setVerifiedSupplierCategory();
+
+				// set supporting document as verified (copy from is_verified)
+				setVerifiedSupportDoc();
 			}
 
 			if (applicationType
@@ -11458,6 +11464,28 @@ public class SmApplicationBackingBean extends
 		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveApprovedStatusDesc(reqDTO);
+	}
+	
+	public void setVerifiedSupplierCategory() {
+		if (!getManagedBean().getSmAppl().getSmSupplierCategories().isEmpty()) {
+			for (SmSupplierCategory suppCategory : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (suppCategory.getPoDecFlg() != null
+						&& suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
+				}
+			}
+		}
+	}
+
+	public void setVerifiedSupportDoc() {
+		for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (applSuppDoc.getVerifiedFlg() != null) {
+				applSuppDoc
+						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
+			}
+		}
 	}
 
 }
