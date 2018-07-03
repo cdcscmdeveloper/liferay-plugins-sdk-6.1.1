@@ -62,7 +62,7 @@
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
 															     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
-									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" />
+									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				   			</p:selectOneMenu>
 						</td>
 						<td style="margin-top: -3px;">
@@ -126,7 +126,8 @@
 													isBPKTaskAndClaimed) or isQTStatusReFinalized}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
-										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" />
+										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" 
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					   			</p:selectOneMenu>
 							</td>
 							<td style="margin-top: -3px">
