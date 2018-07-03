@@ -12206,4 +12206,24 @@ public class SmApplicationUtil {
 		return resultList;		
 	}
 	
+	public static void clonePoApplSectionReview(
+			SmApplicationManagedBean managedBean) {
+		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
+		for (SmApplSectionReview applSecRev : managedBean.getSmAppl()
+				.getSmApplSectionReviews()) {
+			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev,
+					new String[] { "applSectionReviewId" });
+			apprApplSecRev.setSmAppl(managedBean.getSmAppl());
+			apprApplSecRev
+					.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			apprApplSecRev.setCheckCount(0);
+			apprApplSecRev.setRecommendation(null);
+			apprApplSecRev.setRemarkToApprover(null);
+			apprApplSecRev.setPmRegStatus(null);
+			managedBean.setApprvrSecReview(apprApplSecRev);
+		}
+		managedBean.getSmAppl().getSmApplSectionReviews()
+				.add(managedBean.getApprvrSecReview());
+	}
+	
 }
