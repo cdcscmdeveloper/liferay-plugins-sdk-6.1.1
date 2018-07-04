@@ -218,14 +218,6 @@ public class NoticeBoardBackingBean extends
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage(MAIN_PAGE);
-		boolean hasActiveCancelMOFAppl = false;
-		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-
-		hasActiveCancelMOFAppl = SmApplicationUtil.checkActiveCancelSmApplForSupp(currSupp);
-		if (hasActiveCancelMOFAppl) {
-			throw new EpException(MessageConst.ERROR_722668);
-		}
-		
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
@@ -833,13 +825,6 @@ public class NoticeBoardBackingBean extends
 		retriveBsvDetails(qtId);
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
-		boolean hasActiveCancelMOFAppl = false;
-		
-		hasActiveCancelMOFAppl = SmApplicationUtil.checkActiveCancelSmApplForSupp(smSupplier);
-		if (hasActiveCancelMOFAppl) {
-			throw new EpException(MessageConst.ERROR_722668);
-		}		
-		
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
 			managedBean.setCompanyName(smSupplier.getCompanyName());
 			managedBean.setValidMofNo(true);
