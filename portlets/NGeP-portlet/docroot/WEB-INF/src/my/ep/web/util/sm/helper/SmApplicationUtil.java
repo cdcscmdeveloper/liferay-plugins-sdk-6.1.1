@@ -858,7 +858,8 @@ public class SmApplicationUtil {
 						.getEntityBySinglePropertyFromList(category
 								.getPmCategoryL3().getCategoryL3Id(), appl
 								.getSmSupplierCategories(), "pmCategoryL3");
-				if(cat.getRecordStatusFlg()!=DbValueConst.RECORD_STATUS_DELETED){
+				if (cat != null
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 					validCat = false;
 					throw new EpException(MessageConst.ERROR_722525);
 				}
@@ -9336,6 +9337,7 @@ public class SmApplicationUtil {
 						.getPmState().getStateName());
 				context.put("bankAccountNo", supplierBank.getAccountNo());
 				context.put("bankTnC", supplierBank.getSignatureInstruction());
+				context.put("signatories", supplierBank.getSmChequeSignatories());
 				context = setSignatories(context,
 						supplierBank.getSmChequeSignatories());
 
