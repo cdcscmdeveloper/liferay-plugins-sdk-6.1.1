@@ -67,7 +67,6 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
@@ -475,8 +474,14 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				if(userGroupResDTO.getUserGroupUserList().isEmpty()){
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
-				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getStopInstr().getFlRequest().getDocType(), getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), actor.getUser(),getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
+				
+				PmUser approver = null;
+				if(hasSupplierRole() && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+					approver = fulfilmentSO.retrieveFlActors(getManagedBean().getStopInstr().getFlRequest().getDocType(), getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value()).getUser();
+				} else {
+					approver = getFacesScopes().getUserSessionBean();
+				}
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
 				getManagedBean().getApproverList().addAll(approverUserList);
 			}
 		}
