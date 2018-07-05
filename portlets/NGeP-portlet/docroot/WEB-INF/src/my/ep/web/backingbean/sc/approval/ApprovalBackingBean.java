@@ -796,6 +796,7 @@ public class ApprovalBackingBean extends
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
+			log.info("^^^^^ updateBpmTask call for QT: "+qt.getQtNo());
 
 			CommitteResDTO committeResDto = null;
 			// QuationTenderResDTO qtResDTO = null;
