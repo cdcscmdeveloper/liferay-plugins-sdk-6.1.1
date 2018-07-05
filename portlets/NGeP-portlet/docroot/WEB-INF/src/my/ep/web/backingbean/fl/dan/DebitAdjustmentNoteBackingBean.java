@@ -24,11 +24,13 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -40,6 +42,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
@@ -48,6 +52,7 @@ import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -121,6 +126,21 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
+			
+			//set approver list
+			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(adjustment.getFlRequest().getFulfilmentReqId());
+			UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+			userGroupReqDTO.setGroupId(adjustment.getFlRequest().getPmUserGroup().getUserGroupId());
+			userGroupReqDTO.setApprovalLimit(sumItemAmt);
+			UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
+			if(userGroupResDTO.getUserGroupUserList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}			
+			List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getFacesScopes().getUserSessionBean(), adjustment.getFlRequest().getPmUserGroup().getUserGroupId());
+			reqDTO.setApproverUserList(approverUserList);
+			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
