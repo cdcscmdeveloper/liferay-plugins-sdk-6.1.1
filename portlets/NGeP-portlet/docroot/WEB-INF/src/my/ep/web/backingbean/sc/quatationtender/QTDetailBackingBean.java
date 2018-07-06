@@ -5662,22 +5662,25 @@ public class QTDetailBackingBean extends
 	 * @param approvers
 	 */
 	private void removeDeskOfficer(List<PmUser> approvers) {
-
+      log.debug("removeDeskOfficer");
 		if (CollectionUtils.isNotEmpty(approvers)) {
 			PmUser currentDO = new FacesScopes().getUserSessionBean();
-			boolean isDO = false;
-			int index = 0;
+			//boolean isDO = false;
+			//int index = 0;
 			for (PmUser pmUser : approvers) {
 				if (pmUser.getUserId().equals(currentDO.getUserId())) {
-					isDO = true;
-					index++;
+					log.info("loopremoveDeskOfficer");
+					//isDO = true;
+					//index++;
+					approvers.remove(pmUser);
 					break;
 				}
 			}
-			if (isDO) {
+			/*if (isDO) {
 				approvers.remove(index);
-			}
+			}*/
 		}
+		log.debug("endremoveDeskOfficer");
 	}
 	
 	private boolean checkIsQTAwarded(ScQt scQt) {
