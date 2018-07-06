@@ -320,6 +320,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				validateContractRequest(action);
 			}
 			
+			//Bug #20701 Problem to generate DO - to monitor
+			log.info(":::submitAction() "+ action +". Doc no.: "+ flRequest.getDocNo() +". Deliv adrs size: "+ flRequest.getFlDeliveryAddresses().size());
+			//end Bug #20701			
+			
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
 			reqDTO.setOutcome(action);
@@ -345,7 +349,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.info("Record saved successfully for doc no. "+ flRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
