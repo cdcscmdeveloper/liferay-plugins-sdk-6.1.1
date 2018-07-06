@@ -260,6 +260,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			
+			//Bug #20701 Problem to generate DO - to monitor
+			log.info(":::fulfillmentRequestAction() "+ action +". Doc no.: "+ flFulfilmentRequest.getDocNo() +". Deliv adrs size: "+ flFulfilmentRequest.getFlDeliveryAddresses().size());
+			//end Bug #20701
+			
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
 			reqDTO.setContractRequest(false);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -293,7 +298,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				log.info("Record saved successfully for doc no. "+ flFulfilmentRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
