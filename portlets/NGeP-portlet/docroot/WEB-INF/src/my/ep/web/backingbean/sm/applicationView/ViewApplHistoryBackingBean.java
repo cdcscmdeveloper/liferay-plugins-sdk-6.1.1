@@ -323,30 +323,32 @@ public class ViewApplHistoryBackingBean extends
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrievePOApproverFAandOLASmRemarks
 				(getManagedBean().getSmAppl().getApplNo(), getManagedBean().getSmAppl().getApplId());
 		resetPOApproverDecisionInfo();
-		log.info("PoApproverRemarksList() size:"+ resDTO.getPoApproverRemarksList().size());
-		for(Object[] obj: resDTO.getPoApproverRemarksList()) {
-			boolean isPoUser = false;
-		
-			String userName = (String) obj[0];
-			Date remarkCreatedDate = (Date) obj[1];
-			String roleType = (String) obj[2];
-			String docType = (String) obj[3];
-			String remark = (String) obj[4];
+		if(resDTO.getPoApproverRemarksList() != null) {
+			log.info("PoApproverRemarksList() size:"+ resDTO.getPoApproverRemarksList().size());
+			for(Object[] obj: resDTO.getPoApproverRemarksList()) {
+				boolean isPoUser = false;
 			
-			log.info("userName:"+userName+",remarkCreatedDate:"+remarkCreatedDate+",roleType:"+roleType+",docType:"+docType+",remark:"+remark);
-			
-			if (roleType != null && roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-				isPoUser = true;
+				String userName = (String) obj[0];
+				Date remarkCreatedDate = (Date) obj[1];
+				String roleType = (String) obj[2];
+				String docType = (String) obj[3];
+				String remark = (String) obj[4];
+				
+				log.info("userName:"+userName+",remarkCreatedDate:"+remarkCreatedDate+",roleType:"+roleType+",docType:"+docType+",remark:"+remark);
+				
+				if (roleType != null && roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+					isPoUser = true;
+				}
+				
+				if(isPoUser) {
+					getManagedBean().setPoUserName(userName);
+					setPORemarksInfo(docType, remark, remarkCreatedDate);
+				} else {
+					getManagedBean().setApproverUserName(userName);
+					setApproverRemarksInfo(docType, remark, remarkCreatedDate);
+				}	
 			}
-			
-			if(isPoUser) {
-				getManagedBean().setPoUserName(userName);
-				setPORemarksInfo(docType, remark, remarkCreatedDate);
-			} else {
-				getManagedBean().setApproverUserName(userName);
-				setApproverRemarksInfo(docType, remark, remarkCreatedDate);
-			}	
-		}
+		} 
 	}
 	
 	/**
