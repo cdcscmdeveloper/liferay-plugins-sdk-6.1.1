@@ -20,6 +20,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -33,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
@@ -105,6 +108,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(false);
+		initPOApproverOverlapCategoryRemarkInfo();
 		
 		//Redmine #18959
 		if(getManagedBean().isHasActiveTransaction()) {
@@ -179,6 +183,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		// Check if got active application for this supplier
 		SmAppl activeAppl = SmCommonUtil
 				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
+		boolean isOverlapCategoryRemarkChanged = false;
 
 		try {
 
@@ -200,12 +205,32 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
+			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
+			reqDTO.setRemarkId(getManagedBean().getRemarkId());
 
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				reqDTO.setSmDisciplinaryAction(getManagedBean()
 						.getDisciplineVO().getSmDiscplinaryAction());
 			}
-			 
+			
+			String oriPoApprOverlappedRemark = getManagedBean().getOriPoApprOverlappedRemark();
+			String poApprOverlappedRemark = getManagedBean().getPoApprOverlappedRemark();
+			
+			//Redmine #18959
+			//to check if overlap remark changed 
+			if(oriPoApprOverlappedRemark != null) {
+				if(poApprOverlappedRemark != null && !poApprOverlappedRemark.trim().equals(oriPoApprOverlappedRemark.trim())) {
+					isOverlapCategoryRemarkChanged = true;
+					reqDTO.setUpdatedOverlapCategoryRemark(poApprOverlappedRemark);
+				}
+			} else {
+				if(poApprOverlappedRemark != null && poApprOverlappedRemark.trim().length() > 0) {
+					isOverlapCategoryRemarkChanged = true;
+					reqDTO.setNewlyFilledInOverlapCategoryRemark(poApprOverlappedRemark);
+				}
+			}
+			reqDTO.setOverlapCategoryRemarkChanged(isOverlapCategoryRemarkChanged);
+			
 			//Redmine #18959
 			//to check if regStatus changed 
 			if(getManagedBean().getExistingRegStatus().getRegStatusId().compareTo(getPmRegStatusByStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId()).getRegStatusId()) != 0) {
@@ -249,6 +274,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 						getManagedBean().getSmAppl(),
 						getTrackingActionDesc(reqDTO,"DA"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}
+			
+			//set overlap remark category remark
+			if (isOverlapCategoryRemarkChanged) {		
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"OLA"));
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
@@ -1072,6 +1105,30 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		getManagedBean().setDisciplineVO(discipline);
 	}
+	
+	/**
+	 * Initialized PO or approver overlapping category remarks info
+	 */
+	private void initPOApproverOverlapCategoryRemarkInfo() {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
+		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+		
+		// reset
+	    getManagedBean().setOriPoApprOverlappedRemark(null);
+		getManagedBean().setPoApprOverlappedRemark(null);
+		getManagedBean().setRemarkId(null);
+		
+		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
+				reqDTO);
+		
+		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+			SmRemark remark = resDTO.getRemarksList().get(0);
+			getManagedBean().setPoApprOverlappedRemark(remark.getRemark());
+			getManagedBean().setOriPoApprOverlappedRemark(remark.getRemark());
+			getManagedBean().setRemarkId(remark.getRemarkId());
+		}
+	}
 
 	private DisciplinaryActionVO getInitDisciplinaryActionVO() {
 		DisciplinaryActionVO discipline = new DisciplinaryActionVO();
@@ -1177,7 +1234,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	private String getTrackingActionDesc(SupplierDataMaintenanceReqDTO reqDTO, String val) {
 		StringBuffer sb = new StringBuffer();
-
+		
 		switch(val) {
 		case "RS": // Registration Status
 			sb.append("Status Pendaftaran telah dikemaskini daripada ")
@@ -1223,7 +1280,21 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			}
-		break;		
+		break;
+		case "OLA": // Overlap remark
+			String oriPoApprOverlappedRemark = getManagedBean().getOriPoApprOverlappedRemark();
+			if (oriPoApprOverlappedRemark == null) {
+				oriPoApprOverlappedRemark = "(tiada)";
+			}
+			String latestPoApprOverlappedRemark = getManagedBean().getPoApprOverlappedRemark();
+			if (latestPoApprOverlappedRemark == null) {
+				latestPoApprOverlappedRemark = "(tiada)";
+			}
+			PmUser user = new FacesScopes().getUserSessionBean();
+			sb.append("Catatan pertindihan bidang dari ")
+				.append(oriPoApprOverlappedRemark).append(" kepada ")
+				.append(latestPoApprOverlappedRemark).append(" oleh ").append(user.getUserName());
+		break;
 		default:
 			sb = new StringBuffer();
 			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
