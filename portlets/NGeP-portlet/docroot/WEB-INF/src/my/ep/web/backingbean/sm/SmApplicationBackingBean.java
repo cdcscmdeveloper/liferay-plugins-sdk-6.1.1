@@ -9378,12 +9378,14 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		if (!containsAppRev) {
-			SmApplSectionReview appRev = new SmApplSectionReview();
-			appRev.setSmAppl(getManagedBean().getSmAppl());
-			appRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
-			getManagedBean().setApprvrSecReview(appRev);
-			getManagedBean().getSmAppl().getSmApplSectionReviews()
-					.add(getManagedBean().getApprvrSecReview());
+//			SmApplSectionReview appRev = new SmApplSectionReview();
+//			appRev.setSmAppl(getManagedBean().getSmAppl());
+//			appRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+//			getManagedBean().setApprvrSecReview(appRev);
+//			getManagedBean().getSmAppl().getSmApplSectionReviews()
+//					.add(getManagedBean().getApprvrSecReview());
+			
+			SmApplicationUtil.clonePoApplSectionReview(getManagedBean());
 		}
 
 	}
