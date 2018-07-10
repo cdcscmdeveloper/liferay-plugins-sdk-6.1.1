@@ -279,8 +279,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 					}
 				}
-				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
+				PmUser approver = null;
+				if(hasSupplierRole() && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+					approver = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value()).getUser();
+				} else {
+					approver = getFacesScopes().getUserSessionBean();
+				}
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),approver,getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(reqDTO.isDan()){

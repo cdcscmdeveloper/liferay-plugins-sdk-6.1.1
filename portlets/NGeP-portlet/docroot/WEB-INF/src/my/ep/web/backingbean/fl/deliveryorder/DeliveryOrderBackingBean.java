@@ -293,8 +293,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 					}
 				}
-				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(), getManagedBean().getFulfilmentRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), actor.getUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+				PmUser approver = null;
+				if(hasSupplierRole() && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+					approver = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(), getManagedBean().getFulfilmentRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value()).getUser();
+				} else {
+					approver = getFacesScopes().getUserSessionBean();
+				}
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
