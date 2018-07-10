@@ -205,6 +205,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplier hqGst;
 	private boolean updatePersonnelPage;
 	
+	private String oriPoApprOverlappedRemark;
 	private String poApprOverlappedRemark;
 	private String poUserName;
 	private String poRemark;
@@ -212,6 +213,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String approverUserName;
 	private String approverRemark;
 	private Date approverRemarkCreatedDate;
+	private Long remarkId;
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1514,6 +1516,22 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRejectReason(String rejectReason) {
 		this.rejectReason = rejectReason;
+	}
+
+	public String getOriPoApprOverlappedRemark() {
+		return oriPoApprOverlappedRemark;
+	}
+
+	public void setOriPoApprOverlappedRemark(String oriPoApprOverlappedRemark) {
+		this.oriPoApprOverlappedRemark = oriPoApprOverlappedRemark;
+	}
+
+	public Long getRemarkId() {
+		return remarkId;
+	}
+
+	public void setRemarkId(Long remarkId) {
+		this.remarkId = remarkId;
 	}
 
 }
