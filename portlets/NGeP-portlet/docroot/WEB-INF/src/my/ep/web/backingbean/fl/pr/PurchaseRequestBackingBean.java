@@ -297,6 +297,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			reqDTO.setTriggerBPM(true);
+			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully for doc no. "+ flFulfilmentRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
