@@ -103,7 +103,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		initBumiRecommendNote();
 		initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
 		assignApplActiveAndApprovedCategoryList();
-		setOverLappingCategories();
+		//Redmine #18959 - no need to check overlapping category
+		//setOverLappingCategories();
+		getManagedBean().setOverLappedCategoryMsg("");
+		getManagedBean().setOverLappedCategoryExists(false);
+		
 		setCategoryTypeConfirm();
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
@@ -216,7 +220,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			String oriPoApprOverlappedRemark = getManagedBean().getOriPoApprOverlappedRemark();
 			String poApprOverlappedRemark = getManagedBean().getPoApprOverlappedRemark();
 			
-			//Redmine #18959
+			//Redmine #16927
 			//to check if overlap remark changed 
 			if(oriPoApprOverlappedRemark != null) {
 				if(poApprOverlappedRemark != null && !poApprOverlappedRemark.trim().equals(oriPoApprOverlappedRemark.trim())) {
@@ -607,20 +611,23 @@ public class SupplierDataMaintenanceBackingBean extends
 				overLapCategory);
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
-			if (cat.getPmCategoryL1()
-					.getCategoryL1Id()
-					.equals(getManagedBean().getSelectedCategory()
-							.getPmCategoryL1().getCategoryL1Id())
-					&& cat.getPmCategoryL2()
-							.getCategoryL2Id()
-							.equals(getManagedBean().getSelectedCategory()
-									.getPmCategoryL2().getCategoryL2Id())
-					&& cat.getPmCategoryL3()
-							.getCategoryL3Id()
-							.equals(getManagedBean().getSelectedCategory()
-									.getPmCategoryL3().getCategoryL3Id())) {
-				validCat = false;
-				throw new EpException(MessageConst.ERROR_722533);
+			//Redmine #18959
+			if(cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (cat.getPmCategoryL1()
+						.getCategoryL1Id()
+						.equals(getManagedBean().getSelectedCategory()
+								.getPmCategoryL1().getCategoryL1Id())
+						&& cat.getPmCategoryL2()
+								.getCategoryL2Id()
+								.equals(getManagedBean().getSelectedCategory()
+										.getPmCategoryL2().getCategoryL2Id())
+						&& cat.getPmCategoryL3()
+								.getCategoryL3Id()
+								.equals(getManagedBean().getSelectedCategory()
+										.getPmCategoryL3().getCategoryL3Id())) {
+					validCat = false;
+					throw new EpException(MessageConst.ERROR_722533);
+				}
 			}
 		}
 
