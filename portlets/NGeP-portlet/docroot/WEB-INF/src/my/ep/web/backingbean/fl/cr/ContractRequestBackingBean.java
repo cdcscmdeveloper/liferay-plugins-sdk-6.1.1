@@ -348,6 +348,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			reqDTO.setTriggerBPM(true);
+			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully for doc no. "+ flRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
