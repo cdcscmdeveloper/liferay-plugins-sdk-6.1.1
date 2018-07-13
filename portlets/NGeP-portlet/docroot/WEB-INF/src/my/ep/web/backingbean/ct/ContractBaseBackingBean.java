@@ -193,10 +193,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())
-				||getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()));
 	}
 
 	/**
