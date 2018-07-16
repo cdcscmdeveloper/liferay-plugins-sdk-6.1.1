@@ -180,31 +180,21 @@ body {margin-top: 0px;margin-left: 0px;}
 </table>
 <p class="p7 ft2">Adalah diakui bahawa <NOBR>nama-nama</NOBR> berikut telah diberi kuasa oleh syarikat untuk menandatangani cek akaun di atas:</p>
 <table cellpadding="0" cellspacing="0" class="t2">
+
 <tr>
 	<td class="tr0 td10"><p class="p8 ft1">No<span class="ft3">.</span></p></td>
 	<td class="tr0 td11"><p class="p9 ft1">Nama  No. K/P</p></td>
 	<td class="tr0 td12"><p class="p10 ft1">Tandatangan</p></td>
 </tr>
+
+#foreach($sign in $signatories)
 <tr>
-	<td class="tr7 td13"><p class="p1 ft3">$!csNo0</p></td>
-	<td class="tr7 td14"><p class="p1 ft3">$!csName0<br />$!csIc0</p></td>
+	<td class="tr7 td13"><p class="p1 ft3">$velocityCount</p></td>
+	<td class="tr7 td14"><p class="p1 ft3">$sign.smPersonnel.name<br />$sign.smPersonnel.identificationNo</p></td>
 	<td class="tr7 td15"><p class="p1 ft3"></p></td>
 </tr>
-<tr>
-	<td class="tr8 td13"><p class="p1 ft3">$!csNo1</p></td>
-	<td class="tr8 td14"><p class="p1 ft3">$!csName1<br />$!csIc1</p></td>
-	<td class="tr8 td15"><p class="p1 ft3"></p></td>
-</tr>
-<tr>
-	<td class="tr8 td13"><p class="p1 ft3">$!csNo2</p></td>
-	<td class="tr8 td14"><p class="p1 ft3">$!csName2<br />$!csIc2</p></td>
-	<td class="tr8 td15"><p class="p1 ft3"></p></td>
-</tr>
-<tr>
-	<td class="tr8 td13"><p class="p1 ft3">$!csNo3</p></td>
-	<td class="tr8 td14"><p class="p1 ft3">$!csName3<br />$!csIc3</p></td>
-	<td class="tr8 td15"><p class="p1 ft3"></p></td>
-</tr>
+#end
+
 </table>
 <table cellpadding="0" cellspacing="0" class="t3">
 <tr>
