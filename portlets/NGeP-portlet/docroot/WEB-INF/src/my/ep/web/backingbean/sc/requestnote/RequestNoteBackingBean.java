@@ -763,7 +763,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		
-		
+		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
 		if(getManagedBean().isExceededAmountAlerted()){
 			if(!getManagedBean().isExceededMessagePrompt()){
 				getManagedBean().setExceededMessagePrompt(Boolean.TRUE);
@@ -910,18 +910,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							Long itemId = requestNoteDtl.getRequestItem().getCmItem()
 									.getItemId();
 							flReqDTO.setItemId(itemId);
-							debugLogger("Item Id : " + itemId);
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = " + requestNoteDtl.getRequestNoteDtlId());
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : Item Id : " + itemId);
 							flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
 							Long supplierId = requestNoteDtl.getScRequestSupplierItem().getSupplierId();
 							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
 									.getOrgProfileId());
 							flReqDTO.setSupplierId(supplierId);
-							debugLogger("Supplier Id : " + supplierId);
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : Supplier Id : " + supplierId);
 							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
 							BigDecimal totalAmt = itemSummarySO
 									.retrieveAccumulatedAmount(flReqDTO);
-
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : totalAmt = " + totalAmt);
 							IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 							RuleReqDTO ruleReqDTO = new RuleReqDTO();
