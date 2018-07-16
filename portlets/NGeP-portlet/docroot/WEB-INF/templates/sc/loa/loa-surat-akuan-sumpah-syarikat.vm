@@ -2,6 +2,31 @@
 <head>
 	<style>
 		@page { size: A4 portrait;}
+		@page { @top-left { content: element(header) }}
+		
+		.header {
+			display: block;
+			text-align: left;
+			margin-top: 30px;			
+			position: running(header);
+		}	
+	
+		.footer {
+		   position: fixed;
+		   left: 0;
+		   bottom: 0;
+		   width: 100%;
+		   text-align: left;
+		}
+		
+		.standard{
+			font-family:Arial;
+			font-size:13px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:#333333;
+		}
 		
 		#bottom {
 			clear:both;
@@ -32,16 +57,17 @@
 		p #font1, #font1{
 			text-align:justify;
 			font-family:Arial;
-			font-size:14.5px;
+			font-size:13px;
 			font-weight:normal;
 			font-style:normal;
 			text-decoration:none;
 			color:#333333;
 		}
-		p #font2, #font2{
+
+		.redText{
 			text-align:justify;
 			font-family:Arial;
-			font-size:12.5px;
+			font-size:12px;
 			font-weight:normal;
 			font-style:normal;
 			text-decoration:none;
@@ -54,23 +80,13 @@
 	</style>
 </head>
 <body>
-<div>
-	<table width='100%'>
-		<tr>
-			<td align='left'>
-				<span id='font1'>No. Surat Setuju Terima : <u>$loaNo</u> </span>
-			</td>
-		</tr>		
-	</table>
-</div>
-<div class='header-cont'>
-	<table width='100%'>
-		<tr>
-			<td align='right'>
-				<span id='font1'><b>Lampiran C</b></span>
-			</td>
-		</tr>
-	</table>
+<section class="header">
+	<span class="standard">
+		No. Surat Setuju Terima : <span class="underline">$loaNo</span>
+	</span>
+</section>
+<div class="standard" align="right">
+	<b>Lampiran C</b> <br/><br/>
 </div>
 <div class='title'>
 	<table width='100%'>
@@ -81,6 +97,7 @@
 		</tr>
 	</table>
 </div>
+<br/><br/>
 <div>
 	<table width='100%'>
 		<tr>
@@ -97,7 +114,7 @@
 						<td><span id='font1'>(a)</span></td>
 						<td>
 							<span id='font1'>
-							syarikat <b>TIDAK</b> membuat salah nyataan (misrepresentation) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;
+							syarikat <b>TIDAK</b> membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;
 							</span>
 						</td>
 					</tr>
@@ -150,6 +167,11 @@
 				</p>
 			</td>
 		</tr>
+		<tr>
+			<td style='text-align:center;' colspan='3'>
+				<span id='font1'><br/></span>
+			</td>
+		</tr>		
 		<tr>
 			<td style='width:45%'>
 				<span id='font1'>Diperbuat dan dengan</span>
@@ -218,34 +240,42 @@
 		</tr>
 		<tr>
 			<td style='text-align:center;' colspan='3'>
-				<span id='font1'>Di hadapan saya,</span>
+				<span id='font1'><br/></span>
+			</td>
+		</tr>			
+		<tr>
+			<td style='text-align:center;' colspan='3'>
+				<span id='font1'>Di hadapan saya,<br/><br/></span>
+			</td>
+		</tr>		
+		<tr>
+			<td style='text-align:center;' colspan='3'>
+				<span id='font1'>.............................................</span>
 			</td>
 		</tr>
 		<tr>
-			<td colspan='3'>
-				<span id='font1'>Catatan:</span>
-				<ol type="i">
-					<li><span id='font1'>*Potong mana yang tidak berkenaan.</span></li>
-					<li><span id='font1'>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF/CIDB.</span></li>
-				</ol> 
-			</td>
-		</tr>
-		<tr>
-			<td colspan='3'>
-				<span id='font1'>Tandatangan & Cop (Kerajaan) : .......................</span>
-				<br /><br /><br />
-				<span id='font1'>Tandatangan & Cop (Syarikat) : .......................</span>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='3'>
-				<span id='font2'>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak</span>
-				<br />
-				<span id='font2'>Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini</span>
+			<td style='text-align:center;' colspan='3'>
+				<span id='font1'>Pesuruhjaya Sumpah</span>
 			</td>
 		</tr>
 	</table>
 </div>
-
+<div class="standard" style="margin-top: 4em;">
+	Catatan:   
+	<ul type="i" class="standard" style="list-style-type:lower-roman;">
+		<li>*Potong mana yang tidak berkenaan</li>
+		<li>Surat akuan ini hendaklah dikemukakan bersama Surat Perwakilan Kuasa</li>
+	</ul> 		
+</div>	
+<section class="footer">
+	<p class="standard">
+	Tandatangan & Cop (Kerajaan) : .......................<br/><br/>
+	Tandatangan & Cop (Syarikat) : .......................<br/>
+	</p>
+	<span class="redText">
+	Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+	Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+	</span>
+</section>
 </body>
 </html>
