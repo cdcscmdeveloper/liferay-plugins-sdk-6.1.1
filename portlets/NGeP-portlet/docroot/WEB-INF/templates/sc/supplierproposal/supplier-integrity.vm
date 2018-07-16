@@ -2,7 +2,23 @@
 <head>
 	<style>
 		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
+		@page { @top-left { content: element(header) }}
+		@page { @bottom-left { content: element(footer) }}
+		
+		.header {
+			display: block;
+			text-align: left;
+			margin-top: 30px;			
+			position: running(header);
+		}	
+	
+		.footer {
+		   position: running(footer);
+		   left: 0;
+		   bottom: 0;
+		   width: 100%;
+		   text-align: left;
+		}
 		
 		.standard{
 			font-family:Arial;
@@ -12,24 +28,9 @@
 			text-decoration:none;
 			color:#333333;
 		}
-				
-		.footer {
-			display: block; text-align: center;
-			position: running(footer);
-		}
 		
 		.underline {
 			text-decoration: underline;
-		}
-		
-		.blackText{
-			text-align:justify;
-			font-family:Arial;
-			font-size:12px;
-			font-weight:normal;
-			font-style:normal;
-			text-decoration:none;
-			color:#333333;
 		}
 		
 		.redText{
@@ -42,65 +43,76 @@
 			color:red;
 		}
 		
+		.titleText{
+			font-family:Arial;
+			font-size:20px;
+			font-weight:bold;
+			font-style:normal;
+			text-decoration:none;
+			color:#333333;
+		}
+	
 	</style>
 </head>
 <body>
-    <div class="blackText">
-    	Pekeliling Perbendaharaan Malaysia <br/>	
-    </div>
-    <div class="standard">
-    	No. *Sebut Harga/Tender/Kontrak : <span class="underline">$qtNo</span> <br/><br/>
-    </div>
+	<section class="header">
+		<span class="standard">
+			Pekeliling Perbendaharaan Malaysia
+			<br/>
+			No. *Sebut Harga/Tender/Kontrak : <span class="underline">$qtNo</span>
+		</span>
+	</section>
     <div class="standard" align="right">
     	<i><b>Lampiran B</b></i> <br/><br/>
     </div>
-	<div id="u12" class="u12">
-		<div id="u12_rtf">
-			<p style="text-align:center;"><span style="font-family:Arial;font-size:20px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">SURAT AKUAN PEMBIDA BERJAYA<br/>$title $qtNo</span></p>
-		</div>
+	<p style="text-align:center;margin-bottom: 2em">
+		<span class="titleText">
+			SURAT AKUAN PEMBIDA BERJAYA<br/>$title $qtNo
+		</span>
+	</p>
+	<div style="text-align:justify;">
+		<p class="standard">
+			Saya, <span class="underline"><b>$userName</b></span> nombor K.P. <span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain, sebagai ganjaran untuk dipilih dalam *sebut harga/tender seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.
+		</p>
+		<p class="standard">
+			2. Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain sebagai ganjaran untuk dipilih dalam *sebut harga/tender seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil:
+		</p>
+			<ul class="standard" style="list-style-type:none;">
+			  <li style="margin-top: 3px;">2.1 penarikan balik tawaran kontrak bagi *sebut harga/tender di atas; atau</li>
+			  <li style="margin-top: 3px;">2.2  penamatan kontrak bagi *sebut harga/tender di atas; dan</li>
+			  <li style="margin-top: 3px;">2.3 lain-lain tindakan mengikut peraturan perolehan Kerajaan yang berkuat kuasa.</li>
+			</ul>
+		
+		<p class="standard">
+			3. Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai ganjaran mendapatkan *sebut harga/tender seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran.
+		</p>		
 	</div>
-	<div id="u15" class="u15"  >
-		<div id="u15_rtf" style="text-align:justify;">
-			<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya, <span class="underline"><b>$userName</b></span> nombor K.P. <span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain, sebagai ganjaran untuk dipilih dalam *sebut harga/tender seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.</span></p>
-			<ol start="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
-				<li>Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain sebagai ganjaran untuk dipilih dalam *sebut harga/tender seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil:</li>
-			</ol>
-			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.1 penarikan balik tawaran kontrak bagi *sebut harga/tender di atas; atau</ol>
-			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.2 penamatan kontrak bagi *sebut harga/tender di atas; dan</ol>
-			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.3 lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.</ol>
-			<ol start="3" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
-				<li>Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai ganjaran untuk dipilih dalam *sebut harga/tender seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegah Rasuah Malaysia (SPRM) atau balai polis yang berhampiran.</li>
-			</ol>
-		</div>
-	</div>
-	<div class="standard">
+
+	<div class="standard" style="margin-top: 5em;">
 	
 		Yang Benar, <br/><br/>
-	    ................................<br/>
+	    ...................................................<br/>
 	    $userName $icNo<br/>
 	    <br/><br/>
 	    
 	    Cop Syarikat : <br/><br/><br/>
 	    
 	    Catatan:   
-	    <ol type="i">
-			<li><span id='font1'>*Potong mana yang tidak berkenaan.</span></li>
-			<li><span id='font1'>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF/CIDB.</span></li>
-		</ol> 
-		
-		<br/><br/>		   
-		Tandatangan & Cop (Kerajaan) : .......................
-		<br/><br/><br/>
-	    Tandatangan & Cop (Syarikat) : .......................	
-	    <br/><br/>	  
-	     
+
+		<ul type="i" class="standard" style="list-style-type:lower-roman;">
+			<li>*Potong mana yang tidak berkenaan</li>
+			<li>Surat akuan ini hendaklah dikemukakan bersama Surat Perwakilan Kuasa</li>
+		</ul> 		
 	</div>
-	<div class="redText">
-	
-		Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak
-		<br/>
-	    Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-	    
-	</div>
+	<section class="footer">
+		<p class="standard">
+		Tandatangan & Cop (Kerajaan) : .......................<br/><br/>
+		Tandatangan & Cop (Syarikat) : .......................<br/>
+		</p>
+		<span class="redText">
+		Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+		Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+		</span>
+	</section>
 </body>
 </html>
