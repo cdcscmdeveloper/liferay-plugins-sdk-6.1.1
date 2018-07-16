@@ -2024,8 +2024,12 @@ public class LOADetailBackingBean extends
 		VelocityContext context = new VelocityContext();
 		String procurementMode = null;
 		String ptjName=" ";
+		String qtNo = "&#60;Quotation/Tender No.&#62;";	
+		
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
+
+			qtNo = scLoa.getScQuote().getQuoteNo();
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
 			log.info("=====if dp generateDeclarationFromVelocity");
 			ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),scLoa.getScQuote().getCreatedDate());
@@ -2050,6 +2054,9 @@ public class LOADetailBackingBean extends
 				} else {
 					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
 				}
+				if(scQt.getQtNo() != null){
+					qtNo = scQt.getQtNo();
+				}
 			}
 		}
 		String title = procurementMode != null ? procurementMode + " " + 
@@ -2069,8 +2076,8 @@ public class LOADetailBackingBean extends
 				title = title.replaceAll("\r\n", "<br />");
 				context.put("title", title);
 
-				String userName = "Nama Pembekal";
-				String icNo = "No. Kad Pengenalan";
+				String userName = "&#60;Nama Pembekal&#62;";
+				String icNo = "&#60;No. Kad Pengenalan&#62;";
 				if (pmUser != null) {
 					userName = pmUser.getUserName();
 					icNo = pmUser.getIdentificationNo();
@@ -2089,6 +2096,13 @@ public class LOADetailBackingBean extends
 					}
 				}
 				context.put("agency", ptjName);
+				context.put("qtNo", qtNo);
+
+				String loaNo = "&#60;LOA No.&#62;";
+				if(scLoa.getLoaNo() != null){
+					loaNo = scLoa.getLoaNo();
+				}
+				context.put("loaNo", loaNo);
 
 				String termsConditions = DocumentGenerator
 						.getInstance()
@@ -2106,7 +2120,12 @@ public class LOADetailBackingBean extends
 		VelocityContext context = new VelocityContext();
 
 		context.put("supplierName", scLoiLoa.getSupplierName());
-		context.put("loaNo", scLoa.getLoaNo());
+		
+		String loaNo = "&#60;LOA No.&#62;";
+		if(scLoa.getLoaNo() != null){
+			loaNo = scLoa.getLoaNo();
+		}
+		context.put("loaNo", loaNo);
 
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
