@@ -839,7 +839,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			deleteCatCodes(categories);
 
 			// API FOR LIST OF OVERLAPPING CATEGORIES
-			setOverLappingCategories();
+			//Redmine #18959 - no need to check overlapping
+			//setOverLappingCategories();
 
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
