@@ -6704,7 +6704,6 @@ public class SmApplicationBackingBean extends
 	 * Make a call to the BPM for supplier submitting the application.
 	 */
 	public void initiateSmApplicationTask() {
-		System.out.println("hasif initiateSmApplicationTask--");
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		if (getManagedBean().getSmAppl().isResubmit()) {
@@ -6713,10 +6712,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 		}
-		//16834
+		
 		getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-		//getManagedBean().getSmAppl().setApplSubmitDate(new Timestamp(System
-			//	.currentTimeMillis()));
 		
 		if (bpmAppl.getSupportingDocMode() == null) {
 			bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
