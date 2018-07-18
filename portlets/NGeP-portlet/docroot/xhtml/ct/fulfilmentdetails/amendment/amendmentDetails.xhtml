@@ -12,7 +12,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.validExtensionDate()}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired}">
 					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel"
 						process="@all" onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
