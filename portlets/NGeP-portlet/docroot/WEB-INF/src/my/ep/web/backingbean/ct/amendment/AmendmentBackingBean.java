@@ -498,7 +498,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @param resDTO  the response data transfer object for contract
 	 */
-	public void setAmendmentContractVer(ContractReqDTO reqDTO) {		
+	public void setAmendmentContractVer(ContractReqDTO reqDTO) {	
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractResDTO resDTO = null;
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
@@ -518,7 +518,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setDeleteAgencyMap(resDTO.getDeleteAgencyMap());
 			ctBackingBean.getManagedBean().setUpdateZoneMap(resDTO.getUpdateZoneMap());
 			ctBackingBean.getManagedBean().setUpdateItemMap(resDTO.getUpdateItemMap());
-
+			
 			reqDTO = new ContractReqDTO();
 			reqDTO.setContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			reqDTO.setContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
@@ -577,7 +577,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-
+			
 			// Retrieve Items
 			ctBackingBean.getManagedBean().getCtItemList().clear();
 			ctBackingBean.getManagedBean().getCtItemServiceList().clear();
@@ -825,6 +825,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setDisableMeetingDetails(true);
 				ctBackingBean.getManagedBean().setViewContract(true);
 			}
+			
+			// reset
+			ctBackingBean.getManagedBean().setContractExpired(false);
+			
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getRecordStatusFlg() == 3) { 
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
+				ctBackingBean.getManagedBean().setContractExpired(true);
+			}
+			
 		} finally {
 			contractAmendmentSO = null;
 			reqDTO = null;
@@ -1432,6 +1441,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
+			
+			// Validation for amendment extension period for expired contract
+			if (ctBackingBean.getManagedBean().isContractExpired() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750048);
+			}
+			
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null

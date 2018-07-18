@@ -132,6 +132,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, CtContractZone> updateZoneMap;	
 	private Map<Long, CtContractItem> updateItemMap;		  
 	private List<PmOrgProfile> agencySelected;
+	
+	private boolean contractExpired;
 
 	/**
 	 * @return the fileDirectory
@@ -1094,5 +1096,12 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.agencySelected = agencySelected;
 	}
 
+	public boolean isContractExpired() {
+		return contractExpired;
+	}
+
+	public void setContractExpired(boolean contractExpired) {
+		this.contractExpired = contractExpired;
+	}
 
 }
