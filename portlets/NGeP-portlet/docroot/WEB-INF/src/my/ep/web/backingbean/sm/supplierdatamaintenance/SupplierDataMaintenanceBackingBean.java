@@ -182,7 +182,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		//reset value
 		getManagedBean().setHasRegStatusChanged(false);
-		getManagedBean().setHasMofExpiryDateChanged(false);		
+		getManagedBean().setHasMofExpiryDateChanged(false);
 		
 		// Check if got active application for this supplier
 		SmAppl activeAppl = SmCommonUtil
@@ -880,17 +880,19 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		while (apprCatIt.hasNext()) {
 			SmSupplierCategory apprCat = apprCatIt.next();
-			SmSupplierCategory delCat = (SmSupplierCategory) EntityHelper
-					.getEntityByMultiplePropertiesFromList(apprCat, categories,
-							null, new String[] { "pmCategoryL1",
-									"pmCategoryL2", "pmCategoryL3" }, null);
-			if (delCat != null) {
-				if (delCat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
-					apprCatIt.remove();
-				} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
-					apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-					apprCat.setCancelledDate(new Date());
-					getManagedBean().getDeleteApprovedCategories().add(apprCat);
+			if(apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				SmSupplierCategory delCat = (SmSupplierCategory) EntityHelper
+						.getEntityByMultiplePropertiesFromList(apprCat, categories,
+								null, new String[] { "pmCategoryL1",
+										"pmCategoryL2", "pmCategoryL3" }, null);
+				if (delCat != null) {
+					if (delCat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+						apprCatIt.remove();
+					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
+						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						apprCat.setCancelledDate(new Date());
+						getManagedBean().getDeleteApprovedCategories().add(apprCat);
+					}
 				}
 			}
 		}
