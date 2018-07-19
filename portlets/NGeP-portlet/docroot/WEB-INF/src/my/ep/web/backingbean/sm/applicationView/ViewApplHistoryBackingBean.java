@@ -43,6 +43,8 @@ import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 
+import weblogic.wsee.util.StringUtil;
+
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
@@ -333,16 +335,23 @@ public class ViewApplHistoryBackingBean extends
 				String roleType = (String) obj[2];
 				String docType = (String) obj[3];
 				String remark = (String) obj[4];
+				String poRemarkToApprover = (String) obj[5];
+				Date  poRemarkToApproverCreatedDate = (Date) obj[6];
 				
-				log.info("userName:"+userName+",remarkCreatedDate:"+remarkCreatedDate+",roleType:"+roleType+",docType:"+docType+",remark:"+remark);
+				//log.info("userName:"+userName+",remarkCreatedDate:"+remarkCreatedDate+",roleType:"+roleType+",docType:"+docType+",remark:"+remark);
 				
 				if (roleType != null && roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 					isPoUser = true;
 				}
 				
+				// hasif
 				if(isPoUser) {
 					getManagedBean().setPoUserName(userName);
-					setPORemarksInfo(docType, remark, remarkCreatedDate);
+					if (!StringUtils.isBlank(poRemarkToApprover)) {
+						setPORemarkToApproverInfo(poRemarkToApprover, poRemarkToApproverCreatedDate);
+					} else {
+						setPORemarksInfo(docType, remark, remarkCreatedDate);
+					}
 				} else {
 					getManagedBean().setApproverUserName(userName);
 					setApproverRemarksInfo(docType, remark, remarkCreatedDate);
@@ -408,6 +417,17 @@ public class ViewApplHistoryBackingBean extends
 				getManagedBean().setPoApprOverlappedRemark(remark);
 			}
 		}
+	}
+	
+	/**
+	 * Set PO remark to approver info
+	 * 
+	 * @param remark            remark
+	 * @param remarkCreatedDate remark created date
+	 */
+	private void setPORemarkToApproverInfo(String remark, Date remarkCreatedDate) {
+		getManagedBean().setPoRemark(remark);
+		getManagedBean().setPoRemarkCreatedDate(remarkCreatedDate);
 	}
 	
 	public void initSiteVisit() {
