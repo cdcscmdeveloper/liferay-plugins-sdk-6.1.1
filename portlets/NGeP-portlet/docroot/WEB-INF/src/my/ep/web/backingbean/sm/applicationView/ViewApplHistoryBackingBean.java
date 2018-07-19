@@ -43,8 +43,6 @@ import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 
-import weblogic.wsee.util.StringUtil;
-
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
