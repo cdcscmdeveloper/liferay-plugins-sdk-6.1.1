@@ -3698,8 +3698,9 @@ public class SupplierFinalizationBackingBean extends
 	 * @return the list of PmUser instance
 	 */
 	public List<PmUser> retrieveCommitteeSecretary(String commType) {
-		log.info("retrieveCommitteeSecretary");
+		log.info(":::retrieveCommitteeSecretary() commType: "+ commType);
 		ICommitteSO committeSO = null;
+		
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);

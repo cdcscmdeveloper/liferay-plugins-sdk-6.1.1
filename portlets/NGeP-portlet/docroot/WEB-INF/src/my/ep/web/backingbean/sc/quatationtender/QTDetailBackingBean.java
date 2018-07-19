@@ -38,7 +38,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -74,8 +73,6 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmEndpointConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
-import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -121,7 +118,6 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -3842,9 +3838,10 @@ public class QTDetailBackingBean extends
 	 * @return the list
 	 */
 	public List<PmUser> retrievePmUserSecratryDtl(String committeeType) {
-		debugLogger("retrievePmUserSecratryDtl");
+		log.info(":::retrievePmUserSecratryDtl() committeeType: "+ committeeType);
 		this.getManagedBean().setPmUsersList(null);
 		ICommitteSO committeSO;
+		
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
@@ -3855,9 +3852,9 @@ public class QTDetailBackingBean extends
 			reqDTO.setPmOrgProfile(getManagedBean().getQt().getPmOrgProfile());
 			reqDTO.setCommitteeType(committeeType);
 
-			CommitteResDTO resDTO = committeSO
-					.retrieveFcSecretaryUsersByCommType(reqDTO);
+			CommitteResDTO resDTO = committeSO.retrieveFcSecretaryUsersByCommType(reqDTO);
 			this.getManagedBean().setPmUsersList(resDTO.getUserList());
+			
 			return resDTO.getUserList();
 
 		} finally {
