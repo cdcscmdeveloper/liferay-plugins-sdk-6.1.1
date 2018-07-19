@@ -344,7 +344,6 @@ public class ViewApplHistoryBackingBean extends
 					isPoUser = true;
 				}
 				
-				// hasif
 				if(isPoUser) {
 					getManagedBean().setPoUserName(userName);
 					if (!StringUtils.isBlank(poRemarkToApprover)) {
