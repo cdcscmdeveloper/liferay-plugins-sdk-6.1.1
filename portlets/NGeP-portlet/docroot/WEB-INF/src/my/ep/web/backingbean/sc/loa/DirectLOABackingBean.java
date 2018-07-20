@@ -4870,6 +4870,7 @@ public class DirectLOABackingBean extends
 			loaNo = scLoa.getLoaNo();
 		}
 		context.put("loaNo", loaNo);
+		context.put("procurementMode", procurementMode.toLowerCase());
 
 		String termsConditions = DocumentGenerator
 				.getInstance()
