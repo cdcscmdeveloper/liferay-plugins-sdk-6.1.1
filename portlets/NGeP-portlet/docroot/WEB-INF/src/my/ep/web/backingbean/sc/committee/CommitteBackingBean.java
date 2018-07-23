@@ -272,27 +272,9 @@ public class CommitteBackingBean extends
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setPmUser(pmUser);
 			reqDTO.setCommitteeType(committeeType);
-
-			//Bug #19519 Secretary & Chairperson Procurement Board Sarawak & Sabah Name not displayed			
-			if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
-					committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
-				mofReqDTO.setOrgCode("103"); //KEMENTERIAN KEWANGAN MALAYSIA
-				
-				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
-				reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());	
-				log.info(":::getRoleDesc() MOF ministry orgProfileId: "+ mofResDTO.getPmOrgProfile().getOrgProfileId()); //orgprofileid 955020
 			
-			} else {
-
-				PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
-				reqDTO.setPmOrgProfile(pmOrgProfile);
-				
-			}
-			//end Bug #19519
+			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
+			reqDTO.setPmOrgProfile(pmOrgProfile);
 			
 			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
 			
