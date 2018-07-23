@@ -261,10 +261,10 @@ public class CommitteBackingBean extends
 	 */
 	public String getRoleDesc(PmUser pmUser) {
 		String userRole = null;
-		String committeeType = getManagedBean().getQtCommittee()
-				.getScCommittee().getCommitteeType().getParameterCode();
+		String committeeType = getManagedBean().getQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
 		
 		ICommitteSO committeeSO = null;
+		
 		try {
 			committeeSO = BusinessDelegate.getInstance()
 								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
@@ -272,19 +272,36 @@ public class CommitteBackingBean extends
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setPmUser(pmUser);
 			reqDTO.setCommitteeType(committeeType);
+
+			//Bug #19519 Secretary & Chairperson Procurement Board Sarawak & Sabah Name not displayed			
+			if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
+					committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				mofReqDTO.setOrgCode("103"); //KEMENTERIAN KEWANGAN MALAYSIA
+				
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());	
+				log.info(":::getRoleDesc() MOF ministry orgProfileId: "+ mofResDTO.getPmOrgProfile().getOrgProfileId()); //orgprofileid 955020
 			
-			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
-			reqDTO.setPmOrgProfile(pmOrgProfile);
+			} else {
+
+				PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
+				reqDTO.setPmOrgProfile(pmOrgProfile);
+				
+			}
+			//end Bug #19519
 			
 			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
-			if (resDTO.isSuccessful() && 
-					resDTO.isHasRequiredCommitteeRole()) {
+			
+			if (resDTO.isSuccessful() && resDTO.isHasRequiredCommitteeRole()) {
 				PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 						ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				pmUser.setMemberRoleId(chairPersonRole.getParameterId());
 				userRole = getParameterDesc(chairPersonRole);
-			}
-			
+			}			
 		} finally {
 			committeeSO = null;
 		}
