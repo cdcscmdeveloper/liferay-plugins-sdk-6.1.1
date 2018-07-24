@@ -59,7 +59,7 @@
 		
 									<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
-											rendered="#{validityDaysExpiredQt and !lOADetailBackingBean.managedBean.qtCancelRequested}"
+											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
 											partialSubmit="true" process="@form"
 											action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
@@ -73,7 +73,7 @@
 		
 									<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
-											rendered="#{!isMultipleLOI and validityDaysExpiredQt}"
+											rendered="#{!isMultipleLOI}"
 											styleClass="ui-button" onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
 											action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
