@@ -8030,7 +8030,11 @@ public class DirectLOABackingBean extends
 			throw new EpException(MessageConst.ERROR_760400,
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}	
+		}
+		//Redmine Bug #21137
+		if(scLoa.getContractDuration().compareTo(new BigDecimal(0)) <= 0) {
+			throw new EpException(MessageConst.ERROR_760472);
+		}
 	}
 	
 	/**
