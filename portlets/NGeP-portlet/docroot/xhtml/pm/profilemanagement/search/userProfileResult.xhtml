@@ -12,38 +12,36 @@
 		<p:dataTable id="dtUserResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			rowIndexVar="rowIndex"  lazy="true" rows="10"
 			value="#{profileManagementBackingBean.userOrgDataModel}"
-			var="userOrg">
+			var="userProfileList">
 			<ac:paginator for="dtUserResult" />
 			
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
-				#{profileManagementBackingBean.retrieveOrgName(userOrg.pmOrgProfile)}
+				#{userProfileList[8]}
 			</p:column>
-			
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :10%;white-space : normal">
-				#{userOrg.pmUser.identificationNo}
+				#{userProfileList[1]}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :20%;white-space : normal">
-				#{userOrg.pmUser.userName}
+				#{userProfileList[2]}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" style="width :10%;white-space : normal">
-				#{userOrg.designation}
+				#{userProfileList[3]}
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.user.status']}" width="10%">
-				#{(userOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+				#{(userProfileList[4]==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.created.date']}" style="width :10%;white-space : normal">
-				<h:outputText value="#{userOrg.createdDate}" style="float:left;">
+				<h:outputText value="#{userProfileList[5]}" style="float:left;">
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.role']}" style="width:5%;text-align:center;">
-				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedRoles(userOrg)}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
+				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedRoles(userProfileList[7])}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
 					<p:graphicImage value="/css/images/design/ico-user-role.png"/>
 				</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
-				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userOrg.pmUser.userId, userOrg)}" >
+				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userProfileList[6], userProfileList[7])}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 			</p:column>
