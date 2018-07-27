@@ -51,13 +51,22 @@
 		<tr>
 			<td class="tableWidth80 dashboarTable"><p:outputLabel value="#{lbl['lbl.ss.simple.quote.pending.response.redirect.dp.qt']}" style="float:left;text-align:left;"></p:outputLabel></td>
 			<td class=" tableWidth20 dashboarTable"><h:outputText value="#{pendingResponseDpQtBB.managedBean.simpleQuoteCount}"></h:outputText></td>
+		</tr>		
+		<tr>
+		<td colspan="3"
+					style="text-align: right; padding-right: 6%;" class="dashboarTable">
+					<p:commandLink value="#{lbl['lbl.sc.menu.simple.quote.respond']}"
+						styleClass="blue_font" process="@this" update="@form"
+						action="#{pendingResponseDpQtBB.navigatetoSupplierredirectDp()}">
+					</p:commandLink>
+				</td>
 		</tr>
 		<tr>
 		<td colspan="3"
 					style="text-align: right; padding-right: 6%;" class="dashboarTable">
-					<p:commandLink value="#{lbl['lbl.sc.more.details']}"
+					<p:commandLink value="#{lbl['lbl.sc.qt.menu.quotation.tender.proposal.preparation']}"
 						styleClass="blue_font" process="@this" update="@form"
-						action="#{pendingResponseDpQtBB.navigatetoSupplierredirect()}">
+						action="#{pendingResponseDpQtBB.navigatetoSupplierredirectQt()}">
 					</p:commandLink>
 				</td>
 		</tr>

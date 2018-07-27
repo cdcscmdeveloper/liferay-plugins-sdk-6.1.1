@@ -40,7 +40,9 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.supplierinvitation.SCSupplierInvitationManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -179,14 +181,16 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			
 			ISCSupplierInvitationSO invitationSO = null;
 			ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
+			Boolean isPorletIdFromQtFlag = isPorletIdFromQt();
 			try {
 				invitationSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
 				Long userId = new FacesScopes().getUserSessionBean().getUserId();
 				if(userId != null){
 					reqDTO.setUserId(userId);
-					reqDTO.setSearchBean(searchBean);
-					resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
+					reqDTO.setSearchBean(searchBean);			
+				    resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO,isPorletIdFromQtFlag);		
+//				    resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
 				}
 				
 			} finally{
@@ -354,6 +358,10 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			
 		}
 		return returnId;
+	}
+	
+	public boolean isPorletIdFromQt() {
+		return QTConstants.PORTLET_NAME_QT_SUPPLIER_INVITATION .equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 
 }

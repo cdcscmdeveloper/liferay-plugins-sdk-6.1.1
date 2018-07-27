@@ -9439,6 +9439,72 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
+		<portlet-name>scSupplierInvitationSq</portlet-name>
+		<display-name>Simple Quote Respond</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+ 	 		<value>/xhtml/sc/supplierinvitation/preRenderView.xhtml</value>
+	 	</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Simple Quote Respond</title>
+			<short-title>Simple Quote Respond</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>scSupplierInvitationQt</portlet-name>
+		<display-name>Quotation/ Tender Proposal Preparation</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+ 	 		<value>/xhtml/sc/supplierinvitation/preRenderView.xhtml</value>
+	 	</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Quotation/ Tender Proposal Preparation</title>
+			<short-title>Quotation/ Tender Proposal Preparation</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
 		<portlet-name>passwordcipher</portlet-name>
 		<display-name>Password Cipher</display-name>
 		<portlet-class>
