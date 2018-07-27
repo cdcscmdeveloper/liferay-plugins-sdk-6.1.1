@@ -252,9 +252,44 @@ public class PendingResponseDpQtBackingBean extends
 	}
 
 	/**
-	 * navigate to suppliers page
+	 * navigate to suppliers page under DP
 	 */
-	public void navigatetoSupplierredirect() {
+//	public void navigatetoSupplierredirect() {
+//
+//		ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
+//				.getRequestScope(WebKeys.THEME_DISPLAY);
+//		try {
+//			String commonUrl = themeDisplay.getURLCurrent().substring(
+//					0,
+//					themeDisplay.getURLCurrent().indexOf(
+//							themeDisplay.getLayout().getGroup()
+//									.getFriendlyURL())
+//							+ themeDisplay.getLayout().getGroup()
+//									.getFriendlyURL().length());
+//			
+//			String screenUrl = String
+//					.valueOf(SourcingConstants.NAV_PAGE_PROPOSAL_INVITATION);
+//			StringBuilder navigationUrl = new StringBuilder();
+//			navigationUrl.append(commonUrl).append("/").append(screenUrl);
+//			ExternalContext externalContext = FacesContext.getCurrentInstance()
+//					.getExternalContext();
+//			externalContext.redirect(navigationUrl.toString());
+//			log.info("getNavigationUrl ==" + navigationUrl.toString());
+//		} catch (IOException e) {
+//			log.error(e);
+//		} catch (PortalException e) {
+//			log.error(e);
+//		} catch (SystemException e) {
+//			log.error(e);
+//		}
+//	}
+	
+	
+	/**
+	 * navigate to suppliers page under DP
+	 */
+	public void navigatetoSupplierredirectDp() {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
 				.getRequestScope(WebKeys.THEME_DISPLAY);
 		try {
@@ -265,9 +300,42 @@ public class PendingResponseDpQtBackingBean extends
 									.getFriendlyURL())
 							+ themeDisplay.getLayout().getGroup()
 									.getFriendlyURL().length());
-
+			
 			String screenUrl = String
-					.valueOf(SourcingConstants.NAV_PAGE_PROPOSAL_INVITATION);
+					.valueOf(SourcingConstants.NAV_PAGE_SIMPLE_QUOTE_RESPOND);
+			StringBuilder navigationUrl = new StringBuilder();
+			navigationUrl.append(commonUrl).append("/").append(screenUrl);
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.redirect(navigationUrl.toString());
+			log.info("getNavigationUrl ==" + navigationUrl.toString());
+		} catch (IOException e) {
+			log.error(e);
+		} catch (PortalException e) {
+			log.error(e);
+		} catch (SystemException e) {
+			log.error(e);
+		}
+	}
+	
+	/**
+	 * navigate to suppliers page under QT
+	 */
+	public void navigatetoSupplierredirectQt() {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+		try {
+			String commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+			
+			String screenUrl = String
+					.valueOf(SourcingConstants.NAV_PAGE_QUOTATION_TENDER_PROPOSAL_PREPARATION);
 			StringBuilder navigationUrl = new StringBuilder();
 			navigationUrl.append(commonUrl).append("/").append(screenUrl);
 			ExternalContext externalContext = FacesContext.getCurrentInstance()

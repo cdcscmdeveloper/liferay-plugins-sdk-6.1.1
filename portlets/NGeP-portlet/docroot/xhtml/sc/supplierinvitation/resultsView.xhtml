@@ -59,27 +59,32 @@
 			            <p:menuitem value="#{lbl['lbl.txt.all']}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}">
 			            	<f:setPropertyActionListener value="#{null}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
 			            </p:menuitem>					
-			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes,'Q')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}">
+			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes,'Q')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+			            			rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
 			            	<ui:param name="quotation" value="#{scSupplirInvitationdBB.retriveParameterId('Q')}"></ui:param>
 			            	<f:setPropertyActionListener value="#{quotation}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
 			            </p:menuitem>	
 			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
-											'T')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}">
+											'T')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
 											<ui:param name="tender" value="#{scSupplirInvitationdBB.retriveParameterId('T')}"></ui:param>
 			            	<f:setPropertyActionListener value="#{tender}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
 			            </p:menuitem>			            					
 			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
-											'BSV')}" actionListener="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}" update="@([id$=scSuppInviteTblId])" >
-												<ui:param name="bsv" value="#{scSupplirInvitationdBB.retriveParameterId('BSV')}"></ui:param>
+											'BSV')}" actionListener="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}" update="@([id$=scSuppInviteTblId])" 
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
+											<ui:param name="bsv" value="#{scSupplirInvitationdBB.retriveParameterId('BSV')}"></ui:param>
 				            <f:setPropertyActionListener value="#{bsv}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
 			            </p:menuitem>
 			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
-											'BID')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}">
+											'BID')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
 											<ui:param name="bid" value="#{scSupplirInvitationdBB.retriveParameterId('BID')}"></ui:param>
 			            	<f:setPropertyActionListener value="#{bid}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
 			            </p:menuitem>
 			             <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
-											'SQ')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}">
+											'SQ')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt() == false}">
 											<ui:param name="simplequote" value="#{scSupplirInvitationdBB.retriveParameterId('SQ')}"></ui:param>
 			            	<f:setPropertyActionListener value="#{simplequote}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
 			            </p:menuitem>
