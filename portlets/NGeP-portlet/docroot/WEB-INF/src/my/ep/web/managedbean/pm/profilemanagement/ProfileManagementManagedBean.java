@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -87,6 +88,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private String searchRoleName;
 	private Integer selectedRoleSearchOption;
 	private boolean isPmUserExist = false;
+	private SelectItem[] orgTypeList;
 
 	public ProfileManagementManagedBean(){}
 	
@@ -789,6 +791,14 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setRoleCodeToApprovalLimitMap(
 			Map<String, BigDecimal> roleCodeToApprovalLimitMap) {
 		this.roleCodeToApprovalLimitMap = roleCodeToApprovalLimitMap;
+	}
+
+	public SelectItem[] getOrgTypeList() {
+		return orgTypeList;
+	}
+
+	public void setOrgTypeList(SelectItem[] orgTypeList) {
+		this.orgTypeList = orgTypeList;
 	}
 
 }
