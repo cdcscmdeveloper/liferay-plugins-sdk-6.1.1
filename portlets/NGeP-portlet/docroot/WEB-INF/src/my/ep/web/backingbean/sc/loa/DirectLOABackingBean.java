@@ -8032,8 +8032,10 @@ public class DirectLOABackingBean extends
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 		//Redmine Bug #21137
-		if(scLoa.getContractDuration().compareTo(new BigDecimal(0)) <= 0) {
-			throw new EpException(MessageConst.ERROR_760472);
+		if(scLoa.getContractDuration() != null && (scLoa.getContractDuration().compareTo(new BigDecimal(1)) < 0)) {
+			throw new EpException(MessageConst.ERROR_760473);
+		} else if (scLoa.getContractDuration() != null && (scLoa.getContractDuration().doubleValue() % 1 != 0)){
+			throw new EpException(MessageConst.ERROR_760472, new String[] {scLoa.getContractDuration().toString()});
 		}
 	}
 	
