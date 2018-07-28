@@ -57,7 +57,6 @@ import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.eclipse.persistence.exceptions.ValidationException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -4616,7 +4615,7 @@ public class SmCommonUtil {
 							}
 						}
 						i++;
-					} catch (ValidationException ex) {
+					} catch (Exception ex) {
 						log.debug(">>>>ERROR INITIALIZE REJECT REASON:"
 								+ ex.getMessage() + "<<<<<<<");
 					}
