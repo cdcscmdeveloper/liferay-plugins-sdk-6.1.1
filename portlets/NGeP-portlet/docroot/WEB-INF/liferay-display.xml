@@ -169,6 +169,8 @@
 			<portlet id="qtCustomerService" />
 			<portlet id="scSpecificationCommitteeEndorsement" />
 			<portlet id="scQuotationTenderSearchTechSupp" />
+			<portlet id="scSupplierInvitationSq" />
+			<portlet id="scSupplierInvitationQt" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
