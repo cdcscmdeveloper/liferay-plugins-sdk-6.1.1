@@ -28,6 +28,8 @@
 	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
 	<cc:attribute name="tooltip" default="" />
 	<cc:attribute name="autoUpdateValue" default="" />
+	<cc:attribute name="displayResultWhenFirstLoad" default="true" />
+	<cc:attribute name="displayResultWhenReset" default="true" />
 	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'multiple' ? 'lovBtn' : (cc.attrs.uiMode eq 'button' ? 'lovSingleBtn' : 'lovLink')}" />
 </cc:interface>
 
@@ -74,7 +76,8 @@
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 			<f:param name="postUpdateListenerWithIndex" value="#{cc.attrs.postUpdateListenerWithIndex}" />
 			<f:param name="autoUpdateValue" value="#{cc.attrs.autoUpdateValue}" />
-			
+			<f:param name="displayResultWhenFirstLoad" value="#{cc.attrs.displayResultWhenFirstLoad}" />
+			<f:param name="displayResultWhenReset" value="#{cc.attrs.displayResultWhenReset}" />
 			<cc:insertChildren />
 			
 			<p:graphicImage value="/css/images/design/search.png" style="background:transparent;"></p:graphicImage>
@@ -102,6 +105,8 @@
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 			<f:param name="postUpdateListenerWithIndex" value="#{cc.attrs.postUpdateListenerWithIndex}" />
 			<f:param name="autoUpdateValue" value="#{cc.attrs.autoUpdateValue}" />
+			<f:param name="displayResultWhenFirstLoad" value="#{cc.attrs.displayResultWhenFirstLoad}" />
+			<f:param name="displayResultWhenReset" value="#{cc.attrs.displayResultWhenReset}" />
 			
 			<cc:insertChildren />
 			
@@ -129,7 +134,8 @@
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 			<f:param name="autoUpdateValue" value="#{cc.attrs.autoUpdateValue}" />
-			
+			<f:param name="displayResultWhenFirstLoad" value="#{cc.attrs.displayResultWhenFirstLoad}" />
+			<f:param name="displayResultWhenReset" value="#{cc.attrs.displayResultWhenReset}" />
 			<cc:insertChildren />
 			
 				<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
