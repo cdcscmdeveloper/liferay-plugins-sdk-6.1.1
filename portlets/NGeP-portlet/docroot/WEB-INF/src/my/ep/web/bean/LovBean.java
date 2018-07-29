@@ -25,8 +25,9 @@ public class LovBean implements Serializable {
 	private String selectionMode;
 	private int saveObjectIndex;
 	private String autoUpdateValue;
+	private boolean isDisplayResultWhenFirstLoad;
+	private boolean isDisplayResultWhenReset;
 	
-
 	public String getLovId() {
 		return lovId;
 	}
@@ -130,6 +131,19 @@ public class LovBean implements Serializable {
 	 */
 	public void setAutoUpdateValue(String autoUpdateValue) {
 		this.autoUpdateValue = autoUpdateValue;
+	}
+	
+	public boolean isDisplayResultWhenFirstLoad() {
+		return isDisplayResultWhenFirstLoad;
+	}
+	public void setDisplayResultWhenFirstLoad(boolean isDisplayResultWhenFirstLoad) {
+		this.isDisplayResultWhenFirstLoad = isDisplayResultWhenFirstLoad;
+	}
+	public boolean isDisplayResultWhenReset() {
+		return isDisplayResultWhenReset;
+	}
+	public void setDisplayResultWhenReset(boolean isDisplayResultWhenReset) {
+		this.isDisplayResultWhenReset = isDisplayResultWhenReset;
 	}
 	
 	

@@ -90,7 +90,7 @@ public class LovBackingBean implements Serializable {
 		
 		@Override
 		public ISearchResultBean pageChangeListener(ISearchBean searchBean) {
-
+			
 			debugLogger("getLovBean(): " + getLovBean());
 			if(getLovBean() == null) {
 				return new SearchResultBean();
@@ -98,6 +98,13 @@ public class LovBackingBean implements Serializable {
 			
 			if(getLovBean().getLovId() == null) {
 				debugLogger("=======================lovId null, return empty result ===========================");
+				SearchResultBean srb = new SearchResultBean();
+				srb.setResultList(new ArrayList());
+				return srb;
+			}
+			
+			if(!getLovBean().isDisplayResultWhenFirstLoad()) {
+				enableDisplayResult();
 				SearchResultBean srb = new SearchResultBean();
 				srb.setResultList(new ArrayList());
 				return srb;
@@ -220,6 +227,8 @@ public class LovBackingBean implements Serializable {
 		String postUpdateListenerWithIndex = facesScopes.getParameter("postUpdateListenerWithIndex");
 		String selectionMode = facesScopes.getParameter("selectionMode");
 		String autoUpdateValue = facesScopes.getParameter("autoUpdateValue");
+		String displayResultWhenFirstLoad = facesScopes.getParameter("displayResultWhenFirstLoad");
+		String displayResultWhenReset = facesScopes.getParameter("displayResultWhenReset");
 		
 		debugLogger("headerText: " + headerText);
 		debugLogger("saveObject: " + saveObject);
@@ -229,6 +238,8 @@ public class LovBackingBean implements Serializable {
 		debugLogger("update: " + update);
 		debugLogger("postUpdateListener: " + postUpdateListener);
 		debugLogger("autoUpdateValue: " + autoUpdateValue);
+		debugLogger("displayResultWhenFirstLoad: " + displayResultWhenFirstLoad);
+		debugLogger("displayResultWhenReset: " + displayResultWhenReset);
 
 //		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
 //			
@@ -246,6 +257,8 @@ public class LovBackingBean implements Serializable {
 			lovBean.setPostUpdateListenerWithIndex(postUpdateListenerWithIndex);
 			lovBean.setSelectionMode(selectionMode);
 			lovBean.setAutoUpdateValue(autoUpdateValue);
+			lovBean.setDisplayResultWhenFirstLoad(Boolean.valueOf(displayResultWhenFirstLoad));
+			lovBean.setDisplayResultWhenReset(Boolean.valueOf(displayResultWhenReset));
 			
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
 			if(lovBean.getSelectionMode().equals("single")) {
@@ -346,6 +359,11 @@ public class LovBackingBean implements Serializable {
 		this.getSearchDataModel().resetData();
 		this.setLovSearchBean(new SearchBean());
 //		this.setLovBean(new LovBean());
+		
+		if(!getLovBean().isDisplayResultWhenReset()) {
+			disableDisplayResult();
+			System.out.println("hasif resetAction isDisplayResultWhenReset");
+		}
 	}
 	
 
@@ -647,6 +665,14 @@ public class LovBackingBean implements Serializable {
 			bundle = ResourceBundle.getBundle(column.getBundleFile(), new FacesScopes().getUserLocale());
 			column.setColumnTitle(bundle.getString(column.getBundleKey()));
 		}
+	}
+	
+	private void enableDisplayResult() {
+		getLovBean().setDisplayResultWhenFirstLoad(true);
+	}
+	
+	private void disableDisplayResult() {
+		getLovBean().setDisplayResultWhenFirstLoad(false);
 	}
 	
 	public IPagingDataModel<AutUser> getSearchDataModel() {
