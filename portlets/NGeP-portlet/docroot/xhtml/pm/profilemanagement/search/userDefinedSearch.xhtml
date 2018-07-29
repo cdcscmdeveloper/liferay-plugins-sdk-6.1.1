@@ -11,7 +11,8 @@
 			
 		    <tr>
 				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.org.category']}" /></th>
+						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
+								value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneRadio id="sorOrgCategory" layout="custom" 
 						value="#{profileManagementBackingBean.managedBean.searchOrgCategory}"
 						label="#{lbl['lbl.pm.org.category']}">
@@ -69,7 +70,8 @@
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}" 
 						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForOrgName"
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
-						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}" 
+						displayResultWhenFirstLoad="false" displayResultWhenReset="false"/>
 						<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opSupOrgCode" rendered="#{ParameterConst.orgTypeSupplier eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
@@ -79,7 +81,8 @@
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}" 
 						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForOrgName"
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
-						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}" 
+						displayResultWhenFirstLoad="false" displayResultWhenReset="false"/>
 						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opPtjOrgCode" 
@@ -112,7 +115,8 @@
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForOrgName"
-						conditionField="#{profileManagementBackingBean.constructConditionFields()}"/>						
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}"
+						displayResultWhenFirstLoad="false" displayResultWhenReset="false"/>						
 		         	<p:message id="lovMinistryMsg" for="lovMinistry1" display="icon" />
 				</p:outputPanel>
 				
