@@ -28,6 +28,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -53,6 +54,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -224,6 +226,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
 			for (SmPersonnel selectedPersonnel : this.getManagedBean()
 					.getSelectedSoftCertLs()) {
+				if(StringUtils.isBlank(selectedPersonnel.getMobileNo()) && 
+						StringUtils.isBlank(selectedPersonnel.getPhoneNo())){
+					throw new EpException(MessageConst.ERROR_721053, new String[]{selectedPersonnel.getName()});
+				}
+				
+				if(StringUtils.isBlank(selectedPersonnel.getEmail())){
+					throw new EpException(MessageConst.ERROR_721054, new String[]{selectedPersonnel.getName()});
+				}
+				
 				selectedSoftCertMap.put(selectedPersonnel.getPersonnelId(),
 						selectedPersonnel);
 			}
