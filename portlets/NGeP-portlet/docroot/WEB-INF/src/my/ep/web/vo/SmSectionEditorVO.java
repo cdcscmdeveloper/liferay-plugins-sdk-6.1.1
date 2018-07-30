@@ -23,6 +23,7 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean poEditPersonnel;
 	private boolean appEditPersonnel;
 	private boolean suppEditPersonnel;
+	private boolean hasForeign;
 
 	// capital/equity
 	private boolean poEditEquity;
@@ -268,6 +269,14 @@ public class SmSectionEditorVO implements Serializable {
 
 	public void setSuppEditSuppDoc(boolean suppEditSuppDoc) {
 		this.suppEditSuppDoc = suppEditSuppDoc;
+	}
+
+	public boolean isHasForeign() {
+		return hasForeign;
+	}
+
+	public void setHasForeign(boolean hasForeign) {
+		this.hasForeign = hasForeign;
 	}
 
 }
