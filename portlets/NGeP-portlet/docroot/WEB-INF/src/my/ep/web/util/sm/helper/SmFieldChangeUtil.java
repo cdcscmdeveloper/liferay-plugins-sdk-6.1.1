@@ -70,7 +70,9 @@ public class SmFieldChangeUtil {
 					.setHqFacility(
 							SmApplicationUtil.getHqFacilityByAppl(bean
 									.getLatestAppl()));
-			setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl());
+			setApplTableListChangeStatus(bean.getLatestAppl(),
+					bean.getSmAppl(),
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			bean.setShowFieldChanges(true);
 		} else {
 			bean.setShowFieldChanges(false);
@@ -158,32 +160,49 @@ public class SmFieldChangeUtil {
 	 *            currAppl
 	 */
 	public static void setApplTableListChangeStatus(SmAppl latestAppl,
-			SmAppl currAppl) {
+			SmAppl currAppl, String currentPage) {
 		if (currAppl != null && latestAppl != null) {
 
-			// Cert of recognition
-			setSuppCertFieldChangeStatus(latestAppl, currAppl);
+			if (currentPage != null) {
 
-			// Professional Body
-			setProfessionalBodyFieldChangeStatus(latestAppl, currAppl);
+				if (currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
+					// Cert of recognition
+					setSuppCertFieldChangeStatus(latestAppl, currAppl);
 
-			// Associate Company
-			setAssocCompanyFieldChangeStatus(latestAppl, currAppl);
+					// Professional Body
+					setProfessionalBodyFieldChangeStatus(latestAppl, currAppl);
 
-			// Company experience
-			setCompanyExpFieldChangeStatus(latestAppl, currAppl);
+				} else if (currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
+					// Associate Company
+					setAssocCompanyFieldChangeStatus(latestAppl, currAppl);
 
-			// Personnel
-			setPersonnelFieldChangeStatus(latestAppl, currAppl);
+					// Company experience
+					setCompanyExpFieldChangeStatus(latestAppl, currAppl);
 
-			// SmEquityCompanies
-			setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
+				} else if (currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+					// Personnel
+					setPersonnelFieldChangeStatus(latestAppl, currAppl);
 
-			// smSupplierBranches
-			setBranchFieldChangeStatus(latestAppl, currAppl);
+					// smSupplierBranches
+					setBranchFieldChangeStatus(latestAppl, currAppl);
 
-			// smSupplierBanks
-			setBankFieldChangeStatus(latestAppl, currAppl);
+				} else if (currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+					// Personnel
+					setPersonnelFieldChangeStatus(latestAppl, currAppl);
+
+					// SmEquityCompanies
+					setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
+
+				} else if (currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+					// smSupplierBanks
+					setBankFieldChangeStatus(latestAppl, currAppl);
+				}
+			}
 
 			// smMachineDetails
 
