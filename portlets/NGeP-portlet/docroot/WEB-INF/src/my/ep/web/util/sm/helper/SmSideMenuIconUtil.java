@@ -134,6 +134,9 @@ public class SmSideMenuIconUtil {
 						bean.getLatestApproveAppl(), bean.getSmAppl(),
 						bean.getDowngradeMofAcc())) {
 					bean.getSupplierEditVO().setSuppEditPersonnel(true);
+					bean.getSupplierEditVO().setHasForeign(
+							SmApplicationUtil.isCompanyHasForeignPersonnel(bean
+									.getSmAppl().getSmPersonnels()));
 				}
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
@@ -394,7 +397,7 @@ public class SmSideMenuIconUtil {
 	}
 
 	public static void setAllSectionEditorVO(SmApplicationManagedBean bean,
-			boolean setAll) {
+			boolean setAll, String page) {
 		if (setAll) {
 			setSectionEditorVO(bean,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
@@ -415,7 +418,7 @@ public class SmSideMenuIconUtil {
 			setSectionEditorVO(bean,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
 		} else {
-			setSectionEditorVO(bean, bean.getCurrentPageType());
+			setSectionEditorVO(bean, page);
 		}
 	}
 
