@@ -1257,48 +1257,62 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				// for services need to insert NA record in type, brand and
 				// measurment
 				if (!isSelectedRequestItemProduct()) {
+					
+					if (objSelected !=null) {
+						//Bug #20791: Extension Code Duplicate
+						typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
 
-					if (codeResDTO.getCommodityObj().getCmType() != null
-							&& codeResDTO.getCommodityObj().getCmType().size() > 0) {
-						typeObj = codeResDTO.getCommodityObj().getCmType()
-								.get(0);
-					} else {
-						typeObj = new CmType();
-						typeObj.setTypeCode("000");
-						typeObj.setTypeName("N/A");
-						typeObj.setUnspscId(codeResDTO.getCommodityObj());
-						codeReqDTO.setCmType(typeObj);
-						typeObj = codificationSO.addNewType(codeReqDTO)
-								.getCmType();
+						brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
+
+						meaObj = this.searchMeasurementByMeasurementId(obj
+								.getMeasurementId());
+						
+					}else{
+						//utk method insertContractedItemCodeForService
+						if (codeResDTO.getCommodityObj().getCmType() != null
+								&& codeResDTO.getCommodityObj().getCmType().size() > 0) {
+							typeObj = codeResDTO.getCommodityObj().getCmType()
+									.get(0);
+						} else {
+							typeObj = new CmType();
+							typeObj.setTypeCode("000");
+							typeObj.setTypeName("N/A");
+							typeObj.setUnspscId(codeResDTO.getCommodityObj());
+							codeReqDTO.setCmType(typeObj);
+							typeObj = codificationSO.addNewType(codeReqDTO)
+									.getCmType();
+						}
+						if (codeResDTO.getCommodityObj().getCmBrand() != null
+								&& codeResDTO.getCommodityObj().getCmBrand().size() > 0) {
+							brandObj = codeResDTO.getCommodityObj().getCmBrand()
+									.get(0);
+						} else {
+							brandObj = new CmBrand();
+							brandObj.setBrandCode("00");
+							brandObj.setBrandName("N/A");
+							brandObj.setUnspscId(codeResDTO.getCommodityObj());
+							codeReqDTO.setCmBrand(brandObj);
+							brandObj = codificationSO.addNewBrand(codeReqDTO)
+									.getCmBrand();
+						}
+						if (codeResDTO.getCommodityObj().getCmMeasurement() != null
+								&& codeResDTO.getCommodityObj().getCmMeasurement()
+								.size() > 0) {
+							meaObj = codeResDTO.getCommodityObj()
+									.getCmMeasurement().get(0);
+						} else {
+							meaObj = new CmMeasurement();
+							meaObj.setMeasurementCode("000");
+							meaObj.setMeasurementName("N/A");
+							meaObj.setUnspscId(codeResDTO.getCommodityObj());
+							codeReqDTO.setCmMeasurement(meaObj);
+							meaObj = codificationSO.addNewMeasurement(codeReqDTO)
+									.getCmMeasurement();
+						}
+						obj.setColorId(1L);// first record of table reserved for NA,
+						
 					}
-					if (codeResDTO.getCommodityObj().getCmBrand() != null
-							&& codeResDTO.getCommodityObj().getCmBrand().size() > 0) {
-						brandObj = codeResDTO.getCommodityObj().getCmBrand()
-								.get(0);
-					} else {
-						brandObj = new CmBrand();
-						brandObj.setBrandCode("00");
-						brandObj.setBrandName("N/A");
-						brandObj.setUnspscId(codeResDTO.getCommodityObj());
-						codeReqDTO.setCmBrand(brandObj);
-						brandObj = codificationSO.addNewBrand(codeReqDTO)
-								.getCmBrand();
-					}
-					if (codeResDTO.getCommodityObj().getCmMeasurement() != null
-							&& codeResDTO.getCommodityObj().getCmMeasurement()
-							.size() > 0) {
-						meaObj = codeResDTO.getCommodityObj()
-								.getCmMeasurement().get(0);
-					} else {
-						meaObj = new CmMeasurement();
-						meaObj.setMeasurementCode("000");
-						meaObj.setMeasurementName("N/A");
-						meaObj.setUnspscId(codeResDTO.getCommodityObj());
-						codeReqDTO.setCmMeasurement(meaObj);
-						meaObj = codificationSO.addNewMeasurement(codeReqDTO)
-								.getCmMeasurement();
-					}
-					obj.setColorId(1L);// first record of table reserved for NA,
+					
 					// set for later getting obj
 				} else {// for product extension be selected from table
 
