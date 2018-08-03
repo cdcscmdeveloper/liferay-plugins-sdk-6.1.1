@@ -6,6 +6,7 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -80,6 +81,14 @@ public class ViewSuppProfileBackingBean extends
 	}
 
 	public void search() {
+		if (getManagedBean().getSearchSupplier() != null
+				&& !StringUtils.isBlank(getManagedBean().getSearchSupplier()
+						.getCompanyName())
+				&& getManagedBean().getSearchSupplier().getCompanyName()
+						.length() < 3) {
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.tt.search.prefix.three.char", null));
+		}
 		getManagedBean().searchSupplier();
 	}
 
