@@ -327,6 +327,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		//String others="Justification Other";
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
+		doMB.renewSesionObject();
 		doMB.setDeliveryOrder(resDTO);
 		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
