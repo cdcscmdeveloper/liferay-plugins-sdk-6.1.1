@@ -117,9 +117,10 @@ public class CmTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(CmSupplierItem cmSupplierItem) {
+	public String goToTrackingDiarySearch(Long supplierItemId) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-		getManagedBean().setCmSupplierItem(cmSupplierItem);
+		log.info("goToTrackingDiarySearch - start:" + supplierItemId);
+		//getManagedBean().setCmSupplierItem(cmSupplierItem);
 		
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 		SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
@@ -128,11 +129,11 @@ public class CmTrackingDiaryBackingBean extends
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
 
-
-		reqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
+		reqDTO.setSupplierItemId(supplierItemId);
 		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
 		bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
+		getManagedBean().setCmSupplierItem(resDTO.getSupplierItem());
 		
 		CatalogueBackingBean.retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 		
@@ -143,7 +144,7 @@ public class CmTrackingDiaryBackingBean extends
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
 		//searchBean.getDataFilterBeans().add(new SearchFilterBean("actionedBy",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSmSupplier().getSmPersonnel().getPmUser().getUserId()));
 			
-		System.out.println("TrackingDiaryReqDTO item Id:" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
+		log.info("TrackingDiaryReqDTO item Id:" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
 
 		reqDTOPM.setSearchBean(searchBean);
 		TrackingDiaryResDTO resDTOPM = new TrackingDiaryResDTO();
@@ -179,6 +180,8 @@ public class CmTrackingDiaryBackingBean extends
 			if(bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings() != null && !bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()){
 				groupPricesByTier(bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
 			}*/
+			log.info("goToTrackingDiarySearch - end:" + supplierItemId);
+			
 			return NAV_TO_CATALOG_DETAIL_SEARCH;
 		//return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
