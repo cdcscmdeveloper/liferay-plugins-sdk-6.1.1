@@ -410,17 +410,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		userOrgDataModel = new UserProfilePagingDataModel();
 		retrieveOrgTypeAndOrgName();
 		
-		ISearchBean<PmParameterDesc> searchBean = null;
+		ISearchBean<Object[]> searchBean = null;
 		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
-			searchBean = getUserOrgTypeSearchBean("somFederalOrgType");
+			searchBean = getUserOrgTypeObjectSearchBean("somFederalOrgType");
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
-			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");
+			searchBean = getUserOrgTypeObjectSearchBean("somOtherOrgType");
 		}
 
 		SelectItem[] items = null;
 		if (searchBean != null) {
 			searchBean.getSortColumns();
-			items = getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			items = getDropdownObjectValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 		}
 		
 		getManagedBean().setOrgTypeList(items);
@@ -4583,11 +4583,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public SelectItem[] getOrgTypeDropdownValues() {
 		logger.info("getOrgTypeDropdownValues");
-		ISearchBean<PmParameterDesc> searchBean = null;
+		ISearchBean<Object[]> searchBean = null;
 		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
-			searchBean = getUserOrgTypeSearchBean("somFederalOrgType");
+			searchBean = getUserOrgTypeObjectSearchBean("somFederalOrgType");
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
-			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");
+			searchBean = getUserOrgTypeObjectSearchBean("somOtherOrgType");
 		}
 
 		// if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
@@ -4607,7 +4607,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		SelectItem[] items = null;
 		if (searchBean != null) {
 			searchBean.getSortColumns();
-			items = getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			items = getDropdownObjectValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 		}
 
 		return items;
@@ -4661,6 +4661,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private ISearchBean<PmParameterDesc> getUserOrgTypeSearchBean(String componentId) {
 		logger.info("getUserOrgTypeSearchBean+componentId=" + componentId);
 		ISearchBean<PmParameterDesc> userOrgTypeSearchBean = super.createSearchBean(PmParameterDesc.class, componentId);
+		return userOrgTypeSearchBean;
+	}
+	
+	private ISearchBean<Object[]> getUserOrgTypeObjectSearchBean(String componentId) {
+		logger.info("getUserOrgTypeSearchBean+componentId=" + componentId);
+		ISearchBean<Object[]> userOrgTypeSearchBean = super.createSearchBean(Object[].class, componentId);
 		return userOrgTypeSearchBean;
 	}
 
