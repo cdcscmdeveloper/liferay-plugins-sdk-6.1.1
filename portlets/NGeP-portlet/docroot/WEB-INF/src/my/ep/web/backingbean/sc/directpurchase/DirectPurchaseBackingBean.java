@@ -30,6 +30,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -46,6 +47,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -66,6 +68,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.springframework.util.CollectionUtils;
 // TODO: Auto-generated Javadoc
@@ -151,7 +154,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			if(isGovernament){
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
 			}
-			docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+			
+			//Redmine 20311: remove RN search for Supplier
+			if(isGovernment()){
+				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+			}
+			
 			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 
 			for (String docType : docTypeList) {
@@ -177,9 +185,50 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @throws NamingException the naming exception
 	 */
 	public SelectItem[] searchStatusDesc() throws NamingException {
-		return super.getStatusDropdownValues(
-				ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-				getManagedBean().getSearchDocumentType());
+		//Redmine 20311: remove RN search
+		if(isSupplier() && getManagedBean().getSearchDocumentType() != null){
+			if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
+				SelectItem[] items = null;
+				FacesScopes face = new FacesScopes();
+				List<PmStatusDesc> statusDescsTemp = new ArrayList<PmStatusDesc>();
+				
+				List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+						.getStatusDescList(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+								getManagedBean().getSearchDocumentType(), null);
+
+				for (PmStatusDesc statusDesc : statusDescs) {
+					if(statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_COMPLETED)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED_DUE_TO_PID_VALIDITY_EXPIRED)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_RESPONSE_SUBMITTED)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_ITEM_CODE_ASSIGNMENT)){
+						
+						statusDescsTemp.add(statusDesc);
+					}
+				}
+				
+				int i = 1;
+				items = new SelectItem[statusDescsTemp.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				
+				for (PmStatusDesc statusDescr : statusDescsTemp) {
+					items[i++] = new SelectItem(statusDescr.getPmStatus()
+							.getStatusId(), statusDescr.getStatusName());
+				}
+				return items;
+			}else{
+				return super.getStatusDropdownValues(
+						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+						getManagedBean().getSearchDocumentType());
+			}
+		}else{
+			return super.getStatusDropdownValues(
+					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+					getManagedBean().getSearchDocumentType());
+		}
 	}
 
 	/**
@@ -301,6 +350,31 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 		}
+	}
+	
+	/**
+	 * View doc.
+	 *
+	 * @param dpObj the dp obj
+	 */
+	//Redmine 20311: remove RN search
+	public void viewDocSupplierSQ(Object[] dpObj){
+		debugLogger("viewDocSupplier");
+		long docId = (long) dpObj[0];
+		String docNo = (String) dpObj[1];
+		String docType = (String) dpObj[3];
+		long statusId = (long) dpObj[4];
+
+		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+		diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+		diarySearchBackingBean.getManagedBean().setDocType(docType);
+		diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+
+		SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
+		String docIdStr = Long.toString(docId);
+		sqBackingBean.supplierViewSearch(docIdStr);
+		sqBackingBean.getManagedBean().setDpObj(dpObj);
+		sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 	}
 	
 	/**
