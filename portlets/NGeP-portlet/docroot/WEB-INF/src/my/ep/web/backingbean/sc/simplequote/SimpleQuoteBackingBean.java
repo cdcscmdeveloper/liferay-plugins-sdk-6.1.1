@@ -4865,6 +4865,199 @@ public class SimpleQuoteBackingBean extends
 					.handleNavigation(fc, null, "supplerView");
 		}
 	}
+	
+	/**
+	 * render the supplier view based on the doc id from action search.
+	 */
+	//Redmine 20311: remove RN search
+	public void supplierViewSearch(String quoteIdStr) {
+		TplSpecMaster serviceMaster = null;
+		TplSpecMaster productMaster = null;
+		TemplateSpecBean productTplSpecBean = getManagedBean()
+				.getProductTemplateSpecBean();
+		TemplateSpecBean serviceTplSpecBean = getManagedBean()
+				.getServiceTemplateSpecBean();
+
+		if (StringUtils.isNotBlank(quoteIdStr)) {
+
+			try {
+				FacesScopes facesScopes = new FacesScopes();
+				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				Long quoteId = Long.valueOf(quoteIdStr);
+				quoteReqDTO.setQuoteId(quoteId);
+				quoteReqDTO.setUserId(facesScopes.getUserSessionBean()
+						.getUserId());
+				quoteReqDTO.setFetchSubEntity(true);
+				QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
+						quoteReqDTO);
+				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);
+				
+				// clear session data.
+				renewSesionObject();
+
+				if (scQuote.getQuoteDocs() != null
+						&& scQuote.getQuoteDocs().size() > 0) {
+					for (ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
+						// adding selected product or service question only
+						if (quoteDoc.getSpecMaster().getItemTypeCode()
+								.getParameterCode()
+								.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)) {
+							productMaster = quoteDoc.getSpecMaster();
+						} else if (quoteDoc.getSpecMaster().getItemTypeCode()
+								.getParameterCode()
+								.equals(ParameterConst.SQ_ITEM_LIST_SERVICE)) {
+							serviceMaster = quoteDoc.getSpecMaster();
+						}
+					}
+				}
+
+				List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
+				// service and product
+				if (quoteResDTO.getProductAnswersTpl() != null
+						&& quoteResDTO.getProductAnswersTpl().size() > 0) {
+					List<TplSpecAnswer> productAnswersTpl = quoteResDTO
+							.getProductAnswersTpl();
+					specAnswers.addAll(productAnswersTpl);
+
+					productTplSpecBean.setSpecAnswerList(productAnswersTpl);
+					productTplSpecBean.setSpecMaster(productMaster);
+					productTplSpecBean
+							.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+					getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(productTplSpecBean);
+					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+				}
+
+				if (quoteResDTO.getServiceAnswersTpl() != null
+						&& quoteResDTO.getServiceAnswersTpl().size() > 0) {
+					List<TplSpecAnswer> serviceAnswersTpl = quoteResDTO
+							.getServiceAnswersTpl();
+					specAnswers.addAll(serviceAnswersTpl);
+
+					serviceTplSpecBean.setSpecAnswerList(serviceAnswersTpl);
+					serviceTplSpecBean.setSpecMaster(serviceMaster);
+					serviceTplSpecBean
+							.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+					getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(serviceTplSpecBean);
+					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+				}
+
+				if (quoteResDTO.getScQuoteSupplier() != null) {
+					ScQuoteSupplier sQuoteSupplier = quoteResDTO
+							.getScQuoteSupplier();
+
+					if (scQuote.getMultipleQuote()) { // for multiple quote
+						getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+						if (sQuoteSupplier.isSubmitted()) {
+							getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+						} else {
+							getManagedBean().setSaveButtonFlg(Boolean.TRUE);
+						}
+					} else { // for single quote
+						if (sQuoteSupplier.isSubmitted()) {
+							getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+							getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+						} else {
+							getManagedBean().setSaveButtonFlg(Boolean.TRUE);
+							getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+						}
+					}
+					getManagedBean().setScQuoteSupplier(sQuoteSupplier);
+				}
+
+				getManagedBean().setScQuote(scQuote);
+				quoteReqDTO.setQuoteBidDtl(scQuote);
+				quoteReqDTO.setSpecAnswers(specAnswers);
+				quoteReqDTO.setQuoteSupplier(quoteResDTO.getScQuoteSupplier());
+				if (null != quoteResDTO
+						&& null != quoteResDTO.getScQuoteSupplier()
+						&& null != quoteResDTO.getScQuoteSupplier()
+								.getSmSupplier()) {
+					retriveSimpleQuoteSupplierGstInfo(quoteResDTO
+							.getScQuoteSupplier().getSmSupplier());
+				}
+
+				// remarks
+				scQuote.setRemarks(initializeRemarks(scQuote,
+						scQuote.getCurrentStatus(), scQuote.getRemarks(),
+						ScSQRemark.class));
+
+				getQuoteSO().validateSupplierResponse(quoteReqDTO);
+
+			} catch (EpException e) {
+				String message = e.getMessage();
+				if (MessageConst.ERROR_760390.equals(message)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+					// hide the save & submit button when Simple quote is not start yet
+					// in supplier view
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+				} else if (MessageConst.ERROR_760034.equals(message)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+					// hide the save & submit button when Simple quote is closed
+					// in supplier view
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+				} else if (MessageConst.ERROR_760033.equals(message)) {
+					// hide the save & submit button when Quote has been
+					// submitted previously. You are not allowed to submit twice
+					// in supplier view
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+				} else if (MessageConst.ERROR_722668.equals(message)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					
+				} else {
+					handleException(e);
+				}
+
+			} catch (Exception e) {
+				handleException(e);
+			} finally {
+				// quoteSO = null;
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "supplerView");
+		}
+	}
 
 	/**
 	 * Gets the quote zones.
