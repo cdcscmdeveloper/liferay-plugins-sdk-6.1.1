@@ -2240,16 +2240,16 @@ public class PmCommonUtil implements Serializable{
 							IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByMinistry(reqDTO);
+					.retrieveOrgProfileListDDByMinistry(reqDTO);
 
-			List<PmOrgProfile> list = resDTO.getOrgProfileList();
+			List<Object[]> list = resDTO.getOrgProfileDDList();
 			items = new SelectItem[list.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
-			for (PmOrgProfile orgProfile : list) {
-				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
-						orgProfile.getOrgName());
+			for (Object[] object : list) {
+				items[i++] = new SelectItem((Long)object[0],
+						(String)object[1]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
