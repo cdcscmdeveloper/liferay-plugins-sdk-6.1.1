@@ -38,9 +38,9 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	private CmSupplierItem cmSupplierItem;
 	private Long docId;
 
-	private IPagingDataModel<CmSupplierItem> cmDocumentDataModel 	= new SearchPagingDataModel();
+	private IPagingDataModel<Object[]> cmDocumentDataModel = new SearchPagingDataModel();
 
-	private class SearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class SearchPagingDataModel extends PagingDataModel<Object[]> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -50,47 +50,47 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
-				ISearchBean<CmSupplierItem> searchBean) {
+		protected ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 
 			ICatalogueSO catSO = null;
 			try {
-				System.out.println("pageChangeListener");
+				log.info("pageChangeListener");
 				catSO = (ICatalogueSO) BusinessDelegate.getInstance()
 						.getServiceObject("cm", ICatalogueSO.class);
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				if(getSearchSupplierValue()!=null &&getSearchSupplierValue()!="") {
-					System.out.println("getSupplierName");
+					log.info("getSupplierName");
 					reqDTO.setSupplierName(getSearchSupplierValue());
 				}
 				if(getSearchItemCodeValue()!=null && getSearchItemCodeValue()!="") {
-					System.out.println("getSearchItemCodeValue");
+					log.info("getSearchItemCodeValue");
 					reqDTO.setItemCode(getSearchItemCodeValue());
 				}
 				if(getSearchItemNameValue()!=null && getSearchItemNameValue()!="") {
-					System.out.println("getSearchItemCodeValue");
+					log.info("getSearchItemCodeValue");
 					reqDTO.setItemName(getSearchItemNameValue());
 				}
 				if(getSearchStatusId()!=null && getSearchStatusId()!="") {
-					System.out.println("getSearchStatusId"+getSearchStatusId());
+					log.info("getSearchStatusId"+getSearchStatusId());
 					reqDTO.setItemStatus(getSearchStatusId());
 				}
 				
 				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 				if(bb.isAllSupplier()){
-					System.out.println("*********is supplier***********");
+					log.info("*********is supplier***********");
 					SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-					System.out.println("smSupp.getSupplierId():"+smSupp.getSupplierId());
+					log.info("smSupp.getSupplierId():"+smSupp.getSupplierId());
 					reqDTO.setSupplierId(smSupp.getSupplierId());
 				}
 				
-				reqDTO.setSearchBean(searchBean);
-				System.out.println("*********b4***********"+getSearchItemCodeValue() );
-				CatalogueResDTO resDTO = catSO.searchSupplierItem(reqDTO);
+				reqDTO.setAuditSearchBean(searchBean);
+				log.info("*********b4***********"+getSearchItemCodeValue() );
+				CatalogueResDTO resDTO = catSO.searchSupplierItemAudit(reqDTO);
 
-				System.out.println("*********after***********" + resDTO.getSuppItemResultBean().getTotalRecord());
-				return resDTO.getSuppItemResultBean();
+				log.info("*********after***********" + resDTO.getSuppItemAuditResultBean().getTotalRecord());
+				return resDTO.getSuppItemAuditResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -101,11 +101,11 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	}
 
-	public IPagingDataModel<CmSupplierItem> getCmDocumentDataModel() {
+	public IPagingDataModel<Object[]> getCmDocumentDataModel() {
 		return cmDocumentDataModel;
 	}
 
-	public void setCmDocumentDataModel(IPagingDataModel<CmSupplierItem> cmDocumentDataModel) {
+	public void setCmDocumentDataModel(IPagingDataModel<Object[]> cmDocumentDataModel) {
 		this.cmDocumentDataModel = cmDocumentDataModel;
 	}
 
@@ -177,7 +177,7 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.setSearchCreatedFromDuration(null);
 		this.setSearchCreatedToDuration(null);	
 		this.setCmDocumentDataModel(new SearchPagingDataModel());
-		System.out.println("****************end****************");
+		log.info("****************end****************");
 		
 	
 	}
