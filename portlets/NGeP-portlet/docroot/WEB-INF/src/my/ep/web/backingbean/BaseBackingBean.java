@@ -571,6 +571,44 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
+	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType,
+			ISearchBean<Object[]> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<Object[]> objects = ParameterHelper
+					.getInstance().getParameterDescListDDBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[objects.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (Object[] object : objects) {
+				items[i++] = new SelectItem((Long)object[1],(String)object[0]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Get parameter id select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
 	public SelectItem[] getDropdownValuesBySearchBean(String parameterType,
 			ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
@@ -599,6 +637,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+
 
 	/**
 	 * Populate values for Reason Drop down base on reason category code
