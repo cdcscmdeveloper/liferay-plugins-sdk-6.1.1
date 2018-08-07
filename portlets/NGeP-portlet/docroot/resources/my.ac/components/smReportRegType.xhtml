@@ -12,12 +12,16 @@
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="showAll" default="true" />
 		<cc:attribute name="showUpgrade" default="false" />
+		<cc:attribute name="showG2g" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.regType}"
 			style="width:300px;">
 			<f:selectItems value="#{cc.attrs.bBean.retrieveRegType(cc.attrs.showAll,cc.attrs.showUpgrade)}"/>
+			<c:if test="#{cc.attrs.showG2g}">
+				<f:selectItem itemValue="#{SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}" itemLabel="#{lbl['lbl.rpt.g2g']}" />
+			</c:if>
 			<p:ajax event="change" listener="#{cc.attrs.bBean.onChangeRegType}" process="@this" partialSubmit="true" update="@form" />
 		</p:selectOneMenu>
 	</cc:implementation>
