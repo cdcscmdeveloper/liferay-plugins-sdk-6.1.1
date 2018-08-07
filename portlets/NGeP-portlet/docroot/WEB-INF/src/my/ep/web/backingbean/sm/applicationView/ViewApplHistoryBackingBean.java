@@ -249,6 +249,14 @@ public class ViewApplHistoryBackingBean extends
 	 * Perform search supplier application history
 	 */
 	public void search() {
+		if (getManagedBean().getSearchSupplier() != null
+				&& !StringUtils.isBlank(getManagedBean().getSearchSupplier()
+						.getCompanyName())
+				&& getManagedBean().getSearchSupplier().getCompanyName()
+						.length() < 3) {
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.tt.search.prefix.three.char", null));
+		}
 		getManagedBean().searchSupplier();
 	}
 

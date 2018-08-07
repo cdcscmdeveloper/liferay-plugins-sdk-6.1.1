@@ -330,7 +330,7 @@ public class SupplierManagementConst {
 
 	public static final String BPK_OFFICER = "BPK_OFFICER";
 	public static final String BPK_AUDITOR = "BPK_AUDITOR";
-
+	
 	// SmPersonnel Parameter for staff role
 
 	public static final String SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR = "KPT";
@@ -459,25 +459,25 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPLICATION_DECLARATION_L = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION;
 	public static final String REJECTED_STATUSES[] = my.ep.constant.sm.SupplierManagementConst.REJECTED_STATUSES;
 
-	public static final String SM_APPL_PAGE_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC;
-	public static final String SM_APPL_PAGE_TYPE_BRANCH = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH;
-	public static final String SM_APPL_PAGE_TYPE_EQUITY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY;
-	public static final String SM_APPL_PAGE_TYPE_PERSONNEL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL;
-	public static final String SM_APPL_PAGE_TYPE_BANK = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK;
-	public static final String SM_APPL_PAGE_TYPE_CATEGORY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY;
-	public static final String SM_APPL_PAGE_TYPE_FACTORY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY;
-	public static final String SM_APPL_PAGE_TYPE_EQUIP = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP;
-	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCS = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS;
-	public static final String SM_APPL_PAGE_TYPE_VIRTUAL_CERT = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT;
-	public static final String SM_APPL_PAGE_TYPE_TRACKING_DIARY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY;
-	public static final String SM_APPL_PAGE_TYPE_PO_APPR_DEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC;
-	public static final String SM_APPL_PAGE_TYPE_PAYMENT = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT;
-	public static final String SM_APPL_PAGE_TYPE_DECLARATION = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION;
-	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCSREV = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCSREV;
-	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV;
-	public static final String SM_APPL_PAGE_TYPE_PODEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC;
-	public static final String SM_APPL_PAGE_TYPE_APPRDEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC;
-	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY;
+	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
+	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
+	public static final String SM_APPL_PAGE_TYPE_EQUITY = "EQUITYINFO";
+	public static final String SM_APPL_PAGE_TYPE_PERSONNEL = "PERSONNELINFO";
+	public static final String SM_APPL_PAGE_TYPE_BANK = "BANKINFO";
+	public static final String SM_APPL_PAGE_TYPE_CATEGORY = "CATEGORYINFO";
+	public static final String SM_APPL_PAGE_TYPE_FACTORY = "FACTORYINFO";
+	public static final String SM_APPL_PAGE_TYPE_EQUIP = "EQUIPINFO";
+	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCS = "SUPPORTDOCSINFO";
+	public static final String SM_APPL_PAGE_TYPE_VIRTUAL_CERT = "VIRTUALCERTINFO";
+	public static final String SM_APPL_PAGE_TYPE_TRACKING_DIARY = "TRACKINGDIARYINFO";
+	public static final String SM_APPL_PAGE_TYPE_PO_APPR_DEC = "POAPPROVERDECISION";
+	public static final String SM_APPL_PAGE_TYPE_PAYMENT = "PAYMENTINFO";
+	public static final String SM_APPL_PAGE_TYPE_DECLARATION = "DECLAREINFO";
+	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCSREV = "SUPPORTDOCSREVIEW";
+	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
+	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
+	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
+	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = "POINQUIRY";
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
@@ -541,7 +541,7 @@ public class SupplierManagementConst {
 					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS,
 					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1,
 					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2,
-					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_3 });
+					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_3});
 	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
 	public static final String DPA_REASON_OTHERS_1 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1;
 	public static final String DPA_REASON_OTHERS_2 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2;
@@ -966,7 +966,7 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_TRACKING_DIARY() {
 		return SM_APPL_PAGE_TYPE_TRACKING_DIARY;
 	}
-
+	
 	public String getSM_APPL_PAGE_TYPE_PO_APPR_DEC() {
 		return SM_APPL_PAGE_TYPE_PO_APPR_DEC;
 	}

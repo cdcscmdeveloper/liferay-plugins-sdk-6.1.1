@@ -6712,9 +6712,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 		}
-		
 		getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-		
+
 		if (bpmAppl.getSupportingDocMode() == null) {
 			bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
@@ -9421,14 +9420,6 @@ public class SmApplicationBackingBean extends
 		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 				.getSmApplSectionReviews())) {
 			if (getManagedBean().isApproverUser()) {
-				
-				if(getManagedBean().getSmAppl().getPoUserId() != null) {
-					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getSmAppl().getPoUserId());
-					UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
-					getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
-				}
-				
 				for (SmApplSectionReview rev : getManagedBean().getSmAppl()
 						.getSmApplSectionReviews()) {
 					if (rev.getRoleType().equalsIgnoreCase(
@@ -9439,6 +9430,12 @@ public class SmApplicationBackingBean extends
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						getManagedBean().setPoSecReview(rev);
+						if(rev.getCreatedBy() != null) {
+							UserReqDTO userReqDTO = new UserReqDTO();
+							userReqDTO.setUserId(rev.getCreatedBy());
+							UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO);
+							getManagedBean().setPoUserName(userResDTO.getPmUser().getUserName());
+						}
 					}
 					if (rev.getPmRegStatus() != null
 							&& rev.getPmRegStatus().getPmStatus() != null) {
