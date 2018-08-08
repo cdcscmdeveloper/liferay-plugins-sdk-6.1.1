@@ -364,6 +364,10 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
 					getManagedBean().getStatus() == 1 ? "Active" : "Inactive");
 		}
+
+		//Bug #21212 "BPK Administrator Profile Report" change to "Registration Administrator Profile Report"
+		map.put(PmReportConst.PARAM_PM_LANGUAGE, getFacesScopes().getUserLocale().getLanguage());
+		//end Bug #21212
 	}
 
 	// Item Code, Date From, Date To
