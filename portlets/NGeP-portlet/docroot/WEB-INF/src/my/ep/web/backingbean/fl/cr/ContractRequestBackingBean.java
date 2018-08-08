@@ -4159,8 +4159,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			validatePreparedOrgAndAgencies();
-			checkContractValidity(getManagedBean().getFlRequest());
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				validatePreparedOrgAndAgencies();
+				checkContractValidity(getManagedBean().getFlRequest());
+			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
 					getManagedBean().setSelectedTabIndex(0);
