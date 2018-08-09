@@ -8114,6 +8114,14 @@ public class SmApplicationBackingBean extends
 								ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
 								getManagedBean().getApplnOverLapRemarks());
 			}
+			
+			// #17064 - update establish_date in supplier if there is any changes
+			if (SmCommonUtil.isHasDifferences(getManagedBean().getLatestAppl(),
+					getManagedBean().getSmAppl(),
+					new String[] { "establishDate" })) {
+				reqDTO.setEstablishDate(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getEstablishDate());
+			}
 
 		}
 

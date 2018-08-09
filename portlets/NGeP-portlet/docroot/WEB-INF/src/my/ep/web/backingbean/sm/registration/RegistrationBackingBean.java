@@ -462,6 +462,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		smSupp.setCompanyName(smAppl.getSmCompanyBasic().getCompanyName().trim());
+		smSupp.setEstablishDate(smAppl.getSmCompanyBasic().getEstablishDate());
 		smAppl.setSmSupplier(smSupp);
 		smAppl.getSmCompanyBasic().setSmAppl(smAppl);
 		smAppl.getSmCompanyBasic().setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
