@@ -102,12 +102,12 @@
 							label="#{lbl['lbl.sm.estdate']}" id="establishDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-							value="#{backingBean.managedBean.smSupplier.establishDate}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smSupplier.establishDate}" 
-							currValue="#{backingBean.managedBean.smSupplier.establishDate}" 
-							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.smSupplier.establishDate)}"/>
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
+							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.smCompanyBasic.establishDate)}"/>
 						<p:message id="establishDateMsg" for="establishDate" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
