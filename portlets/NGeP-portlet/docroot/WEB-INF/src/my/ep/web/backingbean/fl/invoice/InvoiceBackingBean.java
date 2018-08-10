@@ -212,8 +212,18 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 				adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
 				if(invItemSumm.getRecalledAmt()!=null && invItemSumm.getRecalledAmt().doubleValue()>0) {
+					//Bug #21515 : to avoid diff deciml Ni yang problem NORA
 					adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt().subtract(invItemSumm.getRecalledAmt()));
+
+					BigDecimal receivedItemAmount = new BigDecimal(0);					
+					for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
+						if(invItem.getReceivedAmt() != null ){
+								receivedItemAmount = receivedItemAmount.add(invItem.getReceivedAmt());
+						}
+					}					
+					adjustedAmt = invItemSumm.getInvAmt().subtract(receivedItemAmount);	
 				}
+				
 				if(adjustedAmt.doubleValue()>0) {
 					reqDTO.setDan(true);
 				} else if(adjustedAmt.doubleValue()<0) {
