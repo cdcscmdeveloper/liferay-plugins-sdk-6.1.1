@@ -215,15 +215,20 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					//Bug #21515 : to avoid diff deciml Ni yang problem NORA
 					//adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt().subtract(invItemSumm.getRecalledAmt()));
 
-					BigDecimal receivedItemAmount = new BigDecimal(0);					
+					BigDecimal receivedItemAmount = new BigDecimal(0);		
+					BigDecimal receivedAmt = new BigDecimal(0);
+					
 					for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
-						if(invItem.getReceivedAmt() != null ){
-								receivedItemAmount = receivedItemAmount.add(invItem.getReceivedAmt());
+						if(invItem.getReceivedQty() != null && invItem.getReceivedQty().doubleValue() >=0
+								&& invItem.getGstUnitPrice() != null && invItem.getGstUnitPrice().doubleValue() >=0){
+							    receivedAmt = invItem.getReceivedQty().multiply(invItem.getGstUnitPrice());
+								receivedItemAmount = receivedItemAmount.add(receivedAmt);
+								
 						}
 					}
-					adjustedAmt = invItemSumm.getInvAmt().subtract(receivedItemAmount);	
+					adjustedAmt = invItemSumm.getInvAmt().subtract(receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP));	
 				}
-				
+
 				if(adjustedAmt.doubleValue()>0) {
 					reqDTO.setDan(true);
 				} else if(adjustedAmt.doubleValue()<0) {
