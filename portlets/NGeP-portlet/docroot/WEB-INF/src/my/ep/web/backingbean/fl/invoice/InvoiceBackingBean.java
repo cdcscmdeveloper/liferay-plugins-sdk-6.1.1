@@ -212,9 +212,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 				adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
 				if(invItemSumm.getRecalledAmt()!=null && invItemSumm.getRecalledAmt().doubleValue()>0) {
-					//Bug #21515 : to avoid diff deciml Ni yang problem NORA
+					//Bug #21515
 					//adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt().subtract(invItemSumm.getRecalledAmt()));
-
+			
 					BigDecimal receivedItemAmount = new BigDecimal(0);		
 					BigDecimal receivedAmt = new BigDecimal(0);
 					
