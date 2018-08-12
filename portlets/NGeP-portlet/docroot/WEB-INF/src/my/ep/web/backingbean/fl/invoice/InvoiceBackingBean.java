@@ -210,23 +210,23 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			// Check is it DAN exist
 			BigDecimal adjustedAmt = new BigDecimal(0);
 			for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+
 				adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
 				if(invItemSumm.getRecalledAmt()!=null && invItemSumm.getRecalledAmt().doubleValue()>0) {
 					//Bug #21515
 					//adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt().subtract(invItemSumm.getRecalledAmt()));
 			
-					BigDecimal receivedItemAmount = new BigDecimal(0);		
-					BigDecimal receivedAmt = new BigDecimal(0);
-					
+					BigDecimal receivedItemAmount = new BigDecimal(0);
 					for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
 						if(invItem.getReceivedQty() != null && invItem.getReceivedQty().doubleValue() >=0
 								&& invItem.getGstUnitPrice() != null && invItem.getGstUnitPrice().doubleValue() >=0){
-							    receivedAmt = invItem.getReceivedQty().multiply(invItem.getGstUnitPrice());
-								receivedItemAmount = receivedItemAmount.add(receivedAmt);
-								
+								BigDecimal receivedAmt = new BigDecimal(0);
+								receivedAmt = invItem.getReceivedQty().multiply(invItem.getGstUnitPrice());
+								receivedItemAmount = receivedItemAmount.add(receivedAmt);								
 						}
 					}
-					adjustedAmt = invItemSumm.getInvAmt().subtract(receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP));	
+					
+					adjustedAmt = invItemSumm.getInvAmt().subtract(receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP));				
 				}
 
 				if(adjustedAmt.doubleValue()>0) {
