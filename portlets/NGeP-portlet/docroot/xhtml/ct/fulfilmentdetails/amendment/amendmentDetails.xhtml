@@ -12,7 +12,8 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired
+					or amendmentBackingBean.isContractAmountAmend()}">
 					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel"
 						process="@all" onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
@@ -28,7 +29,8 @@
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails
-						or (!amendmentBackingBean.managedBean.itemProductExist and !amendmentBackingBean.managedBean.itemServiceExist)}">
+						or (!amendmentBackingBean.managedBean.itemProductExist and !amendmentBackingBean.managedBean.itemServiceExist)
+						or amendmentBackingBean.isContractAmountAmend()}">
 					 <p:ajax event="change" update=":form"  process="@form" 
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
@@ -44,7 +46,8 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails
 					or !amendmentBackingBean.managedBean.itemProductExist
-					or  ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+					or  ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral
+					or amendmentBackingBean.isContractAmountAmend()}">
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
@@ -61,7 +64,8 @@
 				    or ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst
 				    or ctBackingBean.managedBean.disableAmendDetails
 				    or (ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral
-				    	and !ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)}"
+				    	and !ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)
+				    	or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
 					<p:ajax event="change"  update=":form:amend" process="@form"
 						listener="#{amendmentBackingBean.onChangeValueChecked}"
@@ -89,7 +93,7 @@
 			<f:verbatim/>
 			
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onChangeValueByGstChecked}" /> 
@@ -107,7 +111,7 @@
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}" >
 					<p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onChangeOther}"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
@@ -271,7 +275,7 @@
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}">
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.mof']}" style="text-align:left" />
@@ -280,7 +284,7 @@
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}">
 					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"/>
@@ -292,7 +296,7 @@
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
-					disabled="true" />
+					disabled="#{!amendmentBackingBean.isContractAmountAmend()}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
 			</h:panelGrid>

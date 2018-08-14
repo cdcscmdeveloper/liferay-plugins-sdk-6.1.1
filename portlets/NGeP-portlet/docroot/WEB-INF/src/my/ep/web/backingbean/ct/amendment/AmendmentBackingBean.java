@@ -797,7 +797,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// Amendment process	  
-			getManagedBean().setCommitteeType(retrieveCommitteeType());
+			// Redmine 19600 - Amendment with Supplement
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue() >= 20000L){
+				getManagedBean().setCommitteeType(retrieveCommitteeType());
+			}
 			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
@@ -4888,5 +4891,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(null);
 		}
 		return dueDate;
+	}
+	
+	// Redmine 19600 - Amendment with Supplement
+	/**
+	 * to validate contract amount below 20k
+	 * 
+	 * @return
+	 */
+	public boolean isContractAmountAmend() {
+		boolean isContractAmountAmend = false;
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue() < 20000L){
+			isContractAmountAmend = true;
+		}		
+		
+		return isContractAmountAmend;
 	}
 }
