@@ -1369,7 +1369,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				
 				//retrieve Supplier GST Info
 				initGstInfo(resDTO.getSmSupp(),getManagedBean(),false);
-				getManagedBean().setGstFlag(true);
+				getManagedBean().setGstFlag(false);
 
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
