@@ -242,8 +242,7 @@
 				<td class="tdContent"><p:calendar id="estDateCalId"
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
-						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
 					<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
 			</tr>
 
