@@ -118,7 +118,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.util.CommonUtils;
-import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -215,25 +214,6 @@ public class SupplierFinalizationBackingBean extends
 					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
-	
-	/**
-	 * Initialize the data required when the page is initially rendered (based
-	 * on the qtid of the selected quotation/tender) and sets the data in
-	 * managed bean associated with the current user session
-	 * @return 
-	 */
-	public String preRenderViewMaintenance(Long qtId) {
-		log.info("preRenderViewMaintenance");
-		getManagedBean().setActiveIndex(0);
-		
-		Long loggedInUserId = getFacesScopes().getUserSessionBean()
-								.getUserId();
-		getManagedBean().setLoggedInUserId(loggedInUserId);
-
-		loadInitialData(qtId);
-
-		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
-	}
 
 	/**
 	 * To fetch initial data
@@ -241,87 +221,51 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	private void loadInitialData(Long qtId) {
 		log.info("loadInitialData");
+		SCEvaluationDataType dataType = (SCEvaluationDataType) 
+				this.getManagedBean().getPayLoad();
+		getManagedBean().setCommitteeType(dataType.getCommitteeType());
 		
-		if(isQTMaintenanceScreen()){
-			retrieveQTDetails(qtId);
-			
-			String committeeType = getManagedBean().getCommitteeType();
-			if (StringUtils.isNotBlank(committeeType) && 
-					!StringUtils.equalsIgnoreCase(committeeType, "null")) {
-				loadPreparationTabDetails();
-				checkIfLoggedinUserIsSecretary();
-			}
-			loadSupplierFinalizationTabDetails();
-			retrieveBriefingPaper();
-			
-			int tabIndex = 0;
-			if (getManagedBean().isInitialDecisionFwdToBPK()) {
-				getManagedBean().getScQtFinalization()
-						.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
-				getManagedBean().setPreparationTabIndex(-1);
-				getManagedBean().setReportTabIndex(tabIndex++);
-				getManagedBean().setFinalizationTabIndex(tabIndex++);
-				getManagedBean().setEndorsementReportActiveIndex(-1);
-				getManagedBean().setCommEndorsementTabIndex(-1);
-			} else {
-				getManagedBean().setPreparationTabIndex(tabIndex++);
-				getManagedBean().setReportTabIndex(tabIndex++);
-				getManagedBean().setFinalizationTabIndex(tabIndex++);
-				getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
-				getManagedBean().setEndorsementReportActiveIndex(tabIndex);
-			}
-			
-			// Dynamically creating main tab menu
-			createMainMenuModel();
-			
-		}else{
-			SCEvaluationDataType dataType = (SCEvaluationDataType) 
-					this.getManagedBean().getPayLoad();
-			getManagedBean().setCommitteeType(dataType.getCommitteeType());
-			
-			retrieveQTDetails(qtId);
-			
-			if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
-					.equals(dataType.getFcDecision())) {
-				getManagedBean().setInitialDecisionFwdHighAuth(true);
-			} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
-							.equals(dataType.getFcDecision()) || isQTRefinalized()) && 
-						QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
-								.equals(getManagedBean().getCurrentStatusId())) {
-				getManagedBean().setCommitteeType(StringUtils.EMPTY);
-				getManagedBean().setInitialDecisionFwdToBPK(true);
-			}
-			
-			String committeeType = getManagedBean().getCommitteeType();
-			if (StringUtils.isNotBlank(committeeType) && 
-					!StringUtils.equalsIgnoreCase(committeeType, "null")) {
-				loadPreparationTabDetails();
-				checkIfLoggedinUserIsSecretary();
-			}
-			loadSupplierFinalizationTabDetails();
-			retrieveBriefingPaper();
-			
-			int tabIndex = 0;
-			if (getManagedBean().isInitialDecisionFwdToBPK()) {
-				getManagedBean().getScQtFinalization()
-						.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
-				getManagedBean().setPreparationTabIndex(-1);
-				getManagedBean().setReportTabIndex(tabIndex++);
-				getManagedBean().setFinalizationTabIndex(tabIndex++);
-				getManagedBean().setEndorsementReportActiveIndex(-1);
-				getManagedBean().setCommEndorsementTabIndex(-1);
-			} else {
-				getManagedBean().setPreparationTabIndex(tabIndex++);
-				getManagedBean().setReportTabIndex(tabIndex++);
-				getManagedBean().setFinalizationTabIndex(tabIndex++);
-				getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
-				getManagedBean().setEndorsementReportActiveIndex(tabIndex);
-			}
-			
-			// Dynamically creating main tab menu
-			createMainMenuModel();
+		retrieveQTDetails(qtId);
+		
+		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
+				.equals(dataType.getFcDecision())) {
+			getManagedBean().setInitialDecisionFwdHighAuth(true);
+		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
+						.equals(dataType.getFcDecision()) || isQTRefinalized()) && 
+					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
+							.equals(getManagedBean().getCurrentStatusId())) {
+			getManagedBean().setCommitteeType(StringUtils.EMPTY);
+			getManagedBean().setInitialDecisionFwdToBPK(true);
 		}
 		
+		String committeeType = getManagedBean().getCommitteeType();
+		if (StringUtils.isNotBlank(committeeType) && 
+				!StringUtils.equalsIgnoreCase(committeeType, "null")) {
+			loadPreparationTabDetails();
+			checkIfLoggedinUserIsSecretary();
+		}
+		loadSupplierFinalizationTabDetails();
+		retrieveBriefingPaper();
+		
+		int tabIndex = 0;
+		if (getManagedBean().isInitialDecisionFwdToBPK()) {
+			getManagedBean().getScQtFinalization()
+					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
+			getManagedBean().setPreparationTabIndex(-1);
+			getManagedBean().setReportTabIndex(tabIndex++);
+			getManagedBean().setFinalizationTabIndex(tabIndex++);
+			getManagedBean().setEndorsementReportActiveIndex(-1);
+			getManagedBean().setCommEndorsementTabIndex(-1);
+		} else {
+			getManagedBean().setPreparationTabIndex(tabIndex++);
+			getManagedBean().setReportTabIndex(tabIndex++);
+			getManagedBean().setFinalizationTabIndex(tabIndex++);
+			getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
+			getManagedBean().setEndorsementReportActiveIndex(tabIndex);
+		}
+		
+		// Dynamically creating main tab menu
+		createMainMenuModel();
 	}
 	
 	/**
@@ -348,11 +292,8 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
-			//TODO - Filter for non maintenance
-			if(!isQTMaintenanceScreen()){
-				getManagedBean().setOriginalFinalizationSecretaryUserId(
+			getManagedBean().setOriginalFinalizationSecretaryUserId(
 						scQt.getFinalizationSecratery().getUserId());
-			}
 
 			boolean isMedicalProcCategory = isMultipleProposalCategory(
 					scQt, null);
@@ -2186,8 +2127,7 @@ public class SupplierFinalizationBackingBean extends
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
 				finalizationReports.removeAll(endorsementReports);
-				//TODO - Add condition for Maintenance Screen
-				if (endorsementReportCount < totalFinalizationRounds || isQTMaintenanceScreen()) {
+				if (endorsementReportCount < totalFinalizationRounds) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
 					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
@@ -2960,13 +2900,7 @@ public class SupplierFinalizationBackingBean extends
 			if (scQtFinalization != null) {
 				this.getManagedBean().setScQtFinalization(scQtFinalization);
 				
-				//TODO - Maintenance Screen
-				List<String> rejectedRecommendDtlIds;
-				if(isQTMaintenanceScreen()){
-					rejectedRecommendDtlIds = null;
-				}else{
-					rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
-				}
+				List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
 				if (CollectionUtils.isNotEmpty(rejectedRecommendDtlIds)) {
 					SuppFinalizationReqDTO _reqDTO = new SuppFinalizationReqDTO();
 					_reqDTO.setRecommendDtlIds(rejectedRecommendDtlIds);
@@ -4292,10 +4226,6 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);
-			//TODO - disable menu for Maintenance Screen
-			if(isQTMaintenanceScreen()){
-				menuItem.setDisabled(true);
-			}
 		}
 		
 		
@@ -4329,10 +4259,6 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setOncomplete(tabMenuChangeCommonAction
 				+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
-		//TODO - disable menu for Maintenance Screen
-		if(isQTMaintenanceScreen()){
-			menuItem.setDisabled(true);
-		}
 
 		
 		// Supplier Finalization Committee Endorsement Menu Item
@@ -4348,10 +4274,6 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);	
-			//TODO - disable menu for Maintenance Screen
-			if(isQTMaintenanceScreen()){
-				menuItem.setDisabled(true);
-			}
 			
 			menuItem = new MenuItem();
 			menuItem.setValue(ResourceBundleUtils.getMessage(
@@ -6749,9 +6671,5 @@ public class SupplierFinalizationBackingBean extends
 		//set to false whenever KT is deleted, currenly disabled
 		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
 				
-	}
-	
-	private boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 }
