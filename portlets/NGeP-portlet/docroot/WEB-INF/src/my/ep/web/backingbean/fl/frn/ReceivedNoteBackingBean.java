@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -51,7 +50,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
-import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -226,6 +224,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				if(getManagedBean().getPmDigiSign() !=null){
 					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				}
+				if(fulfilmentNote.isBrandNew()) {
+					reqDTO.setBrandnew(true);
+				}
+				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
+				reqDTO.setFulfilmentNote(resDTO.getFulfilmentNote());
+				reqDTO.setTriggerBPM(true);
 				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			}
 			if (resDTO.isSuccessful()) {
