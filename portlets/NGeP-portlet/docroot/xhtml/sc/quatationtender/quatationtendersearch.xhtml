@@ -90,12 +90,6 @@
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
-						<p:commandLink id="viewDNIconMaintenance" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
-							style="margin-right:20px;" partialSubmit="true" process="@this"
-							rendered="#{qTDetailBB.isAllowLOAViewMaintenance()}">
-							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
-								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
-						</p:commandLink>
 						<p:commandLink id="viewDNIcon" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"
 							rendered="#{scQt.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego}">
@@ -135,12 +129,6 @@
 							rendered="#{qTDetailBB.isAllowQTClosedBtn(scQt)}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png" styleClass="tasklist_title1"
 								title="Click here to Close QT" />
-						</p:commandLink>
-						<p:commandLink id="viewFSIcon" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
-							style="margin-right:20px;" partialSubmit="true" process="@this"
-							rendered="#{scQt.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego and qTDetailBB.isAllowQTViewSupplierFinalization(scQt)}">
-							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
-								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>

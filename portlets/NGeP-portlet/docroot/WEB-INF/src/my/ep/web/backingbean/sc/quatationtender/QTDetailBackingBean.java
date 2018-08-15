@@ -182,7 +182,6 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
@@ -847,23 +846,6 @@ public class QTDetailBackingBean extends
 		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
 		
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
-	}
-	
-	/**
-	 * Method to view Finalization Supplier Details.
-	 * 
-	 * @param scQt
-	 *            the ScQt instance
-	 * @param previousPageUrl
-	 * 				the previous page url.
-	 * @return the navigation page
-	 */
-	public String viewFinalizationSupplierDetails(ScQt scQt, String previousPageUrl) {
-		debugLogger("viewFinalizationSupplierDetails");
-		
-		Long qtId = scQt.getQtId();
-		
-		return new SupplierFinalizationBackingBean().preRenderViewMaintenance(qtId);
 	}
 	
 	/**
@@ -5090,11 +5072,6 @@ public class QTDetailBackingBean extends
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
 	
-	private boolean isPbbSecretary() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value());
-	}
-	
 	private boolean isMofSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
@@ -5660,22 +5637,14 @@ public class QTDetailBackingBean extends
 	public SelectItem[] getDocTypeQtLOADropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtLoaDoctypes = new ArrayList<String>();	
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
 		
-		//filter document type search by role.
-		if (isPbbSecretary()){
-			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		}else{
-			qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
-			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
-			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
-			
-			if (isMofSupplier()) {
-				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
-			}	
-		}
-			
+		if (isMofSupplier()) {
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
+		}		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(), qtLoaDoctypes));
@@ -6073,43 +6042,5 @@ public class QTDetailBackingBean extends
 		}
 		attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
-	}
-
-	/**
-	 * is Allow QT View Supplier Finalization
-	 * 
-	 * @param scQt
-	 * 		the ScQt instance
-	 * 
-	 * @return
-	 */
-	public boolean isAllowQTViewSupplierFinalization(ScQt scQt) {
-		boolean isAllowQTViewSupplierFinalization = false;
-		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
-		if (scQt != null && scQt.getQtStatus() != null && scQt.getQtStatus().getStatusId() != null &&
-				ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(docType) &&
-				isQTMaintenanceScreen() && isPbbSecretary()) {
-			isAllowQTViewSupplierFinalization = true;
-		}		
-		
-		return isAllowQTViewSupplierFinalization;
-	}
-	
-	/**
-	 * is Allow View LOA from Maintainence
-	 * 
-	 * @param scQt
-	 * 		the ScQt instance
-	 * 
-	 * @return
-	 */
-	public boolean isAllowLOAViewMaintenance() {
-		boolean isAllowLOAViewMaintenance = false;
-		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
-		if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType) && isQTMaintenanceScreen()) {
-			isAllowLOAViewMaintenance = true;
-		}		
-		
-		return isAllowLOAViewMaintenance;
 	}
 }
