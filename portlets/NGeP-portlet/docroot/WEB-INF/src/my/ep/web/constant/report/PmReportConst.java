@@ -33,7 +33,6 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_USERNAME = "PUSERNAME";
 	public static final String PARAM_PM_IDENTIFICATION_NO = "PIDENNO";
 	public static final String PARAM_PM_ROLE_CODE = "PROLECODE";
-	public static final String PARAM_PM_LANGUAGE = "PLANGUAGE";
 
 	// PM Report Code
 	public static final String PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL = "PM_001";
