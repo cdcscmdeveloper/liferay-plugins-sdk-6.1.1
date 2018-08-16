@@ -17,6 +17,7 @@ public class LiferayOIMRest {
 	@Path("createliferay")
 	public void createLiferay() {
 		UserReqDTO reqDTO = new UserReqDTO();
+		log.info("Before success calling createLiferay rest api....");
 		SmServiceLookup.getUserSO().createUserLiferayOIM(reqDTO);
 		log.info("After success calling createLiferay rest api....");
 	}
