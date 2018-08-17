@@ -15,6 +15,14 @@
 		</tr>
 	</table>
 	<p:panel id="pProMngSearch" header="#{lbl['lbl.pm.search.user']}" toggleable="true">
+		<table>
+			<tr>
+				<td colspan="2" style="padding-bottom:5px;">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.profiles.search.note']}" />
+				</td>
+			</tr>
+		</table>
+		<br/>
 		<!-- User Search -->
 	    <ui:include src="/xhtml/pm/profilemanagement/search/userDefinedSearch.xhtml" />
 	</p:panel>
