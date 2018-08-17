@@ -94,8 +94,8 @@
 
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<img src="/NGeP-portlet/images/#{cmImage.imageName}"
-										style="height: 150px; left: 0px !important;" />
+									<p:graphicImage styleClass="catImageStyle"
+											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
 								</ui:repeat>
 								</div>
 							</h:panelGroup>
