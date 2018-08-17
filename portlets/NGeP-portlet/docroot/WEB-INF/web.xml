@@ -89,6 +89,10 @@
 	    <servlet-name>fileDownloadServlet</servlet-name>
 	    <servlet-class>my.ep.web.servlet.FileDownloadServlet</servlet-class>
 	</servlet>
+	<servlet>
+	    <servlet-name>liferayOIMServlet</servlet-name>
+	    <servlet-class>my.ep.web.servlet.CreateLiferayOIMServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 	    <servlet-name>imageServlet</servlet-name>
 	    <url-pattern>/image/*</url-pattern>
@@ -105,6 +109,10 @@
   <servlet-mapping>
     <servlet-name>molpayServlet</servlet-name>
     <url-pattern>/molpayCallBack/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>liferayOIMServlet</servlet-name>
+    <url-pattern>/createLiferayOIM/*</url-pattern>
   </servlet-mapping>
 	
 	<!-- Quartz Startup Config -->
