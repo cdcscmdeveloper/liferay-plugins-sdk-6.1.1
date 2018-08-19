@@ -1280,6 +1280,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			requestNoteReqDTO.setOutcome(outcome);
+			requestNoteReqDTO.setPayLoad(getManagedBean().getPayLoad());
 			requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			requestNoteReqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 			requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
