@@ -1048,6 +1048,7 @@ public class GovtSellerRegistrationBackingBean extends
 		SelectItem[] items = getDropdownCodeValues("OT");
 		String[] agencyType = new String[] {
 				OrganizationType.STATUTORY_BODIES.value(),
+				OrganizationType.STATUTORY_BODIES_STATE.value(),
 				OrganizationType.STATE_GOVERNMENT.value(),
 				OrganizationType.LOCAL_AUTHORITY.value() };
 		if (items != null && items.length > 0) {
