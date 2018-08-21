@@ -38,8 +38,10 @@ public class CreateLiferayOIMServlet extends HttpServlet {
 
 			if (!EntityHelper.isCollectionEmpty(liferayList)) {
 				for (PmPendingLiferay liferay : liferayList) {
-					reqDTO.setLiferay(liferay);
-					SmServiceLookup.getUserSO().saveUserLiferayOIM(reqDTO);
+					reqDTO.setUserId(liferay.getPmUser().getUserId());
+					reqDTO.setLoginId(liferay.getPmUser().getLoginId());
+					SmServiceLookup.getUserSO()
+							.syncLiferayAndOimInfoFromPm(reqDTO);
 				}
 			}
 		} finally {
