@@ -33,19 +33,11 @@ public class CreateLiferayOIMServlet extends HttpServlet {
 		UserReqDTO reqDTO = new UserReqDTO();
 		PrintWriter out = res.getWriter();
 		try {
-			List<PmPendingLiferay> liferayList = SmServiceLookup.getUserSO()
-					.retrievePendingLiferay(reqDTO).getPendingLiferayList();
-
-			if (!EntityHelper.isCollectionEmpty(liferayList)) {
-				for (PmPendingLiferay liferay : liferayList) {
-					reqDTO.setUserId(liferay.getPmUser().getUserId());
-					reqDTO.setLoginId(liferay.getPmUser().getLoginId());
-					SmServiceLookup.getUserSO()
-							.syncLiferayAndOimInfoFromPm(reqDTO);
-				}
-			}
+			SmServiceLookup.getUserSO().createPendingLiferay(reqDTO);
+			out.print("success!!!!");
+		} catch (Exception e) {
+			out.print(e.getMessage());
 		} finally {
-			out.print("success calling create liferay!!");
 			out.close();
 		}
 		log.info("After success calling createLiferay servlet....");
