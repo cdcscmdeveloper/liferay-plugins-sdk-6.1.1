@@ -1,14 +1,10 @@
 package my.ep.rest.pm;
 
-import java.util.List;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.pm.authorization.PmPendingLiferay;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
@@ -24,21 +20,14 @@ public class LiferayOIMRest {
 		log.info("Before success calling createLiferay rest api....");
 
 		UserReqDTO reqDTO = new UserReqDTO();
-		List<PmPendingLiferay> liferayList = SmServiceLookup
-				.getUserSO().retrievePendingLiferay(reqDTO)
-				.getPendingLiferayList();
+		try {
+			SmServiceLookup.getUserSO().createPendingLiferay(reqDTO);
 
-		if (!EntityHelper.isCollectionEmpty(liferayList)) {
-			for (PmPendingLiferay liferay : liferayList) {
-				reqDTO.setUserId(liferay.getPmUser().getUserId());
-				reqDTO.setLoginId(liferay.getPmUser().getLoginId());
-				SmServiceLookup.getUserSO()
-						.syncLiferayAndOimInfoFromPm(reqDTO);
-			}
+			return Response.status(200)
+					.entity("success calling create liferay!!").build();
+		} catch (Exception e) {
+			return Response.status(406).entity(e.getMessage()).build();
 		}
-
-		return Response.status(200).entity("success calling create liferay!!")
-				.build();
 
 	}
 
