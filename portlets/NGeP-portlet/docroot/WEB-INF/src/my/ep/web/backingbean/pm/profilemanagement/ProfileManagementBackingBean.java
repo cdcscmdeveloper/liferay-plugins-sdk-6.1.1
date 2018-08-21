@@ -2396,27 +2396,38 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void searchUserProfile() {
 		logger.info("searchUserProfile - start");
-		// if (this.getManagedBean().getUserProfileSearchBean()
-		// .getSelectedOrgProfileId() == null) {
-		// // hit error and return
-		// throw new EpException(MessageConst.ERROR_775116, new String[] {});
-		//
-		// }
+		
 		if (getManagedBean().getSelectedOrgType().getParameterId() == null) {
 			throw new EpException(MessageConst.ERROR_770227);
 		}
-
+	
 		if (getManagedBean().getUserProfileSearchBean().getSelectedOrgProfileId() == null
+				&& isDefaultPtjAdminOrgNameEmpty()
 				&& StringUtils.isBlank(getManagedBean().getUserProfileSearchBean().getIdentificationNo())
 				&& StringUtils.isBlank(getManagedBean().getUserProfileSearchBean().getUserName())
 				&& StringUtils.isBlank(getManagedBean().getUserProfileSearchBean().getUserRole())
 				&& getManagedBean().getUserProfileSearchBean().getUserOrgStatus() == null) {
 			throw new EpException(MessageConst.ERROR_770049);
 		}
-
+	
 		logger.info("searchUserProfile - end");
 		getManagedBean().setLazy(true);
 		userOrgDataModel.reloadData();
+	}
+	
+	/**
+	 * check if logged in as PTJ administrator, organization name is empty (displayed in the non-mandatory fields)
+	 * 
+	 * @return boolean
+	 */
+	private boolean isDefaultPtjAdminOrgNameEmpty() {
+		String ptjOrgName = null;
+		if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+			if (getManagedBean().getSelectedOrgProfile().getPmOrgValidity() != null) {
+				ptjOrgName = getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName();
+			} 
+		}
+	    return StringUtils.isBlank(ptjOrgName);
 	}
 
 	/**
