@@ -2,7 +2,6 @@ package my.ep.web.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.pm.authorization.PmPendingLiferay;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
