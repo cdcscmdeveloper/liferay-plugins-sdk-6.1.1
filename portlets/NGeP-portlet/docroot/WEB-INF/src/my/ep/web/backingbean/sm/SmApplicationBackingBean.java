@@ -2493,6 +2493,10 @@ public class SmApplicationBackingBean extends
 				if (rev.getApplSectionReviewId().equals(
 						getManagedBean().getPoSecReview()
 								.getApplSectionReviewId())) {
+					//Bug #21123
+					if(getManagedBean().getPoSecReview().getRemarkToApprover() != null) {
+						getManagedBean().getPoSecReview().setRemarkDate(new Timestamp(System.currentTimeMillis()));						
+					}
 					getManagedBean()
 							.getSmAppl()
 							.getSmApplSectionReviews()
@@ -8196,6 +8200,31 @@ public class SmApplicationBackingBean extends
 					} else {
 						statusDesc = SmCommonUtil.getMessage(
 								"lbl.sm.rejected.lowercaps", null);
+						//Bug #21123
+						if (getManagedBean().getPoSecReview() != null
+								&& getManagedBean().getPoSecReview()
+										.getRecommendation().equals("REJECT")) {
+							if (getManagedBean().isPoUser()
+									&& getManagedBean().getPoSecReview().getApplSectionReviewId() != null) {
+								for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+										.getSmApplSectionReviews()) {
+									if (rev.getApplSectionReviewId().equals(
+											getManagedBean().getPoSecReview()
+													.getApplSectionReviewId())) {
+										if(getManagedBean().getPoSecReview().getRemarkToApprover() != null) {
+											getManagedBean().getPoSecReview().setRemarkDate(new Timestamp(System.currentTimeMillis()));						
+										}
+										getManagedBean()
+												.getSmAppl()
+												.getSmApplSectionReviews()
+												.set(getManagedBean().getSmAppl()
+														.getSmApplSectionReviews().indexOf(rev),
+														getManagedBean().getPoSecReview());
+									}
+								}
+	
+							}
+						}
 					}
 
 					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
