@@ -16,6 +16,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -118,6 +119,12 @@ public class UomBackingBean extends BaseBackingBean<UomManagedBean> implements S
 			uomSearchBean.setSearchValue(getManagedBean().getUomName());
 			searchBean.getDataFilterBeans().add(uomSearchBean);
 		}
+		//Bug #21863
+		SearchFilterBean uomSearchBean = new SearchFilterBean(
+				SearchOperator.OPERATOR_EQUALS.value());
+		uomSearchBean.setSearchField("recordStatusFlg");
+		uomSearchBean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+		searchBean.getDataFilterBeans().add(uomSearchBean);
 		return searchBean;
 	}
 
