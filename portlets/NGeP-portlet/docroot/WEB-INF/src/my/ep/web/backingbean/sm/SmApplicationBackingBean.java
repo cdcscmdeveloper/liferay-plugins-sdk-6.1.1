@@ -517,15 +517,21 @@ public class SmApplicationBackingBean extends
 																		"lbl.sm.submit.questionaire.msg",
 																		null)));
 
-								// for application that is not yet active, will
 								// automatically initiate new BPM task
-								if (!getManagedBean().getSmAppl()
-										.isActiveAppl()) {
-									getManagedBean()
-											.setSmAppl(
-													SmApplicationUtil
-															.initiateMofApplNewBpmTask(getManagedBean()
-																	.getSmAppl()));
+								SmAppl smAppl = SmApplicationUtil
+										.initiateMofApplNewBpmTask(getManagedBean()
+												.getSmAppl());
+
+								if (smAppl.isSuccess()
+										&& smAppl.getInstanceId() != null) {
+									// update back instance id
+									mofReqDto = new MofRegistrationReqDTO();
+									mofReqDto.setSmAppl(smAppl);
+									getManagedBean().setSmAppl(
+											SmServiceLookup
+													.getMofRegistrationSO()
+													.updateSmAppl(mofReqDto)
+													.getSmAppl());
 								}
 
 								prerenderApplicationForResubmission();
@@ -8118,8 +8124,9 @@ public class SmApplicationBackingBean extends
 								ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
 								getManagedBean().getApplnOverLapRemarks());
 			}
-			
-			// #17064 - update establish_date in supplier if there is any changes
+
+			// #17064 - update establish_date in supplier if there is any
+			// changes
 			if (SmCommonUtil.isHasDifferences(getManagedBean().getLatestAppl(),
 					getManagedBean().getSmAppl(),
 					new String[] { "establishDate" })) {
