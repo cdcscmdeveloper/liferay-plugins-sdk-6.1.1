@@ -75,6 +75,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -2243,6 +2244,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 									searchText,true),
 							uomNameSFB
 							));
+			//Bug #21863
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
 					
 			searchBean.getSortColumns().add(new SearchOrderBean("uomName"));
 			reqDTO.setMeasurementSearchBean(searchBean);
