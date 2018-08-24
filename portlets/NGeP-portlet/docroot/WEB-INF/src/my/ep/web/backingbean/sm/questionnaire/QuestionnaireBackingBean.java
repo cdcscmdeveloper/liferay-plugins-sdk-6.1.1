@@ -12,6 +12,7 @@ import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAnswer;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -19,6 +20,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -86,7 +88,12 @@ public class QuestionnaireBackingBean extends
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 
-		SmServiceLookup.getQuestionnaireSO().questionnaireSubmission(reqDTO);
+		QuestionnaireResDTO resDTO = SmServiceLookup.getQuestionnaireSO()
+				.questionnaireSubmission(reqDTO);
+		// check if need to init task for resubmit application
+		if (resDTO.isInitTask()) {
+			SmApplicationUtil.initiateMofApplNewBpmTask(resDTO.getSmAppl());
+		}
 
 		// for resubmit application directly inject to task list
 		if (this.getManagedBean().getRejectedAppl() != null) {
