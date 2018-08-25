@@ -247,6 +247,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		String [] outcomes = getManagedBean().getOutComes();
 		String taskId  = getManagedBean().getTaskId();
+		Object payLoad  = getManagedBean().getPayLoad();
 		RequestNoteResDTO requestNoteResDTO = null;
     try {
     	
@@ -324,6 +325,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 	    		getManagedBean().setOutComes(outcomes);
 	    		getManagedBean().setTaskId(taskId);
+	    		getManagedBean().setPayLoad(payLoad);
 	    		reloadRequestNote(scRequestNote);
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
