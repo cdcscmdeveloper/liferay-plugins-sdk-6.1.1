@@ -10240,6 +10240,10 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
+				//Bug #21523 Marks display 0 in technical evaluation
+				log.info(":::saveEvalutionStageUploadDtls() qt id: "+ uploadedList.get(0).getScQtCheckList().getScQt().getQtId() +". Supp list size: "+ uploadedList.size());
+				//end Bug #21523
+				
 				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
 					uploadedChecklist.setEvaluationStatus(Status);
