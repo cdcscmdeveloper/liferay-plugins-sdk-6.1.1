@@ -404,7 +404,7 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	private void setPOApproverRemarksInfo(boolean isPoUser, String docType, String remark, Date remarkCreatedDate) {
 		if(docType != null) {
-			if(docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE)) {
+			if(docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE) || docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT) ) {
 				if(isPoUser) {
 					getManagedBean().setPoRemark(remark);
 					getManagedBean().setPoRemarkCreatedDate(remarkCreatedDate);
