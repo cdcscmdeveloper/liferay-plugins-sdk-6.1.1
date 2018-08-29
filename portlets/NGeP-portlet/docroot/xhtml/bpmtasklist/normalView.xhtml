@@ -86,7 +86,7 @@
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{bpmTasklistBackingBean.refreshNormalTaskList}"
+				action="#{bpmTasklistBackingBean.initMyTask}"
 				update="taskListMyTaskId" value="#{lbl['lbl.btn.search']}"></p:commandButton>
 		</div>
 
@@ -98,6 +98,7 @@
 
 
 	<!-- <p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true"> -->
+	<ui:remove>
 	<p:dataTable
 		value="#{bpmTasklistBackingBean.managedBean.taskListMyTaskDataModel}"
 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
@@ -190,7 +191,92 @@
 
 	</p:dataTable>
 
-	<!-- 	</p:panel> -->
+	</ui:remove>
+	
+	<p:dataTable var="tasks" id="taskListMyTaskId" widgetVar="taskListTableWidget" 
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		value="#{bpmTasklistBackingBean.managedBean.myTasks}"
+		rowKey="#{tasks}" rowIndexVar="index">
+		<ac:paginator for="taskListMyTaskId"></ac:paginator>
+		
+		<p:column width="5%;">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.doc.no']}
+				</f:facet>
+				#{tasks.item.docNumber}
+			</p:column>
+		<p:column width="20%;" style="white-space:normal;">
+			<f:facet name="header">
+				#{lbl['lbl.bpm.doc.type']}
+			</f:facet>
+			#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.item.docType)}
+				
+		</p:column>
+		
+		<p:column style="white-space:normal;">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.description']}
+				</f:facet>
+			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}">
+				<f:param name="taskId" value="#{tasks.item.taskId}" />
+				<f:param name="process" value="#{tasks.item.process}" />
+				<f:param name="taskName" value="#{tasks.item.taskName}" />
+				<f:param name="docType" value="#{tasks.item.docType}" />
+				<f:param name="isClaim" value="true" />
+				<h:outputText value="#{tasks.item.title}" escape="false" />
+			</p:commandLink>
 
+		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.created.date']}
+				</f:facet>
+			<h:outputText value="#{tasks.item.createDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			</h:outputText>
+
+		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.due.date']}
+				</f:facet>
+			<h:outputText value="#{tasks.item.expirationDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			</h:outputText>
+
+		</p:column>
+		<p:column width="18%;" style="white-space:normal;">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.status']}
+				</f:facet>
+				
+				#{bpmTasklistBackingBean.applicationStatus(tasks.item.docStatus)}
+				
+				
+
+			</p:column>
+
+
+		<p:column width="6%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+
+			<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
+				onclick="this.disabled=true;"
+				action="#{bpmTasklistBackingBean.releaseTask}" update="@form"
+				rendered="#{tasks.item.claimed}">
+
+				<f:param name="taskId" value="#{tasks.item.taskId}" />
+			</p:commandButton>
+
+			<h:panelGroup rendered="#{!tasks.item.claimed}">
+				<div style="height: 30px"></div>
+			</h:panelGroup>
+
+		</p:column>
+	</p:dataTable>
 
 </ui:composition>
