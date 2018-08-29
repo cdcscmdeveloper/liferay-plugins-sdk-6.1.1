@@ -30,7 +30,7 @@
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
-					onstart="blockWidget.show();"
+					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
 					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
@@ -44,7 +44,7 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
-								onstart="blockWidget.show();"
+								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 						</ui:repeat>
@@ -53,14 +53,14 @@
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
-							onstart="blockWidget.show();"
+							onclick="blockWidget.show();"
 							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					</c:when>
 					<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
-								process="@form" update="@all" onstart="blockWidget.show();"
+								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}"
 								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
