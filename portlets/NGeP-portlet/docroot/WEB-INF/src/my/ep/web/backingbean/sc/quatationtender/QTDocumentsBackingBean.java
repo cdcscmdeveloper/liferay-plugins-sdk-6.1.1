@@ -2760,7 +2760,13 @@ public class QTDocumentsBackingBean extends
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if (resDTO.getAddressTypeList().size() > 0) {
-				pmAddressType = resDTO.getAddressTypeList().get(0);
+				for(PmAddressType addressType: resDTO.getAddressTypeList()){
+					if(addressType.isRecordStatus()){
+						pmAddressType = addressType;
+						break;
+					}
+					
+				}
 			}
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
