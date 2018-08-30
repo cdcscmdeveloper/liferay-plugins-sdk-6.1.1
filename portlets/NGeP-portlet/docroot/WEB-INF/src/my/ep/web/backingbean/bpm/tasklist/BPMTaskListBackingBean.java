@@ -667,7 +667,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			// SDO User - filer Search
 			getManagedBean().sdoSearchFilter(reqDTO);
-			BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+			BpmResponseDTO responseDTO = bpmSO.getWorklist(reqDTO);
 			SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 
 			if (responseDTO.getWorklistVO() != null) {
@@ -879,7 +879,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			reqDTO.setAssignment("MY");
 			reqDTO.setCtxToken(token);
-			BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+			BpmResponseDTO responseDTO = bpmSO.getWorklist(reqDTO);
 			SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 
 			if (responseDTO.getWorklistVO() != null) {
