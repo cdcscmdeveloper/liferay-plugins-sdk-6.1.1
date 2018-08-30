@@ -4901,7 +4901,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public boolean isContractAmountAmend() {
 		boolean isContractAmountAmend = false;
-		if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue() < 20000L){
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() < 20000L){
 			isContractAmountAmend = true;
 		}		
 		

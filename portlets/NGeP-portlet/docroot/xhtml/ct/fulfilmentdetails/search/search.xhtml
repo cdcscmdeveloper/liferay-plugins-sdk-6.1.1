@@ -200,10 +200,8 @@
 								        
 							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment.with.supplement']}" icon="ui-icon-amendment" 
 							        rendered="#{(contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1
-							        	and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
                              	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
                              	        and !data.allowAgreementCreation) or (contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==3
-                             	        and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
                              	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
                              	        and !data.allowAgreementCreation)}" 
                              	        process="@this" partialSubmit="true"
