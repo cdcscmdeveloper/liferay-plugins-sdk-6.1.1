@@ -260,7 +260,7 @@
 						<ac:scSingleFileUploadButton id="scfcsUploadBtn"
 							popupWidgetVar="scFinancialChecklistUploadDlg"
 							attachment="#{stageTwofunctional.scQtCheckListAttachment}"
-							readonly="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+							readonly="#{specificationBackingBean.managedBean.readOnly}"
 							deleteFileUploadListener="specificationBackingBean.deleteCheckListAttachmentFile"
 							rowIndex="#{index}">
 							<f:setPropertyActionListener for="actionEvent"
