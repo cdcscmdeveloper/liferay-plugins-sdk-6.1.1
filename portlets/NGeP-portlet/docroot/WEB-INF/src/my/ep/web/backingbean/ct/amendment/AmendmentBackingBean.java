@@ -798,7 +798,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
-			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue() >= 20000L){
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
 				getManagedBean().setCommitteeType(retrieveCommitteeType());
 			}
 			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
@@ -1477,7 +1477,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// Validation mandatory for approval letter if approver authority is required
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq()) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq() && (!isContractAmountAmend() && 
+					!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange())) {
 				//Validation for approval letter
 				if (ctBackingBean.getManagedBean().getContractVer().getApprovalLetterAttachement() == null
 						|| ctBackingBean.getManagedBean().getContractVer().getApprovalLetterAttachement().getFilePath() == null) {						
