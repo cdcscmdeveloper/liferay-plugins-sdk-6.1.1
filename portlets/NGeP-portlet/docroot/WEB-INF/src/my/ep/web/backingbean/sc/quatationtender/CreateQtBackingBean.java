@@ -2860,6 +2860,10 @@ public class CreateQtBackingBean extends
 		if (scQt.getPmOrgProfile() != null) {
 
 			Long orgProfileId = scQt.getPmOrgProfile().getOrgProfileId();
+			
+			//Enhancement #21877
+			scQt.setOrgProfileId(orgProfileId);
+			
 			PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(orgProfileId);
 			this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 			scQt.setPtjSpecialApproval(null);
