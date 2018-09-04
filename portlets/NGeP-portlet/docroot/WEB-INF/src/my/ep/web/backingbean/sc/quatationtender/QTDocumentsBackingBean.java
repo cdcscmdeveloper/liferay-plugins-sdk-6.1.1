@@ -2755,7 +2755,7 @@ public class QTDocumentsBackingBean extends
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+			PmOrgProfile pmOrgProfile = scQt.getOwnerOrgProfile();
 			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
