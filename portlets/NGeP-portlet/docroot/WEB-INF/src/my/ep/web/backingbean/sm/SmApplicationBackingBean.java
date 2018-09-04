@@ -2499,9 +2499,10 @@ public class SmApplicationBackingBean extends
 				if (rev.getApplSectionReviewId().equals(
 						getManagedBean().getPoSecReview()
 								.getApplSectionReviewId())) {
-					//Bug #21123
-					if(getManagedBean().getPoSecReview().getRemarkToApprover() != null) {
-						getManagedBean().getPoSecReview().setRemarkDate(new Timestamp(System.currentTimeMillis()));						
+					// Bug #21123
+					if (getManagedBean().getPoSecReview().getRemarkToApprover() != null) {
+						getManagedBean().getPoSecReview().setRemarkDate(
+								new Timestamp(System.currentTimeMillis()));
 					}
 					getManagedBean()
 							.getSmAppl()
@@ -2631,6 +2632,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void validateBeforeSubmit() {
+
+		// validate dont have facility
+		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
 		// validate overlap category supporting docs
 		SmApplicationUtil.validateOverlapCategoryJustificationAndSuppDocs(
@@ -5646,6 +5650,8 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
+		// checking if suddenly premise information is missing (#21955)
+		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
@@ -8207,29 +8213,38 @@ public class SmApplicationBackingBean extends
 					} else {
 						statusDesc = SmCommonUtil.getMessage(
 								"lbl.sm.rejected.lowercaps", null);
-						//Bug #21123
+						// Bug #21123
 						if (getManagedBean().getPoSecReview() != null
 								&& getManagedBean().getPoSecReview()
 										.getRecommendation().equals("REJECT")) {
 							if (getManagedBean().isPoUser()
-									&& getManagedBean().getPoSecReview().getApplSectionReviewId() != null) {
-								for (SmApplSectionReview rev : getManagedBean().getSmAppl()
-										.getSmApplSectionReviews()) {
+									&& getManagedBean().getPoSecReview()
+											.getApplSectionReviewId() != null) {
+								for (SmApplSectionReview rev : getManagedBean()
+										.getSmAppl().getSmApplSectionReviews()) {
 									if (rev.getApplSectionReviewId().equals(
 											getManagedBean().getPoSecReview()
 													.getApplSectionReviewId())) {
-										if(getManagedBean().getPoSecReview().getRemarkToApprover() != null) {
-											getManagedBean().getPoSecReview().setRemarkDate(new Timestamp(System.currentTimeMillis()));						
+										if (getManagedBean().getPoSecReview()
+												.getRemarkToApprover() != null) {
+											getManagedBean()
+													.getPoSecReview()
+													.setRemarkDate(
+															new Timestamp(
+																	System.currentTimeMillis()));
 										}
 										getManagedBean()
 												.getSmAppl()
 												.getSmApplSectionReviews()
-												.set(getManagedBean().getSmAppl()
-														.getSmApplSectionReviews().indexOf(rev),
-														getManagedBean().getPoSecReview());
+												.set(getManagedBean()
+														.getSmAppl()
+														.getSmApplSectionReviews()
+														.indexOf(rev),
+														getManagedBean()
+																.getPoSecReview());
 									}
 								}
-	
+
 							}
 						}
 					}
