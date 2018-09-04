@@ -3816,6 +3816,12 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	public static void validateDontHavePremise(SmAppl appl){
+		if(appl!=null && EntityHelper.isCollectionEmpty(appl.getSmFacilities())){
+			throw new EpException(MessageConst.ERROR_722670);
+		}
+	}
 
 	/**
 	 * Checks if the supplier has any active transactions.
