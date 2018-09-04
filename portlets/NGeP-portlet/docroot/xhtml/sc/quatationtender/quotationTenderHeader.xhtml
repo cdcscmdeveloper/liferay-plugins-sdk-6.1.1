@@ -20,10 +20,10 @@
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td class="header-info-text">
 				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-					<h:outputText id="orgName" value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}" />
+					<h:outputText id="orgName" value="#{qTDetailBB.managedBean.qt.ownerOrgProfile.orgName}" />
 					</c:if>
 					<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					#{qTDetailBB.retrievePTJByOrgProfileId(qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId,qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.currentStatusId)?qTDetailBB.managedBean.qt.publishDate : qTDetailBB.managedBean.qt.createdDate)}
+					#{qTDetailBB.retrievePTJByOrgProfileId(qTDetailBB.managedBean.qt.ownerOrgProfile.orgProfileId,qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.currentStatusId)?qTDetailBB.managedBean.qt.publishDate : qTDetailBB.managedBean.qt.createdDate)}
 					</c:if>
 				</td>
 				
