@@ -24,7 +24,7 @@
 						value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td style="width: 29%" class="header-info-text">
 				#{evaluationBackingBean.retrievePTJByOrgProfileId
-(evaluationBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,
+(evaluationBackingBean.managedBean.scQt.ownerOrgProfileId,
 evaluationBackingBean.isQTStatusPublished(evaluationBackingBean.managedBean.currentStatusId)?evaluationBackingBean.managedBean.scQt.publishDate : evaluationBackingBean.managedBean.scQt.createdDate)}
 				</td>
 				<td style="width: 3%"><h:outputLabel

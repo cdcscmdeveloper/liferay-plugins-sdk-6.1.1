@@ -23,7 +23,13 @@
 				<td />
 			</tr> -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.prepare.ptj']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{approvalBackingBean.retrievePTJByOrgProfileId(scQt.ownerOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}"
+						disabled="true" readonly="true" style="width:866px;" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.prepare.for.ptj']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{approvalBackingBean.retrievePTJByOrgProfileId(scQt.pmOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}"
 						disabled="true" readonly="true" style="width:866px;" /></td>

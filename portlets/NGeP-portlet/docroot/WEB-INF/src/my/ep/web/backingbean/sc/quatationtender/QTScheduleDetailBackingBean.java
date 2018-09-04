@@ -289,9 +289,19 @@ public class QTScheduleDetailBackingBean extends
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.DESK_ASSISTANT.value());
 			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
-			if (pmOrgProfile != null) {
-				userReqDto.setOrgProfileId(pmOrgProfile.getOrgProfileId());	
+			
+			//Enhancement #21877
+			List<Long> orgProfileIds=new ArrayList<Long>();
+			if (pmOrgProfile != null) {	
+				orgProfileIds.add(pmOrgProfile.getOrgProfileId());
 			}
+			
+			PmOrgProfile OwnerPmOrgProfile = getManagedBean().getQt().getOwnerOrgProfile();			
+			if (OwnerPmOrgProfile != null && pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
+				orgProfileIds.add(OwnerPmOrgProfile.getOrgProfileId());	
+			}
+			
+			userReqDto.setOrgProfileIds(orgProfileIds);
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> deskOfficer = userResDTO.getUserList();
 			getManagedBean().setDeskOfficerAdmin(deskOfficer);
