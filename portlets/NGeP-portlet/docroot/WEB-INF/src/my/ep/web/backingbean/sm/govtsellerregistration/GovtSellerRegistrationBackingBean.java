@@ -134,7 +134,7 @@ public class GovtSellerRegistrationBackingBean extends
 				.getSmAddress());
 		// init gst
 		getInstance().initGstInfo(getManagedBean().getSmSupp(),
-				getManagedBean(),true);
+				getManagedBean(), true);
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		getManagedBean().setShowBranchPointOfContact(true);
 		initBankBranches();
@@ -872,20 +872,12 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		// set company name from company basic to supplier
-		getManagedBean()
-				.getSmAppl()
-				.getSmSupplier()
-				.setCompanyName(
-						getManagedBean().getSmAppl().getSmSupplier()
-								.getSmAppl().getSmCompanyBasic()
-								.getCompanyName());
 		setBranchBankBeforeSubmit();
-		reqDTO.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
+		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setGstList(getInstance().getCleanGst());
 		try {
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
-					.updateOnlineAcc(reqDTO);
+					.updateGovtSellerAcc(reqDTO);
 			if (resDTO.isSuccessful()) {
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
