@@ -903,8 +903,13 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
 		}
-		retrieveBusinessTypeList();
+		
+		getManagedBean().getSmAppl().setSupplierType(smAppl.getSupplierType());
+		getManagedBean().getSmSupplier().setBusinessType(smApplSupplier.getBusinessType());
+//		retrieveBusinessTypeList();
+		retrieveBusinessTypeListBySupplierType();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
+		assignBusinessTypeAlertValue(getManagedBean().getSmAppl().getSupplierType(), getManagedBean().getSmSupplier());
 
 		getManagedBean().setReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
@@ -1367,6 +1372,30 @@ public class SmApplicationBackingBean extends
 
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
+	}
+
+	private void assignBusinessTypeAlertValue(String supplierType,
+			SmSupplier supp) {
+		if (supp != null) {
+			if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				System.out.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR");
+				getManagedBean()
+						.setBusinessTypeAlertValue(
+								getParameterDesc(
+										ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR,
+										supp.getBusinessType()));
+			} else if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				System.out.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR");
+				getManagedBean()
+						.setBusinessTypeAlertValue(
+								getParameterDesc(
+										ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT,
+										supp.getBusinessType()));
+			}
+			System.out.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR ==> " + getManagedBean().getBusinessTypeAlertValue());
+		}
 	}
 
 	/**
@@ -2350,7 +2379,8 @@ public class SmApplicationBackingBean extends
 				setApplicationShareHolders(getManagedBean().getSmAppl()
 						.getSmPersonnels());
 			}
-			retrieveBusinessTypeList();
+//			retrieveBusinessTypeList();
+			retrieveBusinessTypeListBySupplierType();
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
 			if (getManagedBean().isPoUser()) {
@@ -8131,13 +8161,23 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getApplnOverLapRemarks());
 			}
 
-			// #17064 - update establish_date in supplier if there is any
-			// changes
+			// #17064 - update establish_date in supplier if there is any changes
+			// #17716 - update company_name/reg_no/business_type in supplier
 			if (SmCommonUtil.isHasDifferences(getManagedBean().getLatestAppl(),
-					getManagedBean().getSmAppl(),
-					new String[] { "establishDate" })) {
+					getManagedBean().getSmAppl(), new String[] {
+							"establishDate", "companyName", "regNo",
+							"businessType" })) {
 				reqDTO.setEstablishDate(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getEstablishDate());
+				reqDTO.setCompanyName(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getCompanyName());
+				reqDTO.setBusinessRegNo(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getRegNo());
+				reqDTO.setBusinessType(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getBusinessType());
+
+				SmApplicationUtil
+						.updateSmSupplierInfo(getManagedBean(), reqDTO);
 			}
 
 		}
@@ -9952,6 +9992,45 @@ public class SmApplicationBackingBean extends
 								.toArray(new SelectItem[businessTypeSelectItems
 										.size()]));
 	}
+	
+	public void retrieveBusinessTypeListBySupplierType() {
+		SelectItem[] items = null;
+		FacesScopes fs = new FacesScopes();
+
+		String supplierType = getManagedBean().getSmAppl().getSupplierType();
+		String businessType = getManagedBean().getSmSupplier().getBusinessType();
+
+		if (supplierType != null) {
+			if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR);
+			} else if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+			}
+			List<SelectItem> businessTypeSelectItems = new ArrayList<SelectItem>();
+			businessTypeSelectItems.add(new SelectItem(null,
+					ResourceBundleUtils.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							fs.getUserLocale())));
+
+			for (SelectItem item : items) {
+				if (item.getValue() != null) {
+					businessTypeSelectItems.add(item);
+				}
+			}
+			this.getManagedBean().setBusinessTypeLs(
+					businessTypeSelectItems
+							.toArray(new SelectItem[businessTypeSelectItems
+									.size()]));
+		} else {
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					fs.getUserLocale()));
+		}
+
+	}
 
 	/**
 	 * Validate paid captial amt.
@@ -11530,7 +11609,8 @@ public class SmApplicationBackingBean extends
 			for (SmSupplierCategory suppCategory : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
 				if (suppCategory.getPoDecFlg() != null
-						&& suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
+								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
 				}
 			}

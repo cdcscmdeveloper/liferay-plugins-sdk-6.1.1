@@ -467,6 +467,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smAppl.getSmCompanyBasic().setSmAppl(smAppl);
 		smAppl.getSmCompanyBasic().setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 		smAppl.getSmCompanyBasic().setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
+		smAppl.getSmCompanyBasic().setRegNo(smSupp.getRegNo());
+		smAppl.getSmCompanyBasic().setBusinessType(smSupp.getBusinessType());
 		
 		/* add personnel And personnel address */
 		this.getManagedBean().getSmPersonnel().setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
