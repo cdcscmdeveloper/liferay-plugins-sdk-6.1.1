@@ -1538,6 +1538,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
 				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+				reqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
 				BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 				checkCeilingQty = prevSumQty.add(sumOrderedQty);
 				if(checkCeilingQty.doubleValue() >  ctResDTO.getItemCeilingQuantity().doubleValue()){
