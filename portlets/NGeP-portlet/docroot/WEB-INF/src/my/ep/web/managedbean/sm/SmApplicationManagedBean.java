@@ -212,6 +212,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String supplierRemarks;
 
 	private String businessTypeVal;
+	private String businessTypeAlertValue;
 	private String personnelInfoHeader;
 	// Bank Info
 	private Long[] chequeSingPerId;
@@ -2129,6 +2130,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBusinessTypeVal(String businessTypeVal) {
 		this.businessTypeVal = businessTypeVal;
+	}
+
+	public String getBusinessTypeAlertValue() {
+		return businessTypeAlertValue;
+	}
+
+	public void setBusinessTypeAlertValue(String businessTypeAlertValue) {
+		this.businessTypeAlertValue = businessTypeAlertValue;
 	}
 
 	public String getCurrentStatus() {

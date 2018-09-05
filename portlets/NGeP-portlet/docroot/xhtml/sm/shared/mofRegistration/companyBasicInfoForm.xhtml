@@ -64,22 +64,31 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td style="word-wrap: break-word"><p:outputLabel
-							rendered="#{backingBean.managedBean.disabledBusinessType}"
-							styleClass="outputLabel-view"
-							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smSupplier.businessType)}" />
+							styleClass="outputLabel-view" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
-							value="#{backingBean.managedBean.smSupplier.businessType}"
-							rendered="#{!backingBean.managedBean.disabledBusinessType}"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}"
 							style="width:310px">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
-						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
-							showSummary="true" showDetail="false" display="icon" /></td>
+						</p:selectOneMenu>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.businessType}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" 
+							alertValue="#{backingBean.managedBean.businessTypeAlertValue}"/>
+						<p:message id="smBusTypeIdMsg" for="smBusTypeId"
+							showSummary="true" showDetail="false" display="icon" />						
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.smSupplier.regNo}"
-							disabled="true" readonly="true" size="35" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.regNo}" size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.regNo}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.regNo}" 
+							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.regNo}"/>							
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.taxRefNo']}" /></td>
