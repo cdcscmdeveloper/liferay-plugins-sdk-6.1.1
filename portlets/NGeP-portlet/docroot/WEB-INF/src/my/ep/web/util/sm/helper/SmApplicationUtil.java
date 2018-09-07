@@ -2819,7 +2819,11 @@ public class SmApplicationUtil {
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
 			SmApplicationManagedBean bean, String currPage) {
 		if (bean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| bean.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| bean.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			checkOverLappingCategories(bean);
 			if (bean.isOverLappedCategoryExists()) {
 				if (bean.isSupplierUser()) {
@@ -3872,9 +3876,10 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	public static void validateDontHavePremise(SmAppl appl){
-		if(appl!=null && EntityHelper.isCollectionEmpty(appl.getSmFacilities())){
+
+	public static void validateDontHavePremise(SmAppl appl) {
+		if (appl != null
+				&& EntityHelper.isCollectionEmpty(appl.getSmFacilities())) {
 			throw new EpException(MessageConst.ERROR_722670);
 		}
 	}
@@ -9401,7 +9406,8 @@ public class SmApplicationUtil {
 						.getPmState().getStateName());
 				context.put("bankAccountNo", supplierBank.getAccountNo());
 				context.put("bankTnC", supplierBank.getSignatureInstruction());
-				context.put("signatories", supplierBank.getSmChequeSignatories());
+				context.put("signatories",
+						supplierBank.getSmChequeSignatories());
 				context = setSignatories(context,
 						supplierBank.getSmChequeSignatories());
 
