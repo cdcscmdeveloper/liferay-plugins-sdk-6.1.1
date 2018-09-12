@@ -498,11 +498,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private boolean dupplicatedInd = false;
 	
-	
-	
-	
-	
-
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
 
@@ -556,9 +551,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
-
+			
 				return resDTO.getSuppItemResultBean();
 
 			} catch (Exception e) {
@@ -569,7 +562,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				supplierSearchSO = null;
 			}
 		}
-
 	}
 
 	private class PublishSearchPagingDataModel extends
@@ -622,15 +614,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
 						.get(0).getSupplierId());
 				
-				
-				
 				reqDTO.setItemStatus("U");
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
-
+		
 				return resDTO.getSuppItemResultBean();
 
 			} catch (Exception e) {
@@ -641,7 +629,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				supplierSearchSO = null;
 			}
 		}
-
 	}
 
 	private class RejectSearchPagingDataModel extends
@@ -698,9 +685,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
-
+			
 				return resDTO.getSuppItemResultBean();
 
 			} catch (Exception e) {
@@ -711,7 +696,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				supplierSearchSO = null;
 			}
 		}
-
 	}
 
 	private class ApprovedSearchPagingDataModel extends
@@ -768,9 +752,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
-
+			
 				return resDTO.getSuppItemResultBean();
 
 			} catch (Exception e) {
@@ -781,7 +763,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				supplierSearchSO = null;
 			}
 		}
-
 	}
 
 	private class ApprovalSearchPagingDataModel extends
@@ -839,9 +820,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
-
+			
 				return resDTO.getSuppItemResultBean();
 
 			} catch (Exception e) {
@@ -852,7 +831,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				supplierSearchSO = null;
 			}
 		}
-
 	}
 
 	private class DraftSearchPagingDataModel extends
@@ -910,9 +888,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				System.out.println("resDTO.getSupplierItemList():"
-						+ resDTO.getSupplierItemList().size());
-
+				
 				Map tempMap = new HashMap();
 				for (int i = 0; i < resDTO.getSuppItemResultBean()
 						.getResultList().size(); i++) {
@@ -937,15 +913,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 								}
 							}
 						}
-
 					}
-
 				}
 
-				System.out
-						.println("bb.getManagedBean().isRefreshDraftSuppItemFlag()"
-								+ bb.getManagedBean()
-										.isRefreshDraftSuppItemFlag());
 				if (bb.getManagedBean().isRefreshDraftSuppItemFlag()) {
 					RequestContext.getCurrentInstance().execute(
 							"refreshDraftSuppItem();");
@@ -961,7 +931,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				supplierSearchSO = null;
 			}
 		}
-
 	}
 
 	/**
@@ -1024,18 +993,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			}
 
 			IViewSupplierItemSO viewSO = null;
-
+			
 			try {
 
 				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance()
 						.getServiceObject("cm", IViewSupplierItemSO.class);
-
-				System.out.println("catTypeFilterBean.getSearchValue(): "
-						+ catTypeFilterBean.getSearchValue());
+				
+				StringBuilder sb = new StringBuilder();
 				if (catTypeFilterBean.getSearchValue() != null) {
 					catTypeFilterBean.setSearchField("CAT_TYPE");
 					// catTypeFilterBean.setSearchValue("XC");
 					searchBean.getDataFilterBeans().add(catTypeFilterBean);
+					appendSearchCriteria(sb, catTypeFilterBean);		
 				}
 				if (StringUtils.isNotBlank((String) itemNameFilterBean
 						.getSearchValue())) {
@@ -1044,27 +1013,23 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					itemNameFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 					//searchBean.getDataFilterBeans().add(itemNameFilterBean);
 					
-					
 					keyWordFilterBean.setSearchField("KEYWORD");
 					keyWordFilterBean.setSearchValue((String) itemNameFilterBean.getSearchValue());
 					keyWordFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 					keyWordFilterBean.setCaseInsensitive(true);
-					
-					
+					appendSearchCriteria(sb, itemNameFilterBean);		
 					
 					SearchMultiFilterBean multi = new SearchMultiFilterBean(itemNameFilterBean
 							, keyWordFilterBean);
 					searchBean.getDataFilterBeans().add(multi);
-					
-					
 				}
-				
 				
 				if (StringUtils.isNotBlank((String) contractTitleFilterBean
 						.getSearchValue())) {
 					contractTitleFilterBean.setSearchField("CONTRACT_NAME");
 					contractTitleFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractTitleFilterBean);
+					appendSearchCriteria(sb, contractTitleFilterBean);		
 				}
 				
 				if (StringUtils.isNotBlank((String) loaNoFilterBean
@@ -1072,6 +1037,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					loaNoFilterBean.setSearchField("LOA_NO");
 					loaNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(loaNoFilterBean);
+					appendSearchCriteria(sb, loaNoFilterBean);		
 				}
 				
 				if (StringUtils.isNotBlank((String) loaPhysicalNoFilterBean
@@ -1079,6 +1045,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					loaPhysicalNoFilterBean.setSearchField("LOA_PHYSICAL_NO");
 					loaPhysicalNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(loaPhysicalNoFilterBean);
+					appendSearchCriteria(sb, loaPhysicalNoFilterBean);		
 				}
 
 				if (StringUtils.isNotBlank((String) itemCodeFilterBean
@@ -1086,6 +1053,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					itemCodeFilterBean.setSearchField("ITEM_CODE");
 					itemCodeFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+					appendSearchCriteria(sb, itemCodeFilterBean);		
 				}
 
 				if (StringUtils.isNotBlank((String) supplierNameFilterBean
@@ -1093,6 +1061,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					supplierNameFilterBean.setSearchField("COMPANY_NAME");
 					supplierNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
+					appendSearchCriteria(sb, supplierNameFilterBean);	
 				}
 
 				if (StringUtils.isNotBlank((String) contractNoFilterBean
@@ -1100,6 +1069,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					contractNoFilterBean.setSearchField("CONTRACT_NO");
 					contractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
+					appendSearchCriteria(sb, contractNoFilterBean);	
 				}
 
 				if (StringUtils
@@ -1110,6 +1080,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					physicalContractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(
 							physicalContractNoFilterBean);
+					appendSearchCriteria(sb, physicalContractNoFilterBean);	
 				}
 
 				if (StringUtils.isNotBlank((String) circularNoFilterBean
@@ -1117,6 +1088,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					circularNoFilterBean.setSearchField("CIRCULAR_NO");
 					circularNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(circularNoFilterBean);
+					appendSearchCriteria(sb, circularNoFilterBean);	
 				}
 
 				if (StringUtils.isNotBlank((String) epNoFilterBean
@@ -1124,6 +1096,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					epNoFilterBean.setSearchField("EP_NO");
 					epNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(epNoFilterBean);
+					appendSearchCriteria(sb, epNoFilterBean);	
 				}
 
 				if (StringUtils.isNotBlank((String) mofNoFilterBean
@@ -1131,6 +1104,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					mofNoFilterBean.setSearchField("MOF_NO");
 					mofNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(mofNoFilterBean);
+					appendSearchCriteria(sb, mofNoFilterBean);	
 				}
 
 				if (StringUtils.isNotBlank((String) bizRegNoFilterBean
@@ -1138,54 +1112,51 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					bizRegNoFilterBean.setSearchField("BIZ_REG_NO");
 					bizRegNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
+					appendSearchCriteria(sb, bizRegNoFilterBean);	
 				}
 
-				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
-				log.info("bb.isRequisitioner()" + bb.isRequisitioner());
-				if (!bb.isRequisitioner()) {
+				UnspscCodeBackingBean unspscCodeBackingBean = new UnspscCodeBackingBean();
+				
+				if (!unspscCodeBackingBean.isRequisitioner()) {
 					catTypeFilterBean.setSearchField("CAT_TYPE");
 					catTypeFilterBean.setSearchValue("XC");
 					searchBean.getDataFilterBeans().add(catTypeFilterBean);
+					appendSearchCriteria(sb, catTypeFilterBean);	
 				}
 
 				setDistrictLs(new ArrayList<Long>());
-				log.info("districtId:" + districtId);
 				for (Long district : districtId) {
-					log.info("district:" + district);
 					districtLs.add(district);
 				}
 
-				log.debug("districtLs.size():" + districtLs.size());
 				if (districtLs != null && districtLs.size() > 0) {
 					districtFilterBean.setSearchField("DISTRICT_ID");
 					districtFilterBean.setSearchValue(districtLs);
 					searchBean.getDataFilterBeans().add(districtFilterBean);
+					appendSearchCriteria(sb, districtFilterBean);	
 				}
 
 				setStateLs(new ArrayList<Long>());
 				for (Long state : stateId) {
-					log.info("state:" + state);
 					stateLs.add(state);
 				}
-				log.info("districtLs" + districtLs);
+			
 				if (districtLs.isEmpty()) {
 					if (stateLs != null && stateLs.size() > 0) {
 						stateFilterBean.setSearchField("STATE_ID");
 						stateFilterBean.setSearchValue(stateLs);
 						searchBean.getDataFilterBeans().add(stateFilterBean);
-
+						appendSearchCriteria(sb, stateFilterBean);	
 					}
-
 				}
-				log.debug("stateLs" + stateLs);
-
+				
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				PmUserOrg userOrg = null;
 				Long ministryId = null;
 				Long departmentId = null;
 				
-				if (bb.isRequisitioner()) {
+				if (unspscCodeBackingBean.isRequisitioner()) {
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(userId);
 					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
@@ -1226,6 +1197,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				searchBean.setUseEntityClass(true);
 				reqDTO.setViewSearchBean(searchBean);
+						
 				if(userOrg!=null) {
 					reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
 					reqDTO.setMinistryId(ministryId);
@@ -1254,46 +1226,46 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					// throw new EpException(MessageConst.ERROR_715014);
 					return new SearchResultBean();
 				}
-
+						
 				reqDTO.setUserId(userId);
-				System.out.println("******g2gFlag*****"+g2gFlag);
 				reqDTO.setG2gFlag(g2gFlag);
-				log.debug("*********b4***********");
+				
+				appendSearchCriteria(sb, "REQUISITIONER", String.valueOf(unspscCodeBackingBean.isRequisitioner()));
+				appendSearchCriteria(sb, "G2G", String.valueOf(reqDTO.isG2gFlag()));
+				appendSearchCriteria(sb, "USER_ID", String.valueOf(reqDTO.getUserId()));
+				appendSearchCriteria(sb, "MINISTRY_ID", String.valueOf(reqDTO.getMinistryId()));
+				appendSearchCriteria(sb, "DEPT_ID", String.valueOf(reqDTO.getDepartmentId()));
+				appendSearchCriteria(sb, "PTJ_ID", String.valueOf(reqDTO.getUserOrgProfileId()));
+				reqDTO.setSearchCriteria(sb.toString());
+				
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
 				setViewSupplierItemList(resDTO.getViewSuppItemResultBean()
 						.getResultList());
-				log.debug("*********after***********");
-
+				
 				Locale locale = new FacesScopes().getUserLocale();
+				
 				// enable or disable simple quote in search catalogue
 				if(null == getCatTypeFilterBean().getSearchValue()){
 					if (resDTO.getViewSuppItemResultBean().getResultList() != null
 							&& resDTO.getViewSuppItemResultBean().getResultList()
 							.size() > 0) {
 						setSimpleQuoteFlag(Boolean.TRUE);
-						
 					} else {
 						setSimpleQuoteFlag(Boolean.FALSE);
-					
 					}
 				}
 				
 				if (resDTO.getViewSuppItemResultBean().getResultList() != null
 						&& resDTO.getViewSuppItemResultBean().getResultList()
 						.size() > 0) {
-					
 					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getTotalRecord()},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-					
-				
 				} else {
-					
 					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getTotalRecord()},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 				}
 				
-				
-				System.out.println("getTotalRecords:"+getTotalRecords());
+				log.info("getTotalRecords:"+getTotalRecords());
 				SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 				/*TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean
 						.getManagedBean().getProductTemplateSpecBean();
@@ -1330,7 +1302,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				viewSO = null;
 			}
 		}
-
 	}
 
 	/**
@@ -1424,24 +1395,35 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 		log.info("hasSearchValue: " + hasSearchValue);
 		
-		
 		if (StringUtils.isNotBlank((String) itemNameFilterBean.getSearchValue())) {
 			if(((String) itemNameFilterBean.getSearchValue()).trim().length()<3){
 				throw new EpException(MessageConst.ERROR_716019);
 			}
 		}
 		
-		
-		
-
 		if (!hasSearchValue) {
 			throw new EpException(MessageConst.ERROR_716006);
 		} else {
-
 			searchDataModel.reloadData();
 		}
 	}
-
+	
+	/**
+	 * Append search criteria for logging purpose
+	 *
+	 */
+	private void appendSearchCriteria(StringBuilder sb, SearchFilterBean searchFilterBean) {
+		sb.append(String.format("[%s=%s]", searchFilterBean.getSearchField(), searchFilterBean.getSearchValue()));
+	}
+	
+	/**
+	 * Append search criteria for logging purpose
+	 *
+	 */
+	private void appendSearchCriteria(StringBuilder sb, String searchField, String searchValue) {
+		sb.append(String.format("[%s=%s]", searchField, searchValue));
+	}
+	
 	/**
 	 * Gets the item name filter bean.
 	 * 
@@ -3919,10 +3901,4 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setDupplicatedInd(boolean dupplicatedInd) {
 		this.dupplicatedInd = dupplicatedInd;
 	}
-
-	
-	
-	
-	
-
 }
