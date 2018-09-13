@@ -92,7 +92,7 @@
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday}">
 
-						<p:commandLink update="publishdtl"
+						<p:commandLink update="publishdtl, @(.nbsrhresultsStyleClass)"
 							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','today')}"
 							process="@this" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();">
@@ -100,7 +100,7 @@
 								style="padding-right:15px;padding-bottom:10px; font-size:12px" />
 						</p:commandLink>
 
-						<p:commandLink update="publishdtl"
+						<p:commandLink update="publishdtl, @(.nbsrhresultsStyleClass)"
 							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
 							rendered="#{noticeBoardBackingBean.managedBean.pubToday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
@@ -110,14 +110,14 @@
 					</p:column>
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.pubToday}">
-						<p:commandLink update="publishdtl"
+						<p:commandLink update="publishdtl, @(.nbsrhresultsStyleClass)"
 							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 						</p:commandLink>
 
-						<p:commandLink update="publishdtl"
+						<p:commandLink update="publishdtl, @(.nbsrhresultsStyleClass)"
 							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
 							rendered="#{noticeBoardBackingBean.managedBean.pubYesterday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">

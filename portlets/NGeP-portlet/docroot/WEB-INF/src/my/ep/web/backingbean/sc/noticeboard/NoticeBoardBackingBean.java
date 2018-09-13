@@ -472,6 +472,8 @@ public class NoticeBoardBackingBean extends
 						.setYesterday(true);
 			}
 			this.getManagedBean().setPubShow(true);
+			searchNoticeBoard();
+			
 		} else if (NoticeBoardSection.BRIEFINGDETAILS.name().equalsIgnoreCase(
 				sectionName)) {
 			if (day.equalsIgnoreCase("today")) {
@@ -516,6 +518,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setPubYesterday(false);
 			}
 			this.getManagedBean().setPubShow(false);
+			searchNoticeBoard();
 		} else if (NoticeBoardSection.BRIEFINGDETAILS.name().equalsIgnoreCase(
 				sectionName)) {
 			this.getManagedBean().setBriefSearchDataBean(
