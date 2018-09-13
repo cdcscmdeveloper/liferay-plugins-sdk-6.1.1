@@ -5682,6 +5682,10 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		// checking if suddenly premise information is missing (#21955)
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
+		
+		//make sure appliction reject reason is empty for this application (#22444)
+		getManagedBean().getSmAppl().setSmApplRejectReasons(null);
+		
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
