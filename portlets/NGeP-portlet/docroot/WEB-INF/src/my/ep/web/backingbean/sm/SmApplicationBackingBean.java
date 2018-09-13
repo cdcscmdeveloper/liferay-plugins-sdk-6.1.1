@@ -903,13 +903,15 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
 		}
-		
+
 		getManagedBean().getSmAppl().setSupplierType(smAppl.getSupplierType());
-		getManagedBean().getSmSupplier().setBusinessType(smApplSupplier.getBusinessType());
-//		retrieveBusinessTypeList();
+		getManagedBean().getSmSupplier().setBusinessType(
+				smApplSupplier.getBusinessType());
+		// retrieveBusinessTypeList();
 		retrieveBusinessTypeListBySupplierType();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
-		assignBusinessTypeAlertValue(getManagedBean().getSmAppl().getSupplierType(), getManagedBean().getSmSupplier());
+		assignBusinessTypeAlertValue(getManagedBean().getSmAppl()
+				.getSupplierType(), getManagedBean().getSmSupplier());
 
 		getManagedBean().setReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
@@ -1379,7 +1381,8 @@ public class SmApplicationBackingBean extends
 		if (supp != null) {
 			if (supplierType
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-				System.out.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR");
+				System.out
+						.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR");
 				getManagedBean()
 						.setBusinessTypeAlertValue(
 								getParameterDesc(
@@ -1387,14 +1390,17 @@ public class SmApplicationBackingBean extends
 										supp.getBusinessType()));
 			} else if (supplierType
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-				System.out.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR");
+				System.out
+						.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR");
 				getManagedBean()
 						.setBusinessTypeAlertValue(
 								getParameterDesc(
 										ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT,
 										supp.getBusinessType()));
 			}
-			System.out.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR ==> " + getManagedBean().getBusinessTypeAlertValue());
+			System.out
+					.println("SmApplicationBackingBean.assignBusinessTypeAlertValue() ---- STYPE_CONTRACTOR ==> "
+							+ getManagedBean().getBusinessTypeAlertValue());
 		}
 	}
 
@@ -2379,7 +2385,7 @@ public class SmApplicationBackingBean extends
 				setApplicationShareHolders(getManagedBean().getSmAppl()
 						.getSmPersonnels());
 			}
-//			retrieveBusinessTypeList();
+			// retrieveBusinessTypeList();
 			retrieveBusinessTypeListBySupplierType();
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
@@ -5682,10 +5688,11 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		// checking if suddenly premise information is missing (#21955)
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
-		
-		//make sure appliction reject reason is empty for this application (#22444)
+
+		// make sure application reject reason is empty for this application
+		// (#22444)
 		getManagedBean().getSmAppl().setSmApplRejectReasons(null);
-		
+
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
@@ -8165,7 +8172,8 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getApplnOverLapRemarks());
 			}
 
-			// #17064 - update establish_date in supplier if there is any changes
+			// #17064 - update establish_date in supplier if there is any
+			// changes
 			// #17716 - update company_name/reg_no/business_type in supplier
 			if (SmCommonUtil.isHasDifferences(getManagedBean().getLatestAppl(),
 					getManagedBean().getSmAppl(), new String[] {
@@ -9996,13 +10004,14 @@ public class SmApplicationBackingBean extends
 								.toArray(new SelectItem[businessTypeSelectItems
 										.size()]));
 	}
-	
+
 	public void retrieveBusinessTypeListBySupplierType() {
 		SelectItem[] items = null;
 		FacesScopes fs = new FacesScopes();
 
 		String supplierType = getManagedBean().getSmAppl().getSupplierType();
-		String businessType = getManagedBean().getSmSupplier().getBusinessType();
+		String businessType = getManagedBean().getSmSupplier()
+				.getBusinessType();
 
 		if (supplierType != null) {
 			if (supplierType
