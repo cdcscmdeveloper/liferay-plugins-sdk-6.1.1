@@ -868,9 +868,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
-		
-		log.info("length:" + objects);
-
 		ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
 		// Object[] objects =
 		// (Object[])this.getManagedBean().getSelectedObject()[index];
