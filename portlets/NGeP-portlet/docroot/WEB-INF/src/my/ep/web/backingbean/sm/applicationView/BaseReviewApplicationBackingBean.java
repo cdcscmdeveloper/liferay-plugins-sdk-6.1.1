@@ -2083,6 +2083,25 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	/**
+	 * Validate prefix 3 characters for searching by company name
+	 */
+	public void validateCompanySearch() {
+		if (getManagedBean().getSearchSupplier() != null) {
+			if (StringUtils.isBlank(getManagedBean().getSearchSupplier()
+					.getCompanyName())) {
+				throw new EpException(SmCommonUtil.getMessage(
+						"lbl.sm.tt.search.prefix.three.char", null));
+			} else if (!StringUtils.isBlank(getManagedBean()
+					.getSearchSupplier().getCompanyName())
+					&& getManagedBean().getSearchSupplier().getCompanyName()
+							.length() < 3) {
+				throw new EpException(SmCommonUtil.getMessage(
+						"lbl.sm.tt.search.prefix.three.char", null));
+			}
+		}
+	}
+
+	/**
 	 * Get Supplier Id from url parameter
 	 * 
 	 * @return String supplierId
