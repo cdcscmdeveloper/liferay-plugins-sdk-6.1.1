@@ -76,7 +76,8 @@ public class ViewApplHistoryBackingBean extends
 			getManagedBean().getTrackingDiary().setTrackingDiaryParam(
 					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
 					getManagedBean().getSmAppl().getApplId(), false);
-			getManagedBean().getTrackingDiary().getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+			getManagedBean().getTrackingDiary().getManagedBean()
+					.getSearchTrackingDiaryDataModel().reloadData();
 		}
 	}
 
@@ -249,14 +250,7 @@ public class ViewApplHistoryBackingBean extends
 	 * Perform search supplier application history
 	 */
 	public void search() {
-		if (getManagedBean().getSearchSupplier() != null
-				&& !StringUtils.isBlank(getManagedBean().getSearchSupplier()
-						.getCompanyName())
-				&& getManagedBean().getSearchSupplier().getCompanyName()
-						.length() < 3) {
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.tt.search.prefix.three.char", null));
-		}
+		validateCompanySearch();
 		getManagedBean().searchSupplier();
 	}
 
@@ -326,39 +320,46 @@ public class ViewApplHistoryBackingBean extends
 	 * Initialized PO or approver decision info
 	 */
 	private void initPOApproverDecisionInfo() {
-		
+
 		log.info("initPOApproverDecisionInfo");
-		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrievePOApproverFAandOLASmRemarks
-				(getManagedBean().getSmAppl().getApplNo(), getManagedBean().getSmAppl().getApplId());
+		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO()
+				.retrievePOApproverFAandOLASmRemarks(
+						getManagedBean().getSmAppl().getApplNo(),
+						getManagedBean().getSmAppl().getApplId());
 		resetPOApproverDecisionInfo();
-		if(resDTO.getPoApproverRemarksList() != null) {
-			log.info("PoApproverRemarksList() size:"+ resDTO.getPoApproverRemarksList().size());
-			for(Object[] obj: resDTO.getPoApproverRemarksList()) {
+		if (resDTO.getPoApproverRemarksList() != null) {
+			log.info("PoApproverRemarksList() size:"
+					+ resDTO.getPoApproverRemarksList().size());
+			for (Object[] obj : resDTO.getPoApproverRemarksList()) {
 				boolean isPoUser = false;
-			
+
 				String userName = (String) obj[0];
 				Date remarkCreatedDate = (Date) obj[1];
 				String roleType = (String) obj[2];
 				String docType = (String) obj[3];
 				String remark = (String) obj[4];
-				
-				log.info("userName:"+userName+",remarkCreatedDate:"+remarkCreatedDate+",roleType:"+roleType+",docType:"+docType+",remark:"+remark);
-				
-				if (roleType != null && roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+
+				log.info("userName:" + userName + ",remarkCreatedDate:"
+						+ remarkCreatedDate + ",roleType:" + roleType
+						+ ",docType:" + docType + ",remark:" + remark);
+
+				if (roleType != null
+						&& roleType
+								.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 					isPoUser = true;
 				}
-				
-				if(isPoUser) {
+
+				if (isPoUser) {
 					getManagedBean().setPoUserName(userName);
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
 				} else {
 					getManagedBean().setApproverUserName(userName);
 					setApproverRemarksInfo(docType, remark, remarkCreatedDate);
-				}	
+				}
 			}
-		} 
+		}
 	}
-	
+
 	/**
 	 * Reset PO or approver decision info to null
 	 */
@@ -371,53 +372,69 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setApproverRemarkCreatedDate(null);
 		getManagedBean().setApproverRemark(null);
 	}
-	
+
 	/**
 	 * Set PO remarks info
 	 * 
-	 * @param docType           document type 
-	 * @param remark            remark
-	 * @param remarkCreatedDate remark created date
+	 * @param docType
+	 *            document type
+	 * @param remark
+	 *            remark
+	 * @param remarkCreatedDate
+	 *            remark created date
 	 */
-	private void setPORemarksInfo(String docType, String remark, Date remarkCreatedDate) {
+	private void setPORemarksInfo(String docType, String remark,
+			Date remarkCreatedDate) {
 		setPOApproverRemarksInfo(true, docType, remark, remarkCreatedDate);
 	}
-	
+
 	/**
 	 * Set approver remarks info
 	 * 
-	 * @param docType           document type 
-	 * @param remark            remark
-	 * @param remarkCreatedDate remark created date
+	 * @param docType
+	 *            document type
+	 * @param remark
+	 *            remark
+	 * @param remarkCreatedDate
+	 *            remark created date
 	 */
-	private void setApproverRemarksInfo(String docType, String remark, Date remarkCreatedDate) {
+	private void setApproverRemarksInfo(String docType, String remark,
+			Date remarkCreatedDate) {
 		setPOApproverRemarksInfo(false, docType, remark, remarkCreatedDate);
 	}
 
 	/**
 	 * Set PO/approver remarks info
 	 * 
-	 * @param isPoUser          po user indicator
-	 * @param docType           document type 
-	 * @param remark            remark
-	 * @param remarkCreatedDate remark created date
+	 * @param isPoUser
+	 *            po user indicator
+	 * @param docType
+	 *            document type
+	 * @param remark
+	 *            remark
+	 * @param remarkCreatedDate
+	 *            remark created date
 	 */
-	private void setPOApproverRemarksInfo(boolean isPoUser, String docType, String remark, Date remarkCreatedDate) {
-		if(docType != null) {
-			if(docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE) || docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT) ) {
-				if(isPoUser) {
+	private void setPOApproverRemarksInfo(boolean isPoUser, String docType,
+			String remark, Date remarkCreatedDate) {
+		if (docType != null) {
+			if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE)
+					|| docType
+							.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
+				if (isPoUser) {
 					getManagedBean().setPoRemark(remark);
 					getManagedBean().setPoRemarkCreatedDate(remarkCreatedDate);
 				} else {
 					getManagedBean().setApproverRemark(remark);
-					getManagedBean().setApproverRemarkCreatedDate(remarkCreatedDate);
+					getManagedBean().setApproverRemarkCreatedDate(
+							remarkCreatedDate);
 				}
 			} else {
 				getManagedBean().setPoApprOverlappedRemark(remark);
 			}
 		}
 	}
-	
+
 	public void initSiteVisit() {
 		SvoSiteVisitBackingBean svo = new SvoSiteVisitBackingBean();
 		svo.getManagedBean().setAppId(getManagedBean().getSmAppl().getApplId());
@@ -475,7 +492,7 @@ public class ViewApplHistoryBackingBean extends
 		return registrationBackingBean;
 
 	}
-	
+
 	/**
 	 * Get SvoSiteVisitBackingBean instance
 	 * 
