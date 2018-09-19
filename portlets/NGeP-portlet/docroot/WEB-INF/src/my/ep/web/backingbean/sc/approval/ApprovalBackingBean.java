@@ -31,7 +31,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
@@ -48,8 +47,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -88,7 +85,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -981,7 +977,7 @@ public class ApprovalBackingBean extends
 				
 				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					if (CollectionUtils.isNotEmpty(approvalTypes)) {
-						if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
+						/*if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 							if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
 								try {
@@ -999,11 +995,11 @@ public class ApprovalBackingBean extends
 									log.error(e.getMessage(), e);
 								}
 							}
-						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
+						} else*/ if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
 							new QTDocumentsBackingBean().reGenerateDocuments(
 									qt.getQtId(), 
 									QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
-							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+							/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
 								// To remove the existing QT closing job from scheduler if any
 								log.info("remove simple scheduler if QT is closing today.");
@@ -1020,7 +1016,7 @@ public class ApprovalBackingBean extends
 								}catch(Exception e){
 									log.error(e.getMessage(), e);
 								}
-							}
+							}*/
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
 							if (isFinalApproval) {
 								new QTDocumentsBackingBean().reGenerateDocuments(
