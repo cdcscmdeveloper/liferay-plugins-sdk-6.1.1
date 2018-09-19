@@ -30,8 +30,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTDisruptionConst;
-import my.ep.constant.sc.QTStatusConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmEndpointConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -160,13 +158,11 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 				case QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION :
 					ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 					proposalReqDTO.setQtId(qtId);
-					proposalReqDTO.setJobType(SourcingConstants.JOB_TYPE_RETRY);
-					proposalReqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 					ProposalResDTO proposalResDTO = getQTProposalSO()
-							.updateRescheduleWorkFlowStatus(proposalReqDTO);
+							.updateProposalStartWorkFlowStatus(proposalReqDTO);
 					successful = proposalResDTO.isSuccessful();
 					if (successful) {
-						updateQTDisruptionSuccess(qtDisruptionLog);
+						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
 					} else {
 						errorMessage = proposalResDTO.getErrorMessage();
 					}
@@ -200,13 +196,11 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 				case QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION :
 					proposalReqDTO = new ProposalReqDTO();
 					proposalReqDTO.setQtId(qtId);
-					proposalReqDTO.setJobType(SourcingConstants.JOB_TYPE_RETRY);
-					proposalReqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 					proposalResDTO = getQTProposalSO()
-							.updateRescheduleWorkFlowStatus(proposalReqDTO);
+							.updateProposalCloseWorkFlowStatus(proposalReqDTO);
 					successful = proposalResDTO.isSuccessful();
 					if (successful) {
-						updateQTDisruptionSuccess(qtDisruptionLog);
+						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION);
 					} else {
 						errorMessage = proposalResDTO.getErrorMessage();
 					}
