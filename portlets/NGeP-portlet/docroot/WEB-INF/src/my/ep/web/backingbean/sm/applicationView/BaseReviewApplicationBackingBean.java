@@ -2087,11 +2087,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void validateCompanySearch() {
 		if (getManagedBean().getSearchSupplier() != null) {
-			if (StringUtils.isBlank(getManagedBean().getSearchSupplier()
-					.getCompanyName())) {
-				throw new EpException(SmCommonUtil.getMessage(
-						"lbl.sm.tt.search.prefix.three.char", null));
-			} else if (!StringUtils.isBlank(getManagedBean()
+			if (!StringUtils.isBlank(getManagedBean()
 					.getSearchSupplier().getCompanyName())
 					&& getManagedBean().getSearchSupplier().getCompanyName()
 							.length() < 3) {
