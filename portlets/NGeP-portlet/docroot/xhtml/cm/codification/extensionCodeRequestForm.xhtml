@@ -10,9 +10,7 @@
 
 	<ui:define name="contentSection">
 
-
-		<p:messages showDetail="true" autoUpdate="true" closable="true"
-			showSummary="true"></p:messages>
+		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		<h:panelGroup id="cmExtensionRequestFormID">
 
 			<div style="text-align: right; min-height: 40px;">
@@ -27,12 +25,22 @@
 				</div>
 			</div>
 
-
-
-			<p:panel header="#{lbl['lbl.cm.extension.code.request.form']}"
-				toggleable="true">
-
-
+			<p:panel header="#{lbl['lbl.cm.extension.code.request.form']}" toggleable="true">
+				<table style="width: 100%; height: 100%;">
+					<tr>
+						<td width="100%">
+							<h:outputText styleClass="instruction" style="float:left;margin-left:5px;" escape="false"
+								value="#{lbl['lbl.cm.instruction.thirty.days.supp']}" 
+								rendered="#{not unspscCodeBackingBean.supplierTemp}"/>
+							<h:outputText styleClass="instruction" style="float:left;margin-left:5px;" escape="false"
+								value="#{lbl['lbl.cm.instruction.thirty.days.supp.temp']}" 
+								rendered="#{unspscCodeBackingBean.supplierTemp}"/>
+						</td>
+					</tr>
+				</table>
+				<table style="width: 100%; height: 100%;">
+					<tr></tr>
+				</table>
 				<table>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code.lov']}" /></td>
@@ -99,24 +107,18 @@
 					<div style="text-align: right;">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							action="#{unspscCodeBackingBean.addMoreRequest}"
-							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
+							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()">
+						</p:commandButton>
 					</div>
 				</h:panelGroup>
 
 			</p:panel>
 
 			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
-				header="#{lbl['lbl.cm.request.extension.code']}" width="auto"
-				height="auto">
-
+				header="#{lbl['lbl.cm.request.extension.code']}" width="auto" height="auto">
 				<ui:include src="requestExtensionPopUp.xhtml" />
-
 			</p:dialog>
 		</h:panelGroup>
-
-
-
-
 	</ui:define>
 
 </ui:composition>
