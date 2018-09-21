@@ -699,6 +699,7 @@ public class EvaluationMeetingBackingBean extends
 			// memberList.add(member);
 
 		}
+		validateMember(this.getManagedBean().getQt(), localList, this.getManagedBean().getCommitteeType());
 		committeeActivity.addAll(localList);
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
@@ -1093,7 +1094,7 @@ public class EvaluationMeetingBackingBean extends
 			}
 
 		}
-
+		validateMember(this.getManagedBean().getQt(), localList, this.getManagedBean().getCommitteeType());
 		committeeMemberList.addAll(localList);
 		Collections.sort(committeeMemberList);
 		this.getManagedBean().setCommitteeMemberActivity(committeeMemberList);
@@ -1857,6 +1858,115 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
+	
+	
+	/**
+	 * Gets the qt commite dtls by qt id n type.
+	 * 
+	 * @param commType
+	 *            the comm type
+	 * @param qtId
+	 *            the qt id
+	 * @return the qt commite dtls by qt id n type
+	 */
+	private ScQtCommittee getQtCommiteDtlsByQtIdNType(String commType, Long qtId) {
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setCommitteeType(commType);
+		reqDTO.setQtId(qtId);
+		CommitteResDTO resDTO = null;
+		ScQtCommittee qtCommitte = null;
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
+			qtCommitte = resDTO.getScQtCommittee();
+			
+		} finally {
+			committeSO = null;
+		}
+		return qtCommitte;
+	}
+	
+	private void validateMember(ScQt scQt,
+			List<ScCommitteeMember> toBeAddedList, String committeeType) {
+
+	log.debug("validateMembercommitteeType"+committeeType);
+		List<ScQtCommittee> qtCommitteList = null;
+		ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE,
+				scQt.getQtId());
+		qtCommitteList=new ArrayList<ScQtCommittee>();
+		if(null!=specCommitte){
+			qtCommitteList.add(specCommitte);	
+		}
+		qtCommitteList.add(this.getManagedBean().getScQtCommittee());
+		if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+				.getManagedBean().getQt().getEvaluationType())) {
+			if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(committeeType)) {
+				ScQtCommittee openCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE,
+						scQt.getQtId());
+				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE,
+						scQt.getQtId());
+				if(null!=openCommitte){
+					qtCommitteList.add(openCommitte);	
+				}
+				if(null!=fecCommitte){
+					qtCommitteList.add(fecCommitte);	
+				}
+				
+			}
+			
+			else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+					.equalsIgnoreCase(committeeType)) {
+				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE,
+						scQt.getQtId());
+				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE,
+						scQt.getQtId());
+				if(null!=tecCommitte){
+					qtCommitteList.add(tecCommitte);	
+				}
+				if(null!=fecCommitte){
+					qtCommitteList.add(fecCommitte);	
+				}
+			}
+			
+			else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(committeeType)) {
+				
+				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE,
+						scQt.getQtId());
+				ScQtCommittee openCommitte = getQtCommiteDtlsByQtIdNType(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE,
+						scQt.getQtId());
+				if(null!=tecCommitte){
+					qtCommitteList.add(tecCommitte);	
+				}
+				if(null!=openCommitte){
+					qtCommitteList.add(openCommitte);	
+				}
+			}
+			
+		}
+		
+		ICommitteSO committeSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+		try{				
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setScQt(scQt);
+		FacesScopes scope = new FacesScopes();
+		committeReqDTO.setPmUser(scope.getUserSessionBean());
+		committeReqDTO.setUserLocale(scope.getUserLocale());
+		committeReqDTO.setQtCommittee(qtCommitteList);
+		committeReqDTO.setCommitteeMembers(toBeAddedList);
+		committeReqDTO.setCommitteeType(committeeType);
+		
+		committeSO.validateEvaluationMethodMembers(committeReqDTO);
+		}finally{
+		committeSO =null;
+		qtCommitteList=null;
+		}
+	}
+	
 	/*
 	 * private Long retriveMinistryIdByPTJ() { IOrgProfileSO orgProfileSO =
 	 * null; Long ministryId = null; try { orgProfileSO =
