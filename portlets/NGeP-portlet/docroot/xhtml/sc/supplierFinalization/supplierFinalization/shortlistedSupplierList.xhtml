@@ -39,7 +39,7 @@
 							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
 								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
 								disabled="#{!(isSecretaryUser or 
-												isBPKTaskAndClaimed)}">
+												isBPKTaskAndClaimed) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
 								<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
 										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
@@ -210,7 +210,8 @@
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
 						  disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
 													shortlistedSupp.suppSelectionDisabled or 
-														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding }" />
+														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
+														or suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 			</p:dataTable>							 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
@@ -361,7 +362,8 @@
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
 						disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
-											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding}">
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
+											or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	

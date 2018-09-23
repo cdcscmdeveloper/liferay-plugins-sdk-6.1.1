@@ -48,7 +48,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 						partialSubmit="true" update="@form"
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
-						rendered="#{isSecretaryUser or isBPKTaskAndClaimed}"
+						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 					<ui:repeat var="bpmAction"
@@ -61,7 +61,7 @@
 							action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							rendered="#{validityDaysExpiredQt}" />
+							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
