@@ -77,10 +77,8 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
@@ -106,7 +104,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -227,7 +224,6 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public String preRenderViewMaintenance(ScQt scQt) {
 		log.info("preRenderViewMaintenance");
-		//hanz
 		getManagedBean().setActiveIndex(0);
 		getManagedBean().setScQt(scQt);
 		
@@ -291,7 +287,6 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Dynamically creating main tab menu
 		createMainMenuModel();
-		
 	}
 	
 	/**
@@ -301,48 +296,9 @@ public class SupplierFinalizationBackingBean extends
 	private void loadInitialDataMaintenance(Long qtId) {
 		log.info("loadInitialDataMaintenance");
 		ScQt scQt = getManagedBean().getScQt();
-		//String decisionType = scQt.getFinalization().getHigherCommitte().getParameterCode();
-		//getManagedBean().setCommitteeType(scQt.getScQtCommittees().get(0).getScCommittee().getCommitteeType().toString());
-		//getManagedBean().setCommitteeType(scQt.getscqt
-		//getManagedBean().setCommitteeType(dataType.getCommitteeType());
-				
-		/*ScCommittee committee = qtCommittees.getScCommittee();
-
-		if (committee.getCommitteeType().getParameterCode()
-				.equals(committeeTypeCode)) {
-			
-		}*/
-		/*List<ScQtCommittee> scQtCommittee = scQt.getScQtCommittees();
-		PmParameter committeTypeHanz = scQtCommittee.get(0).getScCommittee().getCommitteeType();
-		System.out.println("-----------------HANZ COM-------------------" + committeTypeHanz);
-		getManagedBean().setCommitteeType(committeTypeHanz.toString());*/
-		//scQtCommittee.get(0).getScCommittee().getCommitteeType();
-		//ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
-		//getManagedBean().setCommitteeType("416");
-		/*if(scQt != null){
-			List<ScQtCommittee> scQtCommittee = scQt.getScQtCommittees();
-			//PmParameter committeTypeHanz = scQtCommittee.get(0).getScCommittee().getCommitteeType();
-			
-			ScCommittee tempScCommittee = scQtCommittee.get(0).getScCommittee();
-			getManagedBean().setCommitteeType(tempScCommittee.getCommitteeType().toString());
-		}*/
 		
 		retrieveQTDetails(qtId);
-		
-//		if (null != scQt.getScQtCommittees()) {
-//			//scQt.getScQtCommittees().size();
-//			for (ScQtCommittee committees : scQt.getScQtCommittees()) {
-//				if (null != committees.getScCommittee()) {
-//					committees.getScCommittee().getCommitteeType();
-//					System.out.println("-----------------HANZ Committee Type INSIDE-------------------" + committees.getScCommittee().getCommitteeType());
-//				}
-//			}
-//		}
-		System.out.println("-----------------HANZ Committee Type-------------------" + getManagedBean().getCommitteeType());
-		System.out.println("-----------------HANZ Committee Type-------------------" + getManagedBean().getCommitteeType());
 		retrieveStatusQTMaintenance(qtId);
-		System.out.println("-----------------HANZ Status ID-------------------" + getManagedBean().getCurrentStatusId());
-		
 		loadSupplierFinalizationTabDetails();
 		
 		if (getManagedBean().getScQtFinalization().isHigherAuthReq()) {
@@ -356,12 +312,13 @@ public class SupplierFinalizationBackingBean extends
 				getManagedBean().setInitialDecisionFwdHighAuth(true);
 			}
 		}
-		//String committeeType = getManagedBean().getCommitteeType();
-		//if (StringUtils.isNotBlank(committeeType) && 
-		//		!StringUtils.equalsIgnoreCase(committeeType, "null")) {
+		
+		String committeeType = getManagedBean().getCommitteeType();
+		if (StringUtils.isNotBlank(committeeType) && 
+				!StringUtils.equalsIgnoreCase(committeeType, "null")) {
 			loadPreparationTabDetails();
 			checkIfLoggedinUserIsSecretary();
-		//}
+		}
 		
 		retrieveBriefingPaper();
 		
@@ -411,7 +368,6 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			if(isQTMaintenanceScreen()){
 				PmParameter committeeType = scQt.getScQtCommittees().get(0).getScCommittee().getCommitteeType();
-				System.out.println("-----------------HANZ Committee Type INSIDE-------------------" + committeeType.getParameterCode());
 				getManagedBean().setCommitteeType(committeeType.getParameterCode());
 			}
 			populateParentOrgProfile(scQt);
@@ -1671,6 +1627,7 @@ public class SupplierFinalizationBackingBean extends
 		Set<ScQtRecommendDtl> removedRecommendDtlSet = new HashSet<ScQtRecommendDtl>();
 		for (ScQtRecommendDtl recommendDtl 
 								: scQtRecommend.getRecommendDtls()) {
+			
 			// Skip the deletion of rejected suppliers and 
 			// suppliers with LOI or LOA as these records will have child records
 			if (!recommendDtl.getRecordStatusFlg().equals(
@@ -3391,19 +3348,6 @@ public class SupplierFinalizationBackingBean extends
 		log.info("getRejectedRecommendDtlIds size is : "+ rejectedRecommendDtlIds.size());
 		return rejectedRecommendDtlIds;
 	}
-	
-	//hanz need to add this
-	private List<String> getRejectedRecommendDtlIdsMaintenance() {
-		List<String> rejectedRecommendDtlIds = null;
-		List<ScQtRecommend> scQtRecommends = getManagedBean().getScQtFinalization().getScQtRecommends();
-		
-		for (ScQtRecommend recommend : scQtRecommends) {
-			if (!recommend.isCancelled() && 
-					CollectionUtils.isNotEmpty(recommend.getRecommendDtls())) {}
-		}
-		log.info("getRejectedRecommendDtlIds size is : "+ rejectedRecommendDtlIds.size());
-		return rejectedRecommendDtlIds;
-	}
 
 	private void retrieveSupplierDetailsByRecommendType(
 							ScQtFinalization scQtFinalization) {
@@ -4394,10 +4338,6 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);
-			//TODO - disable menu for Maintenance Screen
-			/*if(isQTMaintenanceScreen()){
-				menuItem.setDisabled(true);
-			}*/
 		}
 		
 		
@@ -4431,10 +4371,6 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setOncomplete(tabMenuChangeCommonAction
 				+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
-		//TODO - disable menu for Maintenance Screen
-		/*if(isQTMaintenanceScreen()){
-			menuItem.setDisabled(true);
-		}*/
 
 		
 		// Supplier Finalization Committee Endorsement Menu Item
@@ -4450,10 +4386,6 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);	
-			//TODO - disable menu for Maintenance Screen
-			/*if(isQTMaintenanceScreen()){
-				menuItem.setDisabled(true);
-			}*/
 			
 			menuItem = new MenuItem();
 			menuItem.setValue(ResourceBundleUtils.getMessage(
