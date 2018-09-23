@@ -22,7 +22,7 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
 						value="#{suppFinalizationBackingBean.managedBean.selectAllMeetings}"
-						disabled="#{suppFinalizationBackingBean.managedBean.hasPreviousMeeting}">
+						disabled="#{suppFinalizationBackingBean.managedBean.hasPreviousMeeting or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=supplierFinalizationMeetingPreparationPnlId])"
@@ -32,7 +32,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectMeeting"
-					value="#{meetingDtl.selected}" disabled="#{disableMeeting}">
+					value="#{meetingDtl.selected}" disabled="#{disableMeeting or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierFinalizationMeetingPreparationPnlId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -47,7 +47,7 @@
 				<ac:dateTime id="finalizationconfirmmeetingDate"
 									required="true"
 									label="#{lbl['lbl.sc.meeting.date']}"
-									disabled="#{disableMeeting}" value="#{meetingDtl.meetingDate}"
+									disabled="#{disableMeeting or suppFinalizationBackingBean.isQTMaintenanceScreen()}" value="#{meetingDtl.meetingDate}"
 									update="@([id$=finalizationconfirmmeetingDate])" rowIndex="#{rowIndex}">
 								</ac:dateTime>
 				<p:message id="mtgDate" for="finalizationconfirmmeetingDate" display="icon"
@@ -66,7 +66,7 @@
 					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 					onmouseout="limitTextArea(this,255);"
 					value="#{meetingDtl.meetingLocation}" id="meetingLocation"
-					disabled="#{disableMeeting}">
+					disabled="#{disableMeeting or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
 				</p:inputTextarea>
 				<p:message id="mtgLoc" for="meetingLocation" display="icon"
@@ -80,7 +80,7 @@
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
-					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
+					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 					<f:selectItems
 						value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this"
@@ -91,7 +91,7 @@
 			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
 				<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" maxlength="100"
 				onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
-				onmouseout="limitTextArea(this,100);"	disabled="#{disableMeeting}">
+				onmouseout="limitTextArea(this,100);"	disabled="#{disableMeeting or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputTextarea>
 			</p:column>
@@ -102,12 +102,13 @@
 				process="@this,meetingDtlTbl" partialSubmit="true"
 				action="#{suppFinalizationBackingBean.addMeetingDtls}"
 				update="meetingDtlTbl"
-				rendered="#{isSecretaryUser}" />
+				rendered="#{isSecretaryUser and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this,meetingDtlTbl" partialSubmit="true"
-			disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.meetingList)}"
+			disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.meetingList)
+			or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 				oncomplete="dlgPerformDel.show();" update="@([id$=#{supplierFinalizationPreparationMeetingDeleteId}])"
-				rendered="#{isSecretaryUser}" />
+				rendered="#{isSecretaryUser and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 
 		</div>
 		
