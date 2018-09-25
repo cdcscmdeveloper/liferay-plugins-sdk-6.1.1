@@ -16,7 +16,6 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
-import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.MessageConst;
@@ -25,8 +24,6 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
-import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
-import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -68,6 +65,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> extends BaseBackingBean<T> {
 	
+	private static final long serialVersionUID = 1L;
 	/** The log. **/
 	private static Logger log = Logger.getLogger(FulfilmentBaseBackingBean.class);
 	private static String separator = ", ";
@@ -215,7 +213,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			reqDTO.setGroupId(groupId);
 			reqDTO.setUserId(approver.getUserId());
 			UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
-			if(resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			if(resDTO.getUserGroupUser()==null || (resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE)){
 				list2.remove(0);
 			}
 			list2.addAll(list1);
