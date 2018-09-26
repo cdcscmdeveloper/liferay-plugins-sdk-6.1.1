@@ -19,7 +19,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.qt.appcategory']}">
 				<h:outputText
-					value="#{otherrequestdetails.approvalType.parameterCode}" />
+					value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.approvalRequestTypes ,otherrequestdetails.approvalType.parameterCode)}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
