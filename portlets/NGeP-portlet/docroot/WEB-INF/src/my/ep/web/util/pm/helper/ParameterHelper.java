@@ -716,8 +716,6 @@ public class ParameterHelper implements Serializable{
 		IParameterSO parameterSO;
 		List<PmParameterDesc> list = null;
 		
-		log.info("getParameterDescFromCache - start");
-		
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			
@@ -736,8 +734,6 @@ public class ParameterHelper implements Serializable{
 		} finally {
 			parameterSO = null;
 		}
-		
-		log.info("getParameterDescFromCache - end");
 		
 		return list;
 	}
