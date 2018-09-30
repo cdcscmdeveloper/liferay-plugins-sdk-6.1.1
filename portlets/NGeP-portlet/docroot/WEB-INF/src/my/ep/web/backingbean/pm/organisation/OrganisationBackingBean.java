@@ -623,6 +623,8 @@ public class OrganisationBackingBean extends
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.STATUTORY_BODIES.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
+						OrganizationType.STATUTORY_BODIES_STATE.value())
+				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.STATE_GOVERNMENT.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.LOCAL_AUTHORITY.value())) {
