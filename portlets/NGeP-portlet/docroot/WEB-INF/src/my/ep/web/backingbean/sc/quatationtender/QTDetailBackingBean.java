@@ -843,10 +843,8 @@ public class QTDetailBackingBean extends
 	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl) {
 		debugLogger("viewDirectLOADetails");
 		
-		System.out.println("TEST HANZ: " + scQt.getProcurementMode().getParameterCode());
 		Long qtId = scQt.getQtId();
 		Long loaId = null;
-		//hanz try to change need to create new method
 		if (ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equals(scQt.getProcurementMode().getParameterCode())) {
 			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
 		}else{
