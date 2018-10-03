@@ -10135,9 +10135,7 @@ public class SmApplicationUtil {
 						.compareTo(new Integer(1)) == 0)
 						|| (isApprover && cat.getApprvrDecFlg() != null && cat
 								.getApprvrDecFlg().compareTo(new Integer(1)) == 0)) {
-					if (cat.getApprovedDate() == null) {
-						cat.setApprovedDate(new Date());
-					}
+					cat.setApprovedDate(new Date());
 					cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
 					setSupplierCategoryEffectiveDate(cat, smAppl.getApplType());
 				} else {
