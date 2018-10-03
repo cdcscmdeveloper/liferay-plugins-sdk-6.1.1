@@ -1026,17 +1026,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			if(StringUtils.isNotBlank(getTaskDescGroup())){
 				taskTitle.append(".");
 				taskTitle.append(getTaskDescGroup());
-			}
-
-
-			if(!isSdoWithMultipleRoles()){
-				reqDTO.setTaskTitle(taskTitle.toString());
-			}else if(isSDORole() && isSdoWithMultipleRoles()){
-				if(getDocStatusGroup() == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION){
+				
+				if(!isSdoWithMultipleRoles()){
 					reqDTO.setTaskTitle(taskTitle.toString());
+				}else if(isSDORole() && isSdoWithMultipleRoles()){
+					if(getDocStatusGroup() == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION){
+						reqDTO.setTaskTitle(taskTitle.toString());
+					}
 				}
 			}
-			
 		}
 	}
 	
