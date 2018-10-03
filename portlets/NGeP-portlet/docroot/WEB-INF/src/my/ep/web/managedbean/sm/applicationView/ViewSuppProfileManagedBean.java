@@ -73,6 +73,7 @@ public class ViewSuppProfileManagedBean extends
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setSupplierSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
+			reqDTO.setDisplaySearchPage(isDisplaySearchPage());
 
 			try {
 				if (!isSupplierUser()) {
