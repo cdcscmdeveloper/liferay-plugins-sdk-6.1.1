@@ -31,7 +31,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@form" update="@form"
 						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						style="float:right;" />
+						style="float:right;" rendered="#{bsvAttendanceBackingBean.managedBean.outComes[0] ne null and bsvAttendanceBackingBean.managedBean.outComes[0] eq 'SUBMIT'}" />
 						
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" update="@form"
 						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}"
