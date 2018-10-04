@@ -225,8 +225,7 @@
 						readonly="true"
 						size="4"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
-						postUpdateListener="contractRequestBackingBean.checkVotFundLov" 
-						conditionField="votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
+						postUpdateListener="contractRequestBackingBean.checkVotFundLov" 						
 						value="#{contractRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
 					<td></td>
