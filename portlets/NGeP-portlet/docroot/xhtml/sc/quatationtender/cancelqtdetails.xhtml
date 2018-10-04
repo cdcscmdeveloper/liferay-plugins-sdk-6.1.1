@@ -32,7 +32,7 @@
 		</div>
 
 		<c:choose>
-			<c:when test="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.currentStatusId)}">
+			<c:when test="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId)}">
 
 				<p:panel id="cancelQt" header="#{qTDetailBB.getParameterDesc(ParameterTypeConst.approvalCategory, ParameterConst.approvalCategoryFinalizationCommittee)}"
 					toggleable="true">
@@ -40,8 +40,8 @@
 						value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
 					<ui:param name="fcaApprovalRemarkList"
 						value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsFinalizationCommittee.xhtml" />
+					 <ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsFinalizationCommittee.xhtml" /> 
 	
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalhistory.xhtml" />
