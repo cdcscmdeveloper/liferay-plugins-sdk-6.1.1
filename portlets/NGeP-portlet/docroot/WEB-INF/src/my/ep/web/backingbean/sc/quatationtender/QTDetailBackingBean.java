@@ -4547,7 +4547,8 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
 
-			if (isQTStatusGreaterThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)) {
+			if (isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId()
+							, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)) {
 				quationTenderReqDTO.setQtId(scQt.getQtId());
 				quationTenderReqDTO
 						.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
@@ -4615,7 +4616,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt qt = this.getManagedBean().getQt();
 			String ackMsg = null;
-			if (isQTStatusPublished(getManagedBean().getCurrentStatusId())) {
+			if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
 				qt.setScQtCommittees(null);
 				qt.setScQtBriefings(null);
 				qt.setScQtStatus(null);
