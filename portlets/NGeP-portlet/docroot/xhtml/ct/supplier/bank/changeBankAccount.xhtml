@@ -79,7 +79,7 @@
 							styleClass="ui-button" process="@form"
 							onstart="blockWidget.show();"		
 							oncomplete="blockWidget.hide();" 	
-							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
+							action="#{supplierBackingBean.saveChangeBankRequest(outcome)}" 
 							rendered="#{not supplierBackingBean.isSupplierRole()}"
 						/>
 					</ui:repeat></td>
