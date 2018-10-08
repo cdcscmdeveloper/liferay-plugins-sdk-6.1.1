@@ -1383,10 +1383,18 @@ public class OrganisationBackingBean extends
 								manualAddr.getAddressId())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
-				} else if (address.getAddressName().equals(
+				} else if (address.getAddressName() != null && address.getAddressName().equals(
 						manualAddr.getAddressName())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
+				} else {
+					//Bug #22684
+					if(address.getAddressId() != null
+						&& address.getAddressId().equals(
+								manualAddr.getAddressId())) {
+						getManagedBean().getAddressTypesList().set(i, adressType);
+						deliveryAddr.setPmAddress(manualAddr);
+					}
 				}
 			}
 		}
