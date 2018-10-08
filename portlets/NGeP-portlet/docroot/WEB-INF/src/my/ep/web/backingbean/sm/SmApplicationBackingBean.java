@@ -5697,6 +5697,11 @@ public class SmApplicationBackingBean extends
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSelectedBranch().getGst());
+
+		// update category that record status is 1 for new mof application. This
+		// happen due to resubmit application (#23683)
+		updateCategoriesRecordStatus();
+
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -5718,6 +5723,24 @@ public class SmApplicationBackingBean extends
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
 
+		}
+	}
+	
+	/**
+	 * Update category record status if category record status is 1 and
+	 * application type is new
+	 */
+	private void updateCategoriesRecordStatus() {
+		if (getManagedBean().isSupplierUser()
+				&& getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& getManagedBean().getSmAppl().getSmSupplierCategories() != null) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+				}
+			}
 		}
 	}
 
