@@ -63,7 +63,7 @@
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
-						<h:outputText value="#{smSupplier.smAppl.pmRegStatus.pmStatus.pmStatusDescs[0].statusName}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}"/>
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}"/>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smSupplier.smAppl.pmRegStatus}"/>
 					</p:column>
 					
