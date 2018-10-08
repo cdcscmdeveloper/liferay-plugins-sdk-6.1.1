@@ -57,8 +57,7 @@
 							<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 								disabled="#{!(isBPKTaskAndClaimed or 
-												isSecretaryUser)
-												or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
+												isSecretaryUser)}"
 								style="width:333px;">
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
@@ -96,7 +95,7 @@
 														(suppFinalizationBackingBean.managedBean.scQt.zonal or 
 															suppFinalizationBackingBean.managedBean.initialSelectionItemized or 
 																(suppFinalizationBackingBean.managedBean.finalizationMethod eq 
-																	ParameterConst.recommendByOnlineBidding)) ) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+																	ParameterConst.recommendByOnlineBidding)) )}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=recommendSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 
@@ -124,7 +123,7 @@
 								<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}"
 									disabled="#{!(isSecretaryUser or 
-													isBPKTaskAndClaimed) or isQTStatusReFinalized or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+													isBPKTaskAndClaimed) or isQTStatusReFinalized}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" 
@@ -148,7 +147,7 @@
 				<h:column>
 					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}" 
-						disabled="#{!isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+						disabled="#{!isSecretaryUser}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
@@ -170,7 +169,7 @@
 								<p:selectOneRadio id="reason" layout="grid" columns="1" 
 										required="true" label="#{lbl['lbl.sc.reason']}"
 										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}"
-										disabled="#{!isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+										disabled="#{!isSecretaryUser}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getReasonRadioBtn()}"/>
 									<p:ajax event="change" partialSubmit="true" process="@this" 
 											listener="#{suppFinalizationBackingBean.changeReasonEvent}" 
@@ -199,8 +198,7 @@
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterId}"
 						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}"
 						disabled="#{!isSecretaryUser or 
-										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId 
-										or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}">
 						<f:selectItems
 							value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
 						<p:ajax event="change" update="@([id$=committeeSecretary],[id$=reasonLabel],[id$=reason])" 
@@ -211,8 +209,7 @@
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
 						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}" 
 						disabled="#{!isSecretaryUser or 
-										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId
-										or suppFinalizationBackingBean.isQTMaintenanceScreen()}" 
+										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}" 
 						rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems var="usersSecretary"
@@ -249,7 +246,7 @@
 						<p:selectBooleanCheckbox id="reEvaluateReqForComp"
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq}"
 							disabled="#{!(isBPKTaskAndClaimed or 
-											isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+											isSecretaryUser)}">
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('1', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq)}"/>
@@ -266,7 +263,7 @@
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"
 							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq or 
 										 	!(isBPKTaskAndClaimed or 
-													isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}" >
+													isSecretaryUser)}" >
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('2', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq)}"/>
@@ -283,7 +280,7 @@
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}"
 							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq or 
 											!(isBPKTaskAndClaimed or 
-												isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+												isSecretaryUser)}">
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('3', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq)}"/>
@@ -304,7 +301,7 @@
 									label="#{lbl['lbl.sc.reevaluate.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}"
 									disabled="#{!(isBPKTaskAndClaimed or 
-													isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+													isSecretaryUser)}">
 									<f:selectItems
 										value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
 										
@@ -335,7 +332,7 @@
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.rePublishOption.parameterId}"
 						required="true" label="#{lbl['lbl.sc.sf.republish.option']}"
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										isBPKTaskAndClaimed) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+										isBPKTaskAndClaimed)}">
 						<f:selectItems
 									value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.rePublishOption)}" />
 						<p:ajax event="change" partialSubmit="true" update="@this"
@@ -395,7 +392,6 @@
 	
 	<ac:scRemarkAndAttachment
 		remarkList="#{suppFinalizationBackingBean.managedBean.finalizationRemarks}"
-		showAttachment="false" 
-		readonly="#{suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+		showAttachment="false" />
 	
 </ui:composition>
