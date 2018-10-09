@@ -124,7 +124,11 @@
 	<tr><td class="txtBold">Recommendation/ Declaration</td></tr>
 	
 	#if($review)
+		#if($templateCode == "M")
+		<tr><td>$!svTask.officerComment</td></tr>
+		#else
 		<tr><td>$!svTask.recommended</td></tr>
+		#end
 		<br /><br /><br />
 	#else
 		<tr><br /><br /><br /><br /><br /></tr>
