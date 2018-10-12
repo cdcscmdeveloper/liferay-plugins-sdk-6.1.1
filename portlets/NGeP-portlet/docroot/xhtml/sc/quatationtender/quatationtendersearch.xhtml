@@ -86,13 +86,13 @@
 						</p:commandLink>
 						<p:commandLink id="viewQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"
-							rendered="#{scQt.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego and qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType != ParameterConst.doctypeLetterOfAward}">
+							rendered="#{scQt.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
 						<p:commandLink id="viewDNIcon" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"
-							rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType == ParameterConst.doctypeLetterOfAward}">
+							rendered="#{scQt.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
