@@ -843,12 +843,7 @@ public class QTDetailBackingBean extends
 		debugLogger("viewDirectLOADetails");
 		
 		Long qtId = scQt.getQtId();
-		Long loaId = null;
-		if (ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equals(scQt.getProcurementMode().getParameterCode())) {
-			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
-		}else{
-			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-		}
+		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
 		
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}
