@@ -53,6 +53,8 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 
+import com.liferay.portal.model.Role;
+
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
 public class SupplierDataMaintenanceBackingBean extends
@@ -967,42 +969,52 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	private boolean isLoginUserTheApplApprover() {
 		boolean retVal = false;
-		PmUser user = new FacesScopes().getUserSessionBean();
+		FacesScopes sc = new FacesScopes();
+		PmUser user = sc.getUserSessionBean();
 
-		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
-				.getSmApplSectionReviews())) {
-			// if review size equals to 1 means direct approve by PO
-			if (getManagedBean().getSmAppl().getSmApplSectionReviews().size() == 1) {
-				getManagedBean().setApplApprover(
-						SmCommonUtil.getUserByUserId(getManagedBean()
-								.getSmAppl().getSmApplSectionReviews().get(0)
-								.getChangedBy()));
-				getManagedBean().setApprovedDate(
-						DateUtils.dateToString("dd-MMM-yyyy", getManagedBean()
-								.getSmAppl().getSmApplSectionReviews().get(0)
-								.getChangedDate()));
+		// for APPROVER can directly do maintenance for any application. But for
+		// PO only can do maintenance for application that approved by
+		// themselves only (#23699)
+		if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER)) {
+			retVal = true;
+		} else {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmApplSectionReviews())) {
+				// if review size equals to 1 means direct approve by PO
 				if (getManagedBean().getSmAppl().getSmApplSectionReviews()
-						.get(0).getChangedBy().compareTo(user.getUserId()) == 0) {
-					retVal = true;
-				}
-			} else {
-				// if review size more than 1 means approve by Approver
-				for (SmApplSectionReview rev : getManagedBean().getSmAppl()
-						.getSmApplSectionReviews()) {
-					if (rev.getRoleType().equals("A")) {
-						getManagedBean()
-								.setApplApprover(
-										SmCommonUtil.getUserByUserId(rev
-												.getChangedBy()));
-						getManagedBean().setApprovedDate(
-								DateUtils.dateToString(
-										"dd-MMM-yyyy",
-										getManagedBean().getSmAppl()
-												.getSmApplSectionReviews()
-												.get(0).getChangedDate()));
-						if (rev.getChangedBy().compareTo(user.getUserId()) == 0) {
-							retVal = true;
-							break;
+						.size() == 1) {
+					getManagedBean().setApplApprover(
+							SmCommonUtil.getUserByUserId(getManagedBean()
+									.getSmAppl().getSmApplSectionReviews()
+									.get(0).getChangedBy()));
+					getManagedBean().setApprovedDate(
+							DateUtils.dateToString("dd-MMM-yyyy",
+									getManagedBean().getSmAppl()
+											.getSmApplSectionReviews().get(0)
+											.getChangedDate()));
+					if (getManagedBean().getSmAppl().getSmApplSectionReviews()
+							.get(0).getChangedBy().compareTo(user.getUserId()) == 0) {
+						retVal = true;
+					}
+				} else {
+					// if review size more than 1 means approve by Approver
+					for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+							.getSmApplSectionReviews()) {
+						if (rev.getRoleType().equals("A")) {
+							getManagedBean().setApplApprover(
+									SmCommonUtil.getUserByUserId(rev
+											.getChangedBy()));
+							getManagedBean().setApprovedDate(
+									DateUtils.dateToString("dd-MMM-yyyy",
+											getManagedBean().getSmAppl()
+													.getSmApplSectionReviews()
+													.get(0).getChangedDate()));
+							if (rev.getChangedBy().compareTo(user.getUserId()) == 0) {
+								retVal = true;
+								break;
+							}
 						}
 					}
 				}
