@@ -12183,6 +12183,9 @@ public class SmApplicationUtil {
 			if (smAppl.getApplType() != null
 					&& smAppl.getApplType().equals(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				if(!regStatus.isBumiAppl()){
+					throw new EpException(MessageConst.ERROR_722671);
+				}
 				smAppl.getSmSupplier().setBumi(true);
 				smAppl.setBumi(true);
 			} else {
