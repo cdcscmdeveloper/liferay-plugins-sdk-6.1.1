@@ -5725,7 +5725,7 @@ public class SmApplicationBackingBean extends
 
 		}
 	}
-	
+
 	/**
 	 * Update category record status if category record status is 1 and
 	 * application type is new
@@ -8242,6 +8242,12 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().isApproverUser()) {
 				log.info(" **** Final Decision from PO ****");
 				if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+					if (getManagedBean().getSmAppl().isBumi()
+							&& getManagedBean().getSmAppl().getPmRegStatus() != null
+							&& !getManagedBean().getSmAppl().getPmRegStatus()
+									.isBumiAppl()) {
+						throw new EpException(MessageConst.ERROR_722671);
+					}
 					if (StringUtils.isNotBlank(mofNo)) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700027, new String[] {
