@@ -131,6 +131,25 @@ public class FacesScopes implements Serializable {
 	public void setRequestScope(String key, Object object) {
 		portletRequest.setAttribute(key, object);
 	}
+	
+	public Object getApplicationScope(String key) {
+		Object obj = portletSession.getAttribute(key, PortletSession.APPLICATION_SCOPE);
+		return obj;
+	}
+
+	/**
+	 * Stores an attribute in this application session. Attributes are reset between
+	 * requests. This method is most often used in conjunction with
+	 * RequestDispatcher.
+	 * 
+	 * @param key
+	 *            A String instance specifying the name of the attribute
+	 * @param object
+	 *            The Object to be stored
+	 */
+	public void setApplicationScope(String key, Object object) {
+		portletSession.setAttribute(key, object, PortletSession.APPLICATION_SCOPE);
+	}
 
 	/**
 	 * Returns the value of a request parameter as a String, or null if the
@@ -180,7 +199,7 @@ public class FacesScopes implements Serializable {
 	 * @return The UserSessionBean instance
 	 */
 	public PmUser getUserSessionBean() {
-		PmUser user = (PmUser) getSessionScope(SESS_USER_SESSION_BEAN);
+		PmUser user = (PmUser) getApplicationScope(SESS_USER_SESSION_BEAN);
 		
 		if (user == null) {
 			try {
@@ -213,7 +232,7 @@ public class FacesScopes implements Serializable {
 				
 				log.info("stored in user session(" + loginId + "):" + (user != null ? user.getUserId() : null));
 				
-				setSessionScope(SESS_USER_SESSION_BEAN, user);
+				setApplicationScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
 				log.error(e.getMessage());
 				
@@ -342,7 +361,7 @@ public class FacesScopes implements Serializable {
 	}
 
 	public Object getBPMAuthenticationCtxToken() {
-		Object ctxToken = getSessionScope(BPM_AUTH_CONTEXT_TOKEN);
+		Object ctxToken = getApplicationScope(BPM_AUTH_CONTEXT_TOKEN);
 		if (null == ctxToken) {
 			String loginId = getUserScreenName();
 			System.out.println("loginId: " + loginId);
@@ -351,7 +370,7 @@ public class FacesScopes implements Serializable {
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 				ctxToken = bpmSO.authenticate(loginId);
-				setSessionScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
+				setApplicationScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
 			}
 		}
 		return ctxToken;
