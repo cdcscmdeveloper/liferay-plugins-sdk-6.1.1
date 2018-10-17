@@ -4,6 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
@@ -150,6 +151,7 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:100px;white-space:normal;">
-		#{tplSpecAnswer.answerRemark}
+		<ui:param name="answerRemark" value="#{fn:replace(tplSpecAnswer.answerRemark,',',',  ')}"></ui:param>
+		#{answerRemark}
 	</p:column>
 </ui:composition>
