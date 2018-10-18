@@ -1141,6 +1141,11 @@ public class OrganisationBackingBean extends
 				throw new EpException(MessageConst.ERROR_775121);
 			}
 
+			//Bug #22684
+			if (StringUtils.isBlank(deliverAddress.getAddressName())) {
+				throw new EpException(MessageConst.ERROR_775138);
+			}
+
 			if (StringUtils.isBlank(deliverAddress.getAddress1())) {
 				throw new EpException(MessageConst.ERROR_775122);
 			}

@@ -83,6 +83,7 @@
 					<td style="width:15%;"><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width:35%;"><p:inputText id="addressname"
+							required="#{!empty param['dialogValidation']}"
 							label="#{lbl['lbl.pm.address.name']}" maxlength="100"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
 							size="43" /></td>
