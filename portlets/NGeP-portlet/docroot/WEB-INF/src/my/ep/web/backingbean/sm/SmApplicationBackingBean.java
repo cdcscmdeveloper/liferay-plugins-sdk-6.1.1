@@ -7662,11 +7662,12 @@ public class SmApplicationBackingBean extends
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
+		assignValReqdToTrue();
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
-		getManagedBean().getPoSecReview().setRecommendation(recommendation);
+		getManagedBean().getPoSecReview().setRecommendation(recommendation);	
 		MofRegistrationResDTO resDTO = getCurrentRegStatus();
 		if (resDTO.getStatusId() != null
 				&& !getManagedBean().getSmAppl().getApplType()
