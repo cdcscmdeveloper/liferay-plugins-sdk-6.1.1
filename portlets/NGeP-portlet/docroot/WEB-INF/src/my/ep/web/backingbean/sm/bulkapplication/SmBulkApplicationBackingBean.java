@@ -704,6 +704,8 @@ public class SmBulkApplicationBackingBean extends
 					if (statusDesc != null) {
 						bulkApplicationVO.setPoRecommendStatus(statusDesc
 								.getStatusName());
+						bulkApplicationVO.setApprovedStatusId(statusDesc
+								.getPmStatus().getStatusId());
 					}
 				}
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
@@ -719,8 +721,10 @@ public class SmBulkApplicationBackingBean extends
 									.getHqFacility(), appl.getSmSupplier()
 									.isBumi());
 				}
-				bulkApplicationVO.setApprovedStatusId(currentStatusDesc
-						.getPmStatus().getStatusId());
+				if (bulkApplicationVO.getApprovedStatusId() == null) {
+					bulkApplicationVO.setApprovedStatusId(currentStatusDesc
+							.getPmStatus().getStatusId());
+				}
 				bulkApplicationVO.setCurrRegStatus(currentStatusDesc
 						.getStatusName());
 
