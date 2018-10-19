@@ -18,6 +18,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.BpmConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -28,6 +29,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.helper.Paginator;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -301,6 +303,22 @@ public class SmBulkApplicationBackingBean extends
 		revReqDTO.setPortalBaseUrl(basePortalUrl);
 		revReqDTO.setOnlineDoc(bulkVO.isOnlineDoc());
 		revReqDTO.setRejectionReasons(bulkVO.getReasonDesc());
+		if (bulkVO.getAppl().getCreatedBy() != null) {
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(bulkVO.getAppl().getCreatedBy());
+			PmUser user = SmServiceLookup.getUserSO()
+					.retrieveUserByUserId(userReqDTO).getPmUser();
+			if (user == null || StringUtils.isBlank(user.getLoginId())) {
+				throw new EpException(
+						"Internal service error: No user to send to BPM!");
+			} else {
+				revReqDTO.setUserList(new ArrayList<String>());
+				revReqDTO.getUserList().add(user.getLoginId());
+			}
+		} else {
+			throw new EpException(
+					"Internal service error: No user to send to BPM!");
+		}
 		if (decision
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 			revReqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(bulkVO
