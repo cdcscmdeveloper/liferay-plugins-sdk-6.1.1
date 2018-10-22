@@ -2094,7 +2094,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									.setRecommendationPackageScore(
 											recommnendationSetting);
 							calculateTotalPackage(this.getManagedBean()
-									.getRecommendationPackageScore());
+									.getRecommendationPackageScore(),false);
 						}
 
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
@@ -6838,7 +6838,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @param technical
 	 *            (ScQtScoreSetting package).
 	 */
-	public void calculateTotalPackage(ScQtScoreSetting technical) {
+	public void calculateTotalPackage(ScQtScoreSetting technical,boolean isValidationRequired) {
 		try {
 			if (null == technical.getOverallTechnical()) {
 				technical.setOverallTechnical(new BigDecimal(0));
@@ -6848,7 +6848,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null!=passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
-					&& !this.getManagedBean().isReadOnly()) {
+					&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
 				throw new EpException(MessageConst.ERROR_760365,new String[] { String.valueOf(passingScore) });
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
