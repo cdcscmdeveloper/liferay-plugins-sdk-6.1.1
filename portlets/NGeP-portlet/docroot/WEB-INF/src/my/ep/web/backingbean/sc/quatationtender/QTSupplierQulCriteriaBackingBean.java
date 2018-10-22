@@ -287,6 +287,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);	
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
+		if("33".equals(pmCategoryL2.getPmCategoryL1().getCategoryL1Code()) || "34".equals(pmCategoryL2.getPmCategoryL1().getCategoryL1Code())){
+			throw new EpException(MessageConst.ERROR_760474);
+		}
 		ScQtCategory category = new ScQtCategory();
 		category.setScQt(this.getManagedBean().getQt());
 		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
