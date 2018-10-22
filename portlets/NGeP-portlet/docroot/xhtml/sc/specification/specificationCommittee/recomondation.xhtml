@@ -26,7 +26,7 @@
 
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
-									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore)}"></p:ajax>
+									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
 							</p:inputText></td>
 					</tr>
 					<tr>
@@ -39,7 +39,7 @@
 
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
-									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore)}"></p:ajax>
+									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
 							</p:inputText></td>
 					</tr>
 					<tr>
