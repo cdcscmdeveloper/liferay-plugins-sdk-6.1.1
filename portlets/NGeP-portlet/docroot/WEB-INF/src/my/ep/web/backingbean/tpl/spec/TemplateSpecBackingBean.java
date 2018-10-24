@@ -1888,13 +1888,15 @@ public class TemplateSpecBackingBean extends
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
-								.getAnswerNumeric());
+								.getAnswerNumeric()).setScale(2, BigDecimal.ROUND_UP);
+						
 					}
 				}
 
 				if (tplSpecAnswer.getAmountPerYear() != null) {
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-							.getAmountPerYear());
+							.getAmountPerYear()).setScale(2, BigDecimal.ROUND_UP);
+					
 				}
 			}
 		}
