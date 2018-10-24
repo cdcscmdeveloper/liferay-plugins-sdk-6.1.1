@@ -4579,11 +4579,11 @@ public class LOADetailBackingBean extends
 				if(quantity != null){
 					subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 							scLoiLoaItem.getUnitPrice(), quantity);
-					totalAmount = totalAmount.add(subTotal);
+					totalAmount = totalAmount.add(subTotal).setScale(2,BigDecimal.ROUND_UP);
 				}
 			}
 		}
-		totalAmount =  totalAmount.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+		totalAmount =  totalAmount.setScale(2, BigDecimal.ROUND_UP);
 		return totalAmount;
 	}
 
