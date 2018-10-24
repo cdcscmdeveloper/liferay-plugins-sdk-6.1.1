@@ -1846,7 +1846,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = offerPrice;
 		if (gstAmount != null) {
 			overallCtAmount = overallCtAmount.add(gstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
 		}
 
 		return overallCtAmount;
