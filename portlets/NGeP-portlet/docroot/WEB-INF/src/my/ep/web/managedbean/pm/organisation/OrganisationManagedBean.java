@@ -65,6 +65,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private PmAddressType deliveryAddress;
 	private List<PmAddressType> addressTypesList = new ArrayList<PmAddressType>();
 	private boolean delAddressBtn;
+	private List<Object[]> receivingOfficerObjList; 
 	
 	private PmContact deliveryContactPerson;
 	private List<PmAddressType> selectedAddressTypes;
@@ -884,5 +885,13 @@ public class OrganisationManagedBean extends BaseManagedBean{
 
 	public void setDelAddressBtn(boolean delAddressBtn) {
 		this.delAddressBtn = delAddressBtn;
+	}
+
+	public List<Object[]> getReceivingOfficerObjList() {
+		return receivingOfficerObjList;
+	}
+
+	public void setReceivingOfficerObjList(List<Object[]> receivingOfficerObjList) {
+		this.receivingOfficerObjList = receivingOfficerObjList;
 	}
 }

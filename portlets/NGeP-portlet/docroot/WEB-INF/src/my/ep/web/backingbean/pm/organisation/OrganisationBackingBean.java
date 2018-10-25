@@ -516,6 +516,11 @@ public class OrganisationBackingBean extends
 	 **/
 	public String maintainOrganisation(PmOrgProfile orgProfile) {
 		log.info(".......maintainOrganisation......");
+		
+		IAddressSO addressSO = null;
+		addressSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			
 		// clear list's previous value
 		this.getManagedBean().setSmSupplierBanks(
 				new ArrayList<SmSupplierBank>());
@@ -584,6 +589,16 @@ public class OrganisationBackingBean extends
 							//default to 60
 							pmAddressType.getPmAddress().setPhoneCountry("60");
 						}
+						
+						//Enhancement #18281
+						AddressReqDTO reqDTO = new AddressReqDTO();
+						reqDTO.setAddressId(pmAddressType.getPmAddress().getAddressId());
+						reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
+						
+						AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
+						pmAddressType.setReceivingOfficerNum((long) resDTO.getAddressTypeList().size());
+						//end Enhancement #18281
+						
 						deliveryAddressList.add(pmAddressType);
 						// this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));
 					}
@@ -711,10 +726,10 @@ public class OrganisationBackingBean extends
 						&& (pmAddressType.getRecordStatusFlg().intValue() == 
 								DbValueConst.RECORD_STATUS_ACTIVE)) {
 					//cater for sarawak if no division
-					IAddressSO addressSO = null;
+//					IAddressSO addressSO = null;
 					try {
-						addressSO = BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+//						addressSO = BusinessDelegate.getInstance().getServiceObject(
+//									ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 						addressReqDTO = new AddressReqDTO();
 						addressReqDTO.setAddressId(pmAddressType.getPmAddress().getAddressId());
 						addressResDTO = addressSO.retrieveAddressDtlById(addressReqDTO);
@@ -2725,7 +2740,53 @@ public class OrganisationBackingBean extends
 			log.info("updateAuto");
 			RequestContext.getCurrentInstance().execute("autoSelectOrgType();");
 			getManagedBean().setNotFirstRun(true);
-		}
-		
+		}		
 	}
+	
+	//Enhancement #18281 Validation prior to deactivating Receiving Address at Organization Maintenance
+	/**
+	 * Receiving officer list based on address Id.
+	 *
+	 * @param addressType
+	 */
+	public void receivingOfficerList(PmAddressType addressType) {
+		Long addressId = addressType.getPmAddress().getAddressId();		
+		
+		AddressResDTO resDTO = getReceivingOfficerList(addressId, AddressType.RECEIVING_OFFICER_ADDRESS.value()); 
+		getManagedBean().setReceivingOfficerObjList(resDTO.getReceivingAddressResultList());
+	}
+	
+	/**
+	 * Gets the receiving officer list based on addressId and addressType.
+	 *
+	 * @param addressId the address id
+	 * @param addressType the address type
+	 * @return the receiving officer list
+	 */
+	public AddressResDTO getReceivingOfficerList(Long addressId, String addressType){
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		reqDTO.setAddressId(addressId);
+		reqDTO.setAddressType(addressType);
+		
+		AddressResDTO resDTO = addressSO.retrieveReceivingOfficerRoleStatusList(reqDTO);
+				
+		return resDTO;
+	}
+	
+	public void onChangeAddressStatus(PmAddressType addressType) {
+		if (addressType != null) {		
+			Long roSize = addressType.getReceivingOfficerNum();
+			
+			log.info(":::onChangeAddressStatus() adrs id: "+ addressType.getPmAddress().getAddressId() +". RO list size: "+ roSize +". active[1]/inactive[0], user choose: "+ addressType.getRecordStatusFlg());
+
+			if (roSize > 0 && addressType.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				log.info(":::onChangeAddressStatus()...yes u should appear bro!");
+				throw new EpException(MessageConst.ERROR_775139);
+			}
+		}
+	}
+	//end Enhancement #18281
+	
 }
