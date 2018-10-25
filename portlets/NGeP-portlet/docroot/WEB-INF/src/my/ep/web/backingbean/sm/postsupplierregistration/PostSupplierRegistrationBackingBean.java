@@ -135,82 +135,82 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
-			//Active Appl
-			if(appl != null){
-				log.info("*****In Progress*********" + isRejectedApplExist);			
-				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
-				this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
-				log.info("*****workFlowStatus*********" + getManagedBean().getStatusDesc() + " " + workFlowStatus.getPmStatus().getStatusId());
-				
-				//Enhancement #20467
-				if(rejectedWf != null){
-					log.info("************** currentStatusAndPath: rejectedWf.getDocId() = " + rejectedWf.getDocId());
-					SmAppl rejAppl = new SmAppl();
-					rejAppl.setApplId(rejectedWf.getDocId());
+			//Self Request Supplier Admin
+			if(supplier.getRecordStatusFlg()==SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+				path = basicAccountFlow(supplier);
+			}else{
+				//Active Appl
+				if(appl != null){
+					log.info("*****In Progress*********" + isRejectedApplExist);			
+					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
+					this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
+					log.info("*****workFlowStatus*********" + getManagedBean().getStatusDesc() + " " + workFlowStatus.getPmStatus().getStatusId());
 					
-					//to check rejected appl expired or not
-					isRejApplExpired = checkRejectedApplExpired(rejAppl);				
-					log.info("************** currentStatusAndPath: isRejApplExpired = " + isRejApplExpired);
-					
-					//if rejected appl expired, treat as new appl
-					if(isRejApplExpired) {
-						isRejectedApplExist = false;
+					//Enhancement #20467
+					if(rejectedWf != null){
+						log.info("************** currentStatusAndPath: rejectedWf.getDocId() = " + rejectedWf.getDocId());
+						SmAppl rejAppl = new SmAppl();
+						rejAppl.setApplId(rejectedWf.getDocId());
+						
+						//to check rejected appl expired or not
+						isRejApplExpired = checkRejectedApplExpired(rejAppl);				
+						log.info("************** currentStatusAndPath: isRejApplExpired = " + isRejApplExpired);
+						
+						//if rejected appl expired, treat as new appl
+						if(isRejApplExpired) {
+							isRejectedApplExist = false;
+						}
 					}
-				}
 
-				if(successPayment){
-					setSuccessPaymentFlag();
-					
-					//to check whether is resubmit
-					if(appl.isResubmit()){
-						getManagedBean().setRejectedApplExist(true);
-					}else{
-						//if refId for processing fee not equeal to current workflow doc id
-						//treat is as rejectedAppl
-						PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
-						if(pyBill != null){
-							if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
-								getManagedBean().setRejectedApplExist(false);
-								successPayment = false;
-							}else{
-								if(rejectedPaymentExpired(supplier.getSupplierId()).size() > 0){
-									// to avoid resubmit flow when supplier rejected by system during Registration fee(20119)
+					if(successPayment){
+						setSuccessPaymentFlag();
+						
+						//to check whether is resubmit
+						if(appl.isResubmit()){
+							getManagedBean().setRejectedApplExist(true);
+						}else{
+							//if refId for processing fee not equeal to current workflow doc id
+							//treat is as rejectedAppl
+							PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
+							if(pyBill != null){
+								if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
 									getManagedBean().setRejectedApplExist(false);
+									successPayment = false;
+								}else{
+									if(rejectedPaymentExpired(supplier.getSupplierId()).size() > 0){
+										// to avoid resubmit flow when supplier rejected by system during Registration fee(20119)
+										getManagedBean().setRejectedApplExist(false);
+									}
+									//if rejected appl expired, user need to pay processing fee
+									if(isRejApplExpired) {
+										getManagedBean().setSuccessPayment(false);
+									}
 								}
-								//if rejected appl expired, user need to pay processing fee
+							}else{
+								getManagedBean().setRejectedApplExist(false);
 								if(isRejApplExpired) {
 									getManagedBean().setSuccessPayment(false);
 								}
 							}
-						}else{
-							getManagedBean().setRejectedApplExist(false);
-							if(isRejApplExpired) {
-								getManagedBean().setSuccessPayment(false);
-							}
 						}
 					}
-				}
-				
-				showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist,successPayment);
-				path = TASK_LIST_PATH;
-				log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());	
-				
-				if(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L){
-					if(isRejApplExpired) {
-						getManagedBean().setFlowStatus(1);
-					} else if(rejectedWf != null){
-						validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+					
+					showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist,successPayment);
+					path = TASK_LIST_PATH;
+					log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());	
+					
+					if(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L){
+						if(isRejApplExpired) {
+							getManagedBean().setFlowStatus(1);
+						} else if(rejectedWf != null){
+							validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+						}
 					}
-				}
-				
-				if(isRejApplExpired) {
-					setExpiredRejectedApplFlag();
-				}
+					
+					if(isRejApplExpired) {
+						setExpiredRejectedApplFlag();
+					}
 
-			}else{
-				//Self Request Supplier Admin
-				if(supplier.getRecordStatusFlg()==SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
-					path = basicAccountFlow(supplier);
 				}else{
 					//MOF APPL
 					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
@@ -271,6 +271,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					}
 				}
 			}
+			
 		}
 
 		return path;
