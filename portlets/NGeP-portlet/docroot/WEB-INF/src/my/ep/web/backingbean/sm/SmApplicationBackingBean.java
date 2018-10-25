@@ -785,6 +785,13 @@ public class SmApplicationBackingBean extends
 
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+
+				// Not allowed on boarding supplier to proceed with any
+				// application if still not yet active (#24106)
+				if (currSupp != null && currSupp.getRecordStatusFlg() == 7) {
+					throw new EpException(MessageConst.ERROR_722672);
+				}
+
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveCancelSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
@@ -7667,7 +7674,7 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
-		getManagedBean().getPoSecReview().setRecommendation(recommendation);	
+		getManagedBean().getPoSecReview().setRecommendation(recommendation);
 		MofRegistrationResDTO resDTO = getCurrentRegStatus();
 		if (resDTO.getStatusId() != null
 				&& !getManagedBean().getSmAppl().getApplType()
