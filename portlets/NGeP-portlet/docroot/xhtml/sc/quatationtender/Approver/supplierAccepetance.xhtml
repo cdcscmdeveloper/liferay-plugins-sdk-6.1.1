@@ -47,8 +47,13 @@
 
 		<ui:include src="requestPTJdetails.xhtml" />
 		<ui:include src="FinalaizationCommitteeApproval.xhtml" />
-		<ui:include src="approveremarksdetails.xhtml" />
-
+		<ac:scRemarkAndAttachment
+		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+		showAttachment="false"
+		readonly="#{approvalBackingBean.managedBean.readOnly}"
+		fileUploadListener="approvalBackingBean.handleFileUpload"
+		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
+		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
 
 	</ui:define>
 </ui:composition>
