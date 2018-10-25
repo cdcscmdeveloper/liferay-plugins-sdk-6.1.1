@@ -30,20 +30,40 @@
 			 <p:column headerText="#{lbl['lbl.pm.address.address']}" style="white-space:normal;">
 				<h:outputText value="#{organisationBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
+			<!-- Enhancement #18281 Validation prior to deactivating Receiving Address at Organization Maintenance -->
 			<p:column style="width:15%;" headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu label="#{lbl['lbl.pm.financialorg.status']}" id="deliveryAddressStatusId" 
-					disabled="#{address.brandNew}" style="width:135px;"
-					value="#{address.recordStatusFlg}" required="true">
-					<f:selectItems
-						value="#{organisationBackingBean.getStatusOptions()}" />
-				</p:selectOneMenu>
+					disabled="#{address.brandNew}" style="width:135px;"	value="#{address.recordStatusFlg}" required="true">
+					<p:ajax event="change" listener="#{organisationBackingBean.onChangeAddressStatus(address)}"
+						update="deliveryAddressStatusId" />
+					<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
+				</p:selectOneMenu>				
+				<p:message for="deliveryAddressStatusId" id="deliveryAddressStatusIdMsg" display="icon" />
 			</p:column>
+			<p:column style="white-space:normal;text-align:center;">
+				<f:facet name="header" style="white-space:normal;">
+					<h:outputText value="#{lbl['lbl.pm.address.list.receiving.officer']}"/>
+				</f:facet>
+				<h:outputText style="text-align:right" />
+				<p:commandLink disabled="true"
+					rendered="#{(address.recordStatusFlg == 0 and address.receivingOfficerNum == 0) or 
+					(address.recordStatusFlg == 0 and address.receivingOfficerNum == 1) or 
+					(address.recordStatusFlg == 1 and address.receivingOfficerNum == 0) or address.brandNew}">
+					<p:graphicImage value="/css/images/design/ico-user-role.png" title="#{lbl['lbl.fl.tooltip.recv.officer']}" />
+				</p:commandLink> 
+				<p:commandLink oncomplete="addOfficer.show();" process="@this,deliveryAddressId" 
+					action="#{organisationBackingBean.receivingOfficerList(address)}" 
+					update="@([id$=addReceivingOfficerDialog])" 
+					rendered="#{(address.recordStatusFlg == 1) and (address.receivingOfficerNum > 0)}">
+					<p:graphicImage value="/css/images/design/ico-user-role.png" title="#{lbl['lbl.fl.tooltip.recv.officer']}" />
+				</p:commandLink> 
+			</p:column>
+			<!-- end Enhancement #18281 -->
 			<p:column style="width:5%;text-align:center;">
 				<p:commandLink oncomplete="addressPopup.show();" process="@this" partialSubmit="true"
 					actionListener="#{organisationBackingBean.editDeliveryAddress(address)}"
 					update="@([id$=deliveryAddressDialog])"	>
-					<p:graphicImage 
-						value="/css/images/design/edit.png" />
+					<p:graphicImage value="/css/images/design/edit.png" />
 					<p:resetInput target=":form:addressTabs:deliveryAddressPanel" />
 				</p:commandLink>
 			</p:column>
@@ -302,6 +322,23 @@
 				onclick="addressPopup.hide();">
 				<f:param name="dialogValidation" value="false" /> </p:commandButton>
 		</div>
-
 	</p:dialog>
+	<!-- Enhancement #18281 Validation prior to deactivating Receiving Address at Organization Maintenance -->
+	<p:dialog id="addReceivingOfficerDialog" header="#{lbl['lbl.pm.address.list.receiving.officer']}"
+		widgetVar="addOfficer" showEffect="fade" hideEffect="fade" modal="true" width="600" resizable="false">
+		<p:dataTable id="receivingOfficerDt" var="receivingOfficer" 
+			value="#{organisationBackingBean.managedBean.receivingOfficerObjList}" rowKey="#{rcvOfficer}">
+			<ac:paginator for="receivingOfficerDt" />
+			<p:column headerText="#{lbl['lbl.pm.ic.no']}" style="text-align:center">
+				<h:outputText value="#{receivingOfficer[0]}" style="float:left;"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.ta.name']}" style="text-align:center">
+				<h:outputText value="#{receivingOfficer[1]}" style="float:left;"/>
+			</p:column> 
+			<p:column headerText="#{lbl['lbl.pm.address.receiving.user.role.status']}" style="text-align:center" >
+				#{(receivingOfficer[2] == 1) ? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']} 
+			</p:column> 
+		</p:dataTable>
+	</p:dialog>
+	<!-- end Enhancement #18281 --> 
 </ui:composition>
