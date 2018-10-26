@@ -62,14 +62,14 @@
 				</td>
 				<td style="text-align:left;width:30%;word-wrap: break-word;">
 					<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
-						value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.businessType}" 
 						rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 						style="width:310px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
 					</p:selectOneMenu>
 					<p:outputLabel styleClass="outputLabel-view" 
-					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
+					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smAppl.smCompanyBasic.businessType)}" 
 					rendered="#{registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" />
 					&#160;
 					<p:graphicImage id="typeofbusiness" value="/css/images/design/tooltips.png" />

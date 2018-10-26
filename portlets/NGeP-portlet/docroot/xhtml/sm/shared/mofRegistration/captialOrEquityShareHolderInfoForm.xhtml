@@ -10,11 +10,11 @@
 		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
 			toggleable="true">
 			
-			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
+			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
 			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" 
-				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
-					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
-					and backingBean.managedBean.smSupplier.businessType ne 'P'}"/>
+				rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType ne 'K' and backingBean.managedBean.smAppl.smCompanyBasic.businessType ne 'L'
+					and backingBean.managedBean.smAppl.smCompanyBasic.businessType ne 'M' and backingBean.managedBean.smAppl.smCompanyBasic.businessType ne 'O'
+					and backingBean.managedBean.smAppl.smCompanyBasic.businessType ne 'P'}"/>
 			
 			<table style="width: 100%">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
