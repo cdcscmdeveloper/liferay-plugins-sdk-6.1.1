@@ -19,6 +19,7 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cateGory}">
+			  <ac:paginator for="restrictedPnlId" />
             <p:ajax event="rowSelect" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
 			<p:ajax event="rowUnselect" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
 			<p:ajax event="rowSelectCheckbox" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
