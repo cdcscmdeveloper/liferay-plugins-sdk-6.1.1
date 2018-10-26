@@ -358,26 +358,30 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void onViewOverlapCategory(SmBulkApplicationVO vo) {
-		List<String> overlap = Arrays.asList(
-				ParameterConst.NEW_SM_APPLN_FOR_RENEW,
-				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
-				ParameterConst.NEW_SM_APPLN_FOR_MOF);
-		if (vo.getAppl() != null
-				&& overlap.contains(vo.getAppl().getApplType())
-				&& EntityHelper
-						.isCollectionEmpty(vo.getOverlapCategoryVOList())) {
-			SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
-					.getOverlapCategoryVO(vo.getAppl());
-			if (overlapCategoryVO != null) {
-				vo.setOverlappedCategory(overlapCategoryVO
-						.isOverLappedCategoryExist());
-				vo.setOverlapMsg(overlapCategoryVO.getOverLappedCategoryMsg());
-				vo.setOverlapCategoryVOList(overlapCategoryVO
-						.getOverlapCategoryVOList());
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedOverlapCategoryVOList())) {
+			List<String> overlap = Arrays.asList(
+					ParameterConst.NEW_SM_APPLN_FOR_RENEW,
+					ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
+					ParameterConst.NEW_SM_APPLN_FOR_MOF);
+			if (vo.getAppl() != null
+					&& overlap.contains(vo.getAppl().getApplType())
+					&& EntityHelper.isCollectionEmpty(vo
+							.getOverlapCategoryVOList())) {
+				SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
+						.getOverlapCategoryVO(vo.getAppl());
+				if (overlapCategoryVO != null) {
+					vo.setOverlappedCategory(overlapCategoryVO
+							.isOverLappedCategoryExist());
+					vo.setOverlapMsg(overlapCategoryVO
+							.getOverLappedCategoryMsg());
+					vo.setOverlapCategoryVOList(overlapCategoryVO
+							.getOverlapCategoryVOList());
+				}
 			}
+			getManagedBean().setSelectedOverlapCategoryVOList(
+					vo.getOverlapCategoryVOList());
 		}
-		getManagedBean().setSelectedOverlapCategoryVOList(
-				vo.getOverlapCategoryVOList());
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
 	}
@@ -751,6 +755,7 @@ public class SmBulkApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_RENEW,
 						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
 						ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				
 				if (appl != null && overlap.contains(appl.getApplType())) {
 					for (SmSupplierCategory cat : appl
 							.getSmSupplierCategories()) {
@@ -766,11 +771,25 @@ public class SmBulkApplicationBackingBean extends
 										.compareTo(
 												SupplierManagementConst.PENDING_ACT_STATUS) == 0)
 								|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
-							bulkApplicationVO.setOverlappedCategory(true);
+							SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
+									.getOverlapCategoryVO(bulkApplicationVO.getAppl());
+							if (overlapCategoryVO != null) {
+								bulkApplicationVO
+										.setOverlappedCategory(overlapCategoryVO
+												.isOverLappedCategoryExist());
+								bulkApplicationVO.setOverlapMsg(overlapCategoryVO
+										.getOverLappedCategoryMsg());
+								bulkApplicationVO
+										.setOverlapCategoryVOList(overlapCategoryVO
+												.getOverlapCategoryVOList());
+							}
 							break;
 						}
 					}
 				}
+				
+				getManagedBean().setSelectedOverlapCategoryVOList(
+						bulkApplicationVO.getOverlapCategoryVOList());
 
 				PmState state = appl.getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress()
