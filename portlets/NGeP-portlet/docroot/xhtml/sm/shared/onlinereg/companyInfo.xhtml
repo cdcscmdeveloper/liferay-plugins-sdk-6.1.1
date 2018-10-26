@@ -74,16 +74,16 @@
 				<td class="tdContent">
 					<p:outputPanel id="regNoPanelId">
 						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
-							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
-							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
+							value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.regNo}" converter="toUpperCaseConverter"
+							disabled="#{registrationBackingBean.managedBean.disabledRegNoInMaintenance}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >
 							<p:ajax event="blur" update="regNoPanelId" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
-						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}"/>
-						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{registrationBackingBean.managedBean.smSupp.businessType}" />
-						<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}" >
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.businessType}"/>
+						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
+						<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.businessType}" >
 							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
 						</p:tooltip>&#160;
 						<p:message id="regNoMsg" for="regNo" display="icon" />
