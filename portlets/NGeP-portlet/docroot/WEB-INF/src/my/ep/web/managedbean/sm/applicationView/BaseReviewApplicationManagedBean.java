@@ -9,6 +9,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -20,7 +21,6 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -204,7 +204,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date currDate;
 	private SmGstSupplier hqGst;
 	private boolean updatePersonnelPage;
-	
+
 	private String oriPoApprOverlappedRemark;
 	private String poApprOverlappedRemark;
 	private String poUserName;
@@ -228,7 +228,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		initSelectedFacility();
 		selectedMachine = new SmMachineDtl();
 		selectedManufacturer = new SmManufacturingDtl();
-//		selectedManufacturer.setPmUom(new PmUom());
+		// selectedManufacturer.setPmUom(new PmUom());
 		selectedSignatoryBankAcct = new SmSupplierBank();
 		selectedBank = new SmSupplierBank();
 		selectedCompanyExperience = new SmCompanyExperience();
@@ -358,6 +358,23 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		selectedDockyardFacility.setSmAddress(defaultAddr);
 		selectedStoreFacility = new SmFacility();
 		selectedStoreFacility.setSmAddress(defaultAddr);
+	}
+
+	protected void validateAtLeastOneSearchCriteria() {
+		String searchCompanyName = searchSupplier == null ? StringUtils.EMPTY
+				: searchSupplier.getCompanyName();
+		String searchRegno = searchSupplier == null ? StringUtils.EMPTY
+				: searchSupplier.getRegNo();
+		if (searchPmRegStatusId == null && StringUtils.isBlank(searchMofNo)
+				&& StringUtils.isBlank(searchEpNo)
+				&& StringUtils.isBlank(searchCompanyName)
+				&& StringUtils.isBlank(searchRegno)
+				&& StringUtils.isBlank(searchApplType)
+				&& searchApplStatusId == null
+				&& StringUtils.isBlank(searchApplNo)) {
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.search.criteria.atleast.one.field", null));
+		}
 	}
 
 	public int getTabActiveIndex() {
