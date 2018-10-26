@@ -111,6 +111,7 @@ public class ViewSuppProfileManagedBean extends
 	 * Search supplier latest application
 	 */
 	public void searchSupplier() {
+		validateAtLeastOneSearchCriteria();
 		smSupplierDataModel.reloadData();
 	}
 
