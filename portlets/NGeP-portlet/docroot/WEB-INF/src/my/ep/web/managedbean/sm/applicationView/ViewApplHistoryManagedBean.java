@@ -118,6 +118,7 @@ public class ViewApplHistoryManagedBean extends
 	 * Search supplier application history
 	 */
 	public void searchSupplier() {
+		validateAtLeastOneSearchCriteria();
 		smSupplierDataModel.reloadData();
 	}
 
