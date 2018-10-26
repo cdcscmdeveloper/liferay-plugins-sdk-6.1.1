@@ -2916,6 +2916,25 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get application that still active by supplier
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @return List<SmAppl> applList
+	 */
+	public static List<SmAppl> getActiveApplListBySupplier(SmSupplier supplier) {
+		List<SmAppl> activeApplList = null;
+		if (supplier != null) {
+			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+			mofRegistrationReqDTO.setSupplierId(supplier.getSupplierId());
+			activeApplList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
+					.getApplList();
+		}
+		return activeApplList;
+	}
+
+	/**
 	 * Check whether soft cert is ready for renewal
 	 * 
 	 * @param Long
@@ -4777,23 +4796,29 @@ public class SmCommonUtil {
 					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)
 					|| siteType
 							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY)) {
-				
+
 				svAddress.setSiteType(siteType);
-				if(siteType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)){
+				if (siteType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)) {
 					SmCompanyAddress compAddress = (SmCompanyAddress) site;
 					svAddress.setAddress(compAddress.getSmAddress());
-					SmFacility fac = SmApplicationUtil.getHqFacilityByAppl(compAddress.getSmCompanyBasic().getSmAppl());
-					
-					if(fac != null && StringUtils.isNotBlank(fac.getFacilityType())){
+					SmFacility fac = SmApplicationUtil
+							.getHqFacilityByAppl(compAddress
+									.getSmCompanyBasic().getSmAppl());
+
+					if (fac != null
+							&& StringUtils.isNotBlank(fac.getFacilityType())) {
 						svAddress.setFacilityName(fac.getFacilityName());
-						svAddress.setFacilityType(ParameterHelper.getInstance()
-								.getParameterDesc(
-										ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
-										fac.getFacilityType()));
-						
+						svAddress
+								.setFacilityType(ParameterHelper
+										.getInstance()
+										.getParameterDesc(
+												ParameterTypeConst.SUPPLIER_FACILITY_TYPE,
+												fac.getFacilityType()));
+
 					}
-					
-				}else{
+
+				} else {
 					SmFacility facility = (SmFacility) site;
 					svAddress.setFacilityName(facility.getFacilityName());
 					svAddress.setAddress(facility.getSmAddress());
