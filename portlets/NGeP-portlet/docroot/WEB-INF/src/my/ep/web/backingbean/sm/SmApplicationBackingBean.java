@@ -810,6 +810,13 @@ public class SmApplicationBackingBean extends
 			// Disabled blocking if has active transaction for cancel MOF
 			if (!applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+
+				// Not allowed on boarding supplier to proceed with any
+				// application if still not yet active (#24106)
+				if (currSupp != null && currSupp.getRecordStatusFlg() == 7) {
+					throw new EpException(MessageConst.ERROR_722672);
+				}
+
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
@@ -8250,6 +8257,27 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().isApproverUser()) {
 				log.info(" **** Final Decision from PO ****");
 				if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+
+					// set in progress application other than cancel application
+					// type to be withdraw (#24139)
+					if (getManagedBean().getSmAppl().getApplType()
+							.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+						List<SmAppl> inProgressApplList = SmCommonUtil
+								.getActiveApplListBySupplier(getManagedBean()
+										.getSmAppl().getSmSupplier());
+						
+						if (!EntityHelper.isCollectionEmpty(inProgressApplList)) {
+							log.info("in progress applicaition size:"+inProgressApplList.size());
+							for (SmAppl tmp : inProgressApplList) {
+								if (tmp.getApplType() != null
+										&& !tmp.getApplType()
+												.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+									reqDTO.setInProgressAppl(tmp);
+								}
+							}
+						}
+					}
+
 					if (getManagedBean().getSmAppl().isBumi()
 							&& getManagedBean().getSmAppl().getPmRegStatus() != null
 							&& !getManagedBean().getSmAppl().getPmRegStatus()
