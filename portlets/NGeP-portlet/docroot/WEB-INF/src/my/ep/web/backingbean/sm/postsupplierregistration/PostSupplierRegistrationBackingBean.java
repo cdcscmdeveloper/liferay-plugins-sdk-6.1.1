@@ -371,15 +371,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		log.info("***pmUser id***" + pmUser.getUserId());
 
 		if(pmUser != null){
-			if(SmApplicationUtil.getCurrentSupplier() != null){
-				SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+			SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+			if(smSupp != null){
 				log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
 				return smSupp;
 			}
 		}
-
-
-
 		return null;
 	}
 	
@@ -797,7 +794,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if(pmUser != null){
 			MofAccountReqDTO mofReqDTO = new MofAccountReqDTO();
-			mofReqDTO.setUserId(pmUser.getUserId());
+			mofReqDTO.setLoginId(pmUser.getLoginId());
 			Integer exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
 			
 			if(exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW){
