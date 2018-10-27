@@ -1821,15 +1821,13 @@ public class SPDetailBackingBean extends
 		debugLogger("handleFileUpload");
 		if (event.getFile() != null) {
 			IQTProposalSO proposalSO = null;
+			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getQtProposalChecklist();
 			try {
 				proposalSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTProposalSO.class);
 
 				ProposalReqDTO reqDTO = new ProposalReqDTO();
-
-				ScQtProposalChecklist scQtProposalChecklist = this
-						.getManagedBean().getQtProposalChecklist();
 				ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
 						.getScQtProposalChecklistAttachment();
 				if (null == attachment) {
@@ -1843,8 +1841,7 @@ public class SPDetailBackingBean extends
 				uploadAttachmentWithEncryption(getEncryptionKey(),
 						event.getFile(), attachment);
 
-				scQtProposalChecklist
-						.setScQtProposalChecklistAttachment(attachment);
+				scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
 				scQtProposalChecklist.setSubmitted(true);
 
 				reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
@@ -1858,9 +1855,12 @@ public class SPDetailBackingBean extends
 					// RequestContext.getCurrentInstance().execute("checklistUploadDlg.hide();");
 				}
 
+			} catch (Exception e) {
+				scQtProposalChecklist.setSubmitted(false);
+				throw e;
 			} finally {
 				proposalSO = null;
-			}
+			} 
 		}
 	}
 
