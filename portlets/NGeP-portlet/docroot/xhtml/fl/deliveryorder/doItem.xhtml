@@ -458,10 +458,10 @@
 			rowKey="doList">
 			<ac:paginator for="submittedDoDt" />
 			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}" style="text-align:center">
-				<h:outputText value="#{submittedDo.deliveryOrderNo}" style="float:right;"/>
+				<h:outputText value="#{submittedDo.deliveryOrderNo}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.do.supp.do.no']}" style="text-align:center">
-				<h:outputText value="#{submittedDo.supplierDoRef}" style="float:right;"/>
+				<h:outputText value="#{submittedDo.supplierDoRef}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.rev.hed.status']}" style="text-align:center">
 				<h:outputText value="#{createDOBackingBean.getStatusDescById(submittedDo.status.statusId)}" style="float:left;"/>
