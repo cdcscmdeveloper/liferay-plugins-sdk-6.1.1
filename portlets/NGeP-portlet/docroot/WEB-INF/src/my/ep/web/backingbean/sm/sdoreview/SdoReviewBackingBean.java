@@ -11,6 +11,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
+
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -26,15 +31,16 @@ import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPendingPoWeightage;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -47,14 +53,10 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.StreamedContent;
-
 @ManagedBean(name = "sdoReviewBackingBean")
 @RequestScoped
 public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> {
+	private static final long serialVersionUID = 1L;
 
 	public static Logger log = Logger.getLogger(SdoReviewBackingBean.class);
 	private StreamedContent file;
@@ -422,17 +424,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 	
 	/**
-	 * get user role
-	 * @return
-	 */
-	private String getUserRole() {		
-		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()))
-			return RoleCode.UPS_SDO.value();		
-		else 
-			return null;
-	}
-	
-	/**
 	 * retrieve zone by state id
 	 * @param stateId
 	 * @return String
@@ -516,13 +507,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setPmUser(poUser);
 			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
 			
-			setPOWeightage(poUser);
 			processingOfficer = poUser.getUserName();
 			log.info("not resubmit - poUser>>>>>>>>>>" + poUser.getLoginId());
 			log.info("not resubmit - new weight>>>>>>>>>>" + poUser.getPmPoWeightage().getNewWeight());
 			log.info("not resubmit - acc weight>>>>>>>>>>" + poUser.getPmPoWeightage().getAccumulatedWeight());
 			reqDTO.setPmUser(poUser);
 			reqDTO.getSmAppl().setPoUserId(poUser.getUserId());
+			setPendingWeightage(reqDTO);
 		}else{
 			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
 			PmUser poUser = null;
@@ -540,7 +531,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 						.getSmAppl().getApplCategoryType(), getManagedBean().getZoneCode());
 			}
 
-			setPOWeightage(poUser);
 			processingOfficer = poUser.getUserName();
 			((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poUser.getLoginId());	
 			
@@ -555,16 +545,19 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		return processingOfficer;
 	}
+
 	
-	private void setPOWeightage(PmUser poUser){
+	private void setPendingWeightage(SdoReviewReqDTO reqDTO){
 		Integer jobRatioWeight = SmCommonUtil.getInstance().retrievePoJobTypeWeight(getManagedBean()
 				.getSmAppl().getSupplierType(), getManagedBean()
 				.getSmAppl().getApplType(), getManagedBean()
 				.getSmAppl().getApplCategoryType());
-		long accumelatedWeight = poUser.getPmPoWeightage().getAccumulatedWeight() + jobRatioWeight;
-		long newWeight = poUser.getPmPoWeightage().getNewWeight() + jobRatioWeight;
-		poUser.getPmPoWeightage().setAccumulatedWeight(accumelatedWeight);
-		poUser.getPmPoWeightage().setNewWeight(newWeight);
+		PmPendingPoWeightage pendingWeightage = new PmPendingPoWeightage();
+		pendingWeightage.setPmUser(reqDTO.getPmUser());
+		pendingWeightage.setWeightage(jobRatioWeight);
+		pendingWeightage.setApplId(reqDTO.getApplId());
+		pendingWeightage.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		reqDTO.setPendingPoWeightage(pendingWeightage);
 	}
 
 }
