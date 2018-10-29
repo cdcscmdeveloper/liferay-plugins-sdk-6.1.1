@@ -87,6 +87,18 @@ public class PmSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_RESET_CONFIG_RULES_MAP));
+		
+		// Update PO Weightage
+				EpSchedulerHelper
+						.scheduleJob(
+								new JobKey(SchedulerConstants.UPDATE_PO_WEIGHTAGE,
+										SchedulerConstants.PM_JOB_GROUP),
+								PmConfigRulesJob.class,
+								SchedulerConstants.UPDATE_PO_WEIGHTAGE_JOB_DESC,
+								SchedulerPropertiesUtils
+										.getInstance()
+										.getProperty(
+												EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_RESET_CONFIG_RULES_MAP));
 
 	}
 }
