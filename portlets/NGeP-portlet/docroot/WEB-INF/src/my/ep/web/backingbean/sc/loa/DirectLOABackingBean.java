@@ -1137,18 +1137,21 @@ public class DirectLOABackingBean extends
 								new FacesScopes().getUserLocale()), "" });
 			}
 			
-			if (scLoa.getScQtProgPayments() != null
-					&& scLoa.getScQtProgPayments().size() > 0) {
-				for (ScQtProgressivePayment progressivePayment : scLoa
-						.getScQtProgPayments()) {
-					progressivePayValidation(progressivePayment);
+			//Bug #24061
+			if(!ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+				if (scLoa.getScQtProgPayments() != null
+						&& scLoa.getScQtProgPayments().size() > 0) {
+					for (ScQtProgressivePayment progressivePayment : scLoa
+							.getScQtProgPayments()) {
+						progressivePayValidation(progressivePayment);
+					}
 				}
-			}
-
-			if (scLoa.getScQtSchedules() != null
-					&& scLoa.getScQtSchedules().size() > 0) {
-				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-					freqScheduleValidation(scQtSchedule);
+	
+				if (scLoa.getScQtSchedules() != null
+						&& scLoa.getScQtSchedules().size() > 0) {
+					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+						freqScheduleValidation(scQtSchedule);
+					}
 				}
 			}
 
