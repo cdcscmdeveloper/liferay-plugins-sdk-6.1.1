@@ -1052,7 +1052,9 @@ public class ConsolidationReportBackingBean extends
 		if (isZonal) {
 			for (TplSpecZoneDtl specZoneDtl : getManagedBean().getZoneDetails()) {
 				Long specZoneId = specZoneDtl.getSpecZoneId();
-				validateDORanking(specZoneDtl, itemsByZone.get(specZoneId));
+				if(itemsByZone!= null && CollectionUtils.isNotEmpty(itemsByZone.get(specZoneId))){
+					validateDORanking(specZoneDtl, itemsByZone.get(specZoneId));
+				}
 			}
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
