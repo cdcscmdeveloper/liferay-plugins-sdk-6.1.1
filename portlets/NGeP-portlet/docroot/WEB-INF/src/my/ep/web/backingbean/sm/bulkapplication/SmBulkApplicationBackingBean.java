@@ -95,7 +95,9 @@ public class SmBulkApplicationBackingBean extends
 	public void approveBulkApplication() {
 		validateTotalSelectedApplication();
 		validateApproveCategories();
-		validateOverlapRemarks();
+
+		// disable validate overlap remarks make it as optional only. (#24160)
+		// validateOverlapRemarks();
 		RequestContext.getCurrentInstance().execute(
 				"approveConfirmPopup.show();");
 	}
@@ -127,7 +129,7 @@ public class SmBulkApplicationBackingBean extends
 				}
 
 				if (bulkAppl.isOverlappedCategory()
-						&& StringUtils.isNotBlank(bulkAppl.getOverlapRemarks())) {
+						&& !StringUtils.isBlank(bulkAppl.getOverlapRemarks())) {
 					SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
 							.getAppl().getApplId(),
 							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
@@ -755,7 +757,7 @@ public class SmBulkApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_RENEW,
 						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
 						ParameterConst.NEW_SM_APPLN_FOR_MOF);
-				
+
 				if (appl != null && overlap.contains(appl.getApplType())) {
 					for (SmSupplierCategory cat : appl
 							.getSmSupplierCategories()) {
@@ -772,13 +774,15 @@ public class SmBulkApplicationBackingBean extends
 												SupplierManagementConst.PENDING_ACT_STATUS) == 0)
 								|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
 							SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
-									.getOverlapCategoryVO(bulkApplicationVO.getAppl());
+									.getOverlapCategoryVO(bulkApplicationVO
+											.getAppl());
 							if (overlapCategoryVO != null) {
 								bulkApplicationVO
 										.setOverlappedCategory(overlapCategoryVO
 												.isOverLappedCategoryExist());
-								bulkApplicationVO.setOverlapMsg(overlapCategoryVO
-										.getOverLappedCategoryMsg());
+								bulkApplicationVO
+										.setOverlapMsg(overlapCategoryVO
+												.getOverLappedCategoryMsg());
 								bulkApplicationVO
 										.setOverlapCategoryVOList(overlapCategoryVO
 												.getOverlapCategoryVOList());
@@ -787,7 +791,7 @@ public class SmBulkApplicationBackingBean extends
 						}
 					}
 				}
-				
+
 				getManagedBean().setSelectedOverlapCategoryVOList(
 						bulkApplicationVO.getOverlapCategoryVOList());
 
