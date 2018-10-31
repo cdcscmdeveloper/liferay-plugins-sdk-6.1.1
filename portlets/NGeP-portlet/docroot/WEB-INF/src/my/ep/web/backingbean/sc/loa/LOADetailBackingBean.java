@@ -2735,7 +2735,7 @@ public class LOADetailBackingBean extends
 			}
 
 			//Bug #24061
-			if(!ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
 				if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 						freqScheduleValidation(scQtSchedule);
@@ -3119,7 +3119,7 @@ public class LOADetailBackingBean extends
 		// validation for fulfillment schedule and progressivepayment
 		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome)) {
 			//Bug #24061
-			if(!ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
 				// check whether loa from s1 or s2.
 				if(scLoa.getScLoiLoa() != null){
 					if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
