@@ -1138,7 +1138,7 @@ public class DirectLOABackingBean extends
 			}
 			
 			//Bug #24061
-			if(!ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
 				if (scLoa.getScQtProgPayments() != null
 						&& scLoa.getScQtProgPayments().size() > 0) {
 					for (ScQtProgressivePayment progressivePayment : scLoa
