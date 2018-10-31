@@ -1008,61 +1008,6 @@ public class SmApplicationUtil {
 	public static boolean validateBasicInfoBeforeSave(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
-		SmAppl latestAppl = managedBean.getLatestAppl();
-		boolean retVal = false;
-		
-		// check whether supplier has pending transaction on eP
-		if (managedBean.isSupplierUser()
-				&& !(appl.getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
-			if (appl != null && latestAppl != null) {
-				// companyBasic
-				retVal = EntityHelper.isObjectDifference(
-						latestAppl.getSmCompanyBasic(),
-						appl.getSmCompanyBasic(), new String[] {
-								"companyBasicId", "annualRevenue",
-								"annualRevenue", "bumiEquity",
-								"bumiPercentage", "foreignCompanyEquity",
-								"foreignerEquity", "govtEquity",
-								"govtUnitrustEquity", "withFederal", "withGlc",
-								"withOthers", "withState", "withStatutory",
-								"localCompanyEquity", "withOthers",
-								"withState", "withStatutory",
-								"localCompanyEquity", "nonBumiEquity",
-								"nonBumiPercentage", "paidUpCapital", "revNo",
-								"totalMember", "totalShare", "website",
-								"incomeTaxNo", "smCompanyAddresses" });
-				if (retVal) {
-					// #17716: changes column companyName/registrationNo/BusinessType/establishDate - check pending eP transaction
-					boolean hasActiveTransactions = SmApplicationUtil
-							.hasActiveTransactions(appl.getSmSupplier());
-					boolean hasOtherActiveTransactions = SmApplicationUtil
-							.hasOtherActiveTransactions(appl.getSmSupplier());
-
-					if (hasActiveTransactions || hasOtherActiveTransactions) {
-						validSave = false;
-						setNavigationBackToCurrentPage(currentTab, managedBean);
-						FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_INFO,
-												null,
-												MessageUtils
-														.getMessage(
-																MessageConst.INFO_721228,
-																new String[] {},
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes()
-																		.getUserLocale())));
-					}
-
-				}
-
-			}
-		}
-		
 		if (appl.getSmFacilities().isEmpty()) {
 			appl.getSmFacilities().add(managedBean.getBasicCompanyFacility());
 
@@ -7649,12 +7594,10 @@ public class SmApplicationUtil {
 			SmAppl smAppl) {
 		boolean retVal = false;
 		
-		// #17716: remove checking
-		/*if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
+		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
 				.contains(smSupplier.getBusinessType())) {
 			retVal = true;
-		} else */
-		if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
+		} else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
 			retVal = true;
 		}
 		return retVal;
@@ -12304,9 +12247,6 @@ public class SmApplicationUtil {
 
 		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 		SmSupplier supplier = managedBean.getSmSupplier();
-		supplier.setBusinessType(reqDTO.getBusinessType());
-		supplier.setRegNo(reqDTO.getBusinessRegNo());
-		supplier.setCompanyName(reqDTO.getCompanyName());
 		supplier.setEstablishDate(reqDTO.getEstablishDate());
 
 		mofRegistrationReqDTO.setSmSupplier(supplier);
