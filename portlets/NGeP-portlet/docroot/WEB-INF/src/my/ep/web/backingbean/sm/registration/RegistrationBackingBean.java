@@ -390,7 +390,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721020);
 		}
 		
-		if(!smAppl.getSmCompanyBasic().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
 			}
@@ -420,7 +420,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
 		
-		if (smAppl.getSmCompanyBasic().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
+		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
 			PmParameter identificationType = ParameterHelper.getInstance().
 					getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
@@ -462,8 +462,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		smSupp.setCompanyName(smAppl.getSmCompanyBasic().getCompanyName().trim());
 		smSupp.setEstablishDate(smAppl.getSmCompanyBasic().getEstablishDate());
-		smSupp.setRegNo(smAppl.getSmCompanyBasic().getRegNo());
-		smSupp.setBusinessType(smAppl.getSmCompanyBasic().getBusinessType());
 		smAppl.setSmSupplier(smSupp);
 		smAppl.getSmCompanyBasic().setSmAppl(smAppl);
 		smAppl.getSmCompanyBasic().setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
@@ -649,9 +647,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
 		}
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
-		smSupp.setCompanyName(smSupp.getSmAppl().getSmCompanyBasic().getCompanyName());
-		smSupp.setBusinessType(smSupp.getSmAppl().getSmCompanyBasic().getBusinessType());
-		smSupp.setRegNo(smSupp.getSmAppl().getSmCompanyBasic().getRegNo());
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		reqDTO.setGstList(getCleanGst());
@@ -1122,7 +1117,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 			
 			IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
-			reqDTO.setRegNo(this.getManagedBean().getSmAppl().getSmCompanyBasic().getRegNo());
+			reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 			reqDTO.setStatusLs(recStatusLs);
 			RegistrationResDTO resDTO = reqSO.retrieveSupplierByRegNoAndStatusLs(reqDTO);
 			
@@ -1450,7 +1445,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 
-		if(!getManagedBean().getSmAppl().isBrandNew() && SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
+		/*if(!getManagedBean().getSmAppl().isBrandNew() && SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
 						.contains(getManagedBean().getSmSupp().getBusinessType())){
 			log.info("<<<<<<<<<Business Type is changeable>>>>>>>>>>");
 			items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
@@ -1495,7 +1490,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				
 			}
 			return  sabahSarawakBusinessLs.toArray(new SelectItem[sabahSarawakBusinessLs.size()]);
-		}
+		}*/
 
 		return items;
 	}
@@ -2210,7 +2205,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	/**
-	 * Set whether to disable company name, business type and registration number field from editing
+	 * Set whether to disable company name and business type field from editing
 	 * in maintenance
 	 */
 	private void setDisableCompanyNameBusinessTypeInMaintenance() {
@@ -2221,10 +2216,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
 			//disabled for #10998
 			//getManagedBean().setDisabledBusinessTypeInMaintenance(true);
-			// #17716: registration number
-			getManagedBean().setDisabledRegNoInMaintenance(true);
 		}
-		/*
+		
 		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
 				.contains(getManagedBean().getSmSupp().getBusinessType())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
@@ -2233,12 +2226,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				.contains(getManagedBean().getSmSupp().getBusinessType())) {
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
 		}
-		 */
+		
 		SmAppl isActieveAppl = SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmSupp());
 		if(isActieveAppl != null){
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
-			getManagedBean().setDisabledRegNoInMaintenance(true);
 		}
 		
 		if (SmApplicationUtil
@@ -2246,7 +2238,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						.getSmSupp().getSmAppl())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
-			getManagedBean().setDisabledRegNoInMaintenance(true);
 		}
 	}
 	
