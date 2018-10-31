@@ -80,8 +80,6 @@
 						&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
 						
 						<br /><br />
-						<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.overlapped.category.remarks.instruction']}"/><br />
-						<h:outputText value="*" styleClass="mandatory" />&#160;&#160;
 						<p:inputTextarea cols="120" style="width : auto;" rows="5"
 							maxlength="2500" value="#{tasks.overlapRemarks}"
 							label="#{lbl['lbl.sm.remarks.overLapping']}"
@@ -112,7 +110,7 @@
 				rendered="#{bulkApplicationBackingBean.managedBean.applStatus eq 
 				bulkApplicationBackingBean.managedBean.RECOMMEND_APPROVE}"
 				id="approveBtnId" update="@form" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()" process="@this"
+				oncomplete="blockWidget.hide()" process="@this,:#{p:component('resultPanelId')}"
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.approveBulkApplication}" />
 				&#160;
