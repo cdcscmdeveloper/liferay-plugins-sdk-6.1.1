@@ -100,7 +100,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean sameAsOwner;
 	private boolean disabledCompanyNameInMaintenance;
 	private boolean disabledBusinessTypeInMaintenance;
-	private boolean disabledRegNoInMaintenance;
 	
 	private boolean gstFlag;
 
@@ -562,14 +561,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setDisabledBusinessTypeInMaintenance(
 			boolean disabledBusinessTypeInMaintenance) {
 		this.disabledBusinessTypeInMaintenance = disabledBusinessTypeInMaintenance;
-	}
-
-	public boolean isDisabledRegNoInMaintenance() {
-		return disabledRegNoInMaintenance;
-	}
-
-	public void setDisabledRegNoInMaintenance(boolean disabledRegNoInMaintenance) {
-		this.disabledRegNoInMaintenance = disabledRegNoInMaintenance;
 	}
 
 	public boolean isGstFlag() {
