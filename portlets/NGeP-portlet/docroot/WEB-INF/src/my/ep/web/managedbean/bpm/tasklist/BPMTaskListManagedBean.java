@@ -21,7 +21,6 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.bpm.vo.TaskVO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
@@ -52,7 +51,6 @@ import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.TaskListVO;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
@@ -90,25 +88,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private int docStatusGroup;
 	Integer loiPreparationDays = null;
 	private boolean sdoWithMultipleRoles;
-	private List<TaskListVO> myTasks;
-	private List<TaskListVO> groupTasks;
 	
-	public List<TaskListVO> getMyTasks() {
-		return myTasks;
-	}
-
-	public void setMyTasks(List<TaskListVO> myTasks) {
-		this.myTasks = myTasks;
-	}
-
-	public List<TaskListVO> getGroupTasks() {
-		return groupTasks;
-	}
-
-	public void setGroupTasks(List<TaskListVO> groupTasks) {
-		this.groupTasks = groupTasks;
-	}
-
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -330,7 +310,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 
 
-	public Integer retrieveKpiValueByModuleCodeAndKpiCode(String moduleCode, String kpiCode) {
+	private Integer retrieveKpiValueByModuleCodeAndKpiCode(String moduleCode, String kpiCode) {
 		IPmKpiSO pmKpiSO = null;
 
 		try {
@@ -354,7 +334,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return null;
 	}
 	
-	public MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
+	private MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
@@ -899,7 +879,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	
 	
-	public AccessApplResDTO retrieveAccessApplByDocNo(String docNo){
+	private AccessApplResDTO retrieveAccessApplByDocNo(String docNo){
 		IAccessApplSO accessApplSO = null;
 		try{
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
@@ -1001,7 +981,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return false;
 	}
 
-	public boolean viewGlpFlag() {
+	private boolean viewGlpFlag() {
 		FacesScopes fs = new FacesScopes();
 		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
 				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
@@ -1038,14 +1018,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public String retreiveSupplierInvoiceNo(int docId){
+	private String retreiveSupplierInvoiceNo(int docId){
 		IInvoiceSO invoiceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setDocId(new Long(docId));
 		return invoiceSO.retreiveSupplierInvoiceNo(reqDTO).getSupplierInvoiceNo();
 	}
 	
-	public String retreiveSupplierDoRefNo(int docId,boolean isAckFRN){
+	private String retreiveSupplierDoRefNo(int docId,boolean isAckFRN){
 		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setDocId(new Long(docId));
