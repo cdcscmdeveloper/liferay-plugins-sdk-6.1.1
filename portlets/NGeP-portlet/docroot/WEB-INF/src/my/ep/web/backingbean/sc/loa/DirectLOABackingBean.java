@@ -1415,9 +1415,12 @@ public class DirectLOABackingBean extends
 
 			saveProgressivePaymntList();
 			constructScheduleDetails();
-			if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
-				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-					freqScheduleValidation(scQtSchedule);
+			//Bug #24061
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+				if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
+					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+						freqScheduleValidation(scQtSchedule);
+					}
 				}
 			}
 			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
