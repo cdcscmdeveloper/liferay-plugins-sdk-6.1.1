@@ -866,7 +866,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 }*/
 		//}
-		if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)  
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
 			getManagedBean().setSelectedTabIndex(2);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
