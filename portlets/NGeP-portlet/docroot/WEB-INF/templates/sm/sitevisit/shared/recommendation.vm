@@ -127,7 +127,11 @@
 		#if($templateCode == "M")
 		<tr><td>$!svTask.officerComment</td></tr>
 		#else
-		<tr><td>$!svTask.recommended</td></tr>
+			#if($svTask.recommended)
+				<tr><td>Approve</td></tr>
+			#else
+				<tr><td>Reject</td></tr>
+			#end
 		#end
 		<br /><br /><br />
 	#else
