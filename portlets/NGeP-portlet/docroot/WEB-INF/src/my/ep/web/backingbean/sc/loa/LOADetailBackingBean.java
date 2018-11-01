@@ -4762,7 +4762,9 @@ public class LOADetailBackingBean extends
 			isAgreementMandatory = true;
 			loa.setAgreementReq(isAgreementMandatory);
 		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
-			isAgreementMandatory = false;
+			//Bug #24065
+			//isAgreementMandatory = false;
+			isAgreementMandatory = true;
 			loa.setAgreementReq(isAgreementMandatory);
 		}
 
