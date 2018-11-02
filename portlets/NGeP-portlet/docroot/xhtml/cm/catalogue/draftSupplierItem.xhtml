@@ -31,13 +31,13 @@
 
 	<ac:lovPopup />
 
-
+	
 	<p:remoteCommand name="refreshDraftSuppItem" id="refreshDraftSuppItem"
 		action="#{catalogueBackingBean.checkingCheckAll}"
 		update=":form:draftSupplierItemID:selectAllCheckBoxId"></p:remoteCommand>
 
 
-	<table style="width: 100%; height: 100%;">
+		<table style="width: 100%; height: 100%;">
 			<tr>
 				<td width="100%"><h:outputText styleClass="instruction"
 						style="float:left;margin-left:5px;" escape="false"
@@ -46,115 +46,162 @@
 		</table>
 		
 		<ui:include src="/xhtml/common/uompopup.xhtml"></ui:include>
-	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
-		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
-		rowIndexVar="rowIndex" var="selectedSuppCat"
-		rowKey="#{selectedSuppCat.supplierItemId}" rows="10">
+		<p:spacer height="2" />
+		
+		
+		
+<!-- 			<p:blockUI block=":form" trigger="searchButtonId"> -->
+<!-- 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage> -->
+<!-- 			</p:blockUI> -->
+		
+			<table style="width: 100%">
+				<tr>
+					<td><p:panel style="width: 100%;"
+							header="#{lbl['lbl.cm.define.search']}" toggleable="true"
+							id="searchTabId">
+							<table style="margin-top: 10px; width: 100%;">
+								<tr>
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.cm.item.name']}" /></td>
+									<td width="35%%"><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText>
+										</td>
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.cm.item.code']}" /></td>
+									<td width="35%"><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText>
+										</td>
+								</tr>
+							</table>
+							<div style="text-align: left;">
+								<p:commandButton value="#{lbl['lbl.cm.search']}"
+									action="#{catalogueBackingBean.managedBean.searchCatalogueDraftMaintenance}" update="draftSupplierItemID" id="searchButtonId">
 
-		<ac:paginator for="draftSupplierItemID"></ac:paginator>
-
-		<p:column style="text-align: left;width:2%;">
-			<f:facet name="header">
-				<p:selectBooleanCheckbox id="selectAllCheckBoxId"
-					value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
+								</p:commandButton>
+								<p:commandButton value="#{lbl['lbl.btn.reset']}"
+									action="#{catalogueBackingBean.resetCatalogueSearch}"
+									update="catMainItemViewID">
+								</p:commandButton>
+							</div>
+						</p:panel>
+					</td>
+				</tr>
+			</table>
+			
+	
+		<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
+			rowIndexVar="rowIndex" var="selectedSuppCat"
+			rowKey="#{selectedSuppCat.supplierItemId}" rows="10">
+	
+			<ac:paginator for="draftSupplierItemID"></ac:paginator>
+			
+			
+	
+			<p:column style="text-align: left;width:2%;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selectAllCheckBoxId"
+						value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
+						<p:ajax event="change"
+							listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
+							update=":form:downloadLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="singleCheckBoxID"
+					value="#{selectedSuppCat.selected}">
 					<p:ajax event="change"
-						listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
-						update=":form:downloadLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
+						listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
+						update=":form:downloadLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
 				</p:selectBooleanCheckbox>
-			</f:facet>
-			<p:selectBooleanCheckbox id="singleCheckBoxID"
-				value="#{selectedSuppCat.selected}">
-				<p:ajax event="change"
-					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
-					update=":form:downloadLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
-			</p:selectBooleanCheckbox>
-		</p:column>
-
-		<p:column width="3%">
-			<f:facet name="header">
-				#{lbl['lbl.cm.item.code']}
-			</f:facet>
-			<h:outputText value="#{selectedSuppCat.cmItem.extensionCode}"
-				style="white-space: normal" />
-		</p:column>
-
-		<p:column width="20%" style="white-space: normal;">
-			<f:facet name="header">
-				#{lbl['lbl.cm.item.name']}     
-			</f:facet>
-			<h:outputText value="#{selectedSuppCat.cmItem.itemName}" />
-
-		</p:column>
-		<p:column width="2%">
-			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.cm.price']}" />
-			</f:facet>
-			<p:inputText id="stdPrice" value="#{selectedSuppCat.cmStandardPricing.price}"
-				maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
-				style="text-align:right">	
-				<f:converter converterId="bigDecimalConverter" />
-				<p:ajax event="blur" update="stdPrice" />
-			</p:inputText>
-
-		</p:column>
-		<p:column width="5%">
-			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.cm.uom']}" />
-			</f:facet>
-			
-			<p:autoComplete panelStyleClass="uomAuto" id="uomDraftId" scrollHeight="250" size="20" var="pmUom" converter="PmUomConverter"
-							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
-							itemValue="#{pmUom}" 
-							value="#{selectedSuppCat.pmUom}"
-							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
-							maxResults="50" dropdown="false" forceSelection="true" />
-			
-		</p:column>
-		<p:column width="2%">
-			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.cm.start.date']}" />
-			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" readonlyInput="true"
-				navigator="true" showOn="button" size="10"
-				mindate="#{catalogueBackingBean.managedBean.currentDate}"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-
-		</p:column>
-		<p:column width="2%">
-			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
-			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true"
-				navigator="true" showOn="button" size="10"
-				mindate="#{catalogueBackingBean.managedBean.currentDate}"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-
-		</p:column>
-		<p:column width="2%">
-			<f:facet name="header">
-				#{lbl['lbl.cm.action']}
-			</f:facet>
-
-			<h:panelGroup rendered="#{!unspscCodeBackingBean.supplierTemp}">
-				<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
-					action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
-					<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
+			</p:column>
+	
+			<p:column width="3%">
+				<f:facet name="header">
+					#{lbl['lbl.cm.item.code']}
+				</f:facet>
+				<h:outputText value="#{selectedSuppCat.cmItem.extensionCode}"
+					style="white-space: normal" />
+			</p:column>
+	
+			<p:column width="20%" style="white-space: normal;">
+				<f:facet name="header">
+					#{lbl['lbl.cm.item.name']}     
+				</f:facet>
+				<h:outputText value="#{selectedSuppCat.cmItem.itemName}" />
+	
+			</p:column>
+			<p:column width="2%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.cm.price']}" />
+				</f:facet>
+				<p:inputText id="stdPrice" value="#{selectedSuppCat.cmStandardPricing.price}"
+					maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
+					style="text-align:right">	
+					<f:converter converterId="bigDecimalConverter" />
+					<p:ajax event="blur" update="stdPrice" />
+				</p:inputText>
+	
+			</p:column>
+			<p:column width="5%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.cm.uom']}" />
+				</f:facet>
+				
+				<p:autoComplete panelStyleClass="uomAuto" id="uomDraftId" scrollHeight="250" size="20" var="pmUom" converter="PmUomConverter"
+								itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
+								itemValue="#{pmUom}" 
+								value="#{selectedSuppCat.pmUom}"
+								completeMethod="#{catalogueBackingBean.autoCompleteUom}"
+								maxResults="50" dropdown="false" forceSelection="true" />
+				
+			</p:column>
+			<p:column width="2%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
+				</f:facet>
+				<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" readonlyInput="true"
+					navigator="true" showOn="button" size="10"
+					mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+	
+			</p:column>
+			<p:column width="2%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.cm.end.date']}" />
+				</f:facet>
+				<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true"
+					navigator="true" showOn="button" size="10"
+					mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+	
+			</p:column>
+			<p:column width="2%">
+				<f:facet name="header">
+					#{lbl['lbl.cm.action']}
+				</f:facet>
+	
+				<h:panelGroup rendered="#{!unspscCodeBackingBean.supplierTemp}">
+					<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
+						action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
+						<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
+					</p:commandLink>
+				</h:panelGroup>
+				<p:commandLink style="margin-left: 10px;"
+					title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
+					action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:param name="index" value="#{rowIndex}"></f:param>
 				</p:commandLink>
-			</h:panelGroup>
-			<p:commandLink style="margin-left: 10px;"
-				title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
-				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
-				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-				<f:param name="index" value="#{rowIndex}"></f:param>
-			</p:commandLink>
+	
+			</p:column>
+			
+		</p:dataTable>
 
-		</p:column>
-	</p:dataTable>
 
 	<div class="clear"></div>
 
@@ -179,5 +226,6 @@
 		</p:fileUpload>
 
 	</p:dialog>
+	
 
 </ui:composition>
