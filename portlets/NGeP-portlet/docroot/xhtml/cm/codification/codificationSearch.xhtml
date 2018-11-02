@@ -50,7 +50,6 @@
 		</h:panelGroup>
 		<br />
 		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
-
 			<table style="width: 100%; height: 100%;">
 				<tr>
 					<td width="100%"><h:outputText styleClass="instruction"
@@ -70,6 +69,7 @@
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							for="itemNameID">
 							<p:outputLabel escape="false"
+								style="text-align: left;"
 								value="#{lbl['lbl.tooltip.item.code']}" />
 						</p:tooltip></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
@@ -146,9 +146,16 @@
 				</p:column>
 				<p:column sortBy="#{unspscObj.unspscTitle}">
 					<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.title']}
+					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 				</f:facet>
 				#{unspscObj.unspscTitle}
+			</p:column>
+			<!-- Added EN title for unspsc -->
+			<p:column sortBy="#{unspscObj.unspscTitleEng}">
+					<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
+				</f:facet>
+				#{unspscObj.unspscTitleEng}
 			</p:column>
 
 			</p:dataTable>
@@ -173,13 +180,7 @@
 		<p:dialog id="confirmationPopUp" widgetVar="confirmationPopUp"
 			modal="true" header="#{lbl['lbl.cm.add.to.catalogue']}" width="350"
 			height="200">
-
 			<ui:include src="addServiceConfirmationPopUp.xhtml"></ui:include>
-
 		</p:dialog>
-
 	</h:panelGroup>
-
-
-
 </ui:composition>
