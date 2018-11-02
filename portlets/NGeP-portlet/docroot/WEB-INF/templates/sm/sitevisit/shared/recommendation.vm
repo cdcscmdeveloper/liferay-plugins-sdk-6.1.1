@@ -96,7 +96,6 @@
 #else
 <table>
 	<tr><td class="txtBold"><u>Comments</u></td></tr>
-	<tr><td class="txtBold">Comments</td></tr>
 	#if($review)
 		<tr><td>$!svTask.officerComment</td></tr>
 		<br />
@@ -108,7 +107,6 @@
 
 <table>
 	<tr><td class="txtBold"><u>Company Information Update(If any changes)</u></td></tr>
-	<tr><td class="txtBold">Company Information Update</td></tr>
 	
 	#if($review)
 		<tr><td>$!svTask.companyInfoUpdate</td></tr>
@@ -121,7 +119,6 @@
 
 <table>
 	<tr><td class="txtBold"><u>Recommendation/ Declaration</u></td></tr>
-	<tr><td class="txtBold">Recommendation/ Declaration</td></tr>
 	
 	#if($review)
 		#if($templateCode == "M")
