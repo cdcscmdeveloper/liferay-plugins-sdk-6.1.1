@@ -522,7 +522,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-
+			
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -537,7 +537,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				bb.getManagedBean().setExpiredTabPageSize(this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
+					itemNameFilterBean.setSearchField("cmItem.itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 
+					
+				}
+				
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
+					itemCodeFilterBean.setSearchField("cmItem.extensionCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+	
+				}
+				
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
 				supplierReqDTO.setAllStatuses(true);
@@ -588,7 +605,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-
+			
+			
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -603,6 +621,23 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setPublishTabPageSize(this.getPageSize());
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
+					itemNameFilterBean.setSearchField("cmItem.itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+
+					
+				}
+				
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
+					itemCodeFilterBean.setSearchField("cmItem.extensionCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+	
+				}
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
@@ -655,6 +690,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
+			
+		
 
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -671,6 +708,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				bb.getManagedBean().setRejectedTabPageSize(this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				
+			
+				
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
+					itemNameFilterBean.setSearchField("cmItem.itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+
+					
+				}
+				
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
+					itemCodeFilterBean.setSearchField("cmItem.extensionCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+	
+				}
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
@@ -722,7 +778,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-
+			
+		
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -738,6 +795,23 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				bb.getManagedBean().setApprovedTabPageSize(this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
+					itemNameFilterBean.setSearchField("cmItem.itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+
+					
+				}
+				
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
+					itemCodeFilterBean.setSearchField("cmItem.extensionCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+		
+				}
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
@@ -789,7 +863,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-
+		
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -806,6 +880,23 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
+					itemNameFilterBean.setSearchField("cmItem.itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+
+					
+				}
+				
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
+					itemCodeFilterBean.setSearchField("cmItem.extensionCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+	
+				}
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
@@ -857,10 +948,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
+			
 
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
+			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
@@ -873,6 +965,26 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				bb.getManagedBean().setDraftTabPageSize(this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				
+
+				
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
+					itemNameFilterBean.setSearchField("cmItem.itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+
+					
+				}
+				
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
+					itemCodeFilterBean.setSearchField("cmItem.extensionCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+
+				}
+				
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
@@ -885,9 +997,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						.get(0).getSupplierId());
 
 				reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
+
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
+				
 				
 				Map tempMap = new HashMap();
 				for (int i = 0; i < resDTO.getSuppItemResultBean()
@@ -1407,6 +1521,65 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			searchDataModel.reloadData();
 		}
 	}
+	
+	
+	public void searchCatalogueMaintenance() {
+		log.info("In searchCatalogueMaintenance");
+		boolean hasSearchValue = false;
+		log.info("hasSearchValue: " + hasSearchValue);
+
+		if (StringUtils
+				.isNotBlank((String) itemNameFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils
+				.isNotBlank((String) itemCodeFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		
+		log.info("hasSearchValue: " + hasSearchValue);
+		
+		if (StringUtils.isNotBlank((String) itemNameFilterBean.getSearchValue())) {
+			if(((String) itemNameFilterBean.getSearchValue()).trim().length()<3){
+				throw new EpException(MessageConst.ERROR_716019);
+			}
+		}
+		
+		if (!hasSearchValue) {
+			throw new EpException(MessageConst.ERROR_716006);
+		} else {
+			if(tabActiveIndex == 0){
+				draftSearchDataModel.reloadData();
+			}
+			
+			if(tabActiveIndex == 1){
+				approvalSearchDataModel.reloadData();
+			}
+			
+			if(tabActiveIndex == 2){
+				approvedSearchDataModel.reloadData();
+			}
+			
+			if(tabActiveIndex == 3){
+				rejectSearchDataModel.reloadData();
+			}
+			
+			if(tabActiveIndex == 4){
+				publishSearchDataModel.reloadData();
+			}
+
+			if(tabActiveIndex == 5){
+				expiredSearchDataModel.reloadData();
+			}
+			
+			
+			
+		}
+	}
+	
+	
 	
 	/**
 	 * Append search criteria for logging purpose
