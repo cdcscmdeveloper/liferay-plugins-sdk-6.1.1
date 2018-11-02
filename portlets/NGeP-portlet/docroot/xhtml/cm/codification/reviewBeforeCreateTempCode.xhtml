@@ -174,10 +174,13 @@
 								<h:outputText value="*" styleClass="mandatory" />
 								<h:outputText value=" #{lbl['lbl.cm.doc.title']}" />
 							</p:column>
-
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText value=" #{lbl['lbl.cm.doc.title.eng']}" />
+							</p:column>
 							<p:column>
 							#{lbl['lbl.cm.description']}
-						</p:column>
+							</p:column>
 						</p:row>
 
 					</f:facet>
@@ -194,7 +197,6 @@
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^0|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}">
-
 							</ac:lov>
 
 						</p:column>
@@ -202,14 +204,16 @@
 							<p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscTitle}"
 								size="40"></p:inputText>
-
 						</p:column>
-
+						<p:column>
+							<p:inputText
+								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscTitleEng}"
+								size="40"></p:inputText>
+						</p:column>
 						<p:column>
 							<p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscDescription}"
 								size="40"></p:inputText>
-
 						</p:column>
 					</p:row>
 
@@ -230,6 +234,12 @@
 						<p:column>
 							<p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscTitle}"
+								size="40"></p:inputText>
+
+						</p:column>
+						<p:column>
+							<p:inputText
+								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscTitleEng}"
 								size="40"></p:inputText>
 
 						</p:column>
@@ -261,7 +271,12 @@
 								size="40"></p:inputText>
 
 						</p:column>
+						<p:column>
+							<p:inputText
+								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscTitleEng}"
+								size="40"></p:inputText>
 
+						</p:column>
 						<p:column>
 							<p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscDescription}"
@@ -292,7 +307,12 @@
 								size="40"></p:inputText>
 
 						</p:column>
+						<p:column>
+							<p:inputText
+								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscTitleEng}"
+								size="40"></p:inputText>
 
+						</p:column>
 						<p:column>
 							<p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscDescription}"
