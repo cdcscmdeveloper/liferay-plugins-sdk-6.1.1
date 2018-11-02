@@ -81,15 +81,15 @@
 							#{unspscObj1.unspscCode}
 							</p:commandLink>
 				</h:panelGroup>
-				
-				
-				
-					<h:panelGroup rendered="#{!unspscCodeBackingBean.allSupplier}">
-						<h:outputLabel value="#{unspscObj1.unspscCode}" style="float:left;"
-							rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}">
 
-						</h:outputLabel>
-					</h:panelGroup>
+
+
+				<h:panelGroup rendered="#{!unspscCodeBackingBean.allSupplier}">
+					<h:outputLabel value="#{unspscObj1.unspscCode}" style="float:left;"
+						rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}">
+
+					</h:outputLabel>
+				</h:panelGroup>
 
 				<p:commandLink
 					action="#{codificationBackingBean.unspscPopUpSearch(unspscObj1)}"
@@ -102,9 +102,15 @@
 			</p:column>
 			<p:column sortBy="#{unspscObj1.unspscTitle}">
 				<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.title']}
+			#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 				</f:facet>
 				#{unspscObj1.unspscTitle}
+			</p:column>
+			<p:column sortBy="#{unspscObj1.unspscTitleEng}">
+				<f:facet name="header">
+			#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
+				</f:facet>
+				#{unspscObj1.unspscTitleEng}
 			</p:column>
 
 		</p:dataTable>
