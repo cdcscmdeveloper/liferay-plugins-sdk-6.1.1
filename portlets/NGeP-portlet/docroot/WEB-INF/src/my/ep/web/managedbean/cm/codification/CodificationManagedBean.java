@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -28,6 +29,7 @@ import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -151,6 +153,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean titleEngFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean levelFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
@@ -474,7 +478,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 					titleFilterBean.setSearchField("unspscTitle");
 					titleFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(titleFilterBean);
+					titleFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+
+					titleEngFilterBean.setSearchField("unspscTitleEng");
+					titleEngFilterBean.setCaseInsensitive(true);
+					titleEngFilterBean.setSearchValue(titleFilterBean.getSearchValue());
+					titleEngFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					
+					SearchMultiFilterBean bilingualFilter = new SearchMultiFilterBean(titleFilterBean,titleEngFilterBean);
+					
+					searchBean.getDataFilterBeans().add(bilingualFilter);
 				}
 				FacesScopes fs = new FacesScopes();
 				String itemType = fs.getParameter("itemType");
