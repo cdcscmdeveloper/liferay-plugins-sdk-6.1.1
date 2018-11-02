@@ -732,8 +732,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						 }
 					 }
 				 }
-
-				 if(getManagedBean().getApproverModel().getTarget().size()==0) {
+				 if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 					 getManagedBean().setSelectedTabIndex(2);
 					 throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 				 }
