@@ -364,6 +364,8 @@ public class SmApplicationUtil {
 	public static boolean valiateNewCategoryAdded(
 			SmApplicationManagedBean managedBean) {
 		boolean addedNewCode = false;
+		int count = 0;
+		int maxCatSize = SmRuleHelper.getInstance().getMaxCategoryAllowed();
 		List<String> applTypes = Arrays.asList(
 				ParameterConst.NEW_SM_APPLN_FOR_MOF,
 				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
@@ -378,11 +380,16 @@ public class SmApplicationUtil {
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					addedNewCode = true;
-					break;
+					count++;
 				}
 			}
 		} else {
 			addedNewCode = true;
+		}
+
+		if (count > maxCatSize) {
+			throw new EpException(MessageConst.ERROR_722517,
+					new String[] { maxCatSize + "" });
 		}
 
 		return addedNewCode;
@@ -7593,7 +7600,7 @@ public class SmApplicationUtil {
 	public static boolean isDisableCompanyNameInAppl(SmSupplier smSupplier,
 			SmAppl smAppl) {
 		boolean retVal = false;
-		
+
 		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
 				.contains(smSupplier.getBusinessType())) {
 			retVal = true;
@@ -12126,7 +12133,7 @@ public class SmApplicationUtil {
 			if (smAppl.getApplType() != null
 					&& smAppl.getApplType().equals(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				if(!regStatus.isBumiAppl()){
+				if (!regStatus.isBumiAppl()) {
 					throw new EpException(MessageConst.ERROR_722671);
 				}
 				smAppl.getSmSupplier().setBumi(true);
@@ -12209,19 +12216,19 @@ public class SmApplicationUtil {
 		}
 		return categoryCodeBbInstance;
 	}
-	
+
 	public static List<Object[]> getActiveApplList(SmSupplier smSupplier) {
 		List<Object[]> resultList = new ArrayList<Object[]>();
-		
+
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveApplUsingNativeQuery(reqDTO).getResultList();
-		
-		return resultList;		
+
+		return resultList;
 	}
-	
+
 	public static void clonePoApplSectionReview(
 			SmApplicationManagedBean managedBean) {
 		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
@@ -12256,6 +12263,6 @@ public class SmApplicationUtil {
 						ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IMofRegistrationSO.class);
 		reqSO.updateSupplierProfile(mofRegistrationReqDTO);
-	}	
-	
+	}
+
 }
