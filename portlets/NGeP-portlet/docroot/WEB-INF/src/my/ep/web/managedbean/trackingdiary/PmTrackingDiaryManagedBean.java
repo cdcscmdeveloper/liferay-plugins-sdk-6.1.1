@@ -1111,6 +1111,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
 		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		if(searchFilterBean1.getSearchValue() == null && searchFilterBean2.getSearchValue() == null) {
+			sb.append("[tracking diary search filter empty]");
+		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
