@@ -12,11 +12,14 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
@@ -58,7 +61,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	public static final String NAV_TO_CONTRACT_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CONTRACT_DETAIL_SEARCH = "ctTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
-
+	private static Logger log = Logger.getLogger(CtTrackingDiaryBackingBean.class);
+	
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -327,8 +331,16 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 			SearchFilterBean searchFilterBean3 = null;			
 			BaseSearchFilterBean multiFilterBean1 = null;
 			
-			searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getTransactionType());
-			searchFilterBean2 = new SearchFilterBean("groupId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getDocId());
+			String docType = getManagedBean().getvCtDocument().getTransactionType();
+			Long docId = getManagedBean().getvCtDocument().getDocId();
+			
+			if (docType == null || docId == null) {
+				log.info(String.format("CT tracking diary search filter empty[%s=%s][%s=%s]", "docType", docType, "docId", docId));
+				return new SearchResultBean<PmTrackingDiary>();
+			}
+			
+			searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), docType);
+			searchFilterBean2 = new SearchFilterBean("groupId", SearchOperator.OPERATOR_EQUALS.value(), docId);
 			
 			multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
 			
@@ -338,6 +350,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 							
 			}
 			searchBean.getDataFilterBeans().add(multiFilterBean1);
+			
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2, searchFilterBean3);
 			
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -370,5 +384,17 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	 */
 	public String backToPrev() {
 		return NAV_TO_CONTRACT_SEARCH + "?faces-redirect=true";
+	}
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2,
+			 SearchFilterBean searchFilterBean3) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CtTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }

@@ -11,6 +11,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -234,6 +235,11 @@ public class PpTrackingDiaryBackingBean extends
 			}else{
 				docType = ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
 			}
+			
+			if (getManagedBean().getPpPlan().getPlanId() == null) {
+				log.info("PP tracking diary search filter empty");
+				return new SearchResultBean<PmTrackingDiary>();
+			}
 			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),docType);
 			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPpPlan().getPlanId());
 			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),docType);
@@ -243,6 +249,8 @@ public class PpTrackingDiaryBackingBean extends
 			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
 			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
 			searchBean.getDataFilterBeans().add(multiFilterBean3);
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+			
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
@@ -252,7 +260,7 @@ public class PpTrackingDiaryBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
+			
 			return resDTO.getResultBean();
 			
 		}
@@ -289,6 +297,16 @@ public class PpTrackingDiaryBackingBean extends
 		}
 		return statusDesc!=null ? statusDesc.getStatusName() : "";
 	}
-
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PpTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
+	}
 }
 
