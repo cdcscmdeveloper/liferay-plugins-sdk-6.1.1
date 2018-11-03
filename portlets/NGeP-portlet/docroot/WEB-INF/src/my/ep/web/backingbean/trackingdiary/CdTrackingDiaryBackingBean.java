@@ -10,6 +10,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
@@ -75,7 +76,8 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),cdObj[5]));
 		
 			if (cdObj[5] == null) {
-				log.info("doc id is null");
+				log.info("CD doc id tracking diary search filter empty");
+				return new SearchResultBean<PmTrackingDiary>();
 			}
 			
 			setSearchBeanDescription(searchBean,"CD", cdObj[5]);
