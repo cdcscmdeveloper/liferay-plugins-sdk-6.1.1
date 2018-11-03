@@ -243,6 +243,9 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[docType=%s]", docType));
 		sb.append(String.format("[docId=%s]", docId));
+		if(docType == null && docId == null) {
+			sb.append("[tracking diary search filter empty]");
+		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CdTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
