@@ -71,6 +71,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "pmTrackingDiaryManagedBean")
@@ -1030,39 +1031,38 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			boolean isSearchBeanEmpty = true;
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 
-			// log.info("...............isMultiRuleType()=" +
-			// isMultiRuleType());
-			log.info("...............getSelectedDocType()="
-					+ getSelectedDocType());
+			if (getSelectedDocType() == null && getSelectedDocId() == null) {
+				log.info("PM trakcing diary search filter values empty");
+				return new SearchResultBean<PmTrackingDiary>();
+			}
 			
-			BaseSearchFilterBean SearchFilterBean1 = new SearchFilterBean(
+			BaseSearchFilterBean searchFilterBean1 = new SearchFilterBean(
 					"docType", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocType());
-			BaseSearchFilterBean SearchFilterBean2 = new SearchFilterBean(
+			
+			BaseSearchFilterBean searchFilterBean2 = new SearchFilterBean(
 					"docId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
-			BaseSearchFilterBean SearchFilterBean3 = new SearchFilterBean(
+			
+			BaseSearchFilterBean searchFilterBean3 = new SearchFilterBean(
 					"groupDocType", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocType());
-			BaseSearchFilterBean SearchFilterBean4 = new SearchFilterBean(
+			
+			BaseSearchFilterBean searchFilterBean4 = new SearchFilterBean(
 					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
+		
+			BaseSearchFilterBean searchFilterBeanAnd1 = new SearchMultiFilterBean(
+					searchFilterBean1, searchFilterBean2);
+			BaseSearchFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(
+					searchFilterBean3, searchFilterBean4);
 
-			// ////////////////////
-
-			BaseSearchFilterBean SearchFilterBeanAnd1 = new SearchMultiFilterBean(
-					SearchFilterBean1, SearchFilterBean2);
-			BaseSearchFilterBean SearchFilterBeanAnd2 = new SearchMultiFilterBean(
-					SearchFilterBean3, SearchFilterBean4);
-
-			SearchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
-			SearchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
-			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(SearchFilterBeanAnd1, SearchFilterBeanAnd2));
-			// //////////////////////////
-			System.out.println("TrackingDiaryReqDTO-docType"
-					+ getSelectedDocType());
-			System.out
-					.println("TrackingDiaryReqDTO-docId" + getSelectedDocId());
+			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
+			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
+			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+ 
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+			
 			if (isSearchBeanEmpty) {
 				reqDTO.setSearchBean(searchBean);
 				
@@ -1078,35 +1078,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
 							.getInstance().getServiceObject("cc",
 									ITrackingDiarySO.class);
+					
 					resDTO = trackingDiarySO
 							.retrieveTrackingDiaryBySearchBean(reqDTO);
-					// if(isMultiRuleType() && getSelectedDocType2() != null &&
-					// !getSelectedDocType2().isEmpty()){
-					// SearchResultBean<PmTrackingDiary> searchResultBean = new
-					// SearchResultBean<PmTrackingDiary>();
-					// int totalRecordResult1 =
-					// resDTO.getResultBean().getTotalRecord();
-					// searchResultBean.setResultList(resDTO.getResultBean().getResultList());
-					// //retrive second round of Tracking Diary with
-					// selectedDocType2
-					// TrackingDiaryReqDTO reqDTO2 = new TrackingDiaryReqDTO();
-					// searchBean.getDataFilterBeans().add(
-					// new SearchFilterBean("docType",
-					// SearchOperator.OPERATOR_EQUALS.value(),
-					// getSelectedDocType2()));
-					// reqDTO2.setSearchBean(searchBean);
-					// TrackingDiaryResDTO resDTO2 = new TrackingDiaryResDTO();
-					// trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-					// .getInstance().getServiceObject("cc",
-					// ITrackingDiarySO.class);
-					// resDTO2 = trackingDiarySO
-					// .retrieveTrackingDiaryBySearchBean(reqDTO2);
-					// searchResultBean.setTotalRecord(resDTO2.getResultBean().getTotalRecord()
-					// + totalRecordResult1);
-					// searchResultBean.getResultList().addAll(resDTO2.getResultBean().getResultList());//add
-					// this result to previous list
-					// return searchResultBean;
-					// }
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1116,9 +1091,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				// resDTO.getResultBean().getTotalRecord());
 				return resDTO.getResultBean();
 			} else {
-				return new SearchResultBean();
+				return new SearchResultBean<PmTrackingDiary>();
 			}
-
 		}
 	}
 
@@ -1151,5 +1125,16 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 		
 		return pmOrgProfile;
+	}
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, BaseSearchFilterBean searchFilterBean1, BaseSearchFilterBean searchFilterBean2) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s=%s]", ((SearchFilterBean) searchFilterBean1).getSearchField(), ((SearchFilterBean) searchFilterBean1).getSearchValue()));
+		sb.append(String.format("[%s=%s]", ((SearchFilterBean) searchFilterBean2).getSearchField(), ((SearchFilterBean) searchFilterBean2).getSearchValue()));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
