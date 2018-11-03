@@ -106,8 +106,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String eduFieldName;
 	private String financialOrgName;
 	private boolean orgProfileRequired;
-	// private PmOrgProfile selectedOrgProfile;
-	// private PmUser selectedUser;
 	private boolean multiRuleType = false;
 	private String selectedDocType;
 	private String selectedDocType2;
@@ -557,7 +555,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		 */
 		public SearchCategoryPagingDataModel() {
 			super("dtCatCodeResult");
-
 		}
 
 		public ISearchResultBean<Object[]> pageChangeListener(
@@ -633,8 +630,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 	}
 
-	// /////////////////////////////////////////////////
-	// pagination for user org search list
 	private class UserOrgPagingDataModel extends PagingDataModel<PmOrgProfile> {
 		private static final long serialVersionUID = 1L;
 
@@ -648,10 +643,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			log.info("pageChangeListener");
 			try {
 				if (getOrganisationSearchBean().getOrgProfile() != null)
-					// log.info("......getOrganisationSearchBean().getOrgProfile().getOrgProfileId()="
-					// + getOrganisationSearchBean().getOrgProfile()
-					// .getOrgProfileId());
-
 					if (getOrganisationSearchBean().getOrgType() != null
 							&& getOrganisationSearchBean().getOrgName() != null) {
 						searchBean
@@ -681,16 +672,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 										IOrgProfileSO.class);
 						OrgProfileResDTO resDto = orgProfileSO
 								.searchOrgProfile(reqDTO);
-						// log.info("......resDto.getPmOrgProfile()="+resDto.getPmOrgProfile());
 						if (resDto != null && resDto.isSuccessful()) {
-							// SearchResultBean<PmOrgProfile> searchResultBean =
-							// new
-							// SearchResultBean<PmOrgProfile>();
-							// List<PmOrgProfile> resultList= new
-							// ArrayList<PmOrgProfile>();
-							// resultList.add(resDto.getPmOrgProfile());
-							// searchResultBean.setTotalRecord(1);
-							// searchResultBean.setResultList(resultList);
 							return resDto.getOrgProfileResultBean();
 						}
 					} else {
@@ -941,8 +923,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			}
 
 			try {
-				// ISearchBean<PmDocument> searchBeanData =
-				// getSearchBeanData(searchBean);
 				DocumentReqDTO reqDTO = new DocumentReqDTO();
 				reqDTO.setDocumentSearchBean(searchBean);
 				reqDTO.setDocCategoryCode(getSupportDocSearchBean()
@@ -1012,7 +992,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 			return null;
 		}
-
 	}
 
 	private class SearchTrackingDiaryPagingDataModel extends
@@ -1085,9 +1064,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				// System.out.println("resDTO.getResultBean()====================================: "+
-				// resDTO.getResultBean().getTotalRecord());
+				
 				return resDTO.getResultBean();
 			} else {
 				return new SearchResultBean<PmTrackingDiary>();
