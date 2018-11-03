@@ -1022,7 +1022,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 		public SearchTrackingDiaryPagingDataModel() {
 			super("trackingDiaryTableID");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
