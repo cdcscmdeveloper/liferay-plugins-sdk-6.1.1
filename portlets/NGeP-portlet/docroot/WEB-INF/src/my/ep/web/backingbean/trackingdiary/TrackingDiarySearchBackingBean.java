@@ -14,6 +14,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
@@ -69,6 +70,11 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			
+			if (getManagedBean().getDocType() == null && getManagedBean().getDocId() == null) {
+				log.info(getManagedBean().getModuleCode() + " tracking diary search filter empty");
+				return new SearchResultBean<PmTrackingDiary>();
+			}
+			
 			if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)) {
 				SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
 				SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
@@ -79,20 +85,28 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 				BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
 				BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
 				searchBean.getDataFilterBeans().add(multiFilterBean3);
+				
+				setSearchBeanDescription(getManagedBean().getModuleCode(), searchBean, searchFilterBean1, searchFilterBean2);
 			} else if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)) {
 				SearchFilterBean searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getDocType());
 				SearchFilterBean searchFilterBean2 = new SearchFilterBean("groupId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getDocId());
 				
 				BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
 				searchBean.getDataFilterBeans().add(multiFilterBean1);
-			}else if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN)) {
+			
+				setSearchBeanDescription(getManagedBean().getModuleCode(), searchBean, searchFilterBean1, searchFilterBean2);
+			} else if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN)) {
 				SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
 				SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
 				
 				BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
 				searchBean.getDataFilterBeans().add(multiFilterBean1);
+				
+				setSearchBeanDescription(getManagedBean().getModuleCode(), searchBean, searchFilterBean1, searchFilterBean2);
+			} else {
+				setSearchBeanDescription(searchBean);
 			}
-			
+		
 			reqDTO.setSearchBean(searchBean);
 			
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -104,10 +118,8 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 				e.printStackTrace();
 			}
 			return resDTO.getResultBean();
-			
 		}
 	}
-
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
 		return searchTrackingDiaryDataModel;
@@ -135,5 +147,26 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 		String portletTitle = "Tracking Diary";
 		return portletTitle;
 	}
-	  
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(String module, ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
+		if(searchFilterBean1.getSearchValue() == null && searchFilterBean2.getSearchValue() == null) {
+			sb.append("[tracking diary search filter empty]");
+		}
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:TrackingDiarySearchBackingBean.SearchTrackingDiaryPagingDataModel]");
+	}
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean) {
+		searchBean.setDescription("searchTrackingDiary [Caller:TrackingDiarySearchBackingBean.SearchTrackingDiaryPagingDataModel]");
+	}
 }
