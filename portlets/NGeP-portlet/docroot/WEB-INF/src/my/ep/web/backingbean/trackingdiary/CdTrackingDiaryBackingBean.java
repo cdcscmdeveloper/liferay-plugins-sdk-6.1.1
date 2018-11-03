@@ -1,9 +1,6 @@
 package my.ep.web.backingbean.trackingdiary;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -12,7 +9,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -40,14 +36,13 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "cdTrackingDiaryBackingBean")
 @ViewScoped
-public class CdTrackingDiaryBackingBean extends
-BaseBackingBean<CdTrackingDiaryManagedBean> {
+public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryManagedBean> {
+	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CODIFICATION_SEARCH = "/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "/xhtml/cm/codification/cdTrackingDairyViewPage.xhtml";
-
-	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
-
+	
 	public CdTrackingDiaryBackingBean() {
 	}
 
@@ -58,10 +53,8 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 				) {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
-		log.info("pageChangeListener");
 		getManagedBean().getCdDocumentDataModel().reloadData();
 	}
-
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
@@ -69,7 +62,6 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 
 		public SearchTrackingDiaryPagingDataModel() {
 			super("trackingDiaryTableID");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -81,9 +73,12 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),cdObj[5]));
-			//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
-			log.info("Cd TrackingDiary docId  " + cdObj[5]);
-
+		
+			if (cdObj[5] == null) {
+				log.info("doc id is null");
+			}
+			
+			setSearchBeanDescription(searchBean,"CD", cdObj[5]);
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			CdTrackingDiaryBackingBean bb = new CdTrackingDiaryBackingBean();
@@ -92,16 +87,13 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 
 				for(PmTrackingDiary diary:resDTO.getResultBean().getResultList()){
-
 					bb.getManagedBean().setDocId(diary.getDocId());
-
 				}
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//			log.info("SearchCDTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
+		
 			return resDTO.getResultBean();
 		}
 	}
@@ -109,35 +101,7 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 	public String goToTrackingDiarySearch(Object[] unspscObj) {
 
 		getManagedBean().setObject(unspscObj);
-
-		/*SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
-		TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-
-		List<String> docTypeLs = new ArrayList<String>();
-		docTypeLs.add("CU");
-		docTypeLs.add("CE");
-
-		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),docTypeLs));
-		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),unspscObj[5]));
-		//		searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
-		log.info("Cd TrackingDiary docId  " + unspscObj[5]);
-
-		reqDTO.setSearchBean(searchBean);
-		TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
-
-
-		ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
-		resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
-
-		BigDecimal temp = (BigDecimal) unspscObj[7];
-		Long statusId =  temp.longValue();
-		for(PmTrackingDiary diary:resDTO.getResultBean().getResultList()){
-
-			this.getManagedBean().setDocId(diary.getDocId());
-			this.getManagedBean().setDocNo(diary.getDocNo());
-
-		}
-        */		
+		
 		BigDecimal tempDocId = (BigDecimal) unspscObj[5];
 		Long docId = tempDocId.longValue();
 		log.info("unspscObj[1]:" + unspscObj[1] + "--unspscObj[5]:" + unspscObj[5]);
@@ -151,7 +115,6 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
 		StatusReqDTO reqStatusDTO = new StatusReqDTO();
-
 		reqStatusDTO.setLanguageCode(languageCode);
 		reqStatusDTO.setStatusId(statusId);
 		StatusResDTO resStatusDTO = statusSO
@@ -160,22 +123,17 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 		this.getManagedBean().setDocStatus(
 				resStatusDTO.getPmStatusDesc() != null ? resStatusDTO
 						.getPmStatusDesc().getStatusName() : "Review");
-
-
-
+		
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
-		log.info("this.getManagedBean().getDocNo()"+this.getManagedBean().getDocNo());
+		log.info("doc no:" + this.getManagedBean().getDocNo());
 		codeDTO.setDocNo(this.getManagedBean().getDocNo());
 		RequestCodeResDTO codeResDTO = requestSO.retrieveUnspscCodeReviewByDocNo(codeDTO);
-		log.info("getRequestLs:"+codeResDTO.getRequestLs().size());
-
-
+	
 		this.getManagedBean().setReviewExtCodeList(null);
 		this.getManagedBean().setProceedExtCodeList(null);
 		this.getManagedBean().setRecommendExtCodeList(null);
-
 
 		if (codeResDTO.getRequestLs() != null
 				&& codeResDTO.getRequestLs().size() > 0) {
@@ -184,8 +142,6 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 				if(code.getDocNo()!=null && code.getDocNo().trim().length()>0){
 					if(code.getDocNo().substring(0, 3).compareToIgnoreCase("RNE")==0){
 						this.getManagedBean().setUnspscInd(false);
-						log.info("**extension**");
-
 						boolean colorRecommend = false;
 						boolean brandRecommend = false;
 						boolean typeRecommend = false;
@@ -198,30 +154,20 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 						}
 
 						if (!code.isRequestType()){
-
 							typeRecommend = true;
 						}
 
 						if (!code.isRequestMeasurement()){
-
 							meaRecommend = true;
 						}
 
-						if(colorRecommend && brandRecommend && typeRecommend && meaRecommend){
-
-							log.info("recomemd:"+code.getRequestId());
+						if(colorRecommend && brandRecommend && typeRecommend && meaRecommend) {
 							this.getManagedBean().getRecommendExtCodeList().add(code);
+							this.getManagedBean().getProceedExtCodeList().add(code);						
+						} else {
 							this.getManagedBean().getProceedExtCodeList().add(code);
-							
-						}else{
-
-							log.info("process:"+code.getRequestId());
-							this.getManagedBean().getProceedExtCodeList().add(code);
-							
-
 						}
-					}else{
-						log.info("****unspsc***");
+					} else {
 						this.getManagedBean().setUnspscInd(true);
 						this.getManagedBean().setRequestCode(code);
 						this.getManagedBean().getReviewExtCodeList().add(code);
@@ -235,7 +181,6 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 			}
 		}
 
-		//searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
@@ -257,7 +202,6 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
-
 			items[1] = new SelectItem(new String("ACT"), new String("ACTIVE"));
 			items[2] = new SelectItem(new String("NACT"), new String("NON ACTIVE"));
 		} catch (Exception e) {
@@ -272,7 +216,6 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 	}
 
 	public String backToPrev() {
-
 		return NAV_TO_CODIFICATION_SEARCH + "?faces-redirect=true";
 	}
 
@@ -285,17 +228,22 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 
-
-
 	public void preRenderCodificationTrackingDairyView() {
-		log.info(".................preRenderCodificationTrackingDairyView................");
-
 		this.getManagedBean().reset();
-
-
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "cdTrackingDiarySearch");
+	}
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, String docType, Object docId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[docType=%s]", docType));
+		sb.append(String.format("[docId=%s]", docId));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CdTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
 
