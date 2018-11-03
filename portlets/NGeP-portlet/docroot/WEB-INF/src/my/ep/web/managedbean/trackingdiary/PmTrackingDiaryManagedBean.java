@@ -1035,19 +1035,19 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 			
-			BaseSearchFilterBean searchFilterBean1 = new SearchFilterBean(
+			SearchFilterBean searchFilterBean1 = new SearchFilterBean(
 					"docType", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocType());
 			
-			BaseSearchFilterBean searchFilterBean2 = new SearchFilterBean(
+			SearchFilterBean searchFilterBean2 = new SearchFilterBean(
 					"docId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
 			
-			BaseSearchFilterBean searchFilterBean3 = new SearchFilterBean(
+			SearchFilterBean searchFilterBean3 = new SearchFilterBean(
 					"groupDocType", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocType());
 			
-			BaseSearchFilterBean searchFilterBean4 = new SearchFilterBean(
+			SearchFilterBean searchFilterBean4 = new SearchFilterBean(
 					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
 		
@@ -1130,10 +1130,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	 * set search bean description for tracking purpose
 	 *
 	 */
-	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, BaseSearchFilterBean searchFilterBean1, BaseSearchFilterBean searchFilterBean2) {
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("[%s=%s]", ((SearchFilterBean) searchFilterBean1).getSearchField(), ((SearchFilterBean) searchFilterBean1).getSearchValue()));
-		sb.append(String.format("[%s=%s]", ((SearchFilterBean) searchFilterBean2).getSearchField(), ((SearchFilterBean) searchFilterBean2).getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
