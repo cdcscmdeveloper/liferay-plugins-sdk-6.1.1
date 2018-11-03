@@ -1009,8 +1009,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			boolean isSearchBeanEmpty = true;
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 
-			if (getSelectedDocType() == null && getSelectedDocId() == null) {
-				log.info("PM tracking diary search filter empty");
+			if (getSelectedDocType() == null || getSelectedDocId() == null) {
+				log.info(String.format("PM tracking diary search filter empty[%s=%s][%s=%s]", "docType", getSelectedDocType(), "docId", getSelectedDocId()));
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 			
@@ -1111,9 +1111,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
 		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
-		if(searchFilterBean1.getSearchValue() == null && searchFilterBean2.getSearchValue() == null) {
-			sb.append("[tracking diary search filter empty]");
-		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }

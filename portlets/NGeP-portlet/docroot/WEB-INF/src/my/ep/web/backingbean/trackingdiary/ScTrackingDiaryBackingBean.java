@@ -95,10 +95,7 @@ public class ScTrackingDiaryBackingBean extends
 
 	public void search() {
 		log.debug("ScTrackingDiaryBackingBean search");
-		if ((null == getManagedBean().getSearchDocumentType()) 
-//				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
-//				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
-				) {
+		if (null == getManagedBean().getSearchDocumentType()) {
 			throw new EpException(MessageConst.ERROR_776101);
 		}
 		getManagedBean().getScRNDocumentDataModel().reloadData();
@@ -116,17 +113,14 @@ public class ScTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
-//			userSO.retrieveUserByUserId;
 			Object[] scObj = getManagedBean().getScObj();
 			
-			if (scObj[3] == null && scObj[0] == null) {
-				log.info("SC tracking diary search filter empty");
+			if (scObj[3] == null || scObj[0] == null) {
+				log.info(String.format("SC tracking diary search filter empty[%s=%s][%s=%s]", "docType", scObj[3], "docId", scObj[0]));
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),scObj[3]));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),scObj[0]));
 			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),scObj[3]);
 			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),scObj[0]);
 			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),scObj[3]);

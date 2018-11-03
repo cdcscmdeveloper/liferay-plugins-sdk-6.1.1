@@ -70,8 +70,9 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			
-			if (getManagedBean().getDocType() == null && getManagedBean().getDocId() == null) {
-				log.info(getManagedBean().getModuleCode() + " tracking diary search filter empty");
+			if (getManagedBean().getDocType() == null || getManagedBean().getDocId() == null) {
+				log.info(String.format("[%] tracking diary search filter empty[%s=%s][%s=%s]", getManagedBean().getModuleCode(), "docType", 
+						getManagedBean().getDocType(), "docId", getManagedBean().getDocId()));
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 			
@@ -156,9 +157,6 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
-		if(searchFilterBean1.getSearchValue() == null && searchFilterBean2.getSearchValue() == null) {
-			sb.append("[tracking diary search filter empty]");
-		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:TrackingDiarySearchBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 	

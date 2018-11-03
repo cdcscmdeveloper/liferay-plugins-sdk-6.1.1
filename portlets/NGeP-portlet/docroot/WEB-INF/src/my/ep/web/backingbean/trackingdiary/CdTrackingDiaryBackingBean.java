@@ -72,11 +72,11 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 			Object[] cdObj = getManagedBean().getObject();
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),cdObj[5]));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(),"CD"));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId", SearchOperator.OPERATOR_EQUALS.value(),cdObj[5]));
 		
 			if (cdObj[5] == null) {
-				log.info("CD doc id tracking diary search filter empty");
+				log.info("CD tracking diary search filter empty");
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 			
@@ -245,9 +245,6 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[docType=%s]", docType));
 		sb.append(String.format("[docId=%s]", docId));
-		if(docType == null && docId == null) {
-			sb.append("[tracking diary search filter empty]");
-		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CdTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
