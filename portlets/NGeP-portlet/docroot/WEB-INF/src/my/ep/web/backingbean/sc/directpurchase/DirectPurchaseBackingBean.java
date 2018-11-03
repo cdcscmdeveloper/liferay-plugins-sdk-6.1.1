@@ -272,7 +272,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			Long docId = (Long) dpObj[0];
 			
 			if (docId == null && docType == null) {
-				log.info(String.format("DP tracking diary search filter empty[%s=%s][%s=%s]", "docType", docType, "docId", docId));
+				log.info(String.format("DirectPurchase tracking diary search filter empty[%s=%s][%s=%s]", "docType", docType, "docId", docId));
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 
