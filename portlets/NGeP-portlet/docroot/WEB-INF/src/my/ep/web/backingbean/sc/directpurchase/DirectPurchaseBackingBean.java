@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -269,6 +270,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			Object[] dpObj = getManagedBean().getDpObj();
 			String docType = (String) dpObj[3];
 			Long docId = (Long) dpObj[0];
+			
+			if (docId == null && docType == null) {
+				log.info(String.format("DP tracking diary search filter empty[%s=%s][%s=%s]", "docType", docType, "docId", docId));
+				return new SearchResultBean<PmTrackingDiary>();
+			}
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(), docType);
@@ -291,6 +297,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			searchBean.getDataFilterBeans().add(multiFilterBean3);
 
 			reqDTO.setSearchBean(searchBean);
+			
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+			
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
 				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
@@ -766,6 +775,16 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 		return pmOrgProfile;
 	}
-
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:DirectPurchaseBackingBean.SearchTrackingDiaryPagingDataModel]");
+	}
 }
 
