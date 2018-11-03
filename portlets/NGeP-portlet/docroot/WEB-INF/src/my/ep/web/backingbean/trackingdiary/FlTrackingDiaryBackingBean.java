@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
@@ -294,6 +295,14 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
+			
+			String docType = getManagedBean().getvFlDocument().getDocType();
+			Long docId = getManagedBean().getvFlDocument().getDocId();
+			
+			if (docType == null || docId == null) {
+				log.info(String.format("FL tracking diary search filter empty[%s=%s][%s=%s]", "docType", docType, "docId", docId));
+				return new SearchResultBean<PmTrackingDiary>();
+			}
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocType());
@@ -305,8 +314,8 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
 			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
 			searchBean.getDataFilterBeans().add(multiFilterBean3);
-			System.out.println("Fl TrackingDiary docNo " + getManagedBean().getvFlDocument().getDocNo());
-			System.out.println("Fl TrackingDiary DocType " + getManagedBean().getvFlDocument().getDocType());
+		
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -317,7 +326,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//		                      	System.out.println("resDTO.getResultBean()== ==================================: "+ resDTO.getResultBean().getTotalRecord());
+
 			return resDTO.getResultBean();
 			
 		}
@@ -344,7 +353,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 	
-	  /**
+	   /**
 		 * retrieve financial year options for current year and past 7 years
 		 * @return financial year options
 		 */
@@ -493,5 +502,16 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 			return (this.getManagedBean().isFlFulfilmentRequisitioner() || this.getManagedBean().isFlFulfilmentApprover()
 					|| this.getManagedBean().isFlFulfilmentRecevingOfficer()
 					|| this.getManagedBean().isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
+		}
+		
+		/**
+		 * set search bean description for tracking purpose
+		 *
+		 */
+		private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+			sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
+			searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:FlTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 		}
 }

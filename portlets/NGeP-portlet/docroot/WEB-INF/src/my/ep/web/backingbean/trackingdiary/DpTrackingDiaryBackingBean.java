@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
@@ -120,10 +121,7 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 	 */
 	public void search() {
 		log.info("DpTrackingDiaryBackingBean search");
-		if ((null == getManagedBean().getSearchDocumentType()) 
-				//			&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
-				//			&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
-				) {
+		if (null == getManagedBean().getSearchDocumentType()) {
 			throw new EpException(MessageConst.ERROR_776101);
 		}
 		getManagedBean().getDpDocumentDataModel().reloadData();
@@ -147,10 +145,13 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 			Object[] dpObj = getManagedBean().getDpObj();
 			String docType = (String) dpObj[3];
 			Long docId = (Long) dpObj[0];
+			
+			if (docType == null || docId == null) {
+				log.info(String.format("DP tracking diary search filter empty[%s=%s][%s=%s]", "docType", docType, "docId", docId));
+				return new SearchResultBean<PmTrackingDiary>();
+			}
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),dpObj[3]));
-			//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),dpObj[0]));
 			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(), docType);
 			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(), docId);
 			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(), docType);
@@ -169,7 +170,8 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
 			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
 			searchBean.getDataFilterBeans().add(multiFilterBean3);
-
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+			
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
@@ -267,6 +269,17 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 
 	private ISourcingIntegrationSO getSourcingIntegrationSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+	}
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
+		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:DpTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
 
