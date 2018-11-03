@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
@@ -93,10 +94,14 @@ public class CmTrackingDiaryBackingBean extends
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
-			//searchBean.getDataFilterBeans().add(new SearchFilterBean("actionedBy",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSmSupplier().getSmPersonnel().getPmUser().getUserId()));
-				
-			System.out.println("TrackingDiaryReqDTO" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
-
+						
+			if (getManagedBean().getCmSupplierItem().getSupplierItemId() == 0) {
+				log.info("CM tracking diary search filter empty");
+				return new SearchResultBean<PmTrackingDiary>();
+			}
+			
+			setSearchBeanDescription(searchBean,"CM", getManagedBean().getCmSupplierItem().getSupplierItemId());
+			
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
@@ -111,16 +116,14 @@ public class CmTrackingDiaryBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
+
 			return resDTO.getResultBean();
-			
 		}
 	}
 
 	public String goToTrackingDiarySearch(Long supplierItemId) {
-//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
+
 		log.info("goToTrackingDiarySearch - start:" + supplierItemId);
-		//getManagedBean().setCmSupplierItem(cmSupplierItem);
 		
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 		SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
@@ -131,7 +134,7 @@ public class CmTrackingDiaryBackingBean extends
 
 		reqDTO.setSupplierItemId(supplierItemId);
 		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
-
+       
 		bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		getManagedBean().setCmSupplierItem(resDTO.getSupplierItem());
 		
@@ -142,52 +145,32 @@ public class CmTrackingDiaryBackingBean extends
 		TrackingDiaryReqDTO reqDTOPM = new TrackingDiaryReqDTO();
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
-		//searchBean.getDataFilterBeans().add(new SearchFilterBean("actionedBy",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSmSupplier().getSmPersonnel().getPmUser().getUserId()));
 			
 		log.info("TrackingDiaryReqDTO item Id:" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
 
 		reqDTOPM.setSearchBean(searchBean);
 		TrackingDiaryResDTO resDTOPM = new TrackingDiaryResDTO();
 		
-			ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
-			resDTOPM = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTOPM);
+		ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
+		resDTOPM = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTOPM);
 			
-			for(PmTrackingDiary diary : resDTOPM.getResultBean().getResultList()){
-				this.getManagedBean().setDocId(diary.getDocId());
-			}
+		for(PmTrackingDiary diary : resDTOPM.getResultBean().getResultList()){
+			this.getManagedBean().setDocId(diary.getDocId());
+		}
 			
-			CatalogueReqDTO reqDTOZone = new CatalogueReqDTO();
+		CatalogueReqDTO reqDTOZone = new CatalogueReqDTO();
 			
-			reqDTOZone.setSupplierId(resDTO.getSupplierItem().getSmSupplier().getSupplierId());
+		reqDTOZone.setSupplierId(resDTO.getSupplierItem().getSmSupplier().getSupplierId());
 			
-			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTOZone);
-			System.out.println("size:"+resDTO.getSupplierZoneLs().size());
-			bb.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+		resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTOZone);
 			
-	/*		//sort Tier
-			if(bb.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && !bb.getManagedBean().getSelectedMaintainItem().getCmTierPricings().isEmpty()){
-				groupPricesByTier(bb.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), "S");
-			}
-			//sort Tier	Promotion		
-			if(bb.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings() != null && !bb.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().isEmpty()){
-				groupPricesByTier(bb.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings(), "P");
-			}
-			//sort Zonal Tier			
-			if(bb.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings() != null && !bb.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().isEmpty()){
-				groupPricesByTier(bb.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), "S");
-			}
-			//sort Zonal Tier Promotion
-			if(bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings() != null && !bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()){
-				groupPricesByTier(bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
-			}*/
-			log.info("goToTrackingDiarySearch - end:" + supplierItemId);
+		bb.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 			
-			return NAV_TO_CATALOG_DETAIL_SEARCH;
-		//return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
+		log.info("goToTrackingDiarySearch - end:" + supplierItemId);
+			
+		return NAV_TO_CATALOG_DETAIL_SEARCH;
 	}
 	
-
-
 	public void reset(){
 		this.getManagedBean().setSearchItemCodeValue(null);
 		this.getManagedBean().setSearchItemNameValue(null);
@@ -240,7 +223,6 @@ public class CmTrackingDiaryBackingBean extends
 	}
 
 	public String backToPrev() {
-		System.out.println("***************BACK_TO_PREV**********"+BACK_TO_PREV);
 		return BACK_TO_PREV + "?faces-redirect=true";
 	}
 
@@ -253,19 +235,14 @@ public class CmTrackingDiaryBackingBean extends
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 	
-	
 	public void preRenderCMTrackingDairyView() {
-		log.info(".................preRenderCMTrackingDairyView................");
-		
 		this.getManagedBean().reset();
-		
-		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "cmTrackingDiarySearch");
 	}
 	
-	private <T extends CmPricing> void groupPricesByTier(List<T> cmPricings, String stand_id){
+	private <T extends CmPricing> void groupPricesByTier(List<T> cmPricings, String stand_id) {
 
 		if(stand_id.equalsIgnoreCase("S")){
 			//Order Tier or Zonal Tier
@@ -320,13 +297,21 @@ public class CmTrackingDiaryBackingBean extends
 					return p1.getFromQty()<p2.getFromQty()?-1:0;
 				}
 			});
-
 		}
-
-
 	}
 	
-	
-
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, String docType, Object docId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[docType=%s]", docType));
+		sb.append(String.format("[docId=%s]", docId));
+		if(docType == null && docId == null) {
+			sb.append("[tracking diary search filter empty]");
+		}
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CmTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
+	}
 }
 
