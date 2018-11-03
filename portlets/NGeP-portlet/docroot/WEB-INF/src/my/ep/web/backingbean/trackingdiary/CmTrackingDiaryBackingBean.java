@@ -90,16 +90,16 @@ public class CmTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
-
-			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
-						
+			
 			if (getManagedBean().getCmSupplierItem().getSupplierItemId() == 0) {
 				log.info("CM tracking diary search filter empty");
 				return new SearchResultBean<PmTrackingDiary>();
 			}
-			
+
+			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
+					
 			setSearchBeanDescription(searchBean,"CM", getManagedBean().getCmSupplierItem().getSupplierItemId());
 			
 			reqDTO.setSearchBean(searchBean);
@@ -308,9 +308,6 @@ public class CmTrackingDiaryBackingBean extends
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[docType=%s]", docType));
 		sb.append(String.format("[docId=%s]", docId));
-		if(docType == null && docId == null) {
-			sb.append("[tracking diary search filter empty]");
-		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CmTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
