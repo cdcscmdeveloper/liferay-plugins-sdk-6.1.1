@@ -5,6 +5,7 @@ import javax.faces.bean.RequestScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
@@ -57,12 +58,19 @@ public class SmTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
+			
+			if (getManagedBean().getSmAppl().getApplId() == null) {
+				log.info("SM tracking diary search filter empty");
+				return new SearchResultBean<PmTrackingDiary>();
+			}
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SR"));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmAppl().getApplId()));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmSupplier().getSmAppl().getApplNo()));
+
 			log.info("getSmDocumentDataModel docNo " + getManagedBean().getSmAppl().getApplNo());
+			
+			setSearchBeanDescription(searchBean, "SR", getManagedBean().getSmAppl().getApplId());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -73,15 +81,12 @@ public class SmTrackingDiaryBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
+
 			return resDTO.getResultBean();
-			
 		}
 	}
 
 	public String goToTrackingDiarySearch(SmAppl smAppl) {
-//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setSmSupplier(smSupplier);
 		getManagedBean().setSmAppl(smAppl);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_SMSUPPLIER_DETAIL_SEARCH + "?faces-redirect=true";
@@ -109,6 +114,16 @@ public class SmTrackingDiaryBackingBean extends
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
-
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, String docType, Long docId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[docType=%s]", docType));
+		sb.append(String.format("[docId=%s]", String.valueOf(docId)));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:SmTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
+	}
 }
 
