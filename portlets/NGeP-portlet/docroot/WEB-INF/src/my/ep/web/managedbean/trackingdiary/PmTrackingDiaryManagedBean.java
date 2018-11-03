@@ -1010,7 +1010,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 
 			if (getSelectedDocType() == null && getSelectedDocId() == null) {
-				log.info("PM trakcing diary search filter values empty");
+				log.info("PM tracking diary search filter empty");
 				return new SearchResultBean<PmTrackingDiary>();
 			}
 			
