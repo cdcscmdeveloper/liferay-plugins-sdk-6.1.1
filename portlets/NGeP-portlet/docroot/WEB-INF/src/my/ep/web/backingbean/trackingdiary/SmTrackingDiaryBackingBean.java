@@ -123,9 +123,6 @@ public class SmTrackingDiaryBackingBean extends
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[docType=%s]", docType));
 		sb.append(String.format("[docId=%s]", String.valueOf(docId)));
-		if(docType == null && docId == null) {
-			sb.append("[tracking diary search filter empty]");
-		}
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:SmTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 }
