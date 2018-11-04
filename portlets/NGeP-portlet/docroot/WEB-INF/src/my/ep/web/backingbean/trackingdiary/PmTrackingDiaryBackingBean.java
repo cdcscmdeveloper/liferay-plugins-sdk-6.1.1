@@ -386,8 +386,6 @@ public class PmTrackingDiaryBackingBean extends
 
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
-
-		
 	}
 	
 	public void setTrackingDiaryParam(String docType, Long docId, boolean isFilterBySupplier){
@@ -397,8 +395,6 @@ public class PmTrackingDiaryBackingBean extends
 	}
 	
 	public void onFunctionSelect() {
-		System.out.println("............onFunctionSelect..........this.getManagedBean().getFunctionType()...."+this.getManagedBean().getFunctionType());
-
 		if (this.getManagedBean().getFunctionType() != null) {
 			if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase(ParameterConst.ORG_PROFILE_PARAM_CODE)) {
@@ -426,21 +422,17 @@ public class PmTrackingDiaryBackingBean extends
 			} else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("FO")) {
 				resetFOrgSearchBean();
-			}else if (this.getManagedBean().getFunctionType()
+			} else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("UG")) {
 				resetUGSearchBean();
-			}else if (this.getManagedBean().getFunctionType()
+			} else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("CC")) {
 				resetCategorySearchBean();
 			}
 		}
-
 	}
 	
-	
 	public void onTransactionTypeSelect() {
-		System.out.println("............onTransactionTypeSelect..........this.getManagedBean().getTransactionType...."+this.getManagedBean().getTransactionType());
-
 		if (this.getManagedBean().getTransactionType() != null) {
 //			if (this.getManagedBean().getTransactionType()
 //					.equalsIgnoreCase(ParameterConst.ORG_PROFILE_PARAM_CODE)) {
@@ -526,6 +518,7 @@ public class PmTrackingDiaryBackingBean extends
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
+	
 	public String goToUSGTrackingDiarySearch(PmUserGroup userGroup) {
 		log.debug("**********goToUSGTrackingDiarySearch************"
 				+ userGroup.getUserGroupId());
@@ -605,8 +598,6 @@ public class PmTrackingDiaryBackingBean extends
 		getManagedBean().setMultiRuleType(true);
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
-		// ///
-
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
@@ -620,7 +611,6 @@ public class PmTrackingDiaryBackingBean extends
 			getManagedBean().setMultiRuleType(false);
 			getManagedBean().setSelectedDocId(zone.getZoneId());
 			getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
-			// ///
 
 			return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 		}
@@ -628,7 +618,6 @@ public class PmTrackingDiaryBackingBean extends
 	}
 
 	public String backToPrev() {
-
 		return NAV_TO_PM_SEARCH + "?faces-redirect=true";
 	}
 
@@ -746,25 +735,12 @@ public class PmTrackingDiaryBackingBean extends
 				this.getManagedBean().getOrganisationSearchBean()
 						.setOrgProfile(new PmOrgProfile());
 			}
-			//
-			// this.getManagedBean().getOrganisationSearchBean().getOrgProfile()
-			// .setOrgName("");
-
+		
 			if (this.getManagedBean().getOrganisationSearchBean().getOrgType()
 					.getParameterId() != null) {
-				System.out
-						.println("...........this.getManagedBean().getOrganisationSearchBean().getOrgType().getParameterId()="
-								+ this.getManagedBean()
-										.getOrganisationSearchBean()
-										.getOrgType().getParameterId());
 				PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this
 						.getManagedBean().getOrganisationSearchBean()
 						.getOrgType().getParameterId());
-				System.out.println("...........pmParameter" + pmParameter);
-				System.out.println("...........pmParameter.getParameterCode()"
-						+ pmParameter.getParameterCode());
-				System.out.println("...........pmParameter.getParameterCode()"
-						+ pmParameter.getParameterId());
 				this.getManagedBean().getOrganisationSearchBean().getOrgType()
 						.setParameterCode(pmParameter.getParameterCode());
 
@@ -839,16 +815,8 @@ public class PmTrackingDiaryBackingBean extends
 		resDTO = orgProfileSO.retrieveValidOrgProfile(reqDTO);
 		if (resDTO.isSuccessful()) {
 			pmOrgValidity = resDTO.getPmOrgValidity();
-			// System.out.println("size>>>>" +
-			// resDTO.getOrgProfileResultBean().getResultList().size());
-			// searchOrgProfile
-			// for(PmOrgProfile
-			// temp:resDTO.getOrgProfileResultBean().getResultList()){
-			// System.out.println(temp.getPmOrgValidity().getOrgName());
-			// }
 		}
 		return pmOrgValidity;
-
 	}
 
 	public String constructConditionFields() {
@@ -857,41 +825,6 @@ public class PmTrackingDiaryBackingBean extends
 		sb.append(getManagedBean().getOrganisationSearchBean().getOrgType()
 				.getParameterId());
 		sb.append("|recordStatus^1");
-		// if(OrganizationType.MINISTRY.value()
-		// .equals(getManagedBean().getOrganisationSearchBean().getOrgType().getParameterCode())){
-		// if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-		// sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		// }
-		// }else if(OrganizationType.DEPARTMENT.value()
-		// .equals(getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterCode())){
-		// if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-		// sb.append("|");
-		// sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
-		// sb.append("^");
-		// sb.append(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		// }else
-		// if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
-		// sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		// }
-		// }else if(OrganizationType.DIVISION.value()
-		// .equals(getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterCode())){
-		// if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-		// sb.append("|");
-		// sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-		// sb.append("^");
-		// sb.append(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		// }else
-		// if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
-		// sb.append("|");
-		// sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
-		// sb.append("^");
-		// sb.append(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		// }else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
-		// sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		// }
-		// }
-
 		return sb.toString();
 	}
-
 }
