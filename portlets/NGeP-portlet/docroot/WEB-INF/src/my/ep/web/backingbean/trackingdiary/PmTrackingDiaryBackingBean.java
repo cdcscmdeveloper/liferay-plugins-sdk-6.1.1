@@ -190,7 +190,7 @@ public class PmTrackingDiaryBackingBean extends
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
 		if(userSO != null && resDTO.getPmUser() !=null){
 			return resDTO.getPmUser().getUserName();
-		}else{
+		} else {
 			return "";
 		}
 		
@@ -351,7 +351,6 @@ public class PmTrackingDiaryBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
-//		return this.getManagedBean().getBackURL();
 	}
 	/**
 	 * Get Role description by role code and language.
@@ -371,7 +370,6 @@ public class PmTrackingDiaryBackingBean extends
 		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
 	}
 
-	
 	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
 		redirectToSupplierTrackingDiary(docType, docId, false);
 	}
