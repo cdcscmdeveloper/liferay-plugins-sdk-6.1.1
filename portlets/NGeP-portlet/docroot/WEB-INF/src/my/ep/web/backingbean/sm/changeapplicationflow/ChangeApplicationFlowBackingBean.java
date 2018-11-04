@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -140,6 +141,8 @@ public class ChangeApplicationFlowBackingBean extends
 						.value(), appl.getApplNo()));
 		searchBean.getSortColumns().add(new SearchOrderBean("actionedDate"));
 		reqDTO.setSearchBean(searchBean);
+		
+		setSearchBeanDescription(searchBean, appl.getApplNo());
 
 		TrackingDiaryResDTO resDTO = SmServiceLookup.getTrackingDiarySO()
 				.retrieveTrackingDiaryBySearchBean(reqDTO);
@@ -161,5 +164,15 @@ public class ChangeApplicationFlowBackingBean extends
 				}
 			}
 		}
+	}
+	
+	/**
+	 * set search bean description for tracking purpose
+	 *
+	 */
+	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, String docNo) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[docNo=%s]", docNo));
+		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:ChangeApplicationFlowBackingBean.initWorkflowStatus]");
 	}
 }
