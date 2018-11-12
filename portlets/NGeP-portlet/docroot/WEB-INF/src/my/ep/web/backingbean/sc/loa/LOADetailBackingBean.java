@@ -2735,15 +2735,6 @@ public class LOADetailBackingBean extends
 				}	
 			}
 
-			//Bug #24061
-			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
-				if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
-					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
-					}
-				}
-			}
-
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -3119,11 +3110,11 @@ public class LOADetailBackingBean extends
 		}
 		// validation for fulfillment schedule and progressivepayment
 		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome)) {
-			//Bug #24061
-			if(getManagedBean().getScQt() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
-				// check whether loa from s1 or s2.
-				if(scLoa.getScLoiLoa() != null){
-					if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+			// check whether loa from s1 or s2.
+			if(scLoa.getScLoiLoa() != null){
+				if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+					//Bug #24061
+					if(getManagedBean().getScQt() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
 						// For s2
 						if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
 							if(scLoa.getScQtProgPayments() != null && scLoa.getScQtProgPayments().size()>0){
@@ -3131,7 +3122,7 @@ public class LOADetailBackingBean extends
 									progressivePayValidation(progressivePayment);
 								}
 							}
-
+		
 						} else if (("F").equals(getManagedBean().getScQt()
 								.getScheduleType())) {
 							if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
@@ -3140,12 +3131,12 @@ public class LOADetailBackingBean extends
 								}
 							}
 						}
-					} else{
-						// for s1
-						if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
-							for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-								freqScheduleValidation(scQtSchedule);
-							}
+					}
+				} else{
+					// for s1
+					if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+							freqScheduleValidation(scQtSchedule);
 						}
 					}
 				}
