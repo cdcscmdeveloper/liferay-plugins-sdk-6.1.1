@@ -1138,7 +1138,7 @@ public class DirectLOABackingBean extends
 			}
 			
 			//Bug #24061
-			if(getManagedBean().getScQt() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
 				if (scLoa.getScQtProgPayments() != null
 						&& scLoa.getScQtProgPayments().size() > 0) {
 					for (ScQtProgressivePayment progressivePayment : scLoa
@@ -1416,7 +1416,7 @@ public class DirectLOABackingBean extends
 			saveProgressivePaymntList();
 			constructScheduleDetails();
 			//Bug #24061
-			if(getManagedBean().getScQt() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
 				if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 						freqScheduleValidation(scQtSchedule);
