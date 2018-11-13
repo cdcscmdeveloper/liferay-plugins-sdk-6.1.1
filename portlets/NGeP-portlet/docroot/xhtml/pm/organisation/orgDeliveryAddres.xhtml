@@ -34,8 +34,8 @@
 			<p:column style="width:15%;" headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu label="#{lbl['lbl.pm.financialorg.status']}" id="deliveryAddressStatusId" 
 					disabled="#{address.brandNew}" style="width:135px;"	value="#{address.recordStatusFlg}" required="true">
-					<p:ajax event="change" listener="#{organisationBackingBean.onChangeAddressStatus(address)}"
-						update="deliveryAddressStatusId" />
+					<p:ajax event="change" listener="#{organisationBackingBean.onChangeAddressStatus(address, index)}"
+						update="deliveryAddressStatusId" partialSubmit="true" process="@this"/>
 					<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>				
 				<p:message for="deliveryAddressStatusId" id="deliveryAddressStatusIdMsg" display="icon" />
