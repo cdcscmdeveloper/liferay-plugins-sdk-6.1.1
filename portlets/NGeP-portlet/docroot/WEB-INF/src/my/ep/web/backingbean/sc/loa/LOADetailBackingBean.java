@@ -3113,21 +3113,23 @@ public class LOADetailBackingBean extends
 			// check whether loa from s1 or s2.
 			if(scLoa.getScLoiLoa() != null){
 				if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
-					//Bug #24061
-					if(getManagedBean().getScQt() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(getManagedBean().getScQt().getFulfilmentType().getParameterCode())){
-						// For s2
-						if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-							if(scLoa.getScQtProgPayments() != null && scLoa.getScQtProgPayments().size()>0){
-								for (ScQtProgressivePayment progressivePayment : scLoa.getScQtProgPayments()) {
-									progressivePayValidation(progressivePayment);
+					if (getManagedBean().getScQt() != null) {
+						//Bug #24061
+						if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
+							// For s2
+							if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+								if(scLoa.getScQtProgPayments() != null && scLoa.getScQtProgPayments().size()>0){
+									for (ScQtProgressivePayment progressivePayment : scLoa.getScQtProgPayments()) {
+										progressivePayValidation(progressivePayment);
+									}
 								}
-							}
-		
-						} else if (("F").equals(getManagedBean().getScQt()
-								.getScheduleType())) {
-							if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
-								for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-									freqScheduleValidation(scQtSchedule);
+			
+							} else if (("F").equals(getManagedBean().getScQt()
+									.getScheduleType())) {
+								if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+									for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+										freqScheduleValidation(scQtSchedule);
+									}
 								}
 							}
 						}
