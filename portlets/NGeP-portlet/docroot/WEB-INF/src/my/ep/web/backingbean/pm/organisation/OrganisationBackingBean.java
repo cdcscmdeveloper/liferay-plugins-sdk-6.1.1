@@ -2775,14 +2775,15 @@ public class OrganisationBackingBean extends
 		return resDTO;
 	}
 	
-	public void onChangeAddressStatus(PmAddressType addressType) {
+	public void onChangeAddressStatus(PmAddressType addressType, int index) {
 		if (addressType != null) {		
 			Long roSize = addressType.getReceivingOfficerNum();
 			
 			log.info(":::onChangeAddressStatus() adrs id: "+ addressType.getPmAddress().getAddressId() +". RO list size: "+ roSize +". active[1]/inactive[0], user choose: "+ addressType.getRecordStatusFlg());
 
 			if (roSize > 0 && addressType.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				log.info(":::onChangeAddressStatus()...yes u should appear bro!");
+				log.info(":::onChangeAddressStatus() adrsTypeId: "+ addressType.getAddressTypeId() +". row index: "+ index);
+				this.getManagedBean().getAddressTypesList().get(index).setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				throw new EpException(MessageConst.ERROR_775139);
 			}
 		}
