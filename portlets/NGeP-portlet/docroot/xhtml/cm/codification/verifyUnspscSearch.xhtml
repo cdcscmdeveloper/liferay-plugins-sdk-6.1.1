@@ -153,9 +153,16 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.title']}
+					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 				</f:facet>
 				#{unspscObj.unspscTitle}
+			</p:column>
+			
+			<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
+				</f:facet>
+				#{unspscObj.unspscTitleEng}
 			</p:column>
 
 				</p:dataTable>
