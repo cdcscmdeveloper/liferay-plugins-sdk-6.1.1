@@ -2200,6 +2200,9 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
+		} catch (Exception e) {
+			log.info("error to validate save appl no:"
+					+ getManagedBean().getSmAppl().getApplNo(), e);
 		}
 
 		finally {
@@ -5690,9 +5693,8 @@ public class SmApplicationBackingBean extends
 					.isSameAsHq());
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} catch (Exception e) {
-			log.debug(getManagedBean().getCurrentPageType() + "|"
-					+ getManagedBean().getSmAppl().getApplNo() + "|"
-					+ e.getMessage());
+			log.info("error to save appl no:"
+					+ getManagedBean().getSmAppl().getApplNo(), e);
 		} finally {
 
 			retriveLatestApplAfterUpdate("", "");
@@ -8174,10 +8176,11 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getApplnOverLapRemarks());
 			}
 
-			// #17064 - update establish_date in supplier if there is any changes
+			// #17064 - update establish_date in supplier if there is any
+			// changes
 			if (SmCommonUtil.isHasDifferences(getManagedBean().getLatestAppl(),
-					getManagedBean().getSmAppl(), new String[] {
-							"establishDate" })) {
+					getManagedBean().getSmAppl(),
+					new String[] { "establishDate" })) {
 				reqDTO.setEstablishDate(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getEstablishDate());
 
@@ -8220,9 +8223,10 @@ public class SmApplicationBackingBean extends
 						List<SmAppl> inProgressApplList = SmCommonUtil
 								.getActiveApplListBySupplier(getManagedBean()
 										.getSmAppl().getSmSupplier());
-						
+
 						if (!EntityHelper.isCollectionEmpty(inProgressApplList)) {
-							log.info("in progress applicaition size:"+inProgressApplList.size());
+							log.info("in progress applicaition size:"
+									+ inProgressApplList.size());
 							for (SmAppl tmp : inProgressApplList) {
 								if (tmp.getApplType() != null
 										&& !tmp.getApplType()
