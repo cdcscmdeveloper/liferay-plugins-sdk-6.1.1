@@ -929,6 +929,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
+		
 
 		/**
 		 * Instantiates a new search paging data model.
@@ -1577,6 +1578,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			
 			
 		}
+	}
+	
+	public void reset(){
+		
+		this.setItemCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.setItemNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		
+		
 	}
 	
 	
