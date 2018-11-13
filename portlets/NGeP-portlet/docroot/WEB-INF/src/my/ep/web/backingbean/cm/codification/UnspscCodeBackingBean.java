@@ -2622,9 +2622,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by Catalog_Admin");
-			statusReqDTO.setStatusId(15004L);
+			//#22008 - changed status and action/desc string
+			statusReqDTO.setStatusId(15002L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan.";
+			String actionDesc = "Kod lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah disyorkan oleh " + reqDTO.getUserName();
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
 
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -2874,6 +2875,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
+		//this.getManagedBean().setTaskName("Review Request");
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
