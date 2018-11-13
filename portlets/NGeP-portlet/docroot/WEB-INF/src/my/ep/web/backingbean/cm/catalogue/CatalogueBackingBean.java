@@ -9011,6 +9011,44 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			stateSO = null;
 		}
 	}
+	
+	public void resetAction() {
+		log.info("resetAction");
+		
+		this.getManagedBean().reset();
+		
+		if(getManagedBean().getTabActiveIndex() == 0){
+			log.info("resetAction1");
+			this.getManagedBean().getDraftSearchDataModel().reloadData();
+		}
+		
+		if(getManagedBean().getTabActiveIndex() == 1){
+			log.info("resetAction2");
+			this.getManagedBean().getApprovalSearchDataModel().reloadData();
+		}
+		
+		if(getManagedBean().getTabActiveIndex() == 2){
+			log.info("resetAction3");
+			this.getManagedBean().getApprovedSearchDataModel().reloadData();
+		}
+		
+		if(getManagedBean().getTabActiveIndex() == 3){
+			log.info("resetAction4");
+			this.getManagedBean().getRejectSearchDataModel().reloadData();
+		}
+		
+		if(getManagedBean().getTabActiveIndex() == 4){
+			log.info("resetAction5");
+			this.getManagedBean().getPublishSearchDataModel().reloadData();
+		}
+
+		if(getManagedBean().getTabActiveIndex() == 5){
+			log.info("resetAction6");
+			this.getManagedBean().getExpiredSearchDataModel().reloadData();
+		}
+	}
+	
+	
 
 	/**
 	 * adds CmSupplierItems To The List.
