@@ -91,11 +91,18 @@
 
 			</p:column>
 			<p:column sortBy="#{unspscObj1.unspscTitle}">
-				<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.title']}
+					<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 				</f:facet>
 				#{unspscObj1.unspscTitle}
 			</p:column>
+				<p:column sortBy="#{unspscObj1.unspscTitleEng}">
+					<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
+				</f:facet>
+				#{unspscObj1.unspscTitleEng}
+			</p:column>
+				
 
 		</p:dataTable>
 
