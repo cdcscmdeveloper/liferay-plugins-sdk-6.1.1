@@ -375,6 +375,7 @@ public class PmTrackingDiaryBackingBean extends
 	}
 	
 	public void redirectToSupplierTrackingDiary(String docType, Long docId, boolean isFilterBySupplier)  throws IOException,PortalException, SystemException{
+		log.info("redirectToSupplierTrackingDiary - start:docType=" + docType + " docId=" + docId + " isFilterBySupplier="+ isFilterBySupplier);
 		setTrackingDiaryParam(docType, docId, isFilterBySupplier);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
