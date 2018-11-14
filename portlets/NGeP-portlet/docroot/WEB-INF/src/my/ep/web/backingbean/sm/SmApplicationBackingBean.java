@@ -2565,8 +2565,11 @@ public class SmApplicationBackingBean extends
 		boolean validSave = true;
 		switch (currentPageType) {
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-			validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
-					validSave, getManagedBean(), currentTab);
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
+						validSave, getManagedBean(), currentTab);
+			}
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
