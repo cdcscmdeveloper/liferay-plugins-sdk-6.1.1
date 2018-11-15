@@ -2623,9 +2623,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by Catalog_Admin");
 			//#22008 - changed status and action/desc string
-			statusReqDTO.setStatusId(15002L);
+			String actionDesc;
+			if(this.getManagedBean().isRecommendExtension()){
+				log.info("Recommend extension to supplier.");
+				statusReqDTO.setStatusId(15002L);
+				actionDesc = "Kod lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah disyorkan oleh " + reqDTO.getUserName();
+			}else{
+				log.info("Submit extension for endorsement.");
+				statusReqDTO.setStatusId(15004L);
+				actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan";
+			};
+			
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			String actionDesc = "Kod lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah disyorkan oleh " + reqDTO.getUserName();
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
 
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -3532,11 +3541,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 
 				if(colorRecommend && brandRecommend && typeRecommend && meaRecommend){
+					this.getManagedBean().setRecommendExtension(true);
 					this.getManagedBean().setExtensionConfirmationMsg(ResourceBundleUtils.getMessage("lbl.cm.extension.confirmation.recommend",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 
 				}else{
-
+					this.getManagedBean().setRecommendExtension(false);
 					this.getManagedBean().setExtensionConfirmationMsg(ResourceBundleUtils.getMessage("lbl.cm.extension.confirmation.proceed",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 
@@ -3544,7 +3554,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			}
 		}
-
+		
 		log.info("getExtensionConfirmationMsg:"+this.getManagedBean().getExtensionConfirmationMsg());
 
 
