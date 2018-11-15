@@ -412,7 +412,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().setAutoUpdate(Boolean.FALSE);
 						getManagedBean().setGfmasError(true);
 						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-						errReq.setErrorId(new Long(coCancelDataType.getOrderCancelDetails().getErrorIds()));
+						String errorId = coCancelDataType.getOrderCancelDetails().getErrorIds();
+						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(",")) {
+							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(",")[0];
+						}
+						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
 						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
@@ -536,7 +540,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().setAutoUpdate(Boolean.FALSE);
 						getManagedBean().setGfmasError(true);
 						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-						errReq.setErrorId(new Long(poCancelReqType.getOrderCancelDetails().getErrorIds()));
+						String errorId = poCancelReqType.getOrderCancelDetails().getErrorIds();
+						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(",")) {
+							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(",")[0];
+						}
+						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
 						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
