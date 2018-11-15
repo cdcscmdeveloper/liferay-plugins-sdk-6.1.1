@@ -4146,7 +4146,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-				if(ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
+				if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
 					ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
 					if(!contractResp.isBondComplete()){
 						if(!ctContractAmount.isBondWaived()){
