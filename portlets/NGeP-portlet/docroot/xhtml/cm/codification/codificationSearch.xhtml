@@ -11,6 +11,7 @@
 			$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{lbl['lbl.cm.item.code.search']}");
 		</script>
+		<h:outputStylesheet library="ep/css" name="common.css"  />
 	</h:panelGroup>
 	<h:panelGroup rendered="#{!unspscCodeBackingBean.allSupplier}">
 		<script>
@@ -96,7 +97,7 @@
 
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="unspscTableID" lazy="true"
+			<p:dataTable tableStyleClass = "fixedTable" id="unspscTableID" lazy="true"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{codificationBackingBean.managedBean.searchDataModel}"
 				var="unspscObj" width="100%" rows="10">
@@ -106,7 +107,7 @@
 				<ac:paginator for="unspscTableID"></ac:paginator>
 
 
-				<p:column width="15%" sortBy="#{unspscObj.unspscCode}">
+				<p:column styleClass = "wrappedTd" sortBy="#{unspscObj.unspscCode}">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
@@ -144,14 +145,14 @@
 
 
 				</p:column>
-				<p:column sortBy="#{unspscObj.unspscTitle}">
+				<p:column styleClass = "wrappedTd" sortBy="#{unspscObj.unspscTitle}">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
 			<!-- Added EN title for unspsc -->
-			<p:column sortBy="#{unspscObj.unspscTitleEng}">
+			<p:column styleClass = "wrappedTd" sortBy="#{unspscObj.unspscTitleEng}">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
 				</f:facet>
