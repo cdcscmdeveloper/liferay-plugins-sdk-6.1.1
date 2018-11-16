@@ -56,13 +56,13 @@
 									value="#{lOADetailBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-		
+									<!-- Enhancement #21573 -->
 									<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
 											partialSubmit="true" process="@form"
-											action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+											action="#{lOADetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
 											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 											<f:setPropertyActionListener value="#{bpmAction}"
 												target="#{lOADetailBackingBean.managedBean.action}" />
@@ -76,7 +76,7 @@
 											rendered="#{!isMultipleLOI}"
 											styleClass="ui-button" onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
-											action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+											action="#{lOADetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
 											partialSubmit="true" process="@this" update="@this" />
 									</h:panelGroup>
 								</ui:repeat>
@@ -89,6 +89,60 @@
 									enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
 							</c:when>
 						</c:choose>
+							
+							<p:dialog id="confirmAccept" widgetVar="confmAcceptDlg"
+								header="#{lbl['lbl.sc.confirmation']}" resizable="false" 
+								closable="false" modal="true">
+						
+								<p:panel id="confirmAccDlgId">
+									<table>
+										<tr>
+											<td>
+												<h:graphicImage value="/css/images/design/exclamation.png" />
+													<h:outputText value="#{lbl['lbl.sc.confirmation.acknowledge.doc']}" />
+													<br />
+													<br />
+											</td>
+										</tr>
+									</table>
+						
+									<p:spacer height="1px" />
+									<div align="right">
+										<p:commandButton id="yesBtnConfmA" value="#{lbl['lbl.btn.yes']}"
+											onclick="confmAcceptDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											action="#{lOADetailBackingBean.confirmSupplierAccept}"/>
+										<p:commandButton id="noBtnConfmA" value="#{lbl['lbl.btn.no']}"
+											onclick="confmAcceptDlg.hide()" type="button" />
+									</div>
+								</p:panel>
+							</p:dialog>
+							<p:dialog id="confirmReject" widgetVar="confmRejectDlg"
+								header="#{lbl['lbl.sc.confirmation']}" resizable="false" 
+								closable="false" modal="true">
+						
+								<p:panel id="confirmRejDlgId">
+									<table>
+										<tr>
+											<td>
+												<h:graphicImage value="/css/images/design/exclamation.png" />
+													<h:outputText value="#{lbl['lbl.sc.confirmation.reject.doc']}" />
+													<br />
+													<br />
+											</td>
+										</tr>
+									</table>
+						
+									<p:spacer height="1px" />
+									<div align="right">
+										<p:commandButton id="yesBtnConfmR" value="#{lbl['lbl.btn.yes']}"
+											onclick="confmRejectDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											action="#{lOADetailBackingBean.confirmSupplierReject}"/>
+										<p:commandButton id="noBtnConfmR" value="#{lbl['lbl.btn.no']}"
+											onclick="confmRejectDlg.hide()" type="button" />
+									</div>
+								</p:panel>
+							</p:dialog>
+						<!-- end Enhancement #21573 -->
 					</ui:define>
 				</ui:decorate>
 			 </div>

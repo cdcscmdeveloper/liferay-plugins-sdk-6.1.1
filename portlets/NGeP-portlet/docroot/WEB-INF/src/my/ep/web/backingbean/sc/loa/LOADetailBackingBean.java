@@ -6028,5 +6028,41 @@ public class LOADetailBackingBean extends
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}	
 	}
+	
+	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
+	/**
+	 * Update bpm task action for supplier.
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * Authenticating spki before update bpm.
+	 * @param outcome the outcome
+	 */
+	public void updateBpmTaskActionSupplier(String outcome) {
+		this.getManagedBean().setAction(outcome);
+		validateLOADetails(getManagedBean().getScLoa(), outcome);
+		
+		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {			
+			this.getManagedBean().setAutoUpdate(false);		
+			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 
+		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {			
+			this.getManagedBean().setAutoUpdate(false);
+			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()");		
+		}	
+	}
+	
+	public void confirmSupplierAccept() {
+		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
+		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" LOA.");
+
+		// spki
+		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+	}
+	
+	public void confirmSupplierReject() {
+		this.getManagedBean().setAction(BpmOutcomeConst.BPM_REJECT);
+		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOA.");
+		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
+	}
+	//end Enhancement #21573
 
 }
