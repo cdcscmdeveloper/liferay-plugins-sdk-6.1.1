@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
+	<h:outputStylesheet library="ep/css" name="common.css"  />
 		<p:messages id="searchToRecommendMsgId" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" />
 
@@ -111,7 +111,7 @@
 
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-				<p:dataTable id="unspscTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				<p:dataTable id="unspscTableID" tableStyleClass = "fixedTable" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{codificationBackingBean.managedBean.searchDataModel}" var="unspscObj"
 				width="100%" rows="10">
 
@@ -120,7 +120,7 @@
 					<ac:paginator for="unspscTableID"></ac:paginator>
 
 
-					<p:column>
+					<p:column styleClass = "wrappedTd">
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 			        	</f:facet>
@@ -151,14 +151,14 @@
 
 
 					</p:column>
-					<p:column>
+					<p:column styleClass = "wrappedTd">
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
 			
-			<p:column>
+			<p:column styleClass = "wrappedTd">
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
 				</f:facet>
