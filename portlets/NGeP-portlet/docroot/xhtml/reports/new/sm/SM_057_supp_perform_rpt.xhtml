@@ -10,6 +10,7 @@
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 		
 			<td class="tdContent">
@@ -19,7 +20,6 @@
 			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}" />
-
 			</td>
 			<td class="tdContent">
 				<p:inputText maxlength="20" value="#{suppPerformRptBB.managedBean.mofNo}" 
@@ -27,13 +27,6 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" />
-			</td>
-			<td class="tdContent">
-				<ac:smReportRegType bBean="#{suppPerformRptBB}" />
-			</td>
-			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.epNo']}" />
 			</td>
