@@ -10,7 +10,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -34,6 +36,10 @@ public class SuppPerformRptBackingBean extends
 	}
 
 	public void generateReport() {
+		
+		if (getManagedBean().getSelectedOrgProfile() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780044);
+		} 
 		checkTwoYearsFieldDefference(getManagedBean().getYear(),
 				getManagedBean().getYearTo());
 		SimpleDateFormat df = new SimpleDateFormat(
