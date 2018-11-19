@@ -1738,6 +1738,9 @@ public class LOADetailBackingBean extends
 					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode())){ //Bug #22393
 				fiService = "0.4%";
 			}
+		}else{
+			//Normal DP LOA - FufillmentType (schedule) //Bug #22393
+			fiService = "0.4%";
 		}
 		context.put("fiService", fiService);
 
