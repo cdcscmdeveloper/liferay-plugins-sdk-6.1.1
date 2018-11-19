@@ -4015,11 +4015,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setStartDate1(cmStandardPricing.getStartDate());
 			reqDTO.setEndDate1(cmStandardPricing.getEndDate());
 			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+			reqDTO.setStandardPrice( this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice());
+
 			if(catalogueSO.checkExistedItem(reqDTO)){
+				boolean isService = Character.getNumericValue(reqDTO.getExtensionCode().charAt(0))>= 7; //check if item was service
+				String error = 	isService ? MessageConst.ERROR_715069 : MessageConst.ERROR_715019;
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_715019,
+								MessageUtils.getMessage(error,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
@@ -4872,11 +4876,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setStartDate1(catalog.getCmStandardPricing().getStartDate());
 				reqDTO.setEndDate1(catalog.getCmStandardPricing().getEndDate());
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+				reqDTO.setStandardPrice( catalog.getCmStandardPricing().getPrice());
+				
 				if(catalogueSO.checkExistedItem(reqDTO)){
+					boolean isService = Character.getNumericValue(reqDTO.getExtensionCode().charAt(0))>= 7; //check if item was service
+					String error = 	isService ? MessageConst.ERROR_715069 : MessageConst.ERROR_715019;
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715019,
+									MessageUtils.getMessage(error,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return naviToMaintenancePage(false);
