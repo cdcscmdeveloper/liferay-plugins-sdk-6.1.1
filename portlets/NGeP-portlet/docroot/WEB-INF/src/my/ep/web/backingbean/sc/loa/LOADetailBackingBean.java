@@ -445,8 +445,9 @@ public class LOADetailBackingBean extends
 			// Filter skop kerja dan perkhidmatan repo.
 			filterSkopKerjaDanPerkhidmatanRepo(scLoa);
 
+			// Bug #24502
 			// QT Proposal validity expired
-			getQtProposalValidExpiredMessage(scQt);
+			// getQtProposalValidExpiredMessage(scQt);
 
 			prepareSupplierSignerInfo();
 
