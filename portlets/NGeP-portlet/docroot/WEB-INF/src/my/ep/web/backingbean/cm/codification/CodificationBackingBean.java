@@ -2,6 +2,8 @@ package my.ep.web.backingbean.cm.codification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -592,6 +594,17 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 	}
 	 */
+	private int compareFirstChoice(String code1, String code2, int last){
+		if((code1.equals("000") || code1.equals("00")) && (code2.equals("000") || code2.equals("00"))){
+			return 0;
+		}else if((code1.equals("000") || code1.equals("00"))){
+			return -1;
+		}else if((code2.equals("000") || code2.equals("00"))){
+			return 1;
+		}
+		return last;
+	}; 
+	
 	public String codificationSearch() {
 
 		return NAV_TO_CODIFICATION_VIEW;
@@ -643,6 +656,25 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 					.getUnspscTitle());
 		}
+		
+		Collections.sort(resDTO.getCommodityObj().getCmBrand(), new Comparator<CmBrand>() {
+		    @Override
+		    public int compare(CmBrand t1, CmBrand t2) {
+		        return compareFirstChoice(t1.getBrandCode(), t2.getBrandCode(), t1.getBrandName().trim().compareToIgnoreCase(t2.getBrandName().trim()));
+		    }
+		});
+		Collections.sort(resDTO.getCommodityObj().getCmType(), new Comparator<CmType>() {
+		    @Override
+		    public int compare(CmType t1, CmType t2) {
+		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
+		    }
+		});
+		Collections.sort(resDTO.getCommodityObj().getCmMeasurement(), new Comparator<CmMeasurement>() {
+		    @Override
+		    public int compare(CmMeasurement t1, CmMeasurement t2) {
+		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
+		    }
+		});
 
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
@@ -674,9 +706,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		resDTO = unspscSO.searchColor(reqDTO);
 
+		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
+		    @Override
+		    public int compare(CmColor t1, CmColor t2) {
+		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
+		    }
+		});
 		for (CmColor color : resDTO.getColorList()) {
-			// log.info("color:"+color);
-			// log.info("color:"+color.getColorId());
 			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
 				this.getManagedBean()
 				.getColorCriteria()
@@ -2010,7 +2046,31 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		.setUnspscTitle(unspscObj.getUnspscTitle());
 
 		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
-
+		Collections.sort(comodityDTO.getCommodityObj().getCmBrand(), new Comparator<CmBrand>() {
+		    @Override
+		    public int compare(CmBrand t1, CmBrand t2) {
+		        return compareFirstChoice(t1.getBrandCode(), t2.getBrandCode(), t1.getBrandName().trim().compareToIgnoreCase(t2.getBrandName().trim()));
+		    }
+		});
+		Collections.sort(comodityDTO.getCommodityObj().getCmType(), new Comparator<CmType>() {
+		    @Override
+		    public int compare(CmType t1, CmType t2) {
+		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
+		    }
+		});
+		Collections.sort(comodityDTO.getCommodityObj().getCmMeasurement(), new Comparator<CmMeasurement>() {
+		    @Override
+		    public int compare(CmMeasurement t1, CmMeasurement t2) {
+		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
+		    }
+		});
+		
+		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
+		    @Override
+		    public int compare(CmColor t1, CmColor t2) {
+		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
+		    }
+		});
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
