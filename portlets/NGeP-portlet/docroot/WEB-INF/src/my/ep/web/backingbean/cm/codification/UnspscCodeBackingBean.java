@@ -3,6 +3,8 @@ package my.ep.web.backingbean.cm.codification;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -2734,6 +2736,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	}
 	 */
+	
+	private int compareFirstChoice(String code1, String code2, int last){
+		if((code1.equals("000") || code1.equals("00")) && (code2.equals("000") || code2.equals("00"))){
+			return 0;
+		}else if((code1.equals("000") || code1.equals("00"))){
+			return -1;
+		}else if((code2.equals("000") || code2.equals("00"))){
+			return 1;
+		}
+		return last;
+	}; 
+	
 	public void preRenderExtensionView() {
 
 		log.info("**********preRenderExtensionView**************");
@@ -2872,7 +2886,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
 		CodificationResDTO resCodeDTO = codificationSO
 				.searchCommodityObj(reqCodeDTO);
-
+	
 		this.getManagedBean().setTypeList(
 				resCodeDTO.getCommodityObj().getCmType());
 		this.getManagedBean().setBrandList(
@@ -2885,7 +2899,35 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
 		//this.getManagedBean().setTaskName("Review Request");
+		
+		Collections.sort(this.getManagedBean().getTypeList(), new Comparator<CmType>() {
+		    @Override
+		    public int compare(CmType t1, CmType t2) {
+		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
+		    }
 
+		});
+		Collections.sort(this.getManagedBean().getBrandList(), new Comparator<CmBrand>() {
+		    @Override
+		    public int compare(CmBrand t1, CmBrand t2) {
+		        return compareFirstChoice(t1.getBrandCode(), t2.getBrandCode(), t1.getBrandName().trim().compareToIgnoreCase(t2.getBrandName().trim()));
+		    }
+
+		});
+		Collections.sort(this.getManagedBean().getMeasurementList(), new Comparator<CmMeasurement>() {
+		    @Override
+		    public int compare(CmMeasurement t1, CmMeasurement t2) {
+		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
+		    }
+
+		});
+		Collections.sort(this.getManagedBean().getColorList(), new Comparator<CmColor>() {
+		    @Override
+		    public int compare(CmColor t1, CmColor t2) {
+		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
+		    }
+
+		});
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
