@@ -2934,7 +2934,7 @@ public class LOIDetailBackingBean extends
 				method = "Sebut Harga";
 			}
 			if(procurementType != null 
-					&& procurementType.equals(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+					&& procurementType.getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
 				category = "Perkhidmatan";
 			}
 			else{
