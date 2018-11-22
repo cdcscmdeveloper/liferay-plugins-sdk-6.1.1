@@ -1044,7 +1044,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() != null 
 					&& !ctBB.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
 					&& !ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-				double percentage = 0;
+				BigDecimal percentage = BigDecimal.ZERO;
 				for (CtProgressivePayment progressivePayment : ctBB.getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (progressivePayment.getPhaseNo()== null) {
 						setTabValue("SC");
@@ -1092,7 +1092,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}     
 
 					if(progressivePayment.getPercentage()!=null) {
-						percentage = percentage + progressivePayment.getPercentage().doubleValue();
+						percentage = percentage.add(progressivePayment.getPercentage());
 					} else {
 						setTabValue("SC");
 						throw new EpException(MessageConst.ERROR_100022,
@@ -1103,7 +1103,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 
-				int value = Double.compare(percentage,100);
+				int value = percentage.compareTo(new BigDecimal(100));
 				if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 					setTabValue("SC");

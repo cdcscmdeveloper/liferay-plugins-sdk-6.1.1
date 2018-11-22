@@ -1341,7 +1341,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null && !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-					double percentage = 0.0f;
+					BigDecimal percentage = BigDecimal.ZERO;
 					for (CtProgressivePayment progressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
 						if (progressivePayment.getPhaseNo()== null) {
 							setTabValue("SC");
@@ -1384,7 +1384,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}     	
 						if(progressivePayment.getPercentage()!=null) {
-							percentage = percentage + progressivePayment.getPercentage().doubleValue();
+							percentage = percentage.add(progressivePayment.getPercentage());
 						} else {
 							setTabValue("SC");
 							throw new EpException(MessageConst.ERROR_100022,
@@ -1394,7 +1394,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});							
 						}						
 					}
-					int value = Double.compare(percentage,100);
+					int value = percentage.compareTo(new BigDecimal(100));
 					if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 						setTabValue("SC");
