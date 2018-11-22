@@ -1138,19 +1138,21 @@ public class DirectLOABackingBean extends
 			}
 			
 			//Bug #24061
-			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
-				if (scLoa.getScQtProgPayments() != null
-						&& scLoa.getScQtProgPayments().size() > 0) {
-					for (ScQtProgressivePayment progressivePayment : scLoa
-							.getScQtProgPayments()) {
-						progressivePayValidation(progressivePayment);
+			if(scLoa.getScLoiLoa() != null){
+				if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
+					if (scLoa.getScQtProgPayments() != null
+							&& scLoa.getScQtProgPayments().size() > 0) {
+						for (ScQtProgressivePayment progressivePayment : scLoa
+								.getScQtProgPayments()) {
+							progressivePayValidation(progressivePayment);
+						}
 					}
-				}
-	
-				if (scLoa.getScQtSchedules() != null
-						&& scLoa.getScQtSchedules().size() > 0) {
-					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
+		
+					if (scLoa.getScQtSchedules() != null
+							&& scLoa.getScQtSchedules().size() > 0) {
+						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+							freqScheduleValidation(scQtSchedule);
+						}
 					}
 				}
 			}
@@ -1416,13 +1418,16 @@ public class DirectLOABackingBean extends
 			saveProgressivePaymntList();
 			constructScheduleDetails();
 			//Bug #24061
-			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
-				if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
-					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
+			if(scLoa.getScLoiLoa() != null){
+				if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
+					if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
+						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+							freqScheduleValidation(scQtSchedule);
+						}
 					}
 				}
 			}
+			
 			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			serviceSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		}
