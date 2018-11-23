@@ -38,7 +38,7 @@
 										<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 											<p:commandButton value="#{lbl[buttonLabel]}"
 												styleClass="ui-button" update="@form"
-												partialSubmit="true" process="@form"
+												partialSubmit="true" process="@all"
 												action="#{directLOABackingBean.updateBpmTaskActionSupplier(bpmAction)}"
 												onstart="blockWidget.show();"
 												oncomplete="blockWidget.hide();">
@@ -55,7 +55,7 @@
 												styleClass="ui-button" onstart="blockWidget.show();"
 												oncomplete="blockWidget.hide();"
 												action="#{directLOABackingBean.updateBpmTaskActionSupplier(bpmAction)}"
-												partialSubmit="true" process="@this" update="@this" />
+												partialSubmit="true" process="@all" update="@form" />
 										</h:panelGroup>
 									</ui:repeat>
 								</c:when>
@@ -79,7 +79,7 @@
 										<tr>
 											<td>
 												<h:graphicImage value="/css/images/design/exclamation.png" />
-													<h:outputText value="#{lbl['lbl.sc.confirmation.acknowledge.doc']}" />
+													<h:outputText value="#{directLOABackingBean.managedBean.suppConfirmMsgAccept}" />
 													<br />
 													<br />
 											</td>
@@ -105,7 +105,7 @@
 										<tr>
 											<td>
 												<h:graphicImage value="/css/images/design/exclamation.png" />
-													<h:outputText value="#{lbl['lbl.sc.confirmation.reject.doc']}" />
+													<h:outputText value="#{directLOABackingBean.managedBean.suppConfirmMsgReject}" />
 													<br />
 													<br />
 											</td>
