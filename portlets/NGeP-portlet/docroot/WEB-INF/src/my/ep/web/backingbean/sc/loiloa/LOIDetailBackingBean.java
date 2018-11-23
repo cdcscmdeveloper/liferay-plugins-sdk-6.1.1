@@ -5776,11 +5776,31 @@ public class LOIDetailBackingBean extends
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
 		
+		String loi = getMessage("lbl.sc.loiloa.loi.letter", null);
+		String procurementMode = null; 
+		String mode = this.getManagedBean().getScQt().getProcurementMode().getParameterCode();
+		
+		if (mode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			procurementMode = getMessage("lbl.sc.sq", null);
+		} else if (mode.equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			procurementMode = getMessage("lbl.rpt.sc.quotation", null);
+		} else if (mode.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			procurementMode = getMessage("lbl.rpt.sc.tender", null);
+		}		
+	
 		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 			this.getManagedBean().setAutoUpdate(false);		
+			
+			String acceptMsg = getMessage("lbl.sc.loi.supplier.confirm.button.accept", null);
+			
+			this.getManagedBean().setSuppConfirmMsgAccept(acceptMsg.toString().trim());
 			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			this.getManagedBean().setAutoUpdate(false);
+			
+			String rejectMsg = getMessage("lbl.sc.loiloa.supplier.confirm.button.reject", new String[] { loi.trim(), procurementMode.trim() });
+
+			this.getManagedBean().setSuppConfirmMsgReject(rejectMsg.toString().trim());
 			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()"); 
 		}
 	}

@@ -61,7 +61,7 @@
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
-											partialSubmit="true" process="@form"
+											partialSubmit="true" process="@all"
 											action="#{lOADetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
 											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 											<f:setPropertyActionListener value="#{bpmAction}"
@@ -77,7 +77,7 @@
 											styleClass="ui-button" onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
 											action="#{lOADetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
-											partialSubmit="true" process="@this" update="@this" />
+											partialSubmit="true" process="@all" update="@form" />
 									</h:panelGroup>
 								</ui:repeat>
 								
@@ -99,7 +99,7 @@
 										<tr>
 											<td>
 												<h:graphicImage value="/css/images/design/exclamation.png" />
-													<h:outputText value="#{lbl['lbl.sc.confirmation.acknowledge.doc']}" />
+													<h:outputText value="#{lOADetailBackingBean.managedBean.suppConfirmMsgAccept}" />
 													<br />
 													<br />
 											</td>
@@ -125,7 +125,7 @@
 										<tr>
 											<td>
 												<h:graphicImage value="/css/images/design/exclamation.png" />
-													<h:outputText value="#{lbl['lbl.sc.confirmation.reject.doc']}" />
+													<h:outputText value="#{lOADetailBackingBean.managedBean.suppConfirmMsgReject}" />
 													<br />
 													<br />
 											</td>
