@@ -267,6 +267,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	private Long contractTypeId;
 	
+	private String suppConfirmMsgAccept;
+	private String suppConfirmMsgReject;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -1500,6 +1503,34 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	public void setContractTypeId(Long contractTypeId) {
 		this.contractTypeId = contractTypeId;
+	}
+
+	/**
+	 * @return the suppConfirmMsgAccept
+	 */
+	public String getSuppConfirmMsgAccept() {
+		return suppConfirmMsgAccept;
+	}
+
+	/**
+	 * @param suppConfirmMsgAccept the suppConfirmMsgAccept to set
+	 */
+	public void setSuppConfirmMsgAccept(String suppConfirmMsgAccept) {
+		this.suppConfirmMsgAccept = suppConfirmMsgAccept;
+	}
+
+	/**
+	 * @return the suppConfirmMsgReject
+	 */
+	public String getSuppConfirmMsgReject() {
+		return suppConfirmMsgReject;
+	}
+
+	/**
+	 * @param suppConfirmMsgReject the suppConfirmMsgReject to set
+	 */
+	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
+		this.suppConfirmMsgReject = suppConfirmMsgReject;
 	}
 	
 }

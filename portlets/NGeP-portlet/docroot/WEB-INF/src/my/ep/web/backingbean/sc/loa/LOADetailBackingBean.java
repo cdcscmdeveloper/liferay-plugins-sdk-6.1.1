@@ -6044,11 +6044,31 @@ public class LOADetailBackingBean extends
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		
+		String loa = getMessage("lbl.sc.loiloa.loa.header.title", null);
+		String procurementMode = null; 
+		String mode = this.getManagedBean().getScLoa().getProcurementMode().getParameterCode();
+		
+		if (mode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			procurementMode = getMessage("lbl.sc.sq", null);
+		} else if (mode.equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			procurementMode = getMessage("lbl.rpt.sc.quotation", null);
+		} else if (mode.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			procurementMode = getMessage("lbl.rpt.sc.tender", null);
+		}
+		
 		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {			
 			this.getManagedBean().setAutoUpdate(false);		
+			
+			String acceptMsg = getMessage("lbl.sc.loa.supplier.confirm.button.accept", new String[] { loa.trim(), procurementMode.trim() });
+			
+			this.getManagedBean().setSuppConfirmMsgAccept(acceptMsg.toString().trim());
 			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {			
 			this.getManagedBean().setAutoUpdate(false);
+			
+			String rejectMsg = getMessage("lbl.sc.loiloa.supplier.confirm.button.reject", new String[] { loa.trim(), procurementMode.trim() });
+
+			this.getManagedBean().setSuppConfirmMsgReject(rejectMsg.toString().trim());
 			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()");		
 		}	
 	}

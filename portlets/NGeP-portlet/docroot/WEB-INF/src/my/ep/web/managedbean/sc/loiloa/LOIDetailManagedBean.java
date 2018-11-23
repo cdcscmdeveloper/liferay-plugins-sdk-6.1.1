@@ -55,7 +55,6 @@ import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -396,6 +395,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The QT is cancel requested. */
     private boolean qtCancelRequested;
+	
+	private String suppConfirmMsgAccept;
+	private String suppConfirmMsgReject;
 	
     /**
      * Gets the spki backing bean.
@@ -2271,6 +2273,34 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setQtCancelRequested(boolean qtCancelRequested) {
 		this.qtCancelRequested = qtCancelRequested;
+	}
+
+	/**
+	 * @return the suppConfirmMsgAccept
+	 */
+	public String getSuppConfirmMsgAccept() {
+		return suppConfirmMsgAccept;
+	}
+
+	/**
+	 * @param suppConfirmMsgAccept the suppConfirmMsgAccept to set
+	 */
+	public void setSuppConfirmMsgAccept(String suppConfirmMsgAccept) {
+		this.suppConfirmMsgAccept = suppConfirmMsgAccept;
+	}
+
+	/**
+	 * @return the suppConfirmMsgReject
+	 */
+	public String getSuppConfirmMsgReject() {
+		return suppConfirmMsgReject;
+	}
+
+	/**
+	 * @param suppConfirmMsgReject the suppConfirmMsgReject to set
+	 */
+	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
+		this.suppConfirmMsgReject = suppConfirmMsgReject;
 	}
 	
 	
