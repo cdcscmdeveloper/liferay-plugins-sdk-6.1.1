@@ -652,8 +652,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				DbValueConst.RECORD_STATUS_ACTIVE);
 		getManagedBean().getNewAdmin().setContractSignerFlg(
 				DbValueConst.RECORD_STATUS_ACTIVE);
-		getManagedBean().getNewAdmin().setContactPerson(
-				getManagedBean().getOldAdmin().isContactPerson());
+		getManagedBean().getNewAdmin().setContactPerson(true);
 		getManagedBean().getNewAdmin().setDesignation(StringUtils.EMPTY);
 		getManagedBean().getNewAdmin().setEmail(StringUtils.EMPTY);
 		getManagedBean().getNewAdmin().setBirthDate(null);
