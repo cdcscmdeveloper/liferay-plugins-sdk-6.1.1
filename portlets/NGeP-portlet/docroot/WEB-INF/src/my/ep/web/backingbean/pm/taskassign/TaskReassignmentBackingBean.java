@@ -1878,7 +1878,7 @@ public class TaskReassignmentBackingBean extends
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
-									OrgProfileUtil
+									"pmUserOrgs.pmOrgProfile." + OrgProfileUtil
 											.getSearchBeanParentString(OrganizationType.MINISTRY
 													.value()),
 									SearchOperator.OPERATOR_EQUALS
