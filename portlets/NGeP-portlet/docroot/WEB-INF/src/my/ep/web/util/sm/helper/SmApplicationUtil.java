@@ -2739,7 +2739,7 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Check over lapping categories.Checks if Same owner exist in different
+	 * Check overlapping categories.Checks if Same owner exist in different
 	 * supplier and has same one or more similar categories
 	 * 
 	 * @param managedBean
@@ -2747,25 +2747,53 @@ public class SmApplicationUtil {
 	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
-		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
-				.getSmAppl());
 
-		managedBean.setOverLappedCategoryExists(false);
-		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
-		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
+		// for PO/Approver only run this method if already exist overlap
+		// category when supplier submitted application while for supplier need
+		// to run every time
+		if (managedBean.isSupplierUser()
+				|| (!managedBean.isSupplierUser() && isOverlapCategoryExist(managedBean))) {
+			SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
+					.getSmAppl());
 
-		if (overlapCategoryVO != null) {
-			managedBean.setOverLappedCategoryExists(overlapCategoryVO
-					.isOverLappedCategoryExist());
-			managedBean.setOverLappedCategoryMsg(overlapCategoryVO
-					.getOverLappedCategoryMsg());
-			managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
-					.getOverLappedCategoryRemarks());
-			managedBean.setOverlapCategoryVOList(overlapCategoryVO
-					.getOverlapCategoryVOList());
+			managedBean.setOverLappedCategoryExists(false);
+			managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
+			managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
+
+			if (overlapCategoryVO != null) {
+				managedBean.setOverLappedCategoryExists(overlapCategoryVO
+						.isOverLappedCategoryExist());
+				managedBean.setOverLappedCategoryMsg(overlapCategoryVO
+						.getOverLappedCategoryMsg());
+				managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
+						.getOverLappedCategoryRemarks());
+				managedBean.setOverlapCategoryVOList(overlapCategoryVO
+						.getOverlapCategoryVOList());
+			}
+			resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
+					overlapCategoryVO);
 		}
-		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
-				overlapCategoryVO);
+	}
+
+	/**
+	 * Check overlap category
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            managedBean
+	 */
+	private static boolean isOverlapCategoryExist(
+			SmApplicationManagedBean managedBean) {
+		boolean retVal = false;
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if ((cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || cat
+					.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
+					&& cat.isOverLapCategory()) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
 	}
 
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
@@ -2951,20 +2979,27 @@ public class SmApplicationUtil {
 			msg.append("<table style='width: 55%;table-layout:fixed'>");
 			for (Object[] arr : resultList) {
 				if (arr.length == 5) {
-					msg.append("<tr>");
-					msg.append("<td style='width:5%'>").append(count)
-							.append(")").append("</td>");
-					msg.append("<td style='width:10%'>").append(arr[0])
-							.append(arr[1]).append(arr[2]).append("</td>");
-					msg.append("<td style='white-space: normal;'>").append("(")
-							.append(arr[3]).append(" / ").append(arr[4])
-							.append(")").append("</td>");
+					setOverlappedCategoryMsg(msg, count, arr[0], arr[1],
+							arr[2], arr[3], arr[4]);
 					count++;
 				}
 			}
 			msg.append("</table><br />");
 		}
 		return msg.toString();
+	}
+
+	private static void setOverlappedCategoryMsg(StringBuilder msg, int count,
+			Object catCodeL1, Object catCodeL2, Object catCodeL3, Object name,
+			Object suppName) {
+		msg.append("<tr>");
+		msg.append("<td style='width:5%'>").append(count).append(")")
+				.append("</td>");
+		msg.append("<td style='width:10%'>").append(catCodeL1)
+				.append(catCodeL2).append(catCodeL3).append("</td>");
+		msg.append("<td style='white-space: normal;'>").append("(")
+				.append(name).append(" / ").append(suppName).append(")")
+				.append("</td>");
 	}
 
 	public static String getOverlappedCategoryRemarks(List<Object[]> resultList) {
