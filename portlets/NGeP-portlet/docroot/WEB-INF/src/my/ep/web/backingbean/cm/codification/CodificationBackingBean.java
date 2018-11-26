@@ -23,6 +23,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -33,6 +34,8 @@ import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.exception.EpException;
@@ -49,6 +52,7 @@ import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
@@ -62,6 +66,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.managedbean.cm.codification.CodificationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.ClassesVO;
 import my.ep.web.vo.CommoditiesVO;
@@ -2493,7 +2498,17 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			reqDTO.setOutCome("REQUEST_EXTENSION");
 
 		}
-		
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(15004L);
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+		if(reqDTO.getOutCome().equalsIgnoreCase("REQUEST_EXTENSION")){
+			reqDTO.setTrackingStatus(true);			
+			String actionDesc = "Kod Item "+ unspscBB.getManagedBean().getReviewExtCodeList().get(0).getDocNo() +" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan.";
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),"CU"));
+		}
 		
 		if(!unspscBB.getManagedBean().getRequestCode().isRequestBrand() &&
 				!unspscBB.getManagedBean().getRequestCode().isRequestColor() &&
