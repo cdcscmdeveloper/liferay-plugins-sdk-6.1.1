@@ -362,7 +362,6 @@ public class LovBackingBean implements Serializable {
 		
 		if(!getLovBean().isDisplayResultWhenReset()) {
 			disableDisplayResult();
-			System.out.println("hasif resetAction isDisplayResultWhenReset");
 		}
 	}
 	
@@ -425,7 +424,6 @@ public class LovBackingBean implements Serializable {
 								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
 								filterBean.setSearchValue(fieldMapping[1]);
 							} else {
-								System.out.println("this 3");
 								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 								filterBean.setSearchValue(fieldMapping[1]);
 								filterBean.setCaseInsensitive(true);
@@ -475,7 +473,6 @@ public class LovBackingBean implements Serializable {
 							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
 							filterBean.setSearchValue(fieldMapping[1]);
 						} else {
-							System.out.println("this 3");
 							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 							filterBean.setSearchValue(fieldMapping[1]);
 							filterBean.setCaseInsensitive(true);
