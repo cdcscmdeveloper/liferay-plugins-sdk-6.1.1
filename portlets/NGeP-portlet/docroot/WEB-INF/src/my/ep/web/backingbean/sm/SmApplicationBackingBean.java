@@ -2200,9 +2200,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
-		} catch (Exception e) {
-			log.info("error to validate save appl no:"
-					+ getManagedBean().getSmAppl().getApplNo(), e);
 		}
 
 		finally {
