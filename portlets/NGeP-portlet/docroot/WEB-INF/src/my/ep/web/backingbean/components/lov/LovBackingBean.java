@@ -479,9 +479,7 @@ public class LovBackingBean implements Serializable {
 						}
 					}				
 					lovSearchBean.getDataFilterBeans().add(filterBean);		
-				}
-				
-							
+				}		
 			}
 		}
 	}
