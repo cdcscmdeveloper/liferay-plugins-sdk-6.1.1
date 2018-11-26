@@ -2747,53 +2747,25 @@ public class SmApplicationUtil {
 	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
+		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
+				.getSmAppl());
 
-		// for PO/Approver only run this method if already exist overlap
-		// category when supplier submitted application while for supplier need
-		// to run every time
-		if (managedBean.isSupplierUser()
-				|| (!managedBean.isSupplierUser() && isOverlapCategoryExist(managedBean))) {
-			SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
-					.getSmAppl());
+		managedBean.setOverLappedCategoryExists(false);
+		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
+		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 
-			managedBean.setOverLappedCategoryExists(false);
-			managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
-			managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
-
-			if (overlapCategoryVO != null) {
-				managedBean.setOverLappedCategoryExists(overlapCategoryVO
-						.isOverLappedCategoryExist());
-				managedBean.setOverLappedCategoryMsg(overlapCategoryVO
-						.getOverLappedCategoryMsg());
-				managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
-						.getOverLappedCategoryRemarks());
-				managedBean.setOverlapCategoryVOList(overlapCategoryVO
-						.getOverlapCategoryVOList());
-			}
-			resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
-					overlapCategoryVO);
+		if (overlapCategoryVO != null) {
+			managedBean.setOverLappedCategoryExists(overlapCategoryVO
+					.isOverLappedCategoryExist());
+			managedBean.setOverLappedCategoryMsg(overlapCategoryVO
+					.getOverLappedCategoryMsg());
+			managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
+					.getOverLappedCategoryRemarks());
+			managedBean.setOverlapCategoryVOList(overlapCategoryVO
+					.getOverlapCategoryVOList());
 		}
-	}
-
-	/**
-	 * Check overlap category
-	 * 
-	 * @param SmApplicationManagedBean
-	 *            managedBean
-	 */
-	private static boolean isOverlapCategoryExist(
-			SmApplicationManagedBean managedBean) {
-		boolean retVal = false;
-		for (SmSupplierCategory cat : managedBean.getSmAppl()
-				.getSmSupplierCategories()) {
-			if ((cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || cat
-					.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
-					&& cat.isOverLapCategory()) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
+		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
+				overlapCategoryVO);
 	}
 
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
