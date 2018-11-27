@@ -11005,7 +11005,12 @@ public class SmApplicationUtil {
 		// disable or enable authorized flag
 		bean.setDisableAuthorizedRadio(isDisableAuthorizedRadio(
 				shareHolderBean, bean.isValidSmUserLimit()));
-		if (bean.isInDbAlreadyAuth()) {
+		
+		String epRole = shareHolderBean.getEpRole() == null ? StringUtils.EMPTY
+				: shareHolderBean.getEpRole();
+		if (bean.isInDbAlreadyAuth()
+				&& !my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+						.contains(epRole)) {
 			bean.setDisableAuthorizedRadio(false);
 		}
 
