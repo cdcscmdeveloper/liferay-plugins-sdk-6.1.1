@@ -1641,6 +1641,25 @@ return scQt;
 				
 			}
 			
+			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+				List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						
+						if (null == userRemark || "".equals(userRemark)) {
+							
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
+											MessageUtils.getMessage(MessageConst.ERROR_100022, new String[] {
+													getMessageCommon("lbl.sc.remark")}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
+							return;
+						}
+					}
+				}
+			}
+
 			finalizeRemarks(approval.getScQtApprovalRemarks());
 			approval.getScQtApprovalDtls().addAll(approvalRequests);
 			List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
