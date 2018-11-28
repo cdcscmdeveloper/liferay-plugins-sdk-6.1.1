@@ -831,8 +831,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// reset
 			ctBackingBean.getManagedBean().setContractExpired(false);
-			//Bug #24443
-			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getRecordStatusFlg() == 3) {
+			
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getRecordStatusFlg() == 3) { 
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
 				ctBackingBean.getManagedBean().setContractExpired(true);
 			}
 			
@@ -1445,8 +1446,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// Validation for amendment extension period for expired contract
-			//Bug #24443
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+			if (ctBackingBean.getManagedBean().isContractExpired() 
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_750048);
