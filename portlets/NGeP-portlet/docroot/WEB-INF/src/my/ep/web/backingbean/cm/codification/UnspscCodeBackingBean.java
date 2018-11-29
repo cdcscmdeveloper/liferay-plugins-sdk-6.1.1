@@ -2035,25 +2035,25 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				&& !this.getManagedBean().getRequestExtCode().getTypeName()
 				.isEmpty()) {
 			checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
-					.getTypeName());
+					.getTypeName(), false);
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestBrand()
 				&& !this.getManagedBean().getRequestExtCode().getBrandName()
 				.isEmpty()) {
 			checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
-					.getBrandName());
+					.getBrandName(), false);
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()
 				&& !this.getManagedBean().getRequestExtCode()
 				.getMeasurementName().isEmpty()) {
 			checkingMeasurmentRedundency(this.getManagedBean()
-					.getRequestExtCode().getMeasurementName());
+					.getRequestExtCode().getMeasurementName(), false);
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestColor()
 				&& !this.getManagedBean().getRequestExtCode().getColorName()
 				.isEmpty()) {
 			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
-					.getColorName());
+					.getColorName(), false);
 		}
 
 		/*
@@ -2207,7 +2207,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setSelectedColor(null);
 		this.getManagedBean().setSelectedMeasurement(null);
 	}
-
+	
 	public String submitToReviewExt(String action) {
 		log.info("***action***" + action);
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -2232,7 +2232,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		
 		
 		
-
 			if (this.getManagedBean().getReviewExtCodeList() != null
 					&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
 
@@ -2256,17 +2255,24 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						reqDTO.setColorSearchBean(searchBeanColor);
 
 						resDTO = unspscSO.searchColorObj(reqDTO);
-						code.setColorName(resDTO.getColorList().get(0)
-								.getColorName());
+						if(isCatalogueAdmin()){
+							code.setColorName(resDTO.getColorList().get(0)
+									.getColorName());
+						}else if(isCdCommittee()){
+							code.setReviewedColorName(resDTO.getColorList().get(0)
+									.getColorName());
+						}
 						code.setColorId(code.getColorNameDD());
-						code.setRequestColor(false);
+						code.setRequestColor(true);
+						
 
 					}else{
 
-						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin() && code.isRequestColor()){
+						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestColor()){
+
 							ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 							colorFilterBean.setSearchField("colorName");
-							colorFilterBean.setSearchValue(code.getColorName());
+							colorFilterBean.setSearchValue(code.getColorName().trim());
 							searchBeanColor.getDataFilterBeans().add(colorFilterBean);
 	
 							reqDTO.setColorSearchBean(searchBeanColor);
@@ -2295,17 +2301,22 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						reqDTO.setBrandSearchBean(searchBeanColor);
 
 						resDTO = unspscSO.searchBrandObj(reqDTO);
-
-						code.setBrandName(resDTO.getBrandList().get(0)
-								.getBrandName());
+						if(isCatalogueAdmin()){
+							code.setBrandName(resDTO.getBrandList().get(0)
+									.getBrandName());
+						}else if(isCdCommittee()){
+							code.setReviewedBrandName(resDTO.getBrandList().get(0)
+									.getBrandName());
+						}
 						code.setBrandId(code.getBrandNameDD());
-						code.setRequestBrand(false);
-
+						code.setRequestBrand(true);
 					}else{
-						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin() && code.isRequestBrand()){
+
+						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestBrand()){
+
 							ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
 							brandFilterBean.setSearchField("brandName");
-							brandFilterBean.setSearchValue(code.getBrandName());
+							brandFilterBean.setSearchValue(code.getBrandName().trim());
 							searchBeanColor.getDataFilterBeans().add(brandFilterBean);
 							
 							
@@ -2340,16 +2351,20 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						reqDTO.setTypeSearchBean(searchBeanColor);
 
 						resDTO = unspscSO.searchTypeObj(reqDTO);
-
-						code.setTypeName(resDTO.getTypeList().get(0).getTypeName());
+						if(isCatalogueAdmin()){
+							code.setTypeName(resDTO.getTypeList().get(0).getTypeName());
+						}else if(isCdCommittee()){
+							code.setReviewedTypeName(resDTO.getTypeList().get(0).getTypeName());
+						}
 						code.setTypeId(code.getTypeNameDD());
-						code.setRequestType(false);
+						code.setRequestType(true);
 					}else{
-						
-						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin() && code.isRequestType()){
+
+						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestType()){
+
 							ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
 							typeFilterBean.setSearchField("typeName");
-							typeFilterBean.setSearchValue(code.getTypeName());
+							typeFilterBean.setSearchValue(code.getTypeName().trim());
 							searchBeanColor.getDataFilterBeans().add(typeFilterBean);
 							
 							
@@ -2385,17 +2400,23 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						reqDTO.setMeasurementSearchBean(searchBeanColor);
 
 						resDTO = unspscSO.searchMeasurementObj(reqDTO);
-
-						code.setMeasurementName(resDTO.getMeasurementList().get(0)
-								.getMeasurementName());
+						if(isCatalogueAdmin()){
+							code.setMeasurementName(resDTO.getMeasurementList().get(0)
+									.getMeasurementName());
+						}else if(isCdCommittee()){
+							code.setReviewedMeasurementName(resDTO.getMeasurementList().get(0)
+									.getMeasurementName());
+						}
 						code.setMeasurementId(code.getMeasurementNameDD());
-						code.setRequestMeasurement(false);
+						code.setRequestMeasurement(true);
 					}else{
 
-						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()&& code.isRequestMeasurement()){
+						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestMeasurement()){
+							log.info("iscatadmin adn submit");
+
 							ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
 							measurementFilterBean.setSearchField("measurementName");
-							measurementFilterBean.setSearchValue(code.getMeasurementName());
+							measurementFilterBean.setSearchValue(code.getMeasurementName().trim());
 							searchBeanColor.getDataFilterBeans().add(measurementFilterBean);
 							
 							
@@ -2483,26 +2504,26 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						if (code.isRequestType()
 								&& (code.getTypeRemarkII() != null && code
 								.getTypeRemarkII().trim().length() > 0)) {
-							checkingTypeRedundency(code.getReviewedTypeNameII());
+							checkingTypeRedundency(code.getReviewedTypeNameII(), false);
 						}
 						if (code.isRequestBrand()
 								&& (code.getBrandRemarkII() != null && code
 								.getBrandRemarkII().trim().length() > 0)) {
 							checkingBrandRedundency(code
-									.getReviewedBrandNameII());
+									.getReviewedBrandNameII(), false);
 						}
 						if (code.isRequestMeasurement()
 								&& (code.getMeasurementRemarkII() != null && code
 								.getMeasurementRemarkII().trim()
 								.length() > 0)) {
 							checkingMeasurmentRedundency(code
-									.getReviewedMeasurementNameII());
+									.getReviewedMeasurementNameII(), false);
 						}
 						if (code.isRequestColor()
 								&& (code.getColorRemarkII() != null && code
 								.getColorRemarkII().trim().length() > 0)) {
 							checkingColorRedundency(code
-									.getReviewedColorNameII());
+									.getReviewedColorNameII(), false);
 						}
 					}
 					// //////////////////////////////////
@@ -2535,23 +2556,23 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					if (code.isRequestType()
 							&& (code.getTypeRemark() != null && code
 							.getTypeRemark().trim().length() > 0)) {
-						checkingTypeRedundency(code.getReviewedTypeName());
+						checkingTypeRedundency(code.getReviewedTypeName().trim(), true);
 					}
 					if (code.isRequestBrand()
 							&& (code.getBrandRemark() != null && code
 							.getBrandRemark().trim().length() > 0)) {
-						checkingBrandRedundency(code.getReviewedBrandName());
+						checkingBrandRedundency(code.getReviewedBrandName().trim(), true);
 					}
 					if (code.isRequestMeasurement()
 							&& (code.getMeasurementRemark() != null && code
 							.getMeasurementRemark().trim().length() > 0)) {
 						checkingMeasurmentRedundency(code
-								.getReviewedMeasurementName());
+								.getReviewedMeasurementName().trim(), true);
 					}
 					if (code.isRequestColor()
 							&& (code.getColorRemark() != null && code
 							.getColorRemark().trim().length() > 0)) {
-						checkingColorRedundency(code.getReviewedColorName());
+						checkingColorRedundency(code.getReviewedColorName().trim(), true);
 					}
 					// //////////////////////////////////
 					if ((code.getTypeRemark() != null && code.getTypeRemark()
@@ -2827,9 +2848,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			.add(resDTO.getRequestCode());
 			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		}
-
+		log.info("\n\n\n\n\nThe task name is " + res.getTaskName());
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
-
+			
 			// if(!code.isRequestColor()){
 			if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
 				code.setReviewedColorName(code.getColorName());
@@ -3424,7 +3445,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return -1;
 	}
 
-	public void checkingTypeRedundency(String typeInput) {
+	public void checkingTypeRedundency(String typeInput, boolean isSelectFromList) {
 		log.info(".....checking redundancy for typeInput=" + typeInput);
 		this.getManagedBean().setTypeRedundancy(false);
 		if (typeInput != null && !typeInput.equals("")) {
@@ -3433,7 +3454,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					if (type.getTypeName().toLowerCase()
 							.equals(typeInput.toLowerCase())) {
 						this.getManagedBean().setTypeRedundancy(true);
-
+						if(isSelectFromList){
+							throw new EpException(MessageUtils
+									.getMessage(MessageConst.ERROR_715068, new String[] { ""
+											+ typeInput },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()));
+						}
 						throw new EpException(
 								MessageConst.ERROR_716009,
 								new String[] { ResourceBundleUtils
@@ -3448,7 +3475,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 	}
 
-	public void checkingBrandRedundency(String brandInput) {
+	public void checkingBrandRedundency(String brandInput,  boolean isSelectFromList) {
 		log.info(".....checking redundancy for brandInput=" + brandInput);
 		this.getManagedBean().setBarndRedundancy(false);
 		if (brandInput != null && !brandInput.equals("")) {
@@ -3458,7 +3485,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							.equals(brandInput.toLowerCase())) {
 
 						this.getManagedBean().setBarndRedundancy(true);
-
+						if(isSelectFromList){
+							throw new EpException(MessageUtils
+									.getMessage(MessageConst.ERROR_715068, new String[] { ""
+											+ brandInput },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()));
+						}
 						throw new EpException(
 								MessageConst.ERROR_716009,
 								new String[] { ResourceBundleUtils
@@ -3473,7 +3506,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 	}
 
-	public void checkingMeasurmentRedundency(String MeasurmentInput) {
+	public void checkingMeasurmentRedundency(String MeasurmentInput,  boolean isSelectFromList) {
 		log.info(".....checking redundancy for MeasurmentInput="
 				+ MeasurmentInput);
 		this.getManagedBean().setMeasurRedundancy(false);
@@ -3485,7 +3518,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					if (measur.getMeasurementName().toLowerCase()
 							.equals(MeasurmentInput.toLowerCase())) {
 						this.getManagedBean().setMeasurRedundancy(true);
-
+						if(isSelectFromList){
+							throw new EpException(MessageUtils
+									.getMessage(MessageConst.ERROR_715068, new String[] { ""
+											+ MeasurmentInput },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()));
+						}
 						throw new EpException(
 								MessageConst.ERROR_716009,
 								new String[] { ResourceBundleUtils
@@ -3504,7 +3543,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return "searchUnspscToAssign";
 	}
 
-	public void checkingColorRedundency(String colorInput) {
+	public void checkingColorRedundency(String colorInput,  boolean isSelectFromList) {
 		log.info(".....checking redundancy for colorInput=" + colorInput);
 		log.info("colorList " + this.getManagedBean().getColorList());
 		this.getManagedBean().setColorRedundancy(false);
@@ -3516,6 +3555,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						this.getManagedBean().setColorRedundancy(true);
 						log.info("this.getManagedBean().isColorRedundancy()="
 								+ this.getManagedBean().isColorRedundancy());
+						if(isSelectFromList){
+							throw new EpException(MessageUtils
+									.getMessage(MessageConst.ERROR_715068, new String[] { ""
+											+ colorInput },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()));
+						}
 						throw new EpException(
 								MessageConst.ERROR_716009,
 								new String[] { ResourceBundleUtils
