@@ -153,6 +153,16 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flOrder = getManagedBean().getFulfilmentOrder();
 			}
+
+			//#24638 check SAPOrderNo at status supp ack, cannot be null after Idd approved 
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) &&
+					getManagedBean().getFulfilmentOrder()!=null && getManagedBean().getFulfilmentOrder().getSapOrderNo() == null){
+				String sapOrderNo = checkSapOrderNo(getManagedBean().getFulfilmentOrder().getDocNo());
+
+				if(sapOrderNo!=null){
+					getManagedBean().getFulfilmentOrder().setSapOrderNo(sapOrderNo);
+				}			
+			}
 			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
@@ -1648,5 +1658,27 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setDocStatusId(null);
 		getManagedBean().getPendingDoDataModel().reloadData();
+	}
+	
+	/**
+	 * Check SapOrderNo.
+	 */
+	private String checkSapOrderNo(String pocoNo){
+		//#24638
+		IFulfilmentOrderSO  fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlDocNo(pocoNo);
+		
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		resDTO = fulfilmentOrderSO.getSapOrderNoOSB(reqDTO);
+		String sapOrderNo = null;
+		if(resDTO!=null && resDTO.getOrderNo() != null){
+			sapOrderNo = resDTO.getOrderNo();
+		}else{
+			throw new EpException(MessageConst.ERROR_71024, new String[]{"SapOrderNo"});
+		}
+		return sapOrderNo;
+		
 	}
 }
