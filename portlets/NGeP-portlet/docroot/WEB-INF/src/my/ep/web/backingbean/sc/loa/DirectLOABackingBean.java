@@ -2064,16 +2064,12 @@ public class DirectLOABackingBean extends
 
 			for (ScQtSchedule schedule : schdules) {
 
-				Date d1 = new Date();
-
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(d1);
-				String date = localDate.substring(0, 2);
-				String fromdate = date + "/"
+				String fromdate = 01 + "/"
 						+ getMonth(schedule.getStartMonth()) + "/"
 						+ schedule.getStartYear();
-				String toDate = date + "/" + getMonth(schedule.getEndMonth())
+				String toDate = 01 + "/" + getMonth(schedule.getEndMonth())
 						+ "/" + schedule.getEndYear();
 				try {
 					if (df.parse(fromdate).after(df.parse(toDate))) {
