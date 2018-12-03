@@ -1394,8 +1394,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
 					overallContractAmount = contractAmt.getContractAmount().doubleValue();
-					if (contractAmt.getGstAmount() != null) {
-						overallContractAmount += contractAmt.getGstAmount().doubleValue();
+					if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
+						overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
 					}
 					overallContractAmount = Double.valueOf(df.format(overallContractAmount));
 					break;
@@ -2154,20 +2154,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to 
-	 * calculate over all amount with GST
+	 * calculate over all amount with GST AND STAX
 	 */
 	public void calculateOrverAllAmt(){
 		if(getManagedBean().getCtContractAmount()!= null) {
 			BigDecimal gstAmt = BigDecimal.ZERO;
+			BigDecimal staxAmt = BigDecimal.ZERO;
 			BigDecimal contractAmt = BigDecimal.ZERO;
 
 			if (getManagedBean().getCtContractAmount().getGstAmount() != null)
 				gstAmt = getManagedBean().getCtContractAmount().getGstAmount();
+			
+			if (getManagedBean().getCtContractAmount().getStaxAmount() != null)
+				staxAmt = getManagedBean().getCtContractAmount().getStaxAmount();
 
 			if (getManagedBean().getCtContractAmount().getContractAmount() != null)
 				contractAmt = getManagedBean().getCtContractAmount().getContractAmount();
 
-			getManagedBean().setGstTotalAmount(gstAmt.add(contractAmt));
+			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
 		}
 		// Recalculate the performance bond amount
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {

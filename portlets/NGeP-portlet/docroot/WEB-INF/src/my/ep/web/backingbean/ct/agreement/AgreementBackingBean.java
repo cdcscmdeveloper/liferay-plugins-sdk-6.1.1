@@ -437,15 +437,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setBondReq(false);
 		}
 
-		// Enable or Disable GST field
+		// Enable or Disable GST AND STAX field
 		if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
 				&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
-		} else {
-			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
-				getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-			}
-			ctBB.getManagedBean().setGstCheckingGUI(true);
+		} else if(ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+				ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+				ctBB.getManagedBean().setGstCheckingGUI(true);
+				ctBB.getManagedBean().setDisableGstAmount(false);			
+		}else if (ctBB.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
+				ctBB.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+				ctBB.getManagedBean().setStaxCheckingGUI(true);
+				ctBB.getManagedBean().setDisableStaxAmount(false);
+			
 		}
 
 		// Check for valid Bond Attachment
@@ -1025,7 +1029,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
 				reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 			}
-			reqDTO.setApprovalLimit(getContractAmt().add(getGstAmt()));
+			reqDTO.setApprovalLimit(getContractAmt().add(getGstAmt().add(getStaxAmt())));
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
 
 			List<PmUser> list = resDTO.getUserList();
@@ -1423,7 +1427,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			context.put("contractEndDate", df.format(getManagedBean().getCtAgreement().getExpDate()));
 			context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");
 
-			BigDecimal overallAmount  = getContractAmt().add(getGstAmt());
+			BigDecimal overallAmount  = getContractAmt().add(getGstAmt().add(getStaxAmt()));
 			BigDecimal lamt  = overallAmount.setScale(
 					CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP);
 			context.put("contractValue", nf.format(lamt) + "");
@@ -2517,6 +2521,24 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			gstAmount = getManagedBean().getContractVer().getCtContractAmount().getGstAmount();
 		}
 		return (gstAmount != null) ? gstAmount : BigDecimal.ZERO;
+	}
+	
+	/**
+	 * The method used to retrieve the correct stax amount
+	 * base on pending verification flag
+	 * 
+	 * @return stax amount
+	 */
+	
+	public BigDecimal getStaxAmt() {
+		BigDecimal staxAmount = BigDecimal.ZERO;
+		if (getManagedBean().getCtAgreement().isPendingVerificationAmendment()
+				&& getManagedBean().getCtAgreement().getCtAmendment() != null) {
+			staxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount();
+		} else {
+			staxAmount = getManagedBean().getContractVer().getCtContractAmount().getStaxAmount();
+		}
+		return (staxAmount != null) ? staxAmount : BigDecimal.ZERO;
 	}
 
 	/**
