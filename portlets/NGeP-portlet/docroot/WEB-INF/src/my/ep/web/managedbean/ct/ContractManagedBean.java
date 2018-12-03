@@ -63,6 +63,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAddress ctAddress;
 	private boolean directPurchase;
 	private boolean gstCheckingGUI;
+	private boolean staxCheckingGUI;
 	private String branchInfoFilePath;
 
 	/*Schedule start*/
@@ -104,6 +105,7 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	private CtContractAmount ctContractAmount;	
 	private boolean disableGstAmount;	
+	private boolean disableStaxAmount;	
 	private boolean disableContractAmount = true;
 	private boolean bondWaiver;
 	private CtContractAmount ctTestBondWaiverAmount;	
@@ -349,6 +351,20 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setGstCheckingGUI(boolean gstCheckingGUI) {
 		this.gstCheckingGUI = gstCheckingGUI;
+	}
+	
+	/**
+	 * @return the staxCheckingGUI
+	 */
+	public boolean isStaxCheckingGUI() {
+		return staxCheckingGUI;
+	}
+
+	/**
+	 * @param staxCheckingGUI the staxCheckingGUI to set
+	 */
+	public void setStaxCheckingGUI(boolean staxCheckingGUI) {
+		this.staxCheckingGUI = staxCheckingGUI;
 	}
 
 	/**
@@ -750,6 +766,20 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableGstAmount(boolean disableGstAmount) {
 		this.disableGstAmount = disableGstAmount;
+	}
+	
+	/**
+	 * @return boolean disableStaxAmount
+	 */
+	public boolean isDisableStaxAmount() {
+		return disableStaxAmount;
+	}
+
+	/**
+	 * @param disableStaxAmount the disableStaxAmount to set
+	 */
+	public void setDisableStaxAmount(boolean disableStaxAmount) {
+		this.disableStaxAmount = disableStaxAmount;
 	}
 
 	/**

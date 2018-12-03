@@ -80,13 +80,31 @@
 			  			</p:inputText>
 			  		</td>
 				</tr>
+				
+				<tr>
+			  	<td>
+						<p:outputLabel id="staxAmount" value="#{lbl['lbl.ct.stax.amt']}"  />
+					</td>
+					<td>
+						<p:inputText for="staxAmount" styleClass="ppRightBtn"  maxlength="22" style="width:120px;"
+			   				 disabled="true" 
+			   				 rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"
+			   				 value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.staxAmount}" >
+			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+						<p:inputText styleClass="ppRightBtn" style="width:120px;" disabled="true" 
+			   				  rendered="#{!ctBackingBean.managedBean.staxCheckingGUI}" value="#{lbl['lbl.txt.na']}">
+						</p:inputText>
+					</td>
+				</tr>
+				
 				<tr>
 					<td>
 						<p:outputLabel id="overAllAmt" value="#{lbl['lbl.ct.gst.all.amt']}" />
 					</td>
 					<td>
 						<p:inputText id="overAllAmts" styleClass="ppRightBtn"  maxlength="22" style="width:120px;"
-			   				value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount + ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+			   				value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.staxAmount + ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount + ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>

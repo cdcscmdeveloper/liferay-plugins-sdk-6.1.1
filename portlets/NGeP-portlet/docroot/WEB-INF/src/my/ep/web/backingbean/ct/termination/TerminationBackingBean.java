@@ -250,16 +250,20 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-			// Enable or Disable GST field
+			// Enable or Disable GST AND STAX field
 			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
 					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
-			} else {
-				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+				ctBB.getManagedBean().setStaxCheckingGUI(false);
+			} else if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 					getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-				}
-				ctBB.getManagedBean().setGstCheckingGUI(true);
-			}
+					ctBB.getManagedBean().setGstCheckingGUI(true);
+			}else if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
+				getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+				ctBB.getManagedBean().setStaxCheckingGUI(true);
+		}
+			
+			
 			flush();
 			if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
 				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
