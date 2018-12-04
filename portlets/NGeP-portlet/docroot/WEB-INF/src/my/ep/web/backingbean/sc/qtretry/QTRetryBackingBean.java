@@ -162,17 +162,41 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 							.updateProposalStartWorkFlowStatus(proposalReqDTO);
 					successful = proposalResDTO.isSuccessful();
 					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
+						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_REQUEST_ITEM);
 					} else {
 						errorMessage = proposalResDTO.getErrorMessage();
 					}
 					break;
 				
-				case QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION :
+				case QTDisruptionConst.QT_PUBLISH_REQUEST_ITEM :
 					NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
 					noticeBoardReqDTO.setQtId(qtId);
 					NoticeBoardResDTO noticeBoardResDTO = getQTNoticeBoardSO()
+							.publishQtAndCopyReqItems(noticeBoardReqDTO);
+					successful = noticeBoardResDTO.isSuccessful();
+					if (successful) {
+						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
+					} else {
+						errorMessage = noticeBoardResDTO.getErrorMessage();
+					}
+					break;
+				case QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION :
+					noticeBoardReqDTO = new NoticeBoardReqDTO();
+					noticeBoardReqDTO.setQtId(qtId);
+					noticeBoardResDTO = getQTNoticeBoardSO()
 							.publishQtAndInsertSuppliers(noticeBoardReqDTO);
+					successful = noticeBoardResDTO.isSuccessful();
+					if (successful) {
+						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_SUPPLIER_NOTIFICATION_DISRUPTION);
+					} else {
+						errorMessage = noticeBoardResDTO.getErrorMessage();
+					}
+					break;
+				case QTDisruptionConst.QT_PUBLISH_SUPPLIER_NOTIFICATION_DISRUPTION :
+					noticeBoardReqDTO = new NoticeBoardReqDTO();
+					noticeBoardReqDTO.setQtId(qtId);
+					noticeBoardResDTO = getQTNoticeBoardSO()
+							.publishQtAndSendNotifications(noticeBoardReqDTO);
 					successful = noticeBoardResDTO.isSuccessful();
 					if (successful) {
 						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
