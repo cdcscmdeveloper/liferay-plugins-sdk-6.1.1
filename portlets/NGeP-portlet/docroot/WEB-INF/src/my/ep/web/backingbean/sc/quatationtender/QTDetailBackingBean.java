@@ -5900,6 +5900,7 @@ public class QTDetailBackingBean extends
 	
 	private void insertSuppliersAndSendNotification(Long qtId) {
 		IQTNoticeBoardSO noticeBoardSO = null;
+		int disruptionStage = QTDisruptionConst.QT_PUBLISH_REQUEST_ITEM;
 		try {
 			
 				noticeBoardSO = BusinessDelegate.getInstance()
@@ -5910,18 +5911,47 @@ public class QTDetailBackingBean extends
 			if (qtId != null) {
 				reqDTO.setQtId(qtId);
 				NoticeBoardResDTO resDTO = noticeBoardSO
-						.publishQtAndInsertSuppliers(reqDTO);
-
+						.publishQtAndCopyReqItems(reqDTO);
+				
 				if (resDTO.isSuccessful()) {
-					log.info("$$$$$ Insert Supplier and send notification successful for the QT Id :"
+					disruptionStage = QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION;
+					log.info("$$$$$ Copy Request Items successful for the QT Id :"
 							+ qtId);
-					updateQtPublishBpmTask(qtId);
+					resDTO = noticeBoardSO.publishQtAndInsertSuppliers(reqDTO);
+
+					if (resDTO.isSuccessful()) {
+						disruptionStage = QTDisruptionConst.QT_PUBLISH_SUPPLIER_NOTIFICATION_DISRUPTION;
+						log.info("$$$$$ Insert Supplier successful for the QT Id :"
+								+ qtId);
+						resDTO = noticeBoardSO.publishQtAndSendNotifications(reqDTO);
+						
+						if (resDTO.isSuccessful()) {
+							log.debug("$$$$$ Send notification successful for the QT Id :"
+									+ qtId);
+							disruptionStage = QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION;
+							updateQtPublishBpmTask(qtId, disruptionStage);
+						} else {
+							log.debug("$$$$$ Send notification unsuccessful for the QT Id :"
+									+ qtId);
+							updateQtAsDisrupted(
+									qtId,
+									disruptionStage,
+									resDTO.getErrorMessage());
+						}
+					} else {
+						log.info("$$$$$ Insert Supplier unsuccessful for the QT Id :"
+								+ qtId);
+						updateQtAsDisrupted(
+								qtId,
+								disruptionStage,
+								resDTO.getErrorMessage());
+					}
 				} else {
-					log.info("$$$$$ Insert Supplier and send notification unsuccessful for the QT Id :"
+					log.info("$$$$$ Copy Request Items unsuccessful for the QT Id :"
 							+ qtId);
 					updateQtAsDisrupted(
 							qtId,
-							QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION,
+							disruptionStage,
 							resDTO.getErrorMessage());
 				}
 			}
@@ -5939,14 +5969,14 @@ public class QTDetailBackingBean extends
 
 			}
 			updateQtAsDisrupted(qtId,
-					QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION,
+					disruptionStage,
 					errorMessage);
 		}finally{
 			noticeBoardSO=null;
 		}
 	}
 
-	private void updateQtPublishBpmTask(Long qtId) {
+	private void updateQtPublishBpmTask(Long qtId, int disruptionStage) {
 		// Update BPM after work flow status and supplier insertion successful
 		IQTNoticeBoardSO noticeBoardSO = null;
 		try {
@@ -5965,7 +5995,7 @@ public class QTDetailBackingBean extends
 				log.info("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
 						+ qtId);
 				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION,
+						disruptionStage,
 						resDTO.getErrorMessage());
 			}
 		} catch (Exception e) {
@@ -5981,7 +6011,8 @@ public class QTDetailBackingBean extends
 
 			}
 			updateQtAsDisrupted(qtId,
-					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION, errorMessage);
+					disruptionStage, 
+					errorMessage);
 		}finally{
 			noticeBoardSO=null;
 		}
