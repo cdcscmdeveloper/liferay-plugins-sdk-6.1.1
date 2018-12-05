@@ -3792,13 +3792,13 @@ public class LOADetailBackingBean extends
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
 			for (ScQtSchedule schedule : freqschedule) {
-				Date currentDate = new Date();
+				//Date currentDate = new Date();
 				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-				String localDate = df.format(currentDate);
-				String day = localDate.substring(0, 2);
-				String fromdate = day + "/" + schedule.getStartMonth() + "/"
+				//String localDate = df.format(currentDate);
+				//String day = localDate.substring(0, 2);
+				String fromdate = 01 + "/" + schedule.getStartMonth() + "/"
 						+ schedule.getStartYear();
-				String toDate = day + "/" + schedule.getEndMonth() + "/"
+				String toDate = 01 + "/" + schedule.getEndMonth() + "/"
 						+ schedule.getEndYear();
 
 				schedule.setScheduleNo(schedule.getScheduleNo());
