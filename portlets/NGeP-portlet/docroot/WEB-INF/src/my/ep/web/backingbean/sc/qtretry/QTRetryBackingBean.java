@@ -153,6 +153,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 			String errorMessage = null;
 			ScQt scQt = qtDisruptionLog.getScQt();
 			Long qtId = scQt.getQtId();
+			log.info(new StringBuilder().append("qtId: ").append(qtId).append(", disruptionStage: ").append(disruptionStage));
 			
 			switch (disruptionStage) {
 				case QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION :
@@ -269,6 +270,8 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 			}
 			
 			if (!successful) {
+				log.info(new StringBuilder().append("unsuccessful-->").append("qtId: ").append(qtId).append(", errorMessage: ").append(errorMessage));
+				
 				if (qtDisruptionLog.getDisruptionStage() != null && 
 						!qtDisruptionLog.getDisruptionStage().equals(disruptionStage)) {
 					insertQTDisruption(scQt, disruptionStage, errorMessage);
