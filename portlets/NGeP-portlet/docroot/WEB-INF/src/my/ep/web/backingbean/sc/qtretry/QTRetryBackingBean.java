@@ -274,6 +274,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 				
 				if (qtDisruptionLog.getDisruptionStage() != null && 
 						!qtDisruptionLog.getDisruptionStage().equals(disruptionStage)) {
+					updateQTDisruptionSuccess(qtDisruptionLog);
 					insertQTDisruption(scQt, disruptionStage, errorMessage);
 				} else {
 					qtDisruptionLog.setErrorMsg(errorMessage);
