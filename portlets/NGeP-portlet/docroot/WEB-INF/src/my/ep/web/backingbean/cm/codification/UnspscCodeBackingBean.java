@@ -2207,7 +2207,21 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setSelectedColor(null);
 		this.getManagedBean().setSelectedMeasurement(null);
 	}
-	
+	public void onDDSelected(CmRequestCode code, String attr){ //onchange listener
+		if(attr.equals("type")){
+			code.setTypeRemark(null);
+			code.setReviewedTypeName(code.getTypeName());
+		}else if(attr.equals("brand")){
+			code.setBrandRemark(null);
+			code.setReviewedBrandName(code.getBrandName());
+		}else if(attr.equals("color")){
+			code.setColorRemark(null);
+			code.setReviewedColorName(code.getColorName());
+		}else if(attr.equals("measurement")){
+			code.setMeasurementRemark(null);
+			code.setReviewedMeasurementName(code.getMeasurementName());
+		}
+	}
 	public String submitToReviewExt(String action) {
 		log.info("***action***" + action);
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -2229,9 +2243,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Object obj = res.getPojo();
 
 		CodificationReqDTO reqUnspscDTO = new CodificationReqDTO();
-		
-		
-		
+		boolean isDDTypeSelected = false;
+		boolean isDDBrandSelected = false;
+		boolean isDDMeasurementSelected = false;
+		boolean isDDColorSelected = false;
+
 			if (this.getManagedBean().getReviewExtCodeList() != null
 					&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
 
@@ -2259,6 +2275,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							code.setColorName(resDTO.getColorList().get(0)
 									.getColorName());
 						}else if(isCdCommittee()){
+							isDDColorSelected = true;
 							code.setReviewedColorName(resDTO.getColorList().get(0)
 									.getColorName());
 						}
@@ -2305,6 +2322,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							code.setBrandName(resDTO.getBrandList().get(0)
 									.getBrandName());
 						}else if(isCdCommittee()){
+							isDDBrandSelected = true;
 							code.setReviewedBrandName(resDTO.getBrandList().get(0)
 									.getBrandName());
 						}
@@ -2354,6 +2372,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						if(isCatalogueAdmin()){
 							code.setTypeName(resDTO.getTypeList().get(0).getTypeName());
 						}else if(isCdCommittee()){
+							isDDTypeSelected = true;
 							code.setReviewedTypeName(resDTO.getTypeList().get(0).getTypeName());
 						}
 						code.setTypeId(code.getTypeNameDD());
@@ -2404,6 +2423,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							code.setMeasurementName(resDTO.getMeasurementList().get(0)
 									.getMeasurementName());
 						}else if(isCdCommittee()){
+							isDDMeasurementSelected = true;
 							code.setReviewedMeasurementName(resDTO.getMeasurementList().get(0)
 									.getMeasurementName());
 						}
@@ -2555,43 +2575,43 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					// //////checking for redundant values
 					if (code.isRequestType()
 							&& (code.getTypeRemark() != null && code
-							.getTypeRemark().trim().length() > 0)) {
+							.getTypeRemark().trim().length() > 0) && !isDDTypeSelected) {
 						checkingTypeRedundency(code.getReviewedTypeName().trim(), true);
 					}
 					if (code.isRequestBrand()
 							&& (code.getBrandRemark() != null && code
-							.getBrandRemark().trim().length() > 0)) {
+							.getBrandRemark().trim().length() > 0) &&  !isDDBrandSelected) {
 						checkingBrandRedundency(code.getReviewedBrandName().trim(), true);
 					}
 					if (code.isRequestMeasurement()
 							&& (code.getMeasurementRemark() != null && code
-							.getMeasurementRemark().trim().length() > 0)) {
+							.getMeasurementRemark().trim().length() > 0) && !isDDMeasurementSelected ) {
 						checkingMeasurmentRedundency(code
 								.getReviewedMeasurementName().trim(), true);
 					}
 					if (code.isRequestColor()
 							&& (code.getColorRemark() != null && code
-							.getColorRemark().trim().length() > 0)) {
+							.getColorRemark().trim().length() > 0) && 	!isDDColorSelected) {
 						checkingColorRedundency(code.getReviewedColorName().trim(), true);
 					}
 					// //////////////////////////////////
-					if ((code.getTypeRemark() != null && code.getTypeRemark()
-							.trim().length() > 0)
-							|| (code.getBrandRemark() != null && code
-							.getBrandRemark().trim().length() > 0)
-							|| (code.getMeasurementRemark() != null && code
-							.getMeasurementRemark().trim().length() > 0)
-							|| (code.getColorRemark() != null && code
-							.getColorRemark().trim().length() > 0)) {
-						log.info("remark added!!");
-						code.setRemarkRequired(false);
-
+					if( !isDDMeasurementSelected || !isDDColorSelected || !isDDBrandSelected || !isDDTypeSelected){
+						if ((code.getTypeRemark() != null && code.getTypeRemark()
+								.trim().length() > 0)
+								|| (code.getBrandRemark() != null && code
+								.getBrandRemark().trim().length() > 0 )
+								|| (code.getMeasurementRemark() != null && code
+								.getMeasurementRemark().trim().length() > 0  )
+								|| (code.getColorRemark() != null && code
+								.getColorRemark().trim().length() > 0) ) {
+							log.info("remark added!!");
+							code.setRemarkRequired(false);
+						}
 					}
 
-					if (code.isRemarkRequired()) {
-						System.out
-						.println("................test...........code.isRemarkRequired()="
-								+ code.isRemarkRequired());
+
+					if (code.isRemarkRequired() ) {
+						log.info("remark  error invoked");
 						throw new EpException(
 								MessageConst.ERROR_716007,
 								new String[] { ResourceBundleUtils
@@ -2600,8 +2620,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
 												.getUserLocale()) });
-
-						// return "reviewApproveExtensionCode";
 					}
 				}
 				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
@@ -2848,7 +2866,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			.add(resDTO.getRequestCode());
 			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		}
-		log.info("\n\n\n\n\nThe task name is " + res.getTaskName());
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
 			
 			// if(!code.isRequestColor()){
