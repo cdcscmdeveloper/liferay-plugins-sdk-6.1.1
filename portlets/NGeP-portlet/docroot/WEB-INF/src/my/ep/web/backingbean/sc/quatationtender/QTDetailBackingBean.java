@@ -5926,12 +5926,12 @@ public class QTDetailBackingBean extends
 						resDTO = noticeBoardSO.publishQtAndSendNotifications(reqDTO);
 						
 						if (resDTO.isSuccessful()) {
-							log.debug("$$$$$ Send notification successful for the QT Id :"
+							log.info("$$$$$ Send notification successful for the QT Id :"
 									+ qtId);
 							disruptionStage = QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION;
 							updateQtPublishBpmTask(qtId, disruptionStage);
 						} else {
-							log.debug("$$$$$ Send notification unsuccessful for the QT Id :"
+							log.info("$$$$$ Send notification unsuccessful for the QT Id :"
 									+ qtId);
 							updateQtAsDisrupted(
 									qtId,
