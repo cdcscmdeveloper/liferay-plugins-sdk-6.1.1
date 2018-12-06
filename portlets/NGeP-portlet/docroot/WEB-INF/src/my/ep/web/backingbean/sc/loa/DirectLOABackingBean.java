@@ -8092,6 +8092,8 @@ public class DirectLOABackingBean extends
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(this.getManagedBean().getScLoa(), outcome);
+		// validate spec questions
+		validateSpecQuestions();
 		
 		String loa = getMessage("lbl.sc.loiloa.loa.header.title", null);
 		String procurementMode = null; 
@@ -8126,9 +8128,6 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
 		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" DIRECT LOA.");
 		
-		// validate spec questions
-		validateSpecQuestions();
-
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");		
