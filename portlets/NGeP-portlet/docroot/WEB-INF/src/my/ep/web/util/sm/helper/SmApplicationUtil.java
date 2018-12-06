@@ -11918,7 +11918,7 @@ public class SmApplicationUtil {
 			long diff = currentDate.getTime()
 					- currWorkflow.getCreatedDate().getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
-			if (diffDays > SmRuleHelper.getInstance()
+			if (diffDays >= SmRuleHelper.getInstance()
 					.getApplicationResubmissionDays()) {
 				valid = false;
 			}
