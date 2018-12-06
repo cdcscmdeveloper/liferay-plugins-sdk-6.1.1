@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -69,6 +70,8 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.osb.sc.DPOsbReqDTO;
+import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -1045,6 +1048,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
+			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
 		}
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
@@ -4250,4 +4254,64 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScSupplierItemPrice scSupplierItemPrice = Collections.max(items, comparator);
 		return scSupplierItemPrice;
 	}
+	
+	/**
+	 * check if no supplier respond 
+	 *
+	 * @param scRequestNoteDtl the sc request note dtl
+	 * @return
+	 */
+	private void checkIsSupplierResponse(List<ScRequestNoteDtl>  requestNoteDtls, Long currentStatus){
+		log.debug("checkSupplierResponse");
+		
+		boolean isResponse = Boolean.TRUE;
+		
+		if(DPStatusConstants.SQ_PENDING_RN_CREATION.equals(currentStatus)){
+			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteDtls) {
+				
+				ScRequestSupplierItem scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+
+				if(scRequestSupplierItem != null 
+						&& scRequestSupplierItem.getSmSupplier().getSupplierId() == null){
+					isResponse = Boolean.FALSE;
+					break;
+				}
+			}
+		}
+
+		if(!isResponse){
+			getManagedBean().setCloneReQuote(true);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, 
+					MessageUtils.getMessage(MessageConst.ERROR_760475, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}else{
+			getManagedBean().setCloneReQuote(false);
+		}
+	}
+	
+	public void cloneAction(){
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		ScQuote quote = requestNote.getQuote();
+		
+		PmUser user = new FacesScopes().getUserSessionBean();
+		DPOsbReqDTO reqOsbDTO = new DPOsbReqDTO();
+		reqOsbDTO.setRequestNoteId(requestNote.getRequestNoteId());
+		reqOsbDTO.setUserId(user.getUserId());
+		
+		DPOsbResDTO resOsbDTO =	getDPOsbSO().cloneQuote(reqOsbDTO);
+		
+		if(resOsbDTO.isSuccessful()){
+			successMessage(MessageConst.INFO_700058, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_SIMPLE_QUOTE,
+					quote.getQuoteNo(), Boolean.TRUE);
+		}
+	}
+	
+	/**
+	 * Gets the DPOsbSO.
+	 *
+	 * @return the DPOsbSO
+	 */
+	private IDPOsbSO getDPOsbSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDPOsbSO.class);
+	}	
 }

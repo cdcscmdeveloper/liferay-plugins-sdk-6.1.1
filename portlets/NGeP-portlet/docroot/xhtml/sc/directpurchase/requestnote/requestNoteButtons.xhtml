@@ -99,6 +99,12 @@
 							action="#{requestNoteBackingBean.backToPrevious}"
 							rendered="#{isSourceMethodSC and requestNoteBackingBean.managedBean.itemSearchBackBtn}" />
 					</c:if>
+					
+					<p:commandButton value="#{lbl['lbl.btn.clone.requote']}"
+						rendered="#{requestNoteBackingBean.managedBean.cloneReQuote}"
+						action="#{requestNoteBackingBean.cloneAction()}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						process="@this" />				
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!isPidExpired and (requestNoteBackingBean.managedBean.assignedState or empty requestNoteBackingBean.managedBean.taskId)}"
