@@ -149,7 +149,7 @@
 			onShow="singleUploadListener(uploadWV);"
 			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
 			<p:fileUpload widgetVar="uploadWV" 
-				allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
