@@ -716,10 +716,10 @@ u {
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
-						class="text_family">4.2 Peruntukan CBP (sekiranya
+						class="text_family">4.2 Peruntukan CJCP (sekiranya
 							berkaitan) </span></td>
 					<td>:</td>
-					<td>RM $gstAmt</td>
+					<td>RM $sstAmt</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
