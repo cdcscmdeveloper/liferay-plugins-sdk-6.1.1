@@ -370,24 +370,28 @@
 					</c:choose>
 				</td>
 			</tr>
+			<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
-				<td colspan="3"><p:inputText style="text-align: right;"
-						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{directLOABackingBean.isGSTRegActive() or isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
-						size="35">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<td><p:outputLabel value="#{lbl['lbl.sc.sst.rm']}" /></td>
+				<td>
+					<p:inputText size="35" style="text-align:right;"
+							value="#{directLOABackingBean.managedBean.scLoa.sstAmt}"
+							disabled="#{!directLOABackingBean.isSSTRegActive() or isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}" > 
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
-							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.gstAmt)}"
+							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.sstAmt)}"
 							update="@this,ContractAmtId,bondReqPG"></p:ajax>
-					</p:inputText></td>
+					</p:inputText>
+				</td>
 			</tr>
 
 			<tr>
 				<td></td>
 				<td colspan="3">
 					<h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.sst.offer.price.reminder']}"
+						escape="false" /> <BR />
+					<!-- <h:outputText styleClass="instruction"
 						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
 						escape="false" 
 						rendered = "#{directLOABackingBean.getGstRate() == 6}"/> 
@@ -399,24 +403,23 @@
 					<h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
 						escape="false"
-						rendered="#{directLOABackingBean.managedBean.renderRemainder}" />
+						rendered="#{directLOABackingBean.managedBean.renderRemainder}" />  -->
 				</td>
 			</tr>
-
+			<!-- end Enhncement #24259 #24269 -->
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
-				<td colspan="3"><p:inputText style="text-align: right;"
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
+				<td colspan="3">
+					<p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.overallContractAmt}"
 						size="35" id="ContractAmtId" disabled="true">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
 				<td>
 					<c:choose>
