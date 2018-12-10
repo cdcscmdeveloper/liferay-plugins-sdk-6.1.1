@@ -92,23 +92,23 @@
 				</p:inputText>
 			</td>
 		</tr>
-		
+		<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
 		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sc.sst.rm']}" /></td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" />
+				<p:inputText disabled="true" size="40" style="text-align:right;" 
+						value="#{lOADetailBackingBean.managedBean.scLoa.sstAmt}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</td>
-			<td>
-				<p:inputText 
-						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}" disabled="true" size="40" style="text-align:right;">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
-				</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td colspan="3">
 				<h:outputText styleClass="instruction"
+					value=" #{lbl['lbl.sc.sst.offer.price.reminder']}"
+					escape="false" /> <BR />
+				<!-- <h:outputText styleClass="instruction"
 					value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
 					escape="false"
 					rendered = "#{directLOABackingBean.getGstRate() == 6}" />
@@ -119,10 +119,10 @@
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
 					escape="false"
-					rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" />
+					rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" />  -->
 			</td>
 		</tr>
-		
+		<!-- end Enhncement #24259 #24269 -->		
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" />
