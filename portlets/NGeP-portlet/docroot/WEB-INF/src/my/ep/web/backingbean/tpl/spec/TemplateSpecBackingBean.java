@@ -343,6 +343,16 @@ public class TemplateSpecBackingBean extends
 		TplSpecQuestion questionToDelete = templateSpecBean
 				.getSelectedSpecQuestion();
 		int selectedIndex = specQuestionList.indexOf(questionToDelete);
+	TplSpecMaster specMaster = questionToDelete.getTplSpecMaster();
+	List<TplSpecQuestion> techicalDeleteQuestionList=null;
+	if(null!=specMaster){
+	 techicalDeleteQuestionList=	specMaster.getTechnicalSpecQuestionsToDelete();
+	 if(null==techicalDeleteQuestionList){
+		 techicalDeleteQuestionList = new ArrayList<TplSpecQuestion>();
+		specMaster.setTechnicalSpecQuestionsToDelete(techicalDeleteQuestionList); 
+	 }
+	}
+				
 
 		if (questionToDelete.getQuestionType().equalsIgnoreCase(
 				TemplateSpecConst.QUESTION_TYPE_ITEM)) {
@@ -356,6 +366,13 @@ public class TemplateSpecBackingBean extends
 				}
 				if (!childToDelete.isBrandNew()) {
 					childToDelete.setDeleted(true);
+					if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equalsIgnoreCase(
+							childToDelete.getQuestionType())) {
+						if(null!=childToDelete.getClPriceTypeCode()){
+							childToDelete.setClPriceTypeCode(null);
+						}	
+					}
+					techicalDeleteQuestionList.add(childToDelete);
 				}
 				specQuestionList.remove(childToDelete);
 				i--;
@@ -366,13 +383,22 @@ public class TemplateSpecBackingBean extends
 			if(null!=questionToDelete.getTplSpecMaster() && null!=questionToDelete.getTplSpecMaster().getTplSpecZone()){
 			TemplateSpecHelper.getInstance().resetSpecZoneQuanties(questionToDelete);
 			}
+			if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equalsIgnoreCase(
+					questionToDelete.getQuestionType())) {
+				if(null!=questionToDelete.getClPriceTypeCode()){
+					questionToDelete.setClPriceTypeCode(null);
+				}	
+			}
+			
+			techicalDeleteQuestionList.add(questionToDelete);
 		}
 		specQuestionList.remove(questionToDelete);
-
 		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
 				.equals(templateSpecBean.getContentType())) {
 			TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(
 					templateSpecBean, questionToDelete.getTplSpecAnswers());
+			questionToDelete.setTplSpecAnswers(null);
+			//specMaster.setTechnicalSpecQuestionsToDelete(null); 
 		}
 
 		templateSpecBean.setSelectedSpecQuestion(null);
