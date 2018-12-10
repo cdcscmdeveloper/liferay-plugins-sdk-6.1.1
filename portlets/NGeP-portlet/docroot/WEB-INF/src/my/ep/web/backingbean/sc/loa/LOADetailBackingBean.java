@@ -39,9 +39,9 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -67,11 +67,11 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
-import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.sst.SupplierSstReqDTO;
+import my.ep.dto.sm.sst.SupplierSstResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -111,10 +111,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
-import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -345,7 +345,10 @@ public class LOADetailBackingBean extends
 
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
-			isGSTRegActive();
+			
+			//Enhancement #24259 #24269
+//			isGSTRegActive();
+			isSSTRegActive();
 
 			// Setting BI Report
 			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
@@ -479,8 +482,8 @@ public class LOADetailBackingBean extends
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
-			AwardSupplierResDTO resDTO = getQtAwardSO()
-					.retrieveLOADtlByLoaId(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaId(reqDTO);
+			
 			if (resDTO.getScLoa() != null) {
 				ScLoa scLoa = resDTO.getScLoa();
 
@@ -659,7 +662,11 @@ public class LOADetailBackingBean extends
 		}
 
 		//Supplier overall contract amount
-		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		//Enhancement #24259 #24269
+//		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		BigDecimal overallCtAmout = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
+		log.info(":::populateLOADetails() overallCtAmout (RM) = "+ overallCtAmout);
+		//end Enhancement #24259 #24269
 		getManagedBean().setOverallContractAmt(overallCtAmout);
 		scLoa.setOverallContractAmt(overallCtAmout);
 
@@ -682,7 +689,7 @@ public class LOADetailBackingBean extends
 			scLoa.setSupplierBranch(scLoa.getScLoiLoa().getScLois().get(0).getSupplierBranch());
 			scLoa.setLoiCreated(Boolean.TRUE);
 		}
-		handleBranchDetailsChanged(false);
+//		handleBranchDetailsChanged(false);-
 
 		// Supplier Witness
 		ScLoaWitness loaSupplierWitness = null;
@@ -1724,7 +1731,9 @@ public class LOADetailBackingBean extends
 			gstRegFlag = "true";
 		}
 		context.put("gstRegFlag", gstRegFlag);
-		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		
+//		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setSSMInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, scQt, myLocale);
 		setMinSL1MParticipant(context, scLoa, integerDF);
@@ -2425,44 +2434,38 @@ public class LOADetailBackingBean extends
 
 		String BranchName = getSupplierBranchNameByBranchCode(selectedSupplierBranchCode);
 
-		if (null == BranchName
-				|| supplierBranchAsHQ.equals(BranchName)) {
-			SmPersonnel supplierHQPersonnel = this.getManagedBean()
-					.getSupplierHQPersonnel();
-			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl()
-					.getSmCompanyBasic();
+		if (null == BranchName || supplierBranchAsHQ.equals(BranchName)) {
+			SmPersonnel supplierHQPersonnel = this.getManagedBean().getSupplierHQPersonnel();
+			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl().getSmCompanyBasic();
 
-			for (SmCompanyAddress smCompanyAddress : smCompanyBasic
-					.getSmCompanyAddresses()) {
-				if (AddressType.CONTACT_ADDRESS.value().equals(
-						smCompanyAddress.getAddressType())) {
+			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
 					log.info("found hq address");
 
 					scLoa.setSupplierBranch(supplierBranchAsHQ);
 
 					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getScSupplierAddress(),
-							smCompanyAddress.getSmAddress(), 
-							supplierHQPersonnel, smCompanyBasic);
+							smCompanyAddress.getSmAddress(), supplierHQPersonnel, smCompanyBasic);
 					scLoa.setScSupplierAddress(supplierAddress);
 
 					// Get Gst info for HQ
-					Long supplierId = scLoa.getScLoiLoa().getSmSupplier()
-							.getSupplierId();
-					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
+					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
+					SupplierSstResDTO resDTO = getSSTInfo(supplierId, null);
+//					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
+					
 					if(isBranchChanged){
-						setGSTInfo(resDTO, scLoa);
+						setSSTInfo(resDTO, scLoa);
+//						setGSTInfo(resDTO, scLoa);
 					}
 
 					break;
 				}
 			}
 		} else {
-			List<SmSupplierBranch> supplierBranchs = this.getManagedBean()
-					.getBranchsList();
+			List<SmSupplierBranch> supplierBranchs = this.getManagedBean().getBranchsList();
 
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
-				if (supplierBranch.getBranchCode().equals(
-						selectedSupplierBranchCode)) {
+				if (supplierBranch.getBranchCode().equals(selectedSupplierBranchCode)) {
 					log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
@@ -2481,10 +2484,14 @@ public class LOADetailBackingBean extends
 
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
+					SupplierSstResDTO resDTO = getSSTInfo(supplierId,supplierBranch.getBranchCode());
+//					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
+					
 					if(isBranchChanged){
-						setGSTInfo(resDTO,scLoa);
+						setSSTInfo(resDTO,scLoa);
+//						setGSTInfo(resDTO,scLoa);
 					}
+					
 					break;
 				}
 			}
@@ -4566,6 +4573,7 @@ public class LOADetailBackingBean extends
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
 			quantity = scLoiLoaItem.getQty();
+			
 			if(null == scLoiLoaItem.getTplSpecTierQty() ){
 				// without Tier quantity
 
@@ -4770,12 +4778,14 @@ public class LOADetailBackingBean extends
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
 		// if supplier Gst Registered  
-		if(isGSTRegActive()){
+//		if(isGSTRegActive()){
+		
+		if (isSSTRegActive()) { //Enhancement #24259 #24269
 			overallContractAmtOrLoaAmt = loa.getOverallContractAmt(); 
-
-		} else{
+		} else {
 			overallContractAmtOrLoaAmt = loa.getLoaAmt();
 		}
+		
 		return overallContractAmtOrLoaAmt;
 	}
 
@@ -5068,27 +5078,61 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	//Enhancement #24259 #24269
+//	/**
+//	 * Sum of gstAmount & loa offer price
+//	 * 
+//	 * @param gstAmount
+//	 */
+//	public void calculateOverallAmount(BigDecimal gstAmount) {
+//		ScLoa scLoa = getManagedBean().getScLoa();
+//		getManagedBean().setOverallContractAmt(
+//				overallCtAmount(scLoa.getLoaAmt(), gstAmount));
+//
+//		scLoa.setOverallContractAmt(getManagedBean().getOverallContractAmt());
+//
+//		if (null != getManagedBean().getContractSignerUser()
+//				&& getManagedBean().getContractSignerUser().getUserId() != null) {
+//
+//			scLoa.setLoaSignerDesig(null);
+//			scLoa.setContractSigner(null);
+//			getManagedBean().setContractSignerUser(null);
+//			prepareSignerInfo();
+//			RequestContext.getCurrentInstance().execute(
+//					"gstSignerConfirmPopupWin.show()");
+//		} else {
+//			prepareSignerInfo();
+//		}
+//
+//		checkAgreementMandatory();
+//
+//		checkPerformanceBondMandatory();
+//
+//		calcBondAmount(scLoa, Boolean.FALSE);
+//		// bond amount in words
+//		if (scLoa.getBondAmt() != null) {
+//			getManagedBean().setBondAmountWord(
+//					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+//		}
+//	}
+	
 	/**
-	 * Sum of gstAmount & loa offer price
+	 * Sum of sstAmount & loa offer price
 	 * 
-	 * @param gstAmount
+	 * @param sstAmount
 	 */
-	public void calculateOverallAmount(BigDecimal gstAmount) {
+	public void calculateOverallAmount(BigDecimal sstAmount) {
 		ScLoa scLoa = getManagedBean().getScLoa();
-		getManagedBean().setOverallContractAmt(
-				overallCtAmount(scLoa.getLoaAmt(), gstAmount));
-
+		getManagedBean().setOverallContractAmt(overallCtAmountWithSST(scLoa.getLoaAmt(), sstAmount));
 		scLoa.setOverallContractAmt(getManagedBean().getOverallContractAmt());
 
-		if (null != getManagedBean().getContractSignerUser()
-				&& getManagedBean().getContractSignerUser().getUserId() != null) {
+		if (null != getManagedBean().getContractSignerUser() && getManagedBean().getContractSignerUser().getUserId() != null) {
 
 			scLoa.setLoaSignerDesig(null);
 			scLoa.setContractSigner(null);
 			getManagedBean().setContractSignerUser(null);
 			prepareSignerInfo();
-			RequestContext.getCurrentInstance().execute(
-					"gstSignerConfirmPopupWin.show()");
+			RequestContext.getCurrentInstance().execute("sstSignerConfirmPopupWin.show()");
 		} else {
 			prepareSignerInfo();
 		}
@@ -5098,33 +5142,55 @@ public class LOADetailBackingBean extends
 		checkPerformanceBondMandatory();
 
 		calcBondAmount(scLoa, Boolean.FALSE);
+		
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
-			getManagedBean().setBondAmountWord(
-					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			getManagedBean().setBondAmountWord(NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
 	}
 
+//	/**
+//	 * Checks if is GST reg active.
+//	 *
+//	 * @return true, if is GST reg active
+//	 */
+//	public boolean isGSTRegActive() {
+//		boolean isActive = Boolean.FALSE;
+//		ScLoa scLoa = getManagedBean().getScLoa();
+//		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+//		getManagedBean().setRenderRemainder(false);
+//		if ((supplier != null && supplier.getGstRegisteredFlag() == 
+//				DbValueConst.RECORD_STATUS_ACTIVE)) {
+//			if (null != scLoa.getGstEffDate()){
+//				if(scLoa.getGstEffDate().compareTo(new Date()) <= 0){
+//					isActive = Boolean.TRUE;
+//				}else {
+//					getManagedBean().setRenderRemainder(isActive);
+//				}
+//			}
+//		}
+//		return isActive;
+//	}
+	
 	/**
-	 * Checks if is GST reg active.
+	 * Checks if is SST reg active.
 	 *
-	 * @return true, if is GST reg active
+	 * @return true, if is SST reg active
 	 */
-	public boolean isGSTRegActive() {
+	public boolean isSSTRegActive() { 
 		boolean isActive = Boolean.FALSE;
+		
 		ScLoa scLoa = getManagedBean().getScLoa();
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
-		getManagedBean().setRenderRemainder(false);
-		if ((supplier != null && supplier.getGstRegisteredFlag() == 
-				DbValueConst.RECORD_STATUS_ACTIVE)) {
-			if (null != scLoa.getGstEffDate()){
-				if(scLoa.getGstEffDate().compareTo(new Date()) <= 0){
+				
+		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {		
+			if (null != scLoa.getSstEffDate()) {		
+				if(scLoa.getSstEffDate().compareTo(new Date()) <= 0){
 					isActive = Boolean.TRUE;
-				}else {
-					getManagedBean().setRenderRemainder(isActive);
 				}
 			}
 		}
+		
 		return isActive;
 	}
 
@@ -5132,41 +5198,48 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		BigDecimal overallContractAmt = scLoa.getLoaAmt();
-		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& null != scLoa.getGstAmt()) {
-			overallContractAmt = overallContractAmt.add(scLoa.getGstAmt());
+//		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
+//				&& null != scLoa.getGstAmt()) {
+//			overallContractAmt = overallContractAmt.add(scLoa.getGstAmt());
+//		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
 
-		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
-
+		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
+				&& null != scLoa.getSstAmt()) {
+			overallContractAmt = overallContractAmt.add(scLoa.getSstAmt());
+		} else if ((supplier != null && supplier.getSstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
 			BigDecimal durationMnth = null;
 			BigDecimal noOfMnth = new BigDecimal(12);
+			
 			for (ScLoiLoaItem loiLoaItem : scLoa.getScLoiLoaItems()) {
-				TplSpecQuestion specQuestion = loiLoaItem.getScRequestItem()
-						.getTplSpecQuestion();
+				TplSpecQuestion specQuestion = loiLoaItem.getScRequestItem().getTplSpecQuestion();
+				
 				if (specQuestion != null) {
 					TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+					
 					if (specMaster.getItemTypeCode().getParameterCode()
 							.compareTo(ParameterConst.ITEM_TYPE_SERVICE) == 0) {
-						durationMnth = specQuestion.getTplSpecMaster()
-								.getDurationMonth();
+						durationMnth = specQuestion.getTplSpecMaster().getDurationMonth();
 						break;
 					}
-
 				}
 			}
+			
 			if (durationMnth != null) {
 				BigDecimal awardedPrice = (overallContractAmt.divide(
 						durationMnth, 2, BigDecimal.ROUND_HALF_UP)).multiply(noOfMnth);
 				awardedPrice = awardedPrice.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+				
 				if (awardedPrice.intValue() > 500000) {
 					getManagedBean().setDisplayAlert(true);
 				}
 			}
 		}
+		
 		overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		getManagedBean().setOverallContractAmt(overallContractAmt);
 	}
-
+	//end Enhancement #24259 #24269
+	
 	/**
 	 * Check proposal validity date reach by qt.
 	 *
@@ -5261,52 +5334,100 @@ public class LOADetailBackingBean extends
 			log.error("Exceptionn occured while uploading the file"+e.getMessage());
 		}
 	}
-
-	private void setGstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,
-			DecimalFormat amountDF, Locale myLocale) {
+	
+	//Enhancement #24259 #24269	
+//	private void setGstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,
+//			DecimalFormat amountDF, Locale myLocale) {
+//
+//		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): "______________";
+//		context.put("gstRegNo", gstRegNo);
+//
+//		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
+//				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "______________";
+//				context.put("gstEffectiveDate", gstEffectiveDate);
+//
+//				String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
+//						.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
+//						context.put("gstDeclaredDate", gstDeclaredDate);
+//
+//						String offerPrice = "______________";
+//						String offerPriceWording = "______________";
+//						BigDecimal loaAmount = scLoa.getLoaAmt();
+//						if (loaAmount != null) {
+//							offerPrice = amountDF.format(loaAmount);
+//							offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
+//						}
+//						context.put("offerPrice", offerPrice);
+//						context.put("offerPriceWording", offerPriceWording);
+//
+//						String gstAmount = MALAY_NA;
+//						String gstAmountWording = MALAY_NA;
+//						String overallctAmt = "______________";
+//						String overallctAmtWording = "______________";
+//						BigDecimal gstAmt = scLoa.getGstAmt();
+//						if (gstAmt != null) {
+//							gstAmount = amountDF.format(gstAmt);
+//							gstAmountWording = WordUtils.capitalizeFully(NumberWordUtil.convert(gstAmt
+//									.toString()));
+//							overallctAmt = amountDF.format(loaAmount.add(gstAmt));
+//							overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(gstAmt).toString()));
+//						} else {
+//							overallctAmt = amountDF.format(loaAmount);
+//							overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
+//						}
+//						context.put("gstAmt", gstAmount);
+//						context.put("gstAmtWording", gstAmountWording);
+//						context.put("overallCtAmt", overallctAmt);
+//						context.put("overallCtAmtWording", overallctAmtWording);
+//
+//	}	
+	
+	private void setSstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,	DecimalFormat amountDF, Locale myLocale) {
 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): "______________";
 		context.put("gstRegNo", gstRegNo);
 
 		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
 				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "______________";
-				context.put("gstEffectiveDate", gstEffectiveDate);
+		context.put("gstEffectiveDate", gstEffectiveDate);
 
-				String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
-						.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
-						context.put("gstDeclaredDate", gstDeclaredDate);
+		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
+		context.put("gstDeclaredDate", gstDeclaredDate);
 
-						String offerPrice = "______________";
-						String offerPriceWording = "______________";
-						BigDecimal loaAmount = scLoa.getLoaAmt();
-						if (loaAmount != null) {
-							offerPrice = amountDF.format(loaAmount);
-							offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
-						}
-						context.put("offerPrice", offerPrice);
-						context.put("offerPriceWording", offerPriceWording);
-
-						String gstAmount = MALAY_NA;
-						String gstAmountWording = MALAY_NA;
-						String overallctAmt = "______________";
-						String overallctAmtWording = "______________";
-						BigDecimal gstAmt = scLoa.getGstAmt();
-						if (gstAmt != null) {
-							gstAmount = amountDF.format(gstAmt);
-							gstAmountWording = WordUtils.capitalizeFully(NumberWordUtil.convert(gstAmt
-									.toString()));
-							overallctAmt = amountDF.format(loaAmount.add(gstAmt));
-							overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(gstAmt).toString()));
-						} else {
-							overallctAmt = amountDF.format(loaAmount);
-							overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
-						}
-						context.put("gstAmt", gstAmount);
-						context.put("gstAmtWording", gstAmountWording);
-						context.put("overallCtAmt", overallctAmt);
-						context.put("overallCtAmtWording", overallctAmtWording);
-
-	}
+		String offerPrice = "______________";
+		String offerPriceWording = "______________";
+		BigDecimal loaAmount = scLoa.getLoaAmt();
+				
+		if (loaAmount != null) {
+			offerPrice = amountDF.format(loaAmount);
+			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
+		}
+		
+		context.put("offerPrice", offerPrice);
+		context.put("offerPriceWording", offerPriceWording);
+	
+		String sstAmount = MALAY_NA;
+		String overallctAmt = "______________";
+		String overallctAmtWording = "______________";
+		BigDecimal sstAmt = scLoa.getSstAmt();		
+		
+		if (sstAmt != null) {
+			sstAmount = amountDF.format(sstAmt);
+			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
+			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));						
+		} else {
+			overallctAmt = amountDF.format(loaAmount);
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
+		}
+		
+		context.put("sstAmt", sstAmount);
+		context.put("overallCtAmt", overallctAmt);
+		context.put("overallCtAmtWording", overallctAmtWording);
+				
+	}	
+	//end Enhancement #24259 #24269	
 
 	/**
 	 * @param context
@@ -5471,45 +5592,110 @@ public class LOADetailBackingBean extends
 		return certResDTO.getSmMofCert();
 	}
 
-	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
-
-		ISupplierGstSO supplierGstSO = null;
+//	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
+//
+//		ISupplierGstSO supplierGstSO = null;
+//		try {
+//			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+//			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+//			gstReqDTO.setSupplierId(supplierId);
+//			gstReqDTO.setBranchCode(branchCode);
+//			SupplierGstResDTO gstResDTO = supplierGstSO
+//					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+//			return gstResDTO;
+//		} finally {
+//			supplierGstSO = null;
+//		}
+//	}
+	
+	private SupplierSstResDTO getSSTInfo(Long supplierId, Long branchCode) {
+		ISupplierSstSO supplierSstSO = null;
+		
 		try {
-			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
-			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
-			gstReqDTO.setSupplierId(supplierId);
-			gstReqDTO.setBranchCode(branchCode);
-			SupplierGstResDTO gstResDTO = supplierGstSO
-					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
-			return gstResDTO;
+			supplierSstSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSstSO.class);
+			
+			SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
+			sstReqDTO.setSupplierId(supplierId);
+			sstReqDTO.setBranchCode(branchCode);
+			
+			SupplierSstResDTO sstResDTO = supplierSstSO.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
+			
+			return sstResDTO;
 		} finally {
-			supplierGstSO = null;
+			supplierSstSO = null;
 		}
 	}
 
-	private void setGSTInfo(SupplierGstResDTO resDTO, ScLoa scLoa){
-
-		if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
-			SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
-			scLoa.setGstRegNo(gstSupplier.getGstRegNo());
-			scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
-			scLoa.setGstEffDate(gstSupplier.getGstEffDate());
-		} else {
-			scLoa.setGstRegNo(null);
-			scLoa.setGstDeclaredDate(null);
-			scLoa.setGstEffDate(null);
+//	private void setGSTInfo(SupplierGstResDTO resDTO, ScLoa scLoa){
+//
+//		if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
+//			SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
+//			scLoa.setGstRegNo(gstSupplier.getGstRegNo());
+//			scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
+//			scLoa.setGstEffDate(gstSupplier.getGstEffDate());
+//		} else {
+//			scLoa.setGstRegNo(null);
+//			scLoa.setGstDeclaredDate(null);
+//			scLoa.setGstEffDate(null);
+//		}
+//		if(scLoa.getGstAmt() != null){
+//			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
+//			if ((ctAmount != null && scLoa.getLoaAmt() != null)
+//					&& !scLoa.getLoaAmt().equals(ctAmount)) {
+//				ctAmount = ctAmount.subtract(scLoa.getGstAmt());
+//				ctAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+//				this.getManagedBean().setOverallContractAmt(ctAmount);
+//			}
+//		}
+//		scLoa.setGstAmt(null);
+//	}
+	
+	private void setSSTInfo(SupplierSstResDTO resDTO, ScLoa scLoa) {
+		if(scLoa.getSstTypeId() != null && 
+				scLoa.getSstTypeId().getParameterCode().equals(ParameterConst.SST_SALES_TAX)) {
+			
+			if(resDTO.isSuccessful() && resDTO.getSmSstSupplier() != null) {				
+				SmSstSupplier sstSupplier = resDTO.getSmSstSupplier();
+				
+				scLoa.setSstRegNo(sstSupplier.getSalestaxregno());
+				scLoa.setSstDeclaredDate(sstSupplier.getSalestaxregdecDate());
+				scLoa.setSstEffDate(sstSupplier.getSalestaxregDate());
+			} else {
+				scLoa.setSstRegNo(null);
+				scLoa.setSstDeclaredDate(null);
+				scLoa.setSstEffDate(null);
+			}
+		
+		} else { //ParameterConst.SST_SERVICE_TAX
+			
+			if(resDTO.isSuccessful() && resDTO.getSmSstSupplier() != null) {				
+				SmSstSupplier sstSupplier = resDTO.getSmSstSupplier();
+				
+				scLoa.setSstRegNo(sstSupplier.getServtaxregno());
+				scLoa.setSstDeclaredDate(sstSupplier.getServtaxdecDate());
+				scLoa.setSstEffDate(sstSupplier.getServtaxregDate());
+			} else {
+				scLoa.setSstRegNo(null);
+				scLoa.setSstDeclaredDate(null);
+				scLoa.setSstEffDate(null);
+			}		
 		}
-		if(scLoa.getGstAmt() != null){
+		
+		if(scLoa.getSstAmt() != null) {
 			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
-			if ((ctAmount != null && scLoa.getLoaAmt() != null)
-					&& !scLoa.getLoaAmt().equals(ctAmount)) {
-				ctAmount = ctAmount.subtract(scLoa.getGstAmt());
+			
+			if ((ctAmount != null && scLoa.getLoaAmt() != null) && !scLoa.getLoaAmt().equals(ctAmount)) {
+				ctAmount = ctAmount.subtract(scLoa.getSstAmt());
+				
 				ctAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				
 				this.getManagedBean().setOverallContractAmt(ctAmount);
 			}
 		}
-		scLoa.setGstAmt(null);
+		
+		scLoa.setSstAmt(null);
 	}
 
 	/**
@@ -5576,14 +5762,17 @@ public class LOADetailBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		
 		if (scLoa.getLoaAmt() != null) {
-			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
-					scLoa.getGstAmt()));
+			userReqDTO.setApprovalLimit(overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt()));
+//			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
+//					scLoa.getGstAmt()));
 		}
-		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
-				.getOrgProfileId());
+		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+		
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 		getManagedBean().setContractSignerList(userResDTO.getUserList());
+		
 		getManagedBean().setContractSignerUser(contractSignerUser);
 	}
 
@@ -5962,14 +6151,18 @@ public class LOADetailBackingBean extends
 		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 		sb.append(RoleCode.CONTRACT_SIGNER.value());
 		sb.append("^9");
+
 		if (scLoa.getLoaAmt() != null) {
 			sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
 			sb.append(true);
 			sb.append("^1");
 			sb.append("|pmUserOrgs.pmUserRoles.approvalLimit^");
-			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
+			//Enhancement #24259 #24269
+			sb.append(overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt())); 
+//			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt())); 
 			sb.append("^4");
 		}
+		
 		return sb.toString();
 	}
 
