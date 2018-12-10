@@ -498,7 +498,8 @@ public class DirectLOABackingBean extends
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 			
 			// overall ct amount or loa amt
-			BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+//			BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+			BigDecimal overallCtAmout = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 			getManagedBean().setOverallContractAmt(overallCtAmout);
 			scLoa.setOverallContractAmt(overallCtAmout);
 
@@ -540,7 +541,9 @@ public class DirectLOABackingBean extends
 
 			prepareSupplierSignerInfo();
 
-			scLoa = calcBondAmount(scLoa, true);
+//			scLoa = calcBondAmount(scLoa, true);
+			scLoa = calcBondAmountWithSST(scLoa, true);
+			
 			Date issueDate = scLoa.getIssueDate();
 			Date bondRespDueDate = DateUtils.addDays(issueDate, 30);
 			scLoa.setBondResDueDate(bondRespDueDate);
@@ -2156,7 +2159,7 @@ public class DirectLOABackingBean extends
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-			handleBranchDetailsChanged();
+//			handleBranchDetailsChanged();-
 		}
 		
 		ScQt scQt = getManagedBean().getScQt();
@@ -2202,7 +2205,7 @@ public class DirectLOABackingBean extends
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-			handleBranchDetailsChanged();
+//			handleBranchDetailsChanged();-
 		} else{
 			scLoa.setSupplierBranch(null);
 			scLoa.setScSupplierAddress(null);
@@ -4270,7 +4273,9 @@ public class DirectLOABackingBean extends
 		setUserDetails(awardResDTO.getProductDoc());
 		
 		// overall ct amount or loa amt
-		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		//Enhancement #24259 #24269
+//		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		BigDecimal overallCtAmout = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		getManagedBean().setOverallContractAmt(overallCtAmout);
 		scLoa.setOverallContractAmt(overallCtAmout);
 		
@@ -4338,7 +4343,9 @@ public class DirectLOABackingBean extends
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 		
 		// bond calculation
-		scLoa = calcBondAmount(scLoa, true);
+		//Enhancement #24259 #24269
+		scLoa = calcBondAmountWithSST(scLoa, true);
+//		scLoa = calcBondAmount(scLoa, true);
 
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
@@ -5304,20 +5311,79 @@ public class DirectLOABackingBean extends
 			gstRegFlag = "true";
 		}
 		context.put("gstRegFlag", gstRegFlag);
-		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		
+		//Enhancement #24259 #24269
+		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+//		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 
 		/*DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));*/
 	}
 
+//	/**
+//	 * @param context
+//	 * @param scLoa
+//	 * @param amountDF
+//	 * @param myLocale
+//	 */
+//	private void setGstInfoForAgreementLetter(VelocityContext context,
+//			ScLoa scLoa, DecimalFormat amountDF, Locale myLocale) {
+//
+//		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo()
+//				: "______________";
+//		context.put("gstRegNo", gstRegNo);
+//
+//		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
+//				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "______________";
+//		context.put("gstEffectiveDate", gstEffectiveDate);
+//
+//		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
+//				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
+//		context.put("gstDeclaredDate", gstDeclaredDate);
+//
+//		String offerPrice = "______________";
+//		String offerPriceWording = "______________";
+//		BigDecimal loaAmount = scLoa.getLoaAmt();
+//		if (loaAmount != null) {
+//			offerPrice = amountDF.format(loaAmount);
+//			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil
+//					.convert(loaAmount.toString()));
+//		}
+//		context.put("offerPrice", offerPrice);
+//		context.put("offerPriceWording", offerPriceWording);
+//
+//		String gstAmount = MALAY_NA;
+//		String gstAmountWording = MALAY_NA;
+//		String overallctAmt = "______________";
+//		String overallctAmtWording = "______________";
+//		BigDecimal gstAmt = scLoa.getGstAmt();
+//		if (gstAmt != null) {
+//			gstAmount = amountDF.format(gstAmt);
+//			gstAmountWording = WordUtils.capitalizeFully(NumberWordUtil
+//					.convert(gstAmt.toString()));
+//			overallctAmt = amountDF.format(loaAmount.add(gstAmt));
+//			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil
+//					.convert(loaAmount.add(gstAmt).toString()));
+//		} else {
+//			overallctAmt = amountDF.format(loaAmount);
+//			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil
+//					.convert(loaAmount.toString()));
+//		}
+//		context.put("gstAmt", gstAmount);
+//		context.put("gstAmtWording", gstAmountWording);
+//		context.put("overallCtAmt", overallctAmt);
+//		context.put("overallCtAmtWording", overallctAmtWording);
+//
+//	}
+	
 	/**
 	 * @param context
 	 * @param scLoa
 	 * @param amountDF
 	 * @param myLocale
 	 */
-	private void setGstInfoForAgreementLetter(VelocityContext context,
+	private void setSstInfoForAgreementLetter(VelocityContext context,
 			ScLoa scLoa, DecimalFormat amountDF, Locale myLocale) {
 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo()
@@ -5335,37 +5401,38 @@ public class DirectLOABackingBean extends
 		String offerPrice = "______________";
 		String offerPriceWording = "______________";
 		BigDecimal loaAmount = scLoa.getLoaAmt();
+		
 		if (loaAmount != null) {
 			offerPrice = amountDF.format(loaAmount);
 			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil
 					.convert(loaAmount.toString()));
 		}
+		
 		context.put("offerPrice", offerPrice);
 		context.put("offerPriceWording", offerPriceWording);
 
-		String gstAmount = MALAY_NA;
-		String gstAmountWording = MALAY_NA;
+		String sstAmount = MALAY_NA;
 		String overallctAmt = "______________";
 		String overallctAmtWording = "______________";
-		BigDecimal gstAmt = scLoa.getGstAmt();
-		if (gstAmt != null) {
-			gstAmount = amountDF.format(gstAmt);
-			gstAmountWording = WordUtils.capitalizeFully(NumberWordUtil
-					.convert(gstAmt.toString()));
-			overallctAmt = amountDF.format(loaAmount.add(gstAmt));
-			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil
-					.convert(loaAmount.add(gstAmt).toString()));
+			
+		BigDecimal sstAmt = scLoa.getSstAmt();
+				
+		if (sstAmt != null) {
+			sstAmount = amountDF.format(sstAmt);
+			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
+			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));						
 		} else {
 			overallctAmt = amountDF.format(loaAmount);
-			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil
-					.convert(loaAmount.toString()));
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
 		}
-		context.put("gstAmt", gstAmount);
-		context.put("gstAmtWording", gstAmountWording);
+		
+		context.put("sstAmt", sstAmount);
 		context.put("overallCtAmt", overallctAmt);
 		context.put("overallCtAmtWording", overallctAmtWording);
 
 	}
+	//end Enhancement #24259 #24269
 	
 	/**
 	 * @param context
@@ -6184,61 +6251,117 @@ public class DirectLOABackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromFile(new FileOutputStream(getActualFilePath(attachment)), file);
 	}*/
 
+	//Enhancement #24259 #24269
+//	/**
+//	 * Sum of gstAmount & loa offer price
+//	 * 
+//	 * @param gstAmount
+//	 */
+//	public void calculateOverallAmount(BigDecimal gstAmount) {
+//		ScLoa scLoa = getManagedBean().getScLoa();
+//		BigDecimal loaAmount = scLoa.getLoaAmt();
+//		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
+//		
+//		if (loaAmount != null) {
+//			contractOverAllAmt   = overallCtAmount(loaAmount, gstAmount);
+//			this.getManagedBean().setOverallContractAmt(contractOverAllAmt);
+//
+//			calcBondAmount(scLoa, true);
+//			// bond amount in words
+//			if (scLoa.getBondAmt() != null) {
+//				getManagedBean().setBondAmountWord(
+//						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+//			}
+//			
+//			if (null != scLoa.getContractSigner()
+//					&& scLoa.getContractSigner().getUserId() != null) {
+//				scLoa.setLoaSignerDesig(null);
+//				scLoa.setContractSigner(null);
+//				prepareSignerInfo();
+//				RequestContext.getCurrentInstance().execute(
+//						"gstSignerConfirmPopupWin.show()");
+//			}
+//		}
+//	}
+	
 	/**
-	 * Sum of gstAmount & loa offer price
+	 * Sum of sstAmount & loa offer price
 	 * 
-	 * @param gstAmount
+	 * @param sstAmount
 	 */
-	public void calculateOverallAmount(BigDecimal gstAmount) {
+	public void calculateOverallAmount(BigDecimal sstAmount) {
 		ScLoa scLoa = getManagedBean().getScLoa();
 		BigDecimal loaAmount = scLoa.getLoaAmt();
 		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		
 		if (loaAmount != null) {
-			contractOverAllAmt   = overallCtAmount(loaAmount, gstAmount);
+			contractOverAllAmt = overallCtAmountWithSST(loaAmount, sstAmount);
 			this.getManagedBean().setOverallContractAmt(contractOverAllAmt);
 
-			calcBondAmount(scLoa, true);
+			calcBondAmountWithSST(scLoa, true);
+			
 			// bond amount in words
 			if (scLoa.getBondAmt() != null) {
-				getManagedBean().setBondAmountWord(
-						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+				getManagedBean().setBondAmountWord(NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 			}
 			
-			if (null != scLoa.getContractSigner()
-					&& scLoa.getContractSigner().getUserId() != null) {
+			if (null != scLoa.getContractSigner() && scLoa.getContractSigner().getUserId() != null) {
 				scLoa.setLoaSignerDesig(null);
 				scLoa.setContractSigner(null);
+				
 				prepareSignerInfo();
-				RequestContext.getCurrentInstance().execute(
-						"gstSignerConfirmPopupWin.show()");
+				
+				RequestContext.getCurrentInstance().execute("sstSignerConfirmPopupWin.show()");
 			}
 		}
-	}
+	}	
 
+//	/**
+//	 * Checks if is GST reg active.
+//	 *
+//	 * @return true, if is GST reg active
+//	 */
+//	public boolean isGSTRegActive() {
+//
+//		boolean isActive = true;
+//		ScLoa scLoa = getManagedBean().getScLoa();
+//		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+//		getManagedBean().setRenderRemainder(false);
+//		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {
+//			if (null != scLoa.getGstEffDate()) {
+//				if (scLoa.getGstEffDate().compareTo(new Date()) <= 0) {
+//					isActive = false;
+//				} else {
+//					getManagedBean().setRenderRemainder(isActive);
+//				}
+//			}
+//		}
+//
+//		return isActive;
+//	}
+	
 	/**
-	 * Checks if is GST reg active.
+	 * Checks if is SST reg active.
 	 *
-	 * @return true, if is GST reg active
+	 * @return true, if is SST reg active
 	 */
-	public boolean isGSTRegActive() {
+	public boolean isSSTRegActive() {
 
 		boolean isActive = true;
 		ScLoa scLoa = getManagedBean().getScLoa();
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
-		getManagedBean().setRenderRemainder(false);
-		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {
-			if (null != scLoa.getGstEffDate()) {
-				if (scLoa.getGstEffDate().compareTo(new Date()) <= 0) {
+		
+		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {			
+			if (null != scLoa.getSstEffDate()) {	
+				if (scLoa.getSstEffDate().compareTo(new Date()) <= 0) {
 					isActive = false;
-				} else {
-					getManagedBean().setRenderRemainder(isActive);
 				}
 			}
 		}
 
 		return isActive;
 	}
+	//end Enhancement #24259 #24269
 	
 	//Enhancement #20007: DPQT GST - Disable Field GST Amount
 	public BigDecimal getGstRate() {
@@ -6629,14 +6752,17 @@ public class DirectLOABackingBean extends
 		scLoa.setLoaSignerDesig(null);
 		
 		if (loaAmount != null) {
-			contractOverAllAmt   = overallCtAmount(loaAmount, scLoa.getGstAmt());
+			contractOverAllAmt   = overallCtAmountWithSST(loaAmount, scLoa.getSstAmt());
+//			contractOverAllAmt   = overallCtAmount(loaAmount, scLoa.getGstAmt());
 		}
 		getManagedBean().setOverallContractAmt(contractOverAllAmt);
 		
 		prepareSignerInfo();
 		
 		// calc bond amt
-		calcBondAmount(scLoa, true);
+		calcBondAmountWithSST(scLoa, true);
+//		calcBondAmount(scLoa, true);
+		
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
@@ -6650,7 +6776,9 @@ public class DirectLOABackingBean extends
 	 */
 	private void updatePerformanceBond(ScLoa scLoa ) {
 		// calc bond amt
-		calcBondAmount(scLoa, Boolean.TRUE);
+		calcBondAmountWithSST(scLoa, Boolean.TRUE);
+//		calcBondAmount(scLoa, Boolean.TRUE);
+		
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
@@ -7229,6 +7357,18 @@ public class DirectLOABackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scLoa.setProcurementTypeCatId(resDTO.getPmParameter());
+			
+			if (scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)) {
+				reqDTO.setParameterType(ParameterTypeConst.SALES_SERVICE_TAX);
+				reqDTO.setParameterCode(ParameterConst.SST_SALES_TAX);
+				
+				scLoa.setSstTypeId(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
+			} else {
+				reqDTO.setParameterType(ParameterTypeConst.SALES_SERVICE_TAX);
+				reqDTO.setParameterCode(ParameterConst.SST_SERVICE_TAX);
+				
+				scLoa.setSstTypeId(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
+			}
 		} finally {
 			parameterSO = null;
 		}
@@ -7698,7 +7838,9 @@ public class DirectLOABackingBean extends
 			gstRegFlag = "true";
 		}
 		context.put("gstRegFlag", gstRegFlag);
-		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		
+//		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, myLocale);
 		setMinSL1MParticipant(context, scLoa, integerDF);
 		
