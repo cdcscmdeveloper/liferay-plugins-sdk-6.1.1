@@ -1833,6 +1833,36 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return scLoa;
 	}
+	
+	//Enhancement #24259 #24269	
+	/**
+	 * Calculate bond amount with SST.
+	 * 
+	 * @param scLoa
+	 *            the sc loa
+	 * @return the big decimal
+	 */	
+	public ScLoa calcBondAmountWithSST(ScLoa scLoa, boolean isDirectLoa) {
+		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
+		
+		if(isDirectLoa) {
+			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+		}
+		
+		if (scLoa.isBondReq()) {
+			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
+				BigDecimal contractPeriod = scLoa.getContractDuration();
+
+				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
+			}
+		} else {
+			scLoa.setBondAmt(null);
+			scLoa.setBondPercentage(null);
+		} 
+		
+		return scLoa;
+	}	
+	//end Enhancement #24259 #24269	
 
 	/**
 	 * Get the OverallContractAmount.
@@ -1853,6 +1883,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
+	//Enhancement #24259 #24269	
+	/**
+	 * Get the OverallContractAmount with SST.
+	 * @param offerPrice
+	 * @param sstAmount
+	 * @return the contractAmount.
+	 */
+	public BigDecimal overallCtAmountWithSST(BigDecimal offerPrice, BigDecimal sstAmount) {
+		BigDecimal overallCtAmount = offerPrice;
+		if (sstAmount != null) {
+			overallCtAmount = overallCtAmount.add(sstAmount);
+			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+		}
+
+		return overallCtAmount;
+	}
+	//end Enhancement #24259 #24269	
+	
 	/**
 	 * Check ProposalValidity Days Reached or not.
 	 * @param scQt
