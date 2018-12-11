@@ -38,7 +38,7 @@
 			</p:dataGrid>			
 		</h:panelGrid>
 		
-	   	<h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth250" rendered="#{agreementBackingBean.managedBean.finalAgreement}">
+	   	<h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth250">
 			<p:outputLabel value="#{lbl['lbl.ct.signed.date']}"  styleClass="required"/>
 			<h:panelGrid columns="5" styleClass="top-aligned-columns">
 				<p:calendar	value="#{agreementBackingBean.managedBean.agreementContractVer.signedDate}" id="popupButtonCal4" 
