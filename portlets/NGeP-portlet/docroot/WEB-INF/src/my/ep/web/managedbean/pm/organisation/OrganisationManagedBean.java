@@ -23,6 +23,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -99,6 +100,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private boolean islazy = false;
 	
 	private SmGstSupplier gstSupplier;
+	//harris
+	private SmSstSupplier sstSupplier;
 	
 	private Long selectedStateId;
 	
@@ -787,12 +790,20 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public SmGstSupplier getGstSupplier() {
 		return gstSupplier;
 	}
+	//harris
+	public SmSstSupplier getSstSupplier() {
+		return sstSupplier;
+	}
 
 	/**
 	 * @param gstSupplier the gstSupplier to set
 	 */
 	public void setGstSupplier(SmGstSupplier gstSupplier) {
 		this.gstSupplier = gstSupplier;
+	}
+	//harris
+	public void setSstSupplier(SmSstSupplier sstSupplier) {
+		this.sstSupplier = sstSupplier;
 	}
 
 	/**
