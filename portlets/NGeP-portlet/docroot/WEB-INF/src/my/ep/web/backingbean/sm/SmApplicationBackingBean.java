@@ -148,6 +148,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pp.common.PpCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -6800,8 +6801,15 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (getManagedBean().getSmAppl().isResubmit()) {
-			reqDTO.setPoLoginId(SmApplicationUtil.getPOLoginId(getManagedBean()
-					.getSmSupplier(), getManagedBean().getSmAppl()));
+			if (getManagedBean().getSmAppl().getPoUserId() == null) {
+				reqDTO.setPoLoginId(SmApplicationUtil.getPOLoginId(
+						getManagedBean().getSmSupplier(), getManagedBean()
+								.getSmAppl()));
+			} else {
+				PmUser po = PpCommonUtil.retrieveUserByLoginIdOrUserId(null,
+						getManagedBean().getSmAppl().getPoUserId());
+				reqDTO.setPoLoginId(po.getLoginId());
+			}
 		} else {
 			PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
