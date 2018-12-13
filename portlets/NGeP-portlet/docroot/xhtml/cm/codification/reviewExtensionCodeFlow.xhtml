@@ -42,7 +42,12 @@
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
-								size="40" disabled="true" /></td>
+								size="40" disabled="true" />
+<!-- 								<p:commandLink style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}"  -->
+<!-- 									update="recommendPanelId"> -->
+<!-- 									<p:graphicImage value="/css/images/design/search.png" /> -->
+<!-- 								</p:commandLink> -->
+						</td>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}"
@@ -74,21 +79,20 @@
 
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.typeName}"
-								disabled="#{!review.requestType}"></p:inputText>
+								disabled="#{unspscCodeBackingBean.isExistingExt('type', review.typeName ) or !review.requestType}"></p:inputText>
 						</div>
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.brandName}"
-								disabled="#{!review.requestBrand}"></p:inputText>
+								disabled="#{unspscCodeBackingBean.isExistingExt('brand', review.brandName ) or !review.requestBrand}"></p:inputText>
 						</div>
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.measurementName}"
-								disabled="#{!review.requestMeasurement}"></p:inputText>
+								disabled="#{unspscCodeBackingBean.isExistingExt('measurement', review.measurementName ) or !review.requestMeasurement}"></p:inputText>
 
 						</div>
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.colorName}"
-								disabled="#{!review.requestColor}"></p:inputText>
-
+								disabled="#{unspscCodeBackingBean.isExistingExt('color', review.colorName ) or !review.requestColor}"></p:inputText>
 						</div>
 
 					</p:column>
@@ -101,7 +105,7 @@
 
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
-							<p:selectOneMenu rendered="#{review.requestType}"
+							<p:selectOneMenu
 								style="width: 128px;" value="#{review.typeNameDD}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -112,7 +116,7 @@
 						</div>
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
-							<p:selectOneMenu rendered="#{review.requestBrand}"
+							<p:selectOneMenu
 								style="width: 128px;" value="#{review.brandNameDD}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -123,7 +127,7 @@
 						</div>
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
-							<p:selectOneMenu rendered="#{review.requestMeasurement}"
+							<p:selectOneMenu
 								style="width: 128px;" value="#{review.measurementNameDD}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -134,7 +138,7 @@
 						</div>
 						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
-							<p:selectOneMenu rendered="#{review.requestColor}"
+							<p:selectOneMenu 
 								style="width: 128px;" value="#{review.colorNameDD}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -170,6 +174,42 @@
 
 
 		</h:panelGroup>
+<!-- 		<h:panelGroup id="recommendPanelId"> -->
+<!-- 					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend()}"> -->
+<!-- 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex" -->
+<!-- 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}" -->
+<!-- 					var="unspscObj" width="100%"> -->
+<!-- 					<p:column> -->
+<!-- 						<f:facet name="header"> -->
+<!-- 					#{lbl['lbl.cm.recommended.item.code']} -->
+<!-- 				</f:facet> -->
+<!-- 						#{unspscObj.unspscCode} -->
+<!-- 				</p:column> -->
+<!-- 					<p:column> -->
+<!-- 						<f:facet name="header"> -->
+<!-- 					#{lbl['lbl.cm.recommended.item.name']} -->
+<!-- 				</f:facet> -->
+<!-- 				#{unspscObj.unspscTitle} -->
+<!-- 			</p:column> -->
+<!-- 					<p:column rendered="#{unspscCodeBackingBean.catalogueAdmin}"> -->
+<!-- 						<f:facet name="header"> -->
+<!-- 							#{lbl['lbl.cm.action']} -->
+<!-- 						</f:facet> -->
+<!-- 						<p:commandLink -->
+<!-- 							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}" -->
+<!-- 							update="@form"> -->
+<!-- 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage> -->
+<!-- 						</p:commandLink> -->
+<!-- 					</p:column> -->
+<!-- 				</p:dataTable> -->
+<!-- 				<div style="text-align: right;"> -->
+<!-- 					<p:commandButton value="#{lbl['lbl.cm.item.code.search.title']}" update="@form" -->
+<!-- 						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" -->
+<!-- 						action="#{unspscCodeBackingBean.navigateToSearch}" -->
+<!-- 						rendered="#{unspscCodeBackingBean.catalogueAdmin}"></p:commandButton> -->
+<!-- 				</div> -->
+<!-- 			</p:panel> -->
+<!-- 		</h:panelGroup> -->
 
 
 	</ui:define>
