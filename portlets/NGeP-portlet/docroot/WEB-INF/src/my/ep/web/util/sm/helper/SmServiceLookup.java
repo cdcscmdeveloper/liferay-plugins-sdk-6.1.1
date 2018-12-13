@@ -21,6 +21,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.application.ISupplierApplicationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
@@ -57,6 +58,17 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 public class SmServiceLookup {
+
+	/**
+	 * Get IPersonnelSO
+	 * 
+	 * @return IPersonnelSO
+	 */
+	public static ISupplierApplicationSO getSupplierApplicationSO() {
+		return (ISupplierApplicationSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierApplicationSO.class);
+	}
 
 	/**
 	 * Get IPersonnelSO

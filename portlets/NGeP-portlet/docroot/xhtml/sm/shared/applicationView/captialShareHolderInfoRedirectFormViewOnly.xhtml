@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="shrHolderPanGroup">
+		<p:outputPanel id="shareHolderDialog" layout="block">
+			<div align="left">
+				<p:commandLink
+					action="#{viewSmApplBackingBean.backFromPersonnelPage}"
+					process="@this" partialSubmit="true" update=":form"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					style="padding-right:5px;">
+					<p:commandButton type="button" value="#{lbl['lbl.btn.back']}" />
+				</p:commandLink>
+			</div>
+			<ui:include
+				src="/xhtml/sm/shared/applicationView/shareHolderInfoPopUpFormViewOnly.xhtml" />
+		</p:outputPanel>
+	</h:panelGroup>
+
+
+</ui:composition>
