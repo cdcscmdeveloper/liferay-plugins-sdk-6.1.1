@@ -7735,6 +7735,7 @@ public class SmApplicationUtil {
 	public static SmAppl getLatestApplBySupplierId(Long supplierId) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplierId);
+		reqDTO.setNotNeedInitialize(true);
 		MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
 				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
 		return resDTO.getSmAppl();
