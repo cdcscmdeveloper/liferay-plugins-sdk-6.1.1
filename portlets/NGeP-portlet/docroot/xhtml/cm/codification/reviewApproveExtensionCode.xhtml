@@ -96,28 +96,28 @@
 						<div style="width: 100%;">
 							<p:inputText value="#{review.reviewedTypeName}"
 								id="reviewedTypeNameId" maxlength="100"
-								disabled="#{review.typeNameDD != null}" required="true"
+								disabled="#{unspscCodeBackingBean.isExistingExt('type', review.reviewedTypeName ) or review.typeNameDD != null or !review.requestType}" required="true"
 								label="#{lbl['lbl.cm.type']}">
 								<p:ajax event="blur" update=":form:dt:typeremark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width: 100%;">
 							<p:inputText id="reviewedBrandNameId" value="#{review.reviewedBrandName}" maxlength="100"
-								disabled="#{review.brandNameDD != null}" required="true"
+								disabled="#{unspscCodeBackingBean.isExistingExt('brand', review.reviewedBrandName ) or review.brandNameDD != null or !review.requestBrand}" required="true"
 								label="#{lbl['lbl.cm.brand']}">
 								<p:ajax event="blur" update=":form:dt:brandRemark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width: 100%;">
 							<p:inputText id="reviewedMeasurementNameId" value="#{review.reviewedMeasurementName}"
-								maxlength="100" disabled="#{review.measurementNameDD != null}"
+								maxlength="100" disabled="#{unspscCodeBackingBean.isExistingExt('measurement', review.reviewedMeasurementName ) or review.measurementNameDD != null or !review.requestMeasurement}"
 								required="true" label="#{lbl['lbl.cm.measurement']}">
 								<p:ajax event="blur" update=":form:dt:measurementRemark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width: 100%;">
 							<p:inputText id="reviewedColorNameId" value="#{review.reviewedColorName}" maxlength="100"
-								disabled="#{review.colorNameDD != null}" required="true"
+								disabled="#{unspscCodeBackingBean.isExistingExt('color', review.reviewedColorName ) or review.colorNameDD != null or !review.requestColor}" required="true"
 								label="#{lbl['lbl.cm.color']}">
 								<p:ajax event="blur" update=":form:dt:colorRemark1"></p:ajax>
 							</p:inputText>
