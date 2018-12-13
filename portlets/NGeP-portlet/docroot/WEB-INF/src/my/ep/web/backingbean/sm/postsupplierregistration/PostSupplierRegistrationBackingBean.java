@@ -113,7 +113,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		SmSupplier userSupplier = getSupplierProfileByUserId();
 		String path = null;
 		String desc = null;
-		Boolean isRejApplExpired = false;
 
 		if(userSupplier != null){
 			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
@@ -145,22 +144,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
 					this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
 					log.info("*****workFlowStatus*********" + getManagedBean().getStatusDesc() + " " + workFlowStatus.getPmStatus().getStatusId());
-					
-					//Enhancement #20467
-					if(rejectedWf != null){
-						log.info("************** currentStatusAndPath: rejectedWf.getDocId() = " + rejectedWf.getDocId());
-						SmAppl rejAppl = new SmAppl();
-						rejAppl.setApplId(rejectedWf.getDocId());
-						
-						//to check rejected appl expired or not
-						isRejApplExpired = checkRejectedApplExpired(rejAppl);				
-						log.info("************** currentStatusAndPath: isRejApplExpired = " + isRejApplExpired);
-						
-						//if rejected appl expired, treat as new appl
-						if(isRejApplExpired) {
-							isRejectedApplExist = false;
-						}
-					}
 
 					if(successPayment){
 						setSuccessPaymentFlag();
@@ -181,16 +164,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 										// to avoid resubmit flow when supplier rejected by system during Registration fee(20119)
 										getManagedBean().setRejectedApplExist(false);
 									}
-									//if rejected appl expired, user need to pay processing fee
-									if(isRejApplExpired) {
-										getManagedBean().setSuccessPayment(false);
-									}
 								}
 							}else{
 								getManagedBean().setRejectedApplExist(false);
-								if(isRejApplExpired) {
-									getManagedBean().setSuccessPayment(false);
-								}
 							}
 						}
 					}
@@ -200,15 +176,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());	
 					
 					if(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L){
-						if(isRejApplExpired) {
-							getManagedBean().setFlowStatus(1);
-						} else if(rejectedWf != null){
+						if(rejectedWf != null){
 							validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 						}
-					}
-					
-					if(isRejApplExpired) {
-						setExpiredRejectedApplFlag();
 					}
 
 				}else{
@@ -1289,26 +1259,4 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		getManagedBean().setSuccessPayment(true);
 	}
 	
-	//Enhancement #20467
-	/**
-	 * Check whether the rejected application was expired
-	 * compare to no. of days allowed to resubmit after rejected
-	 * @param SmAppl rejAppl
-	 * @return Boolean
-	 */
-	private Boolean checkRejectedApplExpired(SmAppl rejAppl){
-		Boolean isExpired = false;
-
-		if(rejAppl.getApplId() != null) {
-			if(!SmApplicationUtil.isRejectedApplValidForResubmission(rejAppl)) {
-				isExpired = true;
-			}
-		}		
-		return isExpired;
-	}
-	
-	private void setExpiredRejectedApplFlag(){
-		getManagedBean().setRejectedApplExist(false);
-		getManagedBean().setDisplayRejectLabel(true);
-	}
 }
