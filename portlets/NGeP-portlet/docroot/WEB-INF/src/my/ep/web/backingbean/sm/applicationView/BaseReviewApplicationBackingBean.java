@@ -28,6 +28,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.application.SupplierApplicationReqDTO;
+import my.ep.dto.sm.application.SupplierApplicationResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -50,6 +52,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -865,7 +868,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param String
 	 *            docId
 	 */
-	private void setSupplierCancellationRemarks(String docType, Long docId) {
+	public void setSupplierCancellationRemarks(String docType, Long docId) {
 		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType,
 				docId);
 		StringBuilder sb = new StringBuilder();
@@ -896,7 +899,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param String
 	 *            statusId
 	 */
-	private void setPmStatusDesc(String statusId) {
+	public void setPmStatusDesc(String statusId) {
 		if (StringUtils.isBlank(statusId)) {
 			getManagedBean().setCurrentStatus(StringUtils.EMPTY);
 		} else {
@@ -1636,7 +1639,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param List
 	 *            <SmPersonnel> perList
 	 */
-	private void setApplicationShareHolders(List<SmPersonnel> perList) {
+	public void setApplicationShareHolders(List<SmPersonnel> perList) {
 		getManagedBean().setSmapplShareHolders(new ArrayList<SmPersonnel>());
 
 		for (SmPersonnel per : perList) {
@@ -2021,7 +2024,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Set url for Supplier Profile or Supplier Application History.
 	 */
-	private void setSupplierProfileOrHistoryUrl(String baseUrl,
+	public void setSupplierProfileOrHistoryUrl(String baseUrl,
 			String baseUrlLabel, String supplierId) {
 		String url = SmCommonUtil.getEpBaseUrl() + baseUrl;
 		getManagedBean().setPortletUrl(url);
@@ -2087,8 +2090,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void validateCompanySearch() {
 		if (getManagedBean().getSearchSupplier() != null) {
-			if (!StringUtils.isBlank(getManagedBean()
-					.getSearchSupplier().getCompanyName())
+			if (!StringUtils.isBlank(getManagedBean().getSearchSupplier()
+					.getCompanyName())
 					&& getManagedBean().getSearchSupplier().getCompanyName()
 							.length() < 3) {
 				throw new EpException(SmCommonUtil.getMessage(
@@ -2124,13 +2127,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
-			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
-			if (latestRejectedAppl != null) {
-				rejectReasons = SmCommonUtil
-						.getHtmlApplicationRejectReasons(latestRejectedAppl
-								.getSmApplRejectReasons());
-			}
+			List<SmApplRejectReason> rejectReasonList = SmServiceLookup
+					.getMofRegistrationSO()
+					.retrieveLatestRejectedApplicationRejectReasons(mofReqDTO)
+					.getRejectReasons();
+			rejectReasons = SmCommonUtil
+					.getHtmlApplicationRejectReasons(rejectReasonList);
 		} else {
 			rejectReasons = SmCommonUtil
 					.getHtmlApplicationRejectReasons(getManagedBean()
@@ -2635,7 +2637,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return objList;
 	}
 
-	private SmGstSupplier getSupplierGst(Long branchCode) {
+	public SmGstSupplier getSupplierGst(Long branchCode) {
 		SmGstSupplier gst = null;
 		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 		gstReqDTO.setBranchCode(branchCode);
@@ -2700,11 +2702,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
 			String facType) {
+		return getCategoryFacilityVO(facType, smAppl.getSmSupplierCategories(),
+				smAppl.getSmFacilities());
+	}
+
+	public static List<PmCategoryL3> getCategoryFacilityVO(String facType,
+			List<SmSupplierCategory> categories, List<SmFacility> facilities) {
 		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
-		if (smAppl != null
-				&& !EntityHelper.isCollectionEmpty(smAppl
-						.getSmSupplierCategories())) {
-			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+		if (!EntityHelper.isCollectionEmpty(categories)) {
+			for (SmSupplierCategory cat : categories) {
 				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 						&& cat.getPmCategoryL3() != null
 						&& !StringUtils.isBlank(cat.getPmCategoryL3()
@@ -2717,7 +2723,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					cat.getPmCategoryL3().setSelectedFacilityList(
 							new ArrayList<SmFacility>());
 
-					for (SmFacility fac : smAppl.getSmFacilities()) {
+					for (SmFacility fac : facilities) {
 						if (!EntityHelper.isCollectionEmpty(fac
 								.getSmSupplierCategoryFacilities())) {
 							SmSupplierCategoryFacility catTmp = (SmSupplierCategoryFacility) EntityHelper

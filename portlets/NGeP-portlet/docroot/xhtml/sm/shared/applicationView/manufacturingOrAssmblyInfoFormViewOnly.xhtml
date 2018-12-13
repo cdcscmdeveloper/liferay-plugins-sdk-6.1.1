@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true" >
+		<p:outputPanel id="manuInfPan" layout="block">
+
+			<p:dataTable var="manBean" widgetVar="smManuDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{viewSmApplBackingBean.managedBean.smManufacturingDtls}" 
+				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
+				<ac:paginator for="manDt" />
+				<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
+					<h:outputText value="#{manBean.goodsType}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.manufacture.brand']}">
+					<h:outputText value="#{manBean.brand}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sm.manufacture.prodCap']} / #{lbl['lbl.sm.manufacture.month']}">
+					<h:outputText value="#{manBean.productionCapacity}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
+					<h:outputText value="#{manBean.uom}" rendered="#{not empty manBean.uom}"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+					<p:commandLink update=":form:tt:manufactorDialog" process="@this" oncomplete="manufactorDialog.show()"
+						partialSubmit="true" onstart="blockWidget.show()"
+						action="#{viewSmApplBackingBean.assignSelManufacturer(manBean)}"
+						style="padding-right:5px">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			
+		</p:outputPanel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.manufacturingRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.manufacturingRemark}" />
+						
+	</p:panel>
+	<p:dialog style="max-height:200px;width:450px"
+		header="#{lbl['lbl.sm.manufacture.diaHdr']}"
+		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="manufactorDialog">
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%;table-layout:fixed">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.manufacture.prdType']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.goodsType}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.manufacture.brand']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.brand}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.manufacture.prodCap']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.productionCapacity}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.manufacture.mesUnit']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.uom}" /></td>
+				</tr>
+	
+			</table>
+		</p:scrollPanel>
+	</p:dialog>
+</ui:composition>
