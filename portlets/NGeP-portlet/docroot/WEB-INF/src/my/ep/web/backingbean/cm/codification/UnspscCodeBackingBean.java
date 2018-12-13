@@ -1477,7 +1477,24 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									|| !(this.getManagedBean()
 											.getSelectedLovUnspscSegment().getUnspscTitle() != null && this
 											.getManagedBean().getSelectedLovUnspscSegment()
-											.getUnspscTitle().trim().length() > 0)) {
+											.getUnspscTitle().trim().length() > 0) 
+							
+											|| !(this.getManagedBean().getSelectedLovUnspsc()
+													.getUnspscTitleEng() != null && this.getManagedBean()
+													.getSelectedLovUnspsc().getUnspscTitleEng().trim()
+													.length() > 0)
+													|| !(this.getManagedBean().getSelectedLovUnspscClass()
+															.getUnspscTitleEng() != null && this
+															.getManagedBean().getSelectedLovUnspscClass()
+															.getUnspscTitleEng().trim().length() > 0)
+															|| !(this.getManagedBean().getSelectedLovUnspscfamily()
+																	.getUnspscTitleEng() != null && this
+																	.getManagedBean().getSelectedLovUnspscfamily()
+																	.getUnspscTitleEng().trim().length() > 0)
+																	|| !(this.getManagedBean()
+																			.getSelectedLovUnspscSegment().getUnspscTitleEng() != null && this
+																			.getManagedBean().getSelectedLovUnspscSegment()
+																			.getUnspscTitleEng().trim().length() > 0)) {
 
 				FacesContext facesContext = FacesContext
 						.getCurrentInstance();
@@ -2222,6 +2239,37 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			code.setReviewedMeasurementName(code.getMeasurementName());
 		}
 	}
+	
+	public boolean  isExistingExt(String attr, String lhsCompare){ //do we need live check?
+		lhsCompare = lhsCompare.trim();
+		
+		if(attr.equals("type")){
+			for(CmType type: this.getManagedBean().getTypeList()){
+				if(lhsCompare.equals(type.getTypeName())){
+					return true;
+				}
+			}
+		}else if(attr.equals("brand")){
+			for(CmBrand brand: this.getManagedBean().getBrandList()){
+				if(lhsCompare.equals(brand.getBrandName())){
+					return true;
+				}
+			}
+		}else if(attr.equals("color")){
+			for(CmColor color: this.getManagedBean().getColorList()){
+				if(lhsCompare.equals(color.getColorName())){
+					return true;
+				}
+			}
+		}else if(attr.equals("measurement")){
+			for(CmMeasurement measurement: this.getManagedBean().getMeasurementList()){
+				if(lhsCompare.equals(measurement.getMeasurementName())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	public String submitToReviewExt(String action) {
 		log.info("***action***" + action);
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -2280,7 +2328,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									.getColorName());
 						}
 						code.setColorId(code.getColorNameDD());
-						code.setRequestColor(true);
+						code.setRequestColor(false);
 						
 
 					}else{
@@ -2327,7 +2375,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									.getBrandName());
 						}
 						code.setBrandId(code.getBrandNameDD());
-						code.setRequestBrand(true);
+						code.setRequestBrand(false);
 					}else{
 
 						if(!action.equalsIgnoreCase("PUBLISH") && !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestBrand()){
@@ -2376,7 +2424,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							code.setReviewedTypeName(resDTO.getTypeList().get(0).getTypeName());
 						}
 						code.setTypeId(code.getTypeNameDD());
-						code.setRequestType(true);
+						code.setRequestType(false);
 					}else{
 
 						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestType()){
@@ -2428,7 +2476,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									.getMeasurementName());
 						}
 						code.setMeasurementId(code.getMeasurementNameDD());
-						code.setRequestMeasurement(true);
+						code.setRequestMeasurement(false);
 					}else{
 
 						if(!action.equalsIgnoreCase("PUBLISH")&& !action.equalsIgnoreCase("OK") && isCatalogueAdmin()  && code.isRequestMeasurement()){
