@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -36,6 +37,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
+import my.ep.dto.fl.itemsummary.FlItemSummaryResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -2029,17 +2032,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private void calPaymentTracking() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		
+		IFlItemSummarySO itemSummaryPaid = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+	
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		ContractResDTO resDTO = new ContractResDTO();
 		reqDTO.setContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
 		reqDTO.setAsAtDate(getManagedBean().getAsAtDate());
 		resDTO = contractSO.calAdvancePaymentTracking(reqDTO);
+		
+		FlItemSummaryReqDTO reqsumDTO = new FlItemSummaryReqDTO();
+		reqsumDTO.setContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
+		
+		BigDecimal prevSumAmt = itemSummaryPaid.retrieveContractAccumulatedAmount(reqsumDTO);
+		BigDecimal sumOrderedAmt = BigDecimal.ZERO;
+
 
 		BigDecimal paidAdvancePaymentAmt = (resDTO.getPaidAdvancePaymentAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidAdvancePaymentAmt();
 		BigDecimal paidInvoiceAmt = (resDTO.getPaidInvoiceAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidInvoiceAmt();
+		BigDecimal paidsumInvoiceAmt = (sumOrderedAmt.add(prevSumAmt) == null) ? BigDecimal.valueOf(0) : sumOrderedAmt.add(prevSumAmt);
 
 		ctBB.getManagedBean().setPaidAdvancePaymentAmt(paidAdvancePaymentAmt);
 		ctBB.getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
+		ctBB.getManagedBean().setPaidsumInvoiceAmt(paidsumInvoiceAmt);
 	}
 
 
