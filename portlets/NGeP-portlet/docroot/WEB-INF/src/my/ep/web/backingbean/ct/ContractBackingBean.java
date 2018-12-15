@@ -159,6 +159,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private CtProgressivePayment[] selectedProgressive;
 	private CtDeductionClause[] selectedDeductionClauses;
 	private BigDecimal paidPercentage = new BigDecimal(0);	
+	private BigDecimal paidsumPercentage = new BigDecimal(0);	
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid = new BigDecimal(0);
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -1288,12 +1289,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return paidPercentage;
 	}
+	
+
 
 	/**
 	 * @param paidPercentage the paidPercentage to set
 	 */
 	public void setPaidPercentage(BigDecimal paidPercentage) {
 		this.paidPercentage = paidPercentage;
+	}
+	
+	/**
+	 * @return the paidsumPercentage
+	 */
+	public BigDecimal getPaidsumPercentage() {
+		if(getManagedBean().getPaidsumInvoiceAmt() != null && getManagedBean().getPaidsumInvoiceAmt().intValue() > 0) {
+			paidsumPercentage = (getManagedBean().getPaidsumInvoiceAmt().multiply(
+					BigDecimal.valueOf(100)).divide(
+							getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
+		}
+		return paidsumPercentage;
+	}
+	
+	/**
+	 * @param paidsumPercentage the paidsumPercentage to set
+	 */
+	public void setPaidsumPercentage(BigDecimal paidsumPercentage) {
+		this.paidsumPercentage = paidsumPercentage;
 	}
 
 	/**
