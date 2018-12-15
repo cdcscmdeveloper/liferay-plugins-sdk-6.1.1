@@ -86,6 +86,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	/*Payment tracking start*/
 	private BigDecimal gstTotalAmount;
 	private BigDecimal paidInvoiceAmt;
+	private BigDecimal paidsumInvoiceAmt;
 	private double advancePaymentAmt;
 	private BigDecimal paidAdvancePaymentAmt;
 
@@ -568,6 +569,21 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setPaidInvoiceAmt(BigDecimal paidInvoiceAmt) {
 		this.paidInvoiceAmt = paidInvoiceAmt;
 	}
+	
+	/**
+	 * @return the paidsumInvoiceAmt
+	 */
+	public BigDecimal getPaidsumInvoiceAmt() {
+		return paidsumInvoiceAmt;
+	}
+
+	/**
+	 * @param paidsumInvoiceAmt the paidsumInvoiceAmt to set
+	 */
+	public void setPaidsumInvoiceAmt(BigDecimal paidsumInvoiceAmt) {
+		this.paidsumInvoiceAmt = paidsumInvoiceAmt;
+	}
+	
 
 	/**
 	 * @return the advancePaymentAmt
