@@ -889,8 +889,10 @@ public class SmApplicationBackingBean extends
 				}
 				smAppl = resDto.getSmAppl();
 				smAppl.setResubmit(false);
-				smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-
+				if (smAppl != null && StringUtils.isBlank(smAppl.getSupportingDocMode())) {
+					smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				}
+				
 				log.info("****** After retrieve the appl is ********"
 						+ smAppl.getApplId() + " *** Num ***"
 						+ smAppl.getApplNo() + "*** Bank Size *** "
@@ -9171,6 +9173,16 @@ public class SmApplicationBackingBean extends
 			reqDto.setSupplierId(id);
 			reqDto.setAppType(applicationType);
 			reqDto.setSupplierType(supplierType);
+			reqDto.setResubmitExpired(false);
+
+			SmAppl rejectedAppl = SmApplicationUtil.getLatestRejectedApplIdBySuppIdAndApplType(id, applicationType);
+			if(rejectedAppl != null) {
+				reqDto.setRejectedApplId(rejectedAppl.getApplId());
+				
+				if(SmApplicationUtil.checkRejectedApplExpired(rejectedAppl)) {
+					reqDto.setResubmitExpired(true);					
+				}
+			}
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.cloneSmApplicationDraft(reqDto);
 			return resDTO;
