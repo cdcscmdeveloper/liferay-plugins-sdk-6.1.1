@@ -12277,5 +12277,47 @@ public class SmApplicationUtil {
 						IMofRegistrationSO.class);
 		reqSO.updateSupplierProfile(mofRegistrationReqDTO);
 	}
+	
+	//Enhancement #20467
+	/**
+	* Check whether the rejected application was expired
+	* compare to no. of days allowed to resubmit after rejected
+	* @param SmAppl rejAppl
+	* * @return Boolean
+	 */
+	public static Boolean checkRejectedApplExpired(SmAppl rejAppl){
+			Boolean isExpired = false;
+
+			if(rejAppl.getApplId() != null) {
+				if(!isRejectedApplValidForResubmission(rejAppl)) {
+					isExpired = true;
+				}
+			}		
+			return isExpired;
+		}
+	
+	/**
+	 * Get latest rejected application by supplier ID and application type
+	 * 
+	 * @param Long supplierId, String applType
+	 *            
+	 * @return SmAppl 
+	 */
+	public static SmAppl getLatestRejectedApplIdBySuppIdAndApplType(
+			Long supplierId, String applType) {
+		SmAppl smAppl = null;
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		reqDTO.setAppType(applType);
+		Long applId = SmServiceLookup.getMofRegistrationSO().retrieveLastRejectedApplIdByApplType(reqDTO)
+				.getApplId();
+		if (applId != null) {
+			reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(applId);
+			smAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		}
+		return smAppl;
+	}
 
 }
