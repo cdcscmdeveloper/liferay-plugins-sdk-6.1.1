@@ -1976,10 +1976,16 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			CodificationResDTO resDTO = codificationSO
 					.searchUnspscCodeByAuto(reqDTO);
-
+			
+			List<Integer> filters = new ArrayList<Integer>();
+			filters.add(69);
+			filters.add(68);
+			filters.add(99);
 			if (resDTO.getUnspscList() != null)
 				for (CmUnspsc unspsc : resDTO.getUnspscList()) {
-					unspscCodes.add(unspsc.getUnspscCode());
+					if(!filters.contains(Integer.parseInt(unspsc.getUnspscCode().substring(0, 2)))){
+						unspscCodes.add(unspsc.getUnspscCode());
+					}
 				}
 
 		} catch (Exception e) {
