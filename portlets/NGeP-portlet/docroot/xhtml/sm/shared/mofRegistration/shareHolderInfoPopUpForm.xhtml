@@ -13,7 +13,23 @@
 			<p:outputLabel style="float : left" styleClass="ui-panel-title"
 				value="#{lbl['lbl.sm.person.myIdResp']} - " />
 			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}" />
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode ne '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode ne '70019'}"
+				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}"
+				escape="false" />
+			<p:outputLabel style="float : left" styleClass="ui-panel-title"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				value="#{lbl['lbl.sm.person.myIdResp.please.click']}" escape="false" />
+			<p:commandLink value="#{lbl['lbl.sm.person.myIdResp.here']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{backingBean.viewMyIdentityRespond()}" process="@this"
+				partialSubmit="true" update=":form" styleClass="ui-panel-title"
+				style="font-weight: bold;float: left;text-decoration: underline; padding-right:0px">
+			</p:commandLink>
+			<p:outputLabel style="float : left" styleClass="ui-panel-title"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}" />
+
 		</c:if>
 		<table style="width: 100%">
 			<tr>
@@ -1346,6 +1362,85 @@
 			</div>
 		</p:outputPanel>
 	</p:dialog>
+
+	<p:dialog id="myIdentityDialog"
+		header="#{lbl['lbl.sm.person.myIdResp']}"
+		style="max-height:450px;width:500px" widgetVar="myIdentityDialog"
+		showEffect="fade" hideEffect="fade" modal="true" resizable="true">
+
+		<p:scrollPanel mode="native"
+			style="max-height:400px;width:450px;border:none">
+			<table style="width: 100%; table-layout: auto">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.name']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedShareHolder.name}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.icNum']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedShareHolder.identificationNo}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryName}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateName}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtName}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityName}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/></td>
+				</tr>				
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.person.record.status']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.active']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode ne '70019'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.status.dead']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />	
+					</td>					
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.person.residential.status']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.citizen']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'B' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'C'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.residential.permenant']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'M' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'P'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.non.residential.non.citizen']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'H' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'Q'
+					 || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'X' || empty backingBean.managedBean.selectedShareHolder.identityResidentStatus}" />
+					</td>
+				</tr>
+			</table>
+		</p:scrollPanel>
+	</p:dialog>
+
 
 
 </ui:composition>
