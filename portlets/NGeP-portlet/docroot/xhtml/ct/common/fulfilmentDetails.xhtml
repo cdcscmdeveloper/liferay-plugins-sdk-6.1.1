@@ -101,7 +101,9 @@
 						<p:inputText for="staxAmount" styleClass="ppRightBtn"  
 						     maxlength="18" style="width:130px;"
 						     disabled="#{ctBackingBean.managedBean.viewContract
-						     or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"	
+						     or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
+						     or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+						     or ctBackingBean.managedBean.disableGstAmount}"	
 						     rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"		   				 
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.staxAmount}" label="#{lbl['lbl.ct.stax.amt']}" >
 			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
