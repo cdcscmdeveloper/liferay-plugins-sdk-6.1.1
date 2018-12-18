@@ -279,18 +279,27 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			/*End remark setting*/
 
-			// Enable or Disable GST AND STAX field
+			// Enable or Disable GST field
 			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
 					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
-				ctBB.getManagedBean().setStaxCheckingGUI(false);
-			} else if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+			} else {
+				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 					getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-					ctBB.getManagedBean().setGstCheckingGUI(true);
-			}else if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
-				getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+				}
+				ctBB.getManagedBean().setGstCheckingGUI(true);
+			}
+			
+			// Enable or Disable STAX field
+			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
+					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				ctBB.getManagedBean().setStaxCheckingGUI(false);	// Display N/A
+			} else {
+				if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
+					getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+				}
 				ctBB.getManagedBean().setStaxCheckingGUI(true);
-		}
+			}
 			
 		}catch (Exception e) {
 			e.printStackTrace();
