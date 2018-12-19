@@ -4692,6 +4692,9 @@ public class DirectLOABackingBean extends
 					.getToBeRemoveProgPayments());
 			reqDTO.setToBeDeleteschedules(this.getManagedBean()
 					.getToBeRemoveSchedules());
+			//Bug #24769
+			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
+					.getToBedeletedSupplierZone());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 			if (resDTO.isSuccessful()) {
