@@ -140,6 +140,7 @@ import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
+import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -181,6 +182,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -2340,6 +2342,68 @@ public class SmCommonUtil {
 
 		return false;
 	}
+	
+	//harris saletaxregno
+	public static boolean validateSstRegNo(String value) {
+		if (!StringUtils.isBlank(value)) {
+			String sstNoPattern = "\\d+";
+			Pattern pattern;
+			Matcher matcher;
+
+			pattern = Pattern.compile(sstNoPattern);
+
+			if (value != null) {
+				String sstNo = value.toString();
+
+				if (sstNo.length() > 0) {
+					if (sstNo.length() != SmRuleHelper.getInstance()
+							.getSstRegNumLength()) {
+						return false;
+					}
+
+					matcher = pattern.matcher(value.toString());
+					if (!matcher.matches()) {
+						return false;
+					}
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	
+	//harris servtaxregno
+		public static boolean validateSstServRegNo(String value) {
+			if (!StringUtils.isBlank(value)) {
+				String sstNoPattern = "\\d+";
+				Pattern pattern;
+				Matcher matcher;
+
+				pattern = Pattern.compile(sstNoPattern);
+
+				if (value != null) {
+					String sstServNo = value.toString();
+
+					if (sstServNo.length() > 0) {
+						if (sstServNo.length() != SmRuleHelper.getInstance()
+								.getSstRegNumLength()) {
+							return false;
+						}
+
+						matcher = pattern.matcher(value.toString());
+						if (!matcher.matches()) {
+							return false;
+						}
+
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
 
 	/**
 	 * Gets the current active work flow status.
@@ -3081,6 +3145,20 @@ public class SmCommonUtil {
 				.retrieveGstInfoBySupplierIdAndBranchCodeAndIsCurrent(gstReqDTO)
 				.getSmGstSupplier();
 	}
+	
+	//harris
+	public static SmSstSupplier getSmSstSupplierBySupplierIdAndBranchCode(
+			Long supplierId, Long branchCode, String applNo, boolean isCurrent) {
+		SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
+		sstReqDTO.setSupplierId(supplierId);
+		sstReqDTO.setBranchCode(branchCode);
+		sstReqDTO.setApplNo(applNo);
+		sstReqDTO.setCurrent(isCurrent);
+		return SmServiceLookup
+				.getSupplierSstSO()
+				.retrieveSstInfoBySupplierIdAndBranchCodeAndIsCurrent(sstReqDTO)
+				.getSmSstSupplier();
+	}
 
 	/**
 	 * Remove not uploaded gst supporting doc file from list
@@ -3130,6 +3208,34 @@ public class SmCommonUtil {
 			branchGst.setBranchCode(branchCode);
 			branchGst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 			copyHqSuppDocToBranch(hqGst, branchGst, isSameWithHq);
+		}
+	}
+	
+	//harris
+	public static void copyHqSstToBranch(SmSstSupplier hqSst,
+			SmSstSupplier branchSst, boolean isSameWithHq, Long branchCode) {
+		if (hqSst != null) {
+			if (isSameWithHq) {
+				branchSst.setSalestaxregno(hqSst.getSalestaxregno());
+				branchSst.setSalestaxregDate(hqSst.getSalestaxregDate());
+				branchSst.setSalestaxregEndDate(hqSst.getSalestaxregEndDate());
+				
+				branchSst.setServtaxregno(hqSst.getServtaxregno());
+				branchSst.setServtaxregDate(hqSst.getServtaxregDate());
+				branchSst.setServtaxregEndDate(hqSst.getServtaxregEndDate());
+				branchSst.setIsCurrent(hqSst.getIsCurrent());
+			} else {
+				branchSst.setSalestaxregno(null);
+				branchSst.setSalestaxregDate(null);
+				branchSst.setSalestaxregEndDate(null);
+				branchSst.setServtaxregno(null);
+				branchSst.setServtaxregDate(null);
+				branchSst.setServtaxregEndDate(null);
+				branchSst.setIsCurrent(false);
+			}
+			branchSst.setBranchCode(branchCode);
+//			branchSst.setSmSstSupplierDocs(new ArrayList<SmSstSupplierDoc>());
+//			copyHqSuppDocToBranch(hqSst, branchSst, isSameWithHq);
 		}
 	}
 
@@ -4153,6 +4259,38 @@ public class SmCommonUtil {
 					.isGstRegNoAlreadyExist()) {
 				throw new EpException(MessageConst.ERROR_722641,
 						new String[] { gstRegNo });
+			}
+		}
+	}
+	
+	//harris sst saletaxregno
+	public static void validateSstRegNoUniqueness(String bussRegNo,
+			String sstRegNo) {
+		if (!StringUtils.isBlank(sstRegNo)) {
+			SupplierSstReqDTO reqDTO = new SupplierSstReqDTO();
+			reqDTO.setBussRegNo(bussRegNo);
+			reqDTO.setSalestaxregno(sstRegNo);
+			if (SmServiceLookup.getSupplierSstSO()
+					.checkIsSstRegNoAlreadyExist(reqDTO)
+					.isSstRegNoAlreadyExist()) {
+				throw new EpException(MessageConst.ERROR_722641,
+						new String[] { sstRegNo });
+			}
+		}
+	}
+	
+	//harris sst servtaxregno
+	public static void validateSstServRegNoUniqueness(String bussRegNo,
+			String sstServRegNo) {
+		if (!StringUtils.isBlank(sstServRegNo)) {
+			SupplierSstReqDTO reqDTO = new SupplierSstReqDTO();
+			reqDTO.setBussRegNo(bussRegNo);
+			reqDTO.setServtaxregno(sstServRegNo);
+			if (SmServiceLookup.getSupplierSstSO()
+					.checkIsSstRegNoAlreadyExist(reqDTO)
+					.isSstRegNoAlreadyExist()) {
+				throw new EpException(MessageConst.ERROR_722641,
+						new String[] { sstServRegNo });
 			}
 		}
 	}
