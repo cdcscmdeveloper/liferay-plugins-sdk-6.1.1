@@ -41,6 +41,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -93,6 +94,8 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		assignValReqdToFalse();
 		getManagedBean().setShowGst(true);
+		//harris
+		getManagedBean().setShowSst(true);
 		getManagedBean().setShowBranchPointOfContact(false);
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		getManagedBean().setApplType(SupplierManagementConst.ACC_GOVT_SELLER);
@@ -119,6 +122,8 @@ public class GovtSellerRegistrationBackingBean extends
 				.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
 		assignValReqdToFalse();
 		getManagedBean().setShowGst(true);
+		//harris
+		getManagedBean().setShowSst(true);
 		getManagedBean().setFinancialOrgLs(
 				getInstance().retrieveFinancialOrgList());
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
@@ -134,6 +139,9 @@ public class GovtSellerRegistrationBackingBean extends
 				.getSmAddress());
 		// init gst
 		getInstance().initGstInfo(getManagedBean().getSmSupp(),
+				getManagedBean(), true);
+		//harris
+		getInstance().initSstInfo(getManagedBean().getSmSupp(),
 				getManagedBean(), true);
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		getManagedBean().setShowBranchPointOfContact(true);
@@ -320,6 +328,41 @@ public class GovtSellerRegistrationBackingBean extends
 			}
 		} else {
 			this.getManagedBean().setGstFlag(false);
+		}
+	}
+	
+	//harris
+	public void validateSstRegNo() {
+		String sstNo = this.getManagedBean().getSmSstSupplier().getSalestaxregno();
+		String sstServNo = this.getManagedBean().getSmSstSupplier().getServtaxregno();
+		this.getManagedBean().getSmSstSupplier().setIsCurrent(true);
+
+		SmCommonUtil.validateSstRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), sstNo);
+
+		SmCommonUtil.validateSstServRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), sstServNo);
+
+		if (sstNo != null && sstNo.length() > 0) {
+			if (!SmCommonUtil.validateSstRegNo(sstNo)) {
+				this.getManagedBean().setSstFlag(false);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else {
+				this.getManagedBean().setSstFlag(true);
+			}
+		} else {
+			this.getManagedBean().setSstFlag(false);
+		}
+
+		if (sstServNo != null && sstServNo.length() > 0) {
+			if (!SmCommonUtil.validateSstServRegNo(sstServNo)) {
+				this.getManagedBean().setSstFlag(false);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else {
+				this.getManagedBean().setSstFlag(true);
+			}
+		} else {
+			this.getManagedBean().setSstFlag(false);
 		}
 	}
 
@@ -846,6 +889,8 @@ public class GovtSellerRegistrationBackingBean extends
 		setSmSupplierBankBeforeSubmit();
 		setSmSupplierBranchBeforeSubmit();
 		setSupplierGstBeforeSubmit();
+		//harris
+		setSupplierSstBeforeSubmit();
 		setSmApplBeforeSubmit();
 		if (SmServiceLookup.getRegistrationSO()
 				.createSupplier(getRegistrationReqDTO()).isSuccessful()) {
@@ -1357,7 +1402,39 @@ public class GovtSellerRegistrationBackingBean extends
 			}
 		}
 	}
+	
+	//harris
+	private void setSupplierSstBeforeSubmit() {
+		if (getManagedBean().isSstFlag()) {
+//			getManagedBean().getSmSupp().setSstRegisteredFlag(
+//					DbValueConst.RECORD_STATUS_ACTIVE);
+			// main company
+			SmSstSupplier sstSupplier = getManagedBean().getSmSstSupplier();
+			sstSupplier.setIsCurrent(true);
+//			SmCommonUtil.removeNotUploadedSstSuppDoc(sstSupplier);
+			sstSupplier.setSmSupplier(getManagedBean().getSmSupp());
+			getManagedBean().getSmSupp().setSmSstSuppliers(
+					new ArrayList<SmSstSupplier>());
+			getManagedBean().getSmSupp().getSmSstSuppliers().add(sstSupplier);
 
+			// branch
+			if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmSupplierBranches())) {
+				for (SmSupplierBranch br : getManagedBean().getSmAppl()
+						.getSmSupplierBranches()) {
+//					if (br.getSst() != null
+//							&& StringUtils
+//									.isNotBlank(br.getSst().getSalestaxregno())) {
+//						SmCommonUtil.removeNotUploadedSstSuppDoc(br.getSst());
+//						br.getSst().setSmSupplier(getManagedBean().getSmSupp());
+//						br.getSst().setBranchCode(br.getBranchCode());
+//						getManagedBean().getSmSupp().getSmSstSuppliers()
+//								.add(br.getSst());
+//					}
+				}
+			}
+		}
+	}
 	/**
 	 * Set application and supplier values before submit
 	 */

@@ -15,6 +15,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -102,8 +103,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean disabledBusinessTypeInMaintenance;
 	
 	private boolean gstFlag;
+	//harris
+	private boolean sstFlag;
 
 	private SmGstSupplier smGstSupplier;
+	//harris
+	private SmSstSupplier smSstSupplier;
+	
 	private List<PmDocument> gstDocLs;
 	private SmGstSupplierDoc selectedGstSupplierDoc;
 	
@@ -645,6 +651,22 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setDeletedNotActivatedSupplier(boolean deletedNotActivatedSupplier) {
 		this.deletedNotActivatedSupplier = deletedNotActivatedSupplier;
+	}
+
+	public boolean isSstFlag() {
+		return sstFlag;
+	}
+
+	public void setSstFlag(boolean sstFlag) {
+		this.sstFlag = sstFlag;
+	}
+
+	public SmSstSupplier getSmSstSupplier() {
+		return smSstSupplier;
+	}
+
+	public void setSmSstSupplier(SmSstSupplier smSstSupplier) {
+		this.smSstSupplier = smSstSupplier;
 	}
 
 }
