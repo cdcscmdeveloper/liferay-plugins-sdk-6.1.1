@@ -78,6 +78,7 @@ import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -230,6 +231,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//GST 
 		getManagedBean().setSmGstSupplier(new SmGstSupplier());
 		prepareGstDoc();
+		
+		//harris
+		getManagedBean().setSmSstSupplier(new SmSstSupplier());
 			
 		this.getManagedBean().getSmAppl().setApplType(this.getManagedBean().getApplType());
 		getIndividualServiceType();
@@ -249,6 +253,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//Validate GST No
 		validateGstRegNo();
+		
+		//harris
+		validateSstRegNo();
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
@@ -445,6 +452,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smAppl.getSmCompanyBasic().setPhoneNo(smPersonnel.getMobileNo());
 			
 			getManagedBean().setGstFlag(false);
+			//harris
+			getManagedBean().setSstFlag(false);
 		}
 		
 		/*String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
@@ -567,7 +576,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmSupp().setGstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
 			setSupplierGst();
 		}
-
+		
+		//harris
+		//SST
+				if(getManagedBean().isSstFlag()){
+					getManagedBean().getSmSupp().setSmSstSuppliers(new ArrayList<SmSstSupplier>());
+//					getManagedBean().getSmSupp().setSstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
+					setSupplierSst();
+				}
+		
 		/*
 		 * Add all related objects to Parent SmSupplier
 		 */
@@ -1399,6 +1416,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (loadBranchGst) {
 			SmApplicationUtil.initBranchGstInformation(
 					managedBean.getSmGstSupplier(), managedBean.getSmAppl());
+		}
+	}
+	
+	//harris
+	public void initSstInfo(SmSupplier sup,
+			RegistrationManagedBean managedBean, boolean loadBranchSst) {
+
+		managedBean.setSmSstSupplier(SmCommonUtil
+				.getSmSstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
+						null, null, true));
+		if (managedBean.getSmSstSupplier() == null) {
+			managedBean.setSmSstSupplier(new SmSstSupplier());
+			managedBean.getSmSstSupplier().setIsCurrent(true);
+		}
+//		SmApplicationUtil.initSstSuppDocs(managedBean.getSmSstSupplier());
+		if (loadBranchSst) {
+			SmApplicationUtil.initBranchSstInformation(
+					managedBean.getSmSstSupplier(), managedBean.getSmAppl());
 		}
 	}
 	
@@ -2272,6 +2307,35 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	//harris
+	public void validateSstRegNo() {
+		String sstNo = this.getManagedBean().getSmSstSupplier().getSalestaxregno();
+
+		// Validate GST reg no. uniqueness
+		SmCommonUtil.validateSstRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), sstNo);
+
+		if (!StringUtils.isBlank(sstNo)) {
+			if (!SmCommonUtil.validateSstRegNo(sstNo)) {
+				this.getManagedBean().setSstFlag(false);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else {
+				this.getManagedBean().setSstFlag(true);
+			}
+		} else {
+			if (StringUtils.isBlank(sstNo)) {
+				// if both gst no and gst eff date null means deleted gst
+				if (this.getManagedBean().getSmSstSupplier().getSalestaxregDate() == null) {
+					deleteSst(this.getManagedBean().getSmSstSupplier());
+					this.getManagedBean().setSstFlag(false);
+				} else {
+					this.getManagedBean().setSstFlag(false);
+					throw new EpException(MessageConst.ERROR_721027);
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * FIle upload Handler
@@ -2400,6 +2464,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmSupplier supplier = getManagedBean().getSmSupp();
 		gstSupplier.setSmSupplier(getManagedBean().getSmSupp());
 		supplier.getSmGstSuppliers().add(gstSupplier);
+	}
+	
+	//harris sst
+	private void setSupplierSst(){
+		SmSstSupplier sstSupplier = getManagedBean().getSmSstSupplier();
+		sstSupplier.setIsCurrent(true);
+		
+//		if(sstSupplier.getSmSstSupplierDocs().size() > 0){
+//			List<SmSstSupplierDoc> tempLs = new ArrayList<SmSstSupplierDoc>();
+//			tempLs.addAll(sstSupplier.getSmSstSupplierDocs());
+//			
+////			for(SmSstSupplierDoc supplierDoc : sstSupplier.getSmSstSupplierDocs()){
+////				if(supplierDoc.getFileName() == null || supplierDoc.getFilePath() == null){
+////					tempLs.remove(supplierDoc);
+////				}
+////			}
+//			sstSupplier.setSmSstSupplierDocs(tempLs);
+//		}
+		
+		SmSupplier supplier = getManagedBean().getSmSupp();
+		sstSupplier.setSmSupplier(getManagedBean().getSmSupp());
+		supplier.getSmSstSuppliers().add(sstSupplier);
 	}
 	
 	/**
@@ -2574,6 +2660,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		gst.setGstEndDate(null);
 		gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 		SmApplicationUtil.initGstSuppDocs(gst);
+	}
+	
+	//harris
+	public void deleteSst(SmSstSupplier sst) {
+		sst.setSalestaxregno(null);
+		sst.setSalestaxregDate(null);
+		sst.setSalestaxregEndDate(null);
+//		gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+//		SmApplicationUtil.initSstSuppDocs(sst);
 	}
 	
 	public void removeGstUploadedFile(){
