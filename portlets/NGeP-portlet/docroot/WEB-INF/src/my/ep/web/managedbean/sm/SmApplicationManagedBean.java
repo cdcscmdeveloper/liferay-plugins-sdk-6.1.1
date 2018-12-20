@@ -60,6 +60,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -452,6 +453,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String mofNumber;
 	private List<SelectItem> countryItems;
 	private SmGstSupplier companyBasicGst;
+	private SmSstSupplier companyBasicSst;
 	private SmGstSupplier selectedGst;
 	private SmGstSupplierDoc selectedGstSuppDoc;
 	private SmCategoryOverlapDoc selectedOverlapDoc;
@@ -782,6 +784,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		myCountryId = SmCommonUtil.getMyCountryId();
 		selectedGst = new SmGstSupplier();
 		companyBasicGst = new SmGstSupplier();
+		companyBasicSst = new SmSstSupplier();
 		salutationSelectItems = SmCommonUtil.getSalutationItems();
 		addrSameAsItems = new ArrayList<SelectItem>();
 		glp = SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang("CRT",
@@ -3031,6 +3034,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public SmGstSupplier getCompanyBasicGst() {
 		return companyBasicGst;
+	}
+	//harris
+	public SmSstSupplier getCompanyBasicSst() {
+		return companyBasicSst;
 	}
 
 	public void setCompanyBasicGst(SmGstSupplier companyBasicGst) {
