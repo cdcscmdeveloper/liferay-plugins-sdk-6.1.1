@@ -449,15 +449,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 		
 		// Enable or Disable STAX field
-		if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
-				&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-			ctBB.getManagedBean().setStaxCheckingGUI(false);	// Display N/A
-		} else {
+
 			if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
 				getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
 			}
 			ctBB.getManagedBean().setStaxCheckingGUI(true);
-		}
+		
 
 		// Check for valid Bond Attachment
 		if (getManagedBean().isBondReq()) {

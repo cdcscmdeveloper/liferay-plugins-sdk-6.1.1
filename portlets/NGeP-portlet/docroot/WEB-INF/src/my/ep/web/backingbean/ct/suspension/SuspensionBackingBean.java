@@ -291,15 +291,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			}
 			
 			// Enable or Disable STAX field
-			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
-					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				ctBB.getManagedBean().setStaxCheckingGUI(false);	// Display N/A
-			} else {
+
 				if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
 					getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
 				}
 				ctBB.getManagedBean().setStaxCheckingGUI(true);
-			}
+			
 			
 		}catch (Exception e) {
 			e.printStackTrace();
