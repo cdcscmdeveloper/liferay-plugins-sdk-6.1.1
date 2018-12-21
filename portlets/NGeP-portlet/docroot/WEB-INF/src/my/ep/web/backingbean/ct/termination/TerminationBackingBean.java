@@ -262,15 +262,11 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			}
 			
 			// Enable or Disable STAX field
-			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
-					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				ctBB.getManagedBean().setStaxCheckingGUI(false);	// Display N/A
-			} else {
 				if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
 					getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
 				}
 				ctBB.getManagedBean().setStaxCheckingGUI(true);
-			}
+			
 			
 			flush();
 			if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
