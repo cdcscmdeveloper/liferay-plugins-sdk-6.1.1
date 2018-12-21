@@ -94,6 +94,7 @@ import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -151,6 +152,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
+import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
@@ -995,6 +997,39 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_721043);
 			} else if (gst.getGstEndDate() != null
 					&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_721044);
+			}
+		}
+	}
+	
+	//harris
+	public static void validateSSt(SmApplicationManagedBean managedBean,
+			int currentTab, SmRuleHelper ruleHelper) {
+		SmSstSupplier sst = managedBean.getCompanyBasicSst();
+		if (!isSstEmpty(sst)) {
+			if (StringUtils.isNotBlank(sst.getSalestaxregno())
+					&& sst.getSalestaxregno().length() != ruleHelper
+							.getSstRegNumLength()) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else if (StringUtils.isNotBlank(sst.getSalestaxregno())
+					&& sst.getSalestaxregDate() == null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Effective date is required
+				throw new EpException(MessageConst.ERROR_721030);
+			} else if (StringUtils.isBlank(sst.getSalestaxregno())
+					&& sst.getSalestaxregDate() != null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Registration no is required
+				throw new EpException(MessageConst.ERROR_721029);
+			} else if (StringUtils.isBlank(sst.getSalestaxregno())
+					&& sst.getSalestaxregEndDate() != null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Registration no and GST Effective Date is required
+				throw new EpException(MessageConst.ERROR_721043);
+			} else if (sst.getSalestaxregEndDate() != null
+					&& sst.getSalestaxregDate().compareTo(sst.getSalestaxregEndDate()) > 0) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_721044);
 			}
@@ -8000,6 +8035,72 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	//harris
+	public static void initBranchSstInformation(SmSstSupplier hqSst, SmAppl appl) {
+		SupplierSstReqDTO reqDTO = null;
+		SmSstSupplier brCurr = null;
+		SmSstSupplier brByApplNo = null;
+		List<SmSupplierBranch> branchList = appl.getSmSupplierBranches();
+		if (!isSstEmpty(hqSst) && branchList != null) {
+			for (SmSupplierBranch br : branchList) {
+				reqDTO = new SupplierSstReqDTO();
+				reqDTO.setApplNo(appl.getApplNo());
+				reqDTO.setBranchCode(br.getBranchCode() == null ? br
+						.getSupplierBranchId() : br.getBranchCode());
+				brByApplNo = SmServiceLookup.getSupplierSstSO()
+						.retrieveSstInfoByApplNoAndBranchCode(reqDTO)
+						.getSmSstSupplier();
+				brCurr = SmCommonUtil
+						.getSmSstSupplierBySupplierIdAndBranchCode(appl
+								.getSmSupplier().getSupplierId(), br
+								.getBranchCode() != null ? br.getBranchCode()
+								: br.getSupplierBranchId(), null, true);
+
+				if (brByApplNo != null) {
+					br.setSst(brByApplNo);
+					br.setSameAsHq(SmApplicationUtil.isBranchSstSameAsHq(hqSst,
+							br.getSst()));
+				} else {
+					if (brCurr != null) {
+						if (brCurr.getApplNo().equals(appl.getApplNo())) {
+							br.setSst(brCurr);
+							br.setSameAsHq(SmApplicationUtil
+									.isBranchSstSameAsHq(hqSst, br.getSst()));
+						} else {
+							br.setSst(new SmSstSupplier());
+							br.getSst().setSalestaxregno(brCurr.getSalestaxregno());
+							br.getSst().setSalestaxregDate(brCurr.getSalestaxregDate());
+							br.getSst().setSalestaxregEndDate(brCurr.getSalestaxregEndDate());
+							br.getSst().setServtaxregno(brCurr.getServtaxregno());
+							br.getSst().setServtaxregDate(brCurr.getServtaxregDate());
+							br.getSst().setServtaxregEndDate(brCurr.getServtaxregEndDate());
+							br.setSameAsHq(SmApplicationUtil
+									.isBranchSstSameAsHq(hqSst, br.getSst()));
+//							if (brCurr.getSmGstSupplierDocs() != null
+//									&& !brCurr.getSmGstSupplierDocs().isEmpty()) {
+//								br.getGst().setSmGstSupplierDocs(
+//										new ArrayList<SmGstSupplierDoc>());
+//								SmGstSupplierDoc doc = null;
+//								for (SmGstSupplierDoc docCurr : brCurr
+//										.getSmGstSupplierDocs()) {
+//									doc = new SmGstSupplierDoc();
+//									doc.setPmDocument(docCurr.getPmDocument());
+//									doc.setFileName(docCurr.getFileName());
+//									doc.setFilePath(docCurr.getFilePath());
+//									doc.setSmGstSupplier(br.getGst());
+//									br.getGst().getSmGstSupplierDocs().add(doc);
+//								}
+//							}
+						}
+					} else {
+						br.setSst(new SmSstSupplier());
+						br.setSameAsHq(true);
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Add new gst to branch and check whether need to be copied gst information
@@ -8085,6 +8186,18 @@ public class SmApplicationUtil {
 			retVal = true;
 		} else if (StringUtils.isBlank(gst.getGstRegNo())
 				&& gst.getGstEffDate() == null && gst.getGstEndDate() == null) {
+			retVal = true;
+		}
+		return retVal;
+	}
+	
+	//harris
+	public static boolean isSstEmpty(SmSstSupplier sst) {
+		boolean retVal = false;
+		if (sst == null) {
+			retVal = true;
+		} else if (StringUtils.isBlank(sst.getSalestaxregno())
+				&& sst.getSalestaxregDate() == null && sst.getSalestaxregEndDate() == null) {
 			retVal = true;
 		}
 		return retVal;
@@ -8243,6 +8356,20 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	//harris
+	public static void setUpdatedBranchSstToMainList(
+			List<SmSupplierBranch> branchList, SmSstSupplier sst) {
+		if (branchList != null && !branchList.isEmpty()) {
+			for (SmSupplierBranch br : branchList) {
+				if (br.getBranchCode() != null
+						&& sst.getBranchCode() != null
+						&& br.getBranchCode().compareTo(sst.getBranchCode()) == 0) {
+					br.setSst(sst);
+				}
+			}
+		}
+	}
 
 	public static boolean isBranchGstSameAsHq(SmGstSupplier hqGst,
 			SmGstSupplier brGst) {
@@ -8252,6 +8379,20 @@ public class SmApplicationUtil {
 				&& StringUtils.isNotBlank(hqGst.getGstRegNo())
 				&& brGst.getGstRegNo().equals(hqGst.getGstRegNo())
 				&& brGst.getGstEffDate().compareTo(hqGst.getGstEffDate()) == 0) {
+			retVal = true;
+		}
+		return retVal;
+	}
+	
+	//harris
+	public static boolean isBranchSstSameAsHq(SmSstSupplier hqSst,
+			SmSstSupplier brSst) {
+		boolean retVal = false;
+		if (hqSst.getSalestaxregDate() != null && brSst.getSalestaxregDate() != null
+				&& StringUtils.isNotBlank(brSst.getSalestaxregno())
+				&& StringUtils.isNotBlank(hqSst.getSalestaxregno())
+				&& brSst.getSalestaxregno().equals(hqSst.getSalestaxregno())
+				&& brSst.getSalestaxregDate().compareTo(hqSst.getSalestaxregDate()) == 0) {
 			retVal = true;
 		}
 		return retVal;
@@ -9153,6 +9294,34 @@ public class SmApplicationUtil {
 								.getGstRegNo());
 
 						if (!SmCommonUtil.validateGstRegNo(brGst.getGstRegNo())) {
+							throw new EpException(MessageConst.ERROR_721027);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//harris
+	public static void validateBranchSstInformation(SmSupplierBranch br,
+			SmSstSupplier brSst, SmSstSupplier hqSst) {
+		if (hqSst != null && !StringUtils.isBlank(hqSst.getSalestaxregno())) {
+			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (brSst == null || StringUtils.isBlank(brSst.getSalestaxregno())) {
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.gst.branch.req.msg", null));
+				} else if (!StringUtils.isBlank(brSst.getSalestaxregno())) {
+
+					if (hqSst.getSmSupplier() != null
+							&& !StringUtils.isBlank(hqSst.getSmSupplier()
+									.getRegNo())) {
+
+						// Validate GST reg no. uniqueness
+						SmCommonUtil.validateSstRegNoUniqueness(hqSst
+								.getSmSupplier().getRegNo(), brSst
+								.getSalestaxregno());
+
+						if (!SmCommonUtil.validateSstRegNo(brSst.getSalestaxregno())) {
 							throw new EpException(MessageConst.ERROR_721027);
 						}
 					}
