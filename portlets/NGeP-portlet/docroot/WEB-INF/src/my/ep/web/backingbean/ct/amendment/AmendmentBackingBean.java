@@ -796,21 +796,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 			}
 
-			// Enable or Disable GST AND STAXS field
+			// Enable or Disable GST field
 			if (!ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
 					&& !ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				ctBackingBean.getManagedBean().setGstCheckingGUI(false); // Display N/A
-				ctBackingBean.getManagedBean().setDisableStaxAmount(false);
+
 			} else {
 				if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 					ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 				}
 				ctBackingBean.getManagedBean().setGstCheckingGUI(true);
-				
-				if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
-					ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setStaxCheckingGUI(true);
 				// If original contract is fulfilled imposed service tax rule
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.isBeforeGstReliefDueDate()
@@ -818,9 +813,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()
 						&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBackingBean.getGstReliefDueDate().getTime()) {
 					ctBackingBean.getManagedBean().setDisableGstAmount(true);
-					ctBackingBean.getManagedBean().setDisableStaxAmount(true);
 				}
 			}
+			
+			// Enable or Disable STAX field
+
+				if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
+					ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+				}
+				ctBackingBean.getManagedBean().setStaxCheckingGUI(true);
+
+						
 
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
@@ -2388,11 +2391,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null)  {
 			contractAmt = newContractAmt().add(
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()
 							.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount()));
+		}else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null)  {
+			contractAmt = newContractAmt().add(
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
 		}
 		return contractAmt;
 	}

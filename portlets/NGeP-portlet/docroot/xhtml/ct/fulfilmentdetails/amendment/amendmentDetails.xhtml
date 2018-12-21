@@ -263,20 +263,13 @@
 			</h:panelGrid>
 			
 							
-			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
-			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>	
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
 				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
-				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails
-				   		or ctBackingBean.managedBean.disableGstAmount}"
-				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
+				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="newStaxAmtTxt, overallAmt" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:message for="newStaxAmtTxt" display="icon" />
-				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-	   				 rendered="#{!ctBackingBean.managedBean.staxCheckingGUI}" value="#{lbl['lbl.txt.na']}">
 				</p:inputText>
 			</h:panelGrid>
 			

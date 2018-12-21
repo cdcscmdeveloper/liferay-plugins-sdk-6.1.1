@@ -517,7 +517,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (!ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
 					&& !ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
-				ctBB.getManagedBean().setStaxCheckingGUI(false);
 				
 			} else {
 				if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
@@ -526,11 +525,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setGstCheckingGUI(true);
 				ctBB.getManagedBean().setDisableGstAmount(false);
 				
-				if (ctBB.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
-					ctBB.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
-				}
-				ctBB.getManagedBean().setStaxCheckingGUI(true);
-				ctBB.getManagedBean().setDisableStaxAmount(false);
 
 				if (!ctBB.getManagedBean().isViewContract()) {
 					// If original contract is fulfilled imposed service tax rule
@@ -540,12 +534,33 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						} else {
 							if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBB.getGstReliefDueDate().getTime()) {
 								ctBB.getManagedBean().setDisableGstAmount(true);
-								ctBB.getManagedBean().setDisableStaxAmount(true);
 							}
 						}
 					}
 				}
 			}
+			
+			if (ctBB.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
+				ctBB.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+			}
+			ctBB.getManagedBean().setStaxCheckingGUI(true);
+			ctBB.getManagedBean().setDisableStaxAmount(false);
+			
+
+			if (!ctBB.getManagedBean().isViewContract()) {
+				// If original contract is fulfilled imposed service tax rule
+				if (ctBB.isBeforeGstReliefDueDate() && ctBB.imposedServiceTaxCondition()) {
+					if (ctBB.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+						ctBB.getManagedBean().setDisableContractAmount(false);
+					} else {
+						if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBB.getGstReliefDueDate().getTime()) {
+							ctBB.getManagedBean().setDisableStaxAmount(true);
+						}
+					}
+				}
+			}
+		
+			
 			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 				for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
@@ -1871,18 +1886,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (!ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
 				&& !ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
-			ctBB.getManagedBean().setStaxCheckingGUI(false);
 		} else {
 			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 			}
 			ctBB.getManagedBean().setGstCheckingGUI(true);
-			
-			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
-				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
-			}
-			ctBB.getManagedBean().setStaxCheckingGUI(true);
 		}
+		
+		if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
+			trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+		}
+		ctBB.getManagedBean().setStaxCheckingGUI(true);
+	
+		
+		
+		
 		trBB.retrieveContractVerOfAgreement();
 		trBB.getManagedBean().setTerminationList(contractSO.retrieveTerminationHistoryList(ctReqDTO).getTerminationHistoryList());		
 		return TERMINATE_HISTORY_PAGE;
