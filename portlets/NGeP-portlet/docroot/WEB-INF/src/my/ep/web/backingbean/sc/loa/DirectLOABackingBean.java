@@ -6343,27 +6343,27 @@ public class DirectLOABackingBean extends
 //		return isActive;
 //	}
 	
-	/**
-	 * Checks if is SST reg active.
-	 *
-	 * @return true, if is SST reg active
-	 */
-	public boolean isSSTRegActive() {
-
-		boolean isActive = true;
-		ScLoa scLoa = getManagedBean().getScLoa();
-		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
-		
-		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {			
-			if (null != scLoa.getSstEffDate()) {	
-				if (scLoa.getSstEffDate().compareTo(new Date()) <= 0) {
-					isActive = false;
-				}
-			}
-		}
-
-		return isActive;
-	}
+//	/**
+//	 * Checks if is SST reg active.
+//	 *
+//	 * @return true, if is SST reg active
+//	 */
+//	public boolean isSSTRegActive() {
+//
+//		boolean isActive = true;
+//		ScLoa scLoa = getManagedBean().getScLoa();
+//		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+//		
+//		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {			
+//			if (null != scLoa.getSstEffDate()) {	
+//				if (scLoa.getSstEffDate().compareTo(new Date()) <= 0) {
+//					isActive = false;
+//				}
+//			}
+//		}
+//
+//		return isActive;
+//	}
 	//end Enhancement #24259 #24269
 	
 	//Enhancement #20007: DPQT GST - Disable Field GST Amount
@@ -7361,17 +7361,17 @@ public class DirectLOABackingBean extends
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scLoa.setProcurementTypeCatId(resDTO.getPmParameter());
 			
-			if (scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)) {
-				reqDTO.setParameterType(ParameterTypeConst.SALES_SERVICE_TAX);
-				reqDTO.setParameterCode(ParameterConst.SST_SALES_TAX);
-				
-				scLoa.setSstTypeId(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
-			} else {
-				reqDTO.setParameterType(ParameterTypeConst.SALES_SERVICE_TAX);
-				reqDTO.setParameterCode(ParameterConst.SST_SERVICE_TAX);
-				
-				scLoa.setSstTypeId(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
-			}
+//			if (scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)) {
+//				reqDTO.setParameterType(ParameterTypeConst.SALES_SERVICE_TAX);
+//				reqDTO.setParameterCode(ParameterConst.SST_SALES_TAX);
+//				
+//				scLoa.setSstTypeId(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
+//			} else {
+//				reqDTO.setParameterType(ParameterTypeConst.SALES_SERVICE_TAX);
+//				reqDTO.setParameterCode(ParameterConst.SST_SERVICE_TAX);
+//				
+//				scLoa.setSstTypeId(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
+//			}
 		} finally {
 			parameterSO = null;
 		}
