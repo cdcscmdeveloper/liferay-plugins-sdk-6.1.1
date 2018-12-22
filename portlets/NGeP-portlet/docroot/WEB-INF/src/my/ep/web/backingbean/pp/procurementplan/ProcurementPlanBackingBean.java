@@ -1892,8 +1892,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return xhtml
 	 * @throws Exception
 	 */
+	public void onSelectCategory(Long id, int index){
+		log.info("The category id " + id);
+		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
+				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementCat(pmProcCat.getProcurementCat());
+				break;
+			}
+		}
+	}
+	public void onSelectCategoryType(Long id, int index){
+		log.info("The category type id " + id);
+		Long procurementCatId = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat().getParameterId();
+		List<PmProcurementCatType> pmProcCats= 	PpCommonUtil.retrieveProcurementTypeListByCatId(getFacesScopes().getUserLocale().getLanguage(), procurementCatId);
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementType().getParameterId().equals(id)){
+				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementType(pmProcCat.getProcurementType());
+				break;
+			}
+		}
+	}
 	public String savePlan(String action) throws Exception{
 		log.info("savePlan - START");
+		log.info("the action: " + action);
 		ProcurementPlanReqDTO reqDTO = null;
 		IProcurementPlanSO reqSO = null;
 		ProcurementPlanResDTO resDTO = null;
