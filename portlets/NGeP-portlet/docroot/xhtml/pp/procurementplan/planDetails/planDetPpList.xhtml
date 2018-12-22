@@ -118,7 +118,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
 						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}"/>
-					<p:ajax event="change" update="somProcurementMethod" />
+					<p:ajax event="change" update="somProcurementMethod" listener="#{pPlanBackingBean.onSelectCategory(ppItem.procurementCat.parameterId, index)}"/>
 				</p:selectOneMenu>
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
@@ -129,7 +129,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
-					<p:ajax event="change" process="@this" />
+					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}" process="@this" />
 				</p:selectOneMenu>
 				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
