@@ -39,9 +39,9 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -67,11 +67,11 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.sst.SupplierSstReqDTO;
-import my.ep.dto.sm.sst.SupplierSstResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -111,10 +111,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -348,7 +348,7 @@ public class LOADetailBackingBean extends
 			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
-			isSSTRegActive();
+//			isSSTRegActive();
 
 			// Setting BI Report
 			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
@@ -2450,12 +2450,12 @@ public class LOADetailBackingBean extends
 
 					// Get Gst info for HQ
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-					SupplierSstResDTO resDTO = getSSTInfo(supplierId, null);
-//					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
+//					SupplierSstResDTO resDTO = getSSTInfo(supplierId, null);
+					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
 					
 					if(isBranchChanged){
-						setSSTInfo(resDTO, scLoa);
-//						setGSTInfo(resDTO, scLoa);
+//						setSSTInfo(resDTO, scLoa);
+						setGSTInfo(resDTO, scLoa);
 					}
 
 					break;
@@ -2484,12 +2484,12 @@ public class LOADetailBackingBean extends
 
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-					SupplierSstResDTO resDTO = getSSTInfo(supplierId,supplierBranch.getBranchCode());
-//					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
+//					SupplierSstResDTO resDTO = getSSTInfo(supplierId,supplierBranch.getBranchCode());
+					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
 					
 					if(isBranchChanged){
-						setSSTInfo(resDTO,scLoa);
-//						setGSTInfo(resDTO,scLoa);
+//						setSSTInfo(resDTO,scLoa);
+						setGSTInfo(resDTO,scLoa);
 					}
 					
 					break;
@@ -4778,9 +4778,9 @@ public class LOADetailBackingBean extends
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
 		// if supplier Gst Registered  
-//		if(isGSTRegActive()){
-		
-		if (isSSTRegActive()) { //Enhancement #24259 #24269
+		//Enhancement #24259 #24269
+//		if(isGSTRegActive()){		
+		if (loa.getSstAmt() != null) { 
 			overallContractAmtOrLoaAmt = loa.getOverallContractAmt(); 
 		} else {
 			overallContractAmtOrLoaAmt = loa.getLoaAmt();
@@ -5172,27 +5172,27 @@ public class LOADetailBackingBean extends
 //		return isActive;
 //	}
 	
-	/**
-	 * Checks if is SST reg active.
-	 *
-	 * @return true, if is SST reg active
-	 */
-	public boolean isSSTRegActive() { 
-		boolean isActive = Boolean.FALSE;
-		
-		ScLoa scLoa = getManagedBean().getScLoa();
-		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
-				
-		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {		
-			if (null != scLoa.getSstEffDate()) {		
-				if(scLoa.getSstEffDate().compareTo(new Date()) <= 0){
-					isActive = Boolean.TRUE;
-				}
-			}
-		}
-		
-		return isActive;
-	}
+//	/**
+//	 * Checks if is SST reg active.
+//	 *
+//	 * @return true, if is SST reg active
+//	 */
+//	public boolean isSSTRegActive() { 
+//		boolean isActive = Boolean.FALSE;
+//		
+//		ScLoa scLoa = getManagedBean().getScLoa();
+//		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+//			
+//		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {		
+//			if (null != scLoa.getSstEffDate()) {		
+//				if(scLoa.getSstEffDate().compareTo(new Date()) <= 0){
+//					isActive = Boolean.TRUE;
+//				}
+//			}
+//		}
+//		
+//		return isActive;
+//	}
 
 	private void calculateOverallCtAmtForSupplier(){
 		ScLoa scLoa = getManagedBean().getScLoa();
@@ -5202,11 +5202,12 @@ public class LOADetailBackingBean extends
 //				&& null != scLoa.getGstAmt()) {
 //			overallContractAmt = overallContractAmt.add(scLoa.getGstAmt());
 //		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
-
-		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& null != scLoa.getSstAmt()) {
+//		if ((supplier != null && supplier.getSstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
+//				&& null != scLoa.getSstAmt()) {
+		if (scLoa.getSstAmt() != null) {
 			overallContractAmt = overallContractAmt.add(scLoa.getSstAmt());
-		} else if ((supplier != null && supplier.getSstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
+//		} else if ((supplier != null && supplier.getSstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
+		} else {
 			BigDecimal durationMnth = null;
 			BigDecimal noOfMnth = new BigDecimal(12);
 			
@@ -5592,101 +5593,62 @@ public class LOADetailBackingBean extends
 		return certResDTO.getSmMofCert();
 	}
 
-//	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
-//
-//		ISupplierGstSO supplierGstSO = null;
-//		try {
-//			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
-//			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
-//			gstReqDTO.setSupplierId(supplierId);
-//			gstReqDTO.setBranchCode(branchCode);
-//			SupplierGstResDTO gstResDTO = supplierGstSO
-//					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
-//			return gstResDTO;
-//		} finally {
-//			supplierGstSO = null;
-//		}
-//	}
-	
-	private SupplierSstResDTO getSSTInfo(Long supplierId, Long branchCode) {
-		ISupplierSstSO supplierSstSO = null;
-		
+	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
+
+		ISupplierGstSO supplierGstSO = null;
 		try {
-			supplierSstSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSstSO.class);
-			
-			SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
-			sstReqDTO.setSupplierId(supplierId);
-			sstReqDTO.setBranchCode(branchCode);
-			
-			SupplierSstResDTO sstResDTO = supplierSstSO.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
-			
-			return sstResDTO;
+			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+			gstReqDTO.setSupplierId(supplierId);
+			gstReqDTO.setBranchCode(branchCode);
+			SupplierGstResDTO gstResDTO = supplierGstSO
+					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+			return gstResDTO;
 		} finally {
-			supplierSstSO = null;
+			supplierGstSO = null;
 		}
 	}
-
-//	private void setGSTInfo(SupplierGstResDTO resDTO, ScLoa scLoa){
-//
-//		if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
-//			SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
-//			scLoa.setGstRegNo(gstSupplier.getGstRegNo());
-//			scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
-//			scLoa.setGstEffDate(gstSupplier.getGstEffDate());
-//		} else {
-//			scLoa.setGstRegNo(null);
-//			scLoa.setGstDeclaredDate(null);
-//			scLoa.setGstEffDate(null);
-//		}
-//		if(scLoa.getGstAmt() != null){
-//			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
-//			if ((ctAmount != null && scLoa.getLoaAmt() != null)
-//					&& !scLoa.getLoaAmt().equals(ctAmount)) {
-//				ctAmount = ctAmount.subtract(scLoa.getGstAmt());
-//				ctAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-//				this.getManagedBean().setOverallContractAmt(ctAmount);
-//			}
-//		}
-//		scLoa.setGstAmt(null);
-//	}
 	
-	private void setSSTInfo(SupplierSstResDTO resDTO, ScLoa scLoa) {
-		if(scLoa.getSstTypeId() != null && 
-				scLoa.getSstTypeId().getParameterCode().equals(ParameterConst.SST_SALES_TAX)) {
-			
-			if(resDTO.isSuccessful() && resDTO.getSmSstSupplier() != null) {				
-				SmSstSupplier sstSupplier = resDTO.getSmSstSupplier();
-				
-				scLoa.setSstRegNo(sstSupplier.getSalestaxregno());
-				scLoa.setSstDeclaredDate(sstSupplier.getSalestaxregdecDate());
-				scLoa.setSstEffDate(sstSupplier.getSalestaxregDate());
-			} else {
-				scLoa.setSstRegNo(null);
-				scLoa.setSstDeclaredDate(null);
-				scLoa.setSstEffDate(null);
-			}
-		
-		} else { //ParameterConst.SST_SERVICE_TAX
-			
-			if(resDTO.isSuccessful() && resDTO.getSmSstSupplier() != null) {				
-				SmSstSupplier sstSupplier = resDTO.getSmSstSupplier();
-				
-				scLoa.setSstRegNo(sstSupplier.getServtaxregno());
-				scLoa.setSstDeclaredDate(sstSupplier.getServtaxdecDate());
-				scLoa.setSstEffDate(sstSupplier.getServtaxregDate());
-			} else {
-				scLoa.setSstRegNo(null);
-				scLoa.setSstDeclaredDate(null);
-				scLoa.setSstEffDate(null);
-			}		
+//	private SupplierSstResDTO getSSTInfo(Long supplierId, Long branchCode) {
+//		ISupplierSstSO supplierSstSO = null;
+//		
+//		try {
+//			supplierSstSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSstSO.class);
+//			
+//			SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
+//			sstReqDTO.setSupplierId(supplierId);
+//			sstReqDTO.setBranchCode(branchCode);
+//			
+//			SupplierSstResDTO sstResDTO = supplierSstSO.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
+//			
+//			return sstResDTO;
+//		} finally {
+//			supplierSstSO = null;
+//		}
+//	}
+
+	private void setGSTInfo(SupplierGstResDTO resDTO, ScLoa scLoa){
+
+		if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
+			SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
+			scLoa.setGstRegNo(gstSupplier.getGstRegNo());
+			scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
+			scLoa.setGstEffDate(gstSupplier.getGstEffDate());
+		} else {
+			scLoa.setGstRegNo(null);
+			scLoa.setGstDeclaredDate(null);
+			scLoa.setGstEffDate(null);
 		}
-		
+
+		//Enhancement #24259 #24269	
+//		if(scLoa.getGstAmt() != null){
 		if(scLoa.getSstAmt() != null) {
 			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
 			
-			if ((ctAmount != null && scLoa.getLoaAmt() != null) && !scLoa.getLoaAmt().equals(ctAmount)) {
+			if ((ctAmount != null && scLoa.getLoaAmt() != null)	&& !scLoa.getLoaAmt().equals(ctAmount)) {
+//				ctAmount = ctAmount.subtract(scLoa.getGstAmt());
 				ctAmount = ctAmount.subtract(scLoa.getSstAmt());
 				
 				ctAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -5696,7 +5658,55 @@ public class LOADetailBackingBean extends
 		}
 		
 		scLoa.setSstAmt(null);
+//		scLoa.setGstAmt(null);
+		//end Enhancement #24259 #24269	
 	}
+	
+//	private void setSSTInfo(SupplierSstResDTO resDTO, ScLoa scLoa) {
+//		if(scLoa.getSstTypeId() != null && 
+//				scLoa.getSstTypeId().getParameterCode().equals(ParameterConst.SST_SALES_TAX)) {
+//			
+//			if(resDTO.isSuccessful() && resDTO.getSmSstSupplier() != null) {				
+//				SmSstSupplier sstSupplier = resDTO.getSmSstSupplier();
+//				
+//				scLoa.setSstRegNo(sstSupplier.getSalestaxregno());
+//				scLoa.setSstDeclaredDate(sstSupplier.getSalestaxregdecDate());
+//				scLoa.setSstEffDate(sstSupplier.getSalestaxregDate());
+//			} else {
+//				scLoa.setSstRegNo(null);
+//				scLoa.setSstDeclaredDate(null);
+//				scLoa.setSstEffDate(null);
+//			}
+//		
+//		} else { //ParameterConst.SST_SERVICE_TAX
+//			
+//			if(resDTO.isSuccessful() && resDTO.getSmSstSupplier() != null) {				
+//				SmSstSupplier sstSupplier = resDTO.getSmSstSupplier();
+//				
+//				scLoa.setSstRegNo(sstSupplier.getServtaxregno());
+//				scLoa.setSstDeclaredDate(sstSupplier.getServtaxdecDate());
+//				scLoa.setSstEffDate(sstSupplier.getServtaxregDate());
+//			} else {
+//				scLoa.setSstRegNo(null);
+//				scLoa.setSstDeclaredDate(null);
+//				scLoa.setSstEffDate(null);
+//			}		
+//		}
+//		
+//		if(scLoa.getSstAmt() != null) {
+//			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
+//			
+//			if ((ctAmount != null && scLoa.getLoaAmt() != null) && !scLoa.getLoaAmt().equals(ctAmount)) {
+//				ctAmount = ctAmount.subtract(scLoa.getSstAmt());
+//				
+//				ctAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+//				
+//				this.getManagedBean().setOverallContractAmt(ctAmount);
+//			}
+//		}
+//		
+//		scLoa.setSstAmt(null);
+//	}
 
 	/**
 	 * Tab change action.
