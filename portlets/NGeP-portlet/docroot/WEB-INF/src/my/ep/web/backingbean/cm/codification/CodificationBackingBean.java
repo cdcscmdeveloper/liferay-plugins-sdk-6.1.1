@@ -969,7 +969,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if (this.getManagedBean().getCurrentTaskName()
 				.equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
 			return "reviewBeforeCreateTempCode?faces-redirect=true";
-		} else {
+		} else if(this.getManagedBean().getCurrentTaskName()
+				.equals(my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE)){
+			return "reviewExtensionCodeFlow?faces-redirect=true";
+		}else {
 			return "reviewUnspscCode?faces-redirect=true";
 		}
 
@@ -2127,7 +2130,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 						.equalsIgnoreCase(
 								my.ep.constant.cm.CmConst.TASK_REVIEW_REQUEST) || (this
 										.getManagedBean().getCurrentTaskName()
-										.equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)))) {
+										.equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) || (this
+												.getManagedBean().getCurrentTaskName()
+												.equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE))									
+						)) {
 			return "verifyExtensionSearch?faces-redirect=true";
 		}
 		// if come from pending codification
@@ -2328,11 +2334,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 						.getColorName()));
 			}
 		}
-		log.info("......... unspscObj.getCmBrand()="
-				+ unspscObj.getCmBrand());
-		for (CmBrand brand : unspscObj.getCmBrand()) {
-			log.info(".........brand.getBrandName()="
-					+ brand.getBrandName());
+		
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO unspscDTO = unspscSO.retrieveUNSPSCByCommodityCode(reqDTO);
+		
+		for (CmBrand brand : unspscDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName())) {
 				this.getManagedBean()
 				.getBrandCriteria()
@@ -2344,7 +2350,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		// .println("..................this.getManagedBean().getBrandCriteria().size()="
 		// + this.getManagedBean().getBrandCriteria().size());
 
-		for (CmType type : unspscObj.getCmType()) {
+		for (CmType type : unspscDTO.getCommodityObj().getCmType()) {
 			if (!StringUtils.isBlank(type.getTypeName())) {
 				this.getManagedBean()
 				.getTypeCriteria()
@@ -2353,7 +2359,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			}
 		}
 
-		for (CmMeasurement measurement : unspscObj.getCmMeasurement()) {
+		for (CmMeasurement measurement : unspscDTO.getCommodityObj().getCmMeasurement()) {
 			if (!StringUtils.isBlank(measurement.getMeasurementName())) {
 				this.getManagedBean()
 				.getMeasurementCriteria()
