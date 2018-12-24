@@ -381,7 +381,7 @@ public class TemplateSpecBackingBean extends
 		if (!questionToDelete.isBrandNew()) {
 			questionToDelete.setDeleted(true);
 			if(null!=questionToDelete.getTplSpecMaster() && null!=questionToDelete.getTplSpecMaster().getTplSpecZone()){
-			TemplateSpecHelper.getInstance().resetSpecZoneQuanties(questionToDelete);
+			//TemplateSpecHelper.getInstance().resetSpecZoneQuanties(questionToDelete);
 			}
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equalsIgnoreCase(
 					questionToDelete.getQuestionType())) {
@@ -1666,6 +1666,10 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal maxScore = templateSpecSO.validateScoring(
 					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
+			
+			if(maxScore != null && maxScore.equals(new BigDecimal(0))){
+				throw new EpException(MessageConst.ERROR_760476);
+			}
 
 			if (maxScore != null) {
 				selectedSpecQuestion.setMaxScore(maxScore);
