@@ -2323,6 +2323,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 * @return the requestNoteItemList
 	 */
 	public List<FlFulfilmentItemAddr> getRequestNoteItemList() {
+		if (requestNoteItemList == null) {
+			requestNoteItemList = new ArrayList<FlFulfilmentItemAddr>();
+		}
 		return requestNoteItemList;
 	}
 
