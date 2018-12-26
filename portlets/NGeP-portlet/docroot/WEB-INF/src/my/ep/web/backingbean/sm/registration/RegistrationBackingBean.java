@@ -256,6 +256,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//harris
 		validateSstRegNo();
+		validateSstServRegNo();
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
@@ -581,7 +582,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//SST
 				if(getManagedBean().isSstFlag()){
 					getManagedBean().getSmSupp().setSmSstSuppliers(new ArrayList<SmSstSupplier>());
-//					getManagedBean().getSmSupp().setSstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
+					getManagedBean().getSmSupp().setSstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
 					setSupplierSst();
 				}
 		
@@ -2311,7 +2312,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void validateSstRegNo() {
 		String sstNo = this.getManagedBean().getSmSstSupplier().getSalestaxregno();
 
-		// Validate GST reg no. uniqueness
+		// Validate SST reg no. uniqueness
 		SmCommonUtil.validateSstRegNoUniqueness(getManagedBean().getSmSupp()
 				.getRegNo(), sstNo);
 
@@ -2326,6 +2327,35 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if (StringUtils.isBlank(sstNo)) {
 				// if both gst no and gst eff date null means deleted gst
 				if (this.getManagedBean().getSmSstSupplier().getSalestaxregDate() == null) {
+					deleteSst(this.getManagedBean().getSmSstSupplier());
+					this.getManagedBean().setSstFlag(false);
+				} else {
+					this.getManagedBean().setSstFlag(false);
+					throw new EpException(MessageConst.ERROR_721027);
+				}
+			}
+		}
+	}
+	
+	//harris
+	public void validateSstServRegNo() {
+		String sstServNo = this.getManagedBean().getSmSstSupplier().getServtaxregno();
+
+		// Validate SST reg no. uniqueness
+		SmCommonUtil.validateSstRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), sstServNo);
+
+		if (!StringUtils.isBlank(sstServNo)) {
+			if (!SmCommonUtil.validateSstRegNo(sstServNo)) {
+				this.getManagedBean().setSstFlag(false);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else {
+				this.getManagedBean().setSstFlag(true);
+			}
+		} else {
+			if (StringUtils.isBlank(sstServNo)) {
+				// if both gst no and gst eff date null means deleted gst
+				if (this.getManagedBean().getSmSstSupplier().getServtaxregDate() == null) {
 					deleteSst(this.getManagedBean().getSmSstSupplier());
 					this.getManagedBean().setSstFlag(false);
 				} else {
@@ -2667,6 +2697,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		sst.setSalestaxregno(null);
 		sst.setSalestaxregDate(null);
 		sst.setSalestaxregEndDate(null);
+		sst.setServtaxregno(null);
+		sst.setServtaxregDate(null);
+		sst.setServtaxregEndDate(null);
 //		gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 //		SmApplicationUtil.initSstSuppDocs(sst);
 	}
