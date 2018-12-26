@@ -68,6 +68,10 @@ public class SmRuleHelper {
 	public int getGstRegNumLength() {
 		return 12;
 	}
+	
+	public int getSstRegNumLength() {
+		return 17;
+	}
 
 	public int getConsutantPersonnelMinExp() {
 		return 5;
