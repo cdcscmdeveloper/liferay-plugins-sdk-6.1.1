@@ -334,14 +334,10 @@ public class GovtSellerRegistrationBackingBean extends
 	//harris
 	public void validateSstRegNo() {
 		String sstNo = this.getManagedBean().getSmSstSupplier().getSalestaxregno();
-		String sstServNo = this.getManagedBean().getSmSstSupplier().getServtaxregno();
 		this.getManagedBean().getSmSstSupplier().setIsCurrent(true);
 
 		SmCommonUtil.validateSstRegNoUniqueness(getManagedBean().getSmSupp()
 				.getRegNo(), sstNo);
-
-		SmCommonUtil.validateSstServRegNoUniqueness(getManagedBean().getSmSupp()
-				.getRegNo(), sstServNo);
 
 		if (sstNo != null && sstNo.length() > 0) {
 			if (!SmCommonUtil.validateSstRegNo(sstNo)) {
@@ -353,6 +349,15 @@ public class GovtSellerRegistrationBackingBean extends
 		} else {
 			this.getManagedBean().setSstFlag(false);
 		}
+	}
+	
+	//harris
+	public void validateSstServRegNo() {
+		String sstServNo = this.getManagedBean().getSmSstSupplier().getServtaxregno();
+		this.getManagedBean().getSmSstSupplier().setIsCurrent(true);
+
+		SmCommonUtil.validateSstServRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), sstServNo);
 
 		if (sstServNo != null && sstServNo.length() > 0) {
 			if (!SmCommonUtil.validateSstServRegNo(sstServNo)) {
@@ -1406,8 +1411,8 @@ public class GovtSellerRegistrationBackingBean extends
 	//harris
 	private void setSupplierSstBeforeSubmit() {
 		if (getManagedBean().isSstFlag()) {
-//			getManagedBean().getSmSupp().setSstRegisteredFlag(
-//					DbValueConst.RECORD_STATUS_ACTIVE);
+			getManagedBean().getSmSupp().setSstRegisteredFlag(
+					DbValueConst.RECORD_STATUS_ACTIVE);
 			// main company
 			SmSstSupplier sstSupplier = getManagedBean().getSmSstSupplier();
 			sstSupplier.setIsCurrent(true);
