@@ -751,6 +751,20 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		return NAV_TO_SEARCH;
 	}
 
+	
+	public void onInputChange(String input, String attr){
+		if(StringUtils.isBlank(input)){
+			if(attr.equalsIgnoreCase("sales")){
+				this.getManagedBean().getSstSupplier().setSalestaxregDate(null);
+				this.getManagedBean().getSstSupplier().setSalestaxregEndDate(null);
+				this.getManagedBean().getSstSupplier().setSalestaxregdecDate(null);
+			}else if(attr.equalsIgnoreCase("service")){
+				this.getManagedBean().getSstSupplier().setServtaxregDate(null);
+				this.getManagedBean().getSstSupplier().setServtaxregEndDate(null);
+				this.getManagedBean().getSstSupplier().setServtaxdecDate(null);
+			}
+		}
+	}
 	/**
 	 * This method used to save organisation data.
 	 * 
@@ -759,8 +773,13 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	 * @return the navigate URL
 	 **/
 	public String saveOrganization(String outcome) throws Exception {
-		log.info("test11 saveOrganization");
-
+		log.info("test11 saveOrganization\n\n\n");
+		log.info(this.getManagedBean().getSstSupplier().getSalestaxregDate() + " -\n " +
+		this.getManagedBean().getSstSupplier().getSalestaxregEndDate()+ " -\n " +
+		this.getManagedBean().getSstSupplier().getSalestaxregdecDate()+ " -\n " +
+		this.getManagedBean().getSstSupplier().getServtaxregDate()+ " -\n " +
+		this.getManagedBean().getSstSupplier().getServtaxregEndDate()+ " -\n " +
+		this.getManagedBean().getSstSupplier().getServtaxdecDate());
 		IOrgProfileSO orgProfileSO = null;
 		String redirectUrl = null;
 
@@ -847,13 +866,10 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					// }
 					// }
 					// harris
-					if (StringUtils.isNotBlank(sstSupplier.getSalestaxregno())) {
+					if (StringUtils.isNotBlank(sstSupplier.getSalestaxregno())|| StringUtils.isNotBlank(sstSupplier.getServtaxregno())) {
 						reqDTO.setSstSupplier(sstSupplier);
-					} else {
-						if (!sstSupplier.isBrandNew()) {
-							reqDTO.setSstSupplier(sstSupplier);
-						}
 					}
+
 				} else {
 					log.info("Deactvate Supplier=======");
 					reqDTO.setSupplierBanks(getManagedBean().getSmSupplierBanks());
@@ -2145,12 +2161,13 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	// }
 	// }
 	// harris
+
 	private void validateSstDetails() {
 		if (getManagedBean().getSstSupplier() == null) {
 			getManagedBean().setSstSupplier(new SmSstSupplier());
 		}
 
-		SmSstSupplier sstSupplier = getManagedBean().getSstSupplier();
+		SmSstSupplier sstSupplier = this.getManagedBean().getSstSupplier();
 		Date currentDate = new Date();
 
 		if (StringUtils.isNotBlank(sstSupplier.getSalestaxregno())) {
@@ -2190,19 +2207,11 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			if (!validateSalestaxregno(sstSupplier)) {
 				throw new EpException(MessageConst.ERROR_775143);
 			}
-			
-		} else {
-			sstSupplier.setSalestaxregDate(null);
-			sstSupplier.setSalestaxregEndDate(null);
-			sstSupplier.setSalestaxregdecDate(null);
 		}
+			
 
 		if (StringUtils.isNotBlank(sstSupplier.getServtaxregno())) {
 			sstSupplier.setServtaxdecDate(currentDate);
-//			String pattern = "\\d{12}";
-//			if (!sstSupplier.getServtaxregno().matches(pattern)) {
-//				throw new EpException(MessageConst.ERROR_775146);
-//			}
 			
 			if (sstSupplier.getServtaxregno().length() < 17) {
 				throw new EpException(MessageConst.ERROR_775146);
@@ -2224,7 +2233,14 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				throw new EpException(MessageConst.ERROR_775144);
 			}
 			
-		} else {
+		}
+
+		if ((StringUtils.isBlank(sstSupplier.getSalestaxregno()))){
+			sstSupplier.setSalestaxregDate(null);
+			sstSupplier.setSalestaxregEndDate(null);
+			sstSupplier.setSalestaxregdecDate(null);
+		}
+		if ((StringUtils.isBlank(sstSupplier.getServtaxregno()))){
 			sstSupplier.setServtaxregDate(null);
 			sstSupplier.setServtaxregEndDate(null);
 			sstSupplier.setServtaxdecDate(null);

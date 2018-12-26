@@ -299,16 +299,16 @@
  			 <td><h:outputLabel value="#{lbl['lbl.pm.org.tax.nosale']}" />
  			 </td> 		
  			<td><ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
- 			 <p:inputText id="sstsaleregNoId" 
+ 			 <p:inputText style="width:78% !important" id="sstsaleregNoId" 
 						label="#{lbl['lbl.pm.org.tax.nosale']}"						
 						value="#{organisationBackingBean.managedBean.sstSupplier.salestaxregno}"
 						size="35" styleClass="ppDisplayTextL"
 						maxlength="17" >
-						<p:ajax process="@this" update="sstservregNoId,sstEffDateId,sstEffDateMandtId" />						
+						<p:ajax process="@this" event="keyup" listener="#{organisationBackingBean.onInputChange(organisationBackingBean.managedBean.sstSupplier.salestaxregno, 'sales')}" update="sstEffDateId,sstEffDateMandtId,sstEndDateId,sstsaletaxEpDateId" />	 					
 				</p:inputText></ui:fragment>
 				
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
-				<p:inputText id="sstsaleregNoid" 
+				<p:inputText style="width:78% !important" id="sstsaleregNoid" 
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.tax.nosale']}"
 						value="#{lbl['lbl.pm.org.sst.na']}"
@@ -320,16 +320,16 @@
  			<td><h:outputLabel value="#{lbl['lbl.pm.org.tax.reg.no']}" /> 
  			</td>
  			 <td><ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
- 			 <p:inputText id="sstservregNoId" 
+ 			 <p:inputText style="width:78% !important" id="sstservregNoId" 
 						label="#{lbl['lbl.pm.org.tax.reg.no']}"
 						value="#{organisationBackingBean.managedBean.sstSupplier.servtaxregno}"
 						size="35" styleClass="ppDisplayTextL"
 						maxlength="17" >
-						<p:ajax process="@this" update="sstsaleregNoId,sstEffDateId2,sstEffDateMandtId2" />						
+						<p:ajax process="@this" event="keyup" listener="#{organisationBackingBean.onInputChange(organisationBackingBean.managedBean.sstSupplier.servtaxregno,'service')}" update="sstEffDateId2,sstEffDateMandtId2,sstEndDateId1,sstservtaxEpDateId" />				
 				</p:inputText></ui:fragment>
 				
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
-				<p:inputText id="sstservregNoid" 
+				<p:inputText style="width:78% !important" id="sstservregNoid" 
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.tax.reg.no']}"
 						value="#{lbl['lbl.pm.org.sst.na']}"
@@ -345,7 +345,7 @@
              	rendered="#{not empty organisationBackingBean.managedBean.sstSupplier.salestaxregno}"/></td>
             <td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-				<p:calendar id="sstEffDateId" 
+				<p:calendar style="width:60% !important" id="sstEffDateId" 
 					value="#{organisationBackingBean.managedBean.sstSupplier.salestaxregDate}" 
 					mindate="#{ProfileManagementConst.sstMinDate}"
 					navigator="true"
@@ -357,7 +357,7 @@
 				</p:calendar>
 				</ui:fragment>
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
-				<p:inputText id="sstEffDate" 
+				<p:inputText style="width:78% !important"  id="sstEffDate" 
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.tax.regsale.startdate']}"
 						value=""
@@ -373,7 +373,7 @@
              	rendered="#{not empty organisationBackingBean.managedBean.sstSupplier.servtaxregno}"/></td>
             <td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-				<p:calendar id="sstEffDateId2" 
+				<p:calendar style="width:60% !important" id="sstEffDateId2" 
 					value="#{organisationBackingBean.managedBean.sstSupplier.servtaxregDate}" 
 					mindate="#{ProfileManagementConst.sstMinDate}"
 					navigator="true" 
@@ -385,7 +385,7 @@
 				</p:calendar>
 				</ui:fragment>
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
-				<p:inputText id="sstEffDate1" 
+				<p:inputText style="width:78% !important" id="sstEffDate1"   
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.tax.reg.startdate']}"
 						value=" "
@@ -401,7 +401,7 @@
             		    <td><h:outputLabel value="#{lbl['lbl.pm.org.tax.regsale.enddate']}" /> </td>
 				<td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-				<p:calendar id="sstEndDateId" 
+				<p:calendar style="width:60% !important" id="sstEndDateId" 
 					value="#{organisationBackingBean.managedBean.sstSupplier.salestaxregEndDate}" 
 					mindate="#{ProfileManagementConst.sstMinDate}"
 					navigator="true"
@@ -426,7 +426,7 @@
 		    <td><h:outputLabel value="#{lbl['lbl.pm.org.tax.reg.enddate']}" /> </td>
 				<td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-				<p:calendar id="sstEndDateId1" 
+				<p:calendar style="width:60% !important" id="sstEndDateId1" 
 					value="#{organisationBackingBean.managedBean.sstSupplier.servtaxregEndDate}" 
 					mindate="#{ProfileManagementConst.sstMinDate}"
 					navigator="true"
@@ -451,7 +451,7 @@
               <tr>
                			 
  			 <td><h:outputLabel value="#{lbl['lbl.pm.org.tax.ep.date']}" /> </td>			
-				<td><p:inputText id="sstsaletaxEpDateId" 
+				<td><p:inputText id="sstsaletaxEpDateId"  
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.tax.ep.date']}"
 						value="#{organisationBackingBean.managedBean.sstSupplier.salestaxregdecDate}"
