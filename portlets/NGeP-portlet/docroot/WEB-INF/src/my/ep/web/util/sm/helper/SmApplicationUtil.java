@@ -1033,6 +1033,32 @@ public class SmApplicationUtil {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_721044);
 			}
+			
+			if (StringUtils.isNotBlank(sst.getServtaxregno())
+					&& sst.getServtaxregno().length() != ruleHelper
+							.getSstRegNumLength()) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else if (StringUtils.isNotBlank(sst.getServtaxregno())
+					&& sst.getServtaxregDate() == null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Effective date is required
+				throw new EpException(MessageConst.ERROR_721030);
+			} else if (StringUtils.isBlank(sst.getServtaxregno())
+					&& sst.getServtaxregDate() != null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Registration no is required
+				throw new EpException(MessageConst.ERROR_721029);
+			} else if (StringUtils.isBlank(sst.getServtaxregno())
+					&& sst.getServtaxregEndDate() != null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Registration no and GST Effective Date is required
+				throw new EpException(MessageConst.ERROR_721043);
+			} else if (sst.getServtaxregEndDate() != null
+					&& sst.getServtaxregDate().compareTo(sst.getServtaxregEndDate()) > 0) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_721044);
+			}
 		}
 	}
 
@@ -9320,8 +9346,14 @@ public class SmApplicationUtil {
 						SmCommonUtil.validateSstRegNoUniqueness(hqSst
 								.getSmSupplier().getRegNo(), brSst
 								.getSalestaxregno());
+						SmCommonUtil.validateSstServRegNoUniqueness(hqSst
+								.getSmSupplier().getRegNo(), brSst
+								.getServtaxregno());
 
 						if (!SmCommonUtil.validateSstRegNo(brSst.getSalestaxregno())) {
+							throw new EpException(MessageConst.ERROR_721027);
+						}
+						if (!SmCommonUtil.validateSstServRegNo(brSst.getServtaxregno())) {
 							throw new EpException(MessageConst.ERROR_721027);
 						}
 					}
