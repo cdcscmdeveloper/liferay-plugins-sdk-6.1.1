@@ -46,6 +46,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
+import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
@@ -426,6 +427,12 @@ public class SmServiceLookup {
 						ISupplierGstSO.class);
 	}
 
+	//harris
+	public static ISupplierSstSO getSupplierSstSO() {
+		return (ISupplierSstSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierSstSO.class);
+	}
 	/**
 	 * Get ICategoryCodeSO
 	 * 
