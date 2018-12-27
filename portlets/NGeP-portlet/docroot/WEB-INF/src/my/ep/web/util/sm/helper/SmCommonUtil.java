@@ -4152,9 +4152,8 @@ public class SmCommonUtil {
 					.equalsIgnoreCase(
 							my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
 				switch (resDTO.getStatusCode()) {
-				// #21946: MyIdentity bypass
-				// case "70019":
-				// throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
 				case "70020":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
 				case "70031":
