@@ -102,20 +102,6 @@
 						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.myId']}"
-						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
-						<p:commandLink onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()"
-							action="#{backingBean.viewMyIdentityResponse(shareBean)}"
-							process="@this"
-							rendered="#{not empty shareBean.identityResponseCode}"
-							partialSubmit="true" update=":form" style="padding-right:5px;">
-							<p:graphicImage value="/css/images/design/icon_alert.png"
-								title="#{lbl['lbl.sm.view.myidentity.response']}" />
-						</p:commandLink>
-						<h:outputText value="#{lbl['lbl.txt.na']}"
-							rendered="#{empty shareBean.identityResponseCode}" />
-					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<p:commandLink onstart="blockWidget.show()"
@@ -196,9 +182,5 @@
 			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="deleteAuthEquityConfirmDialog.hide();" />
 		</div>
 	</p:confirmDialog>
-	
-	<p:confirmDialog id="myIdentityDlg" closable="true"
-		message="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}"
-		header="#{lbl['lbl.sm.person.myIdResp']}" severity="alert" widgetVar="myIdentityDlg" />
 
 </ui:composition>
