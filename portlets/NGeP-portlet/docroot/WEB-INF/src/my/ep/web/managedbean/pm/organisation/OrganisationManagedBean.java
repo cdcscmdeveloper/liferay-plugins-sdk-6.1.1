@@ -111,6 +111,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	
 	private boolean notFirstRun;
 	private Long selectedZoneId;
+	private Long sstSupplierId;
 
 	public OrganisationManagedBean() {
 
@@ -904,5 +905,13 @@ public class OrganisationManagedBean extends BaseManagedBean{
 
 	public void setReceivingOfficerObjList(List<Object[]> receivingOfficerObjList) {
 		this.receivingOfficerObjList = receivingOfficerObjList;
+	}
+
+	public Long getSstSupplierId() {
+		return sstSupplierId;
+	}
+
+	public void setSstSupplierId(Long sstSupplierId) {
+		this.sstSupplierId = sstSupplierId;
 	}
 }
