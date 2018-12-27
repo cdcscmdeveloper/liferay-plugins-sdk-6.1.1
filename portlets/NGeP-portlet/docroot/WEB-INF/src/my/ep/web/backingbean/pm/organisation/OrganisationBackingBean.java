@@ -669,6 +669,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					SupplierSstResDTO sstResDTO = supplierSstSO.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
 					if (sstResDTO.isSuccessful() && sstResDTO.getSmSstSupplier() != null) {
 						getManagedBean().setSstSupplier(sstResDTO.getSmSstSupplier());
+						getManagedBean().setSstSupplierId(sstResDTO.getSmSstSupplier().getSstSupplierId());
 					}
 
 				} finally {
@@ -868,6 +869,10 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					// harris
 					if (StringUtils.isNotBlank(sstSupplier.getSalestaxregno())|| StringUtils.isNotBlank(sstSupplier.getServtaxregno())) {
 						reqDTO.setSstSupplier(sstSupplier);
+					}else{
+						if(getManagedBean().getSstSupplierId()!=null){
+							reqDTO.setSstSupplierId(getManagedBean().getSstSupplierId());
+						}
 					}
 
 				} else {
@@ -2207,6 +2212,10 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			if (!validateSalestaxregno(sstSupplier)) {
 				throw new EpException(MessageConst.ERROR_775143);
 			}
+		}else{
+			sstSupplier.setSalestaxregDate(null);
+			sstSupplier.setSalestaxregEndDate(null);
+			sstSupplier.setSalestaxregdecDate(null);
 		}
 			
 
@@ -2233,18 +2242,12 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				throw new EpException(MessageConst.ERROR_775144);
 			}
 			
-		}
-
-		if ((StringUtils.isBlank(sstSupplier.getSalestaxregno()))){
-			sstSupplier.setSalestaxregDate(null);
-			sstSupplier.setSalestaxregEndDate(null);
-			sstSupplier.setSalestaxregdecDate(null);
-		}
-		if ((StringUtils.isBlank(sstSupplier.getServtaxregno()))){
+		}else{
 			sstSupplier.setServtaxregDate(null);
 			sstSupplier.setServtaxregEndDate(null);
 			sstSupplier.setServtaxdecDate(null);
 		}
+		
 	}
 
 	private void validateGroupOrg() {
@@ -2368,6 +2371,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			reqDTO.setSupplierId(supplierId);
 			SupplierSstResDTO suppSstResDTO = supplierSstSO.retrieveSstInfoBySstRegNo(reqDTO);
 			if (suppSstResDTO.getSstList() != null && !suppSstResDTO.getSstList().isEmpty()) {
+				
 				for (SmSstSupplier sst : suppSstResDTO.getSstList()) {
 					// validate against PTJ supplier
 					if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2.equals(sst.getSmSupplier()
