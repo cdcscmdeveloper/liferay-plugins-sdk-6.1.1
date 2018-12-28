@@ -70,6 +70,18 @@
 			</h:panelGrid>	
 	  	</h:panelGrid>
 	  	
+	  			<f:verbatim/>
+	     <h:panelGrid columns="3">
+		    <p:selectBooleanCheckbox disabled="true"
+			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.valueChangeByGst}">
+			</p:selectBooleanCheckbox>
+		    <p:spacer width="2" />				
+		    <h:panelGrid columns="2">
+				<p:outputLabel value="#{lbl['lbl.ct.change.contract.value.gst']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.value.by.gst']}" />
+			</h:panelGrid>	
+	  	</h:panelGrid>
+	  	
 		<f:verbatim/>
 		<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true"
