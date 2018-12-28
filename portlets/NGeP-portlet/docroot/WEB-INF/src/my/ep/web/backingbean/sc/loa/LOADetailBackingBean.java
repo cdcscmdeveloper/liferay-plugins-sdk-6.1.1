@@ -401,7 +401,11 @@ public class LOADetailBackingBean extends
 			}
 
 			if(scLoa.isBondReq()){
-				scLoa = calcBondAmount(scLoa, Boolean.FALSE);
+				//Enhancement #24259 #24269
+//				scLoa = calcBondAmount(scLoa, Boolean.FALSE);
+				scLoa = calcBondAmountWithSST(scLoa, Boolean.FALSE);
+				
+				
 				if (scLoa.getBondAmt() != null) {
 					getManagedBean().setBondAmountWord(
 							NumberWordUtil.convert(scLoa.getBondAmt().toString()));
@@ -773,7 +777,11 @@ public class LOADetailBackingBean extends
 
 		// check performance bond
 		checkPerformanceBondMandatory();
-		scLoa = calcBondAmount(scLoa, false);
+		
+		//Enhancement #24259 #24269
+//		scLoa = calcBondAmount(scLoa, false);
+		scLoa = calcBondAmountWithSST(scLoa, false);
+		
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
@@ -5141,7 +5149,7 @@ public class LOADetailBackingBean extends
 
 		checkPerformanceBondMandatory();
 
-		calcBondAmount(scLoa, Boolean.FALSE);
+		calcBondAmountWithSST(scLoa, Boolean.FALSE);
 		
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
