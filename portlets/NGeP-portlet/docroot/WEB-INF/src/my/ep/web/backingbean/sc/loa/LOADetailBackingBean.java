@@ -2685,8 +2685,10 @@ public class LOADetailBackingBean extends
 		try {
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
+			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
+			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
 			validateContractDetails(scLoa);
@@ -2795,8 +2797,10 @@ public class LOADetailBackingBean extends
 		try {
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
+			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
+			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 			parseLOADetails(scLoa, outcome);
 
 			// if reject, remove the new witness
@@ -6253,6 +6257,7 @@ public class LOADetailBackingBean extends
 	 */
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
+		validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		
 		String loa = getMessage("lbl.sc.loiloa.loa.header.title", null);
@@ -6299,5 +6304,70 @@ public class LOADetailBackingBean extends
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 	}
 	//end Enhancement #21573
+	
+	//Bug #24713
+	/**
+	 * Validate supplier details
+	 * 
+	 * @param scLoa
+	 *            the scLoa
+	 */
+	private void validateSupplierWitnessDetails(ScLoa scLoa,
+			ScLoaWitness scLoaWitness, String outcome) {
+		Locale locale = new FacesScopes().getUserLocale();
+		
+		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+			if (scLoa.getSupplierSignDate() == null) {
+				throw new EpException(MessageConst.ERROR_760400, 
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoa.getBankAccNo())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (scLoa.getAckBy().getUserId() == null) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoa.getAckBy().getIdentificationNo())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoaWitness.getWitnessName())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoaWitness.getIdentificationNo())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoaWitness.getDesignation())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoaWitness.getAddress())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.address",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoaWitness.getPhoneNo())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+			if (StringUtils.isBlank(scLoaWitness.getFaxNo())) {
+				throw new EpException(MessageConst.ERROR_760400,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+			}
+		}
+	}
 
 }
