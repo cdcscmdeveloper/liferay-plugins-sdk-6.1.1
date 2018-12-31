@@ -407,6 +407,30 @@ public class PpCommonUtil implements Serializable{
 		return pmUsers;
 	}
 
+	public static List <PmUser>  getUserRolesByUserIdAndOrg(Long userId, Long profileOrgId, String roleCode) {
+		List<PmUser> pmUsers = new ArrayList<PmUser>();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setOrgProfileId(profileOrgId);
+			reqDTO.setRoleCode(roleCode);
+			reqDTO.setIncludeUserIds(new ArrayList<Long>());
+			reqDTO.getIncludeUserIds().add(userId);
+			reqDTO.setIgnoreRoleStatus(false);
+
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+
+			if (resDTO.isSuccessful() && resDTO.getUserList() != null) {
+				pmUsers = resDTO.getUserList();
+			}
+		} finally {
+			userSO = null;
+		}
+		return pmUsers;
+	}
 	/**
 	 * retrieve org profile dtl
 	 * 

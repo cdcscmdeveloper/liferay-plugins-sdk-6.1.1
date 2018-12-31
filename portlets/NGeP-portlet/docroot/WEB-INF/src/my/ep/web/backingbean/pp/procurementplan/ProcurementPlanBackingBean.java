@@ -1240,9 +1240,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ppPlanActors!=null){
 		   List<PmUser> target = new ArrayList<PmUser>();  
 			for(PpPlanActor ppPlanActor : ppPlanActors){
+				List <PmUser> userCheck = PpCommonUtil.getUserRolesByUserIdAndOrg(ppPlanActor.getPmUser().getUserId(), orgProfileId, roleCode);
 				if(DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg()){
 					if(roleCode.equals(ppPlanActor.getRoleCode().getRoleCode())){
-						target.add(ppPlanActor.getPmUser());
+						if(userCheck.size()>0){
+							target.add(ppPlanActor.getPmUser());
+						}
 					}
 				}
 			}
@@ -1264,9 +1267,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ppPlanActors!=null){
 		   List<PmUser> target = new ArrayList<PmUser>();  
 			for(PpPlanActor ppPlanActor : ppPlanActors){
+				List <PmUser> userCheck = PpCommonUtil.getUserRolesByUserIdAndOrg(ppPlanActor.getPmUser().getUserId(), ptjOrgProfileId, roleCode);
 				if(DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg()){
 					if(roleCode.equals(ppPlanActor.getRoleCode().getRoleCode())){ 
-						target.add(ppPlanActor.getPmUser());
+						if(userCheck.size()>0){
+							target.add(ppPlanActor.getPmUser());
+						}
 					}
 				}
 			}
