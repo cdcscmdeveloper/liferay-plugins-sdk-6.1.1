@@ -112,7 +112,7 @@
 						showOn="button"
 						value="#{directLOABackingBean.managedBean.scLoa.supplierSignDate}"
 						mindate="#{directLOABackingBean.managedBean.scLoa.govtSignDate}"
-						required="true"
+						required="false"
 						readonlyInput="true"
 						label="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}"
 						size="40"
@@ -143,7 +143,7 @@
 							value="#{directLOABackingBean.managedBean.scLoa.ackBy.userId}"
 							style="width: 277px;margin-bottom:5px;"
 							disabled="#{directLOABackingBean.managedBean.readOnly}"
-							required="true" label="#{lbl['lbl.sc.loiloa.signer.full.name']}">
+							required="false" label="#{lbl['lbl.sc.loiloa.signer.full.name']}">
 
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -169,7 +169,7 @@
 				<td colspan="3"><p:inputText id="supplierContractSignerIdentificationNo" size="40"
 						disabled="true"
 						value="#{directLOABackingBean.managedBean.scLoa.ackBy.identificationNo}"
-						required="true" label="#{lbl['lbl.sc.identification.no']}"
+						required="false" label="#{lbl['lbl.sc.identification.no']}"
 						maxlength="15" /> <p:message id="supplierContractSignerIdentificationNoMsg"
 						for="supplierContractSignerIdentificationNo" display="icon" /></td>
 			</tr>
@@ -192,7 +192,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="witnessName" size="40"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true"
+						required="false"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.witnessName}"
 						label="#{lbl['lbl.sc.loiloa.witness.full.name']}" maxlength="50" />
 					<p:message id="witnessNameMsg" for="witnessName" display="icon" />
@@ -203,7 +203,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="identificationNo" size="40"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true"
+						required="false"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.identificationNo}"
 						label="#{lbl['lbl.sc.identification.no']}" maxlength="15" /> <p:message
 						id="identificationNoMsg" for="identificationNo" display="icon" />
@@ -214,7 +214,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="designation" size="40"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true"
+						required="false"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.designation}"
 						maxlength="40" label="#{lbl['lbl.sc.designation']}" /> <p:message
 						id="designationMsg" for="designation" display="icon" /></td>
@@ -225,7 +225,7 @@
 						styleClass="mandatory" /></td>
 				<td rowspan="3" width="32%"><p:inputTextarea id="address"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true" rows="5" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+						required="false" rows="5" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.address}"
 						style=" margin-bottom:5px; width: 266px;" maxlength="200"
 						label="#{lbl['lbl.sc.address']}" /> <p:message id="addressMsg"
@@ -234,7 +234,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td width="32%"><p:inputText id="phoneNo" size="25"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true"
+						required="false"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.phoneNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
 						label="#{lbl['lbl.sc.tel.no']}" /> 	<ac:iconTooltip
@@ -244,7 +244,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="faxNo" size="25" required="true"
+				<td><p:inputText id="faxNo" size="25" required="false"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.faxNo}"
 						maxlength="20" validator="#{webappBean.checkFaxNumber}"
