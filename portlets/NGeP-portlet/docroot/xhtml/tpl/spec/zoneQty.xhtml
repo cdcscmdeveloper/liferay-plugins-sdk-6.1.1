@@ -17,13 +17,13 @@
 		<p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
 			#{tplSpecZoneQty.tplSpecZoneDtl.zoneName}
 		</p:column>
-		<p:column style="width:80px;">
+		<p:column style="width:95px;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
 			</f:facet>
 			<p:inputText id="zoneQty"
-				style="min-width:0px !important;width:70px; text-align:right;"
+				style="min-width:0px !important;width:90px; text-align:right;"
 				value="#{tplSpecZoneQty.qty}" required="true"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				disabled="#{!isQuestion or !editable or (isSpecificationReq and !isSpecTypeTechnical)}">
