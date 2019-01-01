@@ -18,7 +18,7 @@
 		<p:messages id="catSrchMsg" closable="true" showDetail="true"></p:messages>
 
 		<p:blockUI block=":form"
-			trigger="searchButtonId, allmi, ccmi, mcmi, pcmi, xcmi"
+			trigger="searchButtonId, ccmi, mcmi, pcmi, xcmi"
 			widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -282,10 +282,10 @@
 							<p:tabMenu id="catTypeMenu"
 								activeIndex="#{catalogueBackingBean.managedBean.resultTabActiveIndex}"
 								rendered="#{unspscCodeBackingBean.requisitioner}">
-								<p:menuitem id="allmi" value="#{lbl['lbl.cm.catalogue.all']}" oncomplete="updateCatButtons();"
+								<!--  <p:menuitem id="allmi" value="#{lbl['lbl.cm.catalogue.all']}" oncomplete="updateCatButtons();"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('',0)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
+									update="searchViewId,catSrchMsg,btnId"></p:menuitem>-->
 								<p:menuitem id="ccmi" value="#{lbl['lbl.cm.central.contract']}" oncomplete="updateCatButtons();"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('CC',1)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
