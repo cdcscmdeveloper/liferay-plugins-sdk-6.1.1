@@ -376,6 +376,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/** The item name filter bean. */
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
+	
+	/** The item name filter bean. */
+	private SearchFilterBean itemNameTextIndexFilterBean = new SearchFilterBean(
+			SearchOperator.CATSEARCH.value());
 
 	/** The item code filter bean. */
 	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(
@@ -447,7 +451,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String uploadDir = EpPropertiesUtils.getInstance().getProperty(
 			EpPropertiesConst.UPLOAD_URL);
 
-	private int resultTabActiveIndex = 4;
+	private int resultTabActiveIndex = 3;
 
 	private Long itemToDelete;
 
@@ -522,7 +526,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-			
+
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -690,8 +694,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-			
-		
 
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -746,7 +748,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<CmSupplierItem>();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -778,8 +780,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-			
-		
+
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -863,7 +864,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-		
+
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -929,7 +930,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
-		
 
 		/**
 		 * Instantiates a new search paging data model.
@@ -949,11 +949,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
-			
 
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
-			
+
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
@@ -998,11 +997,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						.get(0).getSupplierId());
 
 				reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
-
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
-				
 				
 				Map tempMap = new HashMap();
 				for (int i = 0; i < resDTO.getSuppItemResultBean()
@@ -1103,11 +1100,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 							.getSearchValue())		
 					&& StringUtils.isBlank((String) keyWordFilterBean
 							.getSearchValue()) && districtId == null) {
-				log.debug("******SearchResultBean******");
-				return new SearchResultBean();
+				log.debug("******SearchResultBean********");
+				return new SearchResultBean<VCmSupplierItem>();
 			}
 
 			IViewSupplierItemSO viewSO = null;
+			boolean isItemNameSearchValueEmpty = true;
+			boolean isNonCatalogue = false;
 			
 			try {
 
@@ -1118,9 +1117,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				if (catTypeFilterBean.getSearchValue() != null) {
 					catTypeFilterBean.setSearchField("CAT_TYPE");
 					// catTypeFilterBean.setSearchValue("XC");
-					searchBean.getDataFilterBeans().add(catTypeFilterBean);
+					//searchBean.getDataFilterBeans().add(catTypeFilterBean);
 					appendSearchCriteria(sb, catTypeFilterBean);		
 				}
+				
+				String catType = (String) catTypeFilterBean.getSearchValue();
+				if(StringUtils.isNotBlank(catType) && catType.equals("XC")) {
+					isNonCatalogue = true;
+				}
+					
+				// XC, MC
 				if (StringUtils.isNotBlank((String) itemNameFilterBean
 						.getSearchValue())) {
 					itemNameFilterBean.setSearchField("ITEM_NAME");
@@ -1132,21 +1138,31 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					keyWordFilterBean.setSearchValue((String) itemNameFilterBean.getSearchValue());
 					keyWordFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 					keyWordFilterBean.setCaseInsensitive(true);
+					isItemNameSearchValueEmpty = false;
 					appendSearchCriteria(sb, itemNameFilterBean);		
 					
-					SearchMultiFilterBean multi = new SearchMultiFilterBean(itemNameFilterBean
-							, keyWordFilterBean);
-					searchBean.getDataFilterBeans().add(multi);
+					if(isNonCatalogue) {
+						itemNameTextIndexFilterBean.setSearchField("ITEM_NAME");
+						itemNameTextIndexFilterBean.setSearchValue((String) itemNameFilterBean.getSearchValue());
+						itemNameTextIndexFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+						searchBean.getDataFilterBeans().add(itemNameTextIndexFilterBean);
+					} else {
+						SearchMultiFilterBean multi = new SearchMultiFilterBean(itemNameFilterBean
+								, keyWordFilterBean);
+						searchBean.getDataFilterBeans().add(multi);
+					}
 				}
 				
+				// MC
 				if (StringUtils.isNotBlank((String) contractTitleFilterBean
 						.getSearchValue())) {
 					contractTitleFilterBean.setSearchField("CONTRACT_NAME");
 					contractTitleFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractTitleFilterBean);
-					appendSearchCriteria(sb, contractTitleFilterBean);		
+					appendSearchCriteria(sb, contractTitleFilterBean);	
 				}
 				
+				// MC - listagg
 				if (StringUtils.isNotBlank((String) loaNoFilterBean
 						.getSearchValue())) {
 					loaNoFilterBean.setSearchField("LOA_NO");
@@ -1155,6 +1171,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					appendSearchCriteria(sb, loaNoFilterBean);		
 				}
 				
+				// MC - listagg
 				if (StringUtils.isNotBlank((String) loaPhysicalNoFilterBean
 						.getSearchValue())) {
 					loaPhysicalNoFilterBean.setSearchField("LOA_PHYSICAL_NO");
@@ -1162,15 +1179,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(loaPhysicalNoFilterBean);
 					appendSearchCriteria(sb, loaPhysicalNoFilterBean);		
 				}
-
+				// XC , MC - COALESCE
 				if (StringUtils.isNotBlank((String) itemCodeFilterBean
 						.getSearchValue())) {
-					itemCodeFilterBean.setSearchField("ITEM_CODE");
+					if(isNonCatalogue) {
+						itemCodeFilterBean.setSearchField("EXTENSION_CODE");
+					} else {
+						itemCodeFilterBean.setSearchField("ITEM_CODE");
+					}
+					
 					itemCodeFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
 					appendSearchCriteria(sb, itemCodeFilterBean);		
 				}
-
+				// XC, MC
 				if (StringUtils.isNotBlank((String) supplierNameFilterBean
 						.getSearchValue())) {
 					supplierNameFilterBean.setSearchField("COMPANY_NAME");
@@ -1178,7 +1200,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
 					appendSearchCriteria(sb, supplierNameFilterBean);	
 				}
-
+				// MC
 				if (StringUtils.isNotBlank((String) contractNoFilterBean
 						.getSearchValue())) {
 					contractNoFilterBean.setSearchField("CONTRACT_NO");
@@ -1186,7 +1208,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
 					appendSearchCriteria(sb, contractNoFilterBean);	
 				}
-
+				// MC
 				if (StringUtils
 						.isNotBlank((String) physicalContractNoFilterBean
 								.getSearchValue())) {
@@ -1197,7 +1219,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 							physicalContractNoFilterBean);
 					appendSearchCriteria(sb, physicalContractNoFilterBean);	
 				}
-
+			
 				if (StringUtils.isNotBlank((String) circularNoFilterBean
 						.getSearchValue())) {
 					circularNoFilterBean.setSearchField("CIRCULAR_NO");
@@ -1205,7 +1227,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(circularNoFilterBean);
 					appendSearchCriteria(sb, circularNoFilterBean);	
 				}
-
+				// XC
 				if (StringUtils.isNotBlank((String) epNoFilterBean
 						.getSearchValue())) {
 					epNoFilterBean.setSearchField("EP_NO");
@@ -1213,7 +1235,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(epNoFilterBean);
 					appendSearchCriteria(sb, epNoFilterBean);	
 				}
-
+				// XC
 				if (StringUtils.isNotBlank((String) mofNoFilterBean
 						.getSearchValue())) {
 					mofNoFilterBean.setSearchField("MOF_NO");
@@ -1221,10 +1243,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(mofNoFilterBean);
 					appendSearchCriteria(sb, mofNoFilterBean);	
 				}
-
+				// XC, MC
 				if (StringUtils.isNotBlank((String) bizRegNoFilterBean
 						.getSearchValue())) {
-					bizRegNoFilterBean.setSearchField("BIZ_REG_NO");
+					if(isNonCatalogue) {
+						bizRegNoFilterBean.setSearchField("REG_NO");
+					} else {
+						bizRegNoFilterBean.setSearchField("BIZ_REG_NO");
+					}
 					bizRegNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
 					appendSearchCriteria(sb, bizRegNoFilterBean);	
@@ -1264,7 +1290,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						appendSearchCriteria(sb, stateFilterBean);	
 					}
 				}
-				
+					
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				PmUserOrg userOrg = null;
@@ -1312,6 +1338,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				searchBean.setUseEntityClass(true);
 				reqDTO.setViewSearchBean(searchBean);
+				
+				if(!isItemNameSearchValueEmpty) {
+					reqDTO.setItemName(itemNameFilterBean.getSearchValue().toString());
+				}
 						
 				if(userOrg!=null) {
 					reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
@@ -1323,29 +1353,23 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					reqDTO.setCatType(catTypeFilterBean.getSearchValue()
 							.toString());
 				}
-
-				if (searchBean.getDataFilterBeans().size() <= 0) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_716006,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-					// throw new EpException(MessageConst.ERROR_715014);
-					return new SearchResultBean();
-				}
-						
-				reqDTO.setUserId(userId);
-				reqDTO.setG2gFlag(g2gFlag);
 				
-				appendSearchCriteria(sb, "REQUISITIONER", String.valueOf(unspscCodeBackingBean.isRequisitioner()));
+				if(g2gFlag) {
+					if(isNonCatalogue) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("is_govt_seller",
+										SearchOperator.OPERATOR_EQUALS.value(), 1));
+					} else {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("g2g",
+										SearchOperator.OPERATOR_EQUALS.value(), 1));
+					}
+				}
+		
+				reqDTO.setUserId(userId);
+				//reqDTO.setG2gFlag(g2gFlag);
+				
+				appendSearchCriteria(sb, "REQ", String.valueOf(unspscCodeBackingBean.isRequisitioner()));
 				appendSearchCriteria(sb, "G2G", String.valueOf(reqDTO.isG2gFlag()));
 				appendSearchCriteria(sb, "USER_ID", String.valueOf(reqDTO.getUserId()));
 				appendSearchCriteria(sb, "MINISTRY_ID", String.valueOf(reqDTO.getMinistryId()));
@@ -1412,7 +1436,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				return resDTO.getViewSuppItemResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<VCmSupplierItem>();
 			} finally {
 				viewSO = null;
 			}
@@ -1439,7 +1463,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void searchCatalogue() {
 		log.info("In searchCatalogue");
 		boolean hasSearchValue = false;
-		log.info("hasSearchValue: " + hasSearchValue);
+		String catType = null;
+		
+		if(StringUtils.isNotBlank((String) catTypeFilterBean.getSearchValue())) {
+			catType = (String) catTypeFilterBean.getSearchValue();
+		}
 
 		if (StringUtils
 				.isNotBlank((String) itemNameFilterBean.getSearchValue())) {
@@ -1459,16 +1487,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		if (StringUtils.isNotBlank((String) contractNoFilterBean
 				.getSearchValue())) {
 			hasSearchValue = true;
+			checkNonContractedInvalidSearch(catType);
+			checkPanelInvalidSearch(catType);
 		}
 
 		if (StringUtils.isNotBlank((String) physicalContractNoFilterBean
 				.getSearchValue())) {
 			hasSearchValue = true;
+			checkNonContractedInvalidSearch(catType);
+			checkPanelInvalidSearch(catType);
 		}
 
 		if (StringUtils.isNotBlank((String) circularNoFilterBean
 				.getSearchValue())) {
 			hasSearchValue = true;
+			checkNonContractedInvalidSearch(catType);
+			checkMCInvalidSearch(catType);
 		}
 
 		if (StringUtils.isNotBlank((String) epNoFilterBean.getSearchValue())) {
@@ -1496,17 +1530,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			hasSearchValue = true;
 		}
 
-		
 		if (StringUtils.isNotBlank((String) contractTitleFilterBean.getSearchValue())) {
 			hasSearchValue = true;
+			checkNonContractedInvalidSearch(catType);
+			checkPanelInvalidSearch(catType);
 		}
 		
 		if (StringUtils.isNotBlank((String) loaNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
+			checkNonContractedInvalidSearch(catType);
+			checkPanelInvalidSearch(catType);
 		}
 		
 		if (StringUtils.isNotBlank((String) loaPhysicalNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
+			checkNonContractedInvalidSearch(catType);
+			checkPanelInvalidSearch(catType);
 		}
 		log.info("hasSearchValue: " + hasSearchValue);
 		
@@ -1522,6 +1561,26 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			searchDataModel.reloadData();
 		}
 	}
+	
+	private void checkNonContractedInvalidSearch(String catType) {
+		if (catType.equals("XC")) {
+			throw new EpException(MessageConst.ERROR_716021);
+		}
+	}
+	
+	private void checkPanelInvalidSearch(String catType) {
+		if (catType.equals("PC")) {
+			throw new EpException(MessageConst.ERROR_716022);
+		}
+	}
+	
+	private void checkMCInvalidSearch(String catType) {
+		if (catType.equals("MC")) {
+			throw new EpException(MessageConst.ERROR_716023);
+		}
+	}
+	
+
 	
 	
 	public void searchCatalogueMaintenance() {
