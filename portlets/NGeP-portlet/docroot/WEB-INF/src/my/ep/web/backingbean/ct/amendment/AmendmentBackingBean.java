@@ -546,6 +546,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
 				} else {	
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+					
 				}
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
@@ -806,6 +807,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 				}
 				ctBackingBean.getManagedBean().setGstCheckingGUI(true);
+				
 				// If original contract is fulfilled imposed service tax rule
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.isBeforeGstReliefDueDate()
@@ -817,14 +819,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// Enable or Disable STAX field
+			if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
+				ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
+				
+			}
+			ctBackingBean.getManagedBean().setStaxCheckingGUI(true);
+			
+			// Enable or Disable NewSTAX field
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+				
+			}
 
-				if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
-					ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setStaxCheckingGUI(true);
-
-						
-
+			
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
 			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
@@ -1776,7 +1783,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			}
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(newOverallContractAmt());
+			sb.append(newOverallContractAmount());
 			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(action);		
 			getManagedBean().setTextBeforeSign(sb.toString());	
@@ -1815,7 +1822,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			}
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(newOverallContractAmt());
+			sb.append(newOverallContractAmount());
 			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(outcome);		
 			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());	
@@ -2391,15 +2398,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null)  {
-			contractAmt = newContractAmt().add(
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()
-							.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount()));
-		}else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null)  {
-			contractAmt = newContractAmt().add(
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
+			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+		
 		}
 		return contractAmt;
+	}
+	
+	public BigDecimal newOverallContractAmount() {
+		BigDecimal contractAmount = newOverallContractAmt();
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
+			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
+		
+		}
+		return contractAmount;
 	}
 
 	/**
@@ -3194,14 +3206,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onChangeValueByGstChecked() {
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
 			ctBackingBean
 					.getManagedBean()
 					.getContractVer()
 					.getCtAmendment()
 					.setNewGstAmount(
 							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+		}
+		
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
 			ctBackingBean
 					.getManagedBean()
 					.getContractVer()
@@ -3209,9 +3225,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					.setNewStaxAmount(
 							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
 		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			
 		}
+		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
@@ -3298,7 +3315,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
 		sb.append(Boolean.TRUE);
 		sb.append("|pmUserOrgs.pmUserRoles.approvalLimit^");
-		sb.append(newOverallContractAmt());
+		sb.append(newOverallContractAmount());
 		sb.append("^");
 		sb.append(SearchOperator.OPERATOR_GREATER_EQUAL.value());
 		sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
