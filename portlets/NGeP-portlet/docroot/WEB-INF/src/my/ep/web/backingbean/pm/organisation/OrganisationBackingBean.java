@@ -2187,6 +2187,11 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				throw new EpException(MessageConst.ERROR_775145);
 				}
 			
+			// validate unique sstSalestaxregno
+			if (!validateSalestaxregno(sstSupplier)) {
+				throw new EpException(MessageConst.ERROR_775143);
+				}
+			
 //			if (sstSupplier.getSalestaxregDate() != null
 //					&& sstSupplier.getSalestaxregDate().equals(sstSupplier.getServtaxregDate())) {
 //				throw new EpException(MessageConst.ERROR_775142);
@@ -2208,10 +2213,6 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				throw new EpException(MessageConst.ERROR_775147);
 			}
 
-			// validate unique sstSalestaxregno
-			if (!validateSalestaxregno(sstSupplier)) {
-				throw new EpException(MessageConst.ERROR_775143);
-			}
 		}else{
 			sstSupplier.setSalestaxregDate(null);
 			sstSupplier.setSalestaxregEndDate(null);
@@ -2225,6 +2226,10 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			if (sstSupplier.getServtaxregno().length() < 17) {
 				throw new EpException(MessageConst.ERROR_775146);
 				}
+			// validate unique sstServtaxregno
+			if (!validateServtaxregno(sstSupplier)) {
+				throw new EpException(MessageConst.ERROR_775144);
+				}
 			
 			// validate sst servtaxregDate
 			if (sstSupplier.getServtaxregDate() == null) {
@@ -2235,11 +2240,6 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			if (sstSupplier.getServtaxregEndDate() != null
 					&& sstSupplier.getServtaxregEndDate().before(sstSupplier.getServtaxregDate())) {
 				throw new EpException(MessageConst.ERROR_775148);
-			}
-
-			// validate unique sstServtaxregno
-			if (!validateServtaxregno(sstSupplier)) {
-				throw new EpException(MessageConst.ERROR_775144);
 			}
 			
 		}else{
