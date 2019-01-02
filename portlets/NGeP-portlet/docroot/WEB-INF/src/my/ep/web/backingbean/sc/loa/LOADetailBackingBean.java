@@ -693,7 +693,7 @@ public class LOADetailBackingBean extends
 			scLoa.setSupplierBranch(scLoa.getScLoiLoa().getScLois().get(0).getSupplierBranch());
 			scLoa.setLoiCreated(Boolean.TRUE);
 		}
-//		handleBranchDetailsChanged(false);-
+		handleBranchDetailsChanged(false);
 
 		// Supplier Witness
 		ScLoaWitness loaSupplierWitness = null;

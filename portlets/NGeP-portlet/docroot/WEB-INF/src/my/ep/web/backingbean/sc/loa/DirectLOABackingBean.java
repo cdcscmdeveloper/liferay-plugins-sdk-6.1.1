@@ -2162,7 +2162,7 @@ public class DirectLOABackingBean extends
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-//			handleBranchDetailsChanged();-
+			handleBranchDetailsChanged();
 		}
 		
 		ScQt scQt = getManagedBean().getScQt();
@@ -2208,7 +2208,7 @@ public class DirectLOABackingBean extends
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-//			handleBranchDetailsChanged();-
+			handleBranchDetailsChanged();
 		} else{
 			scLoa.setSupplierBranch(null);
 			scLoa.setScSupplierAddress(null);
