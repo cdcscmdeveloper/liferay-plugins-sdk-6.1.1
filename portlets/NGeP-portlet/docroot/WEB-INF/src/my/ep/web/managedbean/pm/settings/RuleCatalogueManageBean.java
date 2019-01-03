@@ -60,6 +60,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String selectedDocumentType;
 	private Date today = new Date();
 	private Date tomorrow = null;
+	private Date aftertomorrow = null;
 	private Date maxDate = null;
 	private List<PmFeeExemption> feeExemptionsForOrgAndItem;
 	private List<PmFeeExemption> feeExemptionsForComodity;
@@ -811,6 +812,17 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 		return c1.getTime();
 	}
+	
+	public Date AfterTomorrowDate() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DATE), 0, 0, 0);
+		Calendar c1 = Calendar.getInstance();
+		c1.add(Calendar.DATE, 2);
+
+		return c1.getTime();
+	}
 
 	/**
 	 * To get Max Date
@@ -1407,6 +1419,17 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 			List<PmPtjSpecialApproval> cloneMainPtjSpecialApprovalList) {
 		this.cloneMainPtjSpecialApprovalList = cloneMainPtjSpecialApprovalList;
 	}
+	public Date getAftertomorrow() {
+		
+		if (aftertomorrow == null) {
+			aftertomorrow = AfterTomorrowDate();
+		}
+		return aftertomorrow;
+	}
+	public void setAftertomorrow(Date aftertomorrow) {
+		this.aftertomorrow = aftertomorrow;
+	}
+	
 
 
 }
