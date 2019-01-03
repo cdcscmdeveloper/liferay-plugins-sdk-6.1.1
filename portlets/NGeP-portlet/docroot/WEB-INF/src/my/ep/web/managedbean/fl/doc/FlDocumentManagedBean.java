@@ -164,7 +164,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				log.debug("pageChangeListener");
 			}
 			try {
-				if(null == getSearchOrderType()){ 
+				//#21150 - Document type become mandatory 
+				if(null == getSearchOrderType() || null ==getSearchDocType()){ 
 					throw new EpException(MessageConst.ERROR_740023);
 				}else if((null ==getSearchDocType() &&  "".equalsIgnoreCase(getSearchOrderNo()) && "".equalsIgnoreCase(getSearchDocNo()))){
 					throw new EpException(MessageConst.ERROR_740023);
