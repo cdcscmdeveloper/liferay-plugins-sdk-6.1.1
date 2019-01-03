@@ -191,8 +191,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			}
 			
 		}
-		
-		if(null == getManagedBean().getSearchOrderType()){ 
+		//#21150 - Document type become mandatory 
+		if(null == getManagedBean().getSearchOrderType() || null ==getManagedBean().getSearchDocType()){ 
 			throw new EpException(MessageConst.ERROR_740023);
 		}else if((null ==getManagedBean().getSearchDocType() &&  "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) && "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))){
 			throw new EpException(MessageConst.ERROR_740039, new String[]{

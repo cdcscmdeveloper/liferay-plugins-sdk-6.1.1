@@ -113,7 +113,9 @@
 						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
 			</tr>
 			<tr>
-			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<!-- #21150 - Document type become mandatory  -->
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
