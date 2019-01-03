@@ -844,10 +844,14 @@ public class SmApplicationBackingBean extends
 								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 					throw new EpException(MessageConst.ERROR_722628);
 				}
+
+				String currSuppType = StringUtils.isBlank(currSupp.getSmAppl()
+						.getSupplierType()) ? "K" : currSupp.getSmAppl()
+						.getSupplierType();
 				if (getManagedBean().getNewSupplierType() == null
 						|| StringUtils.isBlank(getManagedBean()
 								.getNewSupplierType())) {
-					getManagedBean().setNewSupplierType("K");
+					getManagedBean().setNewSupplierType(currSuppType);
 				}
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
@@ -889,10 +893,11 @@ public class SmApplicationBackingBean extends
 				}
 				smAppl = resDto.getSmAppl();
 				smAppl.setResubmit(false);
-				if (smAppl != null && StringUtils.isBlank(smAppl.getSupportingDocMode())) {
+				if (smAppl != null
+						&& StringUtils.isBlank(smAppl.getSupportingDocMode())) {
 					smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 				}
-				
+
 				log.info("****** After retrieve the appl is ********"
 						+ smAppl.getApplId() + " *** Num ***"
 						+ smAppl.getApplNo() + "*** Bank Size *** "
@@ -2829,8 +2834,6 @@ public class SmApplicationBackingBean extends
 						.getPmState().getStateId()
 						.equals(getManagedBean().getPrevBasicStateId())) {
 					log.info(" ******* Existing doc list without change in state id  *****");
-					docs.addAll(getManagedBean().getSmAppl()
-							.getSmApplSupportDocs());
 					for (PmDocument doc : rsDTO.getDocumentList()) {
 						boolean recordExists = false;
 						for (SmApplSupportDoc smDocu : getManagedBean()
@@ -2843,13 +2846,15 @@ public class SmApplicationBackingBean extends
 									SmApplicationUtil
 											.setDefaultSmApplDocFiles(smDocu);
 								}
+								docs.add(smDocu);
 								recordExists = true;
 							}
 						}
 						if (!recordExists) {
-							docs.add(SmApplicationUtil
+							SmApplSupportDoc suppDoc = SmApplicationUtil
 									.getDefaultSmApplSupportingDoc(doc,
-											getManagedBean().getSmAppl()));
+											getManagedBean().getSmAppl());
+							docs.add(suppDoc);
 						}
 
 						// to display or hide download column
@@ -2857,6 +2862,11 @@ public class SmApplicationBackingBean extends
 							getManagedBean().setHasSuppDocToDownload(true);
 						}
 					}
+					EntityHelper
+							.compareAndRemoveEntityFromListIfNotExist(docs,
+									getManagedBean().getSmAppl()
+											.getSmApplSupportDocs(),
+									"applSupportDocId");
 				} else {
 					log.info(" ******* Existing doc list without CHANGE in state id  *****");
 					for (PmDocument doc : rsDTO.getDocumentList()) {
@@ -9175,12 +9185,14 @@ public class SmApplicationBackingBean extends
 			reqDto.setSupplierType(supplierType);
 			reqDto.setResubmitExpired(false);
 
-			SmAppl rejectedAppl = SmApplicationUtil.getLatestRejectedApplIdBySuppIdAndApplType(id, applicationType);
-			if(rejectedAppl != null) {
+			SmAppl rejectedAppl = SmApplicationUtil
+					.getLatestRejectedApplIdBySuppIdAndApplType(id,
+							applicationType);
+			if (rejectedAppl != null) {
 				reqDto.setRejectedApplId(rejectedAppl.getApplId());
-				
-				if(SmApplicationUtil.checkRejectedApplExpired(rejectedAppl)) {
-					reqDto.setResubmitExpired(true);					
+
+				if (SmApplicationUtil.checkRejectedApplExpired(rejectedAppl)) {
+					reqDto.setResubmitExpired(true);
 				}
 			}
 			MofRegistrationResDTO resDTO = mofRegistrationSO
@@ -11643,7 +11655,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
-	
+
 	public void viewMyIdentityRespond() {
 		RequestContext.getCurrentInstance().execute("myIdentityDialog.show();");
 	}
