@@ -175,9 +175,14 @@ public class ViewHistoryBackingBean extends
 	 */
 	public void redirectToReapplyNewAppl() {
 		SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+		// #24923
+		smApplBB.getManagedBean().setNewSupplierType(
+				getManagedBean().getSmAppl().getSupplierType());
 		smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+
+		// Enhancement #20467 - point to new appl page with bullet
 		String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
-				.get(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				.get("RE");
 		SmCommonUtil.redirectToPage(page, null, null, null);
 	}
 
