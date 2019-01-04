@@ -341,9 +341,9 @@
               </tr>  
               <tr>
              <td><h:outputLabel value="#{lbl['lbl.pm.org.tax.regsale.startdate']}" />
-             <p:outputLabel value="*" styleClass="mandatory"  id="sstEffDateMandtId"
-             	rendered="#{not empty organisationBackingBean.managedBean.sstSupplier.salestaxregno}"/></td> 
-            <td>
+                 <p:outputLabel value="*" styleClass="mandatory"/>
+             </td> 
+             <td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 				<p:calendar style="width:60% !important" id="sstEffDateId" 
 					value="#{organisationBackingBean.managedBean.sstSupplier.salestaxregDate}" 
@@ -369,8 +369,7 @@
 				</td>
 		    
 		     <td><h:outputLabel value="#{lbl['lbl.pm.org.tax.reg.startdate']}" /> 
-		      <p:outputLabel value="*" styleClass="mandatory"  id="sstEffDateMandtId2"
-             	rendered="#{not empty organisationBackingBean.managedBean.sstSupplier.servtaxregno}"/></td>
+		      <p:outputLabel value="*" styleClass="mandatory"/></td>
             <td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 				<p:calendar style="width:60% !important" id="sstEffDateId2" 
