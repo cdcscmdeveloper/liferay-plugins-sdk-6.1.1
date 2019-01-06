@@ -1130,11 +1130,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			if (cat.getPmCategoryL1() != null) {
 				catL1.append(cat.getPmCategoryL1().getCategoryName()).append(
 						"<br/>");
-			} else if (cat.getPmCategoryL2() != null) {
-				catL2.append(cat.getPmCategoryL1().getCategoryName()).append(
+			}
+			if (cat.getPmCategoryL2() != null) {
+				catL2.append(cat.getPmCategoryL2().getCategoryName()).append(
 						"<br/>");
-			} else if (cat.getPmCategoryL3() != null) {
-				catL3.append(cat.getPmCategoryL1().getCategoryName()).append(
+			}
+			if (cat.getPmCategoryL3() != null) {
+				catL3.append(cat.getPmCategoryL3().getCategoryName()).append(
 						"<br/>");
 			}
 		}
