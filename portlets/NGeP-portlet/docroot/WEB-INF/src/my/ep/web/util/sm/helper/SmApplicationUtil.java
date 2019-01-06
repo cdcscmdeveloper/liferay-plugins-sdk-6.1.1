@@ -11100,6 +11100,7 @@ public class SmApplicationUtil {
 			validatePaidCaptialAmt(false, bean, currTab);
 			bean.setPersonnelInfoHeader(SmCommonUtil.getMessage(
 					"lbl.sm.equity.owner.information", null));
+			shareHolderBean.setEquityOwner(true);
 		} else if (bean.getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			bean.setPersonnelInfoHeader(SmCommonUtil.getMessage(
