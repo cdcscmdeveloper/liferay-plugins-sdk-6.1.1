@@ -37,12 +37,12 @@ public class CmUpdateExpiredItemJob implements Job {
 					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
 							ICatalogueSO.class);
 			
+			boolean isUpdate = true;
 			
-			for(int i=0; i<100;i++){
-				CatalogueResDTO resDTO = reqSO.updateExpiredItem();
-				
+			while(isUpdate){				
+			CatalogueResDTO resDTO = reqSO.updateExpiredItem();			
 				if(resDTO.getTotalRecord()==0){
-					break;
+					isUpdate = false;
 				}
 			}
 			// please add resDTO to log better
