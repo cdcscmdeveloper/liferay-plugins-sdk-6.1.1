@@ -124,213 +124,40 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 		if (CollectionUtils.isNotEmpty(this.selectedRetryQTs)) {
 			List<ScQtDisruptionLog> selectedRetryQTs = new ArrayList<ScQtDisruptionLog>(this.selectedRetryQTs);
 			
-			for (ScQtDisruptionLog selectedRetryQT : selectedRetryQTs) {
-				retryQTService(selectedRetryQT, selectedRetryQT.getDisruptionStage());
+			IQTRetrySO qtRetrySO;
+			try {
+				qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
 				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_700005,
-										new String[] { 
-												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_QUOTATION),
-												selectedRetryQT.getScQt().getQtNo() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));	
+				QTRetryReqDTO reqDTO = new QTRetryReqDTO();
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				for (ScQtDisruptionLog selectedRetryQT : selectedRetryQTs) {
+					reqDTO.setScQtDisruptionLog(selectedRetryQT);
+					reqDTO.setDisruptionStage(selectedRetryQT.getDisruptionStage());
+					qtRetrySO.retryQTService(reqDTO);
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_700005,
+											new String[] { 
+													getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_QUOTATION),
+													selectedRetryQT.getScQt().getQtNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));	
+				}
+			} finally {
+				qtRetrySO = null;
+				this.reason = null;
 			}
 			
 			reloadRetryQTAction();
 		}
 		
 		log.info("submitQTRetryAction - end");
-	}
-	
-	private void retryQTService(ScQtDisruptionLog qtDisruptionLog, Integer disruptionStage) {		
-		if (disruptionStage != null) {
-			boolean successful = false;
-			String errorMessage = null;
-			ScQt scQt = qtDisruptionLog.getScQt();
-			Long qtId = scQt.getQtId();
-			log.info(new StringBuilder().append("qtId: ").append(qtId).append(", disruptionStage: ").append(disruptionStage));
-			
-			switch (disruptionStage) {
-				case QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION :
-					ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
-					proposalReqDTO.setQtId(qtId);
-					ProposalResDTO proposalResDTO = getQTProposalSO()
-							.updateProposalStartWorkFlowStatus(proposalReqDTO);
-					successful = proposalResDTO.isSuccessful();
-					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_REQUEST_ITEM);
-					} else {
-						errorMessage = proposalResDTO.getErrorMessage();
-					}
-					break;
-				
-				case QTDisruptionConst.QT_PUBLISH_REQUEST_ITEM :
-					NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(qtId);
-					NoticeBoardResDTO noticeBoardResDTO = getQTNoticeBoardSO()
-							.publishQtAndCopyReqItems(noticeBoardReqDTO);
-					successful = noticeBoardResDTO.isSuccessful();
-					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
-					} else {
-						errorMessage = noticeBoardResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION :
-					noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(qtId);
-					noticeBoardResDTO = getQTNoticeBoardSO()
-							.publishQtAndInsertSuppliers(noticeBoardReqDTO);
-					successful = noticeBoardResDTO.isSuccessful();
-					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_SUPPLIER_NOTIFICATION_DISRUPTION);
-					} else {
-						errorMessage = noticeBoardResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.QT_PUBLISH_SUPPLIER_NOTIFICATION_DISRUPTION :
-					noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(qtId);
-					noticeBoardResDTO = getQTNoticeBoardSO()
-							.publishQtAndSendNotifications(noticeBoardReqDTO);
-					successful = noticeBoardResDTO.isSuccessful();
-					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
-					} else {
-						errorMessage = noticeBoardResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION :
-					noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(qtId);
-					noticeBoardReqDTO.setBpmEndpoint(BpmEndpointConst.SC_PUBLISH_QT_MESSAGEPOINT);
-					noticeBoardResDTO = getQTNoticeBoardSO()
-							.updateBpmForPublishAndProposalClose(noticeBoardReqDTO);
-					successful = noticeBoardResDTO.isSuccessful();
-					if (successful) {
-						updateQTDisruptionSuccess(qtDisruptionLog);
-					} else {
-						errorMessage = noticeBoardResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION :
-					proposalReqDTO = new ProposalReqDTO();
-					proposalReqDTO.setQtId(qtId);
-					proposalResDTO = getQTProposalSO()
-							.updateProposalCloseWorkFlowStatus(proposalReqDTO);
-					successful = proposalResDTO.isSuccessful();
-					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION);
-					} else {
-						errorMessage = proposalResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION :
-					noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(qtId);
-					noticeBoardResDTO = getQTNoticeBoardSO()
-							.closeQtAndSaveProposalAmount(noticeBoardReqDTO);
-					successful = noticeBoardResDTO.isSuccessful();
-					if (successful) {
-						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION);
-					} else {
-						errorMessage = noticeBoardResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION :
-					noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(qtId);
-					noticeBoardReqDTO.setBpmEndpoint(BpmEndpointConst.SC_CLOSE_PROPOSAL_MESSAGEPOINT);
-					noticeBoardResDTO = getQTNoticeBoardSO()
-							.updateBpmForPublishAndProposalClose(noticeBoardReqDTO);
-					successful = noticeBoardResDTO.isSuccessful();
-					if (successful) {
-						updateQTDisruptionSuccess(qtDisruptionLog);
-					} else {
-						errorMessage = noticeBoardResDTO.getErrorMessage();
-					}
-					break;
-				case QTDisruptionConst.BIDDING_CLOSE_BPM_DISRUPTION :
-					BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
-					biddingReqDTO.setQtId(qtId);
-					BiddingResDTO biddingResDTO = getBiddingSO()
-							.updateBpmForBiddingClosed(biddingReqDTO);
-					successful = biddingResDTO.isSuccessful();
-					if (successful) {
-						updateQTDisruptionSuccess(qtDisruptionLog);
-					} else {
-						errorMessage = biddingResDTO.getErrorMessage();
-					}
-					break;
-			}
-			
-			if (!successful) {
-				log.info(new StringBuilder().append("unsuccessful-->").append("qtId: ").append(qtId).append(", errorMessage: ").append(errorMessage));
-				
-				if (qtDisruptionLog.getDisruptionStage() != null && 
-						!qtDisruptionLog.getDisruptionStage().equals(disruptionStage)) {
-					updateQTDisruptionSuccess(qtDisruptionLog);
-					insertQTDisruption(scQt, disruptionStage, errorMessage);
-				} else {
-					qtDisruptionLog.setErrorMsg(errorMessage);
-					qtDisruptionLog.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
-					updateQTDisruption(qtDisruptionLog);
-				}
-			}
-		}
-	}
-	
-	private void updateQTDisruptionSuccess(ScQtDisruptionLog qtDisruptionLog) {
-		qtDisruptionLog.setSuccess(true);
-		updateQTDisruption(qtDisruptionLog);
-	}
-	
-	private void updateQTDisruption(ScQtDisruptionLog qtDisruptionLog) {
-		IQTRetrySO qtRetrySO;
-		try {
-			qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
-			
-			QTRetryReqDTO reqDTO = new QTRetryReqDTO();
-			reqDTO.setScQtDisruptionLog(qtDisruptionLog);
-			
-			qtRetrySO.saveQTDisruption(reqDTO);
-		} finally {
-			qtRetrySO = null;
-		}
-	}
-	
-	private void insertQTDisruption(ScQt scQt, Integer disruptionStage, String errorMsg) {
-		ScQtDisruptionLog disruptionLog = new ScQtDisruptionLog();
-		disruptionLog.setScQt(scQt);
-		disruptionLog.setDisruptionStage(disruptionStage);
-		disruptionLog.setErrorMsg(errorMsg);
-		super.setUserDetails(disruptionLog);
-		
-		updateQTDisruption(disruptionLog);	
-	}
-	
-	private IQTNoticeBoardSO getQTNoticeBoardSO() {
-		return BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTNoticeBoardSO.class);
-	}
-	
-	private IQTProposalSO getQTProposalSO() {
-		return BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTProposalSO.class);
-	}
-	
-	private IBiddingSO getBiddingSO() {
-		return BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IBiddingSO.class);
 	}
 
 	/**
