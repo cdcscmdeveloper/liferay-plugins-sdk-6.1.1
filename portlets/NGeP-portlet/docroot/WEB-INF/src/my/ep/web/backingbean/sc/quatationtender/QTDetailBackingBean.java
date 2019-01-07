@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,10 +47,10 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.qtretry.IQTRetrySO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
-import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -70,7 +71,6 @@ import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.BpmEndpointConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -89,14 +89,13 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
+import my.ep.dto.sc.qtretry.QTRetryReqDTO;
+import my.ep.dto.sc.qtretry.QTRetryResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
-import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -137,6 +136,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -207,7 +207,6 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -5545,45 +5544,33 @@ public class QTDetailBackingBean extends
 	public void closeProposal(ScQt scQt) {
 		log.info("closeProposal-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		log.info("##### Proposal Close started @"+DateUtils.getCurrentDate());
-		IQTProposalSO qtProposalSO = null;
-		try {
-			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			Long qtId = scQt.getQtId();
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtId(qtId);
-			
-			ProposalResDTO resDTO = qtProposalSO.updateProposalCloseWorkFlowStatus(reqDTO);
-			boolean isSucessful = false;
-			if(resDTO.isSuccessful()){
-				IQTNoticeBoardSO noticeBoardSO = null;
-				try{
-					noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-					NoticeBoardReqDTO nbReqDTO = new NoticeBoardReqDTO();
-					nbReqDTO.setQtId(qtId);
-					isSucessful = noticeBoardSO.closeQtAndSaveProposalAmount(nbReqDTO).isSuccessful();
-				}catch(Exception e){
-					log.info(scQt.getQtNo() + " Close failed");
-					throw new EpException(e.getLocalizedMessage());
-				}
+		
+		QTRetryResDTO resDTO = saveAndSubmitQTDisruption(scQt, 
+				QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
+				"Manual Close QT (" + System.getProperty("jboss.node.name") + ").");
+		
+		if (resDTO.isSuccessful()) {
+			IQTProposalSO qtProposalSO;
+			try {
+				qtProposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 				
-			}
-			if (isSucessful) {
+				ProposalReqDTO reqDTO = new ProposalReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
 				qtProposalSO.closeProposal(reqDTO);
-			}
 			
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,resDTO.getErrorMessage()!= null ? resDTO.getErrorMessage() :
-							scQt.getQtNo() + " Closing Started. Please wait a while for QT closing."
-			));
-
-		} finally {
-			qtProposalSO = null;
+			} finally {
+				qtProposalSO = null;
+			}
 		}
+		
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null, resDTO.getErrorMessage() != null ? resDTO.getErrorMessage() :
+						scQt.getQtNo() + " Closing Started. Please wait a while for QT closing."
+		));
+		
 		log.info("##### Proposal Close completed @"+DateUtils.getCurrentDate());
 	}
 	
@@ -5595,37 +5582,52 @@ public class QTDetailBackingBean extends
 	 */
 	
 	public void publishQT(ScQt scQt) {
-		ProposalResDTO proposalResDTO = null;
-		try{
-			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
-			proposalReqDTO.setQtId(scQt.getQtId());
-			proposalResDTO = getProposalSO()
-					.updateProposalStartWorkFlowStatus(proposalReqDTO);
-			if (!proposalResDTO.isSpecChanged()) {
-				if (proposalResDTO.isSuccessful()) {
-					log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
-					insertSuppliersAndSendNotification(scQt.getQtId());
-					
-				} 
+		String errorMessage = saveAndSubmitQTDisruption(scQt, 
+				QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION, 
+				"Manual Publish QT (" + System.getProperty("jboss.node.name") + ").")
+				.getErrorMessage();
+		
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null, errorMessage != null ? errorMessage:
+						scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
+						));
+	}
+	
+	private QTRetryResDTO saveAndSubmitQTDisruption(ScQt scQt, Integer disruptionStage, String errorMsg) {
+		IQTRetrySO qtRetrySO;
+		try {
+			qtRetrySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
+			
+			PmUser user = new FacesScopes().getUserSessionBean();
+			if (user.getUserId() == null) {
+				user.setUserId(1L);
 			}
 			
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,proposalResDTO.getErrorMessage()!= null ? proposalResDTO.getErrorMessage():
-							scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
-							));
+			QTRetryReqDTO reqDTO = new QTRetryReqDTO();
+			
+			// Save QT Disruption
+			ScQtDisruptionLog qtDisruptionLog = new ScQtDisruptionLog();
+			qtDisruptionLog.setScQt(scQt);
+			qtDisruptionLog.setDisruptionStage(disruptionStage);
+			qtDisruptionLog.setErrorMsg(errorMsg);
+			qtDisruptionLog.setCreatedBy(user.getUserId());
+			qtDisruptionLog.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			qtDisruptionLog.setChangedBy(user.getUserId());
+			reqDTO.setScQtDisruptionLog(qtDisruptionLog);
+			qtDisruptionLog = qtRetrySO.saveQTDisruption(reqDTO)
+				.getScQtDisruptionLog();
+			
+			// Perform QT Retry
+			reqDTO.setScQtDisruptionLog(qtDisruptionLog);
+			reqDTO.setDisruptionStage(qtDisruptionLog.getDisruptionStage());
+			reqDTO.setPmUser(user);
+			return qtRetrySO.retryQTService(reqDTO);
 		
-		}catch(Exception e){
-			log.info("$$$$$ qt Work Flow status updated failed during Publish due to exception");
-			log.error(e.getStackTrace());
-			if(proposalResDTO != null){
-				updateQtAsDisrupted(
-						scQt.getQtId(),
-						QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
-						proposalResDTO.getErrorMessage());
-			}
+		} finally {
+			qtRetrySO = null;
 		}
 	}
 	
@@ -5882,153 +5884,6 @@ public class QTDetailBackingBean extends
 			//log.info("end deleteCommitteemembersData"+this.getManagedBean().getCommittemembers().size());
 		}
 		
-	}
-	
-	/**
-	 * Gets the proposal SO.
-	 * 
-	 * @return the proposal SO
-	 */
-	private IQTProposalSO getProposalSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-	}
-	private IQTDetailSO getQtDetailSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-	}
-	
-	private void insertSuppliersAndSendNotification(Long qtId) {
-		IQTNoticeBoardSO noticeBoardSO = null;
-		int disruptionStage = QTDisruptionConst.QT_PUBLISH_REQUEST_ITEM;
-		try {
-			
-				noticeBoardSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTNoticeBoardSO.class);
-
-			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-			if (qtId != null) {
-				reqDTO.setQtId(qtId);
-				NoticeBoardResDTO resDTO = noticeBoardSO
-						.publishQtAndCopyReqItems(reqDTO);
-				
-				if (resDTO.isSuccessful()) {
-					disruptionStage = QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION;
-					log.info("$$$$$ Copy Request Items successful for the QT Id :"
-							+ qtId);
-					resDTO = noticeBoardSO.publishQtAndInsertSuppliers(reqDTO);
-
-					if (resDTO.isSuccessful()) {
-						disruptionStage = QTDisruptionConst.QT_PUBLISH_SUPPLIER_NOTIFICATION_DISRUPTION;
-						log.info("$$$$$ Insert Supplier successful for the QT Id :"
-								+ qtId);
-						resDTO = noticeBoardSO.publishQtAndSendNotifications(reqDTO);
-						
-						if (resDTO.isSuccessful()) {
-							log.info("$$$$$ Send notification successful for the QT Id :"
-									+ qtId);
-							disruptionStage = QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION;
-							updateQtPublishBpmTask(qtId, disruptionStage);
-						} else {
-							log.info("$$$$$ Send notification unsuccessful for the QT Id :"
-									+ qtId);
-							updateQtAsDisrupted(
-									qtId,
-									disruptionStage,
-									resDTO.getErrorMessage());
-						}
-					} else {
-						log.info("$$$$$ Insert Supplier unsuccessful for the QT Id :"
-								+ qtId);
-						updateQtAsDisrupted(
-								qtId,
-								disruptionStage,
-								resDTO.getErrorMessage());
-					}
-				} else {
-					log.info("$$$$$ Copy Request Items unsuccessful for the QT Id :"
-							+ qtId);
-					updateQtAsDisrupted(
-							qtId,
-							disruptionStage,
-							resDTO.getErrorMessage());
-				}
-			}
-		} catch (Exception e) {
-			log.info("$$$$$ Insert Supplier and send notification failed at"
-					+ DateUtils.getCurrentDate());
-			e.printStackTrace();
-			log.error(e.getLocalizedMessage());
-			String errorMessage = null;
-			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			if (rootCause != null) {
-				errorMessage = ExceptionUtils.getStackTrace(rootCause);
-			} else {
-				errorMessage = ExceptionUtils.getStackTrace(e);
-
-			}
-			updateQtAsDisrupted(qtId,
-					disruptionStage,
-					errorMessage);
-		}finally{
-			noticeBoardSO=null;
-		}
-	}
-
-	private void updateQtPublishBpmTask(Long qtId, int disruptionStage) {
-		// Update BPM after work flow status and supplier insertion successful
-		IQTNoticeBoardSO noticeBoardSO = null;
-		try {
-				noticeBoardSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTNoticeBoardSO.class);
-			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-			reqDTO.setQtId(qtId);
-			reqDTO.setBpmEndpoint(BpmEndpointConst.SC_PUBLISH_QT_MESSAGEPOINT);
-			NoticeBoardResDTO resDTO = noticeBoardSO
-					.updateBpmForPublishAndProposalClose(reqDTO);
-			if (resDTO.isSuccessful()) {
-				log.info("$$$$$ BPM Update after Publish successful for the QT Id :"
-						+ qtId);
-			} else {
-				log.info("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
-						+ qtId);
-				updateQtAsDisrupted(qtId,
-						disruptionStage,
-						resDTO.getErrorMessage());
-			}
-		} catch (Exception e) {
-			log.info("$$$$$ BPM Update after Publish failed for the QT Id :"
-					+ qtId);
-			String errorMessage = null;
-			e.printStackTrace();
-			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			if (rootCause != null) {
-				errorMessage = ExceptionUtils.getStackTrace(rootCause);
-			} else {
-				errorMessage = ExceptionUtils.getStackTrace(e);
-
-			}
-			updateQtAsDisrupted(qtId,
-					disruptionStage, 
-					errorMessage);
-		}finally{
-			noticeBoardSO=null;
-		}
-	}
-	
-	private void updateQtAsDisrupted(Long qtId, int disruptionStage,
-			String errorMessage) {
-		try {
-			
-			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
-			proposalReqDTO.setQtId(qtId);
-			proposalReqDTO.setDisruptionStage(disruptionStage);
-			proposalReqDTO.setErrorMessage(errorMessage);
-			getProposalSO().updateDisruptedQtAndSendNotification(proposalReqDTO);
-		} finally {
-		}
 	}
 	
 	
