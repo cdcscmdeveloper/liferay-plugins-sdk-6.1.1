@@ -544,7 +544,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
 			}
 			ctBB.getManagedBean().setStaxCheckingGUI(true);
-			ctBB.getManagedBean().setDisableStaxAmount(false);
+		//	ctBB.getManagedBean().setDisableStaxAmount(false);
 			
 
 			if (!ctBB.getManagedBean().isViewContract()) {
@@ -916,7 +916,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 							&& ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
 						overallContractAmount = contractAmt.getContractAmount().doubleValue();
-						if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
+						if (contractAmt.getGstAmount() != null) {
+							overallContractAmount  += contractAmt.getGstAmount().doubleValue();
+						}
+						if (contractAmt.getStaxAmount() != null ) {
+							overallContractAmount  += contractAmt.getStaxAmount().doubleValue();
+						}
+						if (contractAmt.getGstAmount() != null && contractAmt.getStaxAmount() != null) {
 							overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
 						}
 						overallContractAmount = Double.valueOf(df.format(overallContractAmount));
