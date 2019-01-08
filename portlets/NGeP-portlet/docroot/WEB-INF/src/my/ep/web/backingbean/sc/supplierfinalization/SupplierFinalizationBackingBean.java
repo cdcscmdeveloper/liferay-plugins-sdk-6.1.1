@@ -3035,10 +3035,10 @@ public class SupplierFinalizationBackingBean extends
 
 						if (recommendDtlId != null
 								&& supplierId != null
-								&& supplierId == evalResDtl
+								&& supplierId.compareTo(evalResDtl
 										.getQtEvaluationResult()
 										.getScQtProposal().getScQtSupplier()
-										.getSmSupplier().getSupplierId()
+										.getSmSupplier().getSupplierId()) == 0
 								&& specZoneId.equals(evaZoneId)
 								&& (recommendDtl.getRecordStatusFlg().equals(
 											DbValueConst.RECORD_STATUS_REJECTED))) {
@@ -3090,7 +3090,7 @@ public class SupplierFinalizationBackingBean extends
 
 							if (recommendDtlId != null
 									&& supplierId != null
-									&& supplierId == currentSupplierId
+									&& supplierId.compareTo(currentSupplierId) == 0
 									&& specZoneId == evaZoneId
 									&& (recommendDtl.getRecordStatusFlg().equals(
 												DbValueConst.RECORD_STATUS_REJECTED))) {
