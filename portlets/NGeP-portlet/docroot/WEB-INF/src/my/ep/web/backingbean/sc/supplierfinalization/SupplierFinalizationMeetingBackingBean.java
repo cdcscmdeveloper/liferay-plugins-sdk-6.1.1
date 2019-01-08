@@ -627,6 +627,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public String getRoleDesc(PmUser pmUser) {
 		String userRole = null;
 		String committeeType = getManagedBean().getCommitteeType();
+		List<ScCommitteeMember> scCommMember = getManagedBean().getCommitteeMembersList();
+		boolean hasChairperson = false;
 		
 		ICommitteSO committeeSO = null;
 		try {
@@ -643,10 +645,26 @@ public class SupplierFinalizationMeetingBackingBean extends
 			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
 			if (resDTO.isSuccessful() && 
 					resDTO.isHasRequiredCommitteeRole()) {
-				PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+				
+				//Bug #24911
+				for (ScCommitteeMember commMember : scCommMember) {
+					if (commMember.getMemberRole().getParameterCode()
+							.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+						hasChairperson = true;
+						}
+					}
+				
+				if(hasChairperson){
+					PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
+					pmUser.setMemberRoleId(memberRole.getParameterId());
+					userRole = getParameterDesc(memberRole);
+				}else{
+					PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-				pmUser.setMemberRoleId(chairPersonRole.getParameterId());
-				userRole = getParameterDesc(chairPersonRole);
+					pmUser.setMemberRoleId(chairPersonRole.getParameterId());
+					userRole = getParameterDesc(chairPersonRole);
+				}
 			}
 			
 		} finally {
