@@ -62,7 +62,6 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.scheduler.helper.sc.ScSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
