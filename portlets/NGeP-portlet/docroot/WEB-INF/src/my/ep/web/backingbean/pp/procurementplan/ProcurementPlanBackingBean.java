@@ -54,6 +54,8 @@ import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -3778,13 +3780,25 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(getManagedBean().getSelectedPlan().getOrgProfileAddress() != null){
 			return getPpFullAddress(getManagedBean().getSelectedPlan().getOrgProfileAddress());
 		}else{
+
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if(resDTO.getAddressTypeList() !=null && !resDTO.getAddressTypeList().isEmpty()){
-				return getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress());
+				PmAddress address = null;
+				for(PmAddressType addressType : resDTO.getAddressTypeList() ){
+					if(addressType.getRecordStatusFlg()==1){
+						address = addressType.getPmAddress();
+						break;
+					}
+				}
+				
+				if(address != null){
+					return getFullAddress(address);
+				}
+				return "";
 			}else{
 				return "";
 			}
