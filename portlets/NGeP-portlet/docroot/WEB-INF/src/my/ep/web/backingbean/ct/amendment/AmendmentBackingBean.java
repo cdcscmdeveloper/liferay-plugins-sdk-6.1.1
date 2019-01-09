@@ -546,7 +546,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
 				} else {	
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
-					
 				}
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
@@ -801,13 +800,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (!ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
 					&& !ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				ctBackingBean.getManagedBean().setGstCheckingGUI(false); // Display N/A
-
 			} else {
 				if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 					ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 				}
 				ctBackingBean.getManagedBean().setGstCheckingGUI(true);
-				
 				// If original contract is fulfilled imposed service tax rule
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.isBeforeGstReliefDueDate()
@@ -820,15 +817,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// Enable or Disable STAX field
 			if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
-				ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
-				
+				ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);				
 			}
 			ctBackingBean.getManagedBean().setStaxCheckingGUI(true);
 			
+			// Enable or Disable New GST field
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);			
+			}
+			
+			
 			// Enable or Disable NewSTAX field
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null) {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
-				
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);				
 			}
 
 			
@@ -1249,7 +1250,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 							&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
 						overallContractAmount = contractAmt.getContractAmount().doubleValue();
-						if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
+						if (contractAmt.getGstAmount() != null) {
+							overallContractAmount += contractAmt.getGstAmount().doubleValue();
+						}
+						if (contractAmt.getStaxAmount() != null ) {
+							overallContractAmount  += contractAmt.getStaxAmount().doubleValue();
+						}
+						if (contractAmt.getGstAmount() != null && contractAmt.getStaxAmount() != null) {
 							overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
 						}
 						overallContractAmount = Double.valueOf(df.format(overallContractAmount));
