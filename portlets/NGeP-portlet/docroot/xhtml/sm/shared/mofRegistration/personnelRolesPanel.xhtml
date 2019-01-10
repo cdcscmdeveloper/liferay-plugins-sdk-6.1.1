@@ -16,7 +16,7 @@
 						<table>
 							<tr>
 								<c:if test="#{backingBean.managedBean.validEquityLimit}">
-									<td style="width: 20px"><p:selectBooleanCheckbox disabled="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
@@ -112,7 +112,7 @@
 							<tr>
 								<c:if test="#{backingBean.managedBean.validEquityLimit}">
 									<td style="width: 20px">
-										<p:selectBooleanCheckbox disabled="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
+										<p:selectBooleanCheckbox disabled="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
