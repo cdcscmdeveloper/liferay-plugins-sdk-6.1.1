@@ -2787,44 +2787,61 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		
 		boolean isVotSOrAmanahExist = false;
-		boolean isVotBOrPOrTExist = false;
+		//boolean isVotBOrPOrTExist = false;
+		boolean isVotBOrTExist = false;
+		boolean isVotPExist = false;
+		
 		String votFundType = null;
+		
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
 				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId())) {
 					continue;
 				}
 				if(itemAddress.getPmVotFund()!=null) {
+
 					if(null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())){
 						votFundType=itemAddress.getPmVotFund().getVotFundType();
 					}else{
 						votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
 					}
+					
 					if(votFundType.equalsIgnoreCase(VotFundType.SETIA.value()) || votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
 						isVotSOrAmanahExist = true;
 						break;
-					} else {
-						isVotBOrPOrTExist = true;
+					} else if(votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value()) || votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+						isVotBOrTExist = true;
+						break;
+					} else if(votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value()) ) {
+						isVotPExist = true;
 						break;
 					}
 				}
 			}
-			if(isVotSOrAmanahExist || isVotBOrPOrTExist) {
+
+			if(isVotSOrAmanahExist || isVotBOrTExist || isVotPExist) {
 				break;
 			}
 		}		
-		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
+		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());		
+
 		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || 
-			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value()) ||
-			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
-			if(isVotSOrAmanahExist) {
+			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+			if(isVotSOrAmanahExist || isVotPExist) {
 				throw new EpException(MessageConst.ERROR_740005);
 			}
-		} else {
-			if(isVotBOrPOrTExist) {
+			
+		} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
+				if(isVotSOrAmanahExist || isVotBOrTExist) {
+					throw new EpException(MessageConst.ERROR_740005);
+				}
+		} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.SETIA.value()) || 
+				pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())) {
+			if(isVotBOrTExist || isVotPExist) {
 				throw new EpException(MessageConst.ERROR_740005);
 			}
 		}
+		
 		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
 			if(getManagedBean().getPmPrgActivity()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.program.activiti",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
