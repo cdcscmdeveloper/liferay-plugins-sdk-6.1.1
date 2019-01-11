@@ -271,12 +271,6 @@ public class BSVAttendanceBackingBean extends
 			List<BriefingZoneBean> zoneBean = this.getManagedBean()
 					.getZoneBean();
 			for (BriefingZoneBean briefingZoneBean : zoneBean) {
-				if (!isAllBsvsComplete(briefingZoneBean)) {
-					throw new EpException(MessageConst.ERROR_760210);
-				}
-			}
-
-			for (BriefingZoneBean briefingZoneBean : zoneBean) {
 				List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
 				ScQtBsv scQtBsv = briefingZoneBean.getScQtBsv();
 				if (null != scQtBsv && null != scQtBsv.getQtBsvId()) {
@@ -300,10 +294,6 @@ public class BSVAttendanceBackingBean extends
 			BriefingZoneBean normalBsv = this.getManagedBean()
 					.getNormalBsvBean();
 			List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
-			boolean flag = isAllBsvsComplete(normalBsv);
-			if (!flag) {
-				throw new EpException(MessageConst.ERROR_760210);
-			}
 			ScQtBsv scQtBsv = normalBsv.getScQtBsv();
 			if (null != scQtBsv && null != scQtBsv.getQtBsvId()) {
 				scQtBsv.setTplSpecZoneDtl(normalBsv.getTplSpecZoneDtl());
@@ -338,8 +328,8 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
-				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-				/*if (!DateUtils.isDateGreater(scQt.getClosingDate(), todayDate)) {
+				/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+				if (!DateUtils.isDateGreater(scQt.getClosingDate(), todayDate)) {
 					try {
 						log.info("call simple scheduler if QT is closing today.");
 						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
@@ -771,43 +761,6 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 			throw new EpException(MessageConst.ERROR_760126);
 		}
 	}*/
-
-	/**
-	 * Method will notify whether BSvs completed or not.
-	 * 
-	 * @param zoneBean
-	 *            the instance of BriefingZoneBean
-	 * @return true if completes
-	 */
-	public boolean isAllBsvsComplete(BriefingZoneBean zoneBean) {
-
-		ScQtBsv bsv = zoneBean.getScQtBsv();
-		if (null != bsv && null != bsv.getQtBsvId()) {
-			if (bsv.isSameBsv()) {
-				List<ScQtBsvDtl> bsvDtls = zoneBean.getBriefingList();
-				return isBsvStatusComplete(bsvDtls);
-			} else {
-				List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>(
-						zoneBean.getBriefingList());
-				bsvDetails.addAll(zoneBean.getSitevisitList());
-				return isBsvStatusComplete(bsvDetails);
-			}
-		}
-		return true;
-	}
-
-	private boolean isBsvStatusComplete(List<ScQtBsvDtl> bsvDetails) {
-
-		for (ScQtBsvDtl bsvDtl : bsvDetails) {
-			Long statusId = bsvDtl.getBsvStatus().getStatusId();
-			if (!QTStatusConst.BSV_COMPLETED.equals(statusId) &&
-					!QTStatusConst.BSV_CANCELLED.equals(statusId)) {
-				return false;
-			}
-
-		}
-		return true;
-	}
 
 	/**
 	 * Get BSV Registration Details.
