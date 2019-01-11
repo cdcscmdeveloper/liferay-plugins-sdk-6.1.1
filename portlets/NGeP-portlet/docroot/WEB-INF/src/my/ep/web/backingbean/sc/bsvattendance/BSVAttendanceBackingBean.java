@@ -61,7 +61,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -73,7 +72,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.quartz.SchedulerException;
 
 /**
  * BSV Attendance BackingBean class is used to display Brifing, Sitevisit
@@ -418,20 +416,22 @@ public class BSVAttendanceBackingBean extends
 
 			}
 
+			Long bsvStatusId = null;
 			if (SourcingConstants.COMPLETE.equalsIgnoreCase(flowType)) {
-				scQtBrief.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_COMPLETED));
+				bsvStatusId = QTStatusConst.BSV_COMPLETED;
 			} else {
-				scQtBrief.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
+				bsvStatusId = QTStatusConst.BSV_PENDING;
 			}
 
 			// reqDTO.setQtBriefingList(briefingDetails);
 			reqDTO.setBriefingDetail(scQtBrief);
+			reqDTO.setBsvStatusId(bsvStatusId);
 			reqDTO.setBriefingReqDtls(this.getManagedBean()
 					.getBriefingRegistrationList());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
 					.getToBeDeletedRegistartions());
-			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
+			BriefingResDTO resDTO = qTBriefingSO.updateBSVAttendanceRegistration(reqDTO);
 			this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
 			if (SourcingConstants.COMPLETE.equalsIgnoreCase(flowType)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
