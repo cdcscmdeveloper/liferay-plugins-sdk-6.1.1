@@ -96,7 +96,7 @@
 			<ui:param name="widthPixes"
 				value="#{(isSpecificationReq and !isItemTypeService)?'100px':'85px'}" />
 			<p:column rowspan="#{specificationrequired ? 2 : 1}"
-				style="width:#{isItemTypeService ? '95px' : widthPixes};">
+				style="width:100px;white-space:normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
