@@ -9,11 +9,14 @@
 	<ui:param name="viewFlag" value="true" />
 	
 	<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.rptpreview.want.proceed.qmark']}	
+   			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
+					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
+				</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}"
 				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
 		</div>
 	</p:dialog>
 	

@@ -8,9 +8,8 @@
 	<p:panel header="#{lbl['lbl.sm.svo.sitevisit.report']}">
 
 		<ui:param name="viewFlag" value="true" />
-		<p:dataTable
-			value="#{svoSiteVisitBackingBean.managedBean.smAppl.smSvTasks}"
-			var="svTask">
+		<p:dataTable var="svTask"
+			value="#{svoSiteVisitBackingBean.managedBean.smAppl.smSvTasks}">
 			<h:inputText value="svTask.pmCategoryL3" />
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
@@ -39,6 +38,11 @@
 					update=":#{p:component('poReportDlgId')}"
 					onclick="blockWidget.show();"
 					action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}">
+				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.download']}"
+					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}"
+				    ajax="false">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
 			</p:column>
 		</p:dataTable>
