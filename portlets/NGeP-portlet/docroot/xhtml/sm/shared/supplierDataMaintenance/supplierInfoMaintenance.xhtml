@@ -98,9 +98,9 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" />
 					<p:outputLabel value="*" styleClass="mandatory" 
 					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
-				<td><p:inputTextarea autoResize="false" cols="41" id="suspendRemark" 
+				<td><p:inputTextarea autoResize="false" cols="100" rows="10" id="suspendRemark" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
-						maxlength="500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
+						maxlength="2500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
 						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" />
 					<p:message id="suspendRemarkMsg"
 					for="suspendRemark" showSummary="true" showDetail="false"
