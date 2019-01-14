@@ -1176,7 +1176,14 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	  *         false, if login user is not User/internal auditor
 	*/	
 	public boolean disableMinistryLov() {
-		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) );
+		if(hasGovernmentUserRole() || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			if(isPTJReOrg()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -1189,7 +1196,14 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	*/	
 	
 	public boolean disablePtjLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null );
+		if((hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null )) {
+			if(isPTJReOrg()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -1202,9 +1216,37 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	*/	
 	
 	public boolean disablePtjGroupLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null );
+		if((hasGovernmentUserRole() || getManagedBean().getMinistry() == null )) {
+			if(isPTJReOrg()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 
+	private boolean isPTJReOrg() {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+		
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+		if(ptjResDTO!=null && ptjResDTO.getPtjReorgList().size()>0)
+			return true;
+		else 
+			return false;
+	}
+	
 	/**
 	 * Get PTJ group condition for construct the LOV listing
 	 * @return String
