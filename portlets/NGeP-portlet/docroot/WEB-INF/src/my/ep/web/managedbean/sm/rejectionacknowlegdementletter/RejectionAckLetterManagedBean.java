@@ -132,6 +132,8 @@ public class RejectionAckLetterManagedBean extends BaseManagedBean{
 			reqDTO.getApplicationStatusLs().add(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION);
 			reqDTO.getApplicationStatusLs().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS);
 			
+			reqDTO.setExcludeDeletedStatus(true);
+			
 			return SmServiceLookup.getSmApplRevisionSO().retrieveApplicationHistoryBySupplierSearchCriteria(reqDTO)
 					.getResultBean();
 		}
