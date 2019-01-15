@@ -241,7 +241,10 @@ public class DirectLOABackingBean extends
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
-			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(statusId)) {
+				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			}
 			parseLOADetails(scLoa, outcome, reqDTO);
 
 			validateSupplierDetails(scLoa);
@@ -4638,7 +4641,10 @@ public class DirectLOABackingBean extends
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(statusId)) {
+				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			}
 			parseLOADetails(scLoa, outcome, reqDTO);
 			validateLOADetails(scLoa, outcome);
 			validateContractAmount(scLoa.getLoaAmt(), outcome);
@@ -8241,7 +8247,12 @@ public class DirectLOABackingBean extends
 	 */
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
-		validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
+
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+				.equals(statusId)) {
+			validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
+		}
 		validateLOADetails(this.getManagedBean().getScLoa(), outcome);
 		// validate spec questions
 		validateSpecQuestions();
@@ -8305,7 +8316,7 @@ public class DirectLOABackingBean extends
 			if (scLoa.getSupplierSignDate() == null) {
 				throw new EpException(MessageConst.ERROR_760400,
 						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+						 		ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 			}
 			if (StringUtils.isBlank(
 					scLoa.getBankAccNo())) {
