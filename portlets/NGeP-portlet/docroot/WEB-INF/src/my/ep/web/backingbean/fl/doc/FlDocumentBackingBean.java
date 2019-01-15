@@ -1196,7 +1196,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	*/	
 	
 	public boolean disablePtjLov() {
-		if((hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null )) {
+		if(getManagedBean().getPtjGroup() == null) {
+			return true;
+		} else if(hasGovernmentUserRole()) {
 			if(isPTJReOrg()) {
 				return false;
 			} else {
@@ -1216,7 +1218,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	*/	
 	
 	public boolean disablePtjGroupLov() {
-		if((hasGovernmentUserRole() || getManagedBean().getMinistry() == null )) {
+		if(getManagedBean().getMinistry() == null) {
+			return true;
+		} else if(hasGovernmentUserRole()) {
 			if(isPTJReOrg()) {
 				return false;
 			} else {
