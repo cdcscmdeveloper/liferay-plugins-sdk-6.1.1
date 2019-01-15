@@ -2688,7 +2688,10 @@ public class LOADetailBackingBean extends
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(statusId)) {
+				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			}
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
 			validateContractDetails(scLoa);
@@ -2800,7 +2803,10 @@ public class LOADetailBackingBean extends
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(statusId)) {
+				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+			}
 			parseLOADetails(scLoa, outcome);
 
 			// if reject, remove the new witness
@@ -6257,7 +6263,12 @@ public class LOADetailBackingBean extends
 	 */
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
-		validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
+
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+				.equals(statusId)) {
+			validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
+		}
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		
 		String loa = getMessage("lbl.sc.loiloa.loa.header.title", null);
@@ -6316,7 +6327,7 @@ public class LOADetailBackingBean extends
 			ScLoaWitness scLoaWitness, String outcome) {
 		Locale locale = new FacesScopes().getUserLocale();
 		
-		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {			
 			if (scLoa.getSupplierSignDate() == null) {
 				throw new EpException(MessageConst.ERROR_760400, 
 						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date",
