@@ -472,7 +472,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				userGroupReqDTO.setApprovalLimit(sumItemAmt);
 				UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
 				if(userGroupResDTO.getUserGroupUserList().isEmpty()){
-					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					//#24764
+					throw new EpException(MessageConst.ERROR_740058);
 				}
 				
 				PmUser approver = null;
