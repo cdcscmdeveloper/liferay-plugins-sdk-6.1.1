@@ -1706,7 +1706,10 @@ public class TaskReassignmentBackingBean extends
 					int reassignType = status.getPmStatusTask() != null 
 							&& status.getPmStatusTask().getReasssignType() != null 
 							? status.getPmStatusTask().getReasssignType() : 0;
-							String moduleCode = status.getModuleCode();
+					String moduleCode = status.getModuleCode();
+					
+					log.info(":::pageChangeListener() reassignType: "+ reassignType +", moduleCode: "+ moduleCode +".");		
+							
 					if(vo == null ){
 						if (ModuleCodeConst.CONTRACT_MANAGEMENT
 								.equalsIgnoreCase(moduleCode)) {
@@ -1824,6 +1827,8 @@ public class TaskReassignmentBackingBean extends
 		Long addressId = null;
 		Integer subReassignType = null;
 		
+		log.info(":::generateUserResultBean() userId: "+ userId +", orgProfileId: "+ orgProfileId +", reassignType: "+ reassignType +".");
+		
 		// filter by user name
 		if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
 			searchBean.getDataFilterBeans().add(
@@ -1859,8 +1864,14 @@ public class TaskReassignmentBackingBean extends
 										.getUserId()))));			
 			// Order by user name
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
-				
-			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList());
+			
+			//Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
+			log.info(":::generateUserResultBean() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
+					+", vo.getDocType(): "+ vo.getDocType() +", vo.getRoleList(): "+ vo.getRoleList() +".");	
+			
+			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList(), orgProfileId);
+			//Bug #25021
+			
 			getManagedBean().setCommitteeUpdate(true);		
 					
 			isSearched = true;
@@ -2217,7 +2228,7 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	private ISearchResultBean<PmUser> generateCommitteAssignees(ISearchBean<PmUser> searchBean,
-			Long docId, String docType, List<String> roleCodeList ){
+			Long docId, String docType, List<String> roleCodeList, Long orgProfileId){
 		ICommitteSO committeSO;
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2227,8 +2238,11 @@ public class TaskReassignmentBackingBean extends
 			committeReqDTO.setDocType(docType);
 			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
 			committeReqDTO.setUserSearchBean(searchBean);
-			return committeSO.retrieveUserListByCommType(committeReqDTO)
-					.getUserResultBean();
+			//Bug #25021
+			committeReqDTO.setOrgProfileId(orgProfileId);
+			//end Bug #25021
+			
+			return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
 		} finally {
 			committeSO = null;
 		}
