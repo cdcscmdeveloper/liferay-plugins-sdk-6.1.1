@@ -290,7 +290,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 					if(userGroupResDTO.getUserGroupUserList() == null || userGroupResDTO.getUserGroupUserList().isEmpty()){
-						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+						//#24764
+						throw new EpException(MessageConst.ERROR_740058);
 					}
 				}
 				PmUser approver = null;
