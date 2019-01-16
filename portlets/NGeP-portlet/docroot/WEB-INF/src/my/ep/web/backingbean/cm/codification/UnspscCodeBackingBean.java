@@ -2871,10 +2871,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
-
+				
 		CDRequestDataType unspsc = (CDRequestDataType) obj;
-
-		log.info("********isPublished******"+unspsc.isPublished());
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
@@ -2885,35 +2883,46 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		CodificationReqDTO reqCodeDTO = new CodificationReqDTO();
 		RequestCodeResDTO resDTO = null;
 		this.getManagedBean().setReviewExtCodeList(null);
+		if(unspsc!=null){
+			if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
+				for (String itemId : unspsc.getItemId()) {
+					log.info("itemId:" + itemId);
 
-		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
-			for (String itemId : unspsc.getItemId()) {
-				log.info("itemId:" + itemId);
-
-				if(itemId!=null && itemId.trim().length()>0){
+					if(itemId!=null && itemId.trim().length()>0){
 
 
-					codeDTO.setRequestId(new Long(itemId));
-					resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
-					this.getManagedBean().getReviewExtCodeList()
-					.add(resDTO.getRequestCode());
+						codeDTO.setRequestId(new Long(itemId));
+						resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+						this.getManagedBean().getReviewExtCodeList()
+						.add(resDTO.getRequestCode());
 
-					this.getManagedBean().setRequestCode(resDTO.getRequestCode());
-				}else{
-					codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-					resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
-					this.getManagedBean().getReviewExtCodeList()
-					.add(resDTO.getRequestCode());
-					this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+						this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+					}else{
+						codeDTO.setRequestId(new Long(unspsc.getRequestId()));
+						resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+						this.getManagedBean().getReviewExtCodeList()
+						.add(resDTO.getRequestCode());
+						this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+					}
 				}
+			} else {
+				codeDTO.setRequestId(new Long(unspsc.getRequestId()));
+				resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+				this.getManagedBean().getReviewExtCodeList()
+				.add(resDTO.getRequestCode());
+				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 			}
-		} else {
-			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-			resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
-			this.getManagedBean().getReviewExtCodeList()
-			.add(resDTO.getRequestCode());
-			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+		}else{// this block is a fix for missing payload(pojo) in bpm redmine#25059
+			if(res.getTaskName().equalsIgnoreCase("Publish Result Notification")){
+				codeDTO.setDocNo(res.getDocNumber());
+				resDTO = requestSO
+						.retrieveUnspscCodeReview(codeDTO);
+				this.getManagedBean().getReviewExtCodeList()
+				.add(resDTO.getRequestCode());
+				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+			}
 		}
+
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
 			
 			// if(!code.isRequestColor()){
@@ -3052,16 +3061,21 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Publish Result Notification")) { 
 
-
-			if (unspsc.isPublished()) {
+			if(unspsc!=null){
+				if (unspsc.isPublished()) {
+					fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "resultNotification.xhtml");
+				} else {
+					fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"reviewExtensionCodeFlow2.xhtml");
+				}
+			}else{
 				fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "resultNotification.xhtml");
-			} else {
-				fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						"reviewExtensionCodeFlow2.xhtml");
 			}
+		
 		}else if(res.getTaskName().equalsIgnoreCase("Recommend Result Notification")){
 
 			fc.getApplication()
@@ -3149,26 +3163,37 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 
 		this.getManagedBean().setReviewExtCodeList(null);
+		if(unspsc!=null){
+			if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
+				for (String itemId : unspsc.getItemId()) {
+					log.info("itemId:" + itemId);
 
-		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
-			for (String itemId : unspsc.getItemId()) {
-				log.info("itemId:" + itemId);
-
-				codeDTO.setRequestId(new Long(itemId));
+					codeDTO.setRequestId(new Long(itemId));
+					RequestCodeResDTO resDTO = requestSO
+							.retrieveUnspscCodeReview(codeDTO);
+					this.getManagedBean().getReviewExtCodeList()
+					.add(resDTO.getRequestCode());
+					this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+				}
+			} else {
+				codeDTO.setRequestId(new Long(unspsc.getRequestId()));
 				RequestCodeResDTO resDTO = requestSO
 						.retrieveUnspscCodeReview(codeDTO);
 				this.getManagedBean().getReviewExtCodeList()
 				.add(resDTO.getRequestCode());
 				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 			}
-		} else {
-			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-			RequestCodeResDTO resDTO = requestSO
-					.retrieveUnspscCodeReview(codeDTO);
-			this.getManagedBean().getReviewExtCodeList()
-			.add(resDTO.getRequestCode());
-			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+		}else{// this block is a fix for missing payload(pojo) in bpm redmine#25059
+			if(res.getTaskName().equalsIgnoreCase("Recommend Result Notification")){
+				codeDTO.setDocNo(res.getDocNumber());
+				RequestCodeResDTO resDTO = requestSO
+						.retrieveUnspscCodeReview(codeDTO);
+				this.getManagedBean().getReviewExtCodeList()
+				.add(resDTO.getRequestCode());
+				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+			}
 		}
+		
 
 		this.getManagedBean().setTaskName(res.getTaskName());
 
