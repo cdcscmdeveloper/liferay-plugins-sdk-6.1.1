@@ -4660,6 +4660,14 @@ public class DirectLOABackingBean extends
 						it.remove();
 					}
 				}
+				//Bug #24713
+				if(this.getManagedBean().getLoaSupplierWitness() != null 
+						&& getManagedBean().getScLoa().getScLoaWitnesses() != null) {
+
+					getManagedBean().getScLoa().getScLoaWitnesses().remove(
+							this.getManagedBean().getLoaSupplierWitness());					
+					this.getManagedBean().setLoaSupplierWitness(null);
+				}
 			}
 
 			// spki
