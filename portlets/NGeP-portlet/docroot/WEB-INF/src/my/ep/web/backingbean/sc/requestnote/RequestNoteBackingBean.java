@@ -113,6 +113,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -4347,6 +4348,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		ScQuote scQuote = getManagedBean().getRequestNote().getQuote();
 		
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+		
 		if(scQuote != null){
 			
 			Date currentDate = new Date();
@@ -4355,7 +4359,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Calendar cal = Calendar.getInstance();
 			cal.clear(); 
 			cal.setTime(closingDate);
-			cal.add(Calendar.DATE, 60); //add 60 days to closing/end date
+			cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
 			
 			if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
 			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
@@ -4365,7 +4369,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					validDate = false;
 				}
 			}	
-		}		
+		}			
 		return validDate;	
 	}
 }
