@@ -12,6 +12,7 @@ package my.ep.web.backingbean.tpl.spec;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -975,12 +976,12 @@ public class TemplateSpecBackingBean extends
 						.getClDurationMonth();
 
 				if (itemDurationMonth != null) {
-					amountPerYear = amountPerYear.divide(itemDurationMonth);
+					amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
 				} else {
 					BigDecimal durationMonth = specMaster.getDurationMonth();
 
 					if (durationMonth != null) {
-						amountPerYear = amountPerYear.divide(durationMonth);
+						amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
 					}
 				}
 
