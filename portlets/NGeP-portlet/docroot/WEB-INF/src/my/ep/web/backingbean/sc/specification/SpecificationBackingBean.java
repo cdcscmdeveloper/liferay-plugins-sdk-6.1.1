@@ -1615,10 +1615,33 @@ public class SpecificationBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 
 				resDTO = specSo.retrieveCheckLists(reqDTO);
+				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
+				if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
+					if (null != resDTO.getTechnicalCheckList()) {
+						// Collections.sort(resDTO.getTechnicalCheckList());
+						for (ScQtCheckList checklist : resDTO
+								.getTechnicalCheckList()) {
+							if (null != checklist.getPmDocument()) {
+								if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+										.equalsIgnoreCase(checklist
+												.getPmDocument()
+												.getDocDefinitionKey())) {
+									localcheckList.add(checklist);
+								}
+							} else {
+								localcheckList.add(checklist);
+							}
+						}
+					}
+				} else {
+					// Collections.sort(resDTO.getTechnicalCheckList());
+					localcheckList = new ArrayList<ScQtCheckList>(
+							resDTO.getTechnicalCheckList());
+					// localcheckList.addAll(resDTO.getTechnicalCheckList());
+				}
 
 				this.getManagedBean().setScQtCheckSt2techProposal(
-						new ArrayList<ScQtCheckList>(resDTO
-								.getTechnicalCheckList()));
+						localcheckList);
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 			}
