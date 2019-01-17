@@ -39,6 +39,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -631,20 +632,38 @@ public class SupplierFinalizationMeetingBackingBean extends
 		boolean hasChairperson = false;
 		
 		ICommitteSO committeeSO = null;
+		IOrgProfileSO orgProfileSO = null;
+		
 		try {
-			committeeSO = BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			committeeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IOrgProfileSO.class);
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setPmUser(pmUser);
 			reqDTO.setCommitteeType(committeeType);
 			
 			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
+						
+			//Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
+			log.info(":::getRoleDesc() committeeType"+ committeeType +".");
+			
+			if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
+				committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { //FSB/FSW
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				mofReqDTO.setOrgCode("103"); //KEMENTERIAN KEWANGAN MALAYSIA
+				
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				pmOrgProfile = mofResDTO.getPmOrgProfile();
+				
+				log.info(":::getRoleDesc() orgProfileId: "+ pmOrgProfile.getOrgProfileId());
+			}
+			//end Bug #25021
+		
 			reqDTO.setPmOrgProfile(pmOrgProfile);
 			
 			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
-			if (resDTO.isSuccessful() && 
-					resDTO.isHasRequiredCommitteeRole()) {
+			
+			if (resDTO.isSuccessful() && resDTO.isHasRequiredCommitteeRole()) {
 				
 				//Bug #24911
 				for (ScCommitteeMember commMember : scCommMember) {
