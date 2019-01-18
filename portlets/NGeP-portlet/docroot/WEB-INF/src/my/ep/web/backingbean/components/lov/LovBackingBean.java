@@ -25,6 +25,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cc.lov.ILovSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.cc.lov.LovReqDTO;
 import my.ep.dto.cc.lov.LovResDTO;
 import my.ep.exception.EpException;
@@ -158,6 +159,9 @@ public class LovBackingBean implements Serializable {
 			reqDTO.setDaoClass(getLovBean().getDaoClass());
 			reqDTO.setSearchMethod(getLovBean().getSearchMethod());
 			
+			// Added below method as part of SIR 22631.
+			excludeConsultant(reqDTO);
+						
 			lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
 //			ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
 			
@@ -171,6 +175,29 @@ public class LovBackingBean implements Serializable {
 		} finally {
 			lovSO = null;
 		}
+	}
+	
+	/**
+	 * This method will add filter to exclude <b>Consultant</b> supplier type from Supplier Listing.
+	 * 
+	 * @param reqDTO
+	 */
+	@SuppressWarnings("unchecked")
+	private void excludeConsultant(LovReqDTO reqDTO) {
+		debugLogger("Entered " + this.getClass().getName() + ".excludeConsultant(): ");
+		if ("retriveSupplierAndGSTInfos".equals(reqDTO.getSearchMethod()) && null != reqDTO.getSearchBean()
+				&& null != reqDTO.getSearchBean().getDataFilterBeans()) {
+			debugLogger("Entered " + this.getClass().getName() + ".excludeConsultant(): Adding filter to exclude Consultant.");
+			SearchFilterBean searchFilterBean = new SearchFilterBean();
+			searchFilterBean.setAndOr(SearchCondition.CONDITION_AND.value());
+			searchFilterBean.setCaseInsensitive(true);
+			searchFilterBean.setSearchField("smAppl.smSupplier.smMofAccounts.supplierType");
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+			searchFilterBean.setSearchValue(SupplierManagementConst.SUPP_TYPE_CONSULTANT);
+			reqDTO.getSearchBean().getDataFilterBeans().add((searchFilterBean));
+			debugLogger("Entered " + this.getClass().getName() + ".excludeConsultant(): Added filter to exclude Consultant.");
+		}
+		debugLogger("Exit " + this.getClass().getName() + ".excludeConsultant(): ");
 	}
 	
 	/**
