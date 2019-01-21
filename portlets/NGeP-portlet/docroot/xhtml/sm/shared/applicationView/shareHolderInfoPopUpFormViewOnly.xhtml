@@ -148,8 +148,9 @@
 			</c:choose>
 			
 			<p:outputPanel
-				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-							and (viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')}">
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR and viewSmApplBackingBean.managedBean.smCompanyBasic.withFederal
+							and (viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' 
+							or viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')}">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.composition.certStatus']}" /></td>
 					<td><ac:smSoftcertStatus personnel="#{viewSmApplBackingBean.managedBean.selectedShareHolder}"  /></td>
@@ -159,6 +160,7 @@
 			<c:choose>
 				<c:when test="#{viewSmApplBackingBean.managedBean.updatePersonnelPage}" >
 					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+												and viewSmApplBackingBean.managedBean.smCompanyBasic.withFederal
 												and viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 												and (viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' 
 												or viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')
@@ -176,7 +178,8 @@
 				</c:when>
 				<c:otherwise>
 					<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and 
-						(viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
+						(viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1')
+						and viewSmApplBackingBean.managedBean.smCompanyBasic.withFederal}">
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}"/></td>
 							<td>

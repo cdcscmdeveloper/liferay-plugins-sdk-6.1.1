@@ -485,7 +485,7 @@
 				</tr>
 			</p:outputPanel>
 			<p:outputPanel
-				rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR and backingBean.managedBean.smAppl.smCompanyBasic.withFederal
 							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')}">
 				<tr>
 					<td><p:outputLabel
@@ -497,13 +497,13 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.smAppl.smCompanyBasic.withFederal
 									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')
 									and backingBean.managedBean.selectedShareHolder.softcertFlg ne '0'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.smAppl.smCompanyBasic.withFederal
 									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')
 									and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
@@ -521,7 +521,7 @@
 						value="/css/images/design/tooltips.png"
 						style="padding-bottom : 7px;"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.smAppl.smCompanyBasic.withFederal
 									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER') 
 									and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" />
 					<p:tooltip id="toolinfo5" for="tooltip5">
