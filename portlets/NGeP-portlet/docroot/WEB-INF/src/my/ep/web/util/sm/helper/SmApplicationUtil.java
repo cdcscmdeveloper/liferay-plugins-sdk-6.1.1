@@ -1002,8 +1002,8 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	//harris
+
+	// harris
 	public static void validateSSt(SmApplicationManagedBean managedBean,
 			int currentTab, SmRuleHelper ruleHelper) {
 		SmSstSupplier sst = managedBean.getCompanyBasicSst();
@@ -1029,11 +1029,12 @@ public class SmApplicationUtil {
 				// GST Registration no and GST Effective Date is required
 				throw new EpException(MessageConst.ERROR_721043);
 			} else if (sst.getSalestaxregEndDate() != null
-					&& sst.getSalestaxregDate().compareTo(sst.getSalestaxregEndDate()) > 0) {
+					&& sst.getSalestaxregDate().compareTo(
+							sst.getSalestaxregEndDate()) > 0) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_721044);
 			}
-			
+
 			if (StringUtils.isNotBlank(sst.getServtaxregno())
 					&& sst.getServtaxregno().length() != ruleHelper
 							.getSstRegNumLength()) {
@@ -1055,7 +1056,8 @@ public class SmApplicationUtil {
 				// GST Registration no and GST Effective Date is required
 				throw new EpException(MessageConst.ERROR_721043);
 			} else if (sst.getServtaxregEndDate() != null
-					&& sst.getServtaxregDate().compareTo(sst.getServtaxregEndDate()) > 0) {
+					&& sst.getServtaxregDate().compareTo(
+							sst.getServtaxregEndDate()) > 0) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_721044);
 			}
@@ -2808,8 +2810,14 @@ public class SmApplicationUtil {
 	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
-		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
-				.getSmAppl());
+		SmOverlapCategoryVO overlapCategoryVO = null;
+
+		if (!managedBean.getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+				&& !managedBean.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			overlapCategoryVO = getOverlapCategoryVO(managedBean.getSmAppl());
+		}
 
 		managedBean.setOverLappedCategoryExists(false);
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
@@ -8060,8 +8068,8 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	//harris
+
+	// harris
 	public static void initBranchSstInformation(SmSstSupplier hqSst, SmAppl appl) {
 		SupplierSstReqDTO reqDTO = null;
 		SmSstSupplier brCurr = null;
@@ -8094,29 +8102,35 @@ public class SmApplicationUtil {
 									.isBranchSstSameAsHq(hqSst, br.getSst()));
 						} else {
 							br.setSst(new SmSstSupplier());
-							br.getSst().setSalestaxregno(brCurr.getSalestaxregno());
-							br.getSst().setSalestaxregDate(brCurr.getSalestaxregDate());
-							br.getSst().setSalestaxregEndDate(brCurr.getSalestaxregEndDate());
-							br.getSst().setServtaxregno(brCurr.getServtaxregno());
-							br.getSst().setServtaxregDate(brCurr.getServtaxregDate());
-							br.getSst().setServtaxregEndDate(brCurr.getServtaxregEndDate());
+							br.getSst().setSalestaxregno(
+									brCurr.getSalestaxregno());
+							br.getSst().setSalestaxregDate(
+									brCurr.getSalestaxregDate());
+							br.getSst().setSalestaxregEndDate(
+									brCurr.getSalestaxregEndDate());
+							br.getSst().setServtaxregno(
+									brCurr.getServtaxregno());
+							br.getSst().setServtaxregDate(
+									brCurr.getServtaxregDate());
+							br.getSst().setServtaxregEndDate(
+									brCurr.getServtaxregEndDate());
 							br.setSameAsHq(SmApplicationUtil
 									.isBranchSstSameAsHq(hqSst, br.getSst()));
-//							if (brCurr.getSmGstSupplierDocs() != null
-//									&& !brCurr.getSmGstSupplierDocs().isEmpty()) {
-//								br.getGst().setSmGstSupplierDocs(
-//										new ArrayList<SmGstSupplierDoc>());
-//								SmGstSupplierDoc doc = null;
-//								for (SmGstSupplierDoc docCurr : brCurr
-//										.getSmGstSupplierDocs()) {
-//									doc = new SmGstSupplierDoc();
-//									doc.setPmDocument(docCurr.getPmDocument());
-//									doc.setFileName(docCurr.getFileName());
-//									doc.setFilePath(docCurr.getFilePath());
-//									doc.setSmGstSupplier(br.getGst());
-//									br.getGst().getSmGstSupplierDocs().add(doc);
-//								}
-//							}
+							// if (brCurr.getSmGstSupplierDocs() != null
+							// && !brCurr.getSmGstSupplierDocs().isEmpty()) {
+							// br.getGst().setSmGstSupplierDocs(
+							// new ArrayList<SmGstSupplierDoc>());
+							// SmGstSupplierDoc doc = null;
+							// for (SmGstSupplierDoc docCurr : brCurr
+							// .getSmGstSupplierDocs()) {
+							// doc = new SmGstSupplierDoc();
+							// doc.setPmDocument(docCurr.getPmDocument());
+							// doc.setFileName(docCurr.getFileName());
+							// doc.setFilePath(docCurr.getFilePath());
+							// doc.setSmGstSupplier(br.getGst());
+							// br.getGst().getSmGstSupplierDocs().add(doc);
+							// }
+							// }
 						}
 					} else {
 						br.setSst(new SmSstSupplier());
@@ -8215,14 +8229,15 @@ public class SmApplicationUtil {
 		}
 		return retVal;
 	}
-	
-	//harris
+
+	// harris
 	public static boolean isSstEmpty(SmSstSupplier sst) {
 		boolean retVal = false;
 		if (sst == null) {
 			retVal = true;
 		} else if (StringUtils.isBlank(sst.getSalestaxregno())
-				&& sst.getSalestaxregDate() == null && sst.getSalestaxregEndDate() == null) {
+				&& sst.getSalestaxregDate() == null
+				&& sst.getSalestaxregEndDate() == null) {
 			retVal = true;
 		}
 		return retVal;
@@ -8381,8 +8396,8 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	//harris
+
+	// harris
 	public static void setUpdatedBranchSstToMainList(
 			List<SmSupplierBranch> branchList, SmSstSupplier sst) {
 		if (branchList != null && !branchList.isEmpty()) {
@@ -8408,16 +8423,18 @@ public class SmApplicationUtil {
 		}
 		return retVal;
 	}
-	
-	//harris
+
+	// harris
 	public static boolean isBranchSstSameAsHq(SmSstSupplier hqSst,
 			SmSstSupplier brSst) {
 		boolean retVal = false;
-		if (hqSst.getSalestaxregDate() != null && brSst.getSalestaxregDate() != null
+		if (hqSst.getSalestaxregDate() != null
+				&& brSst.getSalestaxregDate() != null
 				&& StringUtils.isNotBlank(brSst.getSalestaxregno())
 				&& StringUtils.isNotBlank(hqSst.getSalestaxregno())
 				&& brSst.getSalestaxregno().equals(hqSst.getSalestaxregno())
-				&& brSst.getSalestaxregDate().compareTo(hqSst.getSalestaxregDate()) == 0) {
+				&& brSst.getSalestaxregDate().compareTo(
+						hqSst.getSalestaxregDate()) == 0) {
 			retVal = true;
 		}
 		return retVal;
@@ -9326,13 +9343,14 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	//harris
+
+	// harris
 	public static void validateBranchSstInformation(SmSupplierBranch br,
 			SmSstSupplier brSst, SmSstSupplier hqSst) {
 		if (hqSst != null && !StringUtils.isBlank(hqSst.getSalestaxregno())) {
 			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				if (brSst == null || StringUtils.isBlank(brSst.getSalestaxregno())) {
+				if (brSst == null
+						|| StringUtils.isBlank(brSst.getSalestaxregno())) {
 					throw new EpException(SmCommonUtil.getMessage(
 							"lbl.sm.gst.branch.req.msg", null));
 				} else if (!StringUtils.isBlank(brSst.getSalestaxregno())) {
@@ -9349,10 +9367,12 @@ public class SmApplicationUtil {
 								.getSmSupplier().getRegNo(), brSst
 								.getServtaxregno());
 
-						if (!SmCommonUtil.validateSstRegNo(brSst.getSalestaxregno())) {
+						if (!SmCommonUtil.validateSstRegNo(brSst
+								.getSalestaxregno())) {
 							throw new EpException(MessageConst.ERROR_721027);
 						}
-						if (!SmCommonUtil.validateSstServRegNo(brSst.getServtaxregno())) {
+						if (!SmCommonUtil.validateSstServRegNo(brSst
+								.getServtaxregno())) {
 							throw new EpException(MessageConst.ERROR_721027);
 						}
 					}
@@ -11208,7 +11228,7 @@ public class SmApplicationUtil {
 		// disable or enable authorized flag
 		bean.setDisableAuthorizedRadio(isDisableAuthorizedRadio(
 				shareHolderBean, bean.isValidSmUserLimit()));
-		
+
 		String epRole = shareHolderBean.getEpRole() == null ? StringUtils.EMPTY
 				: shareHolderBean.getEpRole();
 		if (bean.isInDbAlreadyAuth()
@@ -12479,31 +12499,33 @@ public class SmApplicationUtil {
 						IMofRegistrationSO.class);
 		reqSO.updateSupplierProfile(mofRegistrationReqDTO);
 	}
-	
-	//Enhancement #20467
-	/**
-	* Check whether the rejected application was expired
-	* compare to no. of days allowed to resubmit after rejected
-	* @param SmAppl rejAppl
-	* * @return Boolean
-	 */
-	public static Boolean checkRejectedApplExpired(SmAppl rejAppl){
-			Boolean isExpired = false;
 
-			if(rejAppl.getApplId() != null) {
-				if(!isRejectedApplValidForResubmission(rejAppl)) {
-					isExpired = true;
-				}
-			}		
-			return isExpired;
+	// Enhancement #20467
+	/**
+	 * Check whether the rejected application was expired compare to no. of days
+	 * allowed to resubmit after rejected
+	 * 
+	 * @param SmAppl
+	 *            rejAppl * @return Boolean
+	 */
+	public static Boolean checkRejectedApplExpired(SmAppl rejAppl) {
+		Boolean isExpired = false;
+
+		if (rejAppl.getApplId() != null) {
+			if (!isRejectedApplValidForResubmission(rejAppl)) {
+				isExpired = true;
+			}
 		}
-	
+		return isExpired;
+	}
+
 	/**
 	 * Get latest rejected application by supplier ID and application type
 	 * 
-	 * @param Long supplierId, String applType
-	 *            
-	 * @return SmAppl 
+	 * @param Long
+	 *            supplierId, String applType
+	 * 
+	 * @return SmAppl
 	 */
 	public static SmAppl getLatestRejectedApplIdBySuppIdAndApplType(
 			Long supplierId, String applType) {
@@ -12511,8 +12533,8 @@ public class SmApplicationUtil {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setAppType(applType);
-		Long applId = SmServiceLookup.getMofRegistrationSO().retrieveLastRejectedApplIdByApplType(reqDTO)
-				.getApplId();
+		Long applId = SmServiceLookup.getMofRegistrationSO()
+				.retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
 		if (applId != null) {
 			reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setApplId(applId);
