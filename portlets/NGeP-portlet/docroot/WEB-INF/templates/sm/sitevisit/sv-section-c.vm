@@ -30,6 +30,8 @@
     	#parse("templates/sm/sitevisit/shared/manufacturing-additional-documents.vm")
     	<br /><br />
     	#parse("templates/sm/sitevisit/shared/manufacturing-machine.vm")
+    	<br /><br />
+    	#parse("templates/sm/sitevisit/shared/manufacturing-or-assembly.vm")
     	
     #elseif($templateCode == "PC")
     	#parse("templates/sm/sitevisit/shared/printing_license_insurance.vm")
