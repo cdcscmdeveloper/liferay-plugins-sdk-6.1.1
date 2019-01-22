@@ -551,8 +551,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 			}
 
-		}
-		else {
+		}else {//recommend code
 			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by Catalog_Admin");
 
@@ -2565,31 +2564,21 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						+ code.isRemarkRequiredII());
 				log.info("******getReviewedBrandNameII********"
 						+ code.getReviewedBrandNameII());
-				if (code.getReviewedBrandNameII() != null
-						&& code.getReviewedBrandNameII().trim().length() > 0) {
+				if (code.getReviewedBrandNameII() != null 	&& code.getReviewedBrandNameII().trim().length() > 0) {
 					// //////checking for redundant values
 					if (!isCodeAdmin()) {
-						if (code.isRequestType()
-								&& (code.getTypeRemarkII() != null && code
-								.getTypeRemarkII().trim().length() > 0)) {
+						if (code.isRequestType()) {
 							checkingTypeRedundency(code.getReviewedTypeNameII(), false);
 						}
-						if (code.isRequestBrand()
-								&& (code.getBrandRemarkII() != null && code
-								.getBrandRemarkII().trim().length() > 0)) {
+						if (code.isRequestBrand()) {
 							checkingBrandRedundency(code
 									.getReviewedBrandNameII(), false);
 						}
-						if (code.isRequestMeasurement()
-								&& (code.getMeasurementRemarkII() != null && code
-								.getMeasurementRemarkII().trim()
-								.length() > 0)) {
+						if (code.isRequestMeasurement()) {
 							checkingMeasurmentRedundency(code
 									.getReviewedMeasurementNameII(), false);
 						}
-						if (code.isRequestColor()
-								&& (code.getColorRemarkII() != null && code
-								.getColorRemarkII().trim().length() > 0)) {
+						if (code.isRequestColor()) {
 							checkingColorRedundency(code
 									.getReviewedColorNameII(), false);
 						}
@@ -2621,28 +2610,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				} else {
 					log.info("******else********");
 					// //////checking for redundant values
-					if (code.isRequestType()
-							&& (code.getTypeRemark() != null && code
-							.getTypeRemark().trim().length() > 0) && !isDDTypeSelected) {
+					if (code.isRequestType() && !isDDTypeSelected && code.getReviewedTypeName()!=null) {
 						checkingTypeRedundency(code.getReviewedTypeName().trim(), true);
 					}
-					if (code.isRequestBrand()
-							&& (code.getBrandRemark() != null && code
-							.getBrandRemark().trim().length() > 0) &&  !isDDBrandSelected) {
+					if (code.isRequestBrand()  &&  !isDDBrandSelected && code.getReviewedBrandName()!=null) {
 						checkingBrandRedundency(code.getReviewedBrandName().trim(), true);
 					}
-					if (code.isRequestMeasurement()
-							&& (code.getMeasurementRemark() != null && code
-							.getMeasurementRemark().trim().length() > 0) && !isDDMeasurementSelected ) {
-						checkingMeasurmentRedundency(code
-								.getReviewedMeasurementName().trim(), true);
+					if (code.isRequestMeasurement() && !isDDMeasurementSelected && code.getReviewedMeasurementName()!=null) {
+						checkingMeasurmentRedundency(code.getReviewedMeasurementName().trim(), true);
 					}
-					if (code.isRequestColor()
-							&& (code.getColorRemark() != null && code
-							.getColorRemark().trim().length() > 0) && 	!isDDColorSelected) {
+					if (code.isRequestColor()  && !isDDColorSelected && code.getReviewedColorName()!=null) {
 						checkingColorRedundency(code.getReviewedColorName().trim(), true);
 					}
-					// //////////////////////////////////
+
 					if( !isDDMeasurementSelected || !isDDColorSelected || !isDDBrandSelected || !isDDTypeSelected){
 						if ((code.getTypeRemark() != null && code.getTypeRemark()
 								.trim().length() > 0)
@@ -2914,61 +2894,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			.add(resDTO.getRequestCode());
 			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		}
-		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
-			
-			// if(!code.isRequestColor()){
-			if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-				code.setReviewedColorName(code.getColorName());
-			}
-			if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
-				code.setReviewedColorNameII(code.getReviewedColorName());
-			}
-			// }
-
-			// if(!code.isRequestBrand()){
-			if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-				code.setReviewedBrandName(code.getBrandName());
-			}
-			if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
-				code.setReviewedBrandNameII(code.getReviewedBrandName());
-			}
-			// }
-
-			// if(!code.isRequestType()){
-			if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-				code.setReviewedTypeName(code.getTypeName());
-			}
-			if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
-				code.setReviewedTypeNameII(code.getReviewedTypeName());
-			}
-			// }
-
-			// if(!code.isRequestMeasurement()){
-			if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-				code.setReviewedMeasurementName(code.getMeasurementName());
-			}
-			if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
-				code.setReviewedMeasurementNameII(code
-						.getReviewedMeasurementName());
-			}
-			// }
-
-			code.setRemarkRequired(false);
-			code.setRemarkRequiredII(false);
-			code.setAddedRemark(false);
-			/*for (CmRequestRemark remark : code.getCmRequestRemarks()) {
-
-				userReqDTO.setUserId(remark.getChangedBy());
-				log.info("remark.getChangedBy()"
-						+ remark.getChangedBy());
-				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
-				log.info("userResDTO.getPmUser().getUserName():"
-						+ userResDTO.getPmUser().getUserName());
-				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
-			}*/
-
-		}
-
 		reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
 		CodificationResDTO resCodeDTO = codificationSO
 				.searchCommodityObj(reqCodeDTO);
@@ -2982,9 +2907,55 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		resCodeDTO = codificationSO.searchColor(reqCodeDTO);
 		this.getManagedBean().setColorList(resCodeDTO.getColorList());
 
+		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
+			
+			if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
+				code.setReviewedColorName(code.getColorName());
+				code.setReviewedBrandName(code.getBrandName());
+				code.setReviewedTypeName(code.getTypeName());
+				code.setReviewedMeasurementName(code.getMeasurementName());
+				//init dropdown if input was same
+				for(CmColor color: this.getManagedBean().getColorList()){
+					if(code.getReviewedColorName().trim().equals(color.getColorName().trim())){
+						code.setColorNameDD(color.getColorId());
+						break;
+					}
+				}
+				for(CmBrand brand: this.getManagedBean().getBrandList()){
+					if(code.getReviewedBrandName().trim().equals(brand.getBrandName().trim())){
+						code.setBrandNameDD(brand.getBrandId());
+						break;
+					}
+				}
+				for(CmType type: this.getManagedBean().getTypeList()){
+					if(code.getReviewedTypeName().trim().equals(type.getTypeName().trim())){
+						code.setTypeNameDD(type.getTypeId());
+						break;
+					}
+				}
+				for(CmMeasurement measurement: this.getManagedBean().getMeasurementList()){
+					if(code.getReviewedMeasurementName().trim().equals(measurement.getMeasurementName().trim())){
+						code.setMeasurementNameDD(measurement.getMeasurementId());
+						break;
+					}
+				}
+			}
+			if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
+				code.setReviewedColorNameII(code.getReviewedColorName());
+				code.setReviewedBrandNameII(code.getReviewedBrandName());
+				code.setReviewedTypeNameII(code.getReviewedTypeName());
+				code.setReviewedMeasurementNameII(code.getReviewedMeasurementName());
+			}
+			
+			code.setRemarkRequired(false);
+			code.setRemarkRequiredII(false);
+			code.setAddedRemark(false);
+
+		}
+
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
-		//this.getManagedBean().setTaskName("Review Request");
+		this.getManagedBean().setTaskName(res.getTaskName());
 		
 		Collections.sort(this.getManagedBean().getTypeList(), new Comparator<CmType>() {
 		    @Override
@@ -3033,7 +3004,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("********res.getTaskName()********"
 				+ res.getTaskName());
 		if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
@@ -3063,12 +3033,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						"reviewExtensionCodeFlow2.xhtml");
 			}
 		}else if(res.getTaskName().equalsIgnoreCase("Recommend Result Notification")){
-
-			fc.getApplication()
-			.getNavigationHandler()
-			.handleNavigation(fc, null,
-					"reviewExtensionCodeFlow2.xhtml");
-
+			if(this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
+				fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"unspscResultNotification.xhtml");
+			}else{
+				fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"reviewExtensionCodeFlow2.xhtml");
+			}
 		}else {
 
 			fc.getApplication()
