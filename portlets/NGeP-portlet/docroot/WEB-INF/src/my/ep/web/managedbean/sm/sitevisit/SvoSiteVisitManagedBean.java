@@ -13,6 +13,7 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
@@ -119,6 +120,11 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int siteVisitNo;
 	private SmSupplierCategory supplierCategory;
 	private List<SmMachineDtl> machineDtlLs;
+	
+	private List<SmManufacturingDtl> selectedManufacturingList;
+	private List<SmManufacturingDtl> manufacturingDtlLs;
+	private SmManufacturingDtl selectedManufacturer;
+	private Object oriSelectedManufacturingDtl;
 	
 	private List<SmPersonnel> staffLs;
 
@@ -712,4 +718,37 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setOriSelectedMachine(Object oriSelectedMachine) {
 		this.oriSelectedMachine = oriSelectedMachine;
 	}
+	
+	public Object getOriSelectedManufacturingDtl() {
+		return oriSelectedManufacturingDtl;
+	}
+
+	public void setOriSelectedManufacturingDtl(Object oriSelectedManufacturingDtl) {
+		this.oriSelectedManufacturingDtl = oriSelectedManufacturingDtl;
+	}
+
+	public List<SmManufacturingDtl> getSelectedManufacturingList() {
+		return selectedManufacturingList;
+	}
+
+	public void setSelectedManufacturingList(List<SmManufacturingDtl> selectedManufacturingList) {
+		this.selectedManufacturingList = selectedManufacturingList;
+	}
+
+	public List<SmManufacturingDtl> getManufacturingDtlLs() {
+		return manufacturingDtlLs;
+	}
+
+	public void setManufacturingDtlLs(List<SmManufacturingDtl> manufacturingDtlLs) {
+		this.manufacturingDtlLs = manufacturingDtlLs;
+	}
+
+	public SmManufacturingDtl getSelectedManufacturer() {
+		return selectedManufacturer;
+	}
+
+	public void setSelectedManufacturer(SmManufacturingDtl selectedManufacturer) {
+		this.selectedManufacturer = selectedManufacturer;
+	}
+	
 }
