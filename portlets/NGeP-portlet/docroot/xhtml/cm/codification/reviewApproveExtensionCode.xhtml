@@ -25,10 +25,22 @@
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}"
-						rendered="#{bpmTasklistBackingBean.managedBean.claim}"
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT'}"
 						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"
 						update="@form"></p:commandButton>
+						
+					<ui:remove>		
+						<p:commandButton value="#{lbl['lbl.bpm.action.RECOMMEND_TO_SUPPLIER']}"
+							action="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}"  
+							rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}" 
+							disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}" 
+							update="@form">
+						</p:commandButton>
+					</ui:remove>
+			
+						
 				</ui:repeat>
+				
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
@@ -46,7 +58,14 @@
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
-								size="40" disabled="true" /></td>
+								size="40" disabled="true" />
+								<ui:remove>
+									<p:commandLink disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}" 
+									update="recommendPanelId">
+									<p:graphicImage value="/css/images/design/search.png" />
+									</p:commandLink>
+								</ui:remove>							
+								</td>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}"
@@ -96,28 +115,28 @@
 						<div style="width: 100%;">
 							<p:inputText value="#{review.reviewedTypeName}"
 								id="reviewedTypeNameId" maxlength="100"
-								disabled="#{unspscCodeBackingBean.isExistingExt('type', review.reviewedTypeName ) or review.typeNameDD != null or !review.requestType}" required="true"
+								disabled="#{review.typeNameDD != null or !review.requestType}" required="true"
 								label="#{lbl['lbl.cm.type']}">
 								<p:ajax event="blur" update=":form:dt:typeremark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width: 100%;">
 							<p:inputText id="reviewedBrandNameId" value="#{review.reviewedBrandName}" maxlength="100"
-								disabled="#{unspscCodeBackingBean.isExistingExt('brand', review.reviewedBrandName ) or review.brandNameDD != null or !review.requestBrand}" required="true"
+								disabled="#{review.brandNameDD != null or !review.requestBrand}" required="true"
 								label="#{lbl['lbl.cm.brand']}">
 								<p:ajax event="blur" update=":form:dt:brandRemark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width: 100%;">
 							<p:inputText id="reviewedMeasurementNameId" value="#{review.reviewedMeasurementName}"
-								maxlength="100" disabled="#{unspscCodeBackingBean.isExistingExt('measurement', review.reviewedMeasurementName ) or review.measurementNameDD != null or !review.requestMeasurement}"
+								maxlength="100" disabled="#{review.measurementNameDD != null or !review.requestMeasurement}"
 								required="true" label="#{lbl['lbl.cm.measurement']}">
 								<p:ajax event="blur" update=":form:dt:measurementRemark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width: 100%;">
 							<p:inputText id="reviewedColorNameId" value="#{review.reviewedColorName}" maxlength="100"
-								disabled="#{unspscCodeBackingBean.isExistingExt('color', review.reviewedColorName ) or review.colorNameDD != null or !review.requestColor}" required="true"
+								disabled="#{review.colorNameDD != null or !review.requestColor}" required="true"
 								label="#{lbl['lbl.cm.color']}">
 								<p:ajax event="blur" update=":form:dt:colorRemark1"></p:ajax>
 							</p:inputText>
@@ -231,8 +250,43 @@
 
 
 		</h:panelGroup>
-
-
+		<ui-remove>
+			<h:panelGroup id="recommendPanelId">
+					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend()}">
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
+					var="unspscObj" width="100%">
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.cm.recommended.item.code']}
+				</f:facet>
+						#{unspscObj.unspscCode}
+				</p:column>
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.cm.recommended.item.name']}
+				</f:facet>
+				#{unspscObj.unspscTitle}
+			</p:column>
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.action']}
+						</f:facet>
+						<p:commandLink
+							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
+							update="@form">
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.cm.item.code.search.title']}" update="@form"
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
+						action="#{unspscCodeBackingBean.navigateToSearch}"></p:commandButton>
+				</div>
+			</p:panel>
+		</h:panelGroup>
+		</ui-remove>
 	</ui:define>
 
 </ui:composition>
