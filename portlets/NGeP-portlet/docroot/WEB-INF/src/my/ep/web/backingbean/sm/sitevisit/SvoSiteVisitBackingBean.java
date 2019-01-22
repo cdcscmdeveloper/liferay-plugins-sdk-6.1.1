@@ -56,6 +56,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
@@ -63,6 +64,7 @@ import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -83,6 +85,7 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineCategory;
+import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
@@ -327,8 +330,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmMofAccount mofAccount =  SmApplicationUtil.getActiveMofAccount(smSvTask.getSmAppl().getSmSupplier().getSmMofAccounts(),
 					smSvTask.getSmAppl().getSupplierType());
 			getManagedBean().setMofNo(StringUtils.isNotBlank(mofAccount.getMofNo())?mofAccount.getMofNo() : "");
-			
-			
+
+			if (smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				if (smSvTask.getSmAppl().getSmManufacturingDtls().size() > 0) {
+					getManagedBean().setManufacturingDtlLs(smSvTask.getSmAppl().getSmManufacturingDtls());
+				}
+			}
+
 			if(smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 					smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 					smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
@@ -404,6 +412,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				this.prepareFinancialDoc(svTemplate);
 				
 				log.info("-----FIN LS SIZE----" + svTemplate.getFinancialDocLs().size());
+
+				if (svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls().size() > 0) {
+					getManagedBean().setManufacturingDtlLs(svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls());
+				}
 				
 			}else if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 				
@@ -1618,6 +1630,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				context.put("additionalDocLs", "");
 			}
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
+			context.put("manufacturingLs", svTask.getSmAppl().getSmManufacturingDtls());
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			log.info("Section C - Printing >>>>");
@@ -1993,9 +2006,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmSvAdtMachine svAdtMachine = (SmSvAdtMachine) ((SmSvAdtMachine) obj).cloneEntity();
 			this.getManagedBean().setSelectedAdtMachine(svAdtMachine);
 			this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);
-		}else{
+		}else if (obj instanceof SmSvMachine) {
 			getManagedBean().setOriSelectedMachine((SmSvMachine) obj);
 			this.getManagedBean().setSelectedSvMachine((SmSvMachine) obj);
+		} else {
+			getManagedBean().setOriSelectedManufacturingDtl((SmManufacturingDtl) obj);
+			SmManufacturingDtl manufacDtl = (SmManufacturingDtl) ((SmManufacturingDtl) obj).cloneEntity();
+			this.getManagedBean().setSelectedManufacturer(manufacDtl);
+			this.getManagedBean().getSelectedManufacturer().setBrandNew(false);
 		}
 	}
 	
@@ -2013,7 +2031,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
 		//for Manufacturing Template. Add additional doc to SmSvManufacturingDOC
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
-			if(svTemplate.getAdditionalDocLs() != null && svTemplate.getAdditionalDocLs().size() > 0){			
+			if(svTemplate.getAdditionalDocLs() != null && svTemplate.getAdditionalDocLs().size() > 0){
 				for(SmSvManufacturingDoc mfDoc : svTemplate.getAdditionalDocLs()){
 					if(mfDoc.isBrandNew()){
 						log.info("*********is Brandnew*******");
@@ -2021,6 +2039,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					}
 				}
 
+			}
+			if (svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls().size() > 0) {
+				MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+				mofReqDTO.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
+				SmServiceLookup.getMofRegistrationSO().updateSmAppl(mofReqDTO);
 			}
 		}
 
@@ -2661,5 +2684,51 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		
 		return purchaseMethodMap;
+	}
+
+	public void addAdditionalManufacturing() {
+		this.getManagedBean().setSelectedManufacturer(new SmManufacturingDtl());
+		this.getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls();
+
+		SmManufacturingDtl manufacDtl = new SmManufacturingDtl();
+		manufacDtl.setRevNo(1);
+		manufacDtl.setBrandNew(true);
+		manufacDtl.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
+		this.getManagedBean().setSelectedManufacturer(manufacDtl);
+
+	}
+
+	public void saveSmManufacturingDtl() {
+		SmManufacturingDtl manufacturingDtl = getManagedBean().getSelectedManufacturer();
+		SmManufacturingDtl oriManufacturingDtl = (SmManufacturingDtl) getManagedBean().getOriSelectedManufacturingDtl();
+
+		if (manufacturingDtl.isBrandNew()) {
+			manufacturingDtl.setRevNo(1);
+			manufacturingDtl.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
+			getManagedBean().getManufacturingDtlLs().add(manufacturingDtl);
+			this.getManagedBean().setSelectedManufacturer(new SmManufacturingDtl());
+		} else {
+			oriManufacturingDtl.setRevNo(1);
+			oriManufacturingDtl.setGoodsType(manufacturingDtl.getGoodsType());
+			oriManufacturingDtl.setBrand(manufacturingDtl.getBrand());
+			oriManufacturingDtl.setProductionCapacity(manufacturingDtl.getProductionCapacity());
+			oriManufacturingDtl.setUom(manufacturingDtl.getUom());
+		}
+		RequestContext.getCurrentInstance().execute("manufacturingDialog.hide()");
+	}
+
+	/**
+	 * Delete or remove selected manufactures from the SmManufacturingDtl list
+	 * of the application.
+	 */
+	public void removeAdditionalManufacturingDtl() {
+		if (getManagedBean().getSelectedManufacturingList().size() > 0) {
+			EntityHelper.compareAndRemoveEntityFromList(getManagedBean().getSelectedManufacturingList(), getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls(),
+					"manufacturingDtlId");
+			getManagedBean().getSelectedManufacturingList().clear();
+		} else {
+			throw new EpException(MessageConst.ERROR_722534, new String[] { "Manufacturer" });
+		}
+
 	}
 }
