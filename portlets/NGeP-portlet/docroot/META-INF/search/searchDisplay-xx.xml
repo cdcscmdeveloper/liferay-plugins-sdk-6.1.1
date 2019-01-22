@@ -870,6 +870,12 @@
 		<property name="searchMethod" value="retrieveAddressTypeAddressDtlList" />
 		<property name="columns">
 			<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.addressName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.addname" />
+				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmAddress.address1" />
 					<property name="bundleFile"
