@@ -909,7 +909,7 @@ public class SPDetailBackingBean extends
 
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
-		ProposalResDTO proposalResDTO = saveTechTemplateSpecDtls();
+		ProposalResDTO proposalResDTO = saveTechTemplateSpecDtls(isCompleted);
 
 		if (proposalResDTO.isSuccessful()) {
 			return navigatePrepareTecProposalCheckList(scQtProposalChecklist,
@@ -943,7 +943,7 @@ public class SPDetailBackingBean extends
 
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
-		ProposalResDTO proposalResDTO = saveTemplateSpecDtls(completedFinSpec);
+		ProposalResDTO proposalResDTO = saveTemplateSpecDtls(completedFinSpec, isCompleted);
 
 		if (proposalResDTO.isSuccessful()) {
 			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
@@ -958,7 +958,7 @@ public class SPDetailBackingBean extends
 	 * 
 	 * @return the proposal res DTO
 	 */
-	private ProposalResDTO saveTemplateSpecDtls(ScQtProposalChecklist completedFinSpec) {
+	private ProposalResDTO saveTemplateSpecDtls(ScQtProposalChecklist completedFinSpec, boolean isCompleted) {
 		log.info("saveTempleateSpecDtls.completedFinSpec: " + completedFinSpec);
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
@@ -993,9 +993,7 @@ public class SPDetailBackingBean extends
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
 								if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom()
-												.compareTo(
-														BigDecimal.valueOf(0)) > 0) {
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 								}else{
 									specAnswer.setDeleted(true);
@@ -1005,7 +1003,7 @@ public class SPDetailBackingBean extends
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
 									.getSpecAnswerList().size())){
 								throw new EpException(MessageConst.ERROR_760464);
-							}else if(!toDeleteZoneAnswers.isEmpty()){
+							} else if (!toDeleteZoneAnswers.isEmpty()) {
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
 								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
 									TplSpecSuppAnswer specSupplierAnswer = specAnswer.getTplSpecSuppAnswer();
@@ -1027,11 +1025,13 @@ public class SPDetailBackingBean extends
 			}
             if(answers == null || answers.size() == 0){
             	throw new EpException(MessageConst.ERROR_760463);	
-            }else{
+			} else {
             	for(TplSpecAnswer answer:answers){
-            		if(answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)){
-            			throw new EpException(MessageConst.ERROR_760464);
-            		}
+					if (isCompleted) {
+						if (answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)) {
+							throw new EpException(MessageConst.ERROR_760464);
+						}
+					}
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
             			boolean isItemTypeService = false; 
@@ -1110,22 +1110,24 @@ public class SPDetailBackingBean extends
 	 * 
 	 * @return the proposal res DTO
 	 */
-	private ProposalResDTO saveTechTemplateSpecDtls() {
+	private ProposalResDTO saveTechTemplateSpecDtls(boolean isCompleted) {
 		debugLogger("saveTempleateSpecDtls");
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
-		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
-		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getQtProposalChecklist();
 
-			List<TplSpecAnswer> answers = getManagedBean()
-					.getTemplateSpecBean().getSpecAnswerList();
-			log.info("%%%%% Template Spec Answer Size is :"+ getManagedBean()
-					.getTemplateSpecBean().getSpecAnswerList().size());
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTProposalSO.class);
+
+			List<TplSpecAnswer> answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+
+			if (isCompleted) {
+				processResponseException(answers);
+			}
+
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
@@ -1137,6 +1139,23 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 		return proposalResDTO;
+	}
+
+	private void processResponseException(List<TplSpecAnswer> answers) {
+		if (answers == null) {
+			throw new EpException(MessageConst.ERROR_760479);
+		} else {
+			log.info("%%%%% Template Spec Answer Size is :" + answers.size());
+			if (answers.size() == 0) {
+				throw new EpException(MessageConst.ERROR_760479);
+			}
+
+			for (TplSpecAnswer answer : answers) {
+				if (StringUtils.isEmpty(answer.getAnswerText())) {
+					throw new EpException(MessageConst.ERROR_760480);
+				}
+			}
+		}
 	}
 
 	/**

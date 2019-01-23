@@ -110,7 +110,7 @@
 		
 		<p:inputText id="ratePerUom" style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
 			value="#{tplSpecAnswer.ratePerUom}"
-			disabled="#{!editable}" required="#{(isSpecificationReq and isValidationReq and !isSqSpec) and !(isZonal and isSpecTypeFinancial)}"
+			disabled="#{!editable}" required="false"
 			rendered="#{isQuestionTypeItem}"  maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
@@ -154,7 +154,7 @@
 		<h:panelGroup id="ansPG">
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
 			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired and isValidationReq}" rows="1" 
+				rendered="#{isAnswerTypeText}" required="false" rows="1" 
 				label="#{lbl[answerlbl]}">
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
@@ -175,7 +175,7 @@
 			</h:outputText>
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
-				rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired and isValidationReq}"
+				rendered="#{isAnswerTypeDropdown}" required="false"
 				label="#{lbl[answerlbl]}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
