@@ -50,7 +50,7 @@
 		<c:if test="#{!isZonal}">
 			<p:inputText id="estimatedCost" style="min-width:0px !important;width:95px; text-align:right;" 
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
-				required="true" maxlength="19"
+				required="false" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this, estimatedCostMsg, @(.calcEstAmount)" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
