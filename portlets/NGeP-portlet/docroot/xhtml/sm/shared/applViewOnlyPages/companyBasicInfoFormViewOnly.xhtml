@@ -14,19 +14,18 @@
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.no']}" /></td>
 						<td>
-							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.smMofAccount.mofNo}" 
-								rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}"/>
 							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.mofNo}" 
-								rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}"/>
+								rendered="#{not empty viewSmApplBackingBean.managedBean.smMofAccount}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" 
+								rendered="#{empty viewSmApplBackingBean.managedBean.smMofAccount}"/>
 						</td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.startDate']}" /></td>
 						<td>
-							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.effDate}" />
-							</p:outputPanel>
-							<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}">
+							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofAccount}">
 								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.effDate}" />
 							</p:outputPanel>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" 
+								rendered="#{empty viewSmApplBackingBean.managedBean.smMofAccount}"/>
 						</td>
 					</tr>
 					<tr>
@@ -140,6 +139,19 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
 					</p:outputPanel>
 				</tr>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.reason']}" /></td>
+						<td style="white-space: normal;"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.cancelRemarkVO.reason}" /></td>
+						<td colspan="2">
+							<p:commandLink ajax="false" rendered="#{not empty viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName}">
+								<p:fileDownload value="#{viewSmApplBackingBean.commonDownload(viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.filePath,
+								viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName,viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName)}" />
+								<p:graphicImage value="/css/images/design/download.png" style="margin-right:2px;" />
+							</p:commandLink>
+						</td>
+					</tr>
+				</p:outputPanel>
 			</table>
 				
 		</p:outputPanel>

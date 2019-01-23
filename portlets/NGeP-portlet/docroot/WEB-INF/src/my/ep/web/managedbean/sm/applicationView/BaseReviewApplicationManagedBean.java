@@ -51,6 +51,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -214,6 +215,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String approverRemark;
 	private Date approverRemarkCreatedDate;
 	private Long remarkId;
+	
+	private SmCancelMofRemarksVO cancelRemarkVO;
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1549,6 +1552,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRemarkId(Long remarkId) {
 		this.remarkId = remarkId;
+	}
+
+	public SmCancelMofRemarksVO getCancelRemarkVO() {
+		return cancelRemarkVO;
+	}
+
+	public void setCancelRemarkVO(SmCancelMofRemarksVO cancelRemarkVO) {
+		this.cancelRemarkVO = cancelRemarkVO;
 	}
 
 }

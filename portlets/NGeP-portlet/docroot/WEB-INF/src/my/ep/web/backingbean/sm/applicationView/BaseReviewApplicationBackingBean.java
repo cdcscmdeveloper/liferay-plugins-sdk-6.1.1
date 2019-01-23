@@ -28,8 +28,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sm.application.SupplierApplicationReqDTO;
-import my.ep.dto.sm.application.SupplierApplicationResDTO;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -37,6 +37,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
@@ -57,6 +58,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -96,6 +98,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmCancelMofRemarksVO;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -491,10 +494,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (item != null) {
 			getManagedBean().setLocalAuthority(item.getLabel());
 		}
-		if (getManagedBean().isViewSupplierProfile()) {
-			getManagedBean().setSmMofCert(getMofCert());
-			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplier()
+				.getSmMofAccounts())) {
+			getManagedBean().setSmMofAccount(
+					smAppl.getSmSupplier().getSmMofAccounts().get(0));
+			if (getManagedBean().getSmMofAccount() != null
+					&& !EntityHelper.isCollectionEmpty(getManagedBean()
+							.getSmMofAccount().getSmMofCerts())) {
+				getManagedBean().setSmMofCert(
+						getManagedBean().getSmMofAccount().getSmMofCerts()
+								.get(0));
+			}
 		}
+
+		// set reason to cancel MOF (#24811)
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			getManagedBean().setCancelRemarkVO(
+					SmCommonUtil.getInstance().getCancelMofRemarksVO(
+							getManagedBean().getSmAppl()));
+		}
+
 		// init current regsitration status description
 		PmStatusDesc statusDesc = SmApplicationUtil
 				.getCurrRegStatusDesc(getManagedBean().getSmAppl());
