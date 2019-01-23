@@ -9,6 +9,7 @@ import javax.faces.model.SelectItem;
 
 import org.primefaces.context.RequestContext;
 
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.SmTrackingDiaryConst;
 import my.ep.constant.sm.SupplierManagementConst;
@@ -82,7 +83,7 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 					my.ep.constant.sm.SupplierManagementConst.TAB1_CERT_INFO,
 					my.ep.constant.sm.SupplierManagementConst.TAB1_PROF_INFO });
 			SupplierApplicationResDTO resDTO = SmServiceLookup
-					.getSupplierApplicationSO().retrieveFirstTab(reqDTO);
+					.getSupplierApplicationSO().retrieveBasicInfoTab(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getAppl());
 			getManagedBean().setSmCompanyBasic(resDTO.getCompanyBasic());
 			getManagedBean().setSmStaffTotals(resDTO.getStaffTotals());
@@ -95,6 +96,15 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 			getManagedBean().setApprvrSecReview(resDTO.getAppSectionReview());
 			getManagedBean().setPoSecReview(resDTO.getPoSectionReview());
 			getManagedBean().setSmMofAccount(resDTO.getAcc());
+
+			// set reason to cancel MOF (#24811)
+			if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				getManagedBean().setCancelRemarkVO(
+						SmCommonUtil.getInstance().getCancelMofRemarksVO(
+								getManagedBean().getSmAppl()));
+			}
+
 			setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 					.getApplType(), getManagedBean().getSmAppl().getApplId());
 			setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
@@ -464,7 +474,7 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 		getManagedBean().setRedirectToPersonPage(false);
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
-	
+
 	/**
 	 * Redirect back to Search Supplier Profile page
 	 * 
