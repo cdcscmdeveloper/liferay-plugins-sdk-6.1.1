@@ -117,6 +117,7 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -252,7 +253,7 @@ public class DirectLOABackingBean extends
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
 			validateContractDetails(scLoa);
-						
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());			
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
@@ -399,7 +400,8 @@ public class DirectLOABackingBean extends
 
 			validateContractAmount(scLoa.getLoaAmt(), outcome);
 			validateContractNGovtSignDate(scLoa);
-
+			log.info("submitAction loop executed");
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
 			if (scLoa.isBrandNew()) {
@@ -1132,6 +1134,8 @@ public class DirectLOABackingBean extends
 			
 			// validate repo attachements
 			validateRepoAttachment(scLoa);
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
+			
 		}
 
 		// validation for fulfillment schedule and progressivepayment
@@ -8375,6 +8379,54 @@ public class DirectLOABackingBean extends
 						new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", 
 					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 			}
+		}
+	}
+	
+	private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
+	log.info("validateDuplicateItems");	
+		List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
+		if(null!=productScQtDoc){
+			if(null!=productScQtDoc.getTplSpecMaster()){
+			productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
+			}
+		}
+		if(null!=serviceScQtDoc){
+			if(null!=serviceScQtDoc.getTplSpecMaster()){
+				productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());	
+				}
+		}
+		if (CollectionUtils.isNotEmpty(productServiceDocs)) {
+			List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
+			for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
+				
+			if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
+			for (TplSpecQuestion specQuestion : itemProdSerSpecMaster
+					.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+						.equalsIgnoreCase(specQuestion.getQuestionType())) {
+					if (FinancialUiSpecQuestions.isEmpty()) {
+						FinancialUiSpecQuestions.add(specQuestion);
+					} else {
+						for (TplSpecQuestion uiQuestions : FinancialUiSpecQuestions) {
+							if (uiQuestions
+									.getClItem()
+									.trim()
+									.replaceAll("\\s", "")
+									.equalsIgnoreCase(
+											specQuestion.getClItem().trim()
+													.replaceAll("\\s", ""))) {
+								throw new EpException(
+										MessageConst.ERROR_760340,
+										new String[] { specQuestion.getClItem() });
+							}
+						}
+						FinancialUiSpecQuestions.add(specQuestion);
+					}
+				}
+				
+			}
+			}
+	}
 		}
 	}
 }
