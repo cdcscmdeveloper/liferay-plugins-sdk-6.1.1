@@ -1285,7 +1285,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(getManagedBean().getPaidInvoiceAmt() != null && getManagedBean().getPaidInvoiceAmt().intValue() > 0) {
 			paidPercentage = (getManagedBean().getPaidInvoiceAmt().multiply(
 					BigDecimal.valueOf(100)).divide(
-							getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
+							getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
 		}
 		return paidPercentage;
 	}
@@ -1306,7 +1306,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(getManagedBean().getPaidsumInvoiceAmt() != null && getManagedBean().getPaidsumInvoiceAmt().intValue() > 0) {
 			paidsumPercentage = (getManagedBean().getPaidsumInvoiceAmt().multiply(
 					BigDecimal.valueOf(100)).divide(
-							getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
+							getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
 		}
 		return paidsumPercentage;
 	}
