@@ -121,6 +121,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
@@ -140,6 +142,8 @@ import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
@@ -172,6 +176,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -207,6 +212,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
@@ -2342,8 +2348,8 @@ public class SmCommonUtil {
 
 		return false;
 	}
-	
-	//harris saletaxregno
+
+	// harris saletaxregno
 	public static boolean validateSstRegNo(String value) {
 		if (!StringUtils.isBlank(value)) {
 			String sstNoPattern = "\\d+";
@@ -2373,37 +2379,37 @@ public class SmCommonUtil {
 
 		return false;
 	}
-	
-	//harris servtaxregno
-		public static boolean validateSstServRegNo(String value) {
-			if (!StringUtils.isBlank(value)) {
-				String sstNoPattern = "\\d+";
-				Pattern pattern;
-				Matcher matcher;
 
-				pattern = Pattern.compile(sstNoPattern);
+	// harris servtaxregno
+	public static boolean validateSstServRegNo(String value) {
+		if (!StringUtils.isBlank(value)) {
+			String sstNoPattern = "\\d+";
+			Pattern pattern;
+			Matcher matcher;
 
-				if (value != null) {
-					String sstServNo = value.toString();
+			pattern = Pattern.compile(sstNoPattern);
 
-					if (sstServNo.length() > 0) {
-						if (sstServNo.length() != SmRuleHelper.getInstance()
-								.getSstRegNumLength()) {
-							return false;
-						}
+			if (value != null) {
+				String sstServNo = value.toString();
 
-						matcher = pattern.matcher(value.toString());
-						if (!matcher.matches()) {
-							return false;
-						}
-
-						return true;
+				if (sstServNo.length() > 0) {
+					if (sstServNo.length() != SmRuleHelper.getInstance()
+							.getSstRegNumLength()) {
+						return false;
 					}
+
+					matcher = pattern.matcher(value.toString());
+					if (!matcher.matches()) {
+						return false;
+					}
+
+					return true;
 				}
 			}
-
-			return false;
 		}
+
+		return false;
+	}
 
 	/**
 	 * Gets the current active work flow status.
@@ -3145,8 +3151,8 @@ public class SmCommonUtil {
 				.retrieveGstInfoBySupplierIdAndBranchCodeAndIsCurrent(gstReqDTO)
 				.getSmGstSupplier();
 	}
-	
-	//harris
+
+	// harris
 	public static SmSstSupplier getSmSstSupplierBySupplierIdAndBranchCode(
 			Long supplierId, Long branchCode, String applNo, boolean isCurrent) {
 		SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
@@ -3210,8 +3216,8 @@ public class SmCommonUtil {
 			copyHqSuppDocToBranch(hqGst, branchGst, isSameWithHq);
 		}
 	}
-	
-	//harris
+
+	// harris
 	public static void copyHqSstToBranch(SmSstSupplier hqSst,
 			SmSstSupplier branchSst, boolean isSameWithHq, Long branchCode) {
 		if (hqSst != null) {
@@ -3219,7 +3225,7 @@ public class SmCommonUtil {
 				branchSst.setSalestaxregno(hqSst.getSalestaxregno());
 				branchSst.setSalestaxregDate(hqSst.getSalestaxregDate());
 				branchSst.setSalestaxregEndDate(hqSst.getSalestaxregEndDate());
-				
+
 				branchSst.setServtaxregno(hqSst.getServtaxregno());
 				branchSst.setServtaxregDate(hqSst.getServtaxregDate());
 				branchSst.setServtaxregEndDate(hqSst.getServtaxregEndDate());
@@ -3234,8 +3240,9 @@ public class SmCommonUtil {
 				branchSst.setIsCurrent(false);
 			}
 			branchSst.setBranchCode(branchCode);
-//			branchSst.setSmSstSupplierDocs(new ArrayList<SmSstSupplierDoc>());
-//			copyHqSuppDocToBranch(hqSst, branchSst, isSameWithHq);
+			// branchSst.setSmSstSupplierDocs(new
+			// ArrayList<SmSstSupplierDoc>());
+			// copyHqSuppDocToBranch(hqSst, branchSst, isSameWithHq);
 		}
 	}
 
@@ -4261,8 +4268,8 @@ public class SmCommonUtil {
 			}
 		}
 	}
-	
-	//harris sst saletaxregno
+
+	// harris sst saletaxregno
 	public static void validateSstRegNoUniqueness(String bussRegNo,
 			String sstRegNo) {
 		if (!StringUtils.isBlank(sstRegNo)) {
@@ -4277,8 +4284,8 @@ public class SmCommonUtil {
 			}
 		}
 	}
-	
-	//harris sst servtaxregno
+
+	// harris sst servtaxregno
 	public static void validateSstServRegNoUniqueness(String bussRegNo,
 			String sstServRegNo) {
 		if (!StringUtils.isBlank(sstServRegNo)) {
@@ -5302,6 +5309,30 @@ public class SmCommonUtil {
 		}
 
 		return retVal;
+	}
+
+	public SmCancelMofRemarksVO getCancelMofRemarksVO(SmAppl appl) {
+		SmCancelMofRemarksVO cancelVO = new SmCancelMofRemarksVO();
+		cancelVO.setAttch(new SmAttachment());
+		SmRemarksReqDTO remarkReqDTO = new SmRemarksReqDTO();
+		remarkReqDTO.setDocId(appl.getApplId());
+		remarkReqDTO.setDocType(appl.getApplType());
+		SmRemaksResDTO remarkResDTO = SmServiceLookup.getSmRemarksSO()
+				.retrieveSmRemarksByDocument(remarkReqDTO);
+
+		SmAttachmentReqDTO attReqDTO = new SmAttachmentReqDTO();
+		attReqDTO.setDocId(appl.getApplId());
+		attReqDTO.setDocType("KC");
+		SmAttachmentResDTO attachResDTO = SmServiceLookup.getSmAttachmentSO()
+				.retrieveSmAttachmentByDocIdAndType(attReqDTO);
+
+		if (attachResDTO.getAttachment() != null) {
+			cancelVO.setAttch(attachResDTO.getAttachment());
+		}
+		if (!EntityHelper.isCollectionEmpty(remarkResDTO.getRemarksList())) {
+			cancelVO.setReason(remarkResDTO.getRemarksList().get(0).getRemark());
+		}
+		return cancelVO;
 	}
 
 	private ISearchBean<PmPoJobTypeRatio> constructJobWeightSearchBean(
