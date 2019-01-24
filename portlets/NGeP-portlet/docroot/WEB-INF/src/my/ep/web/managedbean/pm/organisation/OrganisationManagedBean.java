@@ -102,7 +102,12 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private SmGstSupplier gstSupplier;
 	//harris
 	private SmSstSupplier sstSupplier;
-	
+	private String salestaxregno;
+	private Date salestaxregDate;
+	private Date salestaxregEndDate;
+	private String servtaxregno;
+	private Date servtaxregDate;
+	private Date servtaxregEndDate;
 	private Long selectedStateId;
 	
 	private SmSupplierBank selectedDeletePaymentBank;
@@ -913,5 +918,53 @@ public class OrganisationManagedBean extends BaseManagedBean{
 
 	public void setSstSupplierId(Long sstSupplierId) {
 		this.sstSupplierId = sstSupplierId;
+	}
+
+	public String getSalestaxregno() {
+		return salestaxregno;
+	}
+
+	public void setSalestaxregno(String salestaxregno) {
+		this.salestaxregno = salestaxregno;
+	}
+
+	public Date getSalestaxregDate() {
+		return salestaxregDate;
+	}
+
+	public void setSalestaxregDate(Date salestaxregDate) {
+		this.salestaxregDate = salestaxregDate;
+	}
+
+	public Date getSalestaxregEndDate() {
+		return salestaxregEndDate;
+	}
+
+	public void setSalestaxregEndDate(Date salestaxregEndDate) {
+		this.salestaxregEndDate = salestaxregEndDate;
+	}
+
+	public String getServtaxregno() {
+		return servtaxregno;
+	}
+
+	public void setServtaxregno(String servtaxregno) {
+		this.servtaxregno = servtaxregno;
+	}
+
+	public Date getServtaxregDate() {
+		return servtaxregDate;
+	}
+
+	public void setServtaxregDate(Date servtaxregDate) {
+		this.servtaxregDate = servtaxregDate;
+	}
+
+	public Date getServtaxregEndDate() {
+		return servtaxregEndDate;
+	}
+
+	public void setServtaxregEndDate(Date servtaxregEndDate) {
+		this.servtaxregEndDate = servtaxregEndDate;
 	}
 }

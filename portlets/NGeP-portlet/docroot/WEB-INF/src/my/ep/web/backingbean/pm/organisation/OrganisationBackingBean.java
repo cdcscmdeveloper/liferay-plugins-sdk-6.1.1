@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -219,6 +222,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		log.info("..............redirectToOrganisation.......id=" + id);
 		resetInitialOrg();
 		retrieveFinancialOrgList();
+       
 
 		this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
 		getManagedBean().setNotFirstRun(true);
@@ -226,6 +230,14 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			PmOrgProfile orgProfile = PmCommonUtil.retrieveOrgProfileDtlById(id);
 			if (orgProfile != null) {
 				maintainOrganisation(orgProfile);
+				
+				this.getManagedBean().setSalestaxregno(this.getManagedBean().getSstSupplier().getSalestaxregno());
+				this.getManagedBean().setSalestaxregDate(this.getManagedBean().getSstSupplier().getSalestaxregDate());
+//				this.getManagedBean().setSalestaxregEndDate(this.getManagedBean().getSstSupplier().getSalestaxregEndDate());
+				
+				this.getManagedBean().setServtaxregno(this.getManagedBean().getSstSupplier().getServtaxregno());
+				this.getManagedBean().setServtaxregDate(this.getManagedBean().getSstSupplier().getServtaxregDate());
+//				this.getManagedBean().setServtaxregEndDate(this.getManagedBean().getSstSupplier().getServtaxregEndDate());
 			}
 		} else {
 			initialOrganisation();
@@ -754,18 +766,22 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 
 	
 	public void onInputChange(String input, String attr){
+		
 		if(StringUtils.isBlank(input)){
 			if(attr.equalsIgnoreCase("sales")){
-				this.getManagedBean().getSstSupplier().setSalestaxregDate(null);
+				this.getManagedBean().setSalestaxregDate(null);
 				this.getManagedBean().getSstSupplier().setSalestaxregEndDate(null);
 				this.getManagedBean().getSstSupplier().setSalestaxregdecDate(null);
 			}else if(attr.equalsIgnoreCase("service")){
-				this.getManagedBean().getSstSupplier().setServtaxregDate(null);
+				this.getManagedBean().setServtaxregDate(null);
 				this.getManagedBean().getSstSupplier().setServtaxregEndDate(null);
 				this.getManagedBean().getSstSupplier().setServtaxdecDate(null);
 			}
 		}
+		
 	}
+	
+	
 	/**
 	 * This method used to save organisation data.
 	 * 
@@ -783,6 +799,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		this.getManagedBean().getSstSupplier().getServtaxdecDate());
 		IOrgProfileSO orgProfileSO = null;
 		String redirectUrl = null;
+		
 
 		try {
 
@@ -794,7 +811,10 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			// validateGstDetails();
 			// }
 			// harris
+			
+
 			if (orgProfile.isGovtSeller()) {
+								
 				validateSupplierBankListAndSupplierPersonnel();
 				validateSstDetails();
 			}
@@ -858,7 +878,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					reqDTO.setSmPersonnels(getManagedBean().getSmPersonnels());
 					// harris SmGstSupplier gstSupplier =					
 					SmSstSupplier sstSupplier = getManagedBean().getSstSupplier();
-					
+					System.out.println("sstSupplier.salestaxregno="+sstSupplier.getSalestaxregno());
 					// if(StringUtils.isNotBlank(gstSupplier.getGstRegNo())){
 					// reqDTO.setGstSupplier(gstSupplier);
 					// }else{
@@ -869,6 +889,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					// harris
 					if (StringUtils.isNotBlank(sstSupplier.getSalestaxregno())|| StringUtils.isNotBlank(sstSupplier.getServtaxregno())) {
 						reqDTO.setSstSupplier(sstSupplier);
+						System.out.println("sstSupplier.salestaxregno2="+sstSupplier.getSalestaxregno());
 					}else{
 						if(getManagedBean().getSstSupplierId()!=null){
 							reqDTO.setSstSupplierId(getManagedBean().getSstSupplierId());
@@ -2165,19 +2186,29 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	// gstSupplier.setGstEndDate(null);
 	// }
 	// }
+
 	// harris
-
 	private void validateSstDetails() {
-		if (getManagedBean().getSstSupplier() == null) {
-			getManagedBean().setSstSupplier(new SmSstSupplier());
-		}
-
+		
 		SmSstSupplier sstSupplier = this.getManagedBean().getSstSupplier();
-		Date currentDate = new Date();
-
-		if (StringUtils.isNotBlank(sstSupplier.getSalestaxregno())) {
-//			String pattern = "\\d{12}";
-			sstSupplier.setSalestaxregdecDate(currentDate);
+		Date current = new Date(); 
+	
+		if (StringUtils.isNotBlank(this.getManagedBean().getSalestaxregno())) {
+			
+           if(!(this.getManagedBean().getSalestaxregno().equals(sstSupplier.getSalestaxregno()))||
+        	  !(this.getManagedBean().getSalestaxregDate().compareTo(sstSupplier.getSalestaxregDate())==0)
+//        	  ||
+//        	  !(this.getManagedBean().getSalestaxregEndDate().compareTo(sstSupplier.getSalestaxregEndDate())==0)
+        	  )
+        	  {
+        	   sstSupplier.setSalestaxregdecDate(current);
+        	   sstSupplier.setSalestaxregno(this.getManagedBean().getSalestaxregno());
+        	   sstSupplier.setSalestaxregDate(this.getManagedBean().getSalestaxregDate());
+//        	   sstSupplier.setSalestaxregEndDate(this.getManagedBean().getSalestaxregEndDate());
+        	  
+        	  
+           }
+           
 			//check sale no is same or not same with serv no
 			if (sstSupplier.getSalestaxregno().equals(sstSupplier.getServtaxregno())) {
 				throw new EpException(MessageConst.ERROR_775142);
@@ -2212,16 +2243,28 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					&& sstSupplier.getSalestaxregEndDate().before(sstSupplier.getSalestaxregDate())) {
 				throw new EpException(MessageConst.ERROR_775147);
 			}
-
+			
 		}else{
 			sstSupplier.setSalestaxregDate(null);
 			sstSupplier.setSalestaxregEndDate(null);
 			sstSupplier.setSalestaxregdecDate(null);
 		}
-			
+		
 
-		if (StringUtils.isNotBlank(sstSupplier.getServtaxregno())) {
-			sstSupplier.setServtaxdecDate(currentDate);
+		if (StringUtils.isNotBlank(this.getManagedBean().getServtaxregno())) {
+			
+			if(!(this.getManagedBean().getServtaxregno().equalsIgnoreCase(sstSupplier.getServtaxregno()))||
+		       !(this.getManagedBean().getServtaxregDate().compareTo(sstSupplier.getServtaxregDate())==0)
+//		       ||
+//		       !(this.getManagedBean().getServtaxregEndDate().compareTo(sstSupplier.getServtaxregEndDate())==0)
+		       ){
+		        sstSupplier.setServtaxdecDate(current);
+		        sstSupplier.setServtaxregno(this.getManagedBean().getServtaxregno());
+		        sstSupplier.setServtaxregDate(this.getManagedBean().getServtaxregDate());
+//		        sstSupplier.setServtaxregEndDate(this.getManagedBean().getServtaxregEndDate());
+		      
+		        	  
+		           }
 			
 			if (sstSupplier.getServtaxregno().length() < 17) {
 				throw new EpException(MessageConst.ERROR_775146);
@@ -2241,7 +2284,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					&& sstSupplier.getServtaxregEndDate().before(sstSupplier.getServtaxregDate())) {
 				throw new EpException(MessageConst.ERROR_775148);
 			}
-			
+
 		}else{
 			sstSupplier.setServtaxregDate(null);
 			sstSupplier.setServtaxregEndDate(null);
@@ -2249,7 +2292,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		}
 		
 	}
-
+	
 	private void validateGroupOrg() {
 		boolean isValid = false;
 		if (this.getManagedBean().getProfileGroup() == null || this.getManagedBean().getProfileGroup().isEmpty()) {
