@@ -781,11 +781,15 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 
 
-
-
 	public void refreshNormalTaskList(){
 
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	}
+	
+	//Enhancement #24714
+	public void refreshBothTaskList(){
+
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
 	}
 
 	public String goToMyTasks() {
@@ -903,9 +907,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("**********releaseTask");
 		
 		releaseBpmTask();
-		this.getManagedBean().getTaskListGroupDataModel().reloadData();
-		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
+		// Enhancement #24714
+			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
+			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
 
 		return "taskListView?faces-redirect=true";
 
