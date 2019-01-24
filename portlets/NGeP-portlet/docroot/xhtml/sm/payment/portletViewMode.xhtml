@@ -17,7 +17,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />a	
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:panel header="#{lbl['lbl.sm.payment.item']}" rendered="#{paymentBackingBean.managedBean.applicationPayment != null}">
 			<p:dataTable value="#{paymentBackingBean.managedBean.applicationPayment}" var="billItem">
 				<p:column headerText="#{lbl['lbl.sm.payment.application']}">
