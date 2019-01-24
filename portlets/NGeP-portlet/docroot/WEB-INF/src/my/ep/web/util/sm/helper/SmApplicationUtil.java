@@ -2740,11 +2740,6 @@ public class SmApplicationUtil {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
 		log.info("****  getStaffList *********" + app.getSupplierType());
 		if (app.getSupplierType().equals(
-				SupplierManagementConst.STYPE_CONTRACTOR)) {
-			SmStaffTotal stf = new SmStaffTotal();
-			staffList.add(setDefaultStaffValues(stf, app,
-					SupplierManagementConst.STAFF_TYPE_CONTRACTOR));
-		} else if (app.getSupplierType().equals(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			SmStaffTotal stf1 = new SmStaffTotal();
 			staffList.add(setDefaultStaffValues(stf1, app,
@@ -2755,6 +2750,10 @@ public class SmApplicationUtil {
 			SmStaffTotal stf3 = new SmStaffTotal();
 			staffList.add(setDefaultStaffValues(stf3, app,
 					SupplierManagementConst.STAFF_TYPE_CLERICAL));
+		}else{
+			SmStaffTotal stf = new SmStaffTotal();
+			staffList.add(setDefaultStaffValues(stf, app,
+					SupplierManagementConst.STAFF_TYPE_CONTRACTOR));
 		}
 		return staffList;
 	}
