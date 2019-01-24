@@ -1899,6 +1899,14 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		
+		//re-quote - Bug #25125
+		if(scQuote.getParentQuoteId() != null){
+			getManagedBean().setPanelItemFlag(Boolean.FALSE);
+			getManagedBean().setNewableFlag(Boolean.TRUE);
+			getManagedBean().setRemovableFlag(Boolean.TRUE);
+			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
+		}
+		
 		if (quotePanelItem != null) {
 			if (quotePanelItem.getItemCategoryId().getParameterCode()
 					.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
@@ -1923,13 +1931,6 @@ public class SimpleQuoteBackingBean extends
 		calculateDuration(scQuote);
 		procurementTypeEvent();
 		
-		// re quote 
-		if(scQuote.getParentQuoteId() != null){
-			getManagedBean().setPanelItemFlag(Boolean.FALSE);
-			getManagedBean().setNewableFlag(Boolean.FALSE);
-			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
-			getManagedBean().setRemovableFlag(Boolean.FALSE);
-		}
 	}
 	
 
@@ -4646,13 +4647,6 @@ public class SimpleQuoteBackingBean extends
 					scQuote.getBusinessNatureCriterias());
 		}
 
-		// re quote 
-		if(scQuote.getParentQuoteId() != null){
-			getManagedBean().setPanelItemFlag(Boolean.FALSE);
-			getManagedBean().setNewableFlag(Boolean.FALSE);
-			getManagedBean().setRemovableFlag(Boolean.FALSE);
-			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
-		}
 		if (null == scQuote.getStartDate()) {
 			Date startDate = new Date();
 			Calendar cal = Calendar.getInstance();
@@ -6506,6 +6500,14 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setDefaultCountryId(
 				resDTO.getPmCountry().getCountryId());
 
+		//re-quote - Bug #25125
+		if(scQuote.getParentQuoteId() != null){
+			getManagedBean().setPanelItemFlag(Boolean.FALSE);
+			getManagedBean().setNewableFlag(Boolean.TRUE);
+			getManagedBean().setRemovableFlag(Boolean.TRUE);
+			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
+		}
+		
 		if (quotePanelItem != null) {
 			if (quotePanelItem.getItemCategoryId().getParameterCode()
 					.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
