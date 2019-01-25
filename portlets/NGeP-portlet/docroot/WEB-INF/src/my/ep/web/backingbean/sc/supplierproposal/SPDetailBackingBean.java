@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
@@ -1151,8 +1152,12 @@ public class SPDetailBackingBean extends
 			}
 
 			for (TplSpecAnswer answer : answers) {
-				if (StringUtils.isEmpty(answer.getAnswerText())) {
-					throw new EpException(MessageConst.ERROR_760480);
+				TplSpecQuestion tplSpecQuestion = answer.getTplSpecQuestion();
+				PmParameter answerType = tplSpecQuestion.getAnswerTypeCode();
+				String answerTypeCode = answerType != null ? answerType.getParameterCode() : null;
+				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()))
+					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null)) {
+						throw new EpException(MessageConst.ERROR_760480);
 				}
 			}
 		}
