@@ -1673,7 +1673,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if (SmCommonUtil.isRegNoAlreadyExist(getManagedBean().getSmSupp()
 					.getRegNo(),
 					getManagedBean().getSmSupp().getBusinessType(),
-					getManagedBean().getSmSupp().getLocalAuthorityId())) {
+					getManagedBean().getSmSupp().getLocalAuthorityId(),
+					getManagedBean().getSmAppl().getSupplierType())) {
 				throw new EpException(MessageConst.ERROR_722634);
 			}
 		}
