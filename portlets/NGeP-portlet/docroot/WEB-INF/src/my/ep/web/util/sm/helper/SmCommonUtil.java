@@ -1774,11 +1774,12 @@ public class SmCommonUtil {
 	 * @return boolean
 	 */
 	public static boolean isRegNoAlreadyExist(String regNo,
-			String businessType, Long localAuthorityId) {
+			String businessType, Long localAuthorityId,String suppType) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setRegNo(regNo);
 		reqDTO.setBussinessType(businessType);
 		reqDTO.setLocalAuthorityId(localAuthorityId);
+		reqDTO.setSuppType(suppType);
 		return SmServiceLookup.getSupplierSearchSO()
 				.checkIsSupplierRegNoAlreadyExist(reqDTO).isRegNoAlreadyExist();
 	}
