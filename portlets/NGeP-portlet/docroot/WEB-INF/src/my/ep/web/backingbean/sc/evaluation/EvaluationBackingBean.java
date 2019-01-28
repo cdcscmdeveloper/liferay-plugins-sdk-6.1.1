@@ -3072,11 +3072,17 @@ public class EvaluationBackingBean extends
 
 					}
 					if (null != packageOfferPrice.getToVariance()) {
-					BigDecimal tovarieance=	 estimatedPrice.multiply(packageOfferPrice.getToVariance()).divide(
+						if (packageOfferPrice.getToVariance().intValue() == 0) {
+							log.debug(this.getClass().getName() + ".calculateFinSpecPackageVarieance(): Setting To Varieance value to 0.00 : " 
+									+ packageOfferPrice.getToVariance().intValue());
+							this.getManagedBean().setPackageToVarieance(new BigDecimal(0.00));
+						} else {
+							BigDecimal tovarieance=	 estimatedPrice.multiply(packageOfferPrice.getToVariance()).divide(
 									new BigDecimal(100), 2,
 									BigDecimal.ROUND_HALF_UP);
-						this.getManagedBean().setPackageToVarieance(
-								estimatedPrice.add(tovarieance));
+							this.getManagedBean().setPackageToVarieance(
+									estimatedPrice.add(tovarieance));
+						}
 
 					}
 				} else {
