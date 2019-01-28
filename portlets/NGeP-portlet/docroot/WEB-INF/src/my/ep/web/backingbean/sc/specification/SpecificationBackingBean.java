@@ -8450,9 +8450,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	public void specOfferpricePackageToVarieance(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
-			if (null == offerPrice.getToVariance()
-					|| offerPrice.getToVariance().intValue() <= 0) {
-				throw new EpException(MessageConst.ERROR_760225);
+			if (null == offerPrice.getToVariance()/*|| offerPrice.getToVariance().intValue() <= 0*/) {
+				throw new EpException(MessageConst.ERROR_760179);
 			}
 
 		}
@@ -9882,6 +9881,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				specReqDTO.setCheckLists(financialScoring1);
 				specReqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 				specReqDTO.setScQt(recommendation);
+				specReqDTO.setAllowZeroVariance(true);
 				validateFinancialPackageItemPassingScoring(this
 						.getManagedBean().getFinancialScoreSetting(), this
 						.getManagedBean().getFinacialItemScoreSetting());
@@ -10462,7 +10462,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean()
 				.getToBeRemoveProgPayments());
 		spReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
-		spReqDTO.setOutcome(action);
+		spReqDTO.setOutcome(action); 
+		if (null != this.getManagedBean() && SCProcessNameConst.FINALISE_SCORING.equals(this.getManagedBean().getTaskName())) {
+			spReqDTO.setAllowZeroVariance(true);
+		}
 		//spReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
