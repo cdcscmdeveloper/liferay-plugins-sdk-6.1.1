@@ -201,6 +201,21 @@ public class PmCommonUtil implements Serializable{
 
 		return isCurrentPairOverlap;
 	}
+	
+	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB) {
+
+		boolean isRedundant = false;
+		
+		// cannot Redundant
+		if(bankIdA.equals(bankIdB)){
+			if (bankCodeA.equalsIgnoreCase(bankCodeB)&& accountCodeA.equalsIgnoreCase(accountCodeB)){
+				isRedundant = true;
+				
+			}
+		}	
+
+		return isRedundant;
+	}
 
 	/**
 	 * Check Role Restriction by role code and user role list
