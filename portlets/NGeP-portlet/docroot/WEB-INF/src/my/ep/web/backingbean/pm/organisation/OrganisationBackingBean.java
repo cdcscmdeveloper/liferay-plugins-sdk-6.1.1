@@ -250,7 +250,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	}
 
 	private String refreshOrganisation(PmOrgProfile orgProfile) throws Exception {
-		log.info("..............refreshOrganisation.......)");
+		log.info("........refreshOrganisation.......)");
 		resetInitialOrg();
 		retrieveFinancialOrgList();
 		this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
