@@ -8,9 +8,128 @@
 	        width:135px;
 	     }
 	</style>
+	<p:panel id="searchReceivingAddressDtls">
+	
+	
+	 <table>
+			            <tr>
+                   <!-- Address Name -->
+			    	<td><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /></td>
+			          	<td><p:inputText
+						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
+						style="width:225px" /></td>
+					</tr>	
+						
+						
+						<!-- State -->	
+					<tr>
+						<td><p:outputLabel  value="#{lbl['lbl.pm.address.state']}" />
+						<p:outputLabel styleClass="mandatory"/></td>
+					<td>
+					 <p:selectOneMenu id="dState1" required="#{!empty param['dialogValidation']}"
+						label="#{lbl['lbl.pm.address.state']}"
+						style="width: 225px;"
+						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+						  value="#{organisationBackingBean.getStateList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCountry.countryId)}" 
+						  var="state" itemLabel="#{state.stateName}"
+						  itemValue="#{state.stateId}"/>
+						<p:ajax event="change" update="dDistrict1,dDivision1,dCity1" 
+						 	listener="#{organisationBackingBean.retrieveDeliveryPmState(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState)}"/>
+					</p:selectOneMenu><p:message for="dState1" id="dState123" display="icon" /></td>
+					
+					</tr>
+			
+					
+					
+				<!-- 	Division -->
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.division']}" />
+						<p:outputPanel id="olDelDivisionMandatory1">
+							<p:outputLabel  styleClass="mandatory"
+								rendered="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}" />
+						</p:outputPanel></td>
+					<td><p:selectOneMenu id="dDivision1" style="width: 225px;"
+							disabled="#{not organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}"
+							required="#{!empty param['dialogValidation']
+							and organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}"
+							label="#{lbl['lbl.pm.address.division']}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision.divisionId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{organisationBackingBean.getDivisionList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId)}"
+								var="division" itemLabel="#{division.divisionName}"
+								itemValue="#{division.divisionId}" />
+							<p:ajax event="change" update="dDistrict1,dCity1"
+								listener="#{organisationBackingBean.retrieveDeliveryPmDivision(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision)}" />
+						</p:selectOneMenu> <p:message for="dDivision1" id="dDivision123" display="icon" /></td>
+					
+					</tr>
+					
+                   
+						                           
+						<!-- District -->
+						<tr>
+					<td><p:outputLabel  value="#{lbl['lbl.pm.address.district']}" />
+						<p:outputLabel  styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="dDistrict1"
+							required="#{!empty param['dialogValidation']}"
+							label="#{lbl['lbl.pm.address.district']}" style="width: 225px;"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict.districtId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState,organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision)}"
+								var="district" itemLabel="#{district.districtName}"
+								itemValue="#{district.districtId}" />
+							<p:ajax event="change" update="dCity1"
+								listener="#{organisationBackingBean.retrieveDeliveryPmDistrict(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict)}" />
+						</p:selectOneMenu> <p:message for="dDistrict1" id="dDistrict123" display="icon" /></td>
+						</tr>
+						
+						
+						<!-- City -->
+						<tr>
+						<td><p:outputLabel   value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
+							 styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="dCity1"
+							required="#{!empty param['dialogValidation']}"
+							style="width: 225px;" label="#{lbl['lbl.pm.address.city']}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity.cityId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{organisationBackingBean.getCityList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict.districtId)}"
+								var="city" itemLabel="#{city.cityName}"
+								itemValue="#{city.cityId}" />
+							<p:ajax event="change"
+								listener="#{organisationBackingBean.retrieveDeliveryPmCity(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity)}" />
+						</p:selectOneMenu> <p:message id="dCityMsg351" for="dCity1" display="icon" /></td>
+								
+			</tr>
+		</table>
+		
+		<p:spacer height="7"></p:spacer>
+		
+		<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					styleClass="BtnSpacing" process="@this,searchReceivingAddressDtls" partialSubmit="true" update="deliveryAddressId"
+					action="#{organisationBackingBean.searchAddressType}" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" resetValues="true"
+					partialSubmit="true" process="@this" update="deliveryAddressId,searchReceivingAddressDtls"
+					styleClass="BtnSpacing" action="#{organisationBackingBean.resetAddressType}"
+					 />
+			</div>
+			
+			</p:panel>
+	
 	<p:panel>
+	
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
+			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres" rows="10"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
@@ -65,6 +184,9 @@
 					update="@([id$=deliveryAddressDialog])"	>
 					<p:graphicImage value="/css/images/design/edit.png" />
 					<p:resetInput target=":form:addressTabs:deliveryAddressPanel" />
+				</p:commandLink>
+				<p:commandLink rendered="#{organisationBackingBean.showTerminationIcon(address)}" disabled="true">
+				<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png" styleClass="tasklist_title1" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
