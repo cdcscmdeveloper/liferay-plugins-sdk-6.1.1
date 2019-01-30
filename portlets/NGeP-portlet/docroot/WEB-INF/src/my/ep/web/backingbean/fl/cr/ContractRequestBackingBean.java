@@ -1469,6 +1469,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(ctContractAmount.getGstAmount()!=null) {
 			contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
 		}
+		if(ctContractAmount.getStaxAmount()!=null) {
+			contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+		}
 		
 		if(checkTotalAmt.doubleValue()>contractAmount.doubleValue()) {
 			CommonUtils commonUtils = new CommonUtils();
