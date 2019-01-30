@@ -1150,10 +1150,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		/*validation for other  selection*/
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
 			// Validation for mandatory attachments
-			if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
+		/*	if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_750033);
-			}
+			} */
 			// Validation for delivery term 
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
 					!ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
