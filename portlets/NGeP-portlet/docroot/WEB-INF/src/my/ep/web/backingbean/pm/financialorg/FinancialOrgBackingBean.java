@@ -862,7 +862,7 @@ public class FinancialOrgBackingBean extends
 	private void validateFinancialAccount()throws Exception {
 		log.info("validateFinancialAccount");
 		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
-		System.out.println("pmFinancialAccList size =======================" + pmFinancialAccList.size());		
+	
 		if (pmFinancialAccList != null && !pmFinancialAccList.isEmpty()) {
 			for(PmFinancialAcc pmFinancialAcc: pmFinancialAccList){
 				if(pmFinancialAcc.getPmPaymentBankOrg()==null 
