@@ -4406,8 +4406,9 @@ public class EvaluationBackingBean extends
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier()
 									.getSupplierId());
-					proposalPage = detailBackingBean
-							.retrieveFinCompanyExpDtls(proposalCheckList);
+					proposalPage = detailBackingBean.getFinCompanyExpDtls(proposalCheckList);
+					//proposalPage = detailBackingBean.retrieveFinCompanyExpDtls(proposalCheckList);
+					
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/finGovCompanyExperience.xhtml";
 
 				} else if (QTConstants.FINANCIAL_PRIVATE_CODE

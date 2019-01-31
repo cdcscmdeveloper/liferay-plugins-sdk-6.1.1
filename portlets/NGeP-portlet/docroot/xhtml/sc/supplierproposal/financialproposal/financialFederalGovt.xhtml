@@ -12,68 +12,46 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel style="font-weight: bold;"
-						value="#{supplierProposalDetailBackingBean.managedBean.year}" />
-					<p:outputLabel
-						value="#{lbl['lbl.sc.spec.company.exp.since.year']} " /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{supplierProposalDetailBackingBean.managedBean.year}" />
+					<p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']} " /></td>
 			</tr>
 		</table>
-		<p:dataTable id="financegovtid" var="financegovt"
-			value="#{supplierProposalDetailBackingBean.managedBean.scLoaList}"
+		
+		<p:dataTable id="financegovtid" var="suppExperience"
+			value="#{supplierProposalDetailBackingBean.managedBean.supplierExperienceList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rowKey="#{financegovt}" rowIndexVar="rowIndex" rows="10">
+			rowKey="#{suppExperience}" rowIndexVar="rowIndex" rows="10">
 
 			<ac:paginator for="financegovtid" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}"
-				style="white-space : normal; width : 20%; ">
-				<h:outputText value="#{financegovt.scLoiLoa.pmOrgProfile.orgName}" />
+			<p:column headerText="#{lbl['lbl.sm.projDtls.clientName']}" style="white-space : normal; ">
+				<h:outputText value="#{suppExperience.clientName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}"
-				style="white-space : normal; width : 30%; ">
-				<h:outputText value="#{financegovt.scLoiLoa.title}" />
+			<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}" style="white-space : normal; ">
+				<h:outputText value="#{suppExperience.title}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}"
-				style=" width : 10%; ">
-				<h:outputText value="#{financegovt.loaNo}" />
+			<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}" style="white-space : normal; ">
+				<ac:labelAmount value="#{suppExperience.contractValue}"	styleClass="outputLabel-view" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.effective.date']}"
-				style=" width : 10%; ">
-				<h:outputText value="#{financegovt.contractEffDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
+				<h:outputText value="#{suppExperience.procurementDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.exp.date']}"
-				style=" width : 10%; ">
-				<h:outputText value="#{financegovt.contractExpDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}"
-				style="width : 10%; ">
-				<h:outputText style="float : right"
-					value="#{financegovt.contractDuration.intValue()/12}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-				</h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.contarct.amount']}"
-				style="text-align:right; width : 10%;">
-				<h:outputText value="#{financegovt.loaAmt}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+			<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
+				<h:outputText value="#{lbl['lbl.sm.projDtls.inProgress']}" rendered="#{suppExperience.progressStatus eq 'P'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.success']}" rendered="#{suppExperience.progressStatus eq 'S'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}" rendered="#{suppExperience.progressStatus eq 'F'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.kiv']}" rendered="#{suppExperience.progressStatus eq 'K'}" />
+				<h:outputText value="#{lbl['lbl.sm.projDtls.repeal']}" rendered="#{suppExperience.progressStatus eq 'R'}" />
 			</p:column>
 
 		</p:dataTable>
+
 		<p:spacer height="5" />
 		<table style="width: 100%">
 			<tr>
