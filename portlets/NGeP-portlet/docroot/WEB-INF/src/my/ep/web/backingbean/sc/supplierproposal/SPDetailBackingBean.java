@@ -2377,8 +2377,10 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				pageUrl = retrieveFinCompanyExpDtls(scQtProposalChecklist);
 
+				pageUrl = getFinCompanyExpDtls(scQtProposalChecklist);
+				//pageUrl = retrieveFinCompanyExpDtls(scQtProposalChecklist);
+				
 			} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_DETAILS
 					.equalsIgnoreCase(docDefinitionKey)) {
 
@@ -4631,4 +4633,48 @@ public class SPDetailBackingBean extends
 	}
 	//end of Enhancement #18723
 
+	/**
+	 * Method to retrieve financial federal government experience details
+	 * 
+	 * @param scQtProposalChecklist
+	 * @return navigation path
+	 */
+	public String getFinCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) { 
+
+		getManagedBean().setYear(
+				scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+
+		IQTProposalSO proposalSO = null;
+		
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setQtProposalCheckListId(scQtProposalChecklist.getQtProposalChecklistId());
+
+			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
+			reqDTO.setScQt(this.getManagedBean().getQt());
+
+			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
+			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
+			this.getManagedBean().setSupplierExperienceList(suppExpList);
+			
+			BigDecimal totalAmount = new BigDecimal(0);
+			for (SmCompanyExperience suppExp : suppExpList) {
+				if(suppExp.getContractValue() != null){
+					totalAmount = totalAmount.add(suppExp.getContractValue());
+				}
+			}
+			
+			this.getManagedBean().setTotalContractAmount(totalAmount);
+
+			return NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE;
+
+		} finally {
+			proposalSO = null;
+		}
+	}
 }
