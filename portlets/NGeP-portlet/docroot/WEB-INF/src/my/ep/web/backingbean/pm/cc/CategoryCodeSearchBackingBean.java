@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.pm.cc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -538,7 +539,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 * @return
 	 */
 	public List<SelectItem> retrieveCategoryL1List(
-			String supplierType, String facilityType, Integer paidUpCapital, 
+			String supplierType, String facilityType, BigDecimal paidUpCapital, 
 			Integer bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1) {
 		
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -555,7 +556,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			reqDTO.setHomeOperated(0);
 		}
 		if (paidUpCapital != null) {
-			reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+			reqDTO.setPaidCapital(paidUpCapital);
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
