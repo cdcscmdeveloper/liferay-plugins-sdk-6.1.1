@@ -58,7 +58,8 @@
 
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button"
-							action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
+							action="#{suppFinalizationBackingBean.submitAction}"
+							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{validityDaysExpiredQt}" />
@@ -112,7 +113,32 @@
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 
 		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />			
+		
+		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
 
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.btn.dialog.cofirm.submit.msg']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
+					oncomplete="submissionPopup.hide();" update="@form">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					process="@this" onclick="submissionPopup.hide();" type="button" />
+
+			</div>
+		</p:dialog>
+		
 	</ui:define>
 
 </ui:composition>
