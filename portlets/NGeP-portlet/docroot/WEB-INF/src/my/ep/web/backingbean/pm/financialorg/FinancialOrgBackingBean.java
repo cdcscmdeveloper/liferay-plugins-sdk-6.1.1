@@ -212,6 +212,7 @@ public class FinancialOrgBackingBean extends
 	 */
 	public void initialFinOrg() {
 		log.info("initialFinOrg");
+		getManagedBean().setAddressType(null);
 		this.getManagedBean().setSelectedTabIndex(GENERRAL);
 		//Country Code
 		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -644,7 +645,7 @@ public class FinancialOrgBackingBean extends
 				throw new EpException(MessageConst.ERROR_775205);
 			}
 		}
-		
+	
 		 if(this.getManagedBean().getPmAddress()!=null){
 			PmAddress address = this.getManagedBean().getPmAddress();
 			PmContact contact = this.getManagedBean().getContactPerson();
@@ -660,16 +661,49 @@ public class FinancialOrgBackingBean extends
 								//throw new EpException(MessageConst.ERROR_770039);
 							}
 					
-							if(StringUtils.isBlank(pmAddress.getAddress1())){
-								sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770040,null));
-								sb.append(System.getProperty("line.separator"));
-								//throw new EpException(MessageConst.ERROR_770040);
+//							if(StringUtils.isBlank(pmAddress.getAddress1())){
+//								sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770040,null));
+//								sb.append(System.getProperty("line.separator"));
+//								//throw new EpException(MessageConst.ERROR_770040);
+//							}
+							
+							if(!StringUtils.isBlank(pmAddress.getAddress1()) || !StringUtils.isBlank(pmAddress.getAddress2())
+									|| !StringUtils.isBlank(pmAddress.getAddress3())){
+								
+							if(pmAddress.getPmState().getStateId()==null){
+									//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770042,null));
+									//sb.append(System.getProperty("line.separator"));
+									throw new EpException(MessageConst.ERROR_770042);
+							}	
+							
+//							PmState pmState = PmCommonUtil.retrievePmStateByStateId(pmAddress.getPmState().getStateId());
+							if(pmAddress.getPmState().getAdoptDivision()){
+								if(pmAddress.getPmDivision().getDivisionId()==null){
+									//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770044,null));
+									//sb.append(System.getProperty("line.separator"));
+									throw new EpException(MessageConst.ERROR_770044);
+								}
+							}else{
+								//set set division null
+								pmAddress.setPmDivision(null);
+							}
+							
+							if(pmAddress.getPmDistrict().getDistrictId()==null){
+								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770043,null));
+								//sb.append(System.getProperty("line.separator"));
+								throw new EpException(MessageConst.ERROR_770043);
+							}
+							
+							if(pmAddress.getPmCity().getCityId()==null){
+								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775112,null));
+								//sb.append(System.getProperty("line.separator"));
+								throw new EpException(MessageConst.ERROR_775112);
 							}
 							
 							if(StringUtils.isBlank(pmAddress.getPostcode())){
-								sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770041,null));
-								sb.append(System.getProperty("line.separator"));
-								//throw new EpException(MessageConst.ERROR_770041);
+								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770041,null));
+								//sb.append(System.getProperty("line.separator"));
+								throw new EpException(MessageConst.ERROR_770041);
 							}else {
 								String postCodeRegex = "\\d{5}";
 								if(!pmAddress.getPostcode().matches(postCodeRegex)){ 
@@ -678,43 +712,30 @@ public class FinancialOrgBackingBean extends
 									//throw new EpException(MessageConst.ERROR_775211);
 								}
 							}
-							
-							if(pmAddress.getPmState().getStateId()==null){
-								sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770042,null));
-								sb.append(System.getProperty("line.separator"));
-								//throw new EpException(MessageConst.ERROR_770042);
-							}
-					
-							if(pmAddress.getPmDistrict().getDistrictId()==null){
-								sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770043,null));
-								sb.append(System.getProperty("line.separator"));
-								//throw new EpException(MessageConst.ERROR_770043);
+							if(StringUtils.isBlank(pmAddress.getPhoneNo() )){
+								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775128,null));
+								//sb.append(System.getProperty("line.separator"));
+								throw new EpException(MessageConst.ERROR_775128);
+							} 
+							if(StringUtils.isBlank(pmAddress.getPhoneArea())){
+								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775135,null));
+								//sb.append(System.getProperty("line.separator"));
+								throw new EpException(MessageConst.ERROR_775135);
 							}
 							
-//							PmState pmState = PmCommonUtil.retrievePmStateByStateId(pmAddress.getPmState().getStateId());
-							if(pmAddress.getPmState().getAdoptDivision()){
-								if(pmAddress.getPmDivision().getDivisionId()==null){
-									sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770044,null));
-									sb.append(System.getProperty("line.separator"));
-								//	throw new EpException(MessageConst.ERROR_770044);
-								}
-							}else{
-								//set set division null
-								pmAddress.setPmDivision(null);
-							}
 							
-					
 //							for(PmContact pmContact:pmAddressType.getPmContacts()){
-								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getContactName())){
-									sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775206,null));
-									sb.append(System.getProperty("line.separator"));
-									//throw new EpException(MessageConst.ERROR_775206);
-								}
-								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
-									sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775207,null));
-									sb.append(System.getProperty("line.separator"));
-									//throw new EpException(MessageConst.ERROR_775207);
-								}else{
+//								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getContactName())){
+//									sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775206,null));
+//									sb.append(System.getProperty("line.separator"));
+//									//throw new EpException(MessageConst.ERROR_775206);
+//								}
+//								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
+//									sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775207,null));
+//									sb.append(System.getProperty("line.separator"));
+//									//throw new EpException(MessageConst.ERROR_775207);
+//								}else{
+								if(!StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
 									String emailRegex ="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 									if(!this.getManagedBean().getContactPerson().getEmail().matches(emailRegex)){
 										sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775212,null));
@@ -722,6 +743,9 @@ public class FinancialOrgBackingBean extends
 										//throw new EpException(MessageConst.ERROR_775212);
 									}
 								}
+//								}
+								
+							}
 								if(StringUtils.isNotBlank(sb.toString())){
 									throw new EpException(sb.toString());
 								}
@@ -820,7 +844,8 @@ public class FinancialOrgBackingBean extends
 				}
 			}
 		}else{
-			log.info("updateMainAddress - add");			
+			log.info("updateMainAddress - add");	
+			getManagedBean().setAddressAndContactPersonMandatory(false);
 			if(getManagedBean().isAddressAndContactPersonMandatory() || isAddressOrContactInfoFillIn(this.getManagedBean().getPmAddress(), this.getManagedBean().getContactPerson())){
 				List<PmContact> contactLst = new ArrayList<PmContact>();
 //				PmAddressType addressType = new PmAddressType();
@@ -862,7 +887,7 @@ public class FinancialOrgBackingBean extends
 	private void validateFinancialAccount()throws Exception {
 		log.info("validateFinancialAccount");
 		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
-	
+		//System.out.println("pmFinancialAccList size " + pmFinancialAccList.size());		
 		if (pmFinancialAccList != null && !pmFinancialAccList.isEmpty()) {
 			for(PmFinancialAcc pmFinancialAcc: pmFinancialAccList){
 				if(pmFinancialAcc.getPmPaymentBankOrg()==null 
@@ -870,50 +895,39 @@ public class FinancialOrgBackingBean extends
 					throw new EpException(MessageConst.ERROR_775209);
 				}
 			}
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			Date endLess = sdf.parse("2099-12-31");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date endLess = sdf.parse("2099-12-31");
 			for (int index1 = 0; index1 < pmFinancialAccList.size(); index1++) {
-//				if (pmFinancialAccList.get(index1).getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (pmFinancialAccList.get(index1).getRecordStatusFlg() 
+						== DbValueConst.RECORD_STATUS_ACTIVE) {
 					if (pmFinancialAccList.size() > 1) {
 						for (int index2 = index1 + 1; index2 < pmFinancialAccList.size(); index2++) {
-//							if (pmFinancialAccList.get(index2).getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE) {
+							if (pmFinancialAccList.get(index2).getRecordStatusFlg() 
+									== DbValueConst.RECORD_STATUS_ACTIVE) {
 								// Overlap exists if (StartA <= EndB) and (EndA
 								// >= StartB)
-//								Date startA = pmFinancialAccList.get(index1).getEffDate();
-//								Date endA = pmFinancialAccList.get(index1).getExpDate();
-//								Date startB = pmFinancialAccList.get(index2).getEffDate();
-//								Date endB = pmFinancialAccList.get(index2).getExpDate();
-//
-//								// not null
-//								if(endA==null){
-//									endA = endLess;
-//								}if(endB==null){
-//									endB = endLess;
-//								}
-								
-								
-//								boolean isCurrentPairOverlap = false;
-//								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
-								
-								Long bankIdA = pmFinancialAccList.get(index1).getPmPaymentBankOrg().getFinancialOrgId();
-								String bankCodeA = pmFinancialAccList.get(index1).getBankCode();
-								String accountCodeA = pmFinancialAccList.get(index1).getAccountNo();
-								 
-								Long bankIdB = pmFinancialAccList.get(index2).getPmPaymentBankOrg().getFinancialOrgId();
-								String bankCodeB = pmFinancialAccList.get(index2).getBankCode();
-								String accountCodeB = pmFinancialAccList.get(index2).getAccountNo();
-								
-								boolean isRedundant  = false;
-								isRedundant = PmCommonUtil.BankDetailRedundant(bankIdA, bankCodeA, accountCodeA, bankIdB, bankCodeB, accountCodeB);
+								Date startA = pmFinancialAccList.get(index1).getEffDate();
+								Date endA = pmFinancialAccList.get(index1).getExpDate();
+								Date startB = pmFinancialAccList.get(index2).getEffDate();
+								Date endB = pmFinancialAccList.get(index2).getExpDate();
 
-								
-								if (isRedundant) {
-									throw new EpException(MessageConst.ERROR_775214);
+								// not null
+								if(endA==null){
+									endA = endLess;
+								}if(endB==null){
+									endB = endLess;
 								}
-//							}
+								
+								boolean isCurrentPairOverlap = false;
+								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
+								
+								if (isCurrentPairOverlap) {
+									throw new EpException(MessageConst.ERROR_775210);
+								}
+							}
 						}
 					} 
-//				}
+				}
 			}
 		}
 	}
