@@ -180,6 +180,7 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this, toVarianceMsg" />
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" />
 					<f:attribute name="max" value="100" />
+					<f:attribute name="min" value="0" />
 				</p:inputText>
 				<p:message id="toVarianceMsg" for="toVariance" display="icon" />
 			</p:column>
