@@ -28,16 +28,16 @@
 					<p:message for="facCountry" id="facCountryMsg" display="icon" />
 				</td>
 				<td style="width:15%;">
-					<p:outputLabel
+					<p:outputLabel required="true"
 						value="#{lbl['lbl.pm.address.state']}" /> 
-					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
-						value="*" styleClass="mandatory" />
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" />
 				</td>
 				<td style="width:35%;">
-					<p:selectOneMenu id="facState" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" tabindex="1"
+					<p:selectOneMenu id="facState" tabindex="1" 
+					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
+					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
 						label="#{lbl['lbl.pm.address.state']}" style="width:297px;"
-						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
-						>
+						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
@@ -53,11 +53,10 @@
 				<td >
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.address']}" /> 
-					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
-						value="*" styleClass="mandatory" /></td>
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><p:inputText id="address1" tabindex="2"
 						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
-						required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" styleClass="ppDisplayTextL"
+						styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address1}"
 						size="52" >
 						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
@@ -96,9 +95,11 @@
 						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
 						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td >
-					<p:selectOneMenu id="facDistrict" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" tabindex="9"
+					<p:selectOneMenu id="facDistrict" tabindex="9"
+					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
+					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
 						label="#{lbl['lbl.pm.address.district']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
 						>
@@ -122,8 +123,10 @@
 						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
 						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
-				<td class="tdContent"><p:selectOneMenu id="facCity" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"  tabindex="10"
+						rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+				<td class="tdContent"><p:selectOneMenu id="facCity"  tabindex="10"
+					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
+					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
 						label="#{lbl['lbl.pm.address.city']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
 						>
@@ -142,8 +145,10 @@
 				<td></td>
 				<td class="tdContent"></td>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
-				<td ><p:inputText id="postCode" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+				<td ><p:inputText id="postCode" 
+					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
+					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.postcode}" styleClass="ppDisplayTextL"
 						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
@@ -154,13 +159,15 @@
 			</tr>
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+						 rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><ac:phone id="telNo" isMobile="false" label="#{lbl['lbl.pm.address.tel']}"
+					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
+					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
 						countryCode="#{financialOrgBackingBean.managedBean.pmAddress.phoneCountry}" 
 						areaCode="#{financialOrgBackingBean.managedBean.pmAddress.phoneArea}" 
 						number="#{financialOrgBackingBean.managedBean.pmAddress.phoneNo}"  
 						validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}" 
-						required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/>
+						/>
 						</td>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
 				<td ><ac:phone id="faxNo" isMobile="false" label="#{lbl['lbl.pm.address.fax']}"
@@ -173,7 +180,7 @@
 			</tr>
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><p:commandLink
 						action="#{financialOrgBackingBean.addContacePerson}"  tabindex="7"
 						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
@@ -195,9 +202,9 @@
 			<table>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+							rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 					<td class="tdContent"><p:inputText id="contactName"  styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.contact.name']}" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" maxlength="85"
+							label="#{lbl['lbl.pm.contact.name']}"  maxlength="85"
 							value="#{financialOrgBackingBean.managedBean.contactPerson.contactName}"
 							size="50" /></td>
 					<td><p:message id="contactNameMsg" for="contactName"
@@ -205,14 +212,14 @@
 				</tr>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+						<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 					<td class="tdContent">
 						<p:inputText id="contactEmail" styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.contact.email']}" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" maxlength="80" size="50"
+							label="#{lbl['lbl.pm.contact.email']}"  maxlength="80" size="50"
 							value="#{financialOrgBackingBean.managedBean.contactPerson.email}"
 							validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}" >
-							<f:validateRegex disabled="#{not financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
-								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<f:validateRegex disabled="#{not financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" 
+							pattern="^(?:[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,}))?$" />
 						</p:inputText>&#160; <p:graphicImage id="giEmail"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giEmail" id="ttEmail"
