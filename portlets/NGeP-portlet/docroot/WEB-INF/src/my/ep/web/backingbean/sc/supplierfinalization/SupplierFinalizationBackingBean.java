@@ -1693,8 +1693,9 @@ public class SupplierFinalizationBackingBean extends
 	 * @param outcome
 	 *            the task to be performed by BPM
 	 */
-	public void submitSuppFinalization(String outcome) {
+	public void submitSuppFinalization() {
 		log.info("submitSuppFinalization");
+		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
 		
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
@@ -1759,6 +1760,18 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
+		}
+	}
+	
+	/**
+	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
+	 */
+	public void submitAction() {
+		this.checkIfLoggedinUserIsSecretary();
+		if (this.getManagedBean().isSecretaryUser()) {
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		} else {
+			this.submitSuppFinalization();
 		}
 	}
 	
