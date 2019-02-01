@@ -4166,8 +4166,8 @@ public class SmApplicationUtil {
 			reqDTO.setHomeOperated(0);
 		}
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
-			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
-					.getPaidUpCapital().intValue());
+			reqDTO.setPaidCapital(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital());
 		}
 		Integer bumiPerc = new Integer(0);
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercentage() != null) {
