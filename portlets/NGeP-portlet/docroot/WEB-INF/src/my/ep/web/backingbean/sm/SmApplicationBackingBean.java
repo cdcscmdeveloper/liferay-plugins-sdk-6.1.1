@@ -845,9 +845,13 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722628);
 				}
 
-				String currSuppType = StringUtils.isBlank(currSupp.getSmAppl()
-						.getSupplierType()) ? "K" : currSupp.getSmAppl()
+				String currSuppType = currSupp.getSmAppl()
 						.getSupplierType();
+				
+				if(StringUtils.isBlank(currSuppType) || currSuppType.equals("B")){
+					currSuppType = "K";
+				}
+						
 				if (getManagedBean().getNewSupplierType() == null
 						|| StringUtils.isBlank(getManagedBean()
 								.getNewSupplierType())) {
