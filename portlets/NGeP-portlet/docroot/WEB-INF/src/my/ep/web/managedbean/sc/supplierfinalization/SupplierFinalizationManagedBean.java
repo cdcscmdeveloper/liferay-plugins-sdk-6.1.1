@@ -232,6 +232,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationReport> endorsementReports;
 	private ScQtFinalizationReport endorsementReport;
 	private SelectItem[] justDropdown;
+	private String outcome;
 	
 	/**
 	 * @return the activeIndex
@@ -2097,6 +2098,19 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.justDropdown = justDropdown;
 	}
 
+	/**
+	 * @return the outcome
+	 */
+	public String getOutcome() {
+		return outcome;
+	}
 
+	/**
+	 * @param outcome
+	 *            the outcome to set
+	 */
+	public void setOutcome(String outcome) {
+		this.outcome = outcome;
+	}
 
 }
