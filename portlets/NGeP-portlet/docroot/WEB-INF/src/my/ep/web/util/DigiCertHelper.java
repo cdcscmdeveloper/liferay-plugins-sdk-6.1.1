@@ -13,10 +13,15 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
+import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -132,6 +137,11 @@ public class DigiCertHelper {
 			KMCClient client = getClient();
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.getChallengeQuestions(identificationNo, 1));
+			
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setUserId(pmUser.getUserId());
+			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -139,10 +149,19 @@ public class DigiCertHelper {
 						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
-					throw new EpException(MessageConst.ERROR_DIGICERT_776051);
-				}
-				break;
+					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+					}
 
+					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+					}
+					break;
+				}
+				
 			default:
 				throw new EpException(MessageConst.ERROR_DIGICERT_776062);
 			}
