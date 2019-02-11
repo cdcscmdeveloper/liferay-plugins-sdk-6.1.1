@@ -1384,7 +1384,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				Locale locale = new FacesScopes().getUserLocale();
 				
 				// enable or disable simple quote in search catalogue
-				if(null == getCatTypeFilterBean().getSearchValue()){
+				//if(null == getCatTypeFilterBean().getSearchValue()){
 					if (resDTO.getViewSuppItemResultBean().getResultList() != null
 							&& resDTO.getViewSuppItemResultBean().getResultList()
 							.size() > 0) {
@@ -1392,7 +1392,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					} else {
 						setSimpleQuoteFlag(Boolean.FALSE);
 					}
-				}
+				//}
 				
 				if (resDTO.getViewSuppItemResultBean().getResultList() != null
 						&& resDTO.getViewSuppItemResultBean().getResultList()
@@ -1461,7 +1461,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * Search catalogue.
 	 */
 	public void searchCatalogue() {
-		log.info("In searchCatalogue");
+		log.info("start searchCatalogue");
+		
 		boolean hasSearchValue = false;
 		String catType = null;
 		
@@ -1560,6 +1561,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		} else {
 			searchDataModel.reloadData();
 		}
+		
+		log.info("end searchCatalogue");
 	}
 	
 	private void checkNonContractedInvalidSearch(String catType) {
@@ -1579,9 +1582,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			throw new EpException(MessageConst.ERROR_716023);
 		}
 	}
-	
-
-	
 	
 	public void searchCatalogueMaintenance() {
 		log.info("In searchCatalogueMaintenance");
