@@ -4236,8 +4236,8 @@ public class SmApplicationUtil {
 			reqDTO.setHomeOperated(0);
 		}
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
-			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
-					.getPaidUpCapital().intValue());
+			reqDTO.setPaidCapital(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital());
 		}
 		if (managedBean.getSmAppl().getApplCategoryType().equals("N")) {
 			reqDTO.setIsSpecialCategory(false);
@@ -4319,8 +4319,8 @@ public class SmApplicationUtil {
 			reqDTO.setHomeOperated(0);
 		}
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
-			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
-					.getPaidUpCapital().intValue());
+			reqDTO.setPaidCapital(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital());
 		}
 		Integer bumiPerc = new Integer(0);
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercentage() != null) {
@@ -8940,9 +8940,9 @@ public class SmApplicationUtil {
 		boolean retVal = true;
 		String suppType = StringUtils.isBlank(appl.getSupplierType()) ? ""
 				: appl.getSupplierType();
-		Integer paidUpCapital = (appl.getSmCompanyBasic() != null && appl
+		BigDecimal paidUpCapital = (appl.getSmCompanyBasic() != null && appl
 				.getSmCompanyBasic().getPaidUpCapital() != null) ? appl
-				.getSmCompanyBasic().getPaidUpCapital().intValue() : 0;
+				.getSmCompanyBasic().getPaidUpCapital() : BigDecimal.ZERO;
 		Integer bumiPercentage = (appl.getSmCompanyBasic() != null && appl
 				.getSmCompanyBasic().getBumiPercentage() != null) ? appl
 				.getSmCompanyBasic().getBumiPercentage().intValue() : 0;
@@ -8973,7 +8973,7 @@ public class SmApplicationUtil {
 				reqDTO.setHomeOperated(0);
 			}
 			if (paidUpCapital != null) {
-				reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+				reqDTO.setPaidCapital(paidUpCapital);
 			}
 			Integer bumiPerc = new Integer(0);
 			if (bumiPercentage != null) {

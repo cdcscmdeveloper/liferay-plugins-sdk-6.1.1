@@ -491,8 +491,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 					}
 				}
 				if(getManagedBean().getPaidUpCapital() != null && getManagedBean().getPaidUpCapital().length() > 0) {
-					Integer capital = Integer.parseInt(getManagedBean().getPaidUpCapital());
-					reqDTO.setPaidUpCapital(capital);
+					reqDTO.setPaidCapital(new BigDecimal(getManagedBean().getPaidUpCapital()));
 				}
 //				if(getBumiPercentage() != null && getBumiPercentage().length() > 0) {
 //					Integer bumi = Integer.parseInt(getBumiPercentage());
@@ -597,7 +596,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 */
 	public List<SelectItem> retrieveCategoryL2List(
 			long categoryL1Id, 
-			String supplierType, String facilityType, Integer paidUpCapital, 
+			String supplierType, String facilityType, BigDecimal paidUpCapital, 
 			Integer bumiPercentage, String categoryType, String businessTypeCode) {
 		
 		if(categoryL1Id == 0) {
@@ -615,7 +614,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			reqDTO.setHomeOperated(0);
 		}
 		if (paidUpCapital != null) {
-			reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+			reqDTO.setPaidCapital(paidUpCapital);
 		}
 		if (categoryType.equals("N")) {
 			reqDTO.setIsSpecialCategory(false);
@@ -655,7 +654,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 */
 	public List<SelectItem> retrieveCategoryL3List(
 			long categoryL2Id, 
-			String supplierType, String facilityType, Integer paidUpCapital, 
+			String supplierType, String facilityType, BigDecimal paidUpCapital, 
 			Integer bumiPercentage, String categoryType, String businessTypeCode) {
 
 		if(categoryL2Id == 0) {
@@ -683,7 +682,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			reqDTO.setHomeOperated(0);
 		}
 		if (paidUpCapital != null) {
-			reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+			reqDTO.setPaidCapital(paidUpCapital);
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
