@@ -3197,8 +3197,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-			if(!BpmOutcomeConst.BPM_REJECT.equals(outcome)){
-				reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+			//Bug #25244
+			if(!(BpmOutcomeConst.BPM_REJECT.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome))){
+				if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() != null) {
+					reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+				}
 			}
 			
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
