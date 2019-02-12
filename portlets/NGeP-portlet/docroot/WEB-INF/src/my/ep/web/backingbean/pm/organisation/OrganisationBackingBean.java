@@ -1369,6 +1369,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 
 		boolean addrExist = false;
 		if (address != null) {
+			log.info("test editDeliveryAddress NOT null");
 
 			if (address.getAddressType().equalsIgnoreCase(AddressType.DELIVERY_ADDRESS.value())) {
 				if (address.getPmAddress().getPmState() != null
@@ -1393,6 +1394,8 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			 * address.setPmContacts(contactLst); }
 			 */
 
+		} else {
+			log.info("test editDeliveryAddress null");
 		}
 		if (!addrExist) {
 
@@ -2979,76 +2982,81 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		}
 	}
 	
- public boolean showTerminationIcon(PmAddressType addressType){
-	 //log.info("showTerminationIcon");
-   PmAddress address= addressType.getPmAddress();
-   PmState state=address.getPmState();
-   PmDistrict district=address.getPmDistrict();
-   PmCity city=address.getPmCity();
-   PmCountry country=  address.getPmCountry();
-	 if(StringUtils.isBlank(address.getAddressName()) || StringUtils.isEmpty(address.getAddressName())){
-		 
-		 return true;	 
-	 }
-   if(StringUtils.isBlank(address.getAddress1()) || StringUtils.isEmpty(address.getAddress1())){
-		 
-		 return true;	 
-	 }
- if(StringUtils.isBlank(address.getPostcode()) || StringUtils.isEmpty(address.getPostcode())){
-	 
-	 return true;	 
-}
-if(StringUtils.isBlank(address.getPhoneCountry()) || StringUtils.isEmpty(address.getPhoneCountry())){
-	 
-	 return true;	 
-}
-/*if(StringUtils.isBlank(address.getPhoneArea()) || StringUtils.isEmpty(address.getPhoneArea())){
-	 
-	 return true;	 
-}*/
-if(StringUtils.isBlank(address.getPhoneNo()) || StringUtils.isEmpty(address.getPhoneNo())){
-	 
-	 return true;	 
-}
- if(null==country || null==country.getCountryId()){
-	 
-	 return true;	 
- }
-	 if(null==state || null==state.getStateId()){
-		 return true;		 
-	 }
-	 if(null!=state && state.getAdoptDivision()){
-		PmDivision division= address.getPmDivision(); 
-		if(null==division || null==division.getDivisionId()){
-			return true;	
+	public boolean showTerminationIcon(PmAddressType addressType){
+	   log.info("showTerminationIcon start");
+	   if (null != addressType) {
+		   
+		   log.info("test showTerminationIcon-addressType NOT null");
+
+		   PmAddress address= addressType.getPmAddress();
+		   if (null != address) {
+			   PmState state=address.getPmState();
+			   PmDistrict district=address.getPmDistrict();
+			   PmCity city=address.getPmCity();
+			   PmCountry country=  address.getPmCountry();
+				 if(StringUtils.isBlank(address.getAddressName()) || StringUtils.isEmpty(address.getAddressName())){
+					 
+					 return true;	 
+				 }
+			     if(StringUtils.isBlank(address.getAddress1()) || StringUtils.isEmpty(address.getAddress1())){
+					 
+					 return true;	 
+				 }
+				 if(StringUtils.isBlank(address.getPostcode()) || StringUtils.isEmpty(address.getPostcode())){
+					 
+					 return true;	 
+				}
+				if(StringUtils.isBlank(address.getPhoneCountry()) || StringUtils.isEmpty(address.getPhoneCountry())){
+					 
+					 return true;	 
+				}
+				/*if(StringUtils.isBlank(address.getPhoneArea()) || StringUtils.isEmpty(address.getPhoneArea())){
+					 
+					 return true;	 
+				}*/
+				if(StringUtils.isBlank(address.getPhoneNo()) || StringUtils.isEmpty(address.getPhoneNo())){
+					 
+					 return true;	 
+				}
+				if(null==country || null==country.getCountryId()){
+					 
+					return true;	 
+				}
+				if(null==state || null==state.getStateId()){
+					return true;		 
+				}
+				if(null!=state && state.getAdoptDivision()){
+					PmDivision division= address.getPmDivision(); 
+					if(null==division || null==division.getDivisionId()){
+						return true;	
+					}
+				}
+				 
+				if(null==district || null==district.getDistrictId()){
+					return true;	 
+				}
+				 
+				if(null==city || null==city.getCityId()){
+					return true;	 
+				}
+		   }
+	   } else {
+		   log.info("test showTerminationIcon-addressType null");
+	   }
+
+	   log.info("showTerminationIcon end");
+	   
+	   return false;
+	}	
+	
+	public void resetAddressType(){
+		if(getManagedBean().getDeliveryAddress().getPmAddress().getPmState().getAdoptDivision()){
+			getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision());	
 		}
-	 }
-	 
-	 if(null==district || null==district.getDistrictId()){
-		 return true;	 
-	 }
-	 
-	 if(null==city || null==city.getCityId()){
-		 return true;	 
-	 }
-	 
-
-	 return false;
- }
-
-	
-public void resetAddressType(){
-	if(getManagedBean().getDeliveryAddress().getPmAddress().getPmState().getAdoptDivision()){
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision());	
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmState(new PmState());
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
+		getManagedBean().getDeliveryAddress().getPmAddress().setAddressName(StringUtils.EMPTY);
+		maintainOrganisation(getManagedBean().getOrgProfile());	
 	}
-	getManagedBean().getDeliveryAddress().getPmAddress().setPmState(new PmState());
-	getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
-	getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
-	getManagedBean().getDeliveryAddress().getPmAddress().setAddressName(StringUtils.EMPTY);
-	maintainOrganisation(getManagedBean().getOrgProfile());
-	
-}
-	
-	
-
 }
