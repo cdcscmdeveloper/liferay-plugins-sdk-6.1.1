@@ -108,6 +108,13 @@
 										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
 										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
 									</p:commandLink>
+									<!-- 	harris -->                               
+								<p:commandLink style="float: left;padding-right: 10px;"
+							onclick="DeleteDlg.show();return false;">
+							<p:graphicImage value="/css/images/design/trash.png"
+								style="margin-right:2px;" />
+						</p:commandLink>
+						
 								</td>
 							</tr>
 						</ui:repeat>
@@ -206,5 +213,14 @@
 				showButtons="false"
 				widgetVar="uploadWV" />
 		</p:dialog>
+<!-- 		harris -->
+		<p:dialog widgetVar="DeleteDlg" id="DeleteDlg" modal="true" height="100" width="500">
+   			 #{lbl['lbl.sm.upload.delete.confirm']}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" oncomplete="DeleteDlg.hide()"
+				action="#{softCertBackingBean.deleteSupDocFileAttachment()}" update="@form"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="DeleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
 
 </ui:composition>
