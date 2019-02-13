@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -712,16 +713,16 @@ public class FinancialOrgBackingBean extends
 									//throw new EpException(MessageConst.ERROR_775211);
 								}
 							}
-							if(StringUtils.isBlank(pmAddress.getPhoneNo() )){
+							//if(StringUtils.isBlank(pmAddress.getPhoneNo() )){
 								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775128,null));
 								//sb.append(System.getProperty("line.separator"));
-								throw new EpException(MessageConst.ERROR_775128);
-							} 
-							if(StringUtils.isBlank(pmAddress.getPhoneArea())){
+								//throw new EpException(MessageConst.ERROR_775128);
+							//} 
+							//if(StringUtils.isBlank(pmAddress.getPhoneArea())){
 								//sb.append(PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_775135,null));
 								//sb.append(System.getProperty("line.separator"));
-								throw new EpException(MessageConst.ERROR_775135);
-							}
+								//throw new EpException(MessageConst.ERROR_775135);
+							//}
 							
 							
 //							for(PmContact pmContact:pmAddressType.getPmContacts()){
@@ -1390,6 +1391,32 @@ public class FinancialOrgBackingBean extends
 		return disabled;
 		
 	}
+	
+	/**
+	 * check if address field data has not entered
+	 * 
+	 * **/
+	
+	public boolean checkHasAddressEntered(String address1) {
+
+		boolean disabled = true;
+
+		if (!address1.equals("")) {
+			disabled = false;
+		}
+
+		return disabled;
+	}
+	
+//	public boolean addressChanged(AjaxBehaviorEvent event) {
+//		
+//		boolean disabled = true;
+//
+//		return disabled;
+//	}
+	
+	
+	
 	/* Financial Service - END */
 	
 	/* Factoring Bank - START */
@@ -1641,6 +1668,8 @@ public class FinancialOrgBackingBean extends
 			getManagedBean().getPmAddress().setPmCity(tempCity);
 		}
 	}
+	
+
 	
 	public boolean bizRegNoMandatory(){
 		boolean isMandatory = false;
