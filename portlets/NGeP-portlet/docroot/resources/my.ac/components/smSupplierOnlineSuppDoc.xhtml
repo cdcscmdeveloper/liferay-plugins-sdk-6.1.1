@@ -140,6 +140,17 @@
 				<p:commandLink ajax="false" value="#{table.smApplDocFiles[0].fileName}" rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
 						<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
 				</p:commandLink>
+				<!-- 	harris -->
+
+				<p:commandLink id="deleteSupDocId" style="white-space: normal !important;"
+								partialSubmit="true" 
+								process="@this" action="#{backingBean.onDeleteSupDocFileAttachment(table)}"
+								update="@form" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()">
+								&#160;
+								<p:graphicImage value="/css/images/design/trash.png" />
+							</p:commandLink>
+
 			</p:column>
 		</p:dataTable>
 		
@@ -161,5 +172,22 @@
 				multiple="false"
 				showButtons="false" />
 		</p:dialog>
+		
+	<!-- 		harris -->
+
+	<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm']}" severity="alert"
+			widgetVar="confirmDeleteSupDocDialog">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" onclick="confirmDeleteSupDocDialog.hide();" 
+					action="#{backingBean.deleteSupDocFileAttachment}" update="@form" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteSupDocDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+
+
 	</cc:implementation>
 </ui:component>
