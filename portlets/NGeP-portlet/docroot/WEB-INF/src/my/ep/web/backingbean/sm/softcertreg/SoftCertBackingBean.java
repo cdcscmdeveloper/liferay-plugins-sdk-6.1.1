@@ -282,6 +282,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 
 	}
+	
+	//harris
+	public void deleteSupDocFileAttachment() {
+		this.getManagedBean().getSelectedSuppDoc().getSuppDocList().get(0)
+		.setSmSofcertDocFiles(null);
+		
+	}
+	
 
 	/**
 	 * Update total amount

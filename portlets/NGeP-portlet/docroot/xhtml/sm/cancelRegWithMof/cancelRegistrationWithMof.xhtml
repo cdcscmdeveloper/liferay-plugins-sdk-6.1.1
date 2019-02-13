@@ -53,7 +53,13 @@
 								style="margin-right:2px;" />
 						</p:commandLink> <p:outputLabel styleClass="outputLabel-view"
 							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
-							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" /></td>
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" />
+							<!-- 	harris   -->					
+					<p:commandLink style="float: left;padding-right: 10px;"
+							onclick="DeleteDlg.show();return false;">
+							<p:graphicImage value="/css/images/design/trash.png"
+								style="margin-right:2px;" />
+						</p:commandLink></td>
 				</tr>
 			</table>
 			<div align="right">
@@ -77,6 +83,15 @@
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				multiple="false" showButtons="false" />
 		</p:dialog>
+<!-- 		harris -->
+	<p:dialog widgetVar="DeleteDlg" id="DeleteDlg" modal="true" height="100" width="500">
+   			 #{lbl['lbl.sm.upload.delete.confirm']}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" oncomplete="DeleteDlg.hide()"
+				action="#{backingBean.deleteCancelMofRegFileAttachment()}" update="@form"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="DeleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />
 	</ui:define>
 </ui:composition>
