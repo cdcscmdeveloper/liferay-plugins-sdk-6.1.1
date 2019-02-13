@@ -202,6 +202,19 @@ public class PmCommonUtil implements Serializable{
 		return isCurrentPairOverlap;
 	}
 	
+	
+	/**
+	 * Check date BankDetailRedundant
+	 * 
+	 * @param bankIdA
+	 * @param bankCodeA
+	 * @param accountCodeA
+	 * @param bankIdB
+	 * @param bankCodeB
+	 * @param accountCodeB
+	 * @return isRedundant
+	 */
+	/** rollback #25136
 	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB) {
 
 		boolean isRedundant = false;
@@ -216,7 +229,7 @@ public class PmCommonUtil implements Serializable{
 
 		return isRedundant;
 	}
-
+*/
 	/**
 	 * Check Role Restriction by role code and user role list
 	 * 
