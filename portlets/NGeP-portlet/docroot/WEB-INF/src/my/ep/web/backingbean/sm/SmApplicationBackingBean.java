@@ -95,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
@@ -130,6 +131,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -308,6 +310,12 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedGstSuppDoc(doc);
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteHqDialog.show();");
+	}
+	//harris
+	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc) {
+		getManagedBean().setSupportDoc(doc);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteSupDocDialog.show();");
 	}
 
 	/**
@@ -9136,7 +9144,13 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
+	//harris
+		public void deleteSupDocFileAttachment(){
 
+			SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
+			mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
+			mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
+		}
 	/**
 	 * Handle and save file attachment for cancel mof registration.
 	 * 
@@ -9163,6 +9177,13 @@ public class SmApplicationBackingBean extends
 
 		}
 	}
+	
+	//harris
+	public void deleteCancelMofRegFileAttachment() {
+		this.getManagedBean().getCancellationAttachment().setFileName(null);
+	}
+	
+	
 
 	/**
 	 * Clone sm application draft from the stable or prev approved application.
