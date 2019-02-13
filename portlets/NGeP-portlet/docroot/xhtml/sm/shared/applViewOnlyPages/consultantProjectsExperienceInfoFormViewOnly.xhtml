@@ -53,7 +53,7 @@
 						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.experienceRemark}" />
 	</p:panel>
 	
-	<p:dialog style="max-height:350px;width:500px" 
+	<p:dialog style="max-height:550px;width:700px" 
 		header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="consDialog" id="consDialog" resizable="false"
 		showEffect="fade" hideEffect="fade" modal="true">
@@ -119,19 +119,37 @@
 									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" />
 								</td>
 							</tr>
-							<tr>
-								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
-								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceCatL1}" escape="false"/></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
-								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceCatL2}" escape="false"/></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
-								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceCatL3}" escape="false"/></td>
-							</tr>
+							 
 						</table>
+						
+						<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+						<br /><br />
+						<TABLE style="text-align: center;">
+							<tr><td colspan="2">
+								<p:dataTable var="consExpCat" widgetVar="consExpCatWidVar"
+									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
+									rowKey="#{consExpCat}" rowIndexVar="index"
+									id="consExpCatDt">
+									
+									<ac:paginator for="contExpCatDt" />
+									
+									<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+										<h:outputText value="#{consExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;" />
+									</p:column>
+						
+						
+									<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+										<h:outputText value="#{consExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;" />
+									</p:column>
+						
+									<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+										<h:outputText value="#{consExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
+									</p:column>
+								 </p:dataTable>
+								 <br />
+							 </td></tr>
+						</TABLE>
+						</p:outputPanel>
 	
 					</td>
 	
