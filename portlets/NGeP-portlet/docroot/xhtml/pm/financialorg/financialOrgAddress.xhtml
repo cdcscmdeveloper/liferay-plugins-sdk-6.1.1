@@ -36,6 +36,9 @@
 					<p:selectOneMenu id="facState" tabindex="1" 
 					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
 					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
+					disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}" 
 						label="#{lbl['lbl.pm.address.state']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -59,7 +62,12 @@
 						styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address1}"
 						size="52" >
-						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=telNo])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=faxNo])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=facState])" process="@this" partialSubmit="true"/> 
+						<p:ajax event="blur" update="@([id$=facDistrict])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=facCity])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=postCode])" process="@this" partialSubmit="true"/>
 						</p:inputText>
 						<p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td >
@@ -92,7 +100,12 @@
 				<td ><p:inputText styleClass="ppDisplayTextL"  tabindex="3"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address2}"
 						size="52" maxlength="100" >
-						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=telNo])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=faxNo])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=facState])" process="@this" partialSubmit="true"/> 
+						<p:ajax event="blur" update="@([id$=facDistrict])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=facCity])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=postCode])" process="@this" partialSubmit="true"/>
 						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
@@ -100,6 +113,9 @@
 					<p:selectOneMenu id="facDistrict" tabindex="9"
 					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
 					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
+					disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}"  
 						label="#{lbl['lbl.pm.address.district']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
 						>
@@ -120,13 +136,21 @@
 				<td ><p:inputText maxlength="100" styleClass="ppDisplayTextL"  tabindex="4"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address3}"
 						size="52" >
-						<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=telNo])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=faxNo])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=facState])" process="@this" partialSubmit="true"/> 
+						<p:ajax event="blur" update="@([id$=facDistrict])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=facCity])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=postCode])" process="@this" partialSubmit="true"/>
 						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td class="tdContent"><p:selectOneMenu id="facCity"  tabindex="10"
 					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
 					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
+					disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}" 
 						label="#{lbl['lbl.pm.address.city']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
 						>
@@ -149,6 +173,9 @@
 				<td ><p:inputText id="postCode" 
 					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
 					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
+					disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}" 
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.postcode}" styleClass="ppDisplayTextL"
 						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
@@ -161,11 +188,12 @@
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						 rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><ac:phone id="telNo" isMobile="false" label="#{lbl['lbl.pm.address.tel']}"
-					required="#{not empty financialOrgBackingBean.managedBean.pmAddress.address1 or not empty financialOrgBackingBean.managedBean.pmAddress.address2
-					or not empty financialOrgBackingBean.managedBean.pmAddress.address3 }"
 						countryCode="#{financialOrgBackingBean.managedBean.pmAddress.phoneCountry}" 
 						areaCode="#{financialOrgBackingBean.managedBean.pmAddress.phoneArea}" 
-						number="#{financialOrgBackingBean.managedBean.pmAddress.phoneNo}"  
+						number="#{financialOrgBackingBean.managedBean.pmAddress.phoneNo}"
+						disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}" 
 						validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}" 
 						/>
 						</td>
@@ -173,7 +201,10 @@
 				<td ><ac:phone id="faxNo" isMobile="false" label="#{lbl['lbl.pm.address.fax']}"
 						countryCode="#{financialOrgBackingBean.managedBean.pmAddress.faxCountry}" 
 						areaCode="#{financialOrgBackingBean.managedBean.pmAddress.faxArea}" 
-						number="#{financialOrgBackingBean.managedBean.pmAddress.faxNo}"  
+						number="#{financialOrgBackingBean.managedBean.pmAddress.faxNo}"
+						disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}"  
 						validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" /></td>
 						  	<td></td>
 						  	
