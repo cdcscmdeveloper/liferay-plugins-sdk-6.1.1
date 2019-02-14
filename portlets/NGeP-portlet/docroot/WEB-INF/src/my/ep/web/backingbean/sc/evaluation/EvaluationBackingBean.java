@@ -3075,7 +3075,7 @@ public class EvaluationBackingBean extends
 						if (packageOfferPrice.getToVariance().intValue() == 0) {
 							log.debug(this.getClass().getName() + ".calculateFinSpecPackageVarieance(): Setting To Varieance value to 0.00 : " 
 									+ packageOfferPrice.getToVariance().intValue());
-							this.getManagedBean().setPackageToVarieance(new BigDecimal(0.00));
+							this.getManagedBean().setPackageToVarieance(this.getManagedBean().getFinSpecZoneEstimatedPrice());
 						} else {
 							BigDecimal tovarieance=	 estimatedPrice.multiply(packageOfferPrice.getToVariance()).divide(
 									new BigDecimal(100), 2,
