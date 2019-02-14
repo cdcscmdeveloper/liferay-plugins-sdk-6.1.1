@@ -124,7 +124,7 @@
 						
 						<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 						<br /><br />
-						<TABLE style="text-align: center;">
+						<TABLE>
 							<tr><td colspan="2">
 								<p:dataTable var="consExpCat" widgetVar="consExpCatWidVar"
 									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
@@ -134,16 +134,16 @@
 									<ac:paginator for="contExpCatDt" />
 									
 									<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-										<h:outputText value="#{consExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{consExpCat.pmCategoryL1.categoryL1Code} - #{consExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;" />
 									</p:column>
 						
 						
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-										<h:outputText value="#{consExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{consExpCat.pmCategoryL2.categoryL2Code} - #{consExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;" />
 									</p:column>
 						
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-										<h:outputText value="#{consExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{consExpCat.pmCategoryL3.categoryL3Code} - #{consExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
 									</p:column>
 								 </p:dataTable>
 								 <br />
