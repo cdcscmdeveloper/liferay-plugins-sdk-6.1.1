@@ -734,14 +734,15 @@ public class TemplateSpecHelper {
 				if (uomPerMonth != null) {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
-				
-				if (itemDurationMonth != null) {
-					totalPrice = totalPrice.multiply(itemDurationMonth);
-				} else {
-					BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
-					
-					if (durationMonth != null) {
-						totalPrice = totalPrice.multiply(durationMonth);
+				if(!specQuestion.getClFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)){
+					if (itemDurationMonth != null) {
+						totalPrice = totalPrice.multiply(itemDurationMonth);
+					} else {
+						BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
+						
+						if (durationMonth != null) {
+							totalPrice = totalPrice.multiply(durationMonth);
+						}
 					}
 				}
 			}	
