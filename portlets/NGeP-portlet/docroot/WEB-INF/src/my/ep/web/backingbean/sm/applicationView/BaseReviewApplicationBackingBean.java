@@ -2156,9 +2156,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			rejectReasons = SmCommonUtil
 					.getHtmlApplicationRejectReasons(rejectReasonList);
 		} else {
-			rejectReasons = SmCommonUtil
-					.getHtmlApplicationRejectReasons(getManagedBean()
-							.getSmAppl().getSmApplRejectReasons());
+			if (getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				SmRemarksReqDTO remarkReqDTO = new SmRemarksReqDTO();
+				remarkReqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+				remarkReqDTO
+						.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT);
+				SmRemaksResDTO remarkResDTO = SmServiceLookup.getSmRemarksSO()
+						.retrieveSmRemarksByDocument(remarkReqDTO);
+				if(!EntityHelper.isCollectionEmpty(remarkResDTO.getRemarksList())){
+					rejectReasons = remarkResDTO.getRemarksList().get(0).getRemark();
+				}
+			} else {
+				rejectReasons = SmCommonUtil
+						.getHtmlApplicationRejectReasons(getManagedBean()
+								.getSmAppl().getSmApplRejectReasons());
+			}
 		}
 		log.info("HTML REJECT REASON:" + rejectReasons);
 		return rejectReasons;
