@@ -195,7 +195,7 @@
 				<p:inputText id="duration"
 					style="min-width:0px !important;width:30px; text-align:right;"
 					value="#{question.clDurationMonth}"
-					rendered="#{isQuestionTypeItem and isShowService and !isFulfilmentTypeAsAndWhen}"
+					rendered="#{isQuestionTypeItem and isShowService}"
 					required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.duration.month']}">
 					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
