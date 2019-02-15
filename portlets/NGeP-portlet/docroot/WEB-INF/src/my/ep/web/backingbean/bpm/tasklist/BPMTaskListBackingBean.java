@@ -876,15 +876,54 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "taskListView");
 
 	}
+	
+	// #24714
+	public void preRenderTaskViewCombined() {
+		log.info("......................preRenderTaskView (Combined)");
 
+		this.getManagedBean().setViewBy("");
+		this.getManagedBean().setViewByGroup("");
+		this.getManagedBean().setDocNo("");
+		this.getManagedBean().setDocNoGroup("");
+		this.getManagedBean().setTaskDesc("");
+		this.getManagedBean().setTaskDescGroup("");
+		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
+		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
+		this.getManagedBean().setDocStatusGroup(0);
+		this.getManagedBean().setDocTypeGroup("");
 
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String docTypeId = originalServletRequest.getParameter("docTypeId");
 
+		if (docTypeId != null && !docTypeId.isEmpty()) {
+			this.getManagedBean().setDocType(docTypeId);
+			originalServletRequest.getParameterMap().remove("docTypeId");
+		} else {
+			this.getManagedBean().setDocType("");
+		}
+		
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
+		
+		FacesScopes sc = new FacesScopes();
+		getManagedBean().setLoginIc(sc.getUserSessionBean().getIdentificationNo());
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "taskListCombined");
+
+	}
 
 
 	public String claimTask()  {
@@ -892,15 +931,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("**********claimTask");
 		
 			claimBpmTask();
+			
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
 
 		return "taskListView?faces-redirect=true";
 
-
 	}
-
 
 
 	public String releaseTask()  {
@@ -908,16 +945,37 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		
 		releaseBpmTask();
 		
-		// Enhancement #24714
-			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		this.getManagedBean().getTaskListBothDataModel().reloadData();
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
 		return "taskListView?faces-redirect=true";
+	}
+	
+	
+	public String claimTaskCombined()  {
 
+		log.info("**********claimTaskCombined");
+		
+			claimBpmTask();
+			
+			//this.getManagedBean().getTaskListBothDataModel().reloadData();
+			this.getManagedBean().getTaskListGroupDataModel().reloadData();
+			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+		return "taskListCombined?faces-redirect=true";
 
 	}
+	
+	public String releaseTaskCombined()  {
+		log.info("**********releaseTaskCombined");
+		
+		releaseBpmTask();
+		
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
 
+		return "taskListCombined?faces-redirect=true";
+
+	}
 
 
 	public void claimTaskInDetailPage()  {
