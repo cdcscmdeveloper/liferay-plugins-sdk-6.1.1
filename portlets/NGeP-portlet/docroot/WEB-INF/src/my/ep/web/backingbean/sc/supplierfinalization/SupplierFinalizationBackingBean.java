@@ -404,7 +404,7 @@ public class SupplierFinalizationBackingBean extends
 		initializeFinalizationRemarks();
 		initializeFinalizationEndorsementRemarks();
 		initializeFinalizationPengreysonRemarks();
-		if(this.getManagedBean().isSecretaryUser() && SourcingConstants.EVALUATE_BY__ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())){
+		if(this.getManagedBean().isSecretaryUser()){
 			log.info("ReevaluationSecretaryUser");
 		
 		String decision = null;
