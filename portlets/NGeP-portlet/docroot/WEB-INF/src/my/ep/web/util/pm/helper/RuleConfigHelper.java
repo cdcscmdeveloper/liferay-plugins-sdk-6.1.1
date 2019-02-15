@@ -116,6 +116,10 @@ public class RuleConfigHelper implements Serializable{
 		return ruleTypeValuelist;
 
 	}
+	
+	public PmConfigRule getPmConfigRuleTypeObj(String ruleType){
+		return getPmConfigRuleTypeObjFromDB(ruleType);
+	}
 
 	/**
 	 * Retrive PmConfigRuleTypeList From Database
