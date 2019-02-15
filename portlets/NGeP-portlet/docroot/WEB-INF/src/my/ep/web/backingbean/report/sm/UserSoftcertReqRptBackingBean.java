@@ -71,6 +71,19 @@ public class UserSoftcertReqRptBackingBean extends
 						df.format(getManagedBean().getDateTo()));
 			}
 		}
+		
+		if(StringUtils.isNotBlank(getManagedBean().getCertApplicationType())){
+			params.put(SmReportConst.PARAM_CERT_APPL_TYPE, getManagedBean().getCertApplicationType());
+		}
+		
+		if(getManagedBean().getCertStatus() != null){
+			params.put(SmReportConst.PARAM_CERT_APPL_STATUS, getManagedBean().getCertStatus());
+		}
+		
+		if(StringUtils.isNotBlank(getManagedBean().getCertProvider())){
+			params.put(SmReportConst.PARAM_CERT_PROVIDER, getManagedBean().getCertProvider());
+		}
+		
 
 		generateSmReport(params);
 	}
@@ -83,6 +96,9 @@ public class UserSoftcertReqRptBackingBean extends
 		getManagedBean().setDateTo(null);
 		getManagedBean().setSoftcertDateType(null);
 		getManagedBean().setIdentificationNo(null);
+		getManagedBean().setCertApplicationType(null);
+		getManagedBean().setCertStatus(null);
+		getManagedBean().setCertProvider(null);
 	}
 
 	private boolean isSuppUser() {
