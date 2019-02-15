@@ -404,6 +404,23 @@ public class SupplierFinalizationBackingBean extends
 		initializeFinalizationRemarks();
 		initializeFinalizationEndorsementRemarks();
 		initializeFinalizationPengreysonRemarks();
+		if(this.getManagedBean().isSecretaryUser() && SourcingConstants.EVALUATE_BY__ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())){
+			log.info("ReevaluationSecretaryUser");
+		
+		String decision = null;
+		if (scQtFinalization.getDecision() != null) {
+			decision = scQtFinalization.getDecision().getParameterCode();
+		}
+		if(null!=decision && ParameterConst.DECISION_RE_EVALUATION.equals(decision)){
+			
+				if(null==this.getManagedBean().getSelectionMode() || " ".equals(this.getManagedBean().getSelectionMode())){
+					log.info("ReevaluationSelectionModeZero");
+					this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+				}
+			//}
+		}
+		}
+		
 		
 		if (this.getManagedBean().getResetSupplierList() == null) {
 			this.getManagedBean().setResetSupplierList(
