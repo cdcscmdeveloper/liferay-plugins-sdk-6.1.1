@@ -10109,4 +10109,37 @@
 				<role-name>user</role-name>
 			</security-role-ref>
 		</portlet>
+		<portlet>
+			<portlet-name>softCertProvider</portlet-name>
+			<display-name>Soft Cert Provider</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>/xhtml/sm/softCertProvider/preRenderSoftCertProvider.xhtml</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Soft Certificate Provider</title>
+				<short-title>Soft Certificate Provider</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
 </portlet-app>
