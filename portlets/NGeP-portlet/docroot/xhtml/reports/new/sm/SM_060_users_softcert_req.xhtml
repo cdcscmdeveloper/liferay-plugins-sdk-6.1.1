@@ -55,19 +55,16 @@
 		
 		<tr>
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.type.date']}" /> 
+				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" /> 
 			</td>
 			<td class="tdContent">
-				<p:selectOneRadio id="reqexpdate" style="width:376px"
-						value="#{userSoftcertReqRptBB.managedBean.softcertDateType}">
-						<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}"
-							itemValue="#{SmReportConst.softcertReqDate}" />
-						<f:selectItem itemLabel="#{lbl['lbl.rptsoftexpdate']}"
-							itemValue="#{SmReportConst.softcertExpDate}" />
-						<f:selectItem itemLabel="#{lbl['lbl.rptsoftrenewaldate']}"
-							itemValue="#{SmReportConst.softcertRenewDate}" />
-						<p:ajax event="change"  update="pnlDateType" />
-					</p:selectOneRadio>
+				<p:selectOneMenu id="certAppType" style="width:376px"
+						value="#{userSoftcertReqRptBB.managedBean.certApplicationType}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.softcert.new']}"
+							itemValue="#{SmReportConst.certAppNew}" />
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.softcert.renew']}"
+							itemValue="#{SmReportConst.certAppRenew}" />
+					</p:selectOneMenu>
 			</td>
 			
 			<td class="tdTitle">
@@ -82,14 +79,53 @@
 		
 		<tr>
 			<td class="tdTitle">
-				<p:outputPanel id="pnlDateType">
-					<p:outputLabel value="#{lbl['lbl.rpt.softcertreqdatefrom']}" rendered="#{userSoftcertReqRptBB.managedBean.softcertDateType == SmReportConst.softcertReqDate}" />
-					<p:outputLabel value="#{lbl['lbl.rpt.softcertexpdatefrom']}" rendered="#{userSoftcertReqRptBB.managedBean.softcertDateType == SmReportConst.softcertExpDate}" />
-					<p:outputLabel value="#{lbl['lbl.rpt.softcertrenewaldatefrom']}" rendered="#{userSoftcertReqRptBB.managedBean.softcertDateType == SmReportConst.softcertRenewDate}" />
-				</p:outputPanel>
+				<p:outputLabel value="#{lbl['lbl.rpt.type.date']}" /> 
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu id="reqexpdate" style="width:376px"
+						value="#{userSoftcertReqRptBB.managedBean.softcertDateType}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.cert.issued.date']}"
+							itemValue="#{SmReportConst.softcertIssuedDate}" />
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.cert.revoke.date']}"
+							itemValue="#{SmReportConst.softcertRevocationDate}" />
+					</p:selectOneMenu>
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}" /> 
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu id="certStatus" style="width:376px"
+						value="#{userSoftcertReqRptBB.managedBean.certStatus}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.cert.appl.status.issued']}"
+							itemValue="#{SmReportConst.certStatusIssued}" />
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.cert.appl.status.pending']}"
+							itemValue="#{SmReportConst.certStatusPending}" />
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.cert.appl.status.rejected']}"
+							itemValue="#{SmReportConst.certStatusRejected}" />
+					</p:selectOneMenu>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.from']}"  />
 			</td>
 			<td class="tdContent">
 				<ac:smReportDateFromTo bBean="#{userSoftcertReqRptBB}" required="false" />
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.sm.softcert.provider']}"  />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu id="certProvider" 
+							value="#{userSoftcertReqRptBB.managedBean.certProvider}">
+					<f:selectItem itemLabel="Digi Cert"
+							itemValue="#{SmReportConst.providerDigiCert}" />
+					<f:selectItem itemLabel="Trust Gate"
+							itemValue="#{SmReportConst.providerTrustGate}" />
+				</p:selectOneMenu>
 			</td>
 		</tr>
 		
