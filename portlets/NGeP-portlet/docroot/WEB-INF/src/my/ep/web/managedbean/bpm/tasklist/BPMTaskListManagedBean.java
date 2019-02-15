@@ -88,6 +88,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private int docStatusGroup;
 	Integer loiPreparationDays = null;
 	private boolean sdoWithMultipleRoles;
+	private String loginIc;
 		
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -184,6 +185,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.processName = processName;
 	}
 	
+	public String getLoginIc() {
+		return loginIc;
+	}
+	
+	public void setLoginIc(String loginIc) {
+		this.loginIc = loginIc;
+	}
+	
 	
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
 	
@@ -191,11 +200,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private PagingDataModel<WorklistItemVO> taskListGroupDataModel = new taskPagingGroupDataModel();
 	
-	// Enhancement #24714
+	// #24714
 	private PagingDataModel<WorklistItemVO> taskListBothDataModel = new taskPagingBothDataModel();
-	
-	
-	
 	
 	
 
@@ -784,7 +790,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.taskListGroupDataModel = taskListGroupDataModel;
 	}
 	
-	// Enhancement #24714
+	// #24714
 	private class taskPagingBothDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
@@ -808,12 +814,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-			   System.out.println("testing BPM auth******" + token);
+			    System.out.println("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
-
+				
 				reqDTO.setDocType(getDocTypeGroup());
 
 				if(getTaskDescGroup()!=null && getTaskDescGroup().trim().length()>0){
@@ -821,19 +827,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				System.out.println("getDocNoGroup():"+getDocNoGroup());
-				if(getDocNoGroup()!=null && getDocNoGroup().trim().length()>0){
+				
+				if(getDocNoGroup()!= null && getDocNoGroup().trim().length() > 0){
 					reqDTO.setDocNumber(getDocNoGroup());
 				}
 			
-				if(getDocStatusGroup()>0){
+				if(getDocStatusGroup() > 0){
 					System.out.println("getDocStatusGroup"+getDocStatusGroup());
 					reqDTO.setStatus(getDocStatusGroup());
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
-				
+					
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY_AND_GROUP);
-				reqDTO.setIsClaimed(false);
+				//reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
 				
 				//SDO User - filer Search
@@ -848,11 +855,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					System.out.println("testing BPM******total="
 							+ responseDTO.getWorklistVO().getTotal());
 
-					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
+						
 						boolean viewGlpFlag = viewGlpFlag();
 						
-						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							try{
+						for( WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
+							
+							try {
 							if (worklistItemVO.getTitle().matches("<")) {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 							}
@@ -938,7 +947,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       System.out.println("getTaskType: "+worklistItemVO.getTaskType());
 						       worklistItemVO.getTaskType();
 						       
-							}catch(Exception ex){
+							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
 								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
 							}
@@ -1222,4 +1231,5 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		reqDTO.setAckFRN(isAckFRN);
 		return deliveryOrderSO.retreiveSupplierDoRefNo(reqDTO).getSupplierDoRefNo();
 	}
+	
 }

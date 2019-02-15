@@ -9,7 +9,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.bpm.my.tasks']}" collapsed="true"
+	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true"
 		toggleable="true">
 
 
@@ -170,33 +170,36 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			
 			<!-- Enhancement #24714  -->
-   			<c:if test="#{tasks.taskType.equals('My')}">
-   				<f:facet name="then">
-   					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
+		
+			 #{tasks.taskType}, #{tasks.process}, #{tasks.acquiredBy} , #{tasks.claimed}, #{tasks.assigneesString}
+				<p:outputPanel rendered="#{tasks.taskType eq 'My'}">
+					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
 						onclick="this.disabled=true;"
-						action="#{bpmTasklistBackingBean.releaseTask}" update="@form"
+						action="#{bpmTasklistBackingBean.releaseTaskCombined}" update="@form"
 						rendered="#{tasks.claimed}">	
 
 						<f:param name="taskId" value="#{tasks.taskId}" />
 					</p:commandButton>
-   				</f:facet>
-   				<f:facet name="else">
-   					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+		    	</p:outputPanel>
+				<p:outputPanel rendered="#{tasks.taskType eq 'Group'}">
+					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
 						onclick="this.disabled=true;"
-						action="#{bpmTasklistBackingBean.claimTask}" update="@form"
-						rendered="#{tasks.claimed}">	
+						action="#{bpmTasklistBackingBean.releaseTaskCombined}" update="@form"
+						rendered="#{tasks.claimed and bpmTasklistBackingBean.managedBean.loginIc eq tasks.acquiredBy}">	
 
 						<f:param name="taskId" value="#{tasks.taskId}" />
 					</p:commandButton>
-   				</f:facet>
-   			</c:if>
-    				
-			<h:panelGroup rendered="#{!tasks.claimed}">
-				<div style="height: 30px"></div>
-			</h:panelGroup>
+					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+						onclick="this.disabled=true;"
+						action="#{bpmTasklistBackingBean.claimTaskCombined}" update="@form"
+						rendered="#{!tasks.claimed}">	
 
+						<f:param name="taskId" value="#{tasks.taskId}" />
+					</p:commandButton>
+		    	</p:outputPanel>
+		
+			
 		</p:column>
 
 

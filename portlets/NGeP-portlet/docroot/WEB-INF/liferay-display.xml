@@ -150,7 +150,7 @@
 		    <portlet id="ReviewSupplierView"></portlet>
 		    <portlet id="scRequestNoteSearch" />
 		    <portlet id="scCreateManualSourcing"></portlet>
-		     <portlet id="scReviewManualSourcing"></portlet>
+		    <portlet id="scReviewManualSourcing"></portlet>
 		    <portlet id="scAddtionalAttandance" />
 		    <portlet id="scCreateQuotationTender" />
 		    <portlet id="scManualSourcingSupplierResponse"/>
@@ -258,6 +258,7 @@
 
 
 			<portlet id="BpmTaskList"></portlet>
+			<portlet id="TasklistCombined"></portlet>
 			<portlet id="BpmServiceRetry"></portlet>
 			<portlet id="Welcome"></portlet>
 			<portlet id="supplierUserActivation"></portlet>

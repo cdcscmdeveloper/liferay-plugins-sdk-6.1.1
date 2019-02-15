@@ -1150,6 +1150,16 @@
 		<css-class-wrapper>bpmtasklist-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>TasklistCombined</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>tasklistcombined-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>BpmServiceRetry</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
