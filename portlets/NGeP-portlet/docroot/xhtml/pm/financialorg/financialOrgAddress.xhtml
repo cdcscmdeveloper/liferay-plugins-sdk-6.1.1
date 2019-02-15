@@ -68,6 +68,7 @@
 						<p:ajax event="blur" update="@([id$=facDistrict])" process="@this" partialSubmit="true"/>
 						<p:ajax event="blur" update="@([id$=facCity])" process="@this" partialSubmit="true"/>
 						<p:ajax event="blur" update="@([id$=postCode])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=contacePerson])" process="@this" partialSubmit="true"/>
 						</p:inputText>
 						<p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td >
@@ -106,6 +107,7 @@
 						<p:ajax event="blur" update="@([id$=facDistrict])" process="@this" partialSubmit="true"/>
 						<p:ajax event="blur" update="@([id$=facCity])" process="@this" partialSubmit="true"/>
 						<p:ajax event="blur" update="@([id$=postCode])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=contacePerson])" process="@this" partialSubmit="true"/>
 						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
@@ -142,6 +144,7 @@
 						<p:ajax event="blur" update="@([id$=facDistrict])" process="@this" partialSubmit="true"/>
 						<p:ajax event="blur" update="@([id$=facCity])" process="@this" partialSubmit="true"/>
 						<p:ajax event="blur" update="@([id$=postCode])" process="@this" partialSubmit="true"/>
+						<p:ajax event="blur" update="@([id$=contacePerson])" process="@this" partialSubmit="true"/>
 						</p:inputText></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
@@ -214,7 +217,10 @@
 					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><p:commandLink
 						action="#{financialOrgBackingBean.addContacePerson}"  tabindex="7"
-						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
+						update="addManualDelAddrPnl" process="addManualDelAddrPnl" id="contacePerson"
+						disabled ="#{empty financialOrgBackingBean.managedBean.pmAddress.address1 and 
+								 empty financialOrgBackingBean.managedBean.pmAddress.address2 and
+								 empty financialOrgBackingBean.managedBean.pmAddress.address3}" 
 						partialSubmit="true">
 						<p:graphicImage
 							title="#{lbl['lbl.pm.header.general.org.contactPerson']}"
