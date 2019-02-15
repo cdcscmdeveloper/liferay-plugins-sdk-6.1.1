@@ -12,6 +12,10 @@ public class UserSoftcertReqRptManagedBean extends SmReportManagedBean{
 	private String userName;
 	private String companyName;
 	private boolean supplierUser;
+	private String certApplicationType;
+	private String dateRangeType;
+	private String certProvider;
+	private String certStatus;
 
 	public String getSoftcertDateType() {
 		return softcertDateType;
@@ -44,5 +48,37 @@ public class UserSoftcertReqRptManagedBean extends SmReportManagedBean{
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	public String getCertApplicationType() {
+		return certApplicationType;
+	}
+
+	public void setCertApplicationType(String certApplicationType) {
+		this.certApplicationType = certApplicationType;
+	}
+
+	public String getDateRangeType() {
+		return dateRangeType;
+	}
+
+	public void setDateRangeType(String dateRangeType) {
+		this.dateRangeType = dateRangeType;
+	}
+
+	public String getCertProvider() {
+		return certProvider;
+	}
+
+	public void setCertProvider(String certProvider) {
+		this.certProvider = certProvider;
+	}
+
+	public String getCertStatus() {
+		return certStatus;
+	}
+
+	public void setCertStatus(String certStatus) {
+		this.certStatus = certStatus;
 	}
 }
