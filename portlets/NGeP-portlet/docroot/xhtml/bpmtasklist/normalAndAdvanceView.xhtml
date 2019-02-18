@@ -170,9 +170,8 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<!-- Enhancement #24714  -->
+			<!-- #24714  -->
 		
-			 #{tasks.taskType}, #{tasks.process}, #{tasks.acquiredBy} , #{tasks.claimed}, #{tasks.assigneesString}
 				<p:outputPanel rendered="#{tasks.taskType eq 'My'}">
 					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
 						onclick="this.disabled=true;"
