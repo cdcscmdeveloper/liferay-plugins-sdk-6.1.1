@@ -85,7 +85,7 @@
            	<portlet id="pmPoJobWeight"></portlet>
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
-			<portlet id="softCertProdiver"></portlet>
+			<portlet id="softCertProvider"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
