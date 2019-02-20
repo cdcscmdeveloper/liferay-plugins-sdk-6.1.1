@@ -15,11 +15,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.UomHelper;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -42,12 +39,7 @@ public class PmUomConverter implements Converter {
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
 		
 		if (value != null && value.trim().length() > 0 && StringUtils.isNumeric(value)) {
-			UomReqDTO reqDTO = new UomReqDTO();
-			reqDTO.setUomId(Long.valueOf(value));
-			IUomSO uomSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUomSO.class);
-			return uomSO.retrieveUomByUomId(reqDTO).getPmUom();
+			return UomHelper.getInstance().retrieveUomById(Long.valueOf(value));
 		} else {
 			return null;
 		}
