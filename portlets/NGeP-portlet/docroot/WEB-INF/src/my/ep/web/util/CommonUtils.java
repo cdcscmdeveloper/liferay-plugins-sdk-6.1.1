@@ -25,7 +25,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  *
  */
 public class CommonUtils {
-	private static Map<String, Long> uomMap = new HashMap<String, Long>();
+	private static Map<String, Integer> uomMap = new HashMap<String, Integer>();
 	
 	/**
 	 * Get the display date time format pattern by date format type.
@@ -100,52 +100,35 @@ public class CommonUtils {
 		int decimalPrecision = 0;
 		
 		switch (numberFormatType) {
-			case CommonConstants.NUMBER_FORMAT_TYPE_QTY : 
-				
-				PmUom pmUom = null;
-				
+			case CommonConstants.NUMBER_FORMAT_TYPE_QTY : 				
 				if (StringUtils.isNotBlank(uomCode)) {
-					Long uomId = uomMap.get(uomCode);
-					
-					IUomSO uomSO;
-					
-					try {
-						uomSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
-						
-						UomReqDTO reqDTO = new UomReqDTO();
-						
-						if (uomId == null || uomId == 0) {
+					Integer uomDecimalPrecision = uomMap.get(uomCode);
+					if (uomDecimalPrecision == null) {
+						IUomSO uomSO;
+						try {
+							uomSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+							
+							UomReqDTO reqDTO = new UomReqDTO();
 							reqDTO.setUomCode(uomCode);
 							
 							// Get PmUom from db.
 							UomResDTO resDTO = uomSO.retrieveUomByCode(reqDTO);
-							
-							pmUom = resDTO.getPmUom();
-						    
+							PmUom pmUom = resDTO.getPmUom();
 							if (pmUom != null) {
 								// Put UOM into map.
-								uomMap.put(uomCode, pmUom.getUomId());
+								decimalPrecision = pmUom.getDecimalScale();
+								uomMap.put(uomCode, decimalPrecision);
 							}
-						    
-						} else {
-							reqDTO.setUomId(uomId);
 							
-							// Get PmUom from jpa cache.
-							UomResDTO resDTO = uomSO.retrieveUomByUomId(reqDTO);
-							
-							pmUom = resDTO.getPmUom();
-						}
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-						throw new EpException(e.getMessage());
-					} finally {
-						uomSO = null;
-					}	
-				}
-				
-				if (pmUom != null) {
-					decimalPrecision = pmUom.getDecimalScale();
+						} catch (Exception e) {
+							e.printStackTrace();
+							throw new EpException(e.getMessage());
+						} finally {
+							uomSO = null;
+						}	
+					} else {
+						decimalPrecision = uomDecimalPrecision;
+					}
 				}
 				
 				break;
