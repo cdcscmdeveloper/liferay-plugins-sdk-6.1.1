@@ -4611,6 +4611,10 @@ public class LOADetailBackingBean extends
 					isCalculateMaxPriceItem = Boolean.FALSE;
 				}
 			}
+			//fix loaitem reassign
+			
+			scLoiLoaItem.getScRequestItem().getTplSpecQuestion().setClFulfilmentTypeCode(scLoiLoaItem.getScLoa().getScLoiLoa().getFulfilmentTypeCode());
+			
 			if(isCalculateMaxPriceItem){
 				if(quantity != null){
 					subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
