@@ -9,14 +9,15 @@
 	<table>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
-			<td><p:selectOneRadio id="onLnSuppDocs"
+			<td>
+			<!-- #25243 -->
+			    <p:selectOneRadio id="onLnSuppDocs"
 					value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
-						itemValue="H" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
 						itemValue="S" />
 					<p:ajax update="supDocPan" event="change" />
-				</p:selectOneRadio></td>
+				</p:selectOneRadio>
+			</td>
 		</tr>
 	</table>
 	<p:panel toggleable="true" id="onSupTblPan">
