@@ -263,12 +263,21 @@ public class ParameterHelper implements Serializable{
 	 * @return the PmParameter instance
 	 */
 	public PmParameter getParameterByTypeAndCode(String parameterType, String parameterCode) {
-		PmParameterDesc pmParameterDesc = getParameterDescByTypeAndCode(parameterType, parameterCode);
-		
-		if (pmParameterDesc != null) {
-			return pmParameterDesc.getPmParameter();
-		} else {
-			return null;
+		IParameterSO parameterSO;
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterType(parameterType);
+		parameterReqDTO.setParameterCode(parameterCode);
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(parameterReqDTO);
+			return resDTO.getPmParameter();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			parameterSO = null;
 		}
 	}
 	
