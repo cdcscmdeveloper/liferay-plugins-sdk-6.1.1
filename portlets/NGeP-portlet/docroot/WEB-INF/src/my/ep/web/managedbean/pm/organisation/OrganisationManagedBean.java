@@ -16,9 +16,13 @@ import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -117,11 +121,24 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private boolean notFirstRun;
 	private Long selectedZoneId;
 	private Long sstSupplierId;
+	private String addressName;
+	private PmState state = new PmState();
+	private PmDivision division = new PmDivision();
+	private PmDistrict district = new PmDistrict();
+	private PmCity city = new PmCity();
+	private String recievingAddressName;
+	
+	private int resetTablerow;
+	private PmAddressType recevingAddress;
 
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
 		deliveryAddress = new PmAddressType();
+		
+		recevingAddress =new PmAddressType();
+		
+		
 		officeContactPerson = new PmContact();
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(new PmAddress());
@@ -427,6 +444,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public List<PmAddressType> getAddressTypesList() {
 		return addressTypesList;
+		
 	}
 
 	/**
@@ -967,4 +985,79 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setServtaxregEndDate(Date servtaxregEndDate) {
 		this.servtaxregEndDate = servtaxregEndDate;
 	}
+
+	public String getAddressName() {
+		return addressName;
+	}
+
+	public void setAddressName(String addressName) {
+		this.addressName = addressName;
+	}
+//
+//	public Long getStateId() {
+//		return stateId;
+//	}
+//
+//	public void setStateId(Long stateId) {
+//		this.stateId = stateId;
+//	}
+
+	public int getResetTablerow() {
+		return resetTablerow;
+	}
+
+	public void setResetTablerow(int resetTablerow) {
+		this.resetTablerow = resetTablerow;
+	}
+
+	public PmAddressType getRecevingAddress() {
+		return recevingAddress;
+	}
+
+	public void setRecevingAddress(PmAddressType recevingAddress) {
+		this.recevingAddress = recevingAddress;
+	}
+
+	public PmState getState() {
+		return state;
+	}
+
+	public void setState(PmState state) {
+		this.state = state;
+	}
+
+	public PmDivision getDivision() {
+		return division;
+	}
+
+	public void setDivision(PmDivision division) {
+		this.division = division;
+	}
+
+	public PmDistrict getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(PmDistrict district) {
+		this.district = district;
+	}
+
+	public PmCity getCity() {
+		return city;
+	}
+
+	public void setCity(PmCity city) {
+		this.city = city;
+	}
+
+	public String getRecievingAddressName() {
+		return recievingAddressName;
+	}
+
+	public void setRecievingAddressName(String recievingAddressName) {
+		this.recievingAddressName = recievingAddressName;
+	}
+	
+	
+	
 }
