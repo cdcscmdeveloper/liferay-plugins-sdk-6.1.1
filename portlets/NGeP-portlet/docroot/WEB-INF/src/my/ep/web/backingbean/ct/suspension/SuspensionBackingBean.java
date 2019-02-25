@@ -253,7 +253,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						while (sourceIt.hasNext()) {
 							PmUser user = sourceIt.next();
 							log.debug("user : "+user+"; approverUser: "+approverUser);
-							if (user!=null && approverUser!=null && (user.getUserId() == approverUser.getUserId())) {
+							if (user!=null && approverUser!=null && (user.getUserId().longValue() == approverUser.getUserId().longValue())) {
 								sourceIt.remove();
 								isValidApprover = true;
 								break;
