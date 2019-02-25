@@ -3976,7 +3976,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
 			
 			if (contractMinistry != null && committeeMinistry != null
-					&& contractMinistry.getOrgProfileId() == committeeMinistry.getOrgProfileId()) {	
+					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {	
 				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
 				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
 				
