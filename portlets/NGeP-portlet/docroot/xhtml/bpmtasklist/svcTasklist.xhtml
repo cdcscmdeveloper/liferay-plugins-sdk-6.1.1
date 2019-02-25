@@ -97,7 +97,20 @@
 								</p:selectOneMenu></td>
 			
 						</tr>
-					</table>
+
+						<tr>
+							<td width="15%"><p:outputLabel
+									value="#{lbl['lbl.sm.applicationtype']}" /></td>
+							<td width="20%"><p:selectOneMenu id="applTypeId"
+									label="#{lbl['lbl.sm.applicationtype']}"
+									value="#{svcTasklistBackingBean.managedBean.applType}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="" />
+									<f:selectItems
+										value="#{svcTasklistBackingBean.managedBean.applTypeList}" />
+								</p:selectOneMenu></td>
+						</tr>
+						</table>
 					<div style="text-align: right;">
 						<p:commandButton id="schBtn" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{svcTasklistBackingBean.searchAction}" value="#{lbl['lbl.btn.search']}"
