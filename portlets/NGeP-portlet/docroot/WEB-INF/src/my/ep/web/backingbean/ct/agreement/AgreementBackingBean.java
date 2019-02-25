@@ -394,7 +394,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					boolean isValidApprover = false;
 					while (sourceIt.hasNext()) {
 						PmUser user = sourceIt.next();
-						if (user.getUserId() == approverUser.getUserId()) {
+						if (user.getUserId().longValue() == approverUser.getUserId().longValue()) {
 							sourceIt.remove();
 							isValidApprover = true;
 							break;
