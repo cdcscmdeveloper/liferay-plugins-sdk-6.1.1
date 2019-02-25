@@ -22,6 +22,18 @@ import javax.naming.NamingException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -75,18 +87,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.util.PortalUtil;
-
 /**
  * Backing Bean For Contract Termination 
  * 
@@ -97,6 +97,7 @@ import com.liferay.portal.util.PortalUtil;
 @ViewScoped
 public class TerminationBackingBean extends ContractBaseBackingBean<TerminationManagedBean> {
 
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
@@ -225,7 +226,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						boolean isValidApprover = false;
 						while (sourceIt.hasNext()) {
 							PmUser user = sourceIt.next();
-							if (user.getUserId() == approverUser.getUserId()) {
+							if (user.getUserId().longValue() == approverUser.getUserId().longValue()) {
 								sourceIt.remove();
 								isValidApprover = true;
 								break;

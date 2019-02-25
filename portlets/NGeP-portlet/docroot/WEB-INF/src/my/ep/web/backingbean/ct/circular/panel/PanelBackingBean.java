@@ -261,7 +261,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					boolean isValidApprover = false;
 					while (sourceIt.hasNext()) {
 						PmUser user = sourceIt.next();
-						if (user.getUserId() == approverUser.getUserId()) {
+						if (user.getUserId().longValue() == approverUser.getUserId().longValue()) {
 							sourceIt.remove();
 							isValidApprover = true;
 							break;
@@ -346,7 +346,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					boolean isValidApprover = false;
 					while (sourceIt.hasNext()) {
 						PmUser user = sourceIt.next();
-						if (user.getUserId() == approverUser.getUserId()) {
+						if (user.getUserId().longValue() == approverUser.getUserId().longValue()) {
 							sourceIt.remove();
 							isValidApprover = true;
 							break;
