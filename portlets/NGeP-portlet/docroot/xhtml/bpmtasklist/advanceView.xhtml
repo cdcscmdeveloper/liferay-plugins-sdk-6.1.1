@@ -129,7 +129,8 @@
 			<f:facet name="header">
 					#{lbl['lbl.bpm.description']}
 				</f:facet>
-			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}">
+			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}" onclick="blockWidget.show();"
+					oncomplete="blockWidget.hide();">
 				<f:param name="taskId" value="#{tasks.taskId}" />
 				<f:param name="process" value="#{tasks.process}" />
 				<f:param name="taskName" value="#{tasks.taskName}" />
