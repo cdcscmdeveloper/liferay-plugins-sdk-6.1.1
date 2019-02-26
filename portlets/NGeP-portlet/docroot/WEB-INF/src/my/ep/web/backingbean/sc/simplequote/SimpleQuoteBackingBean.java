@@ -51,6 +51,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -4531,6 +4532,12 @@ public class SimpleQuoteBackingBean extends
 			criteria.append("supplierId").append("^")
 					.append(supplierCriteria.toString()).append("|");
 		}
+		
+		//Bug #25386
+		criteria.append("smAppl.supplierType")
+		.append("^").append(SupplierManagementConst.SUPP_TYPE_CONSULTANT)
+		.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
+		.append("|");
 
 		criteria.append("recordStatus^1");
 		return criteria.toString();
