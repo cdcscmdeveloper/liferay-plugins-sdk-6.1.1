@@ -160,7 +160,7 @@ public class LovBackingBean implements Serializable {
 			reqDTO.setSearchMethod(getLovBean().getSearchMethod());
 			
 			// Added below method as part of SIR 22631.
-			excludeConsultant(reqDTO);
+			//excludeConsultant(reqDTO);
 						
 			lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
 //			ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
