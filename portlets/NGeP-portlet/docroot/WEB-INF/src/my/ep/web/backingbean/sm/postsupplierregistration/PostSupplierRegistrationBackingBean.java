@@ -1076,6 +1076,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
 					path = SOFT_CERT_PATH;
 				}
+				// #25384: happen if the previous admin already request
+				// softcert and replaced by this new admin which after request
+				// need to do softcert payment.
+				else if (softCertStatus == SupplierManagementConst.IS_SOFTCERT_REQ) {
+					path = TASK_LIST_PATH;
+				}
 				
 				getManagedBean().setFlowStatus(2);
 			}
