@@ -1325,6 +1325,7 @@ public class PurchaseInquiryBackingBean extends
 		// price change lister
 		priceTypeChangeListener();
 		
+		/* comment for Bug #25388
 		try {
 			boolean hasActiveCancelMOFAppl = false;
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
@@ -1339,6 +1340,7 @@ public class PurchaseInquiryBackingBean extends
 		} catch (EpException e) {
 			handleException(e);
 		}
+		*/
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (isPageNavFlag) { // page nav.to purchase inquiry
