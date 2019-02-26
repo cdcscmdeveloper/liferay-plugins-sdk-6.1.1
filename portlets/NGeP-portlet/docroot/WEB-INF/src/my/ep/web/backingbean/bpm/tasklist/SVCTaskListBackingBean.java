@@ -15,7 +15,6 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -27,7 +26,6 @@ import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -284,6 +282,7 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		getManagedBean().setSupplierName(null);
 		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
 		getManagedBean().setDistrictId(0);
+		getManagedBean().setApplType(null);
 
 		getManagedBean().getSearchDataModel().getList().clear();
 	}
@@ -311,6 +310,7 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 			getManagedBean().setDistrictId(0);
 			getManagedBean().setSupplierName(null);
 			getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+			getManagedBean().setApplType(null);
 			getManagedBean().getSearchDataModel().reloadData();
 		}else{
 			getManagedBean().setApplNo(null);
@@ -319,6 +319,7 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 			getManagedBean().setEpNo(null);
 			getManagedBean().setStateId(0);
 			getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+			getManagedBean().setApplType(null);
 			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			getManagedBean().setStateLs(null);
