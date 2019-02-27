@@ -11,12 +11,22 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
 			<td>
 			<!-- #25243 -->
-			    <p:selectOneRadio id="onLnSuppDocs"
-					value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
-						itemValue="S" />
-					<p:ajax update="supDocPan" event="change" />
-				</p:selectOneRadio>
+				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType == 'B'}">
+					<p:selectOneRadio id="onLnSuppDocs_B" value="#{backingBean.managedBean.smAppl.supportingDocMode}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+							itemValue="S" />
+						<p:ajax update="supDocPan" event="change" />
+					</p:selectOneRadio>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType != 'B'}">
+					<p:selectOneRadio id="onLnSuppDocs"	value="#{backingBean.managedBean.smAppl.supportingDocMode}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
+							itemValue="H" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+							itemValue="S" />
+						<p:ajax update="supDocPan" event="change" />
+					</p:selectOneRadio>
+				</p:outputPanel>
 			</td>
 		</tr>
 	</table>
