@@ -18,6 +18,7 @@ import java.util.List;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -26,6 +27,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -734,12 +737,14 @@ public class TemplateSpecHelper {
 				if (uomPerMonth != null) {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
-				if(!specQuestion.getClFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)){
+				
+				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
+						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 					if (itemDurationMonth != null) {
 						totalPrice = totalPrice.multiply(itemDurationMonth);
 					} else {
 						BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
-						
+
 						if (durationMonth != null) {
 							totalPrice = totalPrice.multiply(durationMonth);
 						}
@@ -869,6 +874,7 @@ public class TemplateSpecHelper {
 					specAnswersToDelete.add(specAnswer);
 				}
 			}
+			
 		}
 	}
 	
@@ -963,7 +969,8 @@ public class TemplateSpecHelper {
 
 		List<TplSpecQuestion> specQuestionsToBeDeleted = specMaster
 				.getFinSpecQuestionsToDelete();
-		if (CollectionUtils.isNotEmpty(specQuestion.getFinSpecQuestions())) {
+		/*if (CollectionUtils.isNotEmpty(specQuestion.getFinSpecQuestions())) {
+			log.info("financialSpecQuestionsnotnull");
 			if (specQuestionsToBeDeleted == null) {
 				specQuestionsToBeDeleted = new ArrayList<TplSpecQuestion>();
 				specMaster.setFinSpecQuestionsToDelete(specQuestionsToBeDeleted);
@@ -974,9 +981,35 @@ public class TemplateSpecHelper {
 								.equalsIgnoreCase(specquestion.getQuestionType())) {
 					specquestion.setDeleted(true);
 					specQuestionsToBeDeleted.add(specquestion);
+					log.info("financialSpecDeleted"+specQuestion.getSpecQuestionId());
 				}
 			}
 			specQuestion.setFinSpecQuestions(null);
+		}else{*/
+			//log.info("financialSpecQuestionsnull");
+			if(null!=specQuestion && !specQuestion.isBrandNew()){
+		ITemplateSpecSO	templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		specReqDTO.setSpecQuestionId(specQuestion.getSpecQuestionId());
+		TemplateSpecResDTO resDTO=	templateSpecSo.getSpecificationsByQuestionId(specReqDTO);
+		if(CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())){
+			if (specQuestionsToBeDeleted == null) {
+				specQuestionsToBeDeleted = new ArrayList<TplSpecQuestion>();
+				specMaster.setFinSpecQuestionsToDelete(specQuestionsToBeDeleted);
+			}
+			for (TplSpecQuestion specquestion : resDTO.getSpecQuestionList()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+								.equalsIgnoreCase(specquestion.getQuestionType())) {
+					specquestion.setDeleted(true);
+					specQuestionsToBeDeleted.add(specquestion);
+					//log.info("elsefinancialSpecDeleted"+specQuestion.getSpecQuestionId());
+				}
+			}
+			
+		}
+			//}
+		specQuestion.setFinSpecQuestions(null);
 		}
 	}
 }
