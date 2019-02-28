@@ -7,28 +7,31 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
-			<td>
-			<!-- #25243 -->
-				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType == 'B'}">
-					<p:selectOneRadio id="onLnSuppDocs_B" value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
-							itemValue="S" />
-						<p:ajax update="supDocPan" event="change" />
-					</p:selectOneRadio>
-				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType != 'B'}">
-					<p:selectOneRadio id="onLnSuppDocs"	value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
-							itemValue="H" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
-							itemValue="S" />
-						<p:ajax update="supDocPan" event="change" />
-					</p:selectOneRadio>
-				</p:outputPanel>
-			</td>
-		</tr>
+		<!-- #25243 -->
+		<c:choose>
+			<c:when test="#{backingBean.managedBean.smAppl.applType == 'B'}">
+				<tr>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.suppDoc.online.bumi.only']}" escape="false" />
+						<p:inputText value="#{backingBean.managedBean.smAppl.supportingDocMode}" id="suppDocOnline" type="hidden" />
+					</td>
+				</tr>
+			</c:when>
+			<c:otherwise>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
+					<td>
+						<p:selectOneRadio id="offLnSuppDocs" value="#{backingBean.managedBean.smAppl.supportingDocMode}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
+								itemValue="H" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+								itemValue="S" />
+							<p:ajax update="supDocPan" event="change" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+			</c:otherwise>
+		</c:choose>
 	</table>
 	<p:panel toggleable="true" id="onSupTblPan">
 		<f:facet name="header">
@@ -50,19 +53,90 @@
 			</table>
 			<br />
 		</c:if>
-
-		<table style="width: 100%">
-
-			<tr>
-				<td><h:outputText styleClass="instruction"
-						value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
-
-			</tr>
-			<tr>
-				<td><h:outputText styleClass="instruction"
-						value="#{lbl['lbl.sm.suppDoc.instruction.attachment']}" escape="false" /></td>
-			</tr>
-		</table>
+		<!-- #25243 -->
+		<c:choose>
+		    <c:when test="#{backingBean.managedBean.smAppl.applType == 'B'}">
+				<table style="width: 100%">
+						<tr>
+							<td><h:outputText styleClass="instruction"
+								value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
+						</tr>
+						<tr>
+							<td><h:outputText styleClass="instruction"
+								value="#{lbl['lbl.sm.suppDoc.instruction.attachment']}" escape="false" /></td>
+						</tr>
+				</table>
+			</c:when>
+			<c:otherwise>
+				<table style="width: 100%;">
+					<tr>
+						<td>
+							<h:outputText style="float:left"
+								value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> 
+							<h:outputText style="float:left"
+								value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br />
+						</td>
+						<td>
+							<div align="right">
+								<p:commandLink action="#{backingBean.printDocCheckList}" update="@form"
+								   onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this">
+									<p:graphicImage value="/css/images/design/print.png"
+												style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
+								</p:commandLink>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<p:spacer height="10px" />
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 33%">
+							<table>
+								<tr>
+									<td><h:outputText style="float:left"
+											value="#{lbl['lbl.sm.suppDoc.offline.peninAddr1']}"
+											escape="false" /></td>
+								</tr>
+								<tr>
+									<td style="padding-top: 10px;"><h:outputText
+											style="float:left"
+											value="#{lbl['lbl.sm.suppDoc.offline.peninAddr2']}"
+											escape="false" /></td>
+								</tr>
+							</table>
+						</td>
+	
+						<td style="width: 33%"><table>
+								<tr>
+									<td><h:outputText style="float:left"
+											value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr1']}"
+											escape="false" /></td>
+								</tr>
+								<tr>
+									<td style="padding-top: 10px;"><h:outputText
+											style="float:left"
+											value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr2']}"
+											escape="false" /></td>
+								</tr>
+							</table></td>
+						<td style="width: 33%"><table>
+								<tr>
+									<td><h:outputText style="float:left"
+											value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr1']}"
+											escape="false" /></td>
+								</tr>
+								<tr>
+									<td style="padding-top: 10px;"><h:outputText
+											style="float:left"
+											value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr2']}"
+											escape="false" /></td>
+								</tr>
+							</table></td>
+					</tr>
+				</table>
+			</c:otherwise>
+		</c:choose>
+				
 		<p:spacer height="10px" />
 		
 		<ac:smSupplierOnlineSuppDoc tableId="mandatoryTableId" uploadDialogId="mandatoryUploadId"
