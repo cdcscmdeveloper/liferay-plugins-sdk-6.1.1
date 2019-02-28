@@ -1,5 +1,6 @@
 package my.ep.rest.sm;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -25,7 +26,6 @@ public class DowngradeExpMofPersonnelRest {
 	@Path("downgradeexpiredpersonnel")
 	public Response downgradeExpMofPersonnel() {
 		log.info("Before success calling downgradeExpMofPersonnel rest api....");
-
 		try{
 			ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
 			SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMof();
@@ -34,30 +34,32 @@ public class DowngradeExpMofPersonnelRest {
 			log.info("**********ChangeExpiredMofPersonnelToBasicJob - Start************");
 			if(mofAccountLs.size() > 0){
 				for(SmMofAccount mofAccount : mofAccountLs){
-					log.info("Supplier ID >>>>" + mofAccount.getSmSupplier().getSupplierId());
-					boolean isChangeStatus = false;
-					boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(mofAccount.getSmSupplier());
+					if(mofAccount.getSmSupplier().getSmAppl() != null){
+						boolean isChangeStatus = false;
+						boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(mofAccount.getSmSupplier());
 
-					if(!activeAppl){
-						isChangeStatus = true;
-					}
-
-					//change role to basic
-					if(isChangeStatus){
-						//List<SmPersonnel> personnelLs = mofAccount.getSmSupplier().getSmAppl().getSmPersonnels();
-						mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
-
-						SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
-						schedulerReqDTO.setMofAccount(mofAccount);
-
-
-						try{
-							SmServiceLookup.getSmSchedulerSO().updateMOFSupplierPersonnelToBasic(schedulerReqDTO);
-						}catch(Exception ex){
-							log.info("ChangeExpiredMofPersonnelToBasicJob updateMoFAcc -  Exception>>>>" + 
-									ex.getMessage() + "- supplier ID -" + mofAccount.getSmSupplier());
+						if(!activeAppl){
+							isChangeStatus = true;
 						}
+			
+						//change role to basic
+						if(isChangeStatus){
+							//List<SmPersonnel> personnelLs = mofAccount.getSmSupplier().getSmAppl().getSmPersonnels();
+							mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
+							mofAccount.setLastCheckDate(new Date());
+							SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
+							schedulerReqDTO.setMofAccount(mofAccount);
+
+							try{
+								SmServiceLookup.getSmSchedulerSO().updateMOFSupplierPersonnelToBasic(schedulerReqDTO);
+							}catch(Exception ex){
+								log.info("ChangeExpiredMofPersonnelToBasicJob updateMoFAcc -  Exception>>>>" + 
+										ex.getMessage() + "- supplier ID -" + mofAccount.getSmSupplier().getSupplierId());
+							}
+						}
+
 					}
+
 				}
 				log.info("**********ChangeExpiredMofPersonnelToBasicJob - END************");
 
