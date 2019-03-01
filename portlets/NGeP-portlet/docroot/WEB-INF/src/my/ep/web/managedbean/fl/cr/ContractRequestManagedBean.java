@@ -168,6 +168,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
+	//start added for #24353
+	private String ptjCodeNameNew;
+	private String ptjCodeNameSearchValuesNew;
+	private String chargeOrgProfileNewValue;
+	private String districtCode;
+	private Long stateId;
+	private List<PmDistrict> searchDistrictList;
+	private String selectedPtjOption;
+	//end added for #24353
 	private String ptjCodeNameSearchValues;
 	private String itemDesc;
 	private String gstRegistrationNo;
@@ -2892,5 +2901,64 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setOldGstRateFlg(boolean oldGstRateFlg) {
 		this.oldGstRateFlg = oldGstRateFlg;
 	}
+	
+	//start added for #24353
+	public String getPtjCodeNameNew() {
+		return ptjCodeNameNew;
+	}
+
+	public void setPtjCodeNameNew(String ptjCodeNameNew) {
+		this.ptjCodeNameNew = ptjCodeNameNew;
+	}
+
+	public String getPtjCodeNameSearchValuesNew() {
+		return ptjCodeNameSearchValuesNew;
+	}
+
+	public void setPtjCodeNameSearchValuesNew(String ptjCodeNameSearchValuesNew) {
+		this.ptjCodeNameSearchValuesNew = ptjCodeNameSearchValuesNew;
+	}
+
+	public String getChargeOrgProfileNewValue() {
+		return chargeOrgProfileNewValue;
+	}
+
+	public void setChargeOrgProfileNewValue(String chargeOrgProfileNewValue) {
+		this.chargeOrgProfileNewValue = chargeOrgProfileNewValue;
+	}
+
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	public Long getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+	public List<PmDistrict> getSearchDistrictList() {
+		return searchDistrictList;
+	}
+
+	public void setSearchDistrictList(List<PmDistrict> searchDistrictList) {
+		this.searchDistrictList = searchDistrictList;
+	}
+
+	public String getSelectedPtjOption() {
+		return selectedPtjOption;
+	}
+
+	public void setSelectedPtjOption(String selectedPtjOption) {
+		this.selectedPtjOption = selectedPtjOption;
+	}
+	
+	//end added for #24353
 
 }
