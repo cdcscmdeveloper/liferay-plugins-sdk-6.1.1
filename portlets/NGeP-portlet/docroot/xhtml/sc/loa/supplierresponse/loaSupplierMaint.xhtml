@@ -15,7 +15,7 @@
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
 	    <ui:param name="isBondReq" value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}" />
-	
+	    <ui:param name="enablePBForDP" value="#{lOADetailBackingBean.managedBean.enablePBForDP}" />
 	
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
@@ -50,7 +50,7 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" disabled="#{!(isDocTypeQuotation and isBondReq)}" actionListener="#{lOADetailBackingBean.tabChangeAction(5)}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" disabled="#{!((isDocTypeQuotation || enablePBForDP) and isBondReq)}" actionListener="#{lOADetailBackingBean.tabChangeAction(5)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					
