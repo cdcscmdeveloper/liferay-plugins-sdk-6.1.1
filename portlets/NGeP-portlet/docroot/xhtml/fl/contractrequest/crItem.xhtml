@@ -341,9 +341,9 @@
 								value="#{contractRequestBackingBean.managedBean.stateList}"
 								itemLabel="#{stateList.stateName}"
 								itemValue="#{stateList.stateId}" />
-							<p:ajax event="change"
+								<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveDivisionList}"
-								update="manDivison,manDistrict,manCity,manAddress" />
+								update="manDivison,manDistrict,manCity" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manState" display="icon" /></td>
 				</tr>
@@ -395,9 +395,6 @@
 							<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveCityList}"
 								update="manCity" />
-							<p:ajax event="change"
-								listener="#{contractRequestBackingBean.retrieveDeliveryAddressList}"
-								update="manAddress" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manDistrict" display="icon" /></td>
 				</tr>
@@ -458,19 +455,37 @@
        					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
        				</td>
        				<td><p:message for="email" display="icon" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
-							required="#{contractRequestBackingBean.managedBean.required}"
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.receivingGrp.addressTypeId}"
-							style="width: 180px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems var="delAddByDistrict"
-								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
-						</p:selectOneMenu>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
+       				<!-- start added for #24353 -->
+					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
 					</td>
-					<td><p:message for="manAddress" display="icon" /></td>
+					<td>
+						<p:selectOneRadio id="ptjRadio"
+							value="#{contractRequestBackingBean.managedBean.selectedPtjOption}">
+							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.issued']}" itemValue="1"/>
+							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.others']}" itemValue="2"/>
+							<p:ajax listener="#{contractRequestBackingBean.viewSelectedPTJRadio}"
+								update="chargeOrgProfileNew,searchPtjNew" process="@this" />
+						</p:selectOneRadio>
+						<p:inputTextarea id="chargeOrgProfileNew" rows="2" cols="63" disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}" readonly="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}" autoResize="false" style="resize:none;" 
+						required="#{contractRequestBackingBean.managedBean.required}"
+						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
+						value="#{contractRequestBackingBean.managedBean.chargeOrgProfileNewValue}" />
+					</td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj.new']}" />
+						<p:commandLink id="searchPtjNew"
+						oncomplete="dlgChargedPtjNew.show();" immediate="true"
+						action="#{contractRequestBackingBean.resetPMAddressTypeDetails}"
+						update=":form:chargeOrgProfileNew,chargeResultPanelNew2,dialogChargedPtjNew"
+						disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+						</p:commandLink>
+						<p:message for="chargeOrgProfileNew" display="icon" />
+					</td>
+					<!-- end added for #24353 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
@@ -483,7 +498,6 @@
 						required="#{contractRequestBackingBean.managedBean.required}"/>
 						</td>
 					<td></td>
-					
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
@@ -831,5 +845,87 @@
 		     </p:dataTable>	
 			</p:panel>			
 		</p:dialog>
+		
+		<!-- dialog dialogChargedPtjNew start added for #24353 -->
+		<p:dialog id="dialogChargedPtjNew"  header="#{lbl['lbl.fl.ptj.list']}" widgetVar="dlgChargedPtjNew" 
+			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
+			<p:messages id="chargePtjMsgNew" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		   <h:panelGroup  id="chargedPtjNew">
+		   	<p:panel id="chargePtjSearchPanelNew" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			      <h:panelGrid columns="3">
+                 <p:selectOneMenu for="chargeStateNew"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.state']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="chargeStateNew" style="width:300px"
+                   value="#{contractRequestBackingBean.managedBean.stateId}" >
+            	   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				   <f:selectItems var="stateList" value="#{contractRequestBackingBean.managedBean.stateList}"
+					itemLabel="#{stateList.stateName}" itemValue="#{stateList.stateId}" />
+         	   		<p:ajax event="change"
+					listener="#{contractRequestBackingBean.retrieveDivisionListForSearch}"
+					update="daerahNew" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="daerahNew"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.district']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="daerahNew" style="width:300px"
+                      value="#{contractRequestBackingBean.managedBean.districtCode}" >
+            	   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				   <f:selectItems var="districtList" value="#{contractRequestBackingBean.managedBean.searchDistrictList}"
+					itemValue="#{districtList.districtCode}" itemLabel="#{districtList.districtName}" /> 
+            	    <p:ajax event="change" update=":form:daerahNew"/>
+                 </p:selectOneMenu>
+             	<p:selectOneMenu for="ptjcodenamenew" 
+                    value="#{contractRequestBackingBean.managedBean.ptjCodeNameNew}"  style="width:150px;">
+                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCodeNew}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjNameNew}"/>
+            	      <p:ajax process="@this"/>
+                 </p:selectOneMenu> 
+				 <p:spacer height="1"/>
+                 <p:inputText id="ptjCodeVaueNew2"  style="width:300px;" 
+                     value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValuesNew}" >
+                     <p:ajax process="@this"/></p:inputText>
+			  </h:panelGrid>
+			  </p:panel>
+		       <div class="ppRightBtn">
+       		         
+       		         <p:commandButton id="chargePtjSearchIdNew2" value="#{lbl['lbl.btn.search']}" update=":form:tableChargePtjNew2"  
+       		            action="#{contractRequestBackingBean.searchPMAddressTypeDetails}" process="@this" /> 
+			         <p:commandButton id="resetlBtnNew2" value="#{lbl['lbl.btn.reset']}" process="@this"
+			            action="#{contractRequestBackingBean.resetPMAddressTypeDetails}" update=":form:chargedPtjNew"   />
+		       </div>
+			 <!-- panel chargeResultPanelNew2 start added for #24353 -->
+			  <p:panel id="chargeResultPanelNew2" header="#{lbl['lbl.fl.result']}" toggleable="true">
+              <p:dataTable id="tableChargePtjNew2" var="pmAddrVar" value="#{contractRequestBackingBean.pmAddressTypeDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+                 rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmAddressType}" rowKey="#{pmAddrVar}" lazy="true" rows="10">
+               <p:ajax event="rowSelectRadio" update=":form:chargePtjSelectBtnNew2" ></p:ajax>
+                  <ac:paginator for="tableChargePtjNew2"/>
+                    <p:column selectionMode="single" style="width:18px;"> 
+                         <f:facet name="header">
+		               </f:facet>
+                    </p:column> 
+                     <p:column headerText="#{lbl['lbl.fl.ptj.code']}" >
+                       	#{pmAddrVar.ptjCode}
+					</p:column>
+                    <p:column headerText="#{lbl['lbl.fl.ptj.name']}" >
+                      	#{pmAddrVar.ptjName}
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.btn.ptj.address']}" >
+                      	#{pmAddrVar.ptjAddress}
+					</p:column>
+			 </p:dataTable>
+			 </p:panel> 
+			 <!-- panel chargeResultPanelNew2 end added for #24353 -->          
+           			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@this"  update="chargeOrgProfileNew" id="chargePtjSelectBtnNew2"
+					disabled="#{fn:length(contractRequestBackingBean.pmAddressTypeDataModel.list) == 0 }"
+				    action="#{contractRequestBackingBean.addChargedPmAddressType()}" onclick="dlgChargedPtjNew.hide();" immediate="true" />
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtjNew.hide();" />
+           </div>
+           </h:panelGroup>
+	</p:dialog>
+	<!-- dialog dialogChargedPtjNew end added for #24353 -->
 		
 </ui:composition>
