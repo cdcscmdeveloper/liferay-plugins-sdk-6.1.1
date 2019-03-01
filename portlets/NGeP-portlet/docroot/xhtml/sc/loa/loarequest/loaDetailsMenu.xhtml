@@ -284,11 +284,11 @@
 						size="35" id="sstAmtId" style="text-align:right;" 
 						disabled="#{(!(isPendingSubmissionStatus or isPendingRevisionStatus)) or lOADetailBackingBean.managedBean.readOnly}" > 
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					<p:ajax event="blur"
+						<p:ajax event="blur"
 						listener="#{lOADetailBackingBean.calculateOverallAmount(lOADetailBackingBean.managedBean.scLoa.sstAmt)}"
-						update="ContractAmtId,agreementReq,@([id$=bondReq]),menuTab"></p:ajax>	
-				</p:inputText>
-			</td>
+							update="ContractAmtId,agreementReq,@([id$=bondReq]),menuTab"></p:ajax>
+					</p:inputText>
+				</td>
 		</tr>
 		
 		<tr>
@@ -325,7 +325,7 @@
 				</p:inputText>
 			</td>
 		</tr>
-		<c:if test="#{isDocTypeQuotation}">
+		<c:if test="#{isDocTypeQuotation || enablePBForDP}">
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />

@@ -196,6 +196,10 @@ public class LOADetailBackingBean extends
 
 	private static final String MALAY_NA = "T/B";
 
+	private static final String PROCUREMENT_TYPE = "Special Item / PK7";
+	
+	private static final String FULFILMENT_TYPE = "Periodic";
+	
 	/**
 	 * Instantiates a new LOA detail backing bean.
 	 */
@@ -339,7 +343,9 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
-
+			
+			checkDpIsElisibleForPB(scLoa, false);
+			
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 
@@ -4717,7 +4723,7 @@ public class LOADetailBackingBean extends
 			// back to dp loa list
 			if(getManagedBean().getSourceId() != null){
 				DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
+				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), true);
 			}
 		}
 
@@ -4769,11 +4775,42 @@ public class LOADetailBackingBean extends
 		}
 
 		boolean isBondReq = isPerformanceBondRequired(overallContractAmtOrLoaAmt, qtCategories);
-
+		
+		//To enable Performance Bond for Direct Purchase - Enhancement #25144- Starte.
+		checkDpIsElisibleForPB(loa, true);
+		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
+		
 		if(loa.isBrandNew()){
 			loa.setBondReq(isBondReq);
 		}
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
+	}
+
+	/**
+	 * To check whether Direct Purchase is eligible or not to enable Perofrmance Bond.
+	 * @param loa
+	 */
+	private void checkDpIsElisibleForPB(ScLoa loa, boolean userIdRequired) {
+		if(loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): loaNo is: " + loa.getLoaNo());
+			log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): DocType is: " + ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
+			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), userIdRequired);
+			if (null != dpLOABackingBean.getManagedBean() && null != dpLOABackingBean.getManagedBean().getPurchaseRequestList()
+					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().size() > 0 &&
+					null != dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls()
+					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().size() > 0) {
+				String procurementType = getParameterDesc(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getProcurementType());
+				String fulfilmentType = getParameterDesc(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getFulfilmentType());
+				log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): procurementType is: " + procurementType);
+				log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): fulfilmentType is: " + fulfilmentType);
+				if (StringUtils.isNotEmpty(procurementType) && PROCUREMENT_TYPE.equals(procurementType) && StringUtils.isNotEmpty(fulfilmentType)
+						&& fulfilmentType.contains(FULFILMENT_TYPE)) {
+					getManagedBean().setEnablePBForDP(true);
+					log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
+				}
+			}
+		}
 	}
 
 	/**

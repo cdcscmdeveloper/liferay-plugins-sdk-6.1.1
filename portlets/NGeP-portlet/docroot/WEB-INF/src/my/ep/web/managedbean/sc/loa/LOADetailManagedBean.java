@@ -270,6 +270,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String suppConfirmMsgAccept;
 	private String suppConfirmMsgReject;
 	
+	// Flag to enable Performance Bond for Direct Purchase.
+	private boolean enablePBForDP;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -1531,6 +1534,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
+	}
+
+	/**
+	 * @return the enablePBForDP
+	 */
+	public boolean isEnablePBForDP() {
+		return enablePBForDP;
+	}
+
+	/**
+	 * @param enablePBForDP the enablePBForDP to set
+	 */
+	public void setEnablePBForDP(boolean enablePBForDP) {
+		this.enablePBForDP = enablePBForDP;
 	}
 	
 }
