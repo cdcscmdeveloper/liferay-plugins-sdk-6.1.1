@@ -387,6 +387,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				log.info("Record saved successfully for doc no. "+ flRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+						validateUnitPrice(flRequest); //#21489
+						}
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
@@ -396,7 +399,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
-				}
+				}				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
@@ -1115,6 +1118,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				setFulfilmentItemAddr(getManagedBean().getFlRequest());
 			}
+			
+			//#21489
+			if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+				validateUnitPrice(getManagedBean().getFlRequest());
+				}
+			
+			
 				
 		}else if(contractId != null){
 			renewSesionObject();
@@ -1696,6 +1706,45 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}					
 				}
 			}			
+		}
+	}
+	
+	
+	//#21489
+	/**
+	 * check item unit price has exceed or not exceed.
+	 * 
+	 * @param FlItemSummaryReqDTO reqDTO - contractId, orgProfileId,itemId
+	 */
+	public void validateUnitPrice(FlFulfilmentRequest flRequest){
+		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+
+		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
+		ContractItemResDTO ctResDTO = new ContractItemResDTO();
+		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
+		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		BigDecimal unitPriceKeyIn = BigDecimal.ZERO;
+		
+		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				ctReqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
+				ctResDTO = contractItemSO.getItemPrice(ctReqDTO);
+				if(ctResDTO.getItemPrice().doubleValue() <= 0){
+					break;
+				}
+				
+				unitPriceKeyIn = itemAddr.getUnitPrice();
+				
+				if(unitPriceKeyIn.doubleValue() >  ctResDTO.getItemPrice().doubleValue()){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO , null,
+							MessageUtils.getMessage(MessageConst.INFO_745086, 
+									new String[]{itemAddr.getScRequestItem().getItemName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					
+				}
+			}
+			
+			
 		}
 	}
 	
@@ -4340,6 +4389,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						throw new EpException(MessageConst.ERROR_750010);
 					}
 				}
+				
+				//#21489
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) && getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+					validateUnitPrice(flRequest);
+					}
+				
 				if(!getManagedBean().isDeclarationCheck()){
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745071);
@@ -5936,3 +5991,5 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//end added for #24353
 
 }
+	
+
