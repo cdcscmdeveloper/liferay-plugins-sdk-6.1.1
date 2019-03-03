@@ -32,6 +32,22 @@
 				<ac:smReportDateFromTo bBean="#{dailyReceivedRptBB}" />
 			</td>
 		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{dailyReceivedRptBB.managedBean.documentType}" styleClass="ppDropDownWidthM" style="margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{dailyReceivedRptBB.getDocumentTypeOptions()}" />
+				</p:selectOneMenu>
+			</td>
+			<td class="tdTitle">	
+			</td>
+			<td class="tdContent">
+			</td>
+		</tr>
 	</table>
 	
 	<ac:smGenerateReport bBean="#{dailyReceivedRptBB}" 

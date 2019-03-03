@@ -6,17 +6,22 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColPaymentRptManagedBean;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 @ManagedBean(name = "colPaymentRptBB")
 @ViewScoped
 public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptManagedBean>{
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(ColPaymentRptBackingBean.class);
 	
 	public ColPaymentRptBackingBean(){
 		getManagedBean().setPaymentTypeMethodLs(getPaymentTypeMethodList());
@@ -48,6 +53,13 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 					StringUtils.upperCase(getManagedBean().getPaymentMethod()));
 		}
 
+		if(getManagedBean().getDocumentType() == null){
+			params.put(ReportConst.ENHANCED_SPREAD_SHEET, getManagedBean().getDefaultOutputType());
+		}else{
+			params.put(ReportConst.ENHANCED_SPREAD_SHEET, getManagedBean().getDocumentType());
+			getManagedBean().setDefaultOutputType(getManagedBean().getDocumentType());
+		}
+		
 		generateSmReport(params);
 	}
 	
@@ -58,5 +70,10 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 		getManagedBean().setPaymentMethod(null);
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
 		getManagedBean().setSelectedOrgProfile(null);
+	}
+	
+	public static SelectItem[] getDocumentTypeOptions() {
+		log.info("getReportTypeOptions");
+		return PmCommonUtil.getDocumentTypeOption();
 	}
 }
