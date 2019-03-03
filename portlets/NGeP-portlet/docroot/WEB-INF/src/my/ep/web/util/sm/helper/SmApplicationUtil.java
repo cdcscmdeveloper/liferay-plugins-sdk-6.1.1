@@ -2416,6 +2416,7 @@ public class SmApplicationUtil {
 			// StringBuffer sb = new StringBuffer();
 			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				per.setIdentityResponseCode(resDTO.getStatusCode());
+				per.setIdentityResidentStatus(resDTO.getResidentStatus());
 			}
 			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		} catch (Exception e) {
