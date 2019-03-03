@@ -15,13 +15,17 @@
 		<h:panelGroup id="extensionFlowReviewID">
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}"
+				<p:commandButton id="btnAdd" value="#{lbl['lbl.cm.add.to.catalogue']}"
 					rendered="#{unspscCodeBackingBean.allSupplier}"
-					action="#{catalogueBackingBean.addToMaintainByItemId('ok')}"></p:commandButton>
+					action="#{catalogueBackingBean.addToMaintainByItemId('ok')}">
+				<p:tooltip id="toolTipFade" for="btnAdd" value="#{lbl['lbl.cm.tooltip.btn.addtocatalog']}" position="top"/>
+					</p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"></p:commandButton>
+					<p:commandButton id="btnOk" value="#{lbl['lbl.bpm.action.OK']}"
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}">
+						<p:tooltip id="toolTipFade" for="btnOk" value="#{lbl['lbl.cm.tooltip.btn.finish']}" position="top"/>
+					</p:commandButton>
 				</ui:repeat>
 			</div>
 

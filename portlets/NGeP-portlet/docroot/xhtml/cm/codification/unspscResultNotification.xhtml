@@ -15,13 +15,17 @@
 
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}" action="#{catalogueBackingBean.addToMaintenanceFile('OK')}"
-					rendered="#{unspscCodeBackingBean.allSupplier}"></p:commandButton>
+				<p:commandButton id="btnAdd" value="#{lbl['lbl.cm.add.to.catalogue']}" action="#{catalogueBackingBean.addToMaintenanceFile('OK')}"
+					rendered="#{unspscCodeBackingBean.allSupplier}">
+					<p:tooltip id="toolTipFade" for="btnAdd" value="#{lbl['lbl.cm.tooltip.btn.addtocatalog']}" position="top"/>
+					</p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
+					<p:commandButton id="btnOk" value="#{lbl['lbl.bpm.action.OK']}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
-						update="@form"></p:commandButton>
+						update="@form">
+					<p:tooltip id="toolTipFade" for="btnOk" value="#{lbl['lbl.cm.tooltip.btn.finish']}" position="top"/>
+						</p:commandButton>
 				</ui:repeat>
 
 			</div>
