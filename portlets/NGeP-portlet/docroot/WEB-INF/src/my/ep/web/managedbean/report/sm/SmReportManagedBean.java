@@ -28,6 +28,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String regNo;
 	private String applNo;
 	private String applType;
+	private String documentType;
 	private String state;
 	private String district;
 	private String year;
@@ -60,6 +61,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	private String currYear;
 
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
 	public Date getDateFrom() {
 		return dateFrom;
 	}

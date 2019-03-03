@@ -6,15 +6,21 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
+
+import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.RevenueCollectionRptManagedBean;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 @ManagedBean(name="revenueCollectionRptBB")
 @ViewScoped
 public class RevenueCollectionRptBackingBean extends SmReportBackingBean<RevenueCollectionRptManagedBean>{
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(RevenueCollectionRptBackingBean.class);
 	
 	public RevenueCollectionRptBackingBean(){
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
@@ -36,6 +42,13 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 			}
 		}*/
 
+		if(getManagedBean().getDocumentType() == null){
+			params.put(ReportConst.ENHANCED_SPREAD_SHEET, getManagedBean().getDefaultOutputType());
+		}else{
+			params.put(ReportConst.ENHANCED_SPREAD_SHEET, getManagedBean().getDocumentType());
+			getManagedBean().setDefaultOutputType(getManagedBean().getDocumentType());
+		}
+		
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
@@ -45,5 +58,14 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 	public void resetSearch(){
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
 		setDefaultDateFromAndDateTo();
+	}
+	
+	/**
+	 * document type options
+	 * @return SelectItem[]
+	 */
+	public static SelectItem[] getDocumentTypeOptions() {
+		log.info("getReportTypeOptions");
+		return PmCommonUtil.getDocumentTypeOption();
 	}
 }
