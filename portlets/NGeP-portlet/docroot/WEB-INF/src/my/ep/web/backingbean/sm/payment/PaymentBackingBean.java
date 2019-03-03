@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
+import my.ep.biz.service.sm.pending.IPendingPaymentSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
@@ -27,6 +28,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
+import my.ep.dto.sm.pending.PendingPaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -63,6 +65,10 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(PaymentBackingBean.class);
 	private String paymentGatewayUrl;
 	private String merchantId;
@@ -215,58 +221,68 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public String proceedToPaymentSummary() {
 		log.debug("****proceedToPaymentSummary****");
-
-		PyBill pyBill = this.getManagedBean().getPyBill();
-		BigDecimal ttlAmount = new BigDecimal(0);
-		this.getManagedBean().setNewPyBillDtlLs(new ArrayList<PyBillDtl>());
-		retrievePaymentItem();
-
-		Map<Long, SmPersonnel> selectedSoftCertMap = new HashMap<Long, SmPersonnel>();
-		if (this.getManagedBean().getSelectedSoftCertLs() != null
-				&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
-			for (SmPersonnel selectedPersonnel : this.getManagedBean()
-					.getSelectedSoftCertLs()) {
-				if(StringUtils.isBlank(selectedPersonnel.getMobileNo()) && 
-						StringUtils.isBlank(selectedPersonnel.getPhoneNo())){
-					throw new EpException(MessageConst.ERROR_721053, new String[]{selectedPersonnel.getName()});
-				}
+		
+		IPendingPaymentSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IPendingPaymentSO.class);
+		PaymentReqDTO reqDTO = new PaymentReqDTO();
+		reqDTO.setBillId(this.getManagedBean().getPyBill().getBillId());
+		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
 				
-				if(StringUtils.isBlank(selectedPersonnel.getEmail())){
-					throw new EpException(MessageConst.ERROR_721054, new String[]{selectedPersonnel.getName()});
-				}
-				
-				selectedSoftCertMap.put(selectedPersonnel.getPersonnelId(),
-						selectedPersonnel);
-			}
+		if(resDTO.isFoundCompletePayment()){
+			throw new EpException(MessageConst.ERROR_721055);
 		}
+			PyBill pyBill = this.getManagedBean().getPyBill();
+			BigDecimal ttlAmount = new BigDecimal(0);
+			this.getManagedBean().setNewPyBillDtlLs(new ArrayList<PyBillDtl>());
+			retrievePaymentItem();
 
-		for (PyBillDtl billDtl : pyBill.getPyBillDtls()) {
-			if (billDtl.getItemCode().getParameterCode()
-					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
-				//TODO : need to fix && new payment design
-				if (selectedSoftCertMap != null
-						&& !selectedSoftCertMap.isEmpty()
-						&& selectedSoftCertMap.containsKey(billDtl.getBillDtlRefId())) {
+			Map<Long, SmPersonnel> selectedSoftCertMap = new HashMap<Long, SmPersonnel>();
+			if (this.getManagedBean().getSelectedSoftCertLs() != null
+					&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
+				for (SmPersonnel selectedPersonnel : this.getManagedBean()
+						.getSelectedSoftCertLs()) {
+					if(StringUtils.isBlank(selectedPersonnel.getMobileNo()) && 
+							StringUtils.isBlank(selectedPersonnel.getPhoneNo())){
+						throw new EpException(MessageConst.ERROR_721053, new String[]{selectedPersonnel.getName()});
+					}
+					
+					if(StringUtils.isBlank(selectedPersonnel.getEmail())){
+						throw new EpException(MessageConst.ERROR_721054, new String[]{selectedPersonnel.getName()});
+					}
+					
+					selectedSoftCertMap.put(selectedPersonnel.getPersonnelId(),
+							selectedPersonnel);
+				}
+			}
+
+			for (PyBillDtl billDtl : pyBill.getPyBillDtls()) {
+				if (billDtl.getItemCode().getParameterCode()
+						.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
+					//TODO : need to fix && new payment design
+					if (selectedSoftCertMap != null
+							&& !selectedSoftCertMap.isEmpty()
+							&& selectedSoftCertMap.containsKey(billDtl.getBillDtlRefId())) {
+						this.getManagedBean().getNewPyBillDtlLs().add(billDtl);
+					}
+				} else {
 					this.getManagedBean().getNewPyBillDtlLs().add(billDtl);
 				}
-			} else {
-				this.getManagedBean().getNewPyBillDtlLs().add(billDtl);
 			}
-		}
 
-		for (PyBillDtl newItemDtlLs : this.getManagedBean().getNewPyBillDtlLs()) {
-			ttlAmount = ttlAmount.add(newItemDtlLs.getItemPrice());
-			log.info("TotalAmount>>>>>>" + ttlAmount);
-		}
-		getManagedBean().setTotalAmountBeforeGst(
-				ttlAmount.setScale(2, BigDecimal.ROUND_UP));
-		BigDecimal gst = getManagedBean().isSoftcertPayment() ? SmCommonUtil
-				.getGstCurrentRate().divide(new BigDecimal(100))
-				.multiply(ttlAmount) : BigDecimal.ZERO;
-		getManagedBean().setGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
-		this.getManagedBean().setTotalAmount(
-				gst.add(ttlAmount).setScale(2, BigDecimal.ROUND_UP));
-		return "paymentSummary";
+			for (PyBillDtl newItemDtlLs : this.getManagedBean().getNewPyBillDtlLs()) {
+				ttlAmount = ttlAmount.add(newItemDtlLs.getItemPrice());
+				log.info("TotalAmount>>>>>>" + ttlAmount);
+			}
+			getManagedBean().setTotalAmountBeforeGst(
+					ttlAmount.setScale(2, BigDecimal.ROUND_UP));
+			BigDecimal gst = getManagedBean().isSoftcertPayment() ? SmCommonUtil
+					.getGstCurrentRate().divide(new BigDecimal(100))
+					.multiply(ttlAmount) : BigDecimal.ZERO;
+			getManagedBean().setGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
+			this.getManagedBean().setTotalAmount(
+					gst.add(ttlAmount).setScale(2, BigDecimal.ROUND_UP));
+			return "paymentSummary";
+		
+		
 	}
 
 	/**
