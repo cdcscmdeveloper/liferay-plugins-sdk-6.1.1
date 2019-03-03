@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -55,6 +56,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -124,6 +126,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean titleEngFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 	private IPagingDataModel<CmItem> searchItemDataModel = new SearchItemPagingDataModel();
 
 	private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
@@ -435,7 +439,16 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					log.info("*********titleFilterBean***********");
 					titleFilterBean.setSearchField("unspscTitle");
 					titleFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(titleFilterBean);
+					titleFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+
+					titleEngFilterBean.setSearchField("unspscTitleEng");
+					titleEngFilterBean.setCaseInsensitive(true);
+					titleEngFilterBean.setSearchValue(titleFilterBean.getSearchValue());
+					titleEngFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					
+					SearchMultiFilterBean bilingualFilter = new SearchMultiFilterBean(titleFilterBean,titleEngFilterBean);
+					
+					searchBean.getDataFilterBeans().add(bilingualFilter);
 				}
 				FacesScopes fs = new FacesScopes();
 				String itemType = fs.getParameter("itemType");
@@ -2323,7 +2336,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		.setUnspscTitle(unspscObj.getUnspscTitle());
 
 		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
-
+		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
+		    @Override
+		    public int compare(CmColor t1, CmColor t2) {
+		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
+		    }
+		});
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
@@ -2337,6 +2355,24 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		
 		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
 		CodificationResDTO unspscDTO = unspscSO.retrieveUNSPSCByCommodityCode(reqDTO);
+		Collections.sort(unspscDTO.getCommodityObj().getCmBrand(), new Comparator<CmBrand>() {
+		    @Override
+		    public int compare(CmBrand t1, CmBrand t2) {
+		        return compareFirstChoice(t1.getBrandCode(), t2.getBrandCode(), t1.getBrandName().trim().compareToIgnoreCase(t2.getBrandName().trim()));
+		    }
+		});
+		Collections.sort(unspscDTO.getCommodityObj().getCmType(), new Comparator<CmType>() {
+		    @Override
+		    public int compare(CmType t1, CmType t2) {
+		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
+		    }
+		});
+		Collections.sort(unspscDTO.getCommodityObj().getCmMeasurement(), new Comparator<CmMeasurement>() {
+		    @Override
+		    public int compare(CmMeasurement t1, CmMeasurement t2) {
+		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
+		    }
+		});
 		
 		for (CmBrand brand : unspscDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName())) {
@@ -2367,6 +2403,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 						measurement.getMeasurementName()));
 			}
 		}
+		
+		
 
 		return "searchExtensionToAssignItem.xhtml";
 	}
