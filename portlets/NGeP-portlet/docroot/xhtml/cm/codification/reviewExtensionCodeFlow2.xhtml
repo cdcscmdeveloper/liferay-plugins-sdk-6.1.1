@@ -15,11 +15,15 @@
 		<h:panelGroup id="extensionFlowReviewID">
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}" rendered="#{unspscCodeBackingBean.allSupplier}" action="#{catalogueBackingBean.addToMaintainByItemId('OK')}"></p:commandButton>
+				<p:commandButton id="btnAdd" value="#{lbl['lbl.cm.add.to.catalogue']}" rendered="#{unspscCodeBackingBean.allSupplier}" action="#{catalogueBackingBean.addToMaintainByItemId('OK')}">
+					<p:tooltip id="toolTipFade" for="btnAdd" value="#{lbl['lbl.cm.tooltip.btn.addtocatalog']}" position="top"/>
+				</p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
-						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"></p:commandButton>
+					<p:commandButton id="btnOk" value="#{lbl['lbl.bpm.action.OK']}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}">
+						<p:tooltip id="toolTipFade" for="btnOk" value="#{lbl['lbl.cm.tooltip.btn.finish']}" position="top"/>
+					</p:commandButton>
 				</ui:repeat>
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{bpmTasklistBackingBean.claimTaskInDetailPage}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}" update="@form"></p:commandButton>
 			
