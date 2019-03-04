@@ -104,7 +104,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String editColorName;
 	private String editMeasurementName;
 	private String editBrandName;
-
+	
+	private String tempTypeName;
+	private String tempColorName;
+	private String tempMeasurementName;
+	private String tempBrandName;
+	
 	private List<CmUnspsc> unspscPopUpList;
 
 	private String popUpUnspscCode;
@@ -1442,6 +1447,38 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setAssignCodeFlg(boolean assignCodeFlg) {
 		this.assignCodeFlg = assignCodeFlg;
+	}
+
+	public String getTempTypeName() {
+		return tempTypeName;
+	}
+
+	public void setTempTypeName(String tempTypeName) {
+		this.tempTypeName = tempTypeName;
+	}
+
+	public String getTempColorName() {
+		return tempColorName;
+	}
+
+	public void setTempColorName(String tempColorName) {
+		this.tempColorName = tempColorName;
+	}
+
+	public String getTempMeasurementName() {
+		return tempMeasurementName;
+	}
+
+	public void setTempMeasurementName(String tempMeasurementName) {
+		this.tempMeasurementName = tempMeasurementName;
+	}
+
+	public String getTempBrandName() {
+		return tempBrandName;
+	}
+
+	public void setTempBrandName(String tempBrandName) {
+		this.tempBrandName = tempBrandName;
 	}
 	
 }
