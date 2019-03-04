@@ -234,7 +234,6 @@ public class PmCommonUtil implements Serializable{
 	 * @param accountCodeB
 	 * @return isRedundant
 	 */
-	/** rollback #25136
 	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB) {
 
 		boolean isRedundant = false;
@@ -249,7 +248,7 @@ public class PmCommonUtil implements Serializable{
 
 		return isRedundant;
 	}
-*/
+
 	/**
 	 * Check Role Restriction by role code and user role list
 	 * 
