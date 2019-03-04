@@ -16,7 +16,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColReceiptTransDtRptManagedBean;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
+//recommit
 @ManagedBean(name = "colReceiptTransDtRptBB")
 @ViewScoped
 public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColReceiptTransDtRptManagedBean>{
