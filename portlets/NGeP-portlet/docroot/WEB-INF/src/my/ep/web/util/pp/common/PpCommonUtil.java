@@ -421,7 +421,11 @@ public class PpCommonUtil implements Serializable{
 
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			if (RoleCode.PLAN_APPROVER.value().equals(roleCode)) {
+				resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
+			} else {
+				resDTO = userSO.retrieveUserListByRole(reqDTO);
+			}
 
 			if (resDTO.isSuccessful() && resDTO.getUserList() != null) {
 				pmUsers = resDTO.getUserList();
